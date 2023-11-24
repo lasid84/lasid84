@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "KREAM Web",
   "private": true,
   "scripts": {
     "build": "turbo build",
