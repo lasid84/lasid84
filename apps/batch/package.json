@@ -1,0 +1,30 @@
+{
+  "name": "batch",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsup --watch --onSuccess \"node dist/index.js\"",
+    "build": "tsup",
+    "test": "echo 'Add test script here'",
+    "lint": "echo 'Add lint script here'"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "puppeteer": "^21.5.2",
+    "ts-node": "^10.9.1",
+    "utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/body-parser": "^1.19.2",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.17",
+    "@types/morgan": "^1.9.5",
+    "@types/node": "^20.9.5",
+    "@types/supertest": "^2.0.12",
+    "supertest": "^6.3.3",
+    "tsup": "^6.0.1",
+    "typescript": "^5.2.2"
+  }
+}
