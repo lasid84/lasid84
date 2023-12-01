@@ -19,7 +19,7 @@ module.exports = {
       host : ['10.33.63.171'],
       ref  : 'origin/main',
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
-      path : '/home/sdd_it/KREAM_Web/api',
+      path : '~/KREAM_Web/api',
       ssh_options: ["StrictHostKeyChecking=no"],
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production',
     }
