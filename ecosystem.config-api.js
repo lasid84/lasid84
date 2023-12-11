@@ -5,7 +5,10 @@ module.exports = {
       script: 'dist/index.js',
       cwd: "./apps/api",
       autorestart: true,    
-      watch: '.'
+      watch: '.',
+      env: {
+        NODE_ENV: 'production'
+      }
     }
   ],
 
