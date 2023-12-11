@@ -38,7 +38,7 @@ yarn-error.log*
 *.pem
 
 # pm2
-#ecosystem.config.js
+ecosystem.config.js
 
 #config
 ./apps/api/configs/*
