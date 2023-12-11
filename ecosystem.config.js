@@ -27,7 +27,9 @@ module.exports = {
       autorestart: true,    
       watch: '.',
       env: {
-        APP_ENV: 'prod'
+        APP_ENV: 'prod',
+        PORT: 3000,
+        ORIGIN: 'http://localhost:3000'
       }
     }
   ],
