@@ -19,16 +19,6 @@ module.exports = {
       env: {
         NODE_ENV: 'production'
       }
-    },
-    {
-      name: 'web',
-      script: 'dist/index.js',
-      cwd: "./apps/api",
-      autorestart: true,    
-      watch: '.',
-      env: {
-        NODE_ENV: 'production'
-      }
     }
   ],
 
@@ -51,7 +41,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --only batch --env production',
+      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production',
     }
     ,
     batch_prod : {
