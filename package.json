@@ -6,12 +6,13 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "build:web": "turbo build --filter=web",
-    "build:api": "turbo build --filter=api",
-    "build:batch": "turbo build --filter=batch",
     "heroku-postbuild": "if [ $CLIENT_ENV ]; then pnpm run prod-api; elif [ $SERVER_ENV ]; then pnpm run prod-batch; else echo no environment detected, please set CLIENT_ENV or SERVER_ENV; fi",
-    "prod-api": "pnpm run build:api",
-    "prod-batch": "pnpm run build:batch"
+
+    "ds:api_init" : "pm2 deploy api_staging setup",
+    "ds:api" : "pm2 deploy api_staging update",
+    "dp:api_init" : "pm2 deploy production setup --force",
+    "dp:api" : "pm2 deploy api_prod update",
+    "dp:api-force" : "pm2 deploy api_prod update --force"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
