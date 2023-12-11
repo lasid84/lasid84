@@ -37,6 +37,9 @@ yarn-error.log*
 .DS_Store
 *.pem
 
+# pm2
+#ecosystem.config.js
 
 #config
-ecosystem.config.js
+./apps/api/configs/*
+./apps/batch/configs/*

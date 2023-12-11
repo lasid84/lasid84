@@ -11,8 +11,12 @@
     "ds:api_init" : "pm2 deploy api_staging setup",
     "ds:api" : "pm2 deploy api_staging update",
     "dp:api_init" : "pm2 deploy production setup --force",
-    "dp:api" : "pm2 deploy api_prod update",
-    "dp:api-force" : "pm2 deploy api_prod update --force"
+    "dp:api" : "pm2 deploy api_prod production update",
+    "dp:api_force" : "pm2 deploy api_prod update --force",
+
+    "dp:batch_init" : "pm2 deploy production setup --force",
+    "dp:batch" : "pm2 deploy api_prod update",
+    "dp:batch_force" : "pm2 deploy api_prod update --force"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
