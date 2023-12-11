@@ -22,7 +22,7 @@ module.exports = {
     },
     {
       name: 'web',
-      script: 'node_modules/next/dist/bin/next',
+      script: 'web/node_modules/next/dist/bin/next',
       args: 'start',
       autorestart: true,    
       watch: '.',
