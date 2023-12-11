@@ -23,13 +23,11 @@ module.exports = {
     {
       name: 'web',
       script: 'apps/web/node_modules/next/dist/bin/next',
-      args: 'start --port 3001',
+      args: 'start',
       autorestart: true,    
       watch: '.',
       env: {
-        APP_ENV: 'prod',
-        PORT: 3000,
-        ORIGIN: 'http://localhost:3000'
+        APP_ENV: 'prod'
       }
     }
   ],
