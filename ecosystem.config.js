@@ -19,6 +19,16 @@ module.exports = {
       env: {
         NODE_ENV: 'production'
       }
+    },
+    {
+      name: 'web',
+      script: 'node_modules/next/dist/bin/next',
+      args: 'start',
+      autorestart: true,    
+      watch: '.',
+      env: {
+        NODE_ENV: 'production'
+      }
     }
   ],
 
@@ -41,18 +51,27 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production',
-    }
-    ,
+      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only api',
+    },
+    web_prod : {
+      key : './id_rsa-api-prod', 
+      user : 'sdd_it',
+      host : ['10.33.63.171'],
+      ref  : 'origin/main',
+      repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
+      path : '/home/sdd_it/KREAM_Web',
+      ssh_options: ['StrictHostKeyChecking=no'],
+      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only web',
+    },
     batch_prod : {
-      key : './id_rsa', 
+      key : './id_rsa-batch-prod', 
       user : 'sdd_it',
       host : ['10.33.63.172'],
       ref  : 'origin/main',
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production',
+      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only batch',
     }
   }
 };
