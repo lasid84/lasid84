@@ -15,7 +15,7 @@
     "dp:api_force" : "pm2 deploy api_prod update --only batch --force",
 
     "dp:batch_init" : "pm2 deploy production setup --force",
-    "dp:batch" : "pm2 deploy api_prod update",
+    "dp:batch" : "pm2 deploy api_prod update --only batch",
     "dp:batch_force" : "pm2 deploy api_prod update --force"
   },
   "devDependencies": {
