@@ -22,7 +22,7 @@ module.exports = {
     },
     {
       name: 'web',
-      script: 'pnpm start',
+      script: 'npm start',
       cwd: './apps/web',
       autorestart: true,    
       watch: '.'
@@ -58,7 +58,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ./ecosystem.config.js --only web',
+      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --only web',
     },
     batch_prod : {
       key : './id_rsa-batch-prod', 
