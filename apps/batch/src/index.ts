@@ -1,6 +1,6 @@
 const fs = require('fs');
 import { Worker, WorkerOptions } from 'worker_threads';
-import { log, sleep } from 'utils';
+import { log, sleep, path } from 'utils';
 
 let _arrThread:any = [];
 
@@ -70,7 +70,7 @@ async function startWorker() {
       // const worker = workerTs('./src/worker.ts', { worderData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false } });
         
       
-      const worker = new Worker('./src/worker-scraping.ts'
+      const worker = new Worker(path.join(__dirname) +  '/worker-scraping.ts'
       // worker = new Worker('./components/workers/c.js'
             , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
           }});

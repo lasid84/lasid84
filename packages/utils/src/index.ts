@@ -5,6 +5,7 @@ const sleep = require("../components/sleep.ts");
 const ini = require("ini");
 const objectPath = require("object-path");
 const fs = require("fs").promises;
+const path = require("path");
 
 const log = (...args: unknown[]): void => {
     // eslint-disable-next-line no-console -- logger
@@ -15,5 +16,5 @@ const log = (...args: unknown[]): void => {
   };
 
 export {log, callFunction, executFunction, checkAccount, sleep
-      , ini, objectPath, fs
+      , ini, objectPath, fs, path
 }
