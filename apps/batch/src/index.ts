@@ -13,7 +13,7 @@ function init() {
   // return;
 
 
-  let filePath = './configs/thread.ini';
+  let filePath = process.cwd() + './configs/thread.ini'; 
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
     //fileContent = fileContent.replaceAll('\r', '');
