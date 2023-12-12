@@ -12,8 +12,8 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'index.js',
-      cwd: "./apps/batch/dist",
+      script: 'index.ts',
+      cwd: "./apps/batch/src",
       autorestart: true,    
       watch: '.',
       env: {
@@ -68,7 +68,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'npm install && npm build && pm2 reload ./ecosystem.config.js --env production --only batch',
+      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only batch',
     }
   }
 };
