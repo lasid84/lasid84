@@ -41,5 +41,6 @@ yarn-error.log*
 ecosystem.config.js
 
 #config
-./apps/api/configs/*
-./apps/batch/configs/*
+/configs/*
+apps/api/configs/server.ini
+apps/batch/configs/server.ini
