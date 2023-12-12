@@ -24,7 +24,7 @@ module.exports = {
       name: 'web',
       script: 'node_modules/next/dist/bin/next',
       cwd: './apps/web',
-      args: 'start',
+      args: 'start -p 3000',
       autorestart: true,    
       watch: '.',
       env: {

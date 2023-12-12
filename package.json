@@ -18,7 +18,7 @@
     "dp:batch" : "pm2 deploy api_prod update",
     "dp:batch_f" : "pm2 deploy api_prod update --force",
 
-    "dp:web_f" : "pm2 deploy web_prod update --force --env prod"
+    "dp:web_f" : "pm2 deploy web_prod update --force"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
