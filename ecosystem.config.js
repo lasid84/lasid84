@@ -22,13 +22,14 @@ module.exports = {
     },
     {
       name: 'web',
-      script: 'node_modules/next/dist/bin/next',
+      script: 'pnpm',
       cwd: './apps/web',
-      args: 'start -p 3000',
+      args: 'start',
       autorestart: true,    
       watch: '.',
       env: {
-        NODE_ENV: 'production'
+        NODE_ENV: 'production',
+        PORT: 3000
       }
     }
   ],
