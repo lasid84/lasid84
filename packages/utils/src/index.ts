@@ -6,6 +6,8 @@ const ini = require("ini");
 const objectPath = require("object-path");
 const fs = require("fs").promises;
 const path = require("path");
+import { path as arp } from 'app-root-path'
+const homedir = require("os");
 
 const log = (...args: unknown[]): void => {
     // eslint-disable-next-line no-console -- logger
@@ -16,5 +18,5 @@ const log = (...args: unknown[]): void => {
   };
 
 export {log, callFunction, executFunction, checkAccount, sleep
-      , ini, objectPath, fs, path
+      , ini, objectPath, fs, path, homedir, arp
 }

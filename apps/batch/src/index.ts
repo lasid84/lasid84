@@ -1,10 +1,18 @@
 const fs = require('fs');
 import { Worker, WorkerOptions } from 'worker_threads';
-import { log, sleep, path } from 'utils';
+import { log, sleep, path, arp } from 'utils';
+
+const root = path.resolve(arp, '../') // the parent of the root path
 
 let _arrThread:any = [];
 
 function init() {
+
+  // console.log(root);
+  // console.log(arp);
+  // return;
+
+
   let filePath = './configs/thread.ini';
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -70,7 +78,7 @@ async function startWorker() {
       // const worker = workerTs('./src/worker.ts', { worderData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false } });
         
       
-      const worker = new Worker(path.join(__dirname) +  '/worker-scraping.ts'
+      const worker = new Worker(arp + '/apps/batch/src/worker-scraping.ts'
       // worker = new Worker('./components/workers/c.js'
             , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
           }});
@@ -84,4 +92,4 @@ async function startWorker() {
 }
 
 init();
-startWorker();
+//startWorker();
