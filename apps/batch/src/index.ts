@@ -92,4 +92,4 @@ async function startWorker() {
 }
 
 init();
-//startWorker();
+startWorker();
