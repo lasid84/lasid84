@@ -22,8 +22,8 @@ module.exports = {
     },
     {
       name: 'web',
-      script: 'pnpm start',
-      cwd: './apps/web/',
+      script: 'apps/web/node_modules/next/dist/bin/next',
+      args: 'start',
       autorestart: true,    
       watch: '.',
       env: {
