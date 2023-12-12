@@ -23,11 +23,11 @@ module.exports = {
     {
       name: 'web',
       script: 'pnpm start',
-      cwd: './apps/web',
+      cwd: './apps/web/',
       autorestart: true,    
       watch: '.',
       env: {
-        APP_ENV: 'production'
+        NODE_ENV: 'production'
       }
     }
   ],
