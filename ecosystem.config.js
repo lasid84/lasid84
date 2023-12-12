@@ -25,11 +25,7 @@ module.exports = {
       script: 'pnpm start',
       cwd: './apps/web',
       autorestart: true,    
-      watch: '.',
-      env: {
-        NODE_ENV: 'production',
-        PORT: 3000
-      }
+      watch: '.'
     }
   ],
 
