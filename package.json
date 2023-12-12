@@ -1,5 +1,5 @@
 {
-  "name": "KREAM Web",
+  "name": "kream_web",
   "private": true,
   "scripts": {
     "build": "turbo build",
