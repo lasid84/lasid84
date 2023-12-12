@@ -2,8 +2,8 @@ module.exports = {
   apps : [
     {
       name: 'api',
-      script: 'dist/index.js',
-      cwd: "./apps/api",
+      script: 'index.js',
+      cwd: "./apps/api/dist",
       autorestart: true,    
       watch: '.',
       env: {
@@ -12,8 +12,8 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'dist/index.js',
-      cwd: "./apps/batch",
+      script: 'index.js',
+      cwd: "./apps/batch/dist",
       autorestart: true,    
       watch: '.',
       env: {
@@ -22,8 +22,8 @@ module.exports = {
     },
     {
       name: 'web',
-      script: 'apps/web/node_modules/next/dist/bin/next',
-      args: 'start',
+      script: 'pnpm start',
+      cwd: './apps/web',
       autorestart: true,    
       watch: '.',
       env: {

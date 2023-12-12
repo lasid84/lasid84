@@ -108,7 +108,7 @@ export default function Page(): JSX.Element {
               className={styles.turborepoWordmark}
               viewBox="0 0 506 50"
               width={200}
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="http://www.w3.org/2000/svg" 
             >
               <title>Turborepo logo</title>
               <path d="M53.7187 12.0038V1.05332H0.945312V12.0038H20.8673V48.4175H33.7968V12.0038H53.7187Z" />
