@@ -27,7 +27,7 @@ module.exports = {
       autorestart: true,    
       watch: '.',
       env: {
-        APP_ENV: 'prod'
+        APP_ENV: 'production'
       }
     }
   ],
@@ -61,7 +61,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env prod --only web',
+      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only web',
     },
     batch_prod : {
       key : './id_rsa-batch-prod', 
