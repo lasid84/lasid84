@@ -22,9 +22,8 @@ module.exports = {
     },
     {
       name: 'web',
-      script: 'pnpm',
+      script: 'pnpm start',
       cwd: './apps/web',
-      args: 'start',
       autorestart: true,    
       watch: '.',
       env: {
