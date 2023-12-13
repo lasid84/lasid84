@@ -2,7 +2,7 @@ module.exports = {
   apps : [
     {
       name: 'api',
-      script: 'index.ts',
+      script: 'node index.ts',
       cwd: "./apps/api/src",
       autorestart: true,    
       watch: '.',
@@ -12,7 +12,7 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'index.ts',
+      script: 'node index.ts',
       cwd: "./apps/batch/src",
       autorestart: true,    
       watch: '.',
