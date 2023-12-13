@@ -51,7 +51,7 @@ export const createServer = (): Express => {
         res.json(result);
       } catch (err) {
         log('Error fetching data:', err);
-        res.status(500).json({ error: 'Error fetching data' });
+        res.status(500).json({ error: 'Error fetching data : ' + err});
       }
     })
     .post('/login', async (req, res) =>  {
