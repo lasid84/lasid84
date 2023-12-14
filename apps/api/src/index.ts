@@ -1,7 +1,7 @@
-// import { log, ini, objectPath, fs } from "@repo/kwe-lib";
-const ini = require("ini");
-const fs = require("fs");
-const objectPath = require("objectPath");
+const { log, ini, objectPath, fs } = require("@repo/kwe-lib");
+// const ini = require("ini");
+// const fs = require("fs");
+// const objectPath = require("objectPath");
 //import { createServer } from './server.js';
 const {createServer} = require("./server.ts");
 
