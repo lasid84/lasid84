@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
     "lib": ["ES2015"],
     "module": "CommonJS",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
     "outDir": "./dist",
     "allowJs": true
   },
   "exclude": ["node_modules"],
   "extends": "@repo/typescript-config/base.json",
-  "include": ["./src/"]
+  "include": ["."]
 }
