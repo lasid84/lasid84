@@ -4,9 +4,6 @@ function log(...args) {
     const development = process.env.NODE_ENV === 'development';
 
     development && console.log("LOGGER: ", ...args);
-
-    console.log("process.env.NODE_ENV: ", process.env.NODE_ENV);
-    console.log("LOGGER: ", ...args);
   };
 
 module.exports = {

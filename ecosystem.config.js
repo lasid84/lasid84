@@ -12,7 +12,7 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'node index.js --env development',
+      script: 'node index.js',
       cwd: "./apps/batch/dist",
       instances: 4,
       autorestart: true,    
@@ -69,7 +69,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter batch && pm2 reload ecosystem.config.js --env development --only batch',
+      'post-deploy' : 'pnpm install && pnpm build --filter batch && pm2 reload ecosystem.config.js --only batch',
     }
   }
 };
