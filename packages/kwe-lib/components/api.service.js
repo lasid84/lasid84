@@ -3,7 +3,7 @@ const axios = require("axios");
 const ini = require("ini");
 const objectPath = require("object-path");
 const fs = require("fs").promises;
-// const { log } = require('@repo/kwe-lib/components/logHelper');
+const { log } = require('./logHelper');
 
 
 async function executFunction(inproc, inparam, invalue) {
@@ -11,12 +11,12 @@ async function executFunction(inproc, inparam, invalue) {
 
     var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     var url = objectPath.get(iniData, "main.url");
-
+    log(url);
     // var config = new Config("/configs/server.ini");
     // await config.load();
     // const url = config.get("main.url");
     const response = await axios.post(url, {inproc, inparam, invalue});
-    //console.log(response.data);
+    log(response.data);
     const { numericData, textData, cursorData } = response.data
 
     if (numericData !== 0)
@@ -34,9 +34,15 @@ async function executFunction(inproc, inparam, invalue) {
 };
 
 const openPopup = (message) => {
+  try {
   alert(message);
   console.log(message);
+  } catch (err) {
+    
+  }
 };
 
 
-module.exports = executFunction;
+module.exports = {
+  executFunction
+}
