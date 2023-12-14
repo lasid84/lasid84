@@ -11,12 +11,7 @@ async function executFunction(inproc, inparam, invalue) {
 
     var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     var url = objectPath.get(iniData, "main.url");
-    log(url);
-    // var config = new Config("/configs/server.ini");
-    // await config.load();
-    // const url = config.get("main.url");
     const response = await axios.post(url, {inproc, inparam, invalue});
-    log(response.data);
     const { numericData, textData, cursorData } = response.data
 
     if (numericData !== 0)
@@ -29,7 +24,7 @@ async function executFunction(inproc, inparam, invalue) {
     return cursorData;
     
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('api.service-Error fetching data:', error);
   };
 };
 
