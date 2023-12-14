@@ -56,7 +56,7 @@ const createServer = () => {
         const result = await callFunction(inproc, inparam, invalue);
         res.json(result);
       } catch (err) {
-        console.log('Error fetching data:', err);
+        log('Error fetching data:', err);
         res.status(500).json({ error: 'Error fetching data : ' + err});
       }
     })

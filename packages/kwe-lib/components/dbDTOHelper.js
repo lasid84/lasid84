@@ -161,7 +161,7 @@ async function getArgument(pSchema, pProcName, pParamList) {
   
       // Begin a transaction block
       await client.query('BEGIN');
-      let catalog = 'kwe';
+      let catalog = '';
       let schema = pSchema;
       let procName = pProcName;
       let paramList = pParamList;

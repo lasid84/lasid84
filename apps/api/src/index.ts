@@ -17,7 +17,7 @@ async function init () {
     port = objectPath.get(iniData, "main.port");
     // port = 5005;
     server.listen(port, () => {
-      console.log(`api running on ${port}`);
+      log(`api running on ${port}`);
     });
   } catch (err) {
     console.log(err);
