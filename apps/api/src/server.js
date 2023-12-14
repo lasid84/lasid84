@@ -81,8 +81,8 @@ const createServer = () => {
       })
     })
     .on('uncaughtException', function (err) {
-      console.log('An error occurred: ', err);
-      console.log(err.stack);
+      log('An error occurred: ', err);
+      log(err.stack);
     })
     ;
 
