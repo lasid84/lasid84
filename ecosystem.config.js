@@ -38,7 +38,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env production',
     },
     api_prod : {
       key : './id_rsa-api-prod', 
@@ -48,7 +48,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only api',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env production --only api',
     },
     web_prod : {
       key : './id_rsa-api-prod', 
@@ -58,7 +58,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only web',
+      'post-deploy' : 'pnpm install && pnpm build --filter web && pm2 reload ecosystem.config.js --env production --only web',
     },
     batch_prod : {
       key : './id_rsa-batch-prod', 
@@ -68,7 +68,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build && pm2 reload ecosystem.config.js --env production --only batch',
+      'post-deploy' : 'pnpm install && pnpm build --filter batch && pm2 reload ecosystem.config.js --env production --only batch',
     }
   }
 };
