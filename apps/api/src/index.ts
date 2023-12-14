@@ -1,5 +1,5 @@
 // import { log, ini, objectPath, fs } from "@repo/kwe-lib";
-import { createServer } from "./server.js";
+const { createServer } = require('./server.js');
 // import * as createServer from "./server.ts";
 
 var path: string = process.cwd();
