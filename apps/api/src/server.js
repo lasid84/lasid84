@@ -12,7 +12,7 @@ const { callFunction } = require('@repo/kwe-lib/components/dbDTOHelper');
 const { checkAccount } = require('@repo/kwe-lib/components/ldapHelper');
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
-export const createServer = () => {
+const createServer = () => {
 
   let type;
   if (process.env.NODE_ENV === "production") {
@@ -88,3 +88,6 @@ export const createServer = () => {
 
   return app;
 };
+
+
+exports = createServer;
