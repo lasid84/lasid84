@@ -12,7 +12,7 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'node index.js',
+      script: 'node index.js --env development',
       cwd: "./apps/batch/dist",
       instances: 4,
       autorestart: true,    
