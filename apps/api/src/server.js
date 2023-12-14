@@ -1,9 +1,9 @@
-import { json, urlencoded } from "body-parser";
-import express from "express";
-import morgan from "morgan";
-import cors from "cors";
+const { json, urlencoded } = require("body-parser");
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
 const jwt = require('jsonwebtoken');
-import compression from "compression";
+const compression = require("compression");
 //import {log, callFunction, checkAccount} from "@repo/kwe-lib";
 //import {callFunction} from "@repo/kwe-lib";
 // import {callFunction} from "@repo/kwe-lib/components/dbDTOHelper";
