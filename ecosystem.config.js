@@ -2,8 +2,8 @@ module.exports = {
   apps : [
     {
       name: 'api',
-      script: 'node index.ts',
-      cwd: "./apps/api/src",
+      script: 'index.js',
+      cwd: "./apps/api/dist",
       autorestart: true,    
       watch: '.',
       env: {
@@ -12,8 +12,8 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'node index.ts',
-      cwd: "./apps/batch/src",
+      script: 'index.js',
+      cwd: "./apps/batch/dist",
       autorestart: true,    
       watch: '.',
       env: {

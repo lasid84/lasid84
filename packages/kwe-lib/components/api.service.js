@@ -1,5 +1,10 @@
 const axios = require("axios");
-import { log, ini, objectPath, fs } from "../src/index";
+// import { log, ini, objectPath, fs } from "../src/index";
+const ini = require("ini");
+const objectPath = require("object-path");
+const fs = require("fs").promises;
+// const { log } = require('@repo/kwe-lib/components/logHelper');
+
 
 async function executFunction(inproc, inparam, invalue) {
   try {

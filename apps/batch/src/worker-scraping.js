@@ -3,14 +3,16 @@ const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
 //const { connect } = require('http2');
 const { pgm, type, idx, isHeadless } = workerData;
-const { log, sleep, executFunction } = require("kwe-lib");
-// import { log, sleep, executFunction } from "utils";
+// const { log, sleep, executFunction } = require("kwe-lib");
 
-//const request = require('request');
+// import { log } from '@repo/kwe-lib/components/logHelper';
+// import { sleep } from '@repo/kwe-lib/components/sleep';
+// import { executFunction } from "@repo/kwe-lib/components/api.service";
 
-// async function executFunction(params1, param2, param3) {
-    
-// }
+const { log } = require('@repo/kwe-lib/components/logHelper');
+// import { sleep } from '@repo/kwe-lib/components/sleep';
+const { executFunction } = require('@repo/kwe-lib/components/api.service.js');
+
 
 let onExcute = false;
 let browser;

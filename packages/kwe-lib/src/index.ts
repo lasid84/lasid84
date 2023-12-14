@@ -5,8 +5,8 @@
 // const ini = require("ini");
 // const objectPath = require("object-path");
 // const fs = require("fs").promises;
-// const path = require("path");
-// import { path as arp } from 'app-root-path'
+const path = require("path");
+import { path as arp } from 'app-root-path'
 // const homedir = require("os");
 // export callFunction = require("../components/dbDTOHelper.ts")
 
@@ -28,4 +28,6 @@
 //       , ini, objectPath, fs, path, homedir, arp
 // }
 
-// export {callFunction}
+export = {
+    path, arp
+}
