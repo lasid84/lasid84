@@ -15,13 +15,12 @@ function init() {
   // console.log(root);
   // console.log(arp);
   // return;
-
-
   let filePath = process.cwd() + '/configs/thread.ini'; 
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
     //fileContent = fileContent.replaceAll('\r', '');
-    let lines = fileContent.split('\r\n'); // 파일 내용을 라인별로 나눠 배열로 저장
+    let separator = process.platform === 'linux' ? '\n' : '\r\n';
+    let lines = fileContent.split(separator); // 파일 내용을 라인별로 나눠 배열로 저장
     // lines.forEach((line, index) => {
     //   // 각 라인에 대한 처리를 여기에 작성
     // });
@@ -37,7 +36,7 @@ function init() {
       const arr = line.split(' ');
       _arrThread.push({idx: arr[0], pgm : arr[1], type:arr[2], headless:arr[3]})
     }
-    log(_arrThread);
+    log(process.platform, _arrThread);
   } catch (error) {
     log('Error reading the file:', error);
   }
