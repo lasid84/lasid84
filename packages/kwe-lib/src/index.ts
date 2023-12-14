@@ -2,9 +2,9 @@
 // const executFunction = require("../components/api.service.ts");
 // const checkAccount = require("../components/ldapHelper.ts");
 // const sleep = require("../components/sleep.ts");
-// const ini = require("ini");
-// const objectPath = require("object-path");
-// const fs = require("fs").promises;
+const ini = require("ini");
+const objectPath = require("object-path");
+const fs = require("fs").promises;
 const path = require("path");
 import { path as arp } from 'app-root-path'
 // const homedir = require("os");
@@ -29,5 +29,5 @@ import { path as arp } from 'app-root-path'
 // }
 
 export = {
-    path, arp
+    path, arp, ini, objectPath, fs
 }
