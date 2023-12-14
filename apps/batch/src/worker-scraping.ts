@@ -3,7 +3,7 @@ const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
 //const { connect } = require('http2');
 const { pgm, type, idx, isHeadless } = workerData;
-const { log, sleep, executFunction } = require("utils");
+const { log, sleep, executFunction } = require("kwe-lib");
 // import { log, sleep, executFunction } from "utils";
 
 //const request = require('request');

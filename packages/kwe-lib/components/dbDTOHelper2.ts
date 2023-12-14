@@ -1,6 +1,6 @@
-const { DataContainer } = require('./DataContainer.js');
+// const { dataContainer } = require('./dataContainer');
 const { Client } = require('pg');
-import { log, ini, objectPath, fs } from "../src/index";
+// import { log, ini, objectPath, fs } from "../src/index";
 
 //const connectionString = initconnectionString();
 let connstr;
@@ -8,9 +8,9 @@ let connstr;
 async function initconnectionString() {
   // async () => {
 
-  // const ini = require("ini");
-  // const objectPath = require("object-path");
-  // const fs = require("fs").promises;
+  const ini = require("ini");
+  const objectPath = require("object-path");
+  const fs = require("fs").promises;
 
   var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
   connstr = objectPath.get(iniData, "db.connstr");
@@ -24,6 +24,7 @@ async function initconnectionString() {
 
 async function callFunction(pProcName:any, pParamsList:any, pValueList:any) {
   const connectionString = await initconnectionString();
+  // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
   const client = new Client({ connectionString });
   
   try {
@@ -68,7 +69,7 @@ async function callFunction(pProcName:any, pParamsList:any, pValueList:any) {
     query += ');';
     
     const queryResult = await client.query(query, pValueList);
-    const dataContainer = new DataContainer();
+    const dc = new dataContainer();
     var cursorName = [];
 
     for (const row of resultArgument.getCursorData()[0].rows) {
@@ -78,10 +79,10 @@ async function callFunction(pProcName:any, pParamsList:any, pValueList:any) {
 
       switch (row['data_type']) {
         case 'integer':
-          dataContainer.setNumericData(outParamValue);
+          dc.setNumericData(outParamValue);
           break;
         case 'text':
-          dataContainer.setTextData(outParamValue);
+          dc.setTextData(outParamValue);
           break;
         case 'refcursor':
           cursorName.push(outParamValue);
@@ -130,9 +131,9 @@ async function callFunction(pProcName:any, pParamsList:any, pValueList:any) {
     
 
     //console.log(resultArray);
-    dataContainer.setCursorData(resultArray);
+    dc.setCursorData(resultArray);
 
-    return dataContainer;
+    return dc;
   } catch (err) {
     // Rollback the transaction block in case of an error
     await client.query('ROLLBACK');
@@ -169,7 +170,7 @@ async function getArgument(pSchema:any, pProcName:any, pParamList:any) {
   
       let { rows } = await client.query(query, varyingParams);
 
-      let dataContainer = new DataContainer();
+      let dc = new dataContainer();
       var cursorName = [];
       // Process the cursor result as if it were a DataTable
       for (let row of rows) {
@@ -181,11 +182,11 @@ async function getArgument(pSchema:any, pProcName:any, pParamList:any) {
                 let columnValue = row[columnName];
 
                 if (columnName.startsWith("n_return")){
-                    dataContainer.setNumericData(columnValue);
+                    dc.setNumericData(columnValue);
                 }
                 
                 if (columnName.startsWith("v_return")){
-                    dataContainer.setTextData(columnValue);
+                    dc.setTextData(columnValue);
                 }
                 
                 if (columnName.startsWith("c_return"))
@@ -195,8 +196,8 @@ async function getArgument(pSchema:any, pProcName:any, pParamList:any) {
           //console.log('----------');
         }
 
-    if (dataContainer.getNumericData() != 0)
-        return dataContainer;
+    if (dc.getNumericData() != 0)
+        return dc;
 
         let resultArray = [];
       for (let val of cursorName)
@@ -211,20 +212,20 @@ async function getArgument(pSchema:any, pProcName:any, pParamList:any) {
   
       await client.query('COMMIT');
       
-      dataContainer.setCursorData(resultArray);
+      dc.setCursorData(resultArray);
   
-      return dataContainer;
+      return dc;
     } catch (err) {
       // Rollback the transaction block in case of an error
       await client.query('ROLLBACK');
       console.error('Error executing PostgreSQL function:', err);
 
-      let dataContainer = new DataContainer();
-      dataContainer.setNumericData(-1);
-      dataContainer.setTextData(err);
-      dataContainer.setCursorData(null);
+      let dc = new dataContainer();
+      dc.setNumericData(-1);
+      dc.setTextData(err);
+      dc.setCursorData(null);
 
-      return dataContainer;
+      return dc;
     } finally {
       // Close the database connection
       await client.end();

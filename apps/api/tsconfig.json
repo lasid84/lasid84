@@ -2,9 +2,11 @@
   "compilerOptions": {
     "lib": ["ES2015"],
     "module": "CommonJS",
+    "esModuleInterop": true,
     "outDir": "./dist",
+    "allowJs": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "extends": "@repo/typescript-config/base.json",
   "include": ["."]
 }

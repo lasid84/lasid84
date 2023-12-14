@@ -4,7 +4,13 @@ import morgan from "morgan";
 import cors from "cors";
 const jwt = require('jsonwebtoken');
 import compression from "compression";
-import {log, callFunction, checkAccount} from "utils";
+//import {log, callFunction, checkAccount} from "@repo/kwe-lib";
+//import {callFunction} from "@repo/kwe-lib";
+// import {callFunction} from "@repo/kwe-lib/components/dbDTOHelper";
+// const {callFunction} = require("@repo/kwe-lib/components/dbDTOHelper.ts");
+import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
+import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
+import { log } from '@repo/kwe-lib/components/logHelper';
 
 export const createServer = (): Express => {
 
@@ -50,7 +56,7 @@ export const createServer = (): Express => {
         const result = await callFunction(inproc, inparam, invalue);
         res.json(result);
       } catch (err) {
-        log('Error fetching data:', err);
+        console.log('Error fetching data:', err);
         res.status(500).json({ error: 'Error fetching data : ' + err});
       }
     })
@@ -75,8 +81,8 @@ export const createServer = (): Express => {
       })
     })
     .on('uncaughtException', function (err) {
-      log('An error occurred: ', err);
-      log(err.stack);
+      console.log('An error occurred: ', err);
+      console.log(err.stack);
     })
     ;
 

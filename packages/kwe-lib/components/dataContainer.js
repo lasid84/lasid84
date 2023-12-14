@@ -1,4 +1,7 @@
-class DataContainer {
+class dataContainer {
+    // numericData: number;
+    // textData: string;
+    // cursorData: any;
     constructor() {
       // Properties for numeric, text, and cursor data
       this.numericData = 0; // Default value for numeric data is 0 (you can change it as needed)
@@ -42,4 +45,7 @@ class DataContainer {
 //   console.log('Numeric Data:', dataContainer.getNumericData());
 //   console.log('Text Data:', dataContainer.getTextData());
 //   console.log('Cursor Data:', dataContainer.getCursorData());
-module.exports = DataContainer;  
+
+
+// module.exports = dataContainer;  
+exports.dataContainer = dataContainer;

@@ -1,6 +1,6 @@
 const fs = require('fs');
 import { Worker, WorkerOptions } from 'worker_threads';
-import { log, sleep, path, arp } from 'utils';
+import { log, sleep, path, arp } from 'kwe-lib';
 
 const root = path.resolve(arp, '../') // the parent of the root path
 

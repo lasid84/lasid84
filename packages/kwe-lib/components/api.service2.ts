@@ -1,5 +1,5 @@
 const axios = require("axios");
-import { log, ini, objectPath, fs } from "../src/index";
+import { log, ini, objectPath, fs } from "../src/index.ts";
 
 async function executFunction(inproc:any, inparam:any, invalue:any) {
   try {

@@ -12,7 +12,7 @@
     "fs": "0.0.1-security",
     "puppeteer": "^21.5.2",
     "ts-node": "^10.9.1",
-    "utils": "workspace:*"
+    "@repo/kwe-lib": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
