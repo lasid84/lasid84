@@ -2,7 +2,7 @@
 // const ini = require("ini");
 // const fs = require("fs");
 // const objectPath = require("objectPath");
-const { createServer } = require('./server.js');
+import { createServer } from './server.js';
 // import * as createServer from "./server.ts";
 
 //var path: string = process.cwd();
