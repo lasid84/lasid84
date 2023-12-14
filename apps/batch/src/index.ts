@@ -4,7 +4,7 @@ import { Worker, WorkerOptions } from 'worker_threads';
 import { log } from '@repo/kwe-lib/components/logHelper';
 import { sleep } from '@repo/kwe-lib/components/sleep';
 const path = require("path");
-import { arp }  from '@repo/kwe-lib/dist/index'
+import { arp }  from '@repo/kwe-lib'
 
 // const root = path.resolve(arp, '../') // the parent of the root path
 
@@ -81,6 +81,7 @@ async function startWorker() {
 
       // const worker = workerTs('./src/worker.ts', { worderData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false } });
         
+      console.log(arp + '/apps/batch/src/worker-scraping.js');
       
       const worker = new Worker(arp + '/apps/batch/src/worker-scraping.js'
       // worker = new Worker('./components/workers/c.js'
