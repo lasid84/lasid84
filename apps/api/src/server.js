@@ -8,9 +8,9 @@ const compression = require("compression");
 //import {callFunction} from "@repo/kwe-lib";
 // import {callFunction} from "@repo/kwe-lib/components/dbDTOHelper";
 // const {callFunction} = require("@repo/kwe-lib/components/dbDTOHelper.ts");
-import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
-import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
-import { log } from '@repo/kwe-lib/components/logHelper';
+const { callFunction } = require('@repo/kwe-lib/components/dbDTOHelper');
+const { checkAccount } = require('@repo/kwe-lib/components/ldapHelper');
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export const createServer = () => {
 
