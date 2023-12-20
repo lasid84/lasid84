@@ -363,6 +363,10 @@ importers:
   packages/typescript-config: {}
 
   packages/ui:
+    dependencies:
+      react-hook-form:
+        specifier: ^7.49.2
+        version: 7.49.2(react@18.2.0)
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
