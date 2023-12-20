@@ -15,6 +15,7 @@ async function executFunction(inproc, inparam, invalue) {
     // const url = 'http://10.33.63.171:5000/api/data';
     const url = serverUrl + '/api/data';
     log("url", url);
+    log("info", inproc, inparam, invalue);
     const response = await axios.post(url, {inproc, inparam, invalue});
     log("call finish");
     const { numericData, textData, cursorData } = response.data
@@ -40,7 +41,11 @@ const postCall = async (params) => {
   const  data  = await axios.post(url, {
     user_id: params.user_id,
     password: params.password,
-  });
+  })
+  .then(function (response) {
+    self.close();
+  })
+  ;
   return data;
 };
 
