@@ -64,11 +64,10 @@ const Index: React.FC = () => {
 
   const onSubmit = async (user: FormProps) => {
     try {
-      log("Login : ", user)
+      log("onSubmit Login : ", user)
       const res = await loginUser(user);
-      log("res", res)
       const {data} = await res;
-      log("data", data)
+      log("onSubmit data", data)
       setToken(data.token);
       log("data:",data);
       log("data.success:",data.success);
