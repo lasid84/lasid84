@@ -14,6 +14,7 @@ import { useUserSettings } from "states/useUserSettings";
 import { useStore } from "utils/zustand";
 import React, { useState } from 'react';
 import {executFunction} from "@repo/kwe-lib/components/api.service";
+import { log } from '@repo/kwe-lib/components/logHelper';
 
 export type FormProps = {
   user_id: string;
@@ -44,11 +45,12 @@ const Index: React.FC = () => {
 
   const getUserData = (async (data:any) => {
     try {
-        console.log("start getUserData", data)
+        log("start getUserData", data)
         const inparam = ["in_user_id", "in_user_nm", "in_ipaddr"];
         const invalue = [data.user_id, data.user_nm, data.ipaddr];
         const inproc = 'f_admn_get_userauth'; 
-        const cursorData = await executFunction({inproc,inparam, invalue})     
+        const cursorData = await executFunction({inproc,inparam, invalue});    
+        log("cursorData", cursorData);
         if (cursorData !== null) {   
             return cursorData[0];
         }       
@@ -62,14 +64,15 @@ const Index: React.FC = () => {
 
   const onSubmit = async (user: FormProps) => {
     try {
-      console.log("Login : ", user)
+      log("Login : ", user)
       const res = await loginUser(user);
-
+      log("res", res)
       const {data} = await res;
+      log("data", data)
       setToken(data.token);
-      console.log("data:",data);
-      console.log("data.success:",data.success);
-      console.log("token:",token);
+      log("data:",data);
+      log("data.success:",data.success);
+      log("token:",token);
       // console.log("token:",token);
       
       if (!data.success) {
@@ -81,6 +84,7 @@ const Index: React.FC = () => {
       // 로그인 OK,
       // 사용자 설정값, 기본 코드값 캐싱 처리
       // const currUser = res.user;
+      log("here!");
       const userData = await getUserData({user_id: user.user_id, user_nm:data.user_nm, ipaddr:'1.1.1.1'})
 
        console.log("login-form:: res.user =====> ", JSON.stringify(user.user_id), data.user_nm);
@@ -95,9 +99,11 @@ const Index: React.FC = () => {
        userSettingsActions!.setData({ ufs_id: userData[0].ufs_id });
       // 정상적인 로직처리
       
+      console.log("??")
       router.push("/");
     } 
     catch (error) {
+      console.log("error api service", error);
       // if (axios.isAxiosError(error)) {
       //   // user_id, password not found!
       //   if (error.response?.status === 404) {
@@ -151,7 +157,7 @@ const Index: React.FC = () => {
           </div>
         </div>
 
-        <div className="justify-between flex flex-row">
+        <div className="flex flex-row justify-between">
           <div className="flex flex-row items-center gap-2">
             <input type="checkbox" />
             Remember me
@@ -163,11 +169,11 @@ const Index: React.FC = () => {
         <div className="flex justify-start space-x-2">
           <button
             type="submit"
-            className="w-full h-12 justify-center px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent shadow-sm rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            className="justify-center w-full h-12 px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Sign In
           </button>
         </div>
-        {/* <div className="flex flex-row justify-center items-center">
+        {/* <div className="flex flex-row items-center justify-center">
           <span>
             Don't have an account yet? <a className="text-blue-500"> Sign up</a>
           </span>

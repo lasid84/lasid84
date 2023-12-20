@@ -5,7 +5,7 @@ import Centered from "layouts/centered";
 import Layout1 from "layouts/layout-1";
 import LoginTypeA from "./login-type-A";
 import LoginTypeB from "./login-type-B";
-import LoginTypeC from "./login-type-C";
+import LoginTypeC from './login-type-C';
 
 import {useConfigs} from "states/useConfigs";
 import {useHotkeys} from "react-hotkeys-hook";

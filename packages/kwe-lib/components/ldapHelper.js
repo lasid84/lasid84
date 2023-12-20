@@ -32,7 +32,7 @@ async function init() {
 // 사용자 인증 및 계정 체크 함수
 async function checkAccount(user_id, password, callback) {
     log('start :', user_id, password);
-    init();
+    await init();
 
     const client = ldap.createClient({
         url: ldapServerUrl, // LDAP 서버 주소와 포트

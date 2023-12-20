@@ -4,7 +4,8 @@ const ini = require("ini");
 // const objectPath = require("object-path");
 // const fs = require("fs");
 const { log } = require('./logHelper');
-
+//const serverUrl = 'http://10.33.63.50:5005';
+const serverUrl = 'http://10.33.63.171:5000';
 
 async function executFunction(inproc, inparam, invalue) {
   try {
@@ -12,10 +13,12 @@ async function executFunction(inproc, inparam, invalue) {
     // var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     // var url = objectPath.get(iniData, "main.url");
     // const url = 'http://10.33.63.171:5000/api/data';
-    const url = 'http://10.33.63.50:5005/api/data';
+    const url = serverUrl + '/api/data';
+    log("url", url);
     const response = await axios.post(url, {inproc, inparam, invalue});
+    log("call finish");
     const { numericData, textData, cursorData } = response.data
-
+    log("start api service")
     if (numericData !== 0)
     {
       openPopup(numericData + " : " +  textData);
@@ -30,6 +33,17 @@ async function executFunction(inproc, inparam, invalue) {
   };
 };
 
+const postCall = async (params) => {
+  
+  const url = serverUrl + params.url;
+  log("params", params);
+  const  data  = await axios.post(url, {
+    user_id: params.user_id,
+    password: params.password,
+  });
+  return data;
+};
+
 const openPopup = (message) => {
   try {
   alert(message);
@@ -41,5 +55,6 @@ const openPopup = (message) => {
 
 
 module.exports = {
-  executFunction
+  executFunction,
+  postCall
 }

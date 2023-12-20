@@ -1,10 +1,10 @@
 import App from "../App";
 
-export type LoginTypeAProps = {
+export type LoginTypeBProps = {
   children: React.ReactNode;
 };
 
-const LoginTypeA: React.FC<LoginTypeAProps> = ({children}) => (
+const LoginTypeB: React.FC<LoginTypeBProps> = ({children}) => (
   <App>
     <div
       data-layout="LoginTypeA"
@@ -14,4 +14,4 @@ const LoginTypeA: React.FC<LoginTypeAProps> = ({children}) => (
   </App>
 );
 
-export default LoginTypeA;
+export default LoginTypeB;

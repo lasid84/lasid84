@@ -1,10 +1,10 @@
 import App from "../App";
 
-export type LoginTypeAProps = {
+export type LoginTypeCProps = {
   children: React.ReactNode;
 };
 
-const LoginTypeC: React.FC<LoginTypeAProps> = ({children}) => (
+const LoginTypeC: React.FC<LoginTypeCProps> = ({children}) => (
   <App>
     <div
       data-layout="LoginTypeC"
