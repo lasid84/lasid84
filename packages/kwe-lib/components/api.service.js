@@ -1,16 +1,18 @@
 const axios = require("axios");
 // import { log, ini, objectPath, fs } from "../src/index";
 const ini = require("ini");
-const objectPath = require("object-path");
-const fs = require("fs").promises;
+// const objectPath = require("object-path");
+// const fs = require("fs");
 const { log } = require('./logHelper');
 
 
 async function executFunction(inproc, inparam, invalue) {
   try {
 
-    var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
-    var url = objectPath.get(iniData, "main.url");
+    // var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
+    // var url = objectPath.get(iniData, "main.url");
+    const url = 'http://10.33.63.171:5000/api/data';
+    // const url = 'http://10.33.63.50:5000/api/data';
     const response = await axios.post(url, {inproc, inparam, invalue});
     const { numericData, textData, cursorData } = response.data
 
