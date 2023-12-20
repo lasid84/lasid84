@@ -46,7 +46,7 @@ const postCall = async (params) => {
   // const url = serverUrl + params.url;
   // log("params", params);
   const client = await init(params.url);
-  const  data  = await client.post(url, {
+  const  data  = await client.post({
     user_id: params.user_id,
     password: params.password,
   })
