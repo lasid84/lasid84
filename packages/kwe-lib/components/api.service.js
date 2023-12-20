@@ -11,8 +11,8 @@ async function executFunction(inproc, inparam, invalue) {
 
     // var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     // var url = objectPath.get(iniData, "main.url");
-    const url = 'http://10.33.63.171:5000/api/data';
-    // const url = 'http://10.33.63.50:5000/api/data';
+    // const url = 'http://10.33.63.171:5000/api/data';
+    const url = 'http://10.33.63.50:5005/api/data';
     const response = await axios.post(url, {inproc, inparam, invalue});
     const { numericData, textData, cursorData } = response.data
 

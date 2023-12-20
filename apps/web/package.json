@@ -6,7 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --ext ts --ext tsx --ext js --cache --fix --max-warnings 0"
+  },
+  "lint-staged": {
+    "src/**/*.css": [
+      "prettier --write --parser css"
+    ],
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ],
+    "cypress/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@repo/kwe-lib": "workspace:*",

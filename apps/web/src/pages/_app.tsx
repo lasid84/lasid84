@@ -59,6 +59,7 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
       <QueryClientProvider client={queryClient}>
         {/* <ReactQueryDevtools initialIsOpen={true} /> */}
         <Head>
+          <title>KREAM WEB</title>
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         </Head>
         <Layout>

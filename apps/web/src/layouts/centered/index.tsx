@@ -8,7 +8,7 @@ const Centered: React.FC<CenteredProps> = ({children}) => (
   <App>
     <div
       data-layout="centered"
-      className="w-full h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+      className="flex items-center justify-center w-full h-screen text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-white">
       <div className="p-4 lg:p-0">{children}</div>
     </div>
   </App>
