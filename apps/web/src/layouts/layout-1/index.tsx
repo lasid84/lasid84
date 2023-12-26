@@ -16,7 +16,7 @@ const Layout1: React.FC<Layout1Props> = ({children}) => {
   return (
     <App>
       <Head>
-        <title>KREAM</title>
+        <title>KREAM Web</title>
       </Head>
       <div
         data-layout={layout}
@@ -30,7 +30,7 @@ const Layout1: React.FC<Layout1Props> = ({children}) => {
           <div className="">
             <LeftSidebar1 />
           </div>
-          <div className="main w-full bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white">
+          <div className="w-full text-gray-900 main bg-gray-50 dark:bg-gray-900 dark:text-white">
             <Navbar1 />
             <div className="w-full min-h-screen p-4">{children}</div>
           </div>

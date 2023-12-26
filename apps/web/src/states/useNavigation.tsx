@@ -3,6 +3,7 @@ import { create } from 'zustand';
 // import {executFunction} from "../services/api.query";
 const { executFunction } = require('@repo/kwe-lib/components/api.service');
 import { useUserSettings } from "states/useUserSettings";
+import { log } from '@repo/kwe-lib/components/logHelper';
 
 import {
     FiCheckCircle,
@@ -92,9 +93,9 @@ async function getMenuList (userInfo:any) {
     const inparam = ['in_permission_id','in_menu_type', 'in_user_id', 'in_ipaddr'];
     const invalue = [userInfo.permission_id, 'UI', userInfo.user_id, '1.2.3.4'];
     const inproc = 'public.f_admn_get_menulist';
-    const d = await executFunction({inproc,inparam, invalue})
-    console.log(d[0])
-    // console.log(initialState)
+    const menus = await executFunction(inproc,inparam, invalue)
+    
+    log("menus", menus);
 
     const navigationData: NavigationState[] = [{
         parent_seq: -1,
@@ -105,7 +106,7 @@ async function getMenuList (userInfo:any) {
 
     const menuMap = new Map<number, NavigationState>();
 
-  d[0].forEach((menu: any) => {
+    menus[0].forEach((menu: any) => {
     if (menu.use_yn === "Y") {
       const menuItem: NavigationState = {
         parent_seq: menu.parent_seq,

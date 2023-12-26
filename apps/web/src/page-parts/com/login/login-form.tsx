@@ -48,9 +48,9 @@ const Index: React.FC = () => {
         log("start getUserData", data)
         const inparam = ["in_user_id", "in_user_nm", "in_ipaddr"];
         const invalue = [data.user_id, data.user_nm, data.ipaddr];
-        const inproc = 'f_admn_get_userauth'; 
-        const cursorData = await executFunction({inproc,inparam, invalue});    
-        log("cursorData", cursorData);
+        const inproc = 'public.f_admn_get_userauth'; 
+        const cursorData = await executFunction(inproc,inparam, invalue);    
+        log("cursorData", cursorData[0]);
         if (cursorData !== null) {   
             return cursorData[0];
         }       
@@ -64,18 +64,18 @@ const Index: React.FC = () => {
 
   const onSubmit = async (user: FormProps) => {
     try {
-      log("onSubmit Login : ", user)
+      // log("onSubmit Login : ", user)
       const res = await loginUser(user);
       const {data} = await res;
-      log("onSubmit data", data)
+      // log("onSubmit data", data)
       setToken(data.token);
-      log("data:",data);
-      log("data.success:",data.success);
-      log("token:",token);
+      // log("data:",data);
+      // log("data.success:",data.success);
+      // log("token:",token);
       // console.log("token:",token);
       
       if (!data.success) {
-        alert(data.userObject);
+        alert(data.message);
         return;
       }
       // TODO:: JwtToken 값 localStorage보관
@@ -95,10 +95,11 @@ const Index: React.FC = () => {
        userSettingsActions!.setData({ dept_cd: userData[0].dept_cd });
        userSettingsActions!.setData({ trans_mode: userData[0].trans_mode });
        userSettingsActions!.setData({ trans_type: userData[0].trans_type });
+
+       //ip 추가
        userSettingsActions!.setData({ ufs_id: userData[0].ufs_id });
       // 정상적인 로직처리
       
-      console.log("??")
       router.push("/");
     } 
     catch (error) {

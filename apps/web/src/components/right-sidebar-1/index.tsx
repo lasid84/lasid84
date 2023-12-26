@@ -21,7 +21,7 @@ const RightSidebar: React.FC = () => {
         !rightSidebar && "translate-x-64",
         rightSidebar && "translate-x-0"
       )}>
-      <div className="absolute top-0 left-0 bottom-0 h-full overflow-x-auto">
+      <div className="absolute top-0 bottom-0 left-0 h-full overflow-x-auto">
         <div className="w-64 h-full">
           <div className="flex flex-col">
             <div className="flex flex-row items-center justify-between h-16 px-4 text-white bg-blue-500">
@@ -33,40 +33,6 @@ const RightSidebar: React.FC = () => {
           </div>
 
           <Langs />
-
-          <div className="flex flex-col p-4">
-            <div className="mb-2">
-              <div className="mb-2 text-sm font-bold tracking-wider uppercase">
-                물류센터
-              </div>
-            </div>
-            <div className="flex flex-col">
-              {/* <Select
-                name="storage"
-                options={[
-                  {key: "kimpo", value: "김포센터"},
-                  {key: "incheon", value: "인천센터"},
-                  {key: "pusan", value: "부산센터"},
-                ]}
-              /> */}
-            </div>
-          </div>
-
-          <div className="flex flex-col p-4">
-            <div className="mb-2">
-              <div className="mb-2 text-sm font-bold tracking-wider uppercase">
-                고객비즈
-              </div>
-            </div>
-            {/* <Select
-              name="custbiz"
-              options={[
-                {key: "Kiosia", value: "Kiosia"},
-                {key: "SonyMobile", value: "SONY Mobile"},
-                {key: "NTN", value: "NTN"},
-              ]}
-            /> */}
-          </div>
 
           <Sidebar />
 

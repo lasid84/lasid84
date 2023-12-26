@@ -1,12 +1,15 @@
 import {FiSettings, FiMenu, FiUser, FiExternalLink} from "react-icons/fi";
 import {useConfigs} from "states/useConfigs";
+import { useRouter } from "next/router";
 
 const Navbar: React.FC = () => {
   const config = useConfigs((state) => state.config);
   const {rightSidebar, collapsed} = config;
   const configActions = useConfigs((state) => state.actions);
+  const router = useRouter();
+
   return (
-    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800">
+    <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800">
       <div className="flex items-center justify-start w-full">
         <button
           onClick={() =>
@@ -18,11 +21,6 @@ const Navbar: React.FC = () => {
           className="mx-4">
           <FiMenu size={20} />
         </button>
-        {/*
-        <Search />
-
-        <Dropdown6 />
-        */}
         <span className="ml-auto"></span>
         {/*
         <Dropdown2 />
@@ -35,11 +33,11 @@ const Navbar: React.FC = () => {
           className="flex items-center justify-center h-16 mx-4"
           onClick={() => null }>
           <FiUser size={18} />
-          <span className="ml-1">관리자님</span>
+          <span className="ml-1"></span>
         </button>        
         <button
           className="flex items-center justify-center h-16 mx-4"
-          onClick={() => null }>
+          onClick={() => {router.push("/login");} }>
           <FiExternalLink size={18} />
           <span className="ml-1">로그아웃</span>
         </button>         

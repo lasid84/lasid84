@@ -23,7 +23,7 @@ import {log} from '@repo/kwe-lib/components/logHelper';
 export const loginUser = async (params: any) => {
   params["url"] = "/login";
   const  data  = await postCall(params);
-  log("data in login.query", data)
+  // log("data in login.query2", JSON.stringify(data))
   return data;
 };
 

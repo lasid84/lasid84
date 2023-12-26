@@ -19,6 +19,7 @@ interface UserSettingsState {
   trans_mode: string;
   trans_type: string;
   ufs_id:string;
+  token:string
   /*KREAM용 추가 끝*/
 
   // user_lev: string;
@@ -47,6 +48,7 @@ const initialState: UserSettingsState = {
   trans_mode: "",
   trans_type: "",
   ufs_id: "",
+  token: "",
   /*KREAM용 추가 끝*/
   // user_lev: "",
   // user_type: "",

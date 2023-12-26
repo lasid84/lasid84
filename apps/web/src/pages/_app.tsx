@@ -32,7 +32,12 @@ Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
+import { useRouter } from "next/router";
+import { useUserSettings } from "states/useUserSettings";
+import { log } from "@repo/kwe-lib/components/logHelper";
+
 function App({ Component, pageProps }: AppProps): React.ReactElement {
+  
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -59,8 +64,9 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
       <QueryClientProvider client={queryClient}>
         {/* <ReactQueryDevtools initialIsOpen={true} /> */}
         <Head>
-          <title>KREAM WEB</title>
+          <title>KREAM Web</title>
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+          <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <Layout>
           <Component {...pageProps} />

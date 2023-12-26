@@ -10,6 +10,9 @@ import LoginTypeC from './login-type-C';
 import {useConfigs} from "states/useConfigs";
 import {useHotkeys} from "react-hotkeys-hook";
 
+import {useUserSettings} from "states/useUserSettings";
+import { log } from '@repo/kwe-lib/components/logHelper';
+
 export type LayoutProps = {
   children: React.ReactNode;
 };
@@ -24,6 +27,7 @@ const Layouts: React.FC<LayoutProps> = ({children}) => {
     const backgroundClass = background === "light" ? "dark" : "light";
     root.classList.remove(backgroundClass);
     root.classList.add(background);
+    
   }, [background]);
 
   useHotkeys(
@@ -41,8 +45,10 @@ const Layouts: React.FC<LayoutProps> = ({children}) => {
     [background]
   );
 
+
   const router = useRouter();
-  const {pathname} = router;
+  let {pathname} = router;
+
   switch (pathname) {
     case "/404":
     case "/500":

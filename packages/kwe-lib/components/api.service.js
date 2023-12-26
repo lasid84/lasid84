@@ -4,13 +4,18 @@ const ini = require("ini");
 // const objectPath = require("object-path");
 // const fs = require("fs");
 const { log } = require('./logHelper');
-//const serverUrl = 'http://10.33.63.50:5005';
-const serverUrl = 'http://10.33.63.171:5000';
+const serverUrl = 'http://10.33.63.50:5005';
+// const serverUrl = 'http://10.33.63.171:5000';
 
-async function init(url) {
-  return axios.create({
-    baseURL: serverUrl + url
+async function init() {
+
+  const client = axios.create({
+    baseURL: serverUrl,
   });
+
+  client.defaults.timeout = 30000;
+
+  return client;
 }
 
 async function executFunction(inproc, inparam, invalue) {
@@ -19,14 +24,15 @@ async function executFunction(inproc, inparam, invalue) {
     // var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     // var url = objectPath.get(iniData, "main.url");
     // const url = 'http://10.33.63.171:5000/api/data';
-    const url = serverUrl + '/api/data';
-    const client = await init('/api/data');
+    const url = '/api/data';
+    const client = await init();
     log("url", url);
     log("info", inproc, inparam, invalue);
-    const response = await client.post({inproc, inparam, invalue});
-    log("call finish");
+    const response = await client.post(url, {inproc, inparam, invalue});
+
+    log("call finish", JSON.stringify(response.data));
     const { numericData, textData, cursorData } = response.data
-    log("start api service")
+    log("start api service", numericData)
     if (numericData !== 0)
     {
       openPopup(numericData + " : " +  textData);
@@ -44,16 +50,13 @@ async function executFunction(inproc, inparam, invalue) {
 const postCall = async (params) => {
   
   // const url = serverUrl + params.url;
-  // log("params", params);
-  const client = await init(params.url);
-  const  data  = await client.post({
+  log("params", params);
+  const url = params.url;
+  const client = await init();
+  const data  = await client.post(url, {
     user_id: params.user_id,
     password: params.password,
-  })
-  .then(function (response) {
-    
-  })
-  ;
+  });
   return data;
 };
 
