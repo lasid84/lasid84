@@ -4,8 +4,8 @@ const ini = require("ini");
 // const objectPath = require("object-path");
 // const fs = require("fs");
 const { log } = require('./logHelper');
-const serverUrl = 'http://10.33.63.50:5005';
-// const serverUrl = 'http://10.33.63.171:5000';
+//const serverUrl = 'http://10.33.63.50:5005';
+ const serverUrl = 'http://10.33.63.171:5000';
 
 async function init() {
 
