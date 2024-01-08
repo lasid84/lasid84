@@ -26,13 +26,13 @@ async function executFunction(inproc, inparam, invalue) {
     // const url = 'http://10.33.63.171:5000/api/data';
     const url = '/api/data';
     const client = await init();
-    log("url", url);
-    log("info", inproc, inparam, invalue);
+    // log("url", url);
+    // log("info", inproc, inparam, invalue);
     const response = await client.post(url, {inproc, inparam, invalue});
 
-    log("call finish", JSON.stringify(response.data));
+    // log("call finish", JSON.stringify(response.data));
     const { numericData, textData, cursorData } = response.data
-    log("start api service", numericData)
+    // log("start api service", numericData)
     if (numericData !== 0)
     {
       openPopup(numericData + " : " +  textData);
@@ -50,13 +50,16 @@ async function executFunction(inproc, inparam, invalue) {
 const postCall = async (params) => {
   
   // const url = serverUrl + params.url;
-  log("params", params);
-  const url = params.url;
+  
+  const url = serverUrl + params.url;
   const client = await init();
   const data  = await client.post(url, {
     user_id: params.user_id,
     password: params.password,
   });
+
+  log("postCall", data);
+  log("postCall", url, params.user_id, params.password);
   return data;
 };
 
