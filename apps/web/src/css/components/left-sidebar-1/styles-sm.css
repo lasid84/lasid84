@@ -43,7 +43,7 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 4px;
+        width: 1000px;
         @apply bg-blue-500;
       }
     }
@@ -54,7 +54,7 @@
       top: 0;
       bottom: 0;
       left: 0;
-      width: 4px;
+      width: 1000px;
       @apply bg-blue-500;
     }
     &:hover,

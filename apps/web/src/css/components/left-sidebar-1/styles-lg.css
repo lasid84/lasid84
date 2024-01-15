@@ -60,7 +60,7 @@
     [data-collapsed="true"] & {
       width: calc(theme("spacing.1") * 16);
       > .title {
-        width: 0;
+        width: 10px;
       }
     }
     &.open-sibling {
@@ -72,7 +72,7 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 4px;
+        width: 10px;
         @apply bg-blue-500;
       }
     }

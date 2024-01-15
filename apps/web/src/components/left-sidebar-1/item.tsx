@@ -21,16 +21,14 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
   }
   if (items.length === 0) {
     return (
-      <Link href={url as string} >
-        <div className={`left-sidebar-item ${active ? "active" : ""}`}>
+      <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
           {icon}
-          <span className="title">{title}</span>
+          <span className="title w-full">{title}</span>
           {badge && (
             <span className={`badge badge-circle badge-sm ${badge.color}`}>
               {badge.text}
             </span>
           )}
-        </div>
       </Link>
     );
   }
@@ -38,8 +36,7 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
     <button
       onClick={() => setHidden(!hidden)}
       className={`left-sidebar-item ${active ? "active" : ""} ${
-        hidden ? "hidden-sibling" : "open-sibling"
-      }`}>
+        hidden ? "hidden-sibling " : "open-sibling "      }`}>
       {icon}
       <span className="title">{title}</span>
       {badge && (

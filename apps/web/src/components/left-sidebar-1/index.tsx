@@ -32,7 +32,7 @@ const LeftSidebar: React.FC<Props> = () => {
                                 {menu.items.map((l0, a) => (
                                     <li key={a} className="l0 border-b border-[#F2F2F2] dark:border-[#c7d0dc]">
                                         <Item {...l0} />
-                                        <ul className='bg-[#FAFAFA] dark:bg-[#e9eef5] border-l-4 border-l-[#005EB8] w-[230px]'>
+                                        <ul className='bg-[#FAFAFA] dark:bg-[#e9eef5] border-l-4 border-l-[#005EB8]  w-[230px]'>
                                             {l0.items.map((l1, b) => (
                                                 <li key={b} className="l1">
                                                     <Item {...l1} />
