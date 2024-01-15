@@ -1,5 +1,3 @@
-import {FiPlus} from "react-icons/fi";
-
 export type SectionTitleProps = {
   title: string;
   subtitle: string;

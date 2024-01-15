@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 // import {executFunction} from "../services/api.query";
-const { executFunction } = require('@repo/kwe-lib/components/api.service');
+import { executFunction }  from '@repo/kwe-lib/components/api.service'
 import { useUserSettings } from "states/useUserSettings";
 import { log } from '@repo/kwe-lib/components/logHelper';
 
@@ -44,6 +44,7 @@ export type NavigationStore = {
     actions: {
         setOpenMenu: (menuName?: string) => void;
     }
+    childern?: JSX.Element|JSX.Element[]
 }
 
 function getIcon(img_index:any) {
