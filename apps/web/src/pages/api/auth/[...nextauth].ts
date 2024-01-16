@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { loginUser } from "page-parts/com/login/login.query";
 
 export default NextAuth({
+    secret : process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
             name: "Credentials",

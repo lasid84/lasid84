@@ -1,3 +1,4 @@
+'use client'
 import { Fragment, useEffect } from "react";
 import { useNavigation, setNavigationData } from "states/useNavigation";
 import Title from "components/left-sidebar-1/title";
@@ -5,13 +6,14 @@ import Item from "components/left-sidebar-1/item";
 import Logo from "components/left-sidebar-1/logo";
 import LogoImg from "components/left-sidebar-1/logo-img";
 import { useUserSettings } from "states/useUserSettings";
+import { useSession } from 'next-auth/react';
 
 interface Props {
     Children?: JSX.Element | JSX.Element[]
 }
 
 const LeftSidebar: React.FC<Props> = () => {
-
+    const { data: session } = useSession();
     const navigation = useNavigation((state) => state.navigation);
 
     useEffect(() => {
@@ -22,9 +24,12 @@ const LeftSidebar: React.FC<Props> = () => {
     return (
         <div className="text-gray-900 h-screen bg-white left-sidebar left-sidebar-1 dark:bg-[#dce2eb] dark:border-gray-800 dark:text-black w-[230px]">
             <LogoImg />
-            <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">
+            {/* <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"> */}
                 {/* <div className="dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"> */}
-                {navigation.map((menu, i) => (
+                {!session?.user
+                ?  <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"></div>
+                :  <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">
+                     {navigation.map((menu, i) => (
                     <>
                         <Fragment key={i}>
                             <Title>{menu.title}</Title>
@@ -65,8 +70,10 @@ const LeftSidebar: React.FC<Props> = () => {
                             </ul>
                         </Fragment>
                     </>
-                ))}
-            </div>
+                ))}</div>
+                }
+              
+            {/* </div> */}
         </div>
     );
 };
