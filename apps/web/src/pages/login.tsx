@@ -30,7 +30,7 @@ const Index: React.FC = () => {
             <div className="z-10 flex flex-row items-center justify-between w-full p-8 text-xs">
               <div className="text-white">KREAM WEB</div>
               <div className="flex flex-row ml-auto space-x-2">
-                {/* <div>Contact us</div> */}
+                {/* <div>Contact us</div> */} 
               </div>
             </div>
           </div>
