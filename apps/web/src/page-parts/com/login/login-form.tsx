@@ -166,7 +166,7 @@ const Index: React.FC = () => {
             Remember me
           </div>
           <div>
-            <a className="text-blue-500">Forgot password?</a>
+            <a className="text-blue-500" href="https://pwm.kwe.co.kr">Forgot password?</a>
           </div>
         </div>
         <div className="flex justify-start space-x-2">

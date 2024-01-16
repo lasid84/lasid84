@@ -1,3 +1,4 @@
+'use client'
 import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useConfigs } from "states/useConfigs";
 import { useRouter } from "next/router";
@@ -14,7 +15,7 @@ const Navbar: React.FC = () => {
   const { data: session } = useSession();
 
   const logout = () => {
-    signOut()
+     signOut()
     localStorage.removeItem('USER_SETTINGS')
   }
   return (
@@ -65,7 +66,9 @@ const Navbar: React.FC = () => {
           </button>
           <button
             className="flex items-center justify-center h-16 mx-4"
-            onClick={logout}>
+            onClick={()=>{
+              signOut()
+              localStorage.removeItem('USER_SETTINGS')}}>
             <FiExternalLink size={18} />
             <span className="ml-1">로그아웃</span>
           </button>

@@ -5,17 +5,13 @@ import { loginUser } from "page-parts/com/login/login.query";
 export default NextAuth({
     providers: [
         CredentialsProvider({
-
             name: "Credentials",
-       
             credentials: {
                 user_id: { label: "Username", type: "text", placeholder: "ID를 입력하세요" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                // Add logic here to look up the user from the credentials supplied
-                //console.log('req',req)
-                
+
                 // const res = await fetch('/login',{
                 //     method : "POST",
                 //     headers:{
@@ -26,23 +22,18 @@ export default NextAuth({
                 //         password: credentials?.password,
                 //     }),
                 // });
-
                 // const user = await res.json();
+
                 const res = await loginUser({
-                    user_id:req.body.user_id,
-                    password:req.body.password
+                    user_id: req.body.user_id,
+                    password: req.body.password
                 });
-                const {data} = await res
+                const { data } = await res
 
-                //console.log('user api auth!!!!!!!!!!!!!!!',data.json())
-                //const result = JSON.parse(res)
-
-                //console.log('려람ㄹ',result)
-
-                if (data) {                    
+                if (data) {
                     return data
-                } else{
-                    console.log('log123',data)             
+                } else {
+                    console.log('log123', data)
                     return null
                     // You can also Reject this callback with an Error or with a URL:
                     // throw new Error("error message") // Redirect to error page
@@ -52,17 +43,17 @@ export default NextAuth({
         })
     ],
 
-    callbacks:{
-        async jwt({token,user}){
-            return {...token, ...user}
+    callbacks: {
+        async jwt({ token, user }) {
+            return { ...token, ...user }
         },
 
-        async session({session, token}){
+        async session({ session, token }) {
             session.user = token as any;
             return session
         }
     },
-    pages:{
-        signIn : "/login",
+    pages: {
+        signIn: "/login",
     }
 })
