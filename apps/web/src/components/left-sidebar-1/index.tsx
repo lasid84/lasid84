@@ -27,7 +27,7 @@ const LeftSidebar: React.FC<Props> = () => {
             {/* <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"> */}
                 {/* <div className="dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"> */}
                 {!session?.user
-                ?  <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"></div>
+                ?  <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]  w-[150px]"></div>
                 :  <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">
                      {navigation.map((menu, i) => (
                     <>
