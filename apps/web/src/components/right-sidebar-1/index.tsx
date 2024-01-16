@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Colors, {PaletteProps} from "./colors";
-import Toggle from "./toggle";
+import Close from "./close";
 import Sidebar from "./sidebar";
 import Langs from "./langs";
 import {useConfigs} from "states/useConfigs";
@@ -28,13 +28,16 @@ const RightSidebar: React.FC = () => {
               <div className="text-sm font-bold tracking-wider uppercase">
                 Settings
               </div>
-              <Toggle />
+              {/* Right SideBar Toggle */}
+              <Close />
             </div>
           </div>
 
+          {/* 언어 선택 */}
           <Langs />
 
-          <Sidebar />
+          {/* 메뉴바 토글 */}
+          <Sidebar /> 
 
           <div className="flex flex-col p-4">
             <div className="mb-2">

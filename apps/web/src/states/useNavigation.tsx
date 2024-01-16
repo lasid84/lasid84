@@ -101,7 +101,7 @@ async function getMenuList (userInfo:any) {
     const navigationData: NavigationState[] = [{
         parent_seq: -1,
         menu_seq: -2,
-        title: 'Applications',
+        title: '',
         items: [],
       }];
 

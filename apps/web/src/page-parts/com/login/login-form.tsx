@@ -15,6 +15,8 @@ import { useStore } from "utils/zustand";
 import React, { useState } from 'react';
 import {executFunction} from "@repo/kwe-lib/components/api.service";
 import { log } from '@repo/kwe-lib/components/logHelper';
+import { signIn } from 'next-auth/react';
+
 
 export type FormProps = {
   user_id: string;
@@ -63,21 +65,22 @@ const Index: React.FC = () => {
   });
 
   const onSubmit = async (user: FormProps) => {
+    console.log('on submit user',user)
     try {
       // log("onSubmit Login : ", user)
-      const res = await loginUser(user);
-      const {data} = await res;
-      // log("onSubmit data", data)
-      setToken(data.token);
-      // log("data:",data);
-      // log("data.success:",data.success);
-      // log("token:",token);
-      // console.log("token:",token);
-      
-      if (!data.success) {
-        alert(data.message);
-        return;
-      }
+      // const res = await loginUser(user);
+      // const {data} = await res;
+      // // log("onSubmit data", data)
+      // setToken(data.token);
+
+      const data = await signIn("credentials", {
+        user_id: user.user_id,
+        password: user.password,
+        redirect: false,
+        //callbackUrl: "/",
+      });
+          
+
       // TODO:: JwtToken 값 localStorage보관
 
       // 로그인 OK,

@@ -7,6 +7,7 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { SessionProvider } from "next-auth/react";
 
 import { ni18nConfig } from "configs/ni18n.config";
 import { toastConfig } from "configs/toast.config";
@@ -36,8 +37,8 @@ import { useRouter } from "next/router";
 import { useUserSettings } from "states/useUserSettings";
 import { log } from "@repo/kwe-lib/components/logHelper";
 
-function App({ Component, pageProps }: AppProps): React.ReactElement {
-  
+function App({ Component, pageProps}: AppProps): React.ReactElement {
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -61,19 +62,21 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
-        <Head>
-          <title>KREAM Web</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-          <link rel="shortcut icon" href="/favicon.ico" />
-        </Head>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-        <ToastContainer {...toastConfig} />
-        <ReactQueryDevtools />
-      </QueryClientProvider>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+          <Head>
+            <title>KREAM Web</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+            <link rel="shortcut icon" href="/favicon.ico" />
+          </Head>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+          <ToastContainer {...toastConfig} />
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </SessionProvider>
     </>
   );
 }
