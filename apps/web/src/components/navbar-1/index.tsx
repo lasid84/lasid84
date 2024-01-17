@@ -14,10 +14,7 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const logout = () => {
-     signOut()
-    localStorage.removeItem('USER_SETTINGS')
-  }
+
   return (
     <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800">
 
@@ -37,7 +34,7 @@ const Navbar: React.FC = () => {
           <p>이 페이지는 로그인이 필요한 페이지입니다.</p>
           
           <button
-            className="flex items-center justify-center h-16 mx-4"
+            className="flex items-center justify-center h-12 mx-4"
             onClick={() => router.push("/login")}>
              <FiUser size={18} />
             <span className="ml-1">로그인</span>
@@ -59,13 +56,13 @@ const Navbar: React.FC = () => {
           <span className="ml-auto"></span>
 
           <button
-            className="flex items-center justify-center h-16 mx-4"
+            className="flex items-center justify-center h-12 mx-4"
             onClick={() => null}>
             <FiUser size={18} />
             <span className="ml-1">{session.user.user_nm}님 안녕하세요</span>
           </button>
           <button
-            className="flex items-center justify-center h-16 mx-4"
+            className="flex items-center justify-center h-12 mx-4"
             onClick={()=>{
               signOut()
               localStorage.removeItem('USER_SETTINGS')}}>
@@ -73,7 +70,7 @@ const Navbar: React.FC = () => {
             <span className="ml-1">로그아웃</span>
           </button>
           <button
-            className="flex items-center justify-center h-16 mx-4"
+            className="flex items-center justify-center h-12 mx-4"
             onClick={() =>
               configActions.
                 setConfig({

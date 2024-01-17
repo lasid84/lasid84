@@ -6,7 +6,7 @@ import { Input } from "components/react-hook-form/input";
 import { useRouter } from "next/router";
 import { loginUser } from "page-parts/com/login/login.query";
 // import { devConsoleLog } from "utils/dev";
-import { toastError } from "page-parts/tmpl/toast";
+import { toastError } from "tmpl/toast";
 
 import { useConfigs } from "states/useConfigs";
 import { useUserSettings } from "states/useUserSettings";
