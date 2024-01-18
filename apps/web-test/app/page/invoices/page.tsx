@@ -1,3 +1,6 @@
+//동적페이지 오류 관련 Export encountered errors on following paths:
+export const dynamic = "force-dynamic";
+
 import Pagination from '@/app/ui/invoices/pagination';
 import Search from '@/app/ui/search';
 import Table from '@/app/ui/invoices/table';
@@ -37,7 +40,6 @@ export default async function Page({
         <CreateInvoice />
       </div>
        {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}> */}
-       {/* @ts-expect-error Server Component */}
         <Table query={query} currentPage={currentPage} />
       {/* </Suspense> */}
       <div className="flex justify-center w-full mt-5">

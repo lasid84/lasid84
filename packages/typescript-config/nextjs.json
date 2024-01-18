@@ -3,7 +3,7 @@
   "display": "Next.js",
   "extends": "./base.json",
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2017",
     "plugins": [{ "name": "next" }],
     "module": "ESNext",
     "moduleResolution": "Bundler",

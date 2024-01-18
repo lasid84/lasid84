@@ -58,8 +58,8 @@ const postCall = async (params) => {
     password: params.password,
   });
 
-  log("postCall", data);
-  log("postCall", url, params.user_id, params.password);
+  // log("postCall", data);
+  // log("postCall", url, params.user_id, params.password);
   return data;
 };
 
