@@ -18,7 +18,7 @@ export default function SideNav() {
   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
 
   const userData = session?.user;
-  userSettingsActions!.setData(userData);
+  // userSettingsActions!.setData(userData);
 
   // useEffect(() => {
   //   setUser(userData);

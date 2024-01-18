@@ -21,7 +21,7 @@ const LeftSidebar: React.FC = () => {
   
       useEffect(() => {
         const userData = session?.user;
-        console.log("LeftSidebar start", userStoreData);
+        // console.log("LeftSidebar start", userData.user_id);
         // userSettingsActions!.setData({ user_id: userData.user_id });
         // userSettingsActions!.setData({ user_name: userData.user_nm });
         // userSettingsActions!.setData({ permission_id: userData.permission_id });
