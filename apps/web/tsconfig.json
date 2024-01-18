@@ -1,31 +1,54 @@
+// {
+//   "extends": "@repo/typescript-config/nextjs.json",
+//   "compilerOptions": {
+//     "plugins": [
+//       {
+//         "name": "next"
+//       }
+//     ],
+//     "lib": [
+//       "es2020",
+//       "dom",
+//       "dom.iterable",
+//       "esnext"
+//     ],
+//     "incremental": true,
+//     "resolveJsonModule": true,
+//     "strict": false,
+//     "baseUrl": "./src",
+//   },
+//   "include": [
+//     "next-env.d.ts",
+//     "next.config.js",
+//     "src/**/*.ts",
+//     "src/**/*.tsx",
+//     "src/**/*.js",
+//     ".next/types/**/*.ts",
+//     "ni18n.config.js"
+//   ],
+//   "exclude": [
+//     "node_modules"
+//   ]
+// }
 {
-  "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
     "incremental": true,
-    "resolveJsonModule": true,
+    "target": "es2018",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
     "strict": false,
-    "baseUrl": "./src"
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": "./src",
+    "noImplicitAny" : false,
   },
-  "include": [
-    "next-env.d.ts",
-    "next.config.js",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.js",
-    ".next/types/**/*.ts",
-    "ni18n.config.js"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules", ".next", "out"],
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "ni18n.config.js"]
 }

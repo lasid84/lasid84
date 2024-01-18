@@ -6,7 +6,7 @@ import { Input } from "components/react-hook-form/input";
 import { useRouter } from "next/router";
 import { loginUser } from "page-parts/com/login/login.query";
 // import { devConsoleLog } from "utils/dev";
-import { toastError } from "page-parts/tmpl/toast";
+import { toastError } from "tmpl/toast";
 
 import { useConfigs } from "states/useConfigs";
 import { useUserSettings } from "states/useUserSettings";
@@ -15,6 +15,8 @@ import { useStore } from "utils/zustand";
 import React, { useState } from 'react';
 import {executFunction} from "@repo/kwe-lib/components/api.service";
 import { log } from '@repo/kwe-lib/components/logHelper';
+import { signIn } from 'next-auth/react';
+
 
 export type FormProps = {
   user_id: string;
@@ -63,21 +65,22 @@ const Index: React.FC = () => {
   });
 
   const onSubmit = async (user: FormProps) => {
+    console.log('on submit user',user)
     try {
       // log("onSubmit Login : ", user)
-      const res = await loginUser(user);
-      const {data} = await res;
-      // log("onSubmit data", data)
-      setToken(data.token);
-      // log("data:",data);
-      // log("data.success:",data.success);
-      // log("token:",token);
-      // console.log("token:",token);
-      
-      if (!data.success) {
-        alert(data.message);
-        return;
-      }
+      // const res = await loginUser(user);
+      // const {data} = await res;
+      // // log("onSubmit data", data)
+      // setToken(data.token);
+
+      const data = await signIn("credentials", {
+        user_id: user.user_id,
+        password: user.password,
+        redirect: false,
+        //callbackUrl: "/",
+      });
+          
+
       // TODO:: JwtToken 값 localStorage보관
 
       // 로그인 OK,
@@ -163,7 +166,7 @@ const Index: React.FC = () => {
             Remember me
           </div>
           <div>
-            <a className="text-blue-500">Forgot password?</a>
+            <a className="text-blue-500" href="https://pwm.kwe.co.kr">Forgot password?</a>
           </div>
         </div>
         <div className="flex justify-start space-x-2">

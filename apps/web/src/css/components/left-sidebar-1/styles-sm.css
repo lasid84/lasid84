@@ -1,4 +1,4 @@
-@media (max-width: 767px) {
+@media (max-width: 1767px) {
   .arrow {
     transform: rotate(90deg);
     transition: transform 0.15s ease-in-out;
@@ -43,7 +43,7 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 4px;
+        width: 1000px;
         @apply bg-blue-500;
       }
     }
@@ -54,7 +54,7 @@
       top: 0;
       bottom: 0;
       left: 0;
-      width: 4px;
+      width: 1000px;
       @apply bg-blue-500;
     }
     &:hover,
@@ -75,7 +75,7 @@
   }
 
   .left-sidebar-title {
-    @apply uppercase font-normal text-xs tracking-wider flex flex-row items-center justify-start h-16 w-full px-4;
+    @apply uppercase font-normal text-xs tracking-wider flex flex-row items-center justify-start h-0 w-full px-4;
     @apply visible opacity-100;
   }
 

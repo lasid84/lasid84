@@ -1,7 +1,7 @@
 import {useConfigs} from "states/useConfigs";
 import {FiX} from "react-icons/fi";
 
-const Toggle: React.FC = () => {
+const Close: React.FC = () => {
   const config = useConfigs((state) => state.config);
   const {rightSidebar} = config;
   const configActions = useConfigs((state) => state.actions);
@@ -19,4 +19,4 @@ const Toggle: React.FC = () => {
   );
 };
 
-export default Toggle;
+export default Close;

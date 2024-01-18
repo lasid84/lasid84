@@ -1,0 +1,74 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint", "simple-import-sort"],
+    "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@next/next/recommended",
+      "prettier"
+    ],
+    "env": {
+      "es6": true,
+      "browser": true,
+      "jest": true,
+      "node": true
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      },
+      "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+      "import/resolver": {
+        "node": {
+          "paths": ["src"],
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        },
+        "typescript": {
+          "project": "."
+        }
+      }
+    },
+    "rules": {
+      "arrow-body-style": "off",
+      "no-plusplus": "off",
+      "@next/next/no-img-element": 0,
+      "react/react-in-jsx-scope": "off",
+      "react/display-name": "off",
+      "react/function-component-definition": ["warn", { "namedComponents": "arrow-function" }],
+      "react/jsx-one-expression-per-line": "off",
+      "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+      "react/jsx-props-no-spreading": "off",
+      "react/require-default-props": "off",
+      "react/jsx-wrap-multilines": "off",
+      "import/prefer-default-export": "off",
+      "no-restricted-exports": ["error", { "restrictDefaultExports": { "defaultFrom": false } }],
+      "import/no-unresolved": "off",
+      "react/prop-types": 0,
+      "react-hooks/exhaustive-deps": 0,
+      "jsx-a11y/anchor-is-valid": 0,
+      "@typescript-eslint/explicit-function-return-type": 0,
+      "@typescript-eslint/explicit-member-accessibility": 0,
+      "@typescript-eslint/indent": 0,
+      "@typescript-eslint/member-delimiter-style": 0,
+      "@typescript-eslint/no-empty-function":0,
+      "@typescript-eslint/no-explicit-any": 0,
+      "@typescript-eslint/no-non-null-assertion":0,
+      "@typescript-eslint/no-var-requires": 0,
+      "@typescript-eslint/no-use-before-define": 0,
+      "@typescript-eslint/no-unused-vars": [
+        0,
+        {
+          "argsIgnorePattern": "^_",
+          "ignoreRestSiblings": true
+        }
+      ],
+      "no-console": [
+        2,
+        {
+          "allow": ["warn", "error"]
+        }
+      ]
+    }
+  }
+  
