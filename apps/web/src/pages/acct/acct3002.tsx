@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react"
 import PageTitle from "shared/tmpl/page-title"
 // import CodePop, { CodePopStateProps, CodePopType } from "page-parts/stnd/stnd0006-pop"
-import SearchForm from "page-parts/acct/acct3002-search"
+import SearchForm from "page-parts/acct/acct3002-search-row"
 import CodeListGrid from "page-parts/acct/acct3002-list-gird"
 import { SubmitHandler } from "react-hook-form"
 import { useInvoiceStore } from "states/acct/acct3002.store";

@@ -77,3 +77,5 @@ module.exports = {
   executFunction,
   postCall
 }
+
+export default executFunction

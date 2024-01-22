@@ -26,15 +26,15 @@ const PageContent: React.FC<PageContentProps> = ({
         {(left || middle || right) &&
           <div className="flex flex-row items-start justify-between content-center">
             {left
-              ? <div className="flex flex-row space-x-1 mb-1">{left}</div>
+              ? <div className="flex flex-row space-x-1 mb-1 mt-1 ml-1">{left}</div>
               : <div></div>
             }
             {middle
-              ? <div className="flex flex-row space-x-1 mb-1">{middle}</div>
+              ? <div className="flex flex-row space-x-1 mb-1 mt-1">{middle}</div>
               : <div></div>
             }
             {right
-              ? <div className="flex flex-row space-x-1  mb-1">{right}</div>
+              ? <div className="flex flex-row space-x-1  mb-1 mt-1 mr-1">{right}</div>
               : <div></div>
             }
           </div>

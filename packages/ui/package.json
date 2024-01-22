@@ -5,7 +5,8 @@
   "exports": {
     "./card": "./src/card.tsx",
     "./code": "./src/code.tsx",
-    "./progressbar": "./src/progressbar.tsx"
+    "./progressbar": "./src/progressbar.tsx",
+    "./breadcrumb": "./src/breadcrumb/breadcrumb.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
