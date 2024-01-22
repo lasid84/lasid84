@@ -2,12 +2,15 @@
   "name": "@repo/ui",
   "version": "0.0.0",
   "private": true,
+<<<<<<< HEAD
   "exports": {
     "./card": "./src/card.tsx",
     "./code": "./src/code.tsx",
     "./progressbar": "./src/progressbar.tsx",
     "./breadcrumb": "./src/breadcrumb/breadcrumb.tsx"
   },
+=======
+>>>>>>> 1c52320c16fa5bbdb7fc8fc954473e20bdfb6459
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component"

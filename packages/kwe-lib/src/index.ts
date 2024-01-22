@@ -2,11 +2,14 @@
 // const executFunction = require("../components/api.service.ts");
 // const checkAccount = require("../components/ldapHelper.ts");
 // const sleep = require("../components/sleep.ts");
-const ini = require("ini");
-const objectPath = require("object-path");
-const fs = require("fs").promises;
-const path = require("path");
-import { path as arp } from 'app-root-path'
+// const ini = require("ini");
+// const objectPath = require("object-path");
+// const fs = require("fs").promises;
+// const path = require("path");
+// import { path as arp } from 'app-root-path'
+
+export { path as arp } from 'app-root-path';
+// export {executFunction} from '../components/api.service2';
 // const homedir = require("os");
 // export callFunction = require("../components/dbDTOHelper.ts")
 
@@ -28,6 +31,6 @@ import { path as arp } from 'app-root-path'
 //       , ini, objectPath, fs, path, homedir, arp
 // }
 
-export = {
-    path, arp, ini, objectPath, fs
-}
+// export = {
+//     path, arp, ini, objectPath, fs
+// }

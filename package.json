@@ -1,6 +1,10 @@
 {
   "name": "kream_web",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -20,9 +24,18 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+<<<<<<< HEAD
     "@turbo/gen": "^1.11.3",
     "prettier": "^3.2.3",
     "turbo": "latest"
+=======
+    "prettier": "^3.1.0",
+    "turbo": "1.11.3"
+>>>>>>> 1c52320c16fa5bbdb7fc8fc954473e20bdfb6459
   },
-  "packageManager": "pnpm@8.9.0"
+  "engines": {
+    "node": ">=18.17.0",
+    "pnpm": "8.14.1"
+  },
+  "packageManager": "pnpm@8.14.1"
 }

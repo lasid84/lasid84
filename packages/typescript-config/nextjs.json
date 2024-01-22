@@ -3,9 +3,16 @@
   "display": "Next.js",
   "extends": "./base.json",
   "compilerOptions": {
+<<<<<<< HEAD
     "incremental": true,
     "target": "es2018",
     "lib": ["dom", "dom.iterable", "esnext"],
+=======
+    "target": "es2017",
+    "plugins": [{ "name": "next" }],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+>>>>>>> 1c52320c16fa5bbdb7fc8fc954473e20bdfb6459
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,

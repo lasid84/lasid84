@@ -11,26 +11,16 @@ import { lusitana } from '@/app/ui/fonts';
 import CardWrapper from '@/app/ui/dashboard/cards';
 import { Suspense } from 'react';
 import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
+
+import { useSession } from "next-auth/react"
+import { auth } from "@/auth"
  
 export default async function Page() {
 
-  // 스트리밍으로 변경을 위한 주석 처리
-  // const revenue = await fetchRevenue();
-  //const latestInvoices = await fetchLatestInvoices();
-
-  // waterfall -> Parellel 사용을 위한 주석처리
-  // const totalPaidInvoices = (await fetchCardData()).totalPaidInvoices;
-  // const totalPendingInvoices = (await fetchCardData()).totalPendingInvoices;
-  // const numberOfInvoices = (await fetchCardData()).numberOfInvoices;
-  // const numberOfCustomers = (await fetchCardData()).numberOfCustomers;
-  // const {
-  //     numberOfInvoices,
-  //     numberOfCustomers,
-  //     totalPaidInvoices,
-  //     totalPendingInvoices,
-  //   } = await fetchCardData();
-
   const latestInvoices: JSX.Element = await LatestInvoices();
+
+  // const { data: session, update } = useSession()
+  const session = await auth()
 
   return (
     <main>
@@ -47,7 +37,6 @@ export default async function Page() {
           type="customers"
         /> */}
         <Suspense fallback={<CardsSkeleton />}>
-          {/* @ts-expect-error Server Component */}
           <CardWrapper />
         </Suspense>
       </div>

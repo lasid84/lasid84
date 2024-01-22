@@ -1,5 +1,6 @@
 'use client'
 
+import {useEffect, useState, useMemo} from "react";
 import { lusitana } from '@/app/ui/fonts';
 import {
   AtSymbolIcon,
@@ -11,9 +12,42 @@ import { Button } from './button';
 import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate } from '@/app/lib/actions';
 
+import { useStore } from "@/app/utils/zustand";
+import { useUserSettings } from "@/app/states/useUserSettings";
+
+
+const {log} = require('@repo/kwe-lib/components/logHelper');
+const {sleep} = require('@repo/kwe-lib/components/sleep');
+
+import { PowerIcon } from '@heroicons/react/24/outline';
+import { signOut } from '@/auth';
+import { json } from "stream/consumers";
+
 export default function LoginForm() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  // const [formState, dispatch] = useFormState(authenticate, null);
+  
+//   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
 
+//   useEffect(() => {
+//     log("errorMessage", formState);
+//     if (formState?.success) {
+//       const userData = formState.data;
+//       userSettingsActions!.setData({ user_id: userData.user_id });
+//       userSettingsActions!.setData({ user_name: userData.user_nm });
+//       userSettingsActions!.setData({ permission_id: userData.permission_id });
+//       userSettingsActions!.setData({ user_grp_id: userData.user_grp_id });
+//       userSettingsActions!.setData({ office_cd: userData.office_cd });
+//       userSettingsActions!.setData({ dept_cd: userData.dept_cd });
+//       userSettingsActions!.setData({ trans_mode: userData.trans_mode });
+//       userSettingsActions!.setData({ trans_type: userData.trans_type });
+  
+// }
+//   }, [formState]);
+
+  
+
+  // console.log("dispatch-----", FormData);
   return (
     // <form className="space-y-3">
     <form action={dispatch} className="space-y-3">
@@ -69,13 +103,21 @@ export default function LoginForm() {
           aria-live="polite"
           aria-atomic="true"
         >
+          {/* {errorMessage && ( */}
           {errorMessage && (
             <>
               <ExclamationCircleIcon className="w-5 h-5 text-red-500" />
+              {/* <p className="text-sm text-red-500">{errorMessage}</p>*/}
               <p className="text-sm text-red-500">{errorMessage}</p>
             </>
           )}
         </div>
+        
+        <div className="flex flex-row justify-between space-x-2 grow md:flex-col md:space-x-0 md:space-y-2">
+        <div className="hidden w-full h-auto rounded-md grow bg-gray-50 md:block"></div>
+      </div>
+
+
       </div>
     </form>
   );
@@ -93,3 +135,4 @@ function LoginButton() {
     </Button>
   );
 }
+

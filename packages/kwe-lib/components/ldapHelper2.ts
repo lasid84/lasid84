@@ -14,11 +14,11 @@ let baseDN = '';
 
 async function init() {
 
-    var config = new Config("/configs/server.ini");
-  //const config = Config("./configs/server.ini");
-  await config.load();
-  ldapServerUrl = config.get("sso.url");
-  baseDN = 'ou=kwekr_user,dc=kwekr,dc=local';
+  //   var config = new Config("/configs/server.ini");
+  // //const config = Config("./configs/server.ini");
+  // await config.load();
+  // ldapServerUrl = config.get("sso.url");
+  // baseDN = 'ou=kwekr_user,dc=kwekr,dc=local';
 }
 
 // 사용자 인증 및 계정 체크 함수

@@ -1,5 +1,7 @@
+
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
+import  AuthContext from './myProvider';
 
 import { Metadata } from 'next';
 
@@ -15,11 +17,15 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode,
 }) {
+
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+    <AuthContext>
+    <html lang="en">      
+        <body className={`${inter.className} antialiased`}>{children}</body>
+      
     </html>
+    </AuthContext>
   );
 }

@@ -9,6 +9,10 @@ import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
+const {log} = require('@repo/kwe-lib/components/logHelper');
+import { useStore } from "@/app/utils/zustand";
+import { useUserSettings } from "@/app/states/useUserSettings";
+
 const FormSchema = z.object({
     // id: z.string(),
     // customerId: z.string(),
@@ -132,16 +136,34 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     prevState: string | undefined,
     formData: FormData,
   ) {
+    log("action의 authenticate 시작", formData);
     try {
-      await signIn('credentials', formData);
-      console.log("authenticate")
+      
+      const user = await signIn('credentials', formData);
+      
+      // return {
+        // success: true,
+        // data: user
+      // };
+      
     } catch (error) {
       if (error instanceof AuthError) {
         switch (error.type) {
           case 'CredentialsSignin':
-            return 'Invalid credentials.';
+          //   return {
+          //     // success: false,
+          //     message:'Invalid credentials.2',
+          //     // m: '1234'
+          // };
+          return 'Invalid credentials.2';
           default:
-            return 'Something went wrong.';
+            {
+              // return {
+              //   // success: false,
+              //   message:'Something went wrong.2',
+              // };
+              return 'Something went wrong.2';
+          }
         }
       }
       throw error;
