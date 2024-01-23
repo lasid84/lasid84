@@ -59,7 +59,7 @@ export const useGetData = (searchParam:any)=>{
 
 
 //CODE LOAD ..
-export const useAcct3002Load = () => {
+export const useAcct2003Load = () => {
   const {isLoading, data, isError} =  useQuery(["Acct2003Load"], Acct2003Load)
   //console.log('code load hook data check', data)
   return {data, isLoading, isError}

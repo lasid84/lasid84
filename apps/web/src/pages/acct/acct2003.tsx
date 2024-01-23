@@ -4,7 +4,7 @@ import { SubmitHandler } from "react-hook-form"
 import SearchForm from "page-parts/acct/acct2003-search-row"
 import CodeListGrid from "page-parts/acct/acct2003-list-gird"
 import { useInvoiceStore } from "states/acct/acct2003.store";
-import { useGetData, useCreateCode, useAcct3002Load } from "page-parts/acct/acct2003"
+import { useGetData, useCreateCode, useAcct2003Load } from "page-parts/acct/acct2003"
 import { useUserSettings } from "states/useUserSettings";
 import { useSession } from 'next-auth/react';
 
@@ -33,7 +33,7 @@ const Acct2003: React.FC = () => {
     //그리드에 표시할 데이더
     const { data: selectResult } = useGetData(searchParam) //조회  
     //Load data..
-    const { data: LoadData } = useAcct3002Load()
+    const { data: LoadData } = useAcct2003Load()
 
     const handleSearchSubmit: SubmitHandler<any> = useCallback((params) => {
         console.log('handleSearchSubmit', params)
@@ -52,15 +52,14 @@ const Acct2003: React.FC = () => {
     return (
         <>
             {!session?.user
-                ? <div className="flex">
-                    {/* <div className="w-full h-full rounded-[5px] bg-white border mb-2"> */}
+                ? <div className="w-full h-full rounded-[5px] bg-white border mb-2">
                     <div style={{
                         backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/region/incheon.webp')`,
                         backgroundSize: 'cover',
                         backgroundRepeat: 'no-repeat',
                     }}
                         className="w-full h-screen z-50 rounded-[5px] bg-white border mb-2">
-                        <span className="ag-overlay-loading-center">로그인해주세요</span>
+                        <span className="ag-overlay-loading-center">로그인 해주세요</span>
                     </div>
                 </div>
                 : <div>
@@ -74,7 +73,6 @@ const Acct2003: React.FC = () => {
                         {/* grid data와 결합하는 side component */}
                 <div className="w-2/12 rounded-[5px] bg-white border mb-2 space-y-2">
                     <div className="px-4 py-2  space-y-1">
-
                         <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                             계산서일
                         </div>

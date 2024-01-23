@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PageContent from "shared/tmpl/page-content";
 import { GridOptions, Column, CellClickedEvent } from "ag-grid-community";
-import { useInvoiceStore } from "states/acct/acct3002.store";
+import { useInvoiceStore } from "states/acct/acct2003.store";
 type Props = {
   listItem: any | null;
 };
@@ -34,7 +34,7 @@ const CodeListGrid: React.FC<Props> = ({
     console.log('handle empty data', listItem)
     if (listItem === undefined || !listItem || listItem.length === 0) return []; // Handle empty data   
     //if(listItem.data.cursorData.length ===1) return [] //초기값설정
-    
+
     //const firstRow = listItem.data.cursorData[0][0];
     //console.log('firstRow')
 
@@ -214,7 +214,7 @@ const CodeListGrid: React.FC<Props> = ({
       <PageContent
         left={
           <>
-          
+
             {/* <div className="space-y-2"> */}
             <label className="space-y-1">세금계산서 No.</label>
             {/* </div> */}
@@ -224,29 +224,49 @@ const CodeListGrid: React.FC<Props> = ({
               type="text"
               className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700"
             />
-            
+
           </>
         }
         right={
           <>
-          <button
-            onClick={createTax}
-            type="button"
-            className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
-            Billing Report
-          </button>
+            <Link href={{
+              pathname: "/acct/acct1005",
+              query: {
+                invoice_no: targetedRow,
+                // param : JSON.stringify(searchParam)
+                dtefrom: searchParam.fr_date,
+                dtefo: searchParam.to_date,
+                mode: searchParam.trans_mode,
+                type: searchParam.trans_type
+              }
+            }}
+              target="_blank" >
+              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">Billing Report</div>
+            </Link>
+            <Link href={{
+              pathname: "/acct/acct1005",
+              query: {
+                no: targetedRow2,
+              }
+            }}
+              target="_blank" >
+              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">CCN조회 및 Billing관리</div>
+            </Link>
             <button
-            onClick={createTax}
-            type="button"
-            className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
-            CCN조회 및 관리
-          </button>  
-          <button
-            onClick={createTax}
-            type="button"
-            className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
-            계산서 생성
-          </button>
+              onClick={createTax}
+              type="button"
+              className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
+              계산서 생성
+            </button>
+            <Link href={{
+              pathname: "/acct/acct3002",
+              query: {
+                no: targetedRow2,
+              }
+            }}
+              target="_blank" >
+              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">계산서 전송</div>
+            </Link>
           </>
         }
       >

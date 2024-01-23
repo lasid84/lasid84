@@ -2,6 +2,16 @@ import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 import moment from "moment";
 
+const { start_date, end_date } = getInitDate();
+
+export function getInitDate() {
+    const currentDate = moment();
+    const startDate = currentDate.clone().subtract(30, "days").format("YYYY-MM-DD");
+    return {
+        end_date: currentDate.format("YYYY-MM-DD") || 'yyyy-mm-dd',
+        start_date: startDate || 'yyyy-mm-dd',
+    };
+}
 export interface SearchParamType {
     trans_mode: string | undefined,
     trans_type: string | undefined,
@@ -17,17 +27,13 @@ export interface SearchParamType {
     sale_buy:string | undefined,
 }
 
-const { start_date, end_date } = getInitDate();
-
-export function getInitDate() {
-    const currentDate = moment();
-    const startDate = currentDate.clone().subtract(30, "days").format("YYYY-MM-DD");
-    return {
-        end_date: currentDate.format("YYYY-MM-DD") || 'yyyy-mm-dd',
-        start_date: startDate || 'yyyy-mm-dd',
-    };
+export interface TargetValueType {
+    no : string | undefined,
 }
 
+export const initTargetValue : TargetValueType = {
+    no : '',
+}
 
 export const initSearchValue: SearchParamType = {
     trans_mode: 'ALL',
@@ -46,11 +52,6 @@ export const initSearchValue: SearchParamType = {
 
 
 export const initInvoiceCheckValue = {
-    selectedTranType: '',
-    selectedTranMode: '',
-    selectedFrdate: moment().format("YYYY-MM-DD"),
-    selectedTodate: moment().format("YYYY-MM-DD"),
-    //invoice_no :'',    
     userInfo: {
         selected_code: '',
     },
@@ -73,18 +74,18 @@ export const initInvoiceCheckValue = {
 
 type InvoiceCheckStore = {
     searchParam: SearchParamType,
+    targetValue : TargetValueType,
     actions: {
         setSearchParam: (payload: Partial<SearchParamType>) => void;
-        //setUserInfo: (payload: Partial<InvoiceCheckUserInfo>) => void;
+        setTargetValue: (payload: Partial<TargetValueType>) => void;
         //setPopUpData: (payload: Partial<InvoiceCheckPopUpType>) => void;
         setInit: () => void;
         // setInitWithOutUserInfo: () => void;        
     }
 }
 
-
-
 const invoiceStore = ((set: any) => ({
+    targetValue : initTargetValue,
     searchParam: initSearchValue,
     actions: {
         setSearchParam: (payload: Partial<SearchParamType>) => {
@@ -92,6 +93,12 @@ const invoiceStore = ((set: any) => ({
                 state.searchParam = { ...state.searchParam, ...payload };
                 return { ...state, searchParam: { ...state.searchParam } };
             });
+        },
+        setTargetValue : (payload : Partial<TargetValueType>)=> {
+            set((state :any)=>{
+                state.targetValue = {...state.targetValue, ...payload};
+                return {...state, targetValue : {...state.targetValue}}
+            })
         },
         // setUserInfo: (payload: Partial<InvoiceCheckUserInfo>) => {
         //     set((state: any) => {
