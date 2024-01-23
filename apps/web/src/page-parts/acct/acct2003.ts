@@ -5,12 +5,8 @@ import {
 import { toastSuccess,toastError } from "tmpl/toast";
 import axios, { AxiosResponse } from "axios";
 
-
-export interface returnData {
-  cursorData : []
-  numericData : number;
-  textData : string;
-}
+// const { data:initdata} = useLanguage()
+// console.log('허허',initdata)
 
 const baseURL = "http://10.33.63.171:5000"
 // eslint-disable-next-line
@@ -22,25 +18,32 @@ const codeFind = (searchParam:any) => {
     const Param=searchParam.queryKey[1]
     const inparam = [ "in_trans_mode"
     , "in_trans_type"
+    , "in_office_cd"
     , "in_no"
     , "in_fr_date"
     , "in_to_date"
+    , "in_fr_inv_date"
+    , "in_to_inv_date"
     , "in_cust_code"
-    , "in_sale_buy"
-    , "in_edi_yn"
+    , "in_issue_or"
     , "in_user_id"
     , "in_ipaddr"]
-    const invalue = [Param.trans_mode,Param.trans_type,Param.no,Param.fr_date.replace(reg,''),Param.to_date.replace(reg,''),Param.cust_code,
-      Param.sale_buy,Param.edi_yn,'doni.lee','1.1.1.1']
-    const inproc = 'account.f_acct3002_get_data';
-    return axios.post<returnData>(`${baseURL}/api/data`, {inproc, inparam, invalue})
+    const invalue = [Param.trans_mode,Param.trans_type,Param.office_cd,Param.no,Param.fr_date.replace(reg,''),Param.to_date.replace(reg,''),Param.fr_inv_date,Param.to_inv_date,Param.cust_code,
+      Param.issue_or,'doni.lee','1.1.1.1']
+    const inproc = 'account.f_acct2003_get_master';
+    return axios.post(`${baseURL}/api/data`, {inproc, inparam, invalue})
 }
 
+export interface returnData {
+  cursorData : []
+  numericData : number;
+  textData : string;
+}
 
-export const Acct3002Load = () => {
+export const Acct2003Load = () => {
   const inparam = [ "in_user_id", "in_ipaddr"]
   const invalue= ['doni.lee.web','10.33.33.96']
-  const inproc = 'account.f_acct3002_load'
+  const inproc = 'account.f_acct2003_load'
 
   const result = axios.post<returnData>(`${baseURL}/api/data`, {inproc, inparam, invalue})
   return axios.post(`${baseURL}/api/data`, {inproc, inparam, invalue})
@@ -48,17 +51,16 @@ export const Acct3002Load = () => {
 
 
 //조회 command 처리 hooks. (hooks네이밍규칙은 use카멜케이스)
-export const ReactQuery = (searchParam:any)=>{
+export const useGetData = (searchParam:any)=>{
    console.log(searchParam,'searchParam')
     const {isLoading, data, isError} = useQuery(["codeFind", searchParam], codeFind);
-    console.log('data@~!~@~!@',data)
     return {data, isLoading, isError}
 }
 
 
 //CODE LOAD ..
 export const useAcct3002Load = () => {
-  const {isLoading, data, isError} =  useQuery(["Acct3002Load"], Acct3002Load)
+  const {isLoading, data, isError} =  useQuery(["Acct2003Load"], Acct2003Load)
   //console.log('code load hook data check', data)
   return {data, isLoading, isError}
 }

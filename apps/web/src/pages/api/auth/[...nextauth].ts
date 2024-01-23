@@ -55,7 +55,7 @@ export default NextAuth({
         }
     },
     session: {
-        maxAge: 60,
+        maxAge: 60*60*1000,
       },
     pages: {
         signIn: "/login",

@@ -29,12 +29,11 @@ const Acct3002: React.FC = () => {
     //const [isCOD, setIsCOD] = useState<boolean>(true)
 
     // Zustand Store 사용설정
-    //const actions = useInvoiceStore((state) => state.actions)
+    const actions = useInvoiceStore((state) => state.actions)
     const searchParam = useInvoiceStore((state) => state.searchParam)
 
     //그리드에 표시할 데이더
     const { data: selectResult } = ReactQuery(searchParam)
-
     //Load data..
     const {data : LoadData} = useAcct3002Load()
 
@@ -43,17 +42,19 @@ const Acct3002: React.FC = () => {
         // actions.setSearchParam(params)
     }, [searchParam])
 
-    useEffect(() => {
-        if (selectResult) {
-            console.log('selectResult(acct3002.tsx)', selectResult)
-        };
-    }, [selectResult]);
 
-    useEffect(()=>{
-        if(LoadData){
-            console.log('LoadData(acct3002.tsx)',LoadData)
-        }
-    },[LoadData])
+    //useEffect -> React-query hook이 대신함
+    // useEffect(() => {
+    //     if (selectResult) {
+    //         console.log('selectResult(acct3002.tsx)', selectResult)
+    //     };
+    // }, [selectResult]);
+
+    // useEffect(()=>{
+    //     if(LoadData){
+    //         console.log('LoadData(acct3002.tsx)',LoadData)
+    //     }
+    // },[LoadData])
 
     return (
         <>
