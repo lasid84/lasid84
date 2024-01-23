@@ -7,13 +7,18 @@ import PageSearch from "shared/tmpl/page-search-row";
 import { TInput2, TSelect2, TCancelButton, TSubmitButton } from "tmpl/form";
 import { useInvoiceStore, initSearchValue } from "states/acct/acct3002.store";
 import { useUserSettings } from "states/useUserSettings";
+
 //import { useCustomer, useLoadData } from "states/useCodes";
 //import { MultiColumnComboBoxOverview } from "components/dropdowns/ComboSelect" 
 
-export interface loadItem {
+export interface returnData {
   cursorData : []
   numericData : number;
   textData : string;
+}
+
+export interface loadItem {
+  data : returnData[]
 }
 
 type Props = {
@@ -73,7 +78,8 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
   //Set select box data
   const [transmode, setTransmode] = useState([])
   const [transtype, setTranstype] = useState([])
-  const [office, setOffice] = useState([])
+  const [jobor, setJobor] = useState([])
+  const [salebuy, setSalebuy] = useState([])
   const [custcode, setCustcode] = useState([])
 
   const actions = useInvoiceStore((state) => state.actions)
@@ -83,8 +89,11 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
   useEffect(() => { 
     if(loadItem){
 
-      console.log('acct3002-search' ,loadItem)
-      setTransmode(loadItem.data.cursorData[0])
+      console.log('acct3002-search' ,loadItem.data)
+      setTransmode(loadItem.data.cursorData[0]) 
+      setTranstype(loadItem.data.cursorData[1])
+      setJobor(loadItem.data.cursorData[3])
+      setSalebuy(loadItem.data.cursorData[4])
     }
       // actions.setSearchParam({
       //   trans_type: gTransType,
@@ -169,25 +178,23 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
           </div>
           <div>
           <TSelect2
-            id="office_cd"
-            label="사무소"
-            allYn={false}
+            id="job_or"
+            label="작업구분"
             isPlaceholder={false}
             outerClassName="w-full"
             defaultValue={gOfficeId}
             onChange={(e) => actions.setSearchParam({ office_cd: e.target.value })}
-            options={office}
+            options={jobor}
           />
           {errors?.office_cd?.message && <ErrorMessage>{errors.office_cd.message}</ErrorMessage>}
           <TSelect2
-            id="office_cd"
+            id="job_or"
             label="매출일반"
-            allYn={false}
             isPlaceholder={false}
             outerClassName="w-full"
             defaultValue={gOfficeId}
             onChange={(e) => actions.setSearchParam({ office_cd: e.target.value })}
-            options={office}
+            options={salebuy}
           />
           {errors?.office_cd?.message && <ErrorMessage>{errors.office_cd.message}</ErrorMessage>}
           </div>
