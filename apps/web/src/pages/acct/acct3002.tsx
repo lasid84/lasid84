@@ -5,7 +5,7 @@ import SearchForm from "page-parts/acct/acct3002-search-row"
 import CodeListGrid from "page-parts/acct/acct3002-list-gird"
 import { SubmitHandler } from "react-hook-form"
 import { useInvoiceStore } from "states/acct/acct3002.store";
-import { ReactQuery, useCreateCode } from "page-parts/acct/acct3002"
+import { ReactQuery, useCreateCode, useAcct3002Load } from "page-parts/acct/acct3002"
 import { useSession } from 'next-auth/react';
 import { useUserSettings } from "states/useUserSettings";
 
@@ -35,6 +35,9 @@ const Acct3002: React.FC = () => {
     //그리드에 표시할 데이더
     const { data: selectResult } = ReactQuery(searchParam)
 
+    //Load data..
+    const {data : LoadData} = useAcct3002Load()
+
     const handleSearchSubmit: SubmitHandler<any> = useCallback((params) => {
         console.log('handleSearchSubmit', params)
         // actions.setSearchParam(params)
@@ -42,9 +45,15 @@ const Acct3002: React.FC = () => {
 
     useEffect(() => {
         if (selectResult) {
-            console.log('selectResult(stnd3002.tsx)', selectResult)
+            console.log('selectResult(acct3002.tsx)', selectResult)
         };
     }, [selectResult]);
+
+    useEffect(()=>{
+        if(LoadData){
+            console.log('LoadData(acct3002.tsx)',LoadData)
+        }
+    },[LoadData])
 
     return (
         <>
@@ -66,13 +75,11 @@ const Acct3002: React.FC = () => {
                     <div className="flex">
                         <div className="w-full rounded-[5px] bg-white border mb-2">
                             {/* 검색 */}
-                            <SearchForm onSubmit={handleSearchSubmit} />
+                            <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData||null}/>
                         </div>
                     </div>
                     {/* 코드 리스트 */}
-                    <CodeListGrid
-                        listItem={selectResult || null}
-                    /></div>
+                    <CodeListGrid listItem={selectResult || null}/></div>
             }
         </>
     );

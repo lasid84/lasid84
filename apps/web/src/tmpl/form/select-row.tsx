@@ -17,7 +17,6 @@ type SelectProps = {
   placeholder?: string;
   width?: string;
   children?: any;
-  allYn?: boolean;
   isPlaceholder?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   outerClassName?: string;
@@ -33,15 +32,23 @@ export const TSelect2: React.FC<SelectProps> = ({
   placeholder,
   width = "w-full",
   children,
-  allYn = false,
+
   isPlaceholder = true,
   onChange,
   outerClassName,
   readOnly = false,
 }) => {
-  if (allYn) {
-    options = [{ value: "", label: "전체(All)" }, ...options];
+
+  let selectoptions = []
+
+  if (options.length > 1) {
+    options.map((item, i) => {
+      var label = item[Object.keys(item)[0]]
+      var value = item[Object.keys(item)[1]]
+      selectoptions.push({ key: label, value: value })
+    })
   }
+  
   return (
     <div className="flex flex-row items-start">
       <label
@@ -55,7 +62,7 @@ export const TSelect2: React.FC<SelectProps> = ({
         value={value}
         placeholder={placeholder}
         width={width}
-        options={options}
+        options={selectoptions}
         isPlaceholder={isPlaceholder}
         onChange={onChange}
         readOnly={readOnly}

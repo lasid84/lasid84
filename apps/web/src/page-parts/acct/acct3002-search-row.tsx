@@ -10,12 +10,18 @@ import { useUserSettings } from "states/useUserSettings";
 //import { useCustomer, useLoadData } from "states/useCodes";
 //import { MultiColumnComboBoxOverview } from "components/dropdowns/ComboSelect" 
 
+export interface loadItem {
+  cursorData : []
+  numericData : number;
+  textData : string;
+}
+
 type Props = {
   onSubmit: SubmitHandler<any>;
+  loadItem : loadItem|null;
 };
 
-const SearchForm: React.FC<Props> = ({ onSubmit }) => {
-
+const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
   // 인보이스 검색스키마
   const acct3002SearchSchema = z.object({
     trans_mode: z.coerce.string(),
@@ -74,19 +80,20 @@ const SearchForm: React.FC<Props> = ({ onSubmit }) => {
   const searchParam = useInvoiceStore((state) => state.searchParam)
 
 
-  // useEffect(() => {
-  //   if (initdata && initdata2) {
-  //     setTransmode(initdata.mode)
-  //     setTranstype(initdata.type)
-  //     setOffice(initdata.office)
-  //     setCustcode(initdata2.cust)
-  //     actions.setSearchParam({
-  //       trans_type: gTransType,
-  //       trans_mode: gTransMode,
-  //       office_cd: gOfficeId
-  //     })
-  //   }
-  // }, [initdata, initdata2])
+  useEffect(() => { 
+    if(loadItem){
+
+      console.log('acct3002-search' ,loadItem)
+      setTransmode(loadItem.data.cursorData[0])
+    }
+      // actions.setSearchParam({
+      //   trans_type: gTransType,
+      //   trans_mode: gTransMode,
+      //   office_cd: gOfficeId
+      // })
+      
+    
+  }, [loadItem])
 
   useEffect(() => {
     const searchValue = { ...searchParam, }

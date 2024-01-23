@@ -35,12 +35,35 @@ const codeFind = (searchParam:any) => {
     return axios.post(`${baseURL}/api/data`, {inproc, inparam, invalue})
 }
 
+export interface returnData {
+  cursorData : []
+  numericData : number;
+  textData : string;
+}
 
-//조회 command 처리 hooks.
+export const Acct3002Load = () => {
+  const inparam = [ "in_user_id", "in_ipaddr"]
+  const invalue= ['doni.lee.web','10.33.33.96']
+  const inproc = 'account.f_acct3002_load'
+
+  const result = axios.post<returnData>(`${baseURL}/api/data`, {inproc, inparam, invalue})
+  return axios.post(`${baseURL}/api/data`, {inproc, inparam, invalue})
+}
+
+
+//조회 command 처리 hooks. (hooks네이밍규칙은 use카멜케이스)
 export const ReactQuery = (searchParam:any)=>{
    console.log(searchParam,'searchParam')
     const {isLoading, data, isError} = useQuery(["codeFind", searchParam], codeFind);
     return {data, isLoading, isError}
+}
+
+
+//CODE LOAD ..
+export const useAcct3002Load = () => {
+  const {isLoading, data, isError} =  useQuery(["Acct3002Load"], Acct3002Load)
+  //console.log('code load hook data check', data)
+  return {data, isLoading, isError}
 }
 
  /* 계산서 생성  */
