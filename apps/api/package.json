@@ -15,7 +15,8 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "@repo/kwe-lib": "*"
+    "@repo/kwe-lib": "*",
+    "@repo/ui": "*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
