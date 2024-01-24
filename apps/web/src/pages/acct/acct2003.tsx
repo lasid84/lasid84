@@ -4,7 +4,7 @@ import { SubmitHandler } from "react-hook-form"
 import SearchForm from "page-parts/acct/acct2003-search-row"
 import CodeListGrid from "page-parts/acct/acct2003-list-gird"
 import { useInvoiceStore } from "states/acct/acct2003.store";
-import { useGetData, useCreateCode, useAcct2003Load } from "page-parts/acct/acct2003"
+import { useGetData, useCreateCode, useLoadData } from "page-parts/acct/acct2003"
 import { useUserSettings } from "states/useUserSettings";
 import { useSession } from 'next-auth/react';
 
@@ -30,24 +30,15 @@ const Acct2003: React.FC = () => {
     const actions = useInvoiceStore((state) => state.actions)
     const searchParam = useInvoiceStore((state) => state.searchParam)
 
-    //그리드에 표시할 데이더
-    const { data: selectResult } = useGetData(searchParam) //조회  
     //Load data..
-    const { data: LoadData } = useAcct2003Load()
+    const { data: LoadData } = useLoadData()
+    //grid data
+    const { data: selectResult } = useGetData(searchParam)
 
     const handleSearchSubmit: SubmitHandler<any> = useCallback((params) => {
         console.log('handleSearchSubmit', params)
         actions.setSearchParam(params)
     }, [searchParam])
-
-    //useEffect -> React-query hook이 대신함
-    // useEffect(() => {
-    //     // if (gOfficeId && gTransMode && gTransType !== '') {
-    //     if (selectResult) {
-    //         console.log('selectResult(stnd2003.tsx)', selectResult)
-    //     };
-    //     // }
-    // }, [selectResult]);
 
     return (
         <>
@@ -71,38 +62,38 @@ const Acct2003: React.FC = () => {
                             <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData || null} />
                         </div>
                         {/* grid data와 결합하는 side component */}
-                <div className="w-2/12 rounded-[5px] bg-white border mb-2 space-y-2">
-                    <div className="px-4 py-2  space-y-1">
-                        <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                            계산서일
-                        </div>
-                        <input
-                            name="name"
-                            type="date"
-                            className="px-4 py-1 w-full text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700"
-                        />
-                        {isCOD
-                            ? <></>
-                            : <><div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                                취합구분
-                            </div>
-                                <input
-                                    name="name"
-                                    type="date"
-                                    className="px-4 py-1 w-full text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700"
-                                />
+                        <div className="w-2/12 rounded-[5px] bg-white border mb-2 space-y-2">
+                            <div className="px-4 py-2  space-y-1">
                                 <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                                    발행처
+                                    계산서일
                                 </div>
                                 <input
                                     name="name"
                                     type="date"
                                     className="px-4 py-1 w-full text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700"
-                                /></>
-                        }
+                                />
+                                {isCOD
+                                    ? <></>
+                                    : <><div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                        취합구분
+                                    </div>
+                                        <input
+                                            name="name"
+                                            type="date"
+                                            className="px-4 py-1 w-full text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700"
+                                        />
+                                        <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                            발행처
+                                        </div>
+                                        <input
+                                            name="name"
+                                            type="date"
+                                            className="px-4 py-1 w-full text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700"
+                                        /></>
+                                }
 
-                    </div>
-                </div>
+                            </div>
+                        </div>
                     </div>
                     {/* 코드 리스트 */}
                     <CodeListGrid listItem={selectResult || null} /></div>

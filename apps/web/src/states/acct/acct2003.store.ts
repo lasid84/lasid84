@@ -26,13 +26,15 @@ export interface SearchParamType {
     job_or :string | undefined,
     sale_buy:string | undefined,
 }
-
+ 
 export interface TargetValueType {
     no : string | undefined,
+    invoice_list : string | undefined,
 }
 
 export const initTargetValue : TargetValueType = {
     no : '',
+    invoice_list : '',
 }
 
 export const initSearchValue: SearchParamType = {

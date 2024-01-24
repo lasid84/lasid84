@@ -6,6 +6,7 @@ import { GridOptions, Column, CellClickedEvent } from "ag-grid-community";
 import { useInvoiceStore } from "states/acct/acct2003.store";
 type Props = {
   listItem: any | null;
+  children?: React.ReactNode | React.ReactElement | null;
 };
 
 const CodeListGrid: React.FC<Props> = ({
@@ -20,10 +21,9 @@ const CodeListGrid: React.FC<Props> = ({
     enableColResize: false,
   };
 
-  const [targetedRow, setTargetedRow] = useState<any>('')
-  const [targetedRow2, setTargetedRow2] = useState<any>('')
   const searchParam = useInvoiceStore((state) => state.searchParam)
-
+  const targetValue = useInvoiceStore((state) => state.targetValue)
+  const actions = useInvoiceStore((state) => state.actions)
 
   const containerStyle = useMemo(() => "flex flex-col w-full", []);
   const gridStyle = useMemo(() => "w-full h-[450px]", []);
@@ -154,8 +154,12 @@ const CodeListGrid: React.FC<Props> = ({
         invoice_list += i.invoice_no + ','
         no = i.house_bl_no
       })
-      setTargetedRow(invoice_list)
-      setTargetedRow2(no)
+
+      actions.setTargetValue({
+        no: no,
+        invoice_list: invoice_list
+      })
+
       //console.log('체크', JSON.stringify(searchParam))
     }
   }, [])
@@ -232,8 +236,7 @@ const CodeListGrid: React.FC<Props> = ({
             <Link href={{
               pathname: "/acct/acct1005",
               query: {
-                invoice_no: targetedRow,
-                // param : JSON.stringify(searchParam)
+                invoice_no: targetValue.invoice_list,
                 dtefrom: searchParam.fr_date,
                 dtefo: searchParam.to_date,
                 mode: searchParam.trans_mode,
@@ -246,7 +249,7 @@ const CodeListGrid: React.FC<Props> = ({
             <Link href={{
               pathname: "/acct/acct1005",
               query: {
-                no: targetedRow2,
+                no: targetValue.no,
               }
             }}
               target="_blank" >
@@ -261,7 +264,7 @@ const CodeListGrid: React.FC<Props> = ({
             <Link href={{
               pathname: "/acct/acct3002",
               query: {
-                no: targetedRow2,
+                no: targetValue.no,
               }
             }}
               target="_blank" >
