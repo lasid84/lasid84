@@ -1,4 +1,4 @@
-import {useFormContext} from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 export type TextareaProps = {
   id: string;
   name: string;
@@ -16,7 +16,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   placeholder = "",
   width = "w-full",
 }) => {
-  const {register} = useFormContext();
+  const { register } = useFormContext();
   return (
     <textarea
       {...register(name, rules)}
@@ -24,7 +24,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       name={name}
       rows={rows}
       placeholder={placeholder}
-      className={`block ${width} border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 form-textarea focus:ring-blue-500 focus:border-blue-500 focus:ring-0 sm:text-sm rounded-md`}
+      className={`block ${width} h-8 border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 form-textarea focus:ring-blue-500 focus:border-blue-500 focus:ring-0 sm:text-sm rounded-md`}
     />
   );
 };

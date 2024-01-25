@@ -45,7 +45,7 @@ export const Acct2003Load = () => {
   const inproc = 'account.f_acct2003_load'
 
   //const result = axios.post<returnData>(`${baseURL}/api/data`, {inproc, inparam, invalue})
-  return axios.post<returnData>(`${baseURL}/api/data`, { inproc, inparam, invalue })
+  return axios.post<AxiosResponse>(`${baseURL}/api/data`, { inproc, inparam, invalue })
 }
 
 

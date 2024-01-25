@@ -4,7 +4,7 @@ import { SubmitHandler } from "react-hook-form"
 import SearchForm from "page-parts/acct/acct2003-search-row"
 import CodeListGrid from "page-parts/acct/acct2003-list-gird"
 import { useInvoiceStore } from "states/acct/acct2003.store";
-import { useGetData, useCreateCode, useLoadData } from "page-parts/acct/acct2003"
+import { useGetData, useLoadData } from "page-parts/acct/acct2003"
 import { useUserSettings } from "states/useUserSettings";
 import { useSession } from 'next-auth/react';
 
@@ -44,12 +44,7 @@ const Acct2003: React.FC = () => {
         <>
             {!session?.user
                 ? <div className="w-full h-full rounded-[5px] bg-white border mb-2">
-                    <div style={{
-                        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/region/incheon.webp')`,
-                        backgroundSize: 'cover',
-                        backgroundRepeat: 'no-repeat',
-                    }}
-                        className="w-full h-screen z-50 rounded-[5px] bg-white border mb-2">
+                    <div>
                         <span className="ag-overlay-loading-center">로그인 해주세요</span>
                     </div>
                 </div>

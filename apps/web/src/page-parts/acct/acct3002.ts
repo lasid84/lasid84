@@ -51,7 +51,7 @@ export const Acct3002Load = () => {
 export const ReactQuery = (searchParam:any)=>{
    console.log(searchParam,'searchParam')
     const {isLoading, data, isError} = useQuery(["codeFind", searchParam], codeFind);
-    console.log('data@~!~@~!@',data)
+
     return {data, isLoading, isError}
 }
 

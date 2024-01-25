@@ -1,11 +1,10 @@
-import { useState, useRef, useCallback, useEffect } from "react"
+import {useCallback } from "react"
 import PageTitle from "shared/tmpl/page-title"
-// import CodePop, { CodePopStateProps, CodePopType } from "page-parts/stnd/stnd0006-pop"
 import SearchForm from "page-parts/acct/acct3002-search-row"
 import CodeListGrid from "page-parts/acct/acct3002-list-gird"
 import { SubmitHandler } from "react-hook-form"
 import { useInvoiceStore } from "states/acct/acct3002.store";
-import { ReactQuery, useCreateCode, useAcct3002Load } from "page-parts/acct/acct3002"
+import { ReactQuery, useAcct3002Load } from "page-parts/acct/acct3002"
 import { useSession } from 'next-auth/react';
 import { useUserSettings } from "states/useUserSettings";
 
@@ -32,27 +31,17 @@ const Acct3002: React.FC = () => {
     const actions = useInvoiceStore((state) => state.actions)
     const searchParam = useInvoiceStore((state) => state.searchParam)
 
-    //그리드 데이더
-    const { data: selectResult } = ReactQuery(searchParam)
-    //Load data..
-    const {data : LoadData} = useAcct3002Load()
+    const { data: selectResult } = ReactQuery(searchParam) //grid data
+    const {data : LoadData} = useAcct3002Load() //load data
 
-    const handleSearchSubmit: SubmitHandler<any> = useCallback((params) => {
-        console.log('handleSearchSubmit', params)
-        // actions.setSearchParam(params)
-    }, [searchParam])
-    
+    const handleSearchSubmit: SubmitHandler<any> = useCallback((params) => {}, [searchParam])
+
     return (
         <>
             {!session?.user
                 ? <div className="flex">
                     {/* <div className="w-full h-full rounded-[5px] bg-white border mb-2"> */}
-                    <div style={{
-                        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/region/incheon.webp')`,
-                        backgroundSize: 'cover',
-                        backgroundRepeat: 'no-repeat',
-                    }}
-                        className="w-full h-screen z-50 rounded-[5px] bg-white border mb-2">
+                    <div>
                         <span className="ag-overlay-loading-center">로그인해주세요</span>
                     </div>
                 </div>

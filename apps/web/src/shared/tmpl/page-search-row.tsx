@@ -7,7 +7,7 @@ export type PageSearchProps = {
   addition?: React.ReactNode;
 };
 
-
+//검색조건 1분할
 const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
