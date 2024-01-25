@@ -10,7 +10,7 @@ type OptionProps = {
 // Define a type for the state
 interface UserSettingsState {
   user_id: string;
-  user_name: string;
+  user_nm: string;
   /*KREAM용 추가*/ 
   permission_id: string;
   user_grp_id: string;
@@ -38,7 +38,7 @@ interface UserSettingsState {
 // Define the initial state using that type
 const initialState: UserSettingsState = {
   user_id: "",
-  user_name: "",
+  user_nm: "",
 
   /*KREAM용 추가*/ 
   permission_id: "",

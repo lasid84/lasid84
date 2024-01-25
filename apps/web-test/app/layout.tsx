@@ -1,5 +1,9 @@
 
 import '@/app/ui/global.css';
+import "@/app/css/tailwind.css";
+import "@/app/css/main.css";
+// import "@/app/css/layouts/layout-1.css";
+
 import { inter } from '@/app/ui/fonts';
 import  AuthContext from './myProvider';
 

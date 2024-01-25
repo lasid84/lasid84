@@ -14,6 +14,9 @@ import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/a
 
 import { useSession } from "next-auth/react"
 import { auth } from "@/auth"
+
+import { useUserSettings } from "@/app/states/useUserSettings";
+import { UserState } from "@/app/store/userStore";
  
 export default async function Page() {
 
@@ -25,7 +28,7 @@ export default async function Page() {
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Dashboard
+        Dashboard // {useUserSettings.getState().data.user_id} // {UserState.getState().user_id}
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">  
         {/* <Card title="Collected" value={totalPaidInvoices} type="collected" /> 

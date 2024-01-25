@@ -5,9 +5,12 @@ import { create } from 'zustand';
 const { executFunction } = require('@repo/kwe-lib/components/api.service');
 import { useUserSettings } from "@/app/states/useUserSettings";
 const { log } = require('@repo/kwe-lib/components/logHelper');
+import { auth } from '@/auth';
 
 import  getServerSession from 'next-auth';
 import { authConfig } from '@/auth.config';
+
+import { useSession } from "next-auth/react"
 
 
 import {
@@ -118,7 +121,7 @@ async function getMenuList (userInfo:any) {
       const menuItem: NavigationState = {
         parent_seq: menu.parent_seq,
         menu_seq: menu.menu_seq,
-        url: menu.menu_code === '' ? "/" : `/${menu.menu_code.substring(0,4).toLowerCase()}/${menu.menu_code.toLowerCase()}`,
+        url: menu.menu_code === '' ? "/" : `/page/${menu.menu_code.substring(0,4).toLowerCase()}/${menu.menu_code.toLowerCase()}`,
         icon: menu.parent_seq === '0' ? getIcon(menu.image_index) : undefined,
         title: menu.menu_name,
         items: [],
@@ -158,10 +161,6 @@ const useNavigationStore = create<NavigationStore>((set) => ({
   
   export const setNavigationData = async () => {
     console.log("setNavigationData start");
-
-    const session = await getServerSession(authConfig);
-
-    console.log("==================setNavigationData", session);
 
     const userInfo = useUserSettings.getState().data; 
     console.log("userInfo : ",userInfo);
