@@ -33,7 +33,7 @@
     "@prisma/client": "^4.16.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@repo/kwe-lib": "workspace:*",
-    "@repo/ui": "*",
+    "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-devtools": "^4.36.1",
     "@types/accounting": "^0.4.5",

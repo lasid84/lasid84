@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Card } from "@repo/ui/card";
 import { Code } from "@repo/ui/code";
+//import {Code} from "@repo/ui/src/card"
 import styles from "./page.module.css";
 
 function Gradient({

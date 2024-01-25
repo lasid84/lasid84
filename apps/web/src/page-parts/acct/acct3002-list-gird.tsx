@@ -31,10 +31,10 @@ const CodeListGrid: React.FC<Props> = ({
   const [rowData, setRowData] = useState([]);
   const [taxno, setTaxno] = useState('');
   const columns = React.useMemo(() => {
-    console.log('handle empty data', listItem)
+
     if (listItem === undefined || !listItem || listItem.length === 0) return []; // Handle empty data   
     //if(listItem.data.cursorData.length ===1) return [] //초기값설정
-    const firstRow = listItem.data.cursorData[0][0];
+    //const firstRow = listItem.data.cursorData[0][0];
     //console.log('firstRow')
 
     const a = [{
@@ -205,21 +205,17 @@ const CodeListGrid: React.FC<Props> = ({
     }, [gridListRef]
   )
 
-  // const sendTax = useCallback()
-
   return (
-    //w-full rounded-[5px] bg-white border
-    // <div className="flex flex-row w-full h-full mb-2 lg:flex-row lg:space-x-2 space-y-2 lg:space-y-0 lg:mb-4">
     <>
       <PageContent
-      right={
-        <button
-        onClick={createTax}
-        type="button"
-        className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
-        계산서 생성
-      </button>
-      }
+        right={
+          <button
+            onClick={createTax}
+            type="button"
+            className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
+            계산서 전송
+          </button>
+        }
       >
         <div className={containerStyle}>
           <div className={`ag-theme-custom ${gridStyle}`}>
@@ -237,11 +233,12 @@ const CodeListGrid: React.FC<Props> = ({
               onCellValueChanged={cellvalueChangedHandler}
               animateRows={true}
               overlayNoRowsTemplate={
-                '<span class="ag-overlay-loading-center">검색된 데이터가 없습니다.</span>'
+                `<span class="ag-overlay-loading-center">검색된 데이터가 없습니다. ${listItem?.data.textData}</span>`
               }
             />
           </div>
           {/* grid내부 비고 */}
+          <>
           <div className="w-full space-y-1">
             <label className="px-2 text-xs space-y-1">비고(BL)</label>
             <input
@@ -250,159 +247,157 @@ const CodeListGrid: React.FC<Props> = ({
               className="w-8/12 px-4 px-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700"
             />
           </div>
-        </div>
-      </PageContent>
-      <PageContent>
-        <div className={containerStyle}>
-          <div className={`ag-theme-custom ${footStyle}`}>
-            <div className="space-y-1">
-              <div className="flex flex-row items-start">
-                <label className="px-2 space-y-1">개별</label>
-                <div className='w-9/12 flex flex-col '>
-                  <input
-                    id="tax_no"
-                    type="text"
-                    className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                  />
+          {/* <div className={containerStyle}> */}
+            {/* <div className={`ag-theme-custom ${footStyle}`}> */}
+              <div className="space-y-1">
+                <div className="flex flex-row items-start">
+                  <label className="px-2 space-y-1">개별</label>
+                  <div className='w-9/12 flex flex-col '>
+                    <input
+                      id="tax_no"
+                      type="text"
+                      className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-row items-start">
+                  <label className="px-2 space-y-1">전체</label>
+                  <div className='w-9/12 flex flex-col '>
+                    <input
+                      id="tax_no"
+                      type="text"
+                      className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                    />
+                  </div>
+                  <button className="px-4 py-1 text-xs font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">계좌입력</button>
                 </div>
               </div>
               <div className="flex flex-row items-start">
-                <label className="px-2 space-y-1">전체</label>
-                <div className='w-9/12 flex flex-col '>
-                  <input
-                    id="tax_no"
-                    type="text"
-                    className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                  />
-                </div>
-                <button className="px-4 py-1 text-xs font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">계좌입력</button>
-              </div>
-            </div>
-            <div className="flex flex-row items-start">
-              <div className='px-1 py-1 w-full flex flex-col '>
-                <div className='w-8/12 flex flex-row justify-start '>
-                  <label className="px-2 space-y-3">[발송]</label>
-                  <div className="flex flex-col items-start" >
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">사용자명</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
+                <div className='px-1 py-1 w-full flex flex-col '>
+                  <div className='w-8/12 flex flex-row justify-start '>
+                    <label className="px-2 space-y-3">[발송]</label>
+                    <div className="flex flex-col items-start" >
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">사용자명</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">부서</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">전화번호</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">이메일</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">스마트빌ID</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">부서</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
+                    <label className="px-2 space-y-3">[수신]</label>
+                    <div className="flex flex-col items-start" >
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">사용자명</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">사무소</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">이메일</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start">
+                        <label className="w-full space-y-1">전화번호</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
+                      </div>
+                      <div style={{ width: "300px" }} className="flex flex-row items-start" >
+                        <label className="w-full space-y-1">사업장</label>
+                        <div className='w-full flex flex-col '>
+                          <input
+                            id="tax_no"
+                            type="text"
+                            className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">전화번호</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
+                    <div className="flex flex-col items-start" >
+                      <Link href={{
+                        pathname: "/acct/acct3002",
+                        query: {
+                          no: targetedRow2,
+                        }
+                      }}
+                        target="_blank" >
+                        <div className="px-4 py-1 text-xs font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">담당자 편집</div>
+                      </Link>
                     </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">이메일</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
-                    </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">스마트빌ID</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <label className="px-2 space-y-3">[수신]</label>
-                  <div className="flex flex-col items-start" >
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">사용자명</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
-                    </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">사무소</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
-                    </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">이메일</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
-                    </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start">
-                      <label className="w-full space-y-1">전화번호</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
-                    </div>
-                    <div style={{ width: "300px" }} className="flex flex-row items-start" >
-                      <label className="w-full space-y-1">사업장</label>
-                      <div className='w-full flex flex-col '>
-                        <input
-                          id="tax_no"
-                          type="text"
-                          className="px-4 py-1 text-xs font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700 space-y-1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start" >
-                    <Link href={{
-                      pathname: "/acct/acct3002",
-                      query: {
-                        no: targetedRow2,
-                      }
-                    }}
-                      target="_blank" >
-                      <div className="px-4 py-1 text-xs font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">담당자 편집</div>
-                    </Link>
                   </div>
                 </div>
               </div>
+            </>
             </div>
-          </div>
-        </div>
+
       </PageContent>
     </>
   );

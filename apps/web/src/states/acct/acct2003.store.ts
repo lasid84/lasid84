@@ -2,21 +2,6 @@ import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 import moment from "moment";
 
-
-
-export interface SearchParamType {
-    trans_mode: string | undefined,
-    trans_type: string | undefined,
-    no : string | undefined,
-    fr_date: string | undefined,
-    to_date: string | undefined,
-    cust_code: string | undefined,
-    sale_buy:string | undefined,
-    issue_or: string | undefined,
-    edi_yn : string | undefined,
-    job_or :string | undefined,
-}
-
 const { start_date, end_date } = getInitDate();
 
 export function getInitDate() {
@@ -27,28 +12,48 @@ export function getInitDate() {
         start_date: startDate || 'yyyy-mm-dd',
     };
 }
+export interface SearchParamType {
+    trans_mode: string | undefined,
+    trans_type: string | undefined,
+    office_cd: string | undefined,
+    fr_date: string | undefined,
+    to_date: string | undefined,
+    fr_inv_date: string | undefined,
+    to_inv_date: string | undefined,
+    cust_code: string | undefined,
+    issue_or: string | undefined,
+    no : string | undefined,
+    job_or :string | undefined,
+    sale_buy:string | undefined,
+}
+ 
+export interface TargetValueType {
+    no : string | undefined,
+    invoice_list : string | undefined,
+}
 
+export const initTargetValue : TargetValueType = {
+    no : '',
+    invoice_list : '',
+}
 
 export const initSearchValue: SearchParamType = {
     trans_mode: 'ALL',
     trans_type: 'ALL',
+    office_cd: 'ALL',
     fr_date: start_date,
     to_date: end_date,
-    cust_code: '', //거래처나 계산서번호 둘중 하나는 필수값 입니다.
+    fr_inv_date: '',
+    to_inv_date: '',
+    cust_code: '',
     issue_or: 'COD',
     no : '',
-    edi_yn : '',
     job_or :'',
-    sale_buy:'1',
+    sale_buy: '',
 }
 
 
 export const initInvoiceCheckValue = {
-    selectedTranType: '',
-    selectedTranMode: '',
-    selectedFrdate: moment().format("YYYY-MM-DD"),
-    selectedTodate: moment().format("YYYY-MM-DD"),
-    //invoice_no :'',    
     userInfo: {
         selected_code: '',
     },
@@ -58,32 +63,31 @@ export const initInvoiceCheckValue = {
     searchParam: {
         trans_mode: '',
         trans_type: '',
+        office_id : '',
         fr_date: moment().format("YYYY-MM-DD"),
         to_date: moment().format("YYYY-MM-DD"),
         fr_inv_date: '',
         to_inv_date: '',
         cust_code: '',
+        issue_or: 'COD',
         no : '',
-        user_id : '',
-        job_or :'',
-        sale_buy:'',
     },
 }
 
 type InvoiceCheckStore = {
     searchParam: SearchParamType,
+    targetValue : TargetValueType,
     actions: {
         setSearchParam: (payload: Partial<SearchParamType>) => void;
-        //setUserInfo: (payload: Partial<InvoiceCheckUserInfo>) => void;
+        setTargetValue: (payload: Partial<TargetValueType>) => void;
         //setPopUpData: (payload: Partial<InvoiceCheckPopUpType>) => void;
         setInit: () => void;
         // setInitWithOutUserInfo: () => void;        
     }
 }
 
-
-
 const invoiceStore = ((set: any) => ({
+    targetValue : initTargetValue,
     searchParam: initSearchValue,
     actions: {
         setSearchParam: (payload: Partial<SearchParamType>) => {
@@ -91,6 +95,12 @@ const invoiceStore = ((set: any) => ({
                 state.searchParam = { ...state.searchParam, ...payload };
                 return { ...state, searchParam: { ...state.searchParam } };
             });
+        },
+        setTargetValue : (payload : Partial<TargetValueType>)=> {
+            set((state :any)=>{
+                state.targetValue = {...state.targetValue, ...payload};
+                return {...state, targetValue : {...state.targetValue}}
+            })
         },
         // setUserInfo: (payload: Partial<InvoiceCheckUserInfo>) => {
         //     set((state: any) => {

@@ -1,5 +1,5 @@
 import {FiPlus} from "react-icons/fi";
-import Breadcrumb,{ BreadcrumbItemProps } from  "@repo/ui/breadcrumb"; 
+import Breadcrumb,{ BreadcrumbItemProps } from  "@repo/ui/src/breadcrumb/breadcrumb"; 
 
 export type PageTitleProps = {
   title: string;
