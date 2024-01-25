@@ -10,8 +10,6 @@ import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
 const {log} = require('@repo/kwe-lib/components/logHelper');
-import { useStore } from "@/app/utils/zustand";
-import { useUserSettings } from "@/app/states/useUserSettings";
 
 const FormSchema = z.object({
     // id: z.string(),
@@ -142,8 +140,8 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
       const user = await signIn('credentials', formData);
       
       // return {
-        // success: true,
-        // data: user
+      //   success: true,
+      //   data: user
       // };
       
     } catch (error) {
@@ -151,21 +149,22 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
         switch (error.type) {
           case 'CredentialsSignin':
           //   return {
-          //     // success: false,
+          //     success: false,
           //     message:'Invalid credentials.2',
           //     // m: '1234'
           // };
           return 'Invalid credentials.2';
           default:
-            {
-              // return {
-              //   // success: false,
-              //   message:'Something went wrong.2',
-              // };
+            // {
+            //   return {
+            //     success: false,
+            //     message:'Something went wrong.2',
+            //   };
               return 'Something went wrong.2';
-          }
+          // }
         }
       }
       throw error;
     }
   }
+

@@ -1,5 +1,6 @@
 import {useState} from "react";
-import {useRouter} from "next/router";
+// import {useRouter} from "next/router";
+import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import {FiChevronRight} from "react-icons/fi";
 import type {NavigationState} from "@/app/states/useNavigation";
@@ -8,7 +9,8 @@ import type {NavigationState} from "@/app/states/useNavigation";
 const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
   const [hidden, setHidden] = useState<boolean>(true);
   const router = useRouter();
-  const {pathname} = router;
+  // const {pathname} = router;
+  const pathname = usePathname();
 
 
 

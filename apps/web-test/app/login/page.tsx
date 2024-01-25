@@ -2,14 +2,10 @@
 import AcmeLogo from '@/app/ui/acme-logo';
 import LoginForm from '@/app/ui/login-form';
 import Image from 'next/image'
+import {useUserSettings} from '@/app/states/useUserSettings'
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
-import { auth } from "@/auth"
-import { SessionProvider } from "next-auth/react"
-import { FormProvider, useForm } from "react-hook-form";
-import { useStore } from "@/app/utils/zustand";
-import { useUserSettings } from "@/app/states/useUserSettings";
-import { useSession } from "next-auth/react"
+
 
 export type FormProps = {
   user_id: string;
@@ -34,8 +30,7 @@ type SessionType = {
  
 export default function LoginPage() {
 
-  const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
-    const { data: session, update } = useSession();
+  const userInfo = useUserSettings.getState().data; 
 
   return (
     // <SessionProvider session={session}>
@@ -47,6 +42,7 @@ export default function LoginPage() {
               <AcmeLogo />
             {/* </div> */}
           </div>
+          {userInfo.user_id}
             <LoginForm />
         </div>
       </main>

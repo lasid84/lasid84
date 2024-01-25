@@ -1,0 +1,12 @@
+@import "./tailwind.css";
+@import "./main.css";
+@import "./layouts/layout-1.css";
+@import "./animate.css";
+@import "./components/left-sidebar-1/styles-lg.css";
+@import "./components/left-sidebar-1/styles-sm.css";
+@import "./components/nprogress.css";
+@import "./components/recharts.css";
+@import "./components/steps.css";
+@import "./components/left-sidebar-3.css";
+@import "./ag-grid/ag-grid.css";
+@import "./ag-grid/ag-theme-custom.css";

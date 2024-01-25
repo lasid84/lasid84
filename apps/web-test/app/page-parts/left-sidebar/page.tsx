@@ -1,6 +1,6 @@
 'use client'
 
-import { Component, Fragment, useEffect } from "react";
+import { Component, Fragment, useEffect, useState } from "react";
 import {useNavigation, setNavigationData} from "@/app/states/useNavigation";
 import Item from "./item";
 import LogoImg from "./logo-img";
@@ -9,39 +9,60 @@ import { useStore } from "@/app/utils/zustand";
 import { useUserSettings } from "@/app/states/useUserSettings";
 
 import { useSession } from "next-auth/react"
+const { log } = require("@repo/kwe-lib/components/logHelper");
 
 // export default function LeftSidebar() {
 const LeftSidebar: React.FC = () => {
-    
-    const userStoreData = useStore(useUserSettings, (state) => state.data);
+        const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
     const { data: session, update } = useSession()
     
     const navigation = useNavigation((state) => state.navigation);  
-    
   
+    //   useEffect(() => {
+
+    //     () => {
+    //         const userData = session?.user;
+    //         console.log("LeftSidebar start", userData.user_id); 
+    //         userSettingsActions!.setData(userData);    
+    //         console.log("LeftSidebar start useUserSettings", useUserSettings.getState().data);    
+            
+    //         setNavigationData();
+    //     }
+        // const userData = session?.user;
+        
+        // () => {
+        //     aa();
+        // }          
+    //   });
+
       useEffect(() => {
-        const userData = session?.user;
-        // console.log("LeftSidebar start", userData.user_id);
-        // userSettingsActions!.setData({ user_id: userData.user_id });
-        // userSettingsActions!.setData({ user_name: userData.user_nm });
-        // userSettingsActions!.setData({ permission_id: userData.permission_id });
-        // userSettingsActions!.setData({ user_grp_id: userData.user_grp_id });
-        // userSettingsActions!.setData({ office_cd: userData.office_cd });
-        // userSettingsActions!.setData({ dept_cd: userData.dept_cd });
-        // userSettingsActions!.setData({ trans_mode: userData.trans_mode });
-        // userSettingsActions!.setData({ trans_type: userData.trans_type });
+        ;(async () => {          
+            const userData = await session?.user;
+            // console.log("LeftSidebar start", userData.user_id); 
+            // userSettingsActions!.setData({user_id: userData.user_id});    
+            // console.log("LeftSidebar start useUserSettings", useUserSettings.getState().data);    
+            
+            await aa(userData);
 
-        // //ip 추가
-        // userSettingsActions!.setData({ ufs_id: userData[0].ufs_id });
-
+            setNavigationData();        
           
-          setNavigationData();
-      }, []);
+        })()
+      }, [])
 
+
+    const aa = (async (userData:any) => {
+        
+        console.log("LeftSidebar start", userData.user_id); 
+        () => {
+            userSettingsActions!.setData(userData);    
+        }
+        console.log("LeftSidebar start useUserSettings"); 
+    });
 
   
     return (
       <div className="text-gray-900 h-screen bg-white left-sidebar left-sidebar-1 dark:bg-[#dce2eb] dark:border-gray-800 dark:text-black w-[230px]">
+        
         <LogoImg />
           <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">
               {navigation.map((menu, i) => (
