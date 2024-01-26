@@ -1,0 +1,1297 @@
+{
+  "MSG_0003": "Logging in..."
+,
+  "terminal_cd": "Terminal Code"
+,
+  "MSG_0146": ""
+,
+  "remark1": "Remark"
+,
+  "INVOICE_NO": "Invoice No."
+,
+  "bz_plc_nm": "Business name"
+,
+  "emp_no": "UFS Employee Number"
+,
+  "테스트메뉴": "Test Menu"
+,
+  "액터검색": ""
+,
+  "사용자 기준정보": "User reference Info"
+,
+  "메뉴 기준정보": "Menu reference Info"
+,
+  "기준정보": "Reference Info"
+,
+  "인보이스 조회(Manual)": "Invoice Load(Manual)"
+,
+  "user_nm": "Username"
+,
+  "permission_id": "Privilege ID"
+,
+  "perm_id": "Privilege ID"
+,
+  "permission_nm": "Privilege name"
+,
+  "dept_cd": "Department code"
+,
+  "office_cd": "Office code"
+,
+  "office_nm": "Office"
+,
+  "remark": "Remark"
+,
+  "tel_num": "Phone number"
+,
+  "edi_id": "Smartbill ID"
+,
+  "terminal": "Terminal"
+,
+  "use_yn": "Usage status"
+,
+  "권한별 메뉴관리": "Manage menus by permission"
+,
+  "msg_0004": "Please enter permissions."
+,
+  "msg_0005": "It's been processed."
+,
+  "msg_0006": "No change history"
+,
+  "MSG_0007": "Would you like to add a menu?"
+,
+  "MENUADD": "Add Menu"
+,
+  "MSG_0008": "Now Saving..."
+,
+  "MSG_0009": "Cannot be added to submenu."
+,
+  "MSG_0010": "Please select a date."
+,
+  "MSG_0011": "Please enter the system code"
+,
+  "edi_pass": "Smartbill PW"
+,
+  "SEARCH": "inquiry"
+,
+  "MSG_0012": "Do you want to save it?"
+,
+  "언어 관리": "Language Mange"
+,
+  "어쩌구저쩌구": "etc.."
+,
+  "terminal_nm": "Terminal Name"
+,
+  "MSG_0013": "The number of parameters and values is different."
+,
+  "MSG_0001": "Please enter your ID."
+,
+  "MSG_0002": "Please enter your Password"
+,
+  "s_sdt1": "Transmission Date"
+,
+  "last_upload_time": "Final Upload"
+,
+  "종합코드 관리": "General Code Management"
+,
+  "ediuser_dept": "EDI User dept"
+,
+  "invoice_seq": "Seq."
+,
+  "local_amt": "Local Amt"
+,
+  "actual_cost": "Actual Cost"
+,
+  "cost_curr": "Cost Curr"
+,
+  "cost_exchg_rt": "Cost Ex Rate"
+,
+  "waybill_amt": "Waybill Amt"
+,
+  "waybill_exchg_rt": "Waybill Ex Rate"
+,
+  "gubn": "Type"
+,
+  "cust": "Customer"
+,
+  "sppl_vat": "VAT"
+,
+  "vat_amt": "VAT"
+,
+  "customer": "Customer"
+,
+  "일반건 입력": "Normalcase Insert"
+,
+  "Amkor 입력": "Amkor Insert"
+,
+  "Picup Order": "Picup Order"
+,
+  "code": "CODE"
+,
+  "kor": "Korean"
+,
+  "eng": "English"
+,
+  "jpn": "Japanese"
+,
+  "grp_cd": "Group CODE"
+,
+  "grp_cd_nm": "Group CODE Name"
+,
+  "cd": "CODE"
+,
+  "cust_code": "Customer Code"
+,
+  "cust_nm": "Customer Name(Korean)"
+,
+  "cust_nm_abbr": "(Abbreviation)"
+,
+  "cust_nm_chi": "(Chinese Character)"
+,
+  "bz_plc_cd": "Business establishment code"
+,
+  "cust_nm_eng)": "(English)"
+,
+  "dd": "d"
+,
+  "executive_nm": "Representative"
+,
+  "apply_to_sts": "Status"
+,
+  "ccn_sts": "Status"
+,
+  "te": "t"
+,
+  "billing_or": "Processing"
+,
+  "ad_sppl_amt": "Issued amount"
+,
+  "ceasetax": "Cease Tax"
+,
+  "monthlyreport": "Monthly Report"
+,
+  "Charge코드 관리": "Charge code Management"
+,
+  "b": "b"
+,
+  "create_date": "Date Created"
+,
+  "file_contents": "File Contents"
+,
+  "MSG_0018": "You can only reprocess error cases."
+,
+  "MSG_0017": "Please choose a value."
+,
+  "if_yn": "Processing Status"
+,
+  "general_details": "General Details"
+,
+  "MSG_0020": "Please select a Mode."
+,
+  "MSG_0022": "Please enter an invoice number."
+,
+  "byinvoice": "by Invoice"
+,
+  "sum": "Sum"
+,
+  "mode": "Mode"
+,
+  "MSG_0024": "Please select a Product Group."
+,
+  "MSG_0027": "You cannot modify a voided case."
+,
+  "MSG_0028": "Please select an invoice."
+,
+  "createtax": "Bill Generation"
+,
+  "confirm": "Confirm"
+,
+  "MSG_0032": "Do you want to generate a tax invoice?"
+,
+  "MSG_0033": "Please select the date of the bill."
+,
+  "MSG_0035": "Please select a data."
+,
+  "MSG_0030": "Please select an office."
+,
+  "MSG_0037": "The date is already closed."
+,
+  "sendtax": "Transmit a bill"
+,
+  "MSG_0042": "The data is alreadly billed"
+,
+  "MSG_0044": "Please select a category."
+,
+  "MSG_0046": "The bill has been sent, so it cannot be discarded."
+,
+  "MSG_0047": "You do not have permission to select a retiremention..."
+,
+  "cd_nm": "CODE Name"
+,
+  "cd_desc": "Code description"
+,
+  "CODE_NM": "CODE Name"
+,
+  "init": "Init"
+,
+  "Edit": "Edit"
+,
+  "Save": "Save"
+,
+  "Close": "Close"
+,
+  "menu_code": "Menu Code"
+,
+  "menu_order": "Menu Order"
+,
+  "menu_param": "Menu Parameter"
+,
+  "menu_type": "Menu Type"
+,
+  "Refresh": "Refresh"
+,
+  "Add": "Add"
+,
+  "log_dd": "Log Date"
+,
+  "err_pos": "Error POS"
+,
+  "edi_email": "Email"
+,
+  "trans_mode": "trans_mode"
+,
+  "trans_type": "type"
+,
+  "Invoice No.": "Invoice No."
+,
+  "redo": "Reprocess"
+,
+  "office": "Office"
+,
+  "MSG_0147": ""
+,
+  "w/billing_no": "W/Billing No."
+,
+  "tax_sts": "Tax Status"
+,
+  "edi_sts": "EDI Status"
+,
+  "selectall": "Select All"
+,
+  "cancel_reason": "Cancel Reason"
+,
+  "taxcancel": "Cancel Tax"
+,
+  "etdata": "ETD/ATA"
+,
+  "Escape": "ESC"
+,
+  "inv_date": "Invoice Date"
+,
+  "giro_prt_yn": "Print"
+,
+  "receive_cd": "Deposit classification"
+,
+  "sale_buy_or": "Buying / Selling"
+,
+  "tran_cd": "Transaction classification"
+,
+  "vat_sub_yn": "Deduction"
+,
+  "vat_sub_y": "Deduction"
+,
+  "duty_10": "Taxation"
+,
+  "duty_00": "Zero Tax Rate"
+,
+  "job_or": "Job Classification"
+,
+  "s_sts": "Transmission Status"
+,
+  "c_sts": "Cancel Status"
+,
+  "tax_date": "Bill Date"
+,
+  "close_yn": "Closing Status"
+,
+  "update_date": "Update Date"
+,
+  "batch": "Batch"
+,
+  "case by case": "Case by Case"
+,
+  "IncludeNonTax": "Include Non Tax"
+,
+  "search_type": "Search Type"
+,
+  "bz_type": "Business Classification"
+,
+  "bz_con": "Business"
+,
+  "bz_item": "Item"
+,
+  "contact_nm": "Contact"
+,
+  "nation_code": "Country"
+,
+  "tel_no": "Tel No"
+,
+  "fax_no": "FAX No"
+,
+  "merge_type": "Merge Type"
+,
+  "publisher": "Publisher"
+,
+  "date": "Date"
+,
+  "sppl_tot": "Total"
+,
+  "delete": "Delete"
+,
+  "billing_month": "Billing Month"
+,
+  "port": "Port"
+,
+  "chk": "Check"
+,
+  "billto_nm": "BillTo Name"
+,
+  "tot_amt": "Total"
+,
+  "save_receipt": "Receipt Save"
+,
+  "print": "Print"
+,
+  "remark(bl)": "Remark(BL)"
+,
+  "each": "Each"
+,
+  "all": "ALL"
+,
+  "smartbillid": "SmartBill ID"
+,
+  "input_account": "Input Account"
+,
+  "receive": "Receive"
+,
+  "send": "Send"
+,
+  "s_sdt": "Send Time"
+,
+  "sender_nm": "Sender Name"
+,
+  "receiver_nm": "Receiver Name"
+,
+  "sender_dept": "Sender Dept"
+,
+  "sender_tel": "Sender Tel"
+,
+  "receiver_dept": "Receiver Dept"
+,
+  "receiver_tel": "receiver Tel"
+,
+  "receiver_email": "Receiver Email"
+,
+  "modify_reason": "Modify Reason"
+,
+  "send_count": "Send Count"
+,
+  "resendmail": "Resend Mail"
+,
+  "manager": "PIC"
+,
+  "m_sts": "Type"
+,
+  "master_bl_no": "Master BL No."
+,
+  "ata": "ATA"
+,
+  "dtd": "DTD"
+,
+  "arrived_dd": "Arrived Date"
+,
+  "total": "Total"
+,
+  "addr": "Address"
+,
+  "dept": "Department"
+,
+  "input_remark": "Input Remark"
+,
+  "addr2": "(Korean)"
+,
+  "MSG_0151": ""
+,
+  "addr1_eng": "Address"
+,
+  "modifyVAT": ""
+,
+  "addr2_eng": "(English)"
+,
+  "home_page_addr": "Homepage"
+,
+  "MSG_0153": ""
+,
+  "sale_cust_yn": "Sales Customer"
+,
+  "prch_cust_yn": "Foreign Partner"
+,
+  "gen_cust_yn": "Buying Customer"
+,
+  "1": "33"
+,
+  "cust_nm_eng": "(English)"
+,
+  "test13": ""
+,
+  "ai_cal_issue_or": "A/I"
+,
+  "bz_plc_addr2": ""
+,
+  "addr3_eng": ""
+,
+  "oe_cal_issue_or": "O/E"
+,
+  "ae_cal_fr_dd": "Billing Period(A/E)"
+,
+  "ai_cal_fr_dd": "A/I"
+,
+  "oe_cal_fr_dd": "O/E"
+,
+  "oi_cal_fr_dd": "O/I"
+,
+  "main_cust_code": "Main Customer"
+,
+  "vendoir_id": "Vendor ID"
+,
+  "post_no1": "Postal Code"
+,
+  "area_cd": "Region"
+,
+  "bz_plc_type_cd": "Business establishment type"
+,
+  "firm_nm_chi": "Firm Name(Chinese Character)"
+,
+  "firm_nm_eng": "Firm Name(English)"
+,
+  "bz_plc_addr1": "Address"
+,
+  "bz_plc_addr_chi": "Address(Chinese Character)"
+,
+  "own_other_or": "Own / Other"
+,
+  "cntl_tax_office_cd": "Tax Office"
+,
+  "med_ins_code": "Medical insurance business establishment"
+,
+  "cd_mgcd1": "Code Remark1"
+,
+  "cd_mgcd2": "Code Remark2"
+,
+  "bz_div_cd": "Business Division Code"
+,
+  "main_branch_or": "Main / Other Branch"
+,
+  "MSG_0053": "Do you want to send the e-mail again with this account?"
+,
+  "altered_edi": "Exchange rate check"
+,
+  "MSG_0058": "This is not a domestic invoice."
+,
+  "MSG_0059": "This is an untransmitted tax invoice."
+,
+  "MSG_0063": "Business Number"
+,
+  "vendor_id": "Vendor ID"
+,
+  "prod_gr_cd": "Product Group"
+,
+  "ass_transaction": "Associated Transaction"
+,
+  "category": "Category"
+,
+  "major_category": "Major Category"
+,
+  "vat_rt": "VAT Rt"
+,
+  "vat_type": "VAT Type"
+,
+  "fins_yn": "Accounting Sales Status"
+,
+  "fin_category": "Financial Category"
+,
+  "uas_gl_code": "UAS GL Code"
+,
+  "notedi_b_chk": "Bill not sent"
+,
+  "bz_kind_cd": "Business Category"
+,
+  "tax_or1": "the total amount of taxation"
+,
+  "fe_prt_yn": "Foreign Currency Print Status"
+,
+  "fe_ref_item": "Foreign currency reference items"
+,
+  "ae_cal_issue_or": "Tax Invoice Issue(A/E)"
+,
+  "bill_gr1_cd": "Billing Group Code1"
+,
+  "bill_gr2_cd": "Billing Group Code1"
+,
+  "gl_gr1_cd": "GL Group1"
+,
+  "gl_gr2_cd": "GL Group1"
+,
+  "sender_email": "Sender Email"
+,
+  "specialupdate": "Special Update"
+,
+  "type": "Type"
+,
+  "bl/inv no.": "BL/Invoice No."
+,
+  "billto_nm_kor": "Customer"
+,
+  "house_bl_no": "House BL No."
+,
+  "invoice_sts": "Status"
+,
+  "mode/type": "Mode/Type"
+,
+  "apply_to_invoice": "Apply To Invoice"
+,
+  "f": "ff"
+,
+  "MSG_0067": "UFS data cannot be modified."
+,
+  "cust_mode": "Mode"
+,
+  "sales_person": "Salesperson"
+,
+  "deposit_method": "Deposit Method"
+,
+  "deposit_date": "Deposit Date"
+,
+  "deposit_currency": "Deposit Currency Type"
+,
+  "deposit_currency_etc": "Deposit Currency Type etc."
+,
+  "MSG_1006": "You do not have permission to set up."
+,
+  "credit_rate": "Credit Rating"
+,
+  "cash_rate": "Cash Flow Rating"
+,
+  "rate_detail": "Remark"
+,
+  "MSG_0069": "You don't have permission to cancel the bill."
+,
+  "MSG_0071": "Please select a sales/buy category."
+,
+  "MSG_0073": "Hence it cannot be modified."
+,
+  "MSG_0076": "It is a canceled bill, so it cannot be transferred."
+,
+  "MSG_0077": "You do not have permission to discard the bill."
+,
+  "MSG_0078": "Please enter the changes you want to make."
+,
+  "MSG_0080": "Save the invoice first!"
+,
+  "MSG_0082": "The mode already exists."
+,
+  "MSG_0060": "Are you sure you want to cancel the tax invoice transfer?"
+,
+  "MSG_0085": "Would you like to cancel the bill?"
+,
+  "MSG_0086": "This is a cancelled bill."
+,
+  "MSG_0090": "A revised invoice has already been issued."
+,
+  "MSG_0038": "Please check the bill date"
+,
+  "MSG_0093": "Days Over!"
+,
+  "MSG_0094": "Please select the recipient."
+,
+  "MSG_0095": "Please select a group code."
+,
+  "MSG_0097": "Bill creation date (above deadline) error!!"
+,
+  "MSG_0098": "Please select a billing month."
+,
+  "MSG_0099": "Please select a business location."
+,
+  "MSG_0100": "Please check if it is a registered buyer."
+,
+  "MSG_0101": "Would you like to delete the bill?"
+,
+  "ae_sales": "AE Sales"
+,
+  "ai_sales": "AI Sales"
+,
+  "oe_sales": "OE Sales"
+,
+  "oi_sales": "OI Sales"
+,
+  "MSG_0102": "Select deposit classification."
+,
+  "pic_nm": "PIC"
+,
+  "cust_office": "PIC Office"
+,
+  "def": "Default"
+,
+  "billing_yn": "Issue Status"
+,
+  "user_dept": "Department"
+,
+  "krw_amt": "KRW amount"
+,
+  "email": "e-mail"
+,
+  "tax_prt_yn": "Tax Print"
+,
+  "vat_sub_n": "No Deduction"
+,
+  "yyyymm": "YYYYMM"
+,
+  "account": "Accounting Dept"
+,
+  "close_cnt": "Closing counting"
+,
+  "city_nm": "City Name(Korean)"
+,
+  "invoice_dd": "Invoice Date"
+,
+  "confirm_dd": "Confirm Date"
+,
+  "invoice_type": "Invoice Type"
+,
+  "ccn_type": "CCN Type"
+,
+  "mbl_no": "MB/L No."
+,
+  "hbl_no": "HB/L No."
+,
+  "cust_tax_id": "Cust Tax ID"
+,
+  "origin_port": "Origin Port"
+,
+  "dest_port": "Dest Port"
+,
+  "on_board_dd": "On Board Date"
+,
+  "billto_code": "BillTo Code"
+,
+  "arrive_dd": "Arrived Date"
+,
+  "invoice_curr": "Invoice Curr"
+,
+  "local_curr": "Local Curr"
+,
+  "invoice_tot": "Invoice Total"
+,
+  "invoice_taxable": "Taxable Amount"
+,
+  "invoice_taxable1": "Taxable 10%"
+,
+  "invoice_non_taxable": "Non Taxable"
+,
+  "invoice_taxable2": "Taxable 0%"
+,
+  "invoice_taxable3": "Taxable3"
+,
+  "invoice_tot_vat": "Total Vat"
+,
+  "local_tot_amt": "Local Total"
+,
+  "exchg_rt": "Exchange Rate"
+,
+  "local_taxable1": "Taxable 10%"
+,
+  "local_taxable2": "Taxable 0%"
+,
+  "local_taxable": "Taxable Amount"
+,
+  "dtl_seq": "Seq."
+,
+  "local_taxable3": "Taxable3"
+,
+  "local_non_taxable": "Non Taxable"
+,
+  "local_tot_vat": "Total Vat"
+,
+  "detailed_details": "Details"
+,
+  "addr_details": "Address"
+,
+  "new": "New"
+,
+  "current_month": "Current Month"
+,
+  "one_month": "One Month"
+,
+  "two_month": "Two Month"
+,
+  "three_month": "Three Month"
+,
+  "over_month": "Over Three Month"
+,
+  "copy": "Copy"
+,
+  "freight_term": "F/T"
+,
+  "grade": "Grade"
+,
+  "shpcnee": "SHP/CNEE"
+,
+  "tot_vat": "VAT"
+,
+  "post_no": "Post No."
+,
+  "MSG_0127": "Contains special characters."
+,
+  "MSG_0131": "*This program should only be used when generating revised invoices due to changes in supply prices."
+,
+  "MSG_0136": "This is not an invoice for which tax invoice has not been issued."
+,
+  "MSG_0138": "Go to the baseline information screen."
+,
+  "MSG_0139": "Only the National Tax Service's reported bill can issue a revised bill."
+,
+  "report_form": "Report Form"
+,
+  "col_desc": "Column Details"
+,
+  "input": "Input"
+,
+  "MSG_0150": ""
+,
+  "MSG_0148": ""
+,
+  "MSG_0149": ""
+,
+  "MSG_0154": ""
+,
+  "bz_reg_no_with_hyphen": "."
+,
+  "MSG_0155": ""
+,
+  "MSG_0156": ""
+,
+  "blortaxno": "BL/Tax No."
+,
+  "charge_code": "Charge Code"
+,
+  "oi_cal_issue_or": "O/I"
+,
+  "bz_plc_code": "Business establishment code"
+,
+  "main_branch_act_code": "Main Branch code"
+,
+  "MSG_0050": "You do not have permission to send tax invoices! Contact IT dept."
+,
+  "MSG_0054": "Do you want to resend the bill waiting to be sent?"
+,
+  "report_category": "Report Category"
+,
+  "charge_desc": "Charge Description"
+,
+  "MSG_0057": "It was handled by someone else. Check it again."
+,
+  "MSG_0070": "Only UFS sales tax invoice can be canceled."
+,
+  "MSG_0072": "The bill has been sent, so it cannot be canceled."
+,
+  "sendcancel": "Cancel Send"
+,
+  "MSG_0079": "It cannot be abolished because it is a transferred bill."
+,
+  "MSG_0083": "The generated bill is different from the business number registered in the profile."
+,
+  "MSG_0092": "The revised bill cannot be canceled, so please judge carefully. Would you like to issue a revised bill?"
+,
+  "amount": "Amount"
+,
+  "shipper": "Shipper"
+,
+  "consignee": "Consignee"
+,
+  "upload": "Upload"
+,
+  "view": "View"
+,
+  "description": "Description"
+,
+  "vessel_nm": "Vessel Name"
+,
+  "voyage_no": "Voyage No."
+,
+  "carrier": "Carrier"
+,
+  "flight_no": "Flight No."
+,
+  "service_type": "Service Type"
+,
+  "freight_rt": "Freight Rate"
+,
+  "tot_pieces": "Tot Pieces"
+,
+  "tot_slac_stc": "Tot Slac Stc"
+,
+  "oth_krw_amt": "Other KRW"
+,
+  "tot_gross_wt": "Tot Gross Wt"
+,
+  "tot_charge_wt": "Tot Charge Wt"
+,
+  "tot_volumn_wt": "Tot Volumn Wt"
+,
+  "shipment_no": "Shipment No."
+,
+  "lc_no": "L/C No."
+,
+  "comm_invoice": "Commercial Inv"
+,
+  "po_no": "P/O No."
+,
+  "blno": "B/L No."
+,
+  "country_code": "Country"
+,
+  "addr_eng": "Address(Eng)"
+,
+  "addr_kor": "Address(Kor)"
+,
+  "city_nm_kor": "City(Kor)"
+,
+  "no.": "No."
+,
+  "reason": "Reason"
+,
+  "tax_yymm": "Bill Month"
+,
+  "MSG_0125": "Check the invoice date (not available after 15th of each quarter)"
+,
+  "MSG_0126": "Please enter the contact name."
+,
+  "tooltip_0003": "You can look up several commas with a delimiter (ex: 5501249630600, 55012496931300)"
+,
+  "std_date": "Reference date"
+,
+  "merge_nm": "Collection name"
+,
+  "curr_amt": "Foreign Currency Amount"
+,
+  "invbltax": "No(Inv,BL,Tax)"
+,
+  "tooltip_0002": "Hotkey F1 : Show Popup"
+,
+  "billto_nm_eng": "BillTo(Eng)"
+,
+  "tooltip_0001": "1. You can enter the invoice, house, master BL, and tax invoice number. 2. You can enter many numbers in the form No and No."
+,
+  "create": "Create"
+,
+  "sendmodifiedtax": "Send"
+,
+  "MSG_0152": ""
+,
+  "MSG_0157": ""
+,
+  "other": "OTHER"
+,
+  "ufs_id": "UFS ID"
+,
+  "excel": "Excel"
+,
+  "searchMR": "Billing Report"
+,
+  "user_id": "UserID"
+,
+  "n_sts": "Report Status"
+,
+  "bl_no": "HB/L No."
+,
+  "trans_cds": "Manual Input"
+,
+  "MSG_0014": "Duplicate item exists"
+,
+  "file_name": "File Name"
+,
+  "MSG_0023": "A Duplicated Invoice Number"
+,
+  "MSG_0026": "You cannot modify a closed case."
+,
+  "MSG_0029": "B/L Amount and the Target amount are inconsistent. "
+,
+  "MSG_0039": "A closed date is included."
+,
+  "MSG_0041": "A generated bill does not exist"
+,
+  "MSG_0043": "Bill-generated invoice is included. Check and Try again."
+,
+  "billto": "Bill To"
+,
+  "tax_or": "Tax classification"
+,
+  "receive_dd": "Deposit date"
+,
+  "buygubn": "Purchase classification"
+,
+  "duty_no": "No taxable"
+,
+  "update_user": "Update User"
+,
+  "MSG_0122": "Invoice details are copied."
+,
+  "addr1": "Address"
+,
+  "city_nm_eng": "City Name(English)"
+,
+  "cal_except_yn": "Bill Exception"
+,
+  "corp_reg_no": "Corporate Number"
+,
+  "firm_nm_kor": "Firm Name(Korean)"
+,
+  "bz_plc_addr_eng": "Address(English)"
+,
+  "nat_annu_code": "National Pension Business Establishment"
+,
+  "MSG_0051": "Enter the billing period if the bill issuance classification is monthly"
+,
+  "MSG_0052": "For registered businesses, the business registration number is required. Enter business registration number"
+,
+  "rem_prt_yn": "Remark Print Status"
+,
+  "remark2": "Remark2"
+,
+  "MSG_0135": "There are no saved forms."
+,
+  "MSG_0016": "It's processed normally"
+,
+  "MSG_0019": "There is a changed charge code. Do you want to save it?"
+,
+  "MSG_0034": "Please proceed after an adjustment in CCN View or Billing Management View."
+,
+  "MSG_0048": "Discard selection is only possible for REVERSED or VOID."
+,
+  "MSG_0049": "Either the account or the bill number is a required input value."
+,
+  "MSG_0056": "Bill number error. Must be entered in year/month + office + purchase/sales + order..."
+,
+  "MSG_0055": "It's a zero amount, taxable bill set. Would you like to cancel the transfer of both bills?"
+,
+  "MSG_0064": "Would you like to refuse to cancel the tax invoice?"
+,
+  "MSG_0065": "This is an irrevocable tax invoice."
+,
+  "MSG_0068": "You cannot modify the data that is already billed."
+,
+  "MSG_0107": "Please enter the adjusted exchange rate."
+,
+  "MSG_0108": "Only up to 9999.99 is allowed to enter."
+,
+  "MSG_0109": "Only the main account can change the business number."
+,
+  "MSG_0110": "Please enter the adjustment amount."
+,
+  "MSG_0111": "This is not exchange rate adjusted data."
+,
+  "MSG_0112": "Are you sure you want to cancel all adjusted data?"
+,
+  "due_dd": "Estimated deposit date"
+,
+  "delay_seq": "Delay Sequence"
+,
+  "invoice_tot_amt": "Amount"
+,
+  "sales_person_nm": "Salesperson"
+,
+  "delay_day": "Delay Day"
+,
+  "first_due_dd": "First Scheduled Date"
+,
+  "delay_date": "Delay Date"
+,
+  "curr": "Currency"
+,
+  "searchBill": "Bill details"
+,
+  "searchB/L": "B/L inquiry"
+,
+  "sale_by_or": "Buy / Sales"
+,
+  "bill_history": "Billing History"
+,
+  "edit_remark_yn": "Correction of the remark column"
+,
+  "MSG_0141": "The invoice date is larger than the current date."
+,
+  "sppl_amt": "Supply Price"
+,
+  "shipper_nm": ""
+,
+  "consign_nm": ""
+,
+  "shipper_code": ""
+,
+  "consign_code": ""
+,
+  "MSG_0158": ""
+,
+  "ocean": "Ocean Dept."
+,
+  "air import": "Air Import"
+,
+  "Report Print": ""
+,
+  "MSG_0159": ""
+,
+  "start_date": "Date of joining"
+,
+  "bill_type": "Bill Type"
+,
+  "credit_term": "Customer Credit Term"
+,
+  "MSG_0081": "UFS Data can only be modified by the company name, representative, business status, item, address, and invoice date."
+,
+  "MSG_0084": "Contains non-transferable bills!"
+,
+  "MSG_0089": "There is a change. Do you want to save it?"
+,
+  "MSG_0096": "Tax invoice generation is not possible because the Miscellaneous Invoice HOUSE_BL_NO does not exist"
+,
+  "MSG_0103": "Select deposit date."
+,
+  "MSG_0104": "You do not have permission to delete."
+,
+  "MSG_0105": "Fill out the deposit slip and print it out."
+,
+  "MSG_0124": "Invalid date format."
+,
+  "search_gubn": "Inquiry classification"
+,
+  "MSG_0106": "This is the bill number that doesn't exist."
+,
+  "tax_amt": "VAT"
+,
+  "tax_or2": "Zero Tax Rate Sum"
+,
+  "MSG_0121": "Code beginning with KR must be used in 10 digits."
+,
+  "cust_grade": "Customer Grade"
+,
+  "base_dd": "Base Date"
+,
+  "kr_amt": "Korean Currency"
+,
+  "ori_amt": "existing currency"
+,
+  "needtocheckinvoice": "Invoice that needs to be verified"
+,
+  "invoicelist": "Invoice Details"
+,
+  "mon_0": "not overdue"
+,
+  "mon_1": "+1month"
+,
+  "mon_10": "+10month"
+,
+  "mon_11": "+11month"
+,
+  "mon_12": "+12month"
+,
+  "mon_2": "+2month"
+,
+  "mon_3": "+3month"
+,
+  "mon_4": "+4month"
+,
+  "mon_5": "+5month"
+,
+  "mon_6": "+6month"
+,
+  "mon_8": "+8month"
+,
+  "mon_9": "+9month"
+,
+  "editmanager": "Edit Manager"
+,
+  "modify_tax": "Revised tax invoice"
+,
+  "normal_form": "Normal Form"
+,
+  "bycust_form": "Customized Form"
+,
+  "curr_code": "Foreign Currency"
+,
+  "bill_date": "Bill Date"
+,
+  "MSG_0066": "It's an irrevocable bill. Please contact SDD."
+,
+  "MSG_0074": "The bill has been sent and cannot be modified."
+,
+  "MSG_0075": "The tax invoice sent has been rejected or approved for cancellation, so you can only cancel the invoice."
+,
+  "MSG_0091": "The revised tax invoice generated by this program is generated by the reason of 'correction of errors in entries' among the standard reasons of the National Tax Service"
+,
+  "mon_7": "+7month"
+,
+  "origin_tax": "Original tax invoice"
+,
+  "invoice_history": "Invoice History"
+,
+  "modified_bill": "Revised Tax Invoice"
+,
+  "MSG_0114": "is copied."
+,
+  "shprcnee_nm": "SHPR/CNEE"
+,
+  "cal_fr_dd": "Billing date(From)"
+,
+  "approval_form": "Transaction approval application"
+,
+  "exrateadjust": "Exchange rate adjustment"
+,
+  "dailyexrate": "Daily Exchange Rate"
+,
+  "cancel": "Cancel"
+,
+  "MSG_0061": "Customer code"
+,
+  "ctl_exchg_rt": "Adjusted exchange rate"
+,
+  "MSG_0116": "Business establishment, terminal, department, office, UFS ID are required input values."
+,
+  "MSG_0130": "Unable to resend since it's pending approval."
+,
+  "set_form": "Form Settings"
+,
+  "MSG_0137": "Check your smart bill account."
+,
+  "tax_tot": "the total bill"
+,
+  "data_start_row": "Data Startup Column"
+,
+  "col_nm": "Column name"
+,
+  "repeat_mode": "Repeat mode (title/data)"
+,
+  "MSG_0142": "Contact business can only enter numbers."
+,
+  "MSG_0143": ""
+,
+  "MSG_0062": "Customer Name"
+,
+  "tax_no": "Tax No."
+,
+  "MSG_0144": ""
+,
+  "MSG_0145": ""
+,
+  "inv_tot_amt": ""
+,
+  "outstanding_board": "Summary"
+,
+  "w_other": "Other"
+,
+  "01curr": "USD"
+,
+  "02curr": "USD"
+,
+  "w_other_curr": "USD"
+,
+  "free_house_term": "FHT"
+,
+  "invoice_amt": "Invoice Amt"
+,
+  "waybill_curr": "Waybill Curr"
+,
+  "ediuser_chk": "EDI User check"
+,
+  "tax_orig_date": "First Issue Date"
+,
+  "Search": "Search"
+,
+  "menu_name": "Menu Name"
+,
+  "image_index": "Image Idx"
+,
+  "err_log": "Error Log"
+,
+  "searchccn": "Search CCN & Billing Management"
+,
+  "MSG_0015": "Please upload a .D file"
+,
+  "MSG_0021": "Please select a Type."
+,
+  "MSG_0025": "Please enter a charge code."
+,
+  "MSG_0031": "Select at least one piece of information"
+,
+  "MSG_0036": "To Date cannot be smaller than the From date. "
+,
+  "MSG_0040": "This is a customer that does not transmit the tax invoice bill."
+,
+  "MSG_0045": "You can't choose materials that have already been issued except for the abolition of the bill"
+,
+  "MSG_0113": "Either B/L No or Bill No is required."
+,
+  "MSG_0115": "The data is not available."
+,
+  "shprcnee_code": "SHPR/CNEE Code"
+,
+  "cal_issue_or": "Bill Issue Classification"
+,
+  "cal_to_dd": "Billing Date(To)"
+,
+  "adjustExRate": "Adjusted exchange rate"
+,
+  "adjustkrw": "Adjustment of won amount"
+,
+  "apply": "Apply"
+,
+  "aw_for_amt": "Foreign currency amount"
+,
+  "aw_curr": "Currency"
+,
+  "aw_exchg_rt": "Currency Exchange Rate"
+,
+  "MSG_0118": "No ETA/ATA."
+,
+  "tax_or0": "Zero Tax Rate Sum"
+,
+  "vat_sub_yn_nm": "Deduction"
+,
+  "MSG_0119": "Account - Use after registering office code"
+,
+  "MSG_0120": "Please enter a number greater than zero."
+,
+  "create_user": "Registered person"
+,
+  "bz_reg_no": "Business number"
+,
+  "publish_date": "Issue Date"
+,
+  "MSG_0123": "Please enter a year."
+,
+  "fileopen": "File Search"
+,
+  "billing_dd": "Billing Date"
+,
+  "MSG_0128": "Enter bill month (YYYYMM)"
+,
+  "MSG_0129": "Please enter the BL and bill number."
+,
+  "MSG_0132": "An unauthorized bill exists."
+,
+  "MSG_0133": "Please use it after updating."
+,
+  "rem_prt_nm": "Report Output Name"
+,
+  "MSG_0134": "Please select a client"
+,
+  "MSG_0140": "Total amount cannot be less than zero"
+}

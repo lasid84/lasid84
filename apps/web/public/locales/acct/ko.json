@@ -1,0 +1,1297 @@
+{
+  "MSG_0003": "로그인 중입니다..."
+,
+  "terminal_cd": "터미널코드"
+,
+  "MSG_0146": "취소된 계산서입니다."
+,
+  "remark1": "비고"
+,
+  "INVOICE_NO": "Invoice No."
+,
+  "bz_plc_nm": "사업장명"
+,
+  "emp_no": "UFS사원번호"
+,
+  "테스트메뉴": "테스트메뉴"
+,
+  "액터검색": "액터검색"
+,
+  "사용자 기준정보": "사용자 기준정보"
+,
+  "메뉴 기준정보": "메뉴 기준정보"
+,
+  "기준정보": "기준정보"
+,
+  "인보이스 조회(Manual)": "인보이스 조회(Manual)"
+,
+  "user_nm": "사용자명"
+,
+  "permission_id": "권한ID"
+,
+  "perm_id": "권한ID"
+,
+  "permission_nm": "권한명"
+,
+  "dept_cd": "부서코드"
+,
+  "office_cd": "사무소코드"
+,
+  "office_nm": "사무소"
+,
+  "remark": "비고"
+,
+  "tel_num": "전화번호"
+,
+  "edi_id": "스마트빌 ID"
+,
+  "terminal": "터미널"
+,
+  "use_yn": "사용여부"
+,
+  "권한별 메뉴관리": "권한별 메뉴관리"
+,
+  "msg_0004": "권한을 입력하세요."
+,
+  "msg_0005": "처리 되었습니다."
+,
+  "msg_0006": "변경 내역이 없습니다."
+,
+  "MSG_0007": "메뉴를 추가 하시겠습니까?"
+,
+  "MENUADD": "메뉴 추가"
+,
+  "MSG_0008": "저장 중입니다."
+,
+  "MSG_0009": "하위메뉴에 추가 할 수 없습니다."
+,
+  "MSG_0010": "날짜를 선택해 주세요."
+,
+  "MSG_0011": "시스템코드를 입력 해 주세요"
+,
+  "edi_pass": "스마트빌 PW"
+,
+  "SEARCH": "조회"
+,
+  "MSG_0012": "저장하시겠습니까?"
+,
+  "언어 관리": "언어 관리"
+,
+  "어쩌구저쩌구": "어쩌구 저쩌구"
+,
+  "terminal_nm": "터미널명"
+,
+  "MSG_0013": "파라미터와 값의 갯수가 다릅니다."
+,
+  "MSG_0001": "ID를 입력하세요."
+,
+  "MSG_0002": "비밀번호를 입력하세요."
+,
+  "s_sdt1": "전송일자"
+,
+  "last_upload_time": "최종Upload"
+,
+  "종합코드 관리": "종합코드 관리"
+,
+  "ediuser_dept": "담당자 부서"
+,
+  "invoice_seq": "Seq."
+,
+  "local_amt": "Local Amt"
+,
+  "actual_cost": "Actual Cost"
+,
+  "cost_curr": "C.통화"
+,
+  "cost_exchg_rt": "Cost 환율"
+,
+  "waybill_amt": "Waybill Amt"
+,
+  "waybill_exchg_rt": "Waybill 환율"
+,
+  "gubn": "구분"
+,
+  "cust": "거래처"
+,
+  "sppl_vat": "부가세"
+,
+  "vat_amt": "부가세"
+,
+  "customer": "거래처"
+,
+  "일반건 입력": "일반건 입력"
+,
+  "Amkor 입력": "Amkor 입력"
+,
+  "Picup Order": "Picup Order"
+,
+  "code": "코드"
+,
+  "kor": "한국어"
+,
+  "eng": "영어"
+,
+  "jpn": "일본어"
+,
+  "grp_cd": "그룹코드"
+,
+  "grp_cd_nm": "그룹코드 이름"
+,
+  "cd": "코드"
+,
+  "cust_code": "거래처코드"
+,
+  "cust_nm": "상호(한글)"
+,
+  "cust_nm_abbr": "(약 칭)"
+,
+  "cust_nm_chi": "(한 자)"
+,
+  "bz_plc_cd": "사업장"
+,
+  "cust_nm_eng)": "(영 자)"
+,
+  "dd": "dddd"
+,
+  "executive_nm": "대표자"
+,
+  "apply_to_sts": "Status"
+,
+  "ccn_sts": "Status"
+,
+  "te": "t"
+,
+  "billing_or": "처리"
+,
+  "ad_sppl_amt": "발행금액"
+,
+  "ceasetax": "계산서폐기(재발행)"
+,
+  "monthlyreport": "Monthly Report"
+,
+  "Charge코드 관리": "Charge코드 관리"
+,
+  "b": "b"
+,
+  "create_date": "생성일"
+,
+  "file_contents": "파일내용"
+,
+  "MSG_0018": "에러 발생 건에 대해서만 재처리 할 수 있습니다."
+,
+  "MSG_0017": "값을 선택 해 주세요."
+,
+  "if_yn": "처리여부"
+,
+  "general_details": "일반내역"
+,
+  "MSG_0020": "Mode를 선택 해 주세요"
+,
+  "MSG_0022": "인보이스 번호를 입력 해 주세요."
+,
+  "byinvoice": "인보이스별"
+,
+  "sum": "합계"
+,
+  "mode": "Mode"
+,
+  "MSG_0024": "Product Group 을 선택해 주세요"
+,
+  "MSG_0027": "폐지되었으므로 수정할 수 없습니다."
+,
+  "MSG_0028": "인보이스를 선택해 주세요."
+,
+  "createtax": "계산서생성"
+,
+  "confirm": "확인"
+,
+  "MSG_0032": "세금계산서를 생성하시겠습니까?"
+,
+  "MSG_0033": "계산서 일자를 선택하세요."
+,
+  "MSG_0035": "데이터를 선택하세요."
+,
+  "MSG_0030": "사무소를 선택 해 주세요."
+,
+  "MSG_0037": "이미 마감된 일자입니다."
+,
+  "sendtax": "계산서전송"
+,
+  "MSG_0042": "이미 Billing된 자료 입니다..."
+,
+  "MSG_0044": "취합 구분을 선택해 주세요."
+,
+  "MSG_0046": "전송된 계산서이므로 폐기 할 수 없습니다."
+,
+  "MSG_0047": "폐기선택 권한이 없습니다..."
+,
+  "cd_nm": "코드이름"
+,
+  "cd_desc": "코드 설명"
+,
+  "CODE_NM": "코드이름"
+,
+  "init": "새로고침"
+,
+  "Edit": "수정"
+,
+  "Save": "저장"
+,
+  "Close": "닫기"
+,
+  "menu_code": "메뉴코드"
+,
+  "menu_order": "메뉴순서"
+,
+  "menu_param": "메뉴 파라미터"
+,
+  "menu_type": "메뉴 타입"
+,
+  "Refresh": "새로고침"
+,
+  "Add": "추가"
+,
+  "log_dd": "로그 날짜"
+,
+  "err_pos": "오류 코드"
+,
+  "edi_email": "메일주소"
+,
+  "trans_mode": "모드"
+,
+  "trans_type": "타입"
+,
+  "Invoice No.": "Invoice No."
+,
+  "redo": "재처리"
+,
+  "office": "사무소"
+,
+  "MSG_0147": "별도 전송건은 취소할 수 없습니다. 경리부에 문의하세요."
+,
+  "w/billing_no": "W/Billing No."
+,
+  "tax_sts": "계산서상태"
+,
+  "edi_sts": "전송상태"
+,
+  "selectall": "전체선택"
+,
+  "cancel_reason": "취소(거부)사유"
+,
+  "taxcancel": "계산서취소"
+,
+  "etdata": "ETD/ATA"
+,
+  "Escape": "ESC"
+,
+  "inv_date": "Inv발행일"
+,
+  "giro_prt_yn": "지로출력"
+,
+  "receive_cd": "입금구분"
+,
+  "sale_buy_or": "매입/매출"
+,
+  "tran_cd": "거래구분"
+,
+  "vat_sub_yn": "공제"
+,
+  "vat_sub_y": "공제"
+,
+  "duty_10": "과세"
+,
+  "duty_00": "영세"
+,
+  "job_or": "작업구분"
+,
+  "s_sts": "전송상태"
+,
+  "c_sts": "취소상태"
+,
+  "tax_date": "계산서일자"
+,
+  "close_yn": "마감여부"
+,
+  "update_date": "수정일"
+,
+  "batch": "일괄"
+,
+  "case by case": "개별"
+,
+  "IncludeNonTax": "Non Tax포함"
+,
+  "search_type": "상태구분"
+,
+  "bz_type": "사업 형태"
+,
+  "bz_con": "업 태"
+,
+  "bz_item": "종 목"
+,
+  "contact_nm": "담당자"
+,
+  "nation_code": "국가"
+,
+  "tel_no": "전화번호"
+,
+  "fax_no": "FAX번호"
+,
+  "merge_type": "취합구분"
+,
+  "publisher": "발행처"
+,
+  "date": "기간"
+,
+  "sppl_tot": "합계"
+,
+  "delete": "삭제"
+,
+  "billing_month": "청구월"
+,
+  "port": "Port"
+,
+  "chk": "Check"
+,
+  "billto_nm": "거래처"
+,
+  "tot_amt": "합계"
+,
+  "save_receipt": "입금증저장"
+,
+  "print": "출력"
+,
+  "remark(bl)": "비고(BL)"
+,
+  "each": "개별"
+,
+  "all": "전체"
+,
+  "smartbillid": "스마트빌ID"
+,
+  "input_account": "계좌입력"
+,
+  "receive": "수신"
+,
+  "send": "발송"
+,
+  "s_sdt": "전송시간"
+,
+  "sender_nm": "송신자 이름"
+,
+  "receiver_nm": "수신자 이름"
+,
+  "sender_dept": "송신자 부서"
+,
+  "sender_tel": "송신자 전화"
+,
+  "receiver_dept": "수신자 부서"
+,
+  "receiver_tel": "수신자 전화"
+,
+  "receiver_email": "수신자 이메일"
+,
+  "modify_reason": "수정사유"
+,
+  "send_count": "전송회차"
+,
+  "resendmail": "메일 재전송"
+,
+  "manager": "담당자"
+,
+  "m_sts": "구분"
+,
+  "master_bl_no": "Master BL No."
+,
+  "ata": "ATA"
+,
+  "dtd": "DTD"
+,
+  "arrived_dd": "Arrived Date"
+,
+  "total": "합계"
+,
+  "addr": "주소"
+,
+  "dept": "부서"
+,
+  "input_remark": "비고입력"
+,
+  "addr2": "(한글)"
+,
+  "MSG_0151": "원래 VAT와 너무 많은 차이가 있습니다(>100원)"
+,
+  "addr1_eng": "주소"
+,
+  "modifyVAT": "VAT수정"
+,
+  "addr2_eng": "(영문)"
+,
+  "home_page_addr": "홈페이지"
+,
+  "MSG_0153": "재전송 할 수 없는 상태입니다."
+,
+  "sale_cust_yn": "판 매 처"
+,
+  "prch_cust_yn": "해외파트너"
+,
+  "gen_cust_yn": "매 입 처"
+,
+  "1": "22"
+,
+  "cust_nm_eng": "(영 자)"
+,
+  "test13": "tae"
+,
+  "ai_cal_issue_or": "(A/I)"
+,
+  "bz_plc_addr2": ""
+,
+  "addr3_eng": "   "
+,
+  "oe_cal_issue_or": "(O/E)"
+,
+  "ae_cal_fr_dd": "청구기간(A/E)"
+,
+  "ai_cal_fr_dd": "(A/I)"
+,
+  "oe_cal_fr_dd": "(O/E)"
+,
+  "oi_cal_fr_dd": "(O/I)"
+,
+  "main_cust_code": "주거래처"
+,
+  "vendoir_id": "벤더ID"
+,
+  "post_no1": "우편번호"
+,
+  "area_cd": "지역"
+,
+  "bz_plc_type_cd": "사업장유형"
+,
+  "firm_nm_chi": "상호(한자)"
+,
+  "firm_nm_eng": "상호(영자)"
+,
+  "bz_plc_addr1": "주소"
+,
+  "bz_plc_addr_chi": "주소(한자)"
+,
+  "own_other_or": "자타사구분"
+,
+  "cntl_tax_office_cd": "세무서"
+,
+  "med_ins_code": "의료보험사업장"
+,
+  "cd_mgcd1": "코드 비고1"
+,
+  "cd_mgcd2": "코드 비고2"
+,
+  "bz_div_cd": "사업부코드"
+,
+  "main_branch_or": "본지사구분"
+,
+  "MSG_0053": "계정으로 이메일을 재전송 하시겠습니까?"
+,
+  "altered_edi": "환율조회"
+,
+  "MSG_0058": "국내 인보이스가 아닙니다."
+,
+  "MSG_0059": "전송되지 않은 계산서입니다."
+,
+  "MSG_0063": "사업자번호"
+,
+  "vendor_id": "Vendor ID"
+,
+  "prod_gr_cd": "Product Group"
+,
+  "ass_transaction": "Associated Transaction"
+,
+  "category": "카테고리"
+,
+  "major_category": "major 카테고리"
+,
+  "vat_rt": "VAT Rt"
+,
+  "vat_type": "부가세Type"
+,
+  "fins_yn": "회계매출여부"
+,
+  "fin_category": "Financial Category"
+,
+  "uas_gl_code": "UAS GL Code"
+,
+  "notedi_b_chk": "계산서미전송"
+,
+  "bz_kind_cd": "업 종"
+,
+  "tax_or1": "과세합계"
+,
+  "fe_prt_yn": "외화출력여부"
+,
+  "fe_ref_item": "외화참조항목"
+,
+  "ae_cal_issue_or": "계산서발행(A/E)"
+,
+  "bill_gr1_cd": "Billing Group Code1"
+,
+  "bill_gr2_cd": "Billing Group Code2"
+,
+  "gl_gr1_cd": "GL Group1"
+,
+  "gl_gr2_cd": "GL Group2"
+,
+  "sender_email": "송신자 이메일"
+,
+  "specialupdate": "수정(Special)"
+,
+  "type": "Type"
+,
+  "bl/inv no.": "BL/Invoice No."
+,
+  "billto_nm_kor": "거래처"
+,
+  "house_bl_no": "House BL No."
+,
+  "invoice_sts": "Status"
+,
+  "mode/type": "Mode/Type"
+,
+  "apply_to_invoice": "Apply To Invoice"
+,
+  "f": "f"
+,
+  "MSG_0067": "UFS 데이터는 수정할 수 없습니다."
+,
+  "cust_mode": "모드"
+,
+  "sales_person": "영업사원"
+,
+  "deposit_method": "입금형태"
+,
+  "deposit_date": "입금일자"
+,
+  "deposit_currency": "입금화페종류"
+,
+  "deposit_currency_etc": "입금화폐종류etc"
+,
+  "MSG_1006": "설정권한이 없습니다."
+,
+  "credit_rate": "신용평가신용등급"
+,
+  "cash_rate": "현금흐름등급"
+,
+  "rate_detail": "비 고"
+,
+  "MSG_0069": "계산서 취소 권한이 없습니다."
+,
+  "MSG_0071": "매출/매입 구분을 선택하세요."
+,
+  "MSG_0073": "되었으므로 수정할 수 없습니다."
+,
+  "MSG_0076": "취소된 계산서이므로 전송할 수 없습니다."
+,
+  "MSG_0077": "계산서 폐기 권한이 없습니다."
+,
+  "MSG_0078": "변경할 내용을 입력하세요."
+,
+  "MSG_0080": "인보이스 저장 후 사용하세요!"
+,
+  "MSG_0082": "이미 존재하는 모드입니다"
+,
+  "MSG_0060": "세금 계산서 전송을 취소하시겠습니까?"
+,
+  "MSG_0085": "계산서를 취소하시겠습니까?"
+,
+  "MSG_0086": "취소된 계산서입니다."
+,
+  "MSG_0090": "이미 수정계산서가 발행 되었습니다."
+,
+  "MSG_0038": "계산서 일자를 확인해주세요..!"
+,
+  "MSG_0093": "일 초과!"
+,
+  "MSG_0094": "받는사람을 선택하세요."
+,
+  "MSG_0095": "그룹코드를 선택해주세요."
+,
+  "MSG_0097": "계산서 생성일자(마감일자초과) 오류!!"
+,
+  "MSG_0098": "청구월을 선택하세요."
+,
+  "MSG_0099": "사업장을 선택하세요."
+,
+  "MSG_0100": "매입처로 등록된 거래처인지 확인 하세요"
+,
+  "MSG_0101": "계산서를 삭제하시겠습니까?"
+,
+  "ae_sales": "AE Sales"
+,
+  "ai_sales": "AI Sales"
+,
+  "oe_sales": "OE Sales"
+,
+  "oi_sales": "OI Sales"
+,
+  "MSG_0102": "입금구분을 선택하세요."
+,
+  "pic_nm": "담당자"
+,
+  "cust_office": "담당자부서"
+,
+  "def": "기본값"
+,
+  "billing_yn": "발행여부"
+,
+  "user_dept": "부서"
+,
+  "krw_amt": "원화금액"
+,
+  "email": "이메일"
+,
+  "tax_prt_yn": "계산서출력"
+,
+  "vat_sub_n": "불공제"
+,
+  "yyyymm": "년월(YYYYMM)"
+,
+  "account": "Accounting Dept"
+,
+  "close_cnt": "마감횟수"
+,
+  "city_nm": "도시명(한글)"
+,
+  "invoice_dd": "Invoice Date"
+,
+  "confirm_dd": "Confirm Date"
+,
+  "invoice_type": "Invoice Type"
+,
+  "ccn_type": "CCN Type"
+,
+  "mbl_no": "MB/L No."
+,
+  "hbl_no": "HB/L No."
+,
+  "cust_tax_id": "Cust Tax ID"
+,
+  "origin_port": "Origin Port"
+,
+  "dest_port": "Dest Port"
+,
+  "on_board_dd": "On Board Date"
+,
+  "billto_code": "BillTo Code"
+,
+  "arrive_dd": "Arrived Date"
+,
+  "invoice_curr": "Invoice 통화"
+,
+  "local_curr": "Local 통화"
+,
+  "invoice_tot": "Invoice Total"
+,
+  "invoice_taxable": "Taxable Amount"
+,
+  "invoice_taxable1": "Taxable 10%"
+,
+  "invoice_non_taxable": "Non Taxable"
+,
+  "invoice_taxable2": "Taxable 0%"
+,
+  "invoice_taxable3": "Taxable3"
+,
+  "invoice_tot_vat": "Total Vat"
+,
+  "local_tot_amt": "Local Total"
+,
+  "exchg_rt": "환율"
+,
+  "local_taxable1": "Taxable 10%"
+,
+  "local_taxable2": "Taxable 0%"
+,
+  "local_taxable": "Taxable Amount"
+,
+  "dtl_seq": "Seq."
+,
+  "local_taxable3": "Taxable3"
+,
+  "local_non_taxable": "Non Taxable"
+,
+  "local_tot_vat": "Total Vat"
+,
+  "detailed_details": "상세내역"
+,
+  "addr_details": "주소내역"
+,
+  "new": "신규"
+,
+  "current_month": "Current Month"
+,
+  "one_month": "One Month"
+,
+  "two_month": "Two Month"
+,
+  "three_month": "Three Month"
+,
+  "over_month": "Over Three Month"
+,
+  "copy": "복사"
+,
+  "freight_term": "F/T"
+,
+  "grade": "등급"
+,
+  "shpcnee": "SHP/CNEE"
+,
+  "tot_vat": "부가세"
+,
+  "post_no": "우편번호"
+,
+  "MSG_0127": "특수문자가 포함 되어 있습니다."
+,
+  "MSG_0131": "*본 프로그램은 공급가액변동에 따른 수정계산서 생성시에만 사용하셔야 합니다."
+,
+  "MSG_0136": "세금계산서 미발행 인보이스가 아닙니다."
+,
+  "MSG_0138": "기준정보 화면으로 이동합니다."
+,
+  "MSG_0139": "국세청 신고된 계산서만 수정계산서를 발행 할 수 있습니다."
+,
+  "report_form": "레포트양식"
+,
+  "col_desc": "컬럼상세"
+,
+  "input": "입력"
+,
+  "MSG_0150": "청구처 코드가 HPI 화주가 아닙니다."
+,
+  "MSG_0148": "OCEAN 인보이스가 아닙니다."
+,
+  "MSG_0149": "IMPORT 인보이스가 아닙니다."
+,
+  "MSG_0154": "매입구분을 선택하세요."
+,
+  "bz_reg_no_with_hyphen": "."
+,
+  "MSG_0155": "유효하지 않은 사업자번호입니다."
+,
+  "MSG_0156": "국세청 신고된 계산서입니다."
+,
+  "blortaxno": "BL/Tax No."
+,
+  "charge_code": "차지코드"
+,
+  "oi_cal_issue_or": "(O/I)"
+,
+  "bz_plc_code": "사업장코드"
+,
+  "main_branch_act_code": "본지사계정"
+,
+  "MSG_0050": "세금계산서 전송권한이 없습니다! 전산실에 문의하세요!!"
+,
+  "MSG_0054": "전송대기 상태의 계산서를 재전송 하시겠습니까?"
+,
+  "report_category": "report 카테고리"
+,
+  "charge_desc": "내용"
+,
+  "MSG_0057": "다른 사람에 의해 처리된 건입니다. 다시 조회 후 사용하세요."
+,
+  "MSG_0070": "UFS 매출 세금계산서 만  취소 가능합니다."
+,
+  "MSG_0072": "전송된 계산서이므로 취소 할 수 없습니다."
+,
+  "sendcancel": "전송취소"
+,
+  "MSG_0079": "전송된 계산서이므로 폐지할 수 없습니다."
+,
+  "MSG_0083": "생성된 계산서와 프로파일에 등록된 사업자 번호가 다릅니다."
+,
+  "MSG_0092": "생성된 수정 계산서는 취소가 불가능하니 신중하게 판단바랍니다. 수정 계산서를 발행 하시겠습니까?"
+,
+  "amount": "금액"
+,
+  "shipper": "Shipper"
+,
+  "consignee": "Consignee"
+,
+  "upload": "Upload"
+,
+  "view": "View"
+,
+  "description": "Description"
+,
+  "vessel_nm": "Vessel Name"
+,
+  "voyage_no": "Voyage No."
+,
+  "carrier": "Carrier"
+,
+  "flight_no": "Flight No."
+,
+  "service_type": "Service Type"
+,
+  "freight_rt": "Freight Rate"
+,
+  "tot_pieces": "Tot Pieces"
+,
+  "tot_slac_stc": "Tot Slac Stc"
+,
+  "oth_krw_amt": "Other KRW"
+,
+  "tot_gross_wt": "Tot Gross Wt"
+,
+  "tot_charge_wt": "Tot Charge Wt"
+,
+  "tot_volumn_wt": "Tot Volumn Wt"
+,
+  "shipment_no": "Shipment No."
+,
+  "lc_no": "L/C No."
+,
+  "comm_invoice": "Commercial Inv"
+,
+  "po_no": "P/O No."
+,
+  "blno": "B/L No."
+,
+  "country_code": "Country"
+,
+  "addr_eng": "주소(영문)"
+,
+  "addr_kor": "주소(한글)"
+,
+  "city_nm_kor": "City(한글)"
+,
+  "no.": "No."
+,
+  "reason": "사유"
+,
+  "tax_yymm": "계산서 월"
+,
+  "MSG_0125": "계산서일자를 확인하세요(분기별 15일 이후 발행 불가)"
+,
+  "MSG_0126": "담당자이름을 입력하세요."
+,
+  "tooltip_0003": "콤마를 구분자로 여러건 조회 가능(ex:55012496930600, 55012496931300)"
+,
+  "std_date": "기준일"
+,
+  "merge_nm": "취합명"
+,
+  "curr_amt": "외화금액"
+,
+  "invbltax": "No(Inv,BL,Tax)"
+,
+  "tooltip_0002": "Hotkey F1 : Show Popup"
+,
+  "billto_nm_eng": "BillTo(영문)"
+,
+  "tooltip_0001": "1. Invoice, House,Master BL, 세금계산서 번호 입력 가능합니다.\n2. No, No 형태로 다수 입력이 가능합니다."
+,
+  "create": "생성"
+,
+  "sendmodifiedtax": "전송"
+,
+  "MSG_0152": "청구 차지가 단일인 인보이스 건이 아닙니다."
+,
+  "MSG_0157": "업데이트 버전이 있습니다. 업데이트 후 사용하세요."
+,
+  "other": "OTHER"
+,
+  "ufs_id": "UFS ID"
+,
+  "excel": "Excel"
+,
+  "searchMR": "Billing Report"
+,
+  "user_id": "사용자 ID"
+,
+  "n_sts": "신고상태"
+,
+  "bl_no": "HB/L No."
+,
+  "trans_cds": "수기입력"
+,
+  "MSG_0014": "중복된 항목이 존재합니다."
+,
+  "file_name": "파일명"
+,
+  "MSG_0023": "중복된 인보이스 번호입니다."
+,
+  "MSG_0026": "마감되었으므로 수정할 수 없습니다."
+,
+  "MSG_0029": "B/L금액과 발행대상금액이 불일치합니다."
+,
+  "MSG_0039": "마감된 일자가 포함 되어 있습니다."
+,
+  "MSG_0041": "생성된 계산서가 존재하지 않습니다!"
+,
+  "MSG_0043": "계산서가 생성 된 인보이스가 포함되어 있습니다. 다시 조회 후 시도하세요."
+,
+  "billto": "BillTo"
+,
+  "tax_or": "과세구분"
+,
+  "receive_dd": "입금일자"
+,
+  "buygubn": "매입구분"
+,
+  "duty_no": "비과세"
+,
+  "update_user": "수정자"
+,
+  "MSG_0122": "Invoice 내역이 복사 되었습니다."
+,
+  "addr1": "주소"
+,
+  "city_nm_eng": "도시명(영문)"
+,
+  "cal_except_yn": "계산서예외처리"
+,
+  "corp_reg_no": "법인번호"
+,
+  "firm_nm_kor": "상호(한글)"
+,
+  "bz_plc_addr_eng": "주소(영문)"
+,
+  "nat_annu_code": "국민연금사업장"
+,
+  "MSG_0051": "계산서발행구분이 월합인 경우 청구기간을 입력하세요"
+,
+  "MSG_0052": "등록사업자의 경우 사업자등록번호가 필수값입니다. 사업자 등록번호를 입력하세요"
+,
+  "rem_prt_yn": "비고란출력여부"
+,
+  "remark2": "비고2"
+,
+  "MSG_0135": "저장된 양식이 없습니다."
+,
+  "MSG_0016": "정상 처리 되었습니다."
+,
+  "MSG_0019": "변경 된 차지코드가 있습니다. 저장하시겠습니까?"
+,
+  "MSG_0034": "CCN조회 및 Billing관리 화면에서 조정후 처리하세요."
+,
+  "MSG_0048": "폐기선택은 REVERSED or VOID 경우만 가능합니다."
+,
+  "MSG_0049": "거래처나 계산서 번호 둘중에 하나는 필수 입력 값입니다."
+,
+  "MSG_0056": "계산서 번호 오류입니다. 년월 + 사무소 + 매입/매출 + 순번으로 입력 되어야 합니다..."
+,
+  "MSG_0055": "영세, 과세 묶음 계산서 입니다. 두 계산서 전송을 취소 하시겠습니까?"
+,
+  "MSG_0064": "계산서취소 거부를 하시겠습니까?"
+,
+  "MSG_0065": "취소거부 할 수 없는 계산서입니다."
+,
+  "MSG_0068": "계산서가 출력된 데이타는 수정할 수 없습니다."
+,
+  "MSG_0107": "조정환율을 입력하세요."
+,
+  "MSG_0108": "9999.99 까지만 입력 허용 됩니다."
+,
+  "MSG_0109": "주거래처만 사업자번호 변경이 가능합니다."
+,
+  "MSG_0110": "조정금액을 입력하세요."
+,
+  "MSG_0111": "환율 조정된 데이터가 아닙니다."
+,
+  "MSG_0112": "조정된 데이터를 전체 취소하시겠습니까?"
+,
+  "due_dd": "입금예정일"
+,
+  "delay_seq": "연기차수"
+,
+  "invoice_tot_amt": "금액"
+,
+  "sales_person_nm": "영업사원명"
+,
+  "delay_day": "미수일"
+,
+  "first_due_dd": "최초 예정일"
+,
+  "delay_date": "연기일"
+,
+  "curr": "통화"
+,
+  "searchBill": "계산서 내역"
+,
+  "searchB/L": "B/L 조회"
+,
+  "sale_by_or": "매입/매출"
+,
+  "bill_history": "세금계산서 내역"
+,
+  "edit_remark_yn": "계산서비고란수정"
+,
+  "MSG_0141": "계산서일자가 현재일자보다 큽니다."
+,
+  "sppl_amt": "공급가액"
+,
+  "shipper_nm": "Shipper명"
+,
+  "consign_nm": "Cnee명"
+,
+  "shipper_code": "Shipper"
+,
+  "consign_code": "Cnee"
+,
+  "MSG_0158": "수정하려는 계산서날짜의 월(Month)이 다릅니다. 삭제 후 다시 입력 해 주세요."
+,
+  "ocean": "Ocean Dept."
+,
+  "air import": "Air Import"
+,
+  "Report Print": "Report Print(Statement coversheet)"
+,
+  "MSG_0159": "입사정보 등록하시겠습니까?"
+,
+  "start_date": "입사일"
+,
+  "bill_type": "계산서발행구분"
+,
+  "credit_term": "고객사CreditTerm"
+,
+  "MSG_0081": "UFS Data는 상호,대표자,업태,종목,주소,계산서일만 수정 가능합니다."
+,
+  "MSG_0084": "전송할 수 없는 계산서가 포함되어 있습니다!"
+,
+  "MSG_0089": "변경 된 내용이 있습니다. 저장하시겠습니까?"
+,
+  "MSG_0096": "Miscellaneous Invoice의 HOUSE_BL_NO가 존재하지 않아 세금계산서 생성이 불가능합니다."
+,
+  "MSG_0103": "입금일자를 선택하세요."
+,
+  "MSG_0104": "삭제권한이 없습니다."
+,
+  "MSG_0105": "입금증 작성 후 출력하세요."
+,
+  "MSG_0124": "유효하지 않은 날짜형식입니다."
+,
+  "search_gubn": "조회구분"
+,
+  "MSG_0106": "없는 계산서 번호입니다."
+,
+  "tax_amt": "부가세"
+,
+  "tax_or2": "영세합계"
+,
+  "MSG_0121": "KR로 시작되는 코드는 10자리로 사용해야 합니다."
+,
+  "cust_grade": "고객 등급"
+,
+  "base_dd": "기준일"
+,
+  "kr_amt": "원화"
+,
+  "ori_amt": "기존화폐"
+,
+  "needtocheckinvoice": "확인이 필요한 Invoice"
+,
+  "invoicelist": "Invoice 내역"
+,
+  "mon_0": "무연체"
+,
+  "mon_1": "+1개월"
+,
+  "mon_10": "+10개월"
+,
+  "mon_11": "+11개월"
+,
+  "mon_12": "+12개월"
+,
+  "mon_2": "+2개월"
+,
+  "mon_3": "+3개월"
+,
+  "mon_4": "+4개월"
+,
+  "mon_5": "+5개월"
+,
+  "mon_6": "+6개월"
+,
+  "mon_8": "+8개월"
+,
+  "mon_9": "+9개월"
+,
+  "editmanager": "담당자편집"
+,
+  "modify_tax": "수정세금계산서"
+,
+  "normal_form": "기본양식"
+,
+  "bycust_form": "고객별양식"
+,
+  "curr_code": "외화"
+,
+  "bill_date": "계산서일"
+,
+  "MSG_0066": "취소할 수 없는 계산서입니다. SDD에 문의해 주세요."
+,
+  "MSG_0074": "전송된 계산서이므로 수정할 수 없습니다."
+,
+  "MSG_0075": "전송된 세금계산서가 거부또는 취소승인 되었므로 계산서취소만가능 합니다."
+,
+  "MSG_0091": "이 프로그램에서 생성된 수정세금계산서는 국세청 표준 사유중 '기재사항 착오정정'의 사유로 생성됩니다"
+,
+  "mon_7": "+7개월"
+,
+  "origin_tax": "원본세금계산서"
+,
+  "invoice_history": "인보이스 내역"
+,
+  "modified_bill": "수정세금계산서"
+,
+  "MSG_0114": "(이)가 복사 되었습니다."
+,
+  "shprcnee_nm": "SHPR/CNEE"
+,
+  "cal_fr_dd": "청구기간(From)"
+,
+  "approval_form": "거래승인신청서"
+,
+  "exrateadjust": "환율조정"
+,
+  "dailyexrate": "일자별 환율"
+,
+  "cancel": "취소"
+,
+  "MSG_0061": "거래처코드, 상호, 대표자, 사업자번호, 업태, 종목, 주소"
+,
+  "ctl_exchg_rt": "조정환율"
+,
+  "MSG_0116": "사업장,터미널,부서,사무소, UFS ID는 필수 입력 값입니다."
+,
+  "MSG_0130": "승인 대기중으로 재전송 할 수 없습니다."
+,
+  "set_form": "양식설정"
+,
+  "MSG_0137": "스마트빌 계정을 확인하세요."
+,
+  "tax_tot": "계산서합계"
+,
+  "data_start_row": "데이터시작열"
+,
+  "col_nm": "컬럼명"
+,
+  "repeat_mode": "반복모드(타이틀/데이터)"
+,
+  "MSG_0142": "담당자 사업장은 숫자만 입력 할 수 있습니다."
+,
+  "MSG_0143": "대상 인보이스가 없습니다. SDD에 문의하세요."
+,
+  "MSG_0062": "거래처이름"
+,
+  "tax_no": "세금계산서 No"
+,
+  "MSG_0144": "숫자를 입력하세요"
+,
+  "MSG_0145": "전송할 계산서가 없습니다."
+,
+  "inv_tot_amt": "인보이스합계"
+,
+  "outstanding_board": "Summary"
+,
+  "w_other": "Other"
+,
+  "01curr": "USD"
+,
+  "02curr": "USD"
+,
+  "w_other_curr": "USD"
+,
+  "free_house_term": "FHT"
+,
+  "invoice_amt": "Invoice Amt"
+,
+  "waybill_curr": "W.통화"
+,
+  "ediuser_chk": "EDI사용자 체크"
+,
+  "tax_orig_date": "최초발행일"
+,
+  "Search": "조회"
+,
+  "menu_name": "메뉴이름"
+,
+  "image_index": "이미지 인덱스"
+,
+  "err_log": "오류 로그"
+,
+  "searchccn": "CCN조회 및 Billing관리"
+,
+  "MSG_0015": ".D 파일을 업로드 해주세요."
+,
+  "MSG_0021": "Type을 선택 해 주세요."
+,
+  "MSG_0025": "차지코드를 입력해 주세요"
+,
+  "MSG_0031": "하나 이상의 정보를 선택하세요."
+,
+  "MSG_0036": "To날짜가 From날짜보다 작을 수 없습니다."
+,
+  "MSG_0040": "세금계산서 미전송 업체 입니다!!"
+,
+  "MSG_0045": "이미 계산서가 발행된 자료는 폐지외에는 선택하실수 없습니다..."
+,
+  "MSG_0113": "B/L No 또는 계산서No 중 하나는 필수입력 값입니다."
+,
+  "MSG_0115": "데이터가 없습니다."
+,
+  "shprcnee_code": "SHPR/CNEE코드"
+,
+  "cal_issue_or": "계산서발행구분"
+,
+  "cal_to_dd": "청구기간(To)"
+,
+  "adjustExRate": "조정환율"
+,
+  "adjustkrw": "원화금액조정"
+,
+  "apply": "적용"
+,
+  "aw_for_amt": "외화금액"
+,
+  "aw_curr": "통화"
+,
+  "aw_exchg_rt": "환율"
+,
+  "MSG_0118": "ETA/ATA 가 없습니다."
+,
+  "tax_or0": "영세합계"
+,
+  "vat_sub_yn_nm": "공제"
+,
+  "MSG_0119": "계정 - 사무소 코드 등록 후 사용하세요"
+,
+  "MSG_0120": "0보다 큰 수를 입력하세요."
+,
+  "create_user": "등록자"
+,
+  "bz_reg_no": "사업자번호"
+,
+  "publish_date": "발행일"
+,
+  "MSG_0123": "연도를 입력해주세요."
+,
+  "fileopen": "파일찾기"
+,
+  "billing_dd": "계산서일"
+,
+  "MSG_0128": "계산서 월(YYYYMM)을 입력하세요"
+,
+  "MSG_0129": "BL 및 계산서번호를 입력하세요."
+,
+  "MSG_0132": "승인되지 않은 계산서가 존재합니다."
+,
+  "MSG_0133": "업데이트 후 사용해 주세요."
+,
+  "rem_prt_nm": "레포트출력명"
+,
+  "MSG_0134": "거래처를 선택 해 주세요"
+,
+  "MSG_0140": "합계금액이 0보다 작을 수 없습니다"
+}

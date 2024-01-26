@@ -12,7 +12,8 @@ export interface returnData {
   textData : string;
 }
 
-const baseURL = "http://10.33.63.171:5000"
+const baseURL = 'http://10.33.63.50:5005';
+//const baseURL = "http://10.33.63.171:5000" pr
 // eslint-disable-next-line
 
 const reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;

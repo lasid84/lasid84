@@ -6,7 +6,7 @@ const supportedLngs = ['ko', 'en', 'ja'];
 export const ni18nConfig = {
   fallbackLng: [configState.locale || 'ko'],
   supportedLngs,
-  ns: ['base','zod'],
+  ns: ['acct'],
   react: { useSuspense: false },
   backend: {
     loadPath: path.resolve(`/locales/{{ns}}/{{lng}}.json`),

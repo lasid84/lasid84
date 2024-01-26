@@ -1,0 +1,1297 @@
+{
+  "MSG_0003": "ログイン中です。"
+,
+  "terminal_cd": "ターミナルコード"
+,
+  "MSG_0146": ""
+,
+  "remark1": "備考"
+,
+  "INVOICE_NO": "Invoice No."
+,
+  "bz_plc_nm": "事業場名"
+,
+  "emp_no": "UFS番号"
+,
+  "테스트메뉴": "テストメニュー"
+,
+  "액터검색": ""
+,
+  "사용자 기준정보": "ユーザー基準情報"
+,
+  "메뉴 기준정보": "メニュー基準情報"
+,
+  "기준정보": "基準情報"
+,
+  "인보이스 조회(Manual)": "インボイス照会(Manual)"
+,
+  "user_nm": "ユーザー名"
+,
+  "permission_id": "権限ID"
+,
+  "perm_id": "権限ID"
+,
+  "permission_nm": "権限名"
+,
+  "dept_cd": "部署コード"
+,
+  "office_cd": "オフィス コード"
+,
+  "office_nm": "オフィス"
+,
+  "remark": "備考"
+,
+  "tel_num": "電話番号"
+,
+  "edi_id": "スマートビルID"
+,
+  "terminal": "ターミナル."
+,
+  "use_yn": "使用状態"
+,
+  "권한별 메뉴관리": "権限別メニュー管理"
+,
+  "msg_0004": "権限を入力してください。"
+,
+  "msg_0005": "処理されました。"
+,
+  "msg_0006": "変更履歴がありません。"
+,
+  "MSG_0007": "メニューを追加しますか？"
+,
+  "MENUADD": "メニューの追加"
+,
+  "MSG_0008": "保存中です。"
+,
+  "MSG_0009": "サブメニューに追加できません。"
+,
+  "MSG_0010": "日付を選択してください。"
+,
+  "MSG_0011": "システムコードを入力してください。"
+,
+  "edi_pass": "スマートビルPW"
+,
+  "SEARCH": "朝会"
+,
+  "MSG_0012": "保存しますか？"
+,
+  "언어 관리": "Language Mange"
+,
+  "어쩌구저쩌구": ""
+,
+  "terminal_nm": "ターミナル名"
+,
+  "MSG_0013": "パラメータと値の個数が異なります。"
+,
+  "MSG_0001": "IDを入力してください。"
+,
+  "MSG_0002": "パスワードを入力してください。"
+,
+  "s_sdt1": "転送日付"
+,
+  "last_upload_time": "最終Upload"
+,
+  "종합코드 관리": "総合コード管理"
+,
+  "ediuser_dept": "担当者部署"
+,
+  "invoice_seq": "Seq."
+,
+  "local_amt": "Local Amt"
+,
+  "actual_cost": "Actual Cost"
+,
+  "cost_curr": "コスト通貨"
+,
+  "cost_exchg_rt": "Cost 為替レート"
+,
+  "waybill_amt": "Waybill Amt"
+,
+  "waybill_exchg_rt": "Waybill 為替レート"
+,
+  "gubn": "区分"
+,
+  "cust": "取引先"
+,
+  "sppl_vat": "付加税"
+,
+  "vat_amt": "付加税"
+,
+  "customer": "取引先"
+,
+  "일반건 입력": "一般件 入力"
+,
+  "Amkor 입력": "Amkor 入力"
+,
+  "Picup Order": "Picup Order"
+,
+  "code": "コード"
+,
+  "kor": "韓国語"
+,
+  "eng": "英語"
+,
+  "jpn": "日本語"
+,
+  "grp_cd": "グループコード"
+,
+  "grp_cd_nm": "グループコード名"
+,
+  "cd": "コード"
+,
+  "cust_code": "取引先コード"
+,
+  "cust_nm": "商号(ハングル)"
+,
+  "cust_nm_abbr": "(略称)"
+,
+  "cust_nm_chi": "(漢字)"
+,
+  "bz_plc_cd": "事業場コード"
+,
+  "cust_nm_eng)": "(英字)"
+,
+  "dd": "ddd"
+,
+  "executive_nm": "代表者"
+,
+  "apply_to_sts": "Status"
+,
+  "ccn_sts": "Status"
+,
+  "te": "t"
+,
+  "billing_or": "処理"
+,
+  "ad_sppl_amt": "発行金額"
+,
+  "ceasetax": "計算書廃棄(再発行)"
+,
+  "monthlyreport": "Monthly Report"
+,
+  "Charge코드 관리": "チャージコード管理"
+,
+  "b": "b"
+,
+  "create_date": "生成日"
+,
+  "file_contents": "ファイル内容"
+,
+  "MSG_0018": "エラー発生の件についてのみリプロセスできます。"
+,
+  "MSG_0017": "値を選択してください。"
+,
+  "if_yn": "処理の有無"
+,
+  "general_details": "一般内訳"
+,
+  "MSG_0020": "Modeを選択してください"
+,
+  "MSG_0022": "インボイス番号を入力してください。"
+,
+  "byinvoice": "インボイス別"
+,
+  "sum": "合計"
+,
+  "mode": "Mode"
+,
+  "MSG_0024": "Product Groupを選択してください"
+,
+  "MSG_0027": "廃止されたため修正できません。"
+,
+  "MSG_0028": "インボイスを選択してください。"
+,
+  "createtax": "計算書の作成"
+,
+  "confirm": "確認"
+,
+  "MSG_0032": "税金計算書を作成しますか？"
+,
+  "MSG_0033": "計算書の日付を選択してください。"
+,
+  "MSG_0035": "データを選択してください。"
+,
+  "MSG_0030": "事務所を選択してください。"
+,
+  "MSG_0037": "すでに締め切られた日付です。"
+,
+  "sendtax": "計算書転送"
+,
+  "MSG_0042": "すでにBillingされた資料です···"
+,
+  "MSG_0044": "集合区分を選択してください。"
+,
+  "MSG_0046": "送信された計算書なので廃棄できません。"
+,
+  "MSG_0047": "廃棄選択権がありません···"
+,
+  "cd_nm": "コード名"
+,
+  "cd_desc": "コード説明"
+,
+  "CODE_NM": "コード名"
+,
+  "init": "リロード"
+,
+  "Edit": "修整"
+,
+  "Save": "貯蔵"
+,
+  "Close": "閉じる"
+,
+  "menu_code": "メニューコード"
+,
+  "menu_order": "メニュー順"
+,
+  "menu_param": "メニューパラメータ"
+,
+  "menu_type": "メニュータイプ"
+,
+  "Refresh": "リロード"
+,
+  "Add": "追加"
+,
+  "log_dd": "ログの日付"
+,
+  "err_pos": "エラーコード"
+,
+  "edi_email": "メールアドレス"
+,
+  "trans_mode": "モード"
+,
+  "trans_type": "タイプ"
+,
+  "Invoice No.": "Invoice No."
+,
+  "redo": "再処理"
+,
+  "office": "事務所"
+,
+  "MSG_0147": ""
+,
+  "w/billing_no": "W/Billing No."
+,
+  "tax_sts": "勘定書の状態"
+,
+  "edi_sts": "伝送状態"
+,
+  "selectall": "全体選択"
+,
+  "cancel_reason": "Cancel Reason"
+,
+  "taxcancel": "Cancel Tax"
+,
+  "etdata": "ETD/ATA"
+,
+  "Escape": "ESC"
+,
+  "inv_date": "Inv発行日"
+,
+  "giro_prt_yn": "出力"
+,
+  "receive_cd": "入金区分"
+,
+  "sale_buy_or": "買取/売出し"
+,
+  "tran_cd": "取引区分"
+,
+  "vat_sub_yn": "控除"
+,
+  "vat_sub_y": "控除"
+,
+  "duty_10": "課税"
+,
+  "duty_00": "ゼロ税"
+,
+  "job_or": "作業区分"
+,
+  "s_sts": "伝送状態"
+,
+  "c_sts": "キャンセル状態"
+,
+  "tax_date": "勘定書の日付"
+,
+  "close_yn": "締切りの有無"
+,
+  "update_date": "修正日"
+,
+  "batch": "一括"
+,
+  "case by case": "個別"
+,
+  "IncludeNonTax": "Non Tax付"
+,
+  "search_type": "状態区分"
+,
+  "bz_type": "事業形態"
+,
+  "bz_con": "業態"
+,
+  "bz_item": "種目"
+,
+  "contact_nm": "担当者"
+,
+  "nation_code": "国家"
+,
+  "tel_no": "電話番号"
+,
+  "fax_no": "FAX番号"
+,
+  "merge_type": "集合区分"
+,
+  "publisher": "発行所"
+,
+  "date": "期間"
+,
+  "sppl_tot": "合計"
+,
+  "delete": "削除."
+,
+  "billing_month": "請求月"
+,
+  "port": "Port"
+,
+  "chk": "Check"
+,
+  "billto_nm": "取引先"
+,
+  "tot_amt": "合計"
+,
+  "save_receipt": "入金証保存"
+,
+  "print": "出力"
+,
+  "remark(bl)": "備考(BL)"
+,
+  "each": "個別"
+,
+  "all": "全体"
+,
+  "smartbillid": "スマートビルID"
+,
+  "input_account": "口座入力"
+,
+  "receive": "受信"
+,
+  "send": "発送"
+,
+  "s_sdt": "伝送時間"
+,
+  "sender_nm": "送信者名"
+,
+  "receiver_nm": "受信者名"
+,
+  "sender_dept": "送信者部門"
+,
+  "sender_tel": "送信者電話"
+,
+  "receiver_dept": "受信者部"
+,
+  "receiver_tel": "受信者電話"
+,
+  "receiver_email": "受信者メール"
+,
+  "modify_reason": "修正事由"
+,
+  "send_count": "送信回数"
+,
+  "resendmail": "メールの再送信"
+,
+  "manager": "担当者"
+,
+  "m_sts": "区分"
+,
+  "master_bl_no": "Master BL No."
+,
+  "ata": "ATA"
+,
+  "dtd": "DTD"
+,
+  "arrived_dd": "Arrived Date"
+,
+  "total": "合計"
+,
+  "addr": "住所"
+,
+  "dept": "部署"
+,
+  "input_remark": "備考入力"
+,
+  "addr2": "(ハングル)"
+,
+  "MSG_0151": ""
+,
+  "addr1_eng": "住所"
+,
+  "modifyVAT": ""
+,
+  "addr2_eng": "(英文)"
+,
+  "home_page_addr": "ホームページ"
+,
+  "MSG_0153": ""
+,
+  "sale_cust_yn": "販売先"
+,
+  "prch_cust_yn": "海外パートナー"
+,
+  "gen_cust_yn": "買入れ先"
+,
+  "1": "44"
+,
+  "cust_nm_eng": "(英語)"
+,
+  "test13": ""
+,
+  "ai_cal_issue_or": "A/I"
+,
+  "bz_plc_addr2": ""
+,
+  "addr3_eng": ""
+,
+  "oe_cal_issue_or": "O/E"
+,
+  "ae_cal_fr_dd": "請求期間(A/E)"
+,
+  "ai_cal_fr_dd": "A/I"
+,
+  "oe_cal_fr_dd": "O/E"
+,
+  "oi_cal_fr_dd": "O/I"
+,
+  "main_cust_code": "主取引先"
+,
+  "vendoir_id": "ベンダーID"
+,
+  "post_no1": "郵便番号"
+,
+  "area_cd": "地域"
+,
+  "bz_plc_type_cd": "事業場タイプ"
+,
+  "firm_nm_chi": "商号(漢字)"
+,
+  "firm_nm_eng": "商号(英字)"
+,
+  "bz_plc_addr1": "住所"
+,
+  "bz_plc_addr_chi": "住所(漢字)"
+,
+  "own_other_or": "自他事区分"
+,
+  "cntl_tax_office_cd": "税務署"
+,
+  "med_ins_code": "医療保険事業場"
+,
+  "cd_mgcd1": "コード 備考 1"
+,
+  "cd_mgcd2": "コード 備考 2"
+,
+  "bz_div_cd": "事業部コード"
+,
+  "main_branch_or": "本支社区分"
+,
+  "MSG_0053": "アカウントにメールを再送信しますか？"
+,
+  "altered_edi": "為替レート照会"
+,
+  "MSG_0058": "国内インボイスではありません。"
+,
+  "MSG_0059": "転送されていない計算書です。"
+,
+  "MSG_0063": "「事業者番号」は必須入力項目です。"
+,
+  "vendor_id": "Vendor ID"
+,
+  "prod_gr_cd": "Product Group"
+,
+  "ass_transaction": "Associated Transaction"
+,
+  "category": "カテゴリー"
+,
+  "major_category": "majorカテゴリ"
+,
+  "vat_rt": "VAT Rt"
+,
+  "vat_type": "付加価値税Type"
+,
+  "fins_yn": "会計売上の有無"
+,
+  "fin_category": "Financial Category"
+,
+  "uas_gl_code": "UAS GL Code"
+,
+  "notedi_b_chk": "計算書未送信"
+,
+  "bz_kind_cd": "ビジネスカテゴリ"
+,
+  "tax_or1": "課税合計"
+,
+  "fe_prt_yn": "外貨出力の有無"
+,
+  "fe_ref_item": "外貨参照項目"
+,
+  "ae_cal_issue_or": "計算書発行(A/E)"
+,
+  "bill_gr1_cd": "Billing Group Code1"
+,
+  "bill_gr2_cd": "Billing Group Code1"
+,
+  "gl_gr1_cd": "GL Group1"
+,
+  "gl_gr2_cd": "GL Group1"
+,
+  "sender_email": "送信者メール"
+,
+  "specialupdate": "修整(Special)"
+,
+  "type": "Type"
+,
+  "bl/inv no.": "BL/Invoice No."
+,
+  "billto_nm_kor": "取引先"
+,
+  "house_bl_no": "House BL No."
+,
+  "invoice_sts": "Status"
+,
+  "mode/type": "Mode/Type"
+,
+  "apply_to_invoice": "Apply To Invoice"
+,
+  "f": "f"
+,
+  "MSG_0067": "UFS データは修正できません。"
+,
+  "cust_mode": "モード"
+,
+  "sales_person": "販売員"
+,
+  "deposit_method": "入金形態"
+,
+  "deposit_date": "入金日"
+,
+  "deposit_currency": "入金通貨の種類"
+,
+  "deposit_currency_etc": "入金通貨の種類etc"
+,
+  "MSG_1006": "設定権限がありません。"
+,
+  "credit_rate": "信用格付け"
+,
+  "cash_rate": "キャッシュフロー等級"
+,
+  "rate_detail": "備考"
+,
+  "MSG_0069": "請求書の取り消し権限がありません。"
+,
+  "MSG_0071": "売上/買取区分を選択してください。"
+,
+  "MSG_0073": "となりましたので修正できません。"
+,
+  "MSG_0076": "キャンセルされた計算書なので転送できません。"
+,
+  "MSG_0077": "計算書の廃棄権限がありません。"
+,
+  "MSG_0078": "変更する内容を入力してください。"
+,
+  "MSG_0080": "インボイスを保存してからお使いください！"
+,
+  "MSG_0082": "既に存在するモードです"
+,
+  "MSG_0060": "税金計算書の送信をキャンセルしますか？"
+,
+  "MSG_0085": "勘定書を取り消しますか？"
+,
+  "MSG_0086": "キャンセルされた計算書です。"
+,
+  "MSG_0090": "すでに修正計算書が発行されています。"
+,
+  "MSG_0038": "計算書の日付を確認してください。"
+,
+  "MSG_0093": "1日超過！"
+,
+  "MSG_0094": "受け取る人を選択してください。"
+,
+  "MSG_0095": "グループコードを選択してください。"
+,
+  "MSG_0097": "計算書作成日(締切日超過)エラー！！"
+,
+  "MSG_0098": "請求月を選択してください。"
+,
+  "MSG_0099": "事業所を選択してください。"
+,
+  "MSG_0100": "買取先として登録されている取引先であることを確認してください"
+,
+  "MSG_0101": "計算書を削除しますか？"
+,
+  "ae_sales": "AE Sales"
+,
+  "ai_sales": "AI Sales"
+,
+  "oe_sales": "OE Sales"
+,
+  "oi_sales": "OI Sales"
+,
+  "MSG_0102": "入金区分を選択してください。"
+,
+  "pic_nm": "担当者"
+,
+  "cust_office": "担当者部署"
+,
+  "def": "デフォルト値"
+,
+  "billing_yn": "発行の有無"
+,
+  "user_dept": "部署"
+,
+  "krw_amt": "ウォン貨の金額"
+,
+  "email": "e-mail"
+,
+  "tax_prt_yn": "計算書出力"
+,
+  "vat_sub_n": "不控除"
+,
+  "yyyymm": "YYYYMM"
+,
+  "account": "Accounting Dept"
+,
+  "close_cnt": "締め切り回数"
+,
+  "city_nm": "都市名(ハングル)"
+,
+  "invoice_dd": "Invoice Date"
+,
+  "confirm_dd": "Confirm Date"
+,
+  "invoice_type": "Invoice Type"
+,
+  "ccn_type": "CCN Type"
+,
+  "mbl_no": "MB/L No."
+,
+  "hbl_no": "HB/L No."
+,
+  "cust_tax_id": "Cust Tax ID"
+,
+  "origin_port": "Origin Port"
+,
+  "dest_port": "Dest Port"
+,
+  "on_board_dd": "On Board Date"
+,
+  "billto_code": "BillTo Code"
+,
+  "arrive_dd": "Arrived Date"
+,
+  "invoice_curr": "Invoice通貨"
+,
+  "local_curr": "Local通貨"
+,
+  "invoice_tot": "Invoice Total"
+,
+  "invoice_taxable": "Taxable Amount"
+,
+  "invoice_taxable1": "Taxable 10%"
+,
+  "invoice_non_taxable": "Non Taxable"
+,
+  "invoice_taxable2": "Taxable 0%"
+,
+  "invoice_taxable3": "Taxable3"
+,
+  "invoice_tot_vat": "Total Vat"
+,
+  "local_tot_amt": "Local Total"
+,
+  "exchg_rt": "為替レート"
+,
+  "local_taxable1": "Taxable 10%"
+,
+  "local_taxable2": "Taxable 0%"
+,
+  "local_taxable": "Taxable Amount"
+,
+  "dtl_seq": "Seq."
+,
+  "local_taxable3": "Taxable3"
+,
+  "local_non_taxable": "Non Taxable"
+,
+  "local_tot_vat": "Total Vat"
+,
+  "detailed_details": "詳細内訳"
+,
+  "addr_details": "住所内訳"
+,
+  "new": "新規"
+,
+  "current_month": "Current Month"
+,
+  "one_month": "One Month"
+,
+  "two_month": "Two Month"
+,
+  "three_month": "Three Month"
+,
+  "over_month": "Over Three Month"
+,
+  "copy": "コピー"
+,
+  "freight_term": "F/T"
+,
+  "grade": "Grade"
+,
+  "shpcnee": "SHP/CNEE"
+,
+  "tot_vat": "付加価値税"
+,
+  "post_no": "郵便番号."
+,
+  "MSG_0127": "特殊文字が含まれています。"
+,
+  "MSG_0131": "*本プログラムは、供給価格の変動による修正計算書の作成時にのみ使用する必要があります。"
+,
+  "MSG_0136": "税金計算書未発行のインボイスではありません。"
+,
+  "MSG_0138": "基準情報画面に移動します。"
+,
+  "MSG_0139": "国税庁申告された計算書のみ修正計算書を発行できます。"
+,
+  "report_form": "レポート様式"
+,
+  "col_desc": "カラム詳細"
+,
+  "input": "入力"
+,
+  "MSG_0150": ""
+,
+  "MSG_0148": ""
+,
+  "MSG_0149": ""
+,
+  "MSG_0154": ""
+,
+  "bz_reg_no_with_hyphen": "."
+,
+  "MSG_0155": ""
+,
+  "MSG_0156": ""
+,
+  "blortaxno": "BL/Tax No."
+,
+  "charge_code": "チャージコード"
+,
+  "oi_cal_issue_or": "O/I"
+,
+  "bz_plc_code": "事業場コード"
+,
+  "main_branch_act_code": "本支社勘定"
+,
+  "MSG_0050": "税金計算書の送信権限がありません！ 電算室にお問い合わせください！！"
+,
+  "MSG_0054": "転送待機状態の計算書を再送信しますか？"
+,
+  "report_category": "レポートカテゴリ"
+,
+  "charge_desc": "料金の説明"
+,
+  "MSG_0057": "他の人によって処理された件です。 もう一度照会してからお使いください。"
+,
+  "MSG_0070": "UFS売上税金計算書のみキャンセル可能です。"
+,
+  "MSG_0072": "送信された計算書なのでキャンセルできません。"
+,
+  "sendcancel": "Cancel Send"
+,
+  "MSG_0079": "転送された計算書なので廃止できません。"
+,
+  "MSG_0083": "生成された計算書とプロファイルに登録された事業者番号が異なります。"
+,
+  "MSG_0092": "生成された修正計算書はキャンセルできませんので、慎重に判断してください。 修正計算書を発行しますか？"
+,
+  "amount": "金額"
+,
+  "shipper": "Shipper"
+,
+  "consignee": "Consignee"
+,
+  "upload": "Upload"
+,
+  "view": "View"
+,
+  "description": "Description"
+,
+  "vessel_nm": "Vessel Name"
+,
+  "voyage_no": "Voyage No."
+,
+  "carrier": "Carrier"
+,
+  "flight_no": "Flight No."
+,
+  "service_type": "Service Type"
+,
+  "freight_rt": "Freight Rate"
+,
+  "tot_pieces": "Tot Pieces"
+,
+  "tot_slac_stc": "Tot Slac Stc"
+,
+  "oth_krw_amt": "Other KRW"
+,
+  "tot_gross_wt": "Tot Gross Wt"
+,
+  "tot_charge_wt": "Tot Charge Wt"
+,
+  "tot_volumn_wt": "Tot Volumn Wt"
+,
+  "shipment_no": "Shipment No."
+,
+  "lc_no": "L/C No."
+,
+  "comm_invoice": "Commercial Inv"
+,
+  "po_no": "P/O No."
+,
+  "blno": "B/L No."
+,
+  "country_code": "Country"
+,
+  "addr_eng": "住所(英文)"
+,
+  "addr_kor": "住所(ハングル)"
+,
+  "city_nm_kor": "City(ハングル)"
+,
+  "no.": "No."
+,
+  "reason": "事由"
+,
+  "tax_yymm": "勘定書月"
+,
+  "MSG_0125": "計算書の日付を確認してください(四半期別15日以降は発行不可)"
+,
+  "MSG_0126": "担当者の名前を入力してください。"
+,
+  "tooltip_0003": "コンマを区分子で複数件照会可能(ex:55012496930600、55012496931300)"
+,
+  "std_date": "基準日"
+,
+  "merge_nm": "集合名"
+,
+  "curr_amt": "外貨の金額"
+,
+  "invbltax": "No(Inv,BL,Tax)"
+,
+  "tooltip_0002": "Hotkey F1 : Show Popup"
+,
+  "billto_nm_eng": "BillTo(英文)"
+,
+  "tooltip_0001": "1. Invoice、House、Master BL、税金計算書番号を入力できます。2. No、Noの形で多数入力が可能です。"
+,
+  "create": "生成"
+,
+  "sendmodifiedtax": "電送"
+,
+  "MSG_0152": ""
+,
+  "MSG_0157": ""
+,
+  "other": "OTHER"
+,
+  "ufs_id": "UFS ID"
+,
+  "excel": "Excel"
+,
+  "searchMR": "Billing Report"
+,
+  "user_id": "ユーザーID"
+,
+  "n_sts": "届出状態"
+,
+  "bl_no": "HB/L No."
+,
+  "trans_cds": "手書き入力"
+,
+  "MSG_0014": "重複したアイテムが存在します。"
+,
+  "file_name": "ファイル名"
+,
+  "MSG_0023": "重複したインボイス番号です。"
+,
+  "MSG_0026": "締め切りましたので修正できません。"
+,
+  "MSG_0029": "B/L金額と発行対象金額が不一致です。"
+,
+  "MSG_0039": "締め切り日が含まれています。"
+,
+  "MSG_0041": "生成された計算書が存在しません！"
+,
+  "MSG_0043": "計算書が作成されたインボイスが含まれています。 もう一度照会してからお試しください。"
+,
+  "billto": "Bill To"
+,
+  "tax_or": "課税区分"
+,
+  "receive_dd": "入金日"
+,
+  "buygubn": "購入区分"
+,
+  "duty_no": "非課税"
+,
+  "update_user": "修正者"
+,
+  "MSG_0122": "Invoiceの内訳がコピーされました。"
+,
+  "addr1": "住所"
+,
+  "city_nm_eng": "都市名(英文)"
+,
+  "cal_except_yn": "計算書例外処理"
+,
+  "corp_reg_no": "法人番号"
+,
+  "firm_nm_kor": "商号(ハングル)"
+,
+  "bz_plc_addr_eng": "住所(英文)"
+,
+  "nat_annu_code": "国民年金事業場"
+,
+  "MSG_0051": "計算書発行区分が月合計の場合は請求期間を入力してください"
+,
+  "MSG_0052": "登録事業者の場合、事業者登録番号が必須値です。 事業者登録番号を入力してください"
+,
+  "rem_prt_yn": "備考欄出力の有無"
+,
+  "remark2": "備考2"
+,
+  "MSG_0135": "保存されたフォームがありません。"
+,
+  "MSG_0016": "正常処理されました。"
+,
+  "MSG_0019": "変更されたチャージコードがあります。 保存しますか？"
+,
+  "MSG_0034": "CCN照会およびBilling管理画面で調整後処理してください。"
+,
+  "MSG_0048": "廃棄選択は、REVERSED or VOIDの場合のみ可能です。"
+,
+  "MSG_0049": "取引先または計算書番号のいずれかは必須入力値です。"
+,
+  "MSG_0056": "計算書番号エラーです。 年月+事務所+買取/売出+順番に入力する必要があります···"
+,
+  "MSG_0055": "零細、課税一括計算書です。 2 つの計算書の転送をキャンセルしますか？"
+,
+  "MSG_0064": "請求書の取り消し拒否をしますか？"
+,
+  "MSG_0065": "キャンセル拒否できない計算書です。"
+,
+  "MSG_0068": "計算書が出力されたデータは修正できません。"
+,
+  "MSG_0107": "調整為替レートを入力してください。"
+,
+  "MSG_0108": "9999.99まで入力可能です。"
+,
+  "MSG_0109": "主な取引先のみ事業者番号の変更が可能です。"
+,
+  "MSG_0110": "調整金額を入力してください。"
+,
+  "MSG_0111": "為替レート調整されたデータではありません。"
+,
+  "MSG_0112": "調整されたデータをすべてキャンセルしますか？"
+,
+  "due_dd": "入金予定日"
+,
+  "delay_seq": "遅延次数"
+,
+  "invoice_tot_amt": "金額"
+,
+  "sales_person_nm": "営業員名"
+,
+  "delay_day": "未遂日"
+,
+  "first_due_dd": "最初の予定日"
+,
+  "delay_date": "연기일"
+,
+  "curr": "通貨"
+,
+  "searchBill": "勘定書の内訳"
+,
+  "searchB/L": "B/L照会"
+,
+  "sale_by_or": "買取/売出し"
+,
+  "bill_history": "税金計算書内訳"
+,
+  "edit_remark_yn": "計算書備考欄修正"
+,
+  "MSG_0141": "計算書の日付が現在の日付より大きいです。"
+,
+  "sppl_amt": "供給価格"
+,
+  "shipper_nm": ""
+,
+  "consign_nm": ""
+,
+  "shipper_code": ""
+,
+  "consign_code": ""
+,
+  "MSG_0158": ""
+,
+  "ocean": "Ocean Dept."
+,
+  "air import": "Air Import"
+,
+  "Report Print": ""
+,
+  "MSG_0159": ""
+,
+  "start_date": "Date of joining"
+,
+  "bill_type": "計算書発行区分"
+,
+  "credit_term": "顧客会社CreditTerm"
+,
+  "MSG_0081": "UFS Data는 상호,대표자,업태,종목,주소,계산서일만 수정 가능합니다."
+,
+  "MSG_0084": "転送できない計算書が含まれています！"
+,
+  "MSG_0089": "変更された内容があります。 保存しますか？"
+,
+  "MSG_0096": "Miscellaneous InvoiceのHOUSE_BL_NOが存在しないため、税金計算書の作成が不可能です。"
+,
+  "MSG_0103": "入金日を選択してください。"
+,
+  "MSG_0104": "削除権限がありません。"
+,
+  "MSG_0105": "入金証を作成した後、出力してください。"
+,
+  "MSG_0124": "無効な日付形式です。"
+,
+  "search_gubn": "照会区分"
+,
+  "MSG_0106": "ない計算書番号です。"
+,
+  "tax_amt": "付加価値税"
+,
+  "tax_or2": "ゼロ税率合計"
+,
+  "MSG_0121": "KRで始まるコードは10桁で使用する必要があります。"
+,
+  "cust_grade": "顧客等級"
+,
+  "base_dd": "基準日"
+,
+  "kr_amt": "韓国通貨"
+,
+  "ori_amt": "既存貨幣"
+,
+  "needtocheckinvoice": "確認が必要なInvoice"
+,
+  "invoicelist": "Invoiceの内訳"
+,
+  "mon_0": "期限を過ぎていない"
+,
+  "mon_1": "+1ヶ月"
+,
+  "mon_10": "+10ヶ月"
+,
+  "mon_11": "+11ヶ月"
+,
+  "mon_12": "+12ヶ月"
+,
+  "mon_2": "+2ヶ月"
+,
+  "mon_3": "+3ヶ月"
+,
+  "mon_4": "+4ヶ月"
+,
+  "mon_5": "+5ヶ月"
+,
+  "mon_6": "+6ヶ月"
+,
+  "mon_8": "+8ヶ月"
+,
+  "mon_9": "+9ヶ月"
+,
+  "editmanager": "担当者編集"
+,
+  "modify_tax": "修正税金計算書"
+,
+  "normal_form": "基本様式"
+,
+  "bycust_form": "顧客別様式"
+,
+  "curr_code": "外貨"
+,
+  "bill_date": "勘定書の発行日"
+,
+  "MSG_0066": "キャンセルできない計算書です。 SDDにお問い合わせください。"
+,
+  "MSG_0074": "送信された計算書なので修正できません。"
+,
+  "MSG_0075": "전송된 세금계산서가 거부또는 취소승인 되었므로 계산서취소만가능 합니다."
+,
+  "MSG_0091": "このプログラムで生成された修正税金計算書は、国税庁標準事由のうち「記載事項誤り訂正」を理由に作成されます"
+,
+  "mon_7": "+7ヶ月"
+,
+  "origin_tax": "原本税金計算書"
+,
+  "invoice_history": "インボイスの内訳"
+,
+  "modified_bill": "修正税金計算書"
+,
+  "MSG_0114": "がコピーされました。"
+,
+  "shprcnee_nm": "SHPR/CNEE"
+,
+  "cal_fr_dd": "請求期間(From)"
+,
+  "approval_form": "取引承認申請書"
+,
+  "exrateadjust": "為替レート調整"
+,
+  "dailyexrate": "日替わり為替レート"
+,
+  "cancel": "キャンセル"
+,
+  "MSG_0061": "取引先コード"
+,
+  "ctl_exchg_rt": "調整為替レート"
+,
+  "MSG_0116": "事業場、ターミナル、部署、事務所、UFS IDは必須入力値です。"
+,
+  "MSG_0130": "承認待ちに再送信できません。"
+,
+  "set_form": "様式設定"
+,
+  "MSG_0137": "スマートビルのアカウントを確認してください。"
+,
+  "tax_tot": "計算書の合計"
+,
+  "data_start_row": "データ開始列"
+,
+  "col_nm": "カラム名"
+,
+  "repeat_mode": "繰り返しモード(タイトル/データ)"
+,
+  "MSG_0142": "担当者の事業場は数字のみ入力できます。"
+,
+  "MSG_0143": ""
+,
+  "MSG_0062": "取引先名"
+,
+  "tax_no": "税金計算書 No."
+,
+  "MSG_0144": ""
+,
+  "MSG_0145": ""
+,
+  "inv_tot_amt": ""
+,
+  "outstanding_board": "Summary"
+,
+  "w_other": "Other"
+,
+  "01curr": "USD"
+,
+  "02curr": "USD"
+,
+  "w_other_curr": "USD"
+,
+  "free_house_term": "FHT"
+,
+  "invoice_amt": "Invoice Amt"
+,
+  "waybill_curr": "W.通貨"
+,
+  "ediuser_chk": "EDI ユーザー チェック"
+,
+  "tax_orig_date": "最初の発行日"
+,
+  "Search": "照会"
+,
+  "menu_name": "メニュー名"
+,
+  "image_index": "イメージインデックス"
+,
+  "err_log": "エラーログ"
+,
+  "searchccn": "CCN照会及びBilling管理"
+,
+  "MSG_0015": ".Dファイルをアップロードしてください。"
+,
+  "MSG_0021": "Typeを選択してください。"
+,
+  "MSG_0025": "チャージコードを入力してください"
+,
+  "MSG_0031": "1 つ以上の情報を選択してください。"
+,
+  "MSG_0036": "To日付がFrom日付より小さいことはできません。"
+,
+  "MSG_0040": "税金計算書未送信の業者です！！"
+,
+  "MSG_0045": "既に計算書が発行された資料は廃止以外に選択できません···"
+,
+  "MSG_0113": "B/L Noまたは計算書Noのいずれかは必須入力値です。"
+,
+  "MSG_0115": "データがありません。"
+,
+  "shprcnee_code": "SHPR/CNEEコード"
+,
+  "cal_issue_or": "請求書発行区分"
+,
+  "cal_to_dd": "請求期間(To)"
+,
+  "adjustExRate": "調整為替レート"
+,
+  "adjustkrw": "ウォンの金額調整"
+,
+  "apply": "適用"
+,
+  "aw_for_amt": "外貨の金額"
+,
+  "aw_curr": "通貨"
+,
+  "aw_exchg_rt": "為替レート"
+,
+  "MSG_0118": "ETA/ATAがありません。"
+,
+  "tax_or0": "ゼロ税率合計"
+,
+  "vat_sub_yn_nm": "控除"
+,
+  "MSG_0119": "アカウント - 事務所コードを登録した後、ご使用ください"
+,
+  "MSG_0120": "0より大きい数を入力してください。"
+,
+  "create_user": "登録者"
+,
+  "bz_reg_no": "事業者番号"
+,
+  "publish_date": "発行日"
+,
+  "MSG_0123": "年を入力してください。"
+,
+  "fileopen": "ファイル検索"
+,
+  "billing_dd": "勘定書の発行日"
+,
+  "MSG_0128": "計算書ウォール(YYYMM)を入力してください"
+,
+  "MSG_0129": "BLおよび計算書番号を入力してください。"
+,
+  "MSG_0132": "承認されていない計算書が存在します。"
+,
+  "MSG_0133": "アップデート後にお使いください。"
+,
+  "rem_prt_nm": "レポート出力名"
+,
+  "MSG_0134": "取引先を選択してください"
+,
+  "MSG_0140": "合計金額が0より小さいことはできません"
+}
