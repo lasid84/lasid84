@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { makeZodI18nMap } from "zod-i18n-map";
 import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -27,6 +29,9 @@ type Props = {
 };
 
 const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
+    // 다국어
+    const { t } = useTranslation();
+    z.setErrorMap(makeZodI18nMap({ t }));
   // 인보이스 검색스키마
   const acct3002SearchSchema = z.object({
     trans_mode: z.coerce.string(),
@@ -113,8 +118,8 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
         <PageSearch
           right={
             <>
-              <TSubmitButton label={"검색"} />
-              <TCancelButton label={"초기화"} onClick={() => {
+              <TSubmitButton label={t("search")} />
+              <TCancelButton label={t("reset")}onClick={() => {
                 setFocus("trans_mode");
                 reset();
               }} />
@@ -133,7 +138,7 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
           <div>
             <TSelect2
               id="trans_mode"
-              label="trans_mode"
+              label={t("trans_mode")}
               allYn={false}
               isPlaceholder={false}
               outerClassName="w-full space-y-1"
@@ -144,7 +149,7 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
             {errors?.trans_mode?.message && <ErrorMessage>{errors.trans_mode.message}</ErrorMessage>}
             <TSelect2
               id="trans_type"
-              label="trans_type"
+              label={t("trans_type")}
               allYn={false}
               isPlaceholder={false}
               outerClassName="w-full space-y-1"
@@ -165,11 +170,11 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
               textfiled="cust_nm"
               rule={{}}
             /> */}
-            <TInput2 id="cust_code" label="거래처" type="text" />
+            <TInput2 id="cust_code" label={t("cust_code")} type="text" />
             {errors?.cust_code?.message && (
               <ErrorMessage>{errors.cust_code.message}</ErrorMessage>
             )}
-            <TInput2 id="invoice_no" label="invoice_no" type="text" />
+            <TInput2 id="invoice_no" label={t("invoice_no")} type="text" />
             {errors?.invoice_no?.message && (
               <ErrorMessage>{errors.invoice_no.message}</ErrorMessage>
             )}

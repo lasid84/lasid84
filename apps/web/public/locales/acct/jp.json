@@ -71,7 +71,7 @@
 ,
   "edi_pass": "スマートビルPW"
 ,
-  "SEARCH": "朝会"
+  "search": "朝会"
 ,
   "MSG_0012": "保存しますか？"
 ,
@@ -81,6 +81,8 @@
 ,
   "terminal_nm": "ターミナル名"
 ,
+"invoice_no": "Invoice No."
+,
   "MSG_0013": "パラメータと値の個数が異なります。"
 ,
   "MSG_0001": "IDを入力してください。"
@@ -89,6 +91,11 @@
 ,
   "s_sdt1": "転送日付"
 ,
+"fr_date" : "開始日",
+"to_date" : "終了日",
+"fr_inv_date" : "INV開始日",
+"to_inv_date" : "INV終了日",
+
   "last_upload_time": "最終Upload"
 ,
   "종합코드 관리": "総合コード管理"

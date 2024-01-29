@@ -4,6 +4,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import PageContent from "shared/tmpl/page-content";
 import { GridOptions, Column, CellClickedEvent } from "ag-grid-community";
 import { useInvoiceStore } from "states/acct/acct2003.store";
+import { Tab } from "./tab-list";
+
+
 type Props = {
   listItem: any | null;
   children?: React.ReactNode | React.ReactElement | null;
@@ -24,6 +27,7 @@ const ListGrid: React.FC<Props> = ({
   const searchParam = useInvoiceStore((state) => state.searchParam)
   const targetValue = useInvoiceStore((state) => state.targetValue)
   const actions = useInvoiceStore((state) => state.actions)
+  const [tabIndex, setTabIndex] = useState<number>(0);
 
   const containerStyle = useMemo(() => "flex flex-col w-full", []);
   const gridStyle = useMemo(() => "w-full h-[450px]", []);
@@ -179,8 +183,8 @@ const ListGrid: React.FC<Props> = ({
   return (
 
     <>
-      <PageContent        
-        
+      <PageContent title={<Tab tabIndex={tabIndex} setTabIndex={setTabIndex} />}       
+ 
       >
         <div className={containerStyle}>
           <div className={`ag-theme-custom ${gridStyle}`}>

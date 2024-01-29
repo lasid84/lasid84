@@ -71,7 +71,7 @@
 ,
   "edi_pass": "스마트빌 PW"
 ,
-  "SEARCH": "조회"
+  "search": "조회"
 ,
   "MSG_0012": "저장하시겠습니까?"
 ,
@@ -81,6 +81,12 @@
 ,
   "terminal_nm": "터미널명"
 ,
+"invoice_no": "Invoice No."
+,
+"fr_date" : "시작일자",
+"to_date" : "종료일자",
+"fr_inv_date" : "INV시작일자",
+"to_inv_date" : "INV종료일자",
   "MSG_0013": "파라미터와 값의 갯수가 다릅니다."
 ,
   "MSG_0001": "ID를 입력하세요."

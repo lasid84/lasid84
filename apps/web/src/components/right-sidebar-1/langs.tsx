@@ -1,4 +1,5 @@
 import {useConfigs} from "states/useConfigs";
+import {Select} from "@repo/ui/src/select/select"
 
 type Option = {
   key: string;
@@ -47,15 +48,15 @@ const Langs: React.FC = () => {
         언어 선택
       </div>
       <div className="flex flex-col">
-          {/* <Select 
+          <Select 
               name="language"
               onChange={selectLangChange}
               options={[
-              {key: "kr", value: "한국어"},
-              {key: "en", value: "English"},
-              {key: "jp", value: "Japanese"},
+              {label: "한국어", value: "ko"},
+              {label: "English", value: "en"},
+              {label: "JP", value: "jp"},
               ]}
-          />   */}
+          />  
       </div>
     </div>
   );

@@ -1213,8 +1213,14 @@
 ,
   "tax_orig_date": "First Issue Date"
 ,
-  "Search": "Search"
+  "search": "Search"
 ,
+"invoice_no": "Invoice No."
+,
+"fr_date" : "Start Date",
+"to_date" : "End Date",
+"fr_inv_date" : "INV Start Date",
+"to_inv_date" : "INV End Date",
   "menu_name": "Menu Name"
 ,
   "image_index": "Image Idx"
