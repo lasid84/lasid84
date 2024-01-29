@@ -8,7 +8,15 @@
   }
 
   [data-collapsed="false"] {
+    .left-sidebar-body {
+      @apply overflow-y-auto
+    }
+    .open-sibling {
+      @apply border-b border-[#F2F2F2] dark:border-[#c7d0dc];
+
+    }
     .hidden-sibling {
+      @apply border-[#F2F2F2] dark:border-[#c7d0dc];
       + ul {
         @apply hidden;
       }
@@ -20,7 +28,14 @@
     }
   }
   [data-collapsed="true"] {
+    .left-sidebar-body {
+      /*@apply overflow-y-hidden*/
+    }
+    .open-sibling {
+      @apply border-0;
+    }
     .hidden-sibling {
+      @apply border-0;
       + ul {
         @apply block;
       }
@@ -29,21 +44,21 @@
 
   .left-sidebar-1 {
     .logo {
-      @apply flex flex-row items-center justify-start w-full h-16 pl-4 text-base font-bold tracking-wider uppercase whitespace-nowrap;
+      @apply flex flex-row items-center justify-center w-full h-[3.75rem] text-base font-bold tracking-wider uppercase whitespace-nowrap;
       max-width: calc(theme("spacing.1") * 64);
       @apply text-blue-500;
       span {
         transition: all 0.15s ease-in-out;
       }
       [data-collapsed="false"] & {
-        span {
-          @apply visible opacity-100;
+        .collapsed  {
+          @apply hidden;
         }
       }
       [data-collapsed="true"] & {
         max-width: calc(theme("spacing.1") * 16);
-        span {
-          @apply invisible opacity-0;
+        .expanded {
+          @apply hidden;
         }
       }
     }
@@ -52,29 +67,35 @@
   .left-sidebar-item {
     @apply relative flex flex-row items-center justify-start w-full h-10 truncate whitespace-nowrap;
     min-width: calc(theme("spacing.1") * 16);
-    max-width: calc(theme("spacing.1") * 64);
-    width: calc(theme("spacing.1") * 64);
+    max-width: calc(theme("spacing.1") * 57.5);
+    width: calc(theme("spacing.1") * 57.5);
     > svg {
       width: calc(theme("spacing.1") * 16);
     }
+
     [data-collapsed="true"] & {
       width: calc(theme("spacing.1") * 16);
       > .title {
-        width: 10px;
+        @apply pl-[10px];
+        width: 0;
       }
+      /*+ ul > li > a > .left-sidebar-item {*/
+      /*  width: calc(theme("spacing.1") * 57.5);*/
+      /*}*/
     }
     &.open-sibling {
       @apply text-blue-500;
-      &:after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 10px;
-        @apply bg-blue-500;
-      }
+      /*@apply text-blue-500 border-0;*/
+      /*&:after {*/
+      /*  content: "";*/
+      /*  display: block;*/
+      /*  position: absolute;*/
+      /*  top: 0;*/
+      /*  bottom: 0;*/
+      /*  left: 0;*/
+      /*  width: 4px;*/
+      /*  @apply bg-blue-500;*/
+      /*}*/
     }
     /*
     &:after {
@@ -101,7 +122,7 @@
       @apply truncate;
       > .left-sidebar-item {
         > .title {
-          @apply visible opacity-100;
+          @apply visible opacity-100 font-bold;
         }
       }
     }
@@ -117,7 +138,7 @@
   }
 
   .left-sidebar-title {
-    @apply relative flex flex-row items-center justify-start w-full h-0 px-4 text-xs font-normal tracking-wider uppercase;
+    @apply relative flex flex-row items-center justify-start w-full h-16 px-4 text-xs font-normal tracking-wider uppercase;
     &::before {
       transition: opacity 0.2s ease-in-out;
       display: block;
@@ -128,7 +149,7 @@
       top: calc((theme("spacing.1") * 8) - 2px);
       left: 0;
       right: 0;
-      height: 0px;
+      height: 1px;
       width: 100%;
     }
     [data-background="light"] & {
@@ -159,7 +180,7 @@
 
   [data-collapsed="false"] {
     ul ul .left-sidebar-item {
-      padding-left: calc(theme("spacing.1") * 16);
+      padding-left: calc(theme("spacing.1") * 15);
     }
     ul ul ul .left-sidebar-item {
       padding-left: calc(theme("spacing.1") * 20);
@@ -169,6 +190,12 @@
     }
     ul ul ul ul ul .left-sidebar-item {
       padding-left: calc(theme("spacing.1") * 28);
+    }
+  }
+
+  [data-collapsed="true"] {
+    ul ul {
+      @apply border-l-0;
     }
   }
 
@@ -208,7 +235,7 @@
         }
         > ul {
           @apply absolute top-0 z-10 invisible w-48 shadow-lg opacity-0 pointer-events-none;
-          left: 100%;
+          left: 101%;
         }
         &:hover {
           > ul {
