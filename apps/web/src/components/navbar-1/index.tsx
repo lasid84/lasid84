@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
 
 
   return (
-    <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800">
+    <div className="fixed w-full text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800">
 
       {!session?.user
         ? <div className="flex items-center justify-start w-full">

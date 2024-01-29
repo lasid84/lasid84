@@ -25,13 +25,13 @@ const Layout1: React.FC<Layout1Props> = ({children}) => {
         className={`font-sans antialiased text-sm disable-scrollbars ${
           background === "dark" ? "dark" : ""
         }`}>
+          <Navbar1 />
         <RightSidebar1 />
         <div className="wrapper">
           <div className="">
             <LeftSidebar1 />
           </div>
           <div className="w-full text-gray-900 main bg-gray-50 dark:bg-gray-900 dark:text-white">
-            <Navbar1 />
             <div className="w-full min-h-screen p-4">{children}</div>
           </div>
         </div>
