@@ -1,3 +1,4 @@
+'use client'
 import { z } from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
 import { useTranslation } from "react-i18next";
@@ -89,17 +90,17 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
           right={
             <>
               <TSubmitButton label={t("search")} />
-              <TCancelButton label={"초기화"} onClick={() => {
+              <TCancelButton label={t("reset")} onClick={() => {
                 reset();
               }} />
             </>
           }>
 
           <div className="col-span-4 row-span-4">
-            <TTextarea id='no' label='BL/Invoice No.' />
+            <TTextarea id='no' label={t("no")} />
           </div>
           <div className="col-span-2 row-span-2">
-            <TInput2 id="cust_code" label={t("거래처")} type="text" readOnly />
+            <TInput2 id="cust_code" label={t("cust_code")} type="text" readOnly />
             {errors?.cust_code?.message && (
               <ErrorMessage>{errors.cust_code.message}</ErrorMessage>
             )}
