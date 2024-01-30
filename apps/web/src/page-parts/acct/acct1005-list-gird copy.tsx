@@ -1,4 +1,3 @@
-"use client"
 import { AgGridReact } from "ag-grid-react";
 import Link from "next/link";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -36,10 +35,7 @@ const ListGrid: React.FC<Props> = ({
   const containerStyle = useMemo(() => "flex flex-col w-full", []);
   const gridStyle = useMemo(() => "w-full h-[450px]", []);
 
-  const tabRef = useRef<HTMLElement>(null)
-  // const onMoveBox = () => {
-  //   tabRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  // };
+  const tabRef = useRef<any>([])
 
 
   type TypeGridTab = "ALL" | "SHP" | "CSG" | "SKD" | "INV"
@@ -55,14 +51,18 @@ const ListGrid: React.FC<Props> = ({
     const [selectedTab, setSelectedTab] = useState<TypeGridTab>("ALL");
     const [checkState, setCheckState] = useState<string>("NON");
 
-
     
   //탭 클릭시
   const handleOnClickTab = (code: any) => {
     setSelectedTab(code);
-    console.log('_tabRef',tabRef)
-    tabRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };  
+  };
+  useEffect(() => {
+    if (listItem) {
+      //console.log('check listItem', listItem.data.cursorData[0])
+      setRowData(listItem.data.cursorData[0]);
+    }
+  }, [listItem]);
+
 
   return (
 
@@ -72,10 +72,11 @@ const ListGrid: React.FC<Props> = ({
 
         <div className={containerStyle}>
           <div className={`ag-theme-custom ${gridStyle}`}>
-            <Detail tabRef={tabRef}/>    
-            <Detail2 tabRef={tabRef} />           
-            <Detail3  tabRef={tabRef}/>    
-            <Detail4  tabRef={tabRef}/>    
+
+            <Detail ref={el => (tabRef.current[0]=el)}/>    
+            <Detail2 ref={el => (tabRef.current[1]=el)}/>           
+            <Detail3 ref={el => (tabRef.current[2]=el)}/>    
+            <Detail4 ref={el => (tabRef.current[3]=el)}/>    
           </div>
         </div>
       </PageContent>

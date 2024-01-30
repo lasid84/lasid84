@@ -72,11 +72,11 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
   searchParam.no = no
 
 
-  useEffect(() => {
-    if (loadItem) {
-      console.log('acct1005 load data', loadItem.data)
-    }
-  }, [loadItem])
+  // useEffect(() => {
+  //   if (loadItem) {
+  //     console.log('acct1005 load data', loadItem.data)
+  //   }
+  // }, [loadItem])
 
   // useEffect(() => {
   //   const searchValue = { ...searchParam, }
