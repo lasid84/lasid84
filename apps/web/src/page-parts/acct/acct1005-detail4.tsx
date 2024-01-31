@@ -91,7 +91,7 @@ const Detail: React.FC<Props> = ({ onSubmit, loadItem, tabRef }) => {
                           md:grid md:grid-cols-5 
                           lg:grid lg:grid-cols-7 
                           xl:grid xl:grid-cols-9
-                          2xl:grid 2xl:grid-cols-10`}>
+                          2xl:grid 2xl:grid-cols-10 dt4`}>
                 <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
                 <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
                 <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />

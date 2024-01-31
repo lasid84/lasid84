@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 
 type tab = {
   code_name: string;
@@ -9,18 +9,18 @@ type Props = {
   init?: boolean; // 초기화
   tabList: tab[] | undefined; // 탭 리스트
   allYn?: boolean; // 전체보기
-  onClickTab: (selectedTab: any) => void;
+  onClickTab: (selectedTab: any, idx : any) => void;
 };
 
   export const Tab: React.FC<Props> = ({ tabList, allYn = false, onClickTab }: Props) => {
-    const [selectedTab, setSelectedTab] = useState<any>(allYn ? "ALL" : "");
+    const [selectedTab, setSelectedTab] = useState<any>(allYn ? "ALL" : "") 
+    const [idx, setIdx] = useState<any>()
 
     useEffect(() => {
-      selectedTab && onClickTab(selectedTab);
+      selectedTab && onClickTab(selectedTab, idx);
     }, [selectedTab]);
   
-    useEffect(() => setSelectedTab(allYn ? "ALL" : ""), [allYn]);
-  
+    useEffect(() => setSelectedTab(allYn ? "ALL" : ""), [allYn]);  
 
     return (
       <div className="flex mb-[-14px] mt-[-12px]">
@@ -28,7 +28,9 @@ type Props = {
         {tabList?.map(({ code_name, code }, idx) => (
             <div key={idx} className="flex-none  bg-transparent">
               <button
-                  onClick={() => setSelectedTab(code)}
+                  onClick={()=>{setSelectedTab(code)
+                                setIdx(idx)
+                              }}
                   className={
                     code === selectedTab
                         ? "font-bold text-md px-4 py-3 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"

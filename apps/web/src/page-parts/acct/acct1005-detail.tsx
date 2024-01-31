@@ -30,10 +30,9 @@ export interface loadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: loadItem | null;
-  tabRef : HTMLDivElement;
 };
 
-const Detail: React.FC<Props> = ({ onSubmit, loadItem,tabRef }) => {
+const Detail: React.FC<Props> = ({ onSubmit, loadItem }) => {
   //다국어  
   const { t } = useTranslation();
   z.setErrorMap(makeZodI18nMap({ t }));
@@ -70,15 +69,6 @@ const Detail: React.FC<Props> = ({ onSubmit, loadItem,tabRef }) => {
   const searchParam = useInvoiceStore((state) => state.searchParam)
   // const no = JSON.stringify(router.query.no).replace(/\"/gi, "")
   // searchParam.no = no
-  const [isObserver, setObserver] = useState<HTMLDivElement>(null);
-  useEffect(() => {
-    // if (listItem) {
-    //   //console.log('check listItem', listItem.data.cursorData[0])
-    //   setRowData(listItem.data.cursorData[0]);
-    // }
-    setObserver(tabRef)
-  }, [tabRef]);
-  console.log('tffabRef',isObserver)
 
   return (
     <>
@@ -92,13 +82,13 @@ const Detail: React.FC<Props> = ({ onSubmit, loadItem,tabRef }) => {
                 </>
               }
             >
-              <div ref={tabRef}
+              <div
                 className={`gap-2 
                           sm:grid sm:grid-cols-3 
                           md:grid md:grid-cols-5 
                           lg:grid lg:grid-cols-7 
                           xl:grid xl:grid-cols-9
-                          2xl:grid 2xl:grid-cols-10`}>
+                          2xl:grid 2xl:grid-cols-10 dt`}>
                 <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
                 <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
                 <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
