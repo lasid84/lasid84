@@ -1,5 +1,8 @@
 import { AgGridReact } from "ag-grid-react";
 import Link from "next/link";
+import { z } from "zod";
+import { makeZodI18nMap } from "zod-i18n-map";
+import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PageContent from "shared/tmpl/page-content";
 import { GridOptions, Column, CellClickedEvent } from "ag-grid-community";
@@ -12,6 +15,10 @@ type Props = {
 const CodeListGrid: React.FC<Props> = ({
   listItem,
 }) => {
+  //다국어  
+  const { t } = useTranslation();
+  z.setErrorMap(makeZodI18nMap({ t }));
+
   const gridListRef = useRef<any | null>(null);
   const gridListDefaultColDef = {
     sortable: true,
@@ -39,7 +46,7 @@ const CodeListGrid: React.FC<Props> = ({
     //console.log('firstRow')
 
     const a = [{
-      headerName: "No",
+      headerName: t("No."),
       field: 'chk',
       headerCheckboxSelection: true,
       checkboxSelection: true,
@@ -47,35 +54,35 @@ const CodeListGrid: React.FC<Props> = ({
       valueGetter: "node.rowIndex + 1",
       width: 50,
     },
-    { field: 'billto_code', width: 100, sorter: 'string' },
-    { field: 'billto_nm', width: 100, sorter: 'string' },
-    { field: 'house_bl_no', width: 100, sorter: 'string' },
-    { field: 'invoice_no', width: 100, sorter: 'string' },
-    { field: 'etdeta', width: 100, sorter: 'string' },
-    { field: 'shprcnee_code', width: 100, sorter: 'string' },
-    { field: 'shprcnee_nm', width: 100, sorter: 'string' },
-    { field: 'port', width: 100, sorter: 'string' },
-    { field: 'user_id', width: 100, sorter: 'string' },
-    { field: 'free_house_term', width: 100, sorter: 'string' },
-    { field: 'freight_term', width: 100, sorter: 'string' },
-    { field: 'tax_no', width: 100, sorter: 'string' },
-    { field: 'apply_to_sts', width: 100, sorter: 'string' },
-    { field: 'billing_or', width: 100, sorter: 'string' },
-    { field: 'notedi_b_cnk', width: 100, sorter: 'string' },
+    { headerName: t("billto_code"), field: 'billto_code', width: 100, sorter: 'string' },
+    { headerName: t("billto_nm"), field: 'billto_nm', width: 100, sorter: 'string' },
+    { headerName: t("house_bl_no"), field: 'house_bl_no', width: 100, sorter: 'string' },
+    { headerName: t("invoice_no"), field: 'invoice_no', width: 100, sorter: 'string' },
+    { headerName: t("etdata"), field: 'etdata', width: 100, sorter: 'string' },
+    { headerName: t("shprcnee_code"), field: 'shprcnee_code', width: 100, sorter: 'string' },
+    { headerName: t("shprcnee_nm"), field: 'shprcnee_nm', width: 100, sorter: 'string' },
+    { headerName: t("port"), field: 'port', width: 100, sorter: 'string' },
+    { headerName: t("user_id"), field: 'user_id', width: 100, sorter: 'string' },
+    { headerName: t("free_house_term"), field: 'free_house_term', width: 100, sorter: 'string' },
+    { headerName: t("freight_term"), field: 'freight_term', width: 100, sorter: 'string' },
+    { headerName: t("tax_no"), field: 'tax_no', width: 100, sorter: 'string' },
+    { headerName: t("apply_to_sts"), field: 'apply_to_sts', width: 100, sorter: 'string' },
+    { headerName: t("billing_or"), field: 'billing_or', width: 100, sorter: 'string' },
+    { headerName: t("notedi_b_cnk"), field: 'notedi_b_cnk', width: 100, sorter: 'string' },
     {
-      field: 'billing_yn', width: 100, sorter: 'string'
+      headerName: t("billing_yn"), field: 'billing_yn', width: 100, sorter: 'string'
       , cellStyle: (params: any) => {
         if (params.value === 'Y') {
           return { color: 'red', backgroundColor: 'yellow' }
         }
       }
     },
-    { field: 'duty_10', width: 100, sorter: 'string' },
-    { field: 'duty_00', width: 100, sorter: 'string' },
-    { field: 'vat_amt', width: 100, sorter: 'string' },
-    { field: 'duty_no', width: 100, sorter: 'string' },
-    { field: 'tot_amt', width: 100, sorter: 'string' },
-    { field: 'ccn_cnt', width: 100, sorter: 'string' },
+    { headerName: t("duty_10"), field: 'duty_10', width: 100, sorter: 'string' },
+    { headerName: t("duty_00"), field: 'duty_00', width: 100, sorter: 'string' },
+    { headerName: t("vat_amt"), field: 'vat_amt', width: 100, sorter: 'string' },
+    { headerName: t("duty_no"), field: 'duty_no', width: 100, sorter: 'string' },
+    { headerName: t("tot_amt"), field: 'tot_amt', width: 100, sorter: 'string' },
+    { headerName: t("ccn_cnt"), field: 'ccn_cnt', width: 100, sorter: 'string' },
     ]
     return a
 
@@ -244,7 +251,9 @@ const CodeListGrid: React.FC<Props> = ({
               }
             }}
               target="_blank" >
-              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">Billing Report</div>
+              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
+                {t("searchMR")}
+                </div>
             </Link>
             <Link href={{
               pathname: "/acct/acct1005",
@@ -253,13 +262,15 @@ const CodeListGrid: React.FC<Props> = ({
               }
             }}
               target="_blank" >
-              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">CCN조회 및 Billing관리</div>
+              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
+                {t("searchccn")}
+                </div>
             </Link>
             <button
               onClick={createTax}
               type="button"
               className="px-4 py-1 text-s font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
-              계산서 생성
+              {t("createtax")}
             </button>
             <Link href={{
               pathname: "/acct/acct3002",
@@ -268,7 +279,8 @@ const CodeListGrid: React.FC<Props> = ({
               }
             }}
               target="_blank" >
-              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">계산서 전송</div>
+              <div className="px-4 py-1 text-s font-bold text-gray-500 bg-transparent border border-gray-400 rounded hover:text-cyan-700 hover:border-blue-700">
+                {t("sendtax")}</div>
             </Link>
           </>
         }

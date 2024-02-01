@@ -21,27 +21,12 @@ type Props = {
 const ListGrid: React.FC<Props> = ({
   listItem,
 }) => {
-  const gridListRef = useRef<any | null>(null);
-  const gridListDefaultColDef = {
-    sortable: true,
-    resizable: true,
-    suppressMenu: false, //메뉴 안보이게
-    headerClass: "text-center",
-    enableColResize: false,
-  };
 
-  const [tabIndex, setTabIndex] = useState<number>(0);
-  const [rowData, setRowData] = useState([]);
 
   const containerStyle = useMemo(() => "flex flex-col w-full", []);
   const gridStyle = useMemo(() => "w-full h-[450px]", []);
 
-  //const tabRef = useRef<HTMLElement>(null)
   const tabRef = useRef<HTMLDivElement[]>([])
-  // const onMoveBox = () => {
-  //   tabRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  // };
-
 
   type TypeGridTab = "ALL" | "SHP" | "CSG" | "SKD" | "INV"
 
@@ -52,16 +37,35 @@ const ListGrid: React.FC<Props> = ({
     { index: 3, code_name: "4.청구", code: 'INV' },
   ]
 
-  // Tab Index : 상단(기본정보, 추가정보, 비고), 하단(전체보기, 번들)
   const [selectedTab, setSelectedTab] = useState<TypeGridTab>("ALL");
-
-
 
   //탭 클릭시
   const handleOnClickTab = (code: any, idx: any) => {
     setSelectedTab(code);
     tabRef.current[idx]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  const gridOptions: GridOptions = useMemo(() => {
+    return {
+      rowHeight: 30,
+      headerHeight: 25,
+      rowSelection: "multiple",
+      suppressRowClickSelection: true,  // 행 클릭만으로 선택되지 않도록 : true, Clipboard에 영향 미침, cell만 복사
+      suppressCopyRowsToClipboard: true, // true => row 복사 대신 cell 복사
+      suppressHorizontalScroll: false,
+      suppressColumnVirtualisation: true,
+      suppressRowVirtualisation: true,
+      enableRangeSelection: true,
+      // Grid row번호 고정시 사용
+      onSortChanged(e: any) {
+        e.api.refreshCells();
+      },
+      onGridReady(p: any) {
+        p.api.hideOverlay();
+      },
+
+    };
+  }, []);
 
   return (
     <>
@@ -80,8 +84,11 @@ const ListGrid: React.FC<Props> = ({
             </div>
             <div ref={(el) => { tabRef.current[3] = el }}>
               <Detail4 />
-            </div>          </div>
+            </div>
+          </div>         
         </div>
+
+
       </PageContent>
     </>
   );

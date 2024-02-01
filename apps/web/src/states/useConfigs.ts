@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware'
+import { createJSONStorage, devtools, persist } from 'zustand/middleware'
 
 // Define a type for the state
 interface ConfigState {
@@ -32,19 +32,44 @@ type ConfigsStore = {
     }
  }
 
-export const useConfigs = create<ConfigsStore>( set => ({
-    config: initialState,
-    actions: {
-        setConfig: (payload: Partial<ConfigState>) => {
-            set(state => ({
-                config: {
+
+ const configsStore = (set: any) => ({
+    config : initialState,
+    actions : {
+        setConfig : (payload : Partial<ConfigState>) => {
+            set((state:any)=>({
+                config : {
                     ...state.config,
-                    ...payload
-                }
+                    ...payload,
+                },
             }));
         },
     },
-}));  
+ })
 
+ const persistConfigStore = persist(
+    process.env.NODE_ENV !== "production" ? configsStore : configsStore,
+    {
+        name : "CONFIGS",
+        storage : createJSONStorage(()=>localStorage),
+        partialize : ({actions, ...rest}:any)=> rest,
+    }
+ )
+
+// export const useConfigs = create<ConfigsStore>( set => ({
+//     config: initialState,
+//     actions: {
+//         setConfig: (payload: Partial<ConfigState>) => {
+//             set(state => ({
+//                 config: {
+//                     ...state.config,
+//                     ...payload
+//                 }
+//             }));
+//         },
+//     },
+// }));  
+
+export const useConfigs = create<ConfigsStore>()(persistConfigStore)
 
 export default initialState;

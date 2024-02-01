@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/react-hook-form/error-message";
@@ -12,7 +12,6 @@ import { TInput, TInputWithButton, TSelect, TCancelButton, TTextarea, TTextarea2
 import { useInvoiceStore, initSearchValue } from "states/acct/acct1005.store";
 import { useUserSettings } from "states/useUserSettings";
 import PageContentUp from "shared/tmpl/page-content-up";
-
 
 //import { useCustomer, useLoadData } from "states/useCodes";
 //import { MultiColumnComboBoxOverview } from "components/dropdowns/ComboSelect" 
@@ -30,10 +29,11 @@ export interface loadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: loadItem | null;
-  tabRef : HTMLDivElement;
+  tabRef: HTMLDivElement;
 };
 
 const Detail: React.FC<Props> = ({ onSubmit, loadItem, tabRef }) => {
+  const gridListRef = useRef<any | null>(null);
   //다국어  
   const { t } = useTranslation();
   z.setErrorMap(makeZodI18nMap({ t }));
@@ -70,7 +70,7 @@ const Detail: React.FC<Props> = ({ onSubmit, loadItem, tabRef }) => {
   const searchParam = useInvoiceStore((state) => state.searchParam)
   // const no = JSON.stringify(router.query.no).replace(/\"/gi, "")
   // searchParam.no = no
- 
+  
 
   return (
     <>
@@ -120,31 +120,32 @@ const Detail: React.FC<Props> = ({ onSubmit, loadItem, tabRef }) => {
                     height="h-24"
                     readOnly={false}
                   />
-                </div>
-                <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
-                <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
-                <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
-                <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
-                <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
-                <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
-                <TInput id="cust_code" label={t("cust_code")} type="text" readOnly />
+                </div>                
               </div>
-              <div className="grid grid-cols-2 gap-2 pt-2">
-                <TTextarea
-                  label="비고"
-                  id="vigo"
-                  width="w-full"
-                  rows={2}
-                  readOnly={false}
-                />
-                <TTextarea
-                  label="비고"
-                  id="vigo"
-                  width="w-full"
-                  rows={2}
-                  readOnly={false}
-                />
-              </div>
+
+        
+                <div className="col-span-2 row-span-2">
+                  <TTextarea
+                    label="주소"
+                    id="addr1"
+                    height="h-24"
+                    readOnly={false}
+                  />
+                </div>      <div className="col-span-2 row-span-2">
+                  <TTextarea
+                    label="주소"
+                    id="addr1"
+                    height="h-24"
+                    readOnly={false}
+                  />
+                </div>      <div className="col-span-2 row-span-2">
+                  <TTextarea
+                    label="주소"
+                    id="addr1"
+                    height="h-24"
+                    readOnly={false}
+                  />
+                </div>     
 
             </PageContentUp>
 

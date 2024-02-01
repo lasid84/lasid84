@@ -10,7 +10,7 @@ export const ni18nConfig = {
   react: { useSuspense: false },
   backend: {
     loadPath: path.resolve(`/locales/{{ns}}/{{lng}}.json`),
-    //loadPath: 'http://localhost:8000/api/locales/{{lng}}',
+    //loadPath: 'http://localhost:5000/api/locales/{{lng}}',
   },
-  // use: [HttpBackend],
+  //use: [HttpBackend],
 };

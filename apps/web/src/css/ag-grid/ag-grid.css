@@ -507,6 +507,10 @@ ag-grid, ag-grid-angular, ag-grid-ng2, ag-grid-polymer, ag-grid-aurelia {
 .ag-body-viewport {
   display: flex;
 }
+.ag-body-viewport::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
 .ag-body-viewport.ag-layout-normal {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -514,7 +518,15 @@ ag-grid, ag-grid-angular, ag-grid-ng2, ag-grid-polymer, ag-grid-aurelia {
 
 .ag-center-cols-viewport {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
+}
+
+.ag-horizontal-left-spacer {
+  visibility: hidden;
+}
+
+.ag-horizontal-right-spacer {
+  visibility: hidden;
 }
 
 .ag-body-horizontal-scroll-viewport {
@@ -1461,6 +1473,7 @@ ag-grid, ag-grid-angular, ag-grid-ng2, ag-grid-polymer, ag-grid-aurelia {
   align-items: center;
   white-space: nowrap;
   overflow: hidden;
+  background-color: white;
 }
 
 .ag-paging-panel {
@@ -7118,56 +7131,59 @@ input[class^=ag-][type=range]:disabled {
 /* grid row css */
 
 .highlight-blue {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(25 166 231 / var(--tw-bg-opacity)) !important;
-  color: white;
+  color: black;
 }
 
 .highlight-red {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(249 65 100 / var(--tw-bg-opacity)) !important;
-  color: white;
+  color: #000;
 }
 
 .highlight-black {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(51 51 51 / var(--tw-bg-opacity)) !important;
-  color: white;
+  color: #000;
 }
 
 .highlight-orange {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(245 158 11 / var(--tw-bg-opacity)) !important;
-  color: white;
+  color: #000;
 }
 
 .highlight-green {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(16 185 129 / var(--tw-bg-opacity)) !important;
-  color: white;
+  color: #000;
 }
 
 .highlight-pink {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(236 72 153 / var(--tw-bg-opacity)) !important;
-  color: white;
+  color: #000;
 }
 
 .highlight-white {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
-  color: black;
+  color: #000;
 }
 
 .highlight-gray {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(229 229 229 / var(--tw-bg-opacity)) !important;
-  color: black;
+  color: #000;
 }
 
 .highlight-kart {
-  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 0.2;
   background-color: rgb(25 166 231 / var(--tw-bg-opacity)) !important;
-  color: white;
+  color: #000;
 }
 
+[class*=highlight-]:hover {
+  color : #000 !important;
+}
