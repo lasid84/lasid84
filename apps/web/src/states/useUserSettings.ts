@@ -23,6 +23,8 @@ interface UserSettingsState {
 
   /*KREAM용 추가 끝*/
 
+  /* 브라우저용*/
+   loading : string,
   // user_lev: string;
   // user_type: string;
   // email?: string;
@@ -49,9 +51,11 @@ const initialState: UserSettingsState = {
   trans_mode: "",
   trans_type: "",
   ufs_id: "",
-  token: "",
-
+  token: "",  
   /*KREAM용 추가 끝*/
+
+  /* 브라우저용*/
+  loading : "OFF",
   // user_lev: "",
   // user_type: "",
   // email: "",

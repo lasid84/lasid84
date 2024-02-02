@@ -40,6 +40,8 @@ export interface returnData {
   textData: string;
 }
 
+
+
 export const Acct2003Load = () => {
   const inparam = ["in_user_id", "in_ipaddr"]
   const invalue = ['doni.lee.web', '10.33.33.96']
@@ -58,11 +60,13 @@ export const useGetData = (searchParam: any) => {
 }
 
 
-//CODE LOAD hooks
+// CODE LOAD hooks
 export const useLoadData = () => {
   const { isLoading, data, isError } = useQuery(["Acct2003Load"], Acct2003Load)
   return { data, isLoading, isError }
 }
+
+
 
 /* 계산서 생성  */
 export async function create(params: addInvoiceReq): Promise<any> {
