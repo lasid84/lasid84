@@ -6,12 +6,12 @@ import { useEffect, useRef, useMemo, useState } from "react";
 import { useUserSettings } from "states/useUserSettings";
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { Tab } from "page-parts/acct/tab-list"
-import LoadingComponent from "page-parts/loadming";
+import LoadingComponent from "page-parts/loading";
 
 const Navbar: React.FC = () => {
-  const config = useConfigs((state) => state.config);
+  const {config, actions} = useConfigs((state) => state);
   const { rightSidebar, collapsed } = config;
-  const configActions = useConfigs((state) => state.actions);
+  
   const [tabIndex, setTabIndex] = useState<number>(0);
 
   const {
@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
           ? <div className="flex items-center justify-start w-full">
             <button
               onClick={() =>
-                configActions.
+                actions.
                   setConfig({
                     collapsed: !collapsed,
                   })
@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
           <div className=" flex items-center justify-start w-full">
             <button
               onClick={() =>
-                configActions.
+                actions.
                   setConfig({
                     collapsed: !collapsed,
                   })
@@ -92,7 +92,7 @@ const Navbar: React.FC = () => {
             <button
               className="flex items-center justify-center h-12 mx-4"
               onClick={() =>
-                configActions.
+                actions.
                   setConfig({
                     rightSidebar: !rightSidebar,
                   })

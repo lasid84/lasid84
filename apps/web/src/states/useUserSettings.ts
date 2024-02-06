@@ -25,6 +25,8 @@ interface UserSettingsState {
 
   /* 브라우저용*/
    loading : string,
+   hasError : boolean,
+   errMsg : string,
   // user_lev: string;
   // user_type: string;
   // email?: string;
@@ -56,6 +58,8 @@ const initialState: UserSettingsState = {
 
   /* 브라우저용*/
   loading : "OFF",
+  hasError : false,
+  errMsg : "",
   // user_lev: "",
   // user_type: "",
   // email: "",
