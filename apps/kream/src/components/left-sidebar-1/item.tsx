@@ -1,14 +1,14 @@
-import {useState} from "react";
-import {useRouter} from "next/router";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import {FiChevronRight} from "react-icons/fi";
-import type {NavigationState} from "states/useNavigation";
+import { FiChevronRight } from "react-icons/fi";
+import type { NavigationState } from "states/useNavigation";
 
 
 const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
   const [hidden, setHidden] = useState<boolean>(true);
-  const router = useRouter();
-  const {pathname} = router;
+
+  const pathname = usePathname();
 
 
 
@@ -23,7 +23,7 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
     return (
       <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
           {icon}
-          <span className="title w-full">{title}</span>
+          <span className="w-full title">{title}</span>
           {badge && (
             <span className={`badge badge-circle badge-sm ${badge.color}`}>
               {badge.text}

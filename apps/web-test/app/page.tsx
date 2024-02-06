@@ -90,7 +90,7 @@ export default function LoginPage() {
     // setCookie("Authroization", accesstoken);
     // setCookie("RefreshToken", refreshToken);
     log("==============login page", isLogin, status, session);
-  }, [isLogin]);
+  }, [session]);
 
   return (
     <SessionProvider session={session}>

@@ -17,11 +17,12 @@ async function init () {
     var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     port = objectPath.get(iniData, "main.port");
     // port = 5005;
+    log(`??`, port);
     server.listen(port, () => {
       log(`api running on ${port}`);
     });
   } catch (err) {
-    console.log(err);
+    log(err);
   }
 }
 

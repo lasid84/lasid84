@@ -12,8 +12,12 @@ class MyDocument extends Document {
     ctx: DocumentContext
   ): Promise<DocumentInitialProps> {
     const initialProps = await Document.getInitialProps(ctx);
+
+    console.log("/pages/document.tsx");
+
     return {...initialProps};
   }
+  
 
   render(): React.ReactElement {
     return (
@@ -102,7 +106,7 @@ class MyDocument extends Document {
           />
           <meta name="theme-color" content="#2196f3" />
         </Head>
-        <body className="font-sans text-sm antialiased disable-scrollbars bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+        <body className="font-sans text-sm antialiased text-gray-900 bg-white disable-scrollbars dark:bg-gray-900 dark:text-white">
           <div id="portal" />
           <Main />
           <NextScript />

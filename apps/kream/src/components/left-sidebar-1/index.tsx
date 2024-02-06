@@ -1,9 +1,9 @@
 'use client'
+
 import { Fragment, useEffect } from "react";
 import { useNavigation, setNavigationData } from "states/useNavigation";
 import Title from "components/left-sidebar-1/title";
 import Item from "components/left-sidebar-1/item";
-import Logo from "components/left-sidebar-1/logo";
 import LogoImg from "components/left-sidebar-1/logo-img";
 import { useUserSettings } from "states/useUserSettings";
 import { useSession } from 'next-auth/react';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const LeftSidebar: React.FC<Props> = () => {
-    const { data: session } = useSession();
+    // const { data: session } = useSession();
     const navigation = useNavigation((state) => state.navigation);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const LeftSidebar: React.FC<Props> = () => {
             <LogoImg />
             {/* <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"> */}
                 {/* <div className="dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]"> */}
-                {!session?.user
+                {!navigation
                 ?  <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]  w-[150px]"></div>
                 :  <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">
                      {navigation.map((menu, i) => (

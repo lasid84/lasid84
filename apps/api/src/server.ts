@@ -32,6 +32,7 @@ export const createServer = (): Express => {
     .use(json())
     .use(cors())
     .use(compression())
+    .set('trust proxy', true)
     .get("/message/:name", (req, res) => {
       return res.json({ message: `hello ${req.params.name}` });
     })
@@ -81,8 +82,8 @@ export const createServer = (): Express => {
       })
     })
     .on('uncaughtException', function (err) {
-      console.log('An error occurred: ', err);
-      console.log(err.stack);
+      log('An error occurred: ', err);
+      log(err.stack);
     })
     ;
 

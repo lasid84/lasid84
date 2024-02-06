@@ -10,7 +10,7 @@ type OptionProps = {
 // Define a type for the state
 interface UserSettingsState {
   user_id: string;
-  user_name: string;
+  user_nm: string;
   /*KREAM용 추가*/ 
   permission_id: string;
   user_grp_id: string;
@@ -38,7 +38,7 @@ interface UserSettingsState {
 // Define the initial state using that type
 const initialState: UserSettingsState = {
   user_id: "",
-  user_name: "",
+  user_nm: "",
 
   /*KREAM용 추가*/ 
   permission_id: "",
@@ -94,3 +94,13 @@ const persistUserSettingsStore = persist(
 );
 
 export const useUserSettings = create<UserSettingsStore>()(persistUserSettingsStore);
+
+export const setUserSetting = async (user:any) => {
+  // const session = await auth();
+  console.log("setUserSetting start", user);
+  // const userInfo = useUserSettings.getState().data;
+  // console.log("userInfo : ",userInfo);
+  // const navigationData = await getMenuList(userInfo);
+  await useUserSettings.setState({ data: user });
+  console.log("setUserSetting : ",useUserSettings.getState().data);
+};
