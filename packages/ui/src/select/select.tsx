@@ -34,14 +34,14 @@ export const Select: React.FC<SelectProps> = ({
   onChange,
   isPlaceholder = true,
 }) => {
-  const { register } = useFormContext();
+  //const { register } = useFormContext();
   let readOnlyCss;
   if (readOnly) {
     readOnlyCss = "read-only:bg-gray-100";
   }
   return (
     <select
-      {...register(name, rules)}
+      //{...register(name, rules)}
       id={id}
       name={name}
       //  defaultValue={value}

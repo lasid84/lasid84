@@ -21,7 +21,7 @@ class MyDocument extends Document {
 
   render(): React.ReactElement {
     return (
-      <Html lang="en">
+      <Html lang="ko">
         <Head>
           <meta charSet="utf-8" />
           <meta

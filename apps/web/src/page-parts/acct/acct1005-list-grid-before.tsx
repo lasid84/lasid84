@@ -33,10 +33,7 @@ const ListGrid: React.FC<Props> = ({
   const columns = React.useMemo(() => {
     console.log('handle empty data', listItem)
     if (listItem === undefined || !listItem || listItem.length === 0) return []; // Handle empty data   
-    //if(listItem.data.cursorData.length ===1) return [] //초기값설정
-
-    //const firstRow = listItem.data.cursorData[0][0];
-    //console.log('firstRow')
+    const firstRow = listItem.data.cursorData[0][0];
 
     const a = [{
       headerName: "No",
@@ -78,30 +75,40 @@ const ListGrid: React.FC<Props> = ({
     { field: 'ccn_cnt', width: 100, sorter: 'string' },
     ]
     return a
+    // return Object.keys(firstRow).map((key) => 
+    // ({
+    //   title: key,          
+    //   field: key,
+    //   width : 100,
+    //   sorter: 'string',       
+    //   }));
+   
 
   }, [listItem]);
+
+  
 
 
 
 
   const gridOptions: GridOptions = useMemo(() => {
     return {
-      rowHeight: 30,
-      headerHeight: 25,
-      rowSelection: "multiple",
-      suppressRowClickSelection: true,  // 행 클릭만으로 선택되지 않도록 : true, Clipboard에 영향 미침, cell만 복사
-      suppressCopyRowsToClipboard: true, // true => row 복사 대신 cell 복사
-      suppressHorizontalScroll: false,
-      suppressColumnVirtualisation: true,
-      suppressRowVirtualisation: true,
-      enableRangeSelection: true,
-      // Grid row번호 고정시 사용
-      onSortChanged(e: any) {
-        e.api.refreshCells();
-      },
-      onGridReady(p: any) {
-        p.api.hideOverlay();
-      },
+      // rowHeight: 30,
+      // headerHeight: 25,
+      // rowSelection: "multiple",
+      // suppressRowClickSelection: true,  // 행 클릭만으로 선택되지 않도록 : true, Clipboard에 영향 미침, cell만 복사
+      // suppressCopyRowsToClipboard: true, // true => row 복사 대신 cell 복사
+      // suppressHorizontalScroll: false,
+      // suppressColumnVirtualisation: true,
+      // suppressRowVirtualisation: true,
+      // enableRangeSelection: true,
+      // // Grid row번호 고정시 사용
+      // onSortChanged(e: any) {
+      //   e.api.refreshCells();
+      // },
+      // onGridReady(p: any) {
+      //   p.api.hideOverlay();
+      // },
 
     };
   }, []);
@@ -121,7 +128,7 @@ const ListGrid: React.FC<Props> = ({
   };
 
   const onGridReady = (e: any) => {
-    e.api.sizeColumnsToFit();
+    //e.api.sizeColumnsToFit();
     e.columnApi.resetColumnState();
     e.api.hideOverlay();
   };
@@ -200,6 +207,7 @@ const ListGrid: React.FC<Props> = ({
               overlayNoRowsTemplate={
                 '<span class="ag-overlay-loading-center">검색된 데이터가 없습니다.</span>'
               }
+            
             />
           </div>
         </div>

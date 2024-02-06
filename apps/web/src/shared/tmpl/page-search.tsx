@@ -11,16 +11,18 @@ export type PageSearchProps = {
 const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      {/* <div className="flex">
-        <div className="w-10/12 rounded-[5px] bg-white border mb-2"> */}
+      <div className="flex">
+        <div className="w-full rounded-[5px] bg-white border mb-2">
           {/*contents*/}
-          <div className="px-4 py-1 w-full space-y-2">
-            <div className="w-full flex flex-col md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-3">
-              {children}
-            </div>            
+          <div className=" px-4 pt-4 pb-3 w-full border-b border-[#f2f2f2]">
             <div
-              className="w-full flex flex-col md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-2">
-              {addition && addition}
+              className={`w-full gap-2 
+                          sm:grid sm:grid-cols-3 
+                          md:grid md:grid-cols-5 
+                          lg:grid lg:grid-cols-7 
+                          xl:grid xl:grid-cols-9
+                          2xl:grid 2xl:grid-cols-10`}>
+              {children}
             </div>
           </div>
           {/*button*/}
@@ -36,10 +38,8 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
               </div>
             </div>
           </div>
-       
-      
-        {/* </div>
-      </div> */}
+        </div>
+      </div>
     </>
   );
 };

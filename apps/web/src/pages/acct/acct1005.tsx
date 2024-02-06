@@ -1,13 +1,14 @@
 import { useCallback } from "react"
 import PageTitle from "shared/tmpl/page-title"
 import SearchForm from "page-parts/acct/acct1005-search-row"
-import ListGrid from "page-parts/acct/acct1005-list-gird"
+import ListGrid from "page-parts/acct/acct1005-list-grid-before"
 import { SubmitHandler } from "react-hook-form"
 import { useInvoiceStore } from "states/acct/acct1005.store";
 import { useGetData, useLoadData } from "page-parts/acct/acct1005"
 import { useSession } from 'next-auth/react';
 import { useUserSettings } from "states/useUserSettings";
 import BeforeLogin from "shared/tmpl/beforelogin"
+import Detail from "page-parts/acct/acct1005-detail"
 
 
 const pageProps = {
@@ -45,7 +46,8 @@ const Acct1005: React.FC = () => {
                     <PageTitle title={pageProps.title} brcmp={brcmp} />
 
                     {/* 검색 */}
-                    <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData || null} />
+                    {/* <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData || null} /> */}
+                    {/* <Detail/> */}
 
                     {/* 코드 리스트 */}
                     <ListGrid listItem={selectResult || null} /></div>

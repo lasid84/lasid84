@@ -32,6 +32,9 @@ const Acct2003: React.FC = () => {
 
     //Load data..
     const { data: LoadData } = useLoadData()
+
+     
+
     //grid data
     const { data: selectResult } = useGetData(searchParam)
 
@@ -54,7 +57,7 @@ const Acct2003: React.FC = () => {
                     <div className="flex">
                         <div className="w-full rounded-[5px] bg-white border mb-2">
                             {/* 검색 */}
-                            <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData || null} />
+                            <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData||null} />
                         </div>
                         {/* grid data와 결합하는 side component */}
                         <div className="w-2/12 rounded-[5px] bg-white border mb-2 space-y-2">

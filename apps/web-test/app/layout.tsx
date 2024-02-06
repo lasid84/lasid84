@@ -26,7 +26,7 @@ export default function RootLayout({
 
   return (
     <AuthContext>
-    <html lang="en">      
+    <html lang="ko">      
         <body className={`${inter.className} antialiased`}>{children}</body>
       
     </html>

@@ -23,6 +23,7 @@ const CodeListGrid: React.FC<Props> = ({
   const [targetedRow, setTargetedRow] = useState<any>('')
   const [targetedRow2, setTargetedRow2] = useState<any>('')
   const searchParam = useInvoiceStore((state) => state.searchParam)
+  const gridRef: any = useRef<any>(null);
 
 
   const containerStyle = useMemo(() => "flex flex-col w-full", []);
@@ -37,6 +38,9 @@ const CodeListGrid: React.FC<Props> = ({
     //const firstRow = listItem.data.cursorData[0][0];
     //console.log('firstRow')
 
+    //TODO
+    const { isLoading } = listItem;
+    console.log('true?false?', isLoading)
     const a = [{
       headerName: "No",
       field: 'chk',
@@ -167,6 +171,9 @@ const CodeListGrid: React.FC<Props> = ({
     if (listItem) {
       //console.log('check listItem', listItem.data.cursorData[0])
       setRowData(listItem.data.cursorData[0]);
+      gridRef?.current?.api?.hideOverlay();
+    }else{
+      gridRef?.current?.api?.showLoadingOverlay();
     }
   }, [listItem]);
 

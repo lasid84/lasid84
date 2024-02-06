@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { makeZodI18nMap } from "zod-i18n-map";
 import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -27,11 +29,15 @@ type Props = {
 };
 
 const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
+  // 다국어
+  const { t } = useTranslation();
+  z.setErrorMap(makeZodI18nMap({ t }));
+
   // 인보이스 검색스키마
   const acct2003SearchSchema = z.object({
     trans_mode: z.coerce.string(),
     trans_type: z.coerce.string(),
-    office_cd  :  z.coerce.string(),
+    office_cd: z.coerce.string(),
     fr_date: z.coerce.string().optional(),
     to_date: z.coerce.string().optional(),
     fr_inv_date: z.coerce.string(),
@@ -50,6 +56,7 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
   const gOfficeId = useUserSettings((state) => state.data.office_cd)
   const gTransMode = useUserSettings((state) => state.data.trans_mode)
   const gTransType = useUserSettings((state) => state.data.trans_type)
+
 
 
   const methods = useForm<FormType>({
@@ -105,37 +112,37 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
         <PageSearch
           right={
             <>
-              <TSubmitButton label={"검색"} />
-              <TCancelButton label={"초기화"} onClick={() => {
+              <TSubmitButton label={t("search")} />
+              <TCancelButton label={t("reset")} onClick={() => {
                 setFocus("trans_mode");
                 reset();
               }} />
             </>
           }>
           <div className="flex flex-col w-full">
-            <TInput2 id="fr_date" label="기간(시작일자)" type="date">
+            <TInput2 id="fr_date" label={t("fr_date")} type="date">
               {errors?.fr_date?.message && (
                 <ErrorMessage>{errors.fr_date.message}</ErrorMessage>
               )}
             </TInput2>
-            <TInput2 id="to_date" label="(종료일자)" type="date">
+            <TInput2 id="to_date" label={t("to_date")} type="date">
               {errors?.to_date?.message && <ErrorMessage>{errors.to_date.message}</ErrorMessage>}
             </TInput2>
           </div>
           <div className="flex flex-col w-full">
-            <TInput2 id="fr_inv_date" label="기간(시작일자)" type="date">
+            <TInput2 id="fr_inv_date" label={t("fr_inv_date")} type="date">
               {errors?.fr_inv_date?.message && (
                 <ErrorMessage>{errors.fr_inv_date.message}</ErrorMessage>
               )}
             </TInput2>
-            <TInput2 id="to_inv_date" label="(종료일자)" type="date">
+            <TInput2 id="to_inv_date" label={t("to_inv_date")} type="date">
               {errors?.to_inv_date?.message && <ErrorMessage>{errors.to_inv_date.message}</ErrorMessage>}
             </TInput2>
           </div>
           <div className="flex flex-col w-full">
             <TSelect2
               id="trans_mode"
-              label="trans_mode"
+              label={t("trans_mode")}
               allYn={false}
               isPlaceholder={false}
               outerClassName="w-full space-y-1"
@@ -147,7 +154,7 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
 
             <TSelect2
               id="trans_type"
-              label="trans_type"
+              label={t("trans_type")}
               allYn={false}
               isPlaceholder={false}
               outerClassName="w-full space-y-1"
@@ -156,16 +163,16 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
               options={transtype}
             />{errors?.trans_type?.message && <ErrorMessage>{errors.trans_type.message}</ErrorMessage>}
             <TSelect2
-              id="office_id"
-              label="office_id"
+              id="office_cd"
+              label={t("office_cd")}
               allYn={false}
               isPlaceholder={false}
               outerClassName="w-full space-y-1"
               defaultValue={gTransType}
-              onChange={(e) => actions.setSearchParam({ office_id: e.target.value })}
+              onChange={(e) => actions.setSearchParam({ office_cd: e.target.value })}
               options={transtype}
             />
-            {errors?.office_id?.message && <ErrorMessage>{errors.office_id.message}</ErrorMessage>}
+            {errors?.office_cd?.message && <ErrorMessage>{errors.office_cd.message}</ErrorMessage>}
           </div>
           <div className="flex flex-col w-full">
             {/* <MultiColumnComboBoxOverview
@@ -178,14 +185,16 @@ const SearchForm: React.FC<Props> = ({ onSubmit, loadItem }) => {
               textfiled="cust_nm"
               rule={{}}
             /> */}
-            <TInput2 id="cust_code" label="거래처" type="text" />
-            {errors?.cust_code?.message && (
-              <ErrorMessage>{errors.cust_code.message}</ErrorMessage>
-            )}
-            <TInput2 id="no" label="invoice_no" type="text" />
-            {errors?.no?.message && (
-              <ErrorMessage>{errors.no.message}</ErrorMessage>
-            )}
+            <div className="col-span-2 row-span-2">
+              <TInput2 id="cust_code" label={t("cust_code")} type="text" />
+              {errors?.cust_code?.message && (
+                <ErrorMessage>{errors.cust_code.message}</ErrorMessage>
+              )}</div><div className="col-span-2 row-span-2">
+              <TInput2 id="no" label={t("invoice_no")} type="text" />
+              {errors?.no?.message && (
+                <ErrorMessage>{errors.no.message}</ErrorMessage>
+              )}
+            </div>
           </div>
 
         </PageSearch>

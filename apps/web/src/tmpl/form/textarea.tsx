@@ -1,44 +1,29 @@
-import { Textarea } from "components/react-hook-form/textarea";
-import { HTMLInputTypeAttribute } from "react";
+import { InputWrapper, LabelTop, Textarea } from "components/react-hook-form";
 
-export type TextareaProps = {
-    id: string;
-    label: string;
-    width?: string;
-    children?: any;
-    readOnly?: boolean;
-    isAdd?: boolean;
-    notAppliedReadOnlyCss?: boolean;
-    type?: HTMLInputTypeAttribute;
-    value?: any;
-    rules?: any;
+type TextareaProps = {
+  id: string;
+  label: string;
+  width?: string;
+  rows?: number;
+  children?: any;
+  readOnly?: boolean;
+  height?: any;
 };
 
 export const TTextarea: React.FC<TextareaProps> = ({
-    id,
-    label,
-    width = "w-full",
-    children,
-    readOnly = false,
-    isAdd = false,
-    notAppliedReadOnlyCss = false,
-    type = "text",
-    value,
-    rules = {},
+  id,
+  label,
+  width = "w-full",
+  rows = 4,
+  children,
+  readOnly = false,
+  height,
 }) => {
-    return (
-        <div className="flex flex-row items-start mx-1 ">
-            <label
-                htmlFor={id}
-                className={`w-full md:text-right mx-1 py-2`}>
-                {label}
-            </label>
-            <Textarea
-                id={id}
-                name={id}
-            />
-        </div>
-    );
+  return (
+    <InputWrapper outerClassName="w-full" inline={false}>
+      <LabelTop>{label}</LabelTop>
+      <Textarea id={id} name={id} width={width} rows={rows} height={height} readOnly={readOnly} />
+      {children}
+    </InputWrapper>
+  );
 };
-
-

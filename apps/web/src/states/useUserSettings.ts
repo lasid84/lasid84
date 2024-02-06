@@ -20,8 +20,13 @@ interface UserSettingsState {
   trans_type: string;
   ufs_id:string;
   token:string
+
   /*KREAM용 추가 끝*/
 
+  /* 브라우저용*/
+   loading : string,
+   hasError : boolean,
+   errMsg : string,
   // user_lev: string;
   // user_type: string;
   // email?: string;
@@ -48,8 +53,13 @@ const initialState: UserSettingsState = {
   trans_mode: "",
   trans_type: "",
   ufs_id: "",
-  token: "",
+  token: "",  
   /*KREAM용 추가 끝*/
+
+  /* 브라우저용*/
+  loading : "OFF",
+  hasError : false,
+  errMsg : "",
   // user_lev: "",
   // user_type: "",
   // email: "",
