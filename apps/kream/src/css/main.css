@@ -9,7 +9,7 @@
   min-height: 100%;
   padding: 0;
   margin: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   position: relative;
 }
 code {
@@ -51,7 +51,7 @@ button:focus {
 /**
  * hide scrollbars
  */
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
   display: none;
   width: 0 !important;
 }

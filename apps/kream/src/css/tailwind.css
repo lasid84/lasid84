@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #CCCCCC; /* 스크롤바 색상 */
+    border-radius: 0px; /* 스크롤바 둥근 테두리 */
+}
+
+*::-webkit-scrollbar-track {
+    background: #F5F7F7;  /*스크롤바 뒷 배경 색상*/
+}
