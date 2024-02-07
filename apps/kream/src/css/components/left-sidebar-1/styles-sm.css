@@ -43,7 +43,7 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 1000px;
+        width: 10px;
         @apply bg-blue-500;
       }
     }
@@ -54,7 +54,7 @@
       top: 0;
       bottom: 0;
       left: 0;
-      width: 1000px;
+      width: 10px;
       @apply bg-blue-500;
     }
     &:hover,
@@ -75,7 +75,7 @@
   }
 
   .left-sidebar-title {
-    @apply uppercase font-normal text-xs tracking-wider flex flex-row items-center justify-start h-0 w-full px-4;
+    @apply flex flex-row items-center justify-start w-full h-0 px-4 text-xs font-normal tracking-wider uppercase;
     @apply visible opacity-100;
   }
 
@@ -95,10 +95,10 @@
   .left-sidebar-1 {
     @apply text-sm shadow-lg;
     [data-left-sidebar="light"] & {
-      @apply bg-white border-r border-gray-200 text-gray-900;
+      @apply text-gray-900 bg-white border-r border-gray-200;
     }
     [data-left-sidebar="dark"] & {
-      @apply border-r text-white;
+      @apply text-white border-r;
       background: color(theme("colors.gray.900") tint(5%));
       border-color: color(theme("colors.gray.900") tint(10%));
     }

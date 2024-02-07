@@ -73,7 +73,7 @@
         bottom: 0;
         left: 0;
         width: 10px;
-        @apply bg-blue-500;
+        @apply bg-blue-200;
       }
     }
     /*

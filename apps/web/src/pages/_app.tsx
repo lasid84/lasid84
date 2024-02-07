@@ -60,6 +60,8 @@ function App({ Component, pageProps}: AppProps): React.ReactElement {
   //   getCsrfToken();
   // }, []);
 
+  console.log("/pages/_app.tsx");
+
   return (
     <>
       <SessionProvider session={pageProps.session}>

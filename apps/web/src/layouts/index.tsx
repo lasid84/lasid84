@@ -45,6 +45,8 @@ const Layouts: React.FC<LayoutProps> = ({children}) => {
     [background]
   );
 
+  console.log("/layouts/index.tsx");
+
 
   const router = useRouter();
   let {pathname} = router;

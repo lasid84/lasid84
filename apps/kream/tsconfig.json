@@ -1,26 +1,32 @@
-
 {
   "compilerOptions": {
-    "incremental": true,
-    "target": "es2018",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": "./src",
-    // "paths": {
-    //   "@/*": ["./*"]
-    // },
-    "noImplicitAny" : false,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "components/*": ["./src/components/*"],
+      "page-parts/*": ["./src/page-parts/*"],
+      "layouts/*": ["./src/layouts/*"],
+      "utils/*": ["./src/utils/*"],
+      "states/*": ["./src/states/*"],
+      "css/*": ["./src/css/*"],
+    }
   },
-  "exclude": ["node_modules", ".next", "out"],
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "app/**/*.ts", "app/**/*.tsx", "app/**/*.js", "ni18n.config.js"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
 }

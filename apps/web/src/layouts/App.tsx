@@ -14,6 +14,8 @@ function App({ children }: PropsWithChildren) {
     lang,
   ]);
 
+  console.log("layouts/App.tsx");
+
   return (
     <>
       {children}

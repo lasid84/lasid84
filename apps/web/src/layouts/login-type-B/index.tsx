@@ -4,7 +4,7 @@ export type LoginTypeBProps = {
   children: React.ReactNode;
 };
 
-const LoginTypeB: React.FC<LoginTypeBProps> = ({children}) => (
+const LoginTypeB: React.FC<LoginTypeBProps> = ({children}) => (  
   <App>
     <div
       data-layout="LoginTypeA"

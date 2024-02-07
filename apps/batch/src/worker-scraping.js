@@ -1,3 +1,11 @@
+/*
+ * To Do
+   1) 계정 비번 만료 시 처리 기능(유저별 메일 발송 or 등등등)
+   2) 리팩토링
+*/ 
+
+
+
 
 const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
@@ -377,6 +385,9 @@ async function callAPIPost(data) {
         }
 
     } catch(ex) {
+
+        if (msg_result.error == "Unauthorized")
+
         throw  "callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
     }
 }

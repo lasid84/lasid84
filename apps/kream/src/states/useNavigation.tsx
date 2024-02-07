@@ -1,9 +1,9 @@
 
 import { create } from 'zustand';
-// import {executFunction} from "../services/api.query";
-import { executFunction }  from '@repo/kwe-lib/components/api.service'
 import { useUserSettings } from "states/useUserSettings";
-import { log } from '@repo/kwe-lib/components/logHelper';
+
+const { log } = require('@repo/kwe-lib/components/logHelper');
+const { executFunction }  =  require('@repo/kwe-lib/components/api.service');
 
 import {
     FiCheckCircle,
