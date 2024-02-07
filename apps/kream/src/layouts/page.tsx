@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import Layout1 from "layouts/layout-1";
 import { useConfigs } from "states/useConfigs";
 import AuthProvider from "@/components/provider/AuthProvider";
@@ -15,6 +16,18 @@ export type LayoutProps = {
 
 
 const Layouts: React.FC<LayoutProps> = ({ children }) => {
+  
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   const config = useConfigs((state) => state.config);
   const configActions = useConfigs((state) => state.actions);
@@ -60,10 +73,12 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
     default:
       return (
         // <AuthProvider>
+        <QueryClientProvider client={queryClient}>
           <Layout1>
             {children}
             <ProgressBar height="4px" color="#FF5500" shallowRouting/>
           </Layout1>
+          </QueryClientProvider>
         // </AuthProvider>
       );
   }

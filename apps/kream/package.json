@@ -11,7 +11,10 @@
   "dependencies": {
     "@repo/kwe-lib": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@tanstack/react-query": "^4.36.1",
+    "ag-grid-community": "^30.2.1",
     "ag-grid-react": "^30.2.1",
+    "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "next": "14.1.0",
     "next-auth": "5.0.0-beta.5",

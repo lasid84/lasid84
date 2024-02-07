@@ -1,6 +1,10 @@
+'use client'
+
 import PageTitle from "../../../shared/tmpl/page-title"
 import ListGrid from "./_component/list-grid"
 import SearchForm from "./_component/search-form"
+import { useGetData } from "./_component/stnd0001"
+
 const pageProps = {
     title: "사용자 기준정보",
     transKey: "nav.stnd.stnd0001",
@@ -15,13 +19,15 @@ const brcmp = [
     { title: pageProps.title, url: pageProps.url, last: true },
 ]
 
-const Stnd0001: React.FC = () => {
 
+const Stnd0001: React.FC = () => {
+    //grid data
+    const { data: selectResult } = useGetData()
     return (
         <>
             <PageTitle title={pageProps.title} brcmp={brcmp} />
-            <SearchForm/>
-            <ListGrid listItem={null}/>
+            <SearchForm />
+            <ListGrid listItem={selectResult||null} />
         </>
     )
 
