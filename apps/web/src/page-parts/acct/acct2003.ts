@@ -39,7 +39,7 @@ const codeFind = (searchParam: any) => {
   const invalue = [Param.trans_mode, Param.trans_type, Param.office_cd, Param.no, Param.fr_date.replace(reg, ''), Param.to_date.replace(reg, ''), Param.fr_inv_date, Param.to_inv_date, Param.cust_code,
   Param.issue_or, 'doni.lee', '1.1.1.1']
   const inproc = 'account.f_acct2003_get_master';
-  return ApiNonAuthService.post<returnData>(`${baseURL}/api/data`, { inproc, inparam, invalue })
+  return ApiNonAuthService.post<returnData>(`/api/data`, { inproc, inparam, invalue })
 }
 
 
@@ -50,7 +50,7 @@ export const Acct2003Load = () => {
   const inproc = 'account.f_acct2003_load'
 
   //const result = axios.post<returnData>(`${baseURL}/api/data`, {inproc, inparam, invalue})
-  return ApiNonAuthService.post<AxiosResponse>(`${baseURL}/api/data`, { inproc, inparam, invalue })
+  return ApiNonAuthService.post<AxiosResponse>(`/api/data`, { inproc, inparam, invalue })
 }
 
 
@@ -78,7 +78,7 @@ export async function create(params: addInvoiceReq): Promise<any> {
   const inproc = 'account.f_acct2003_ins_create_tax';
   const inparam = ['in_invoices', 'in_bill_dd', 'in_issue_or', 'in_merge_type', 'in_cust_code', 'in_user_id', 'in_ipaddr', 'in_form']
   const invalue = [params.no, params.fr_date, 'COD', '3', '', 'doni.lee', '', '']
-  const response = await ApiNonAuthService.post(`${baseURL}/api/data`, { inproc, inparam, invalue });
+  const response = await ApiNonAuthService.post(`/api/data`, { inproc, inparam, invalue });
 
   console.log('create계산서 response', response)
   return response;
@@ -188,14 +188,17 @@ const responseHasError = async (error: any) => {
     return error.response;
   }
 };
+
+
 const requestHasError = (error: any) => {
   useUserSettings.getState().actions.setData({ loading: "OFF" });
   return Promise.reject(error);
 };
-
+// 응답 인터셉터 추가
 ApiNonAuthService.interceptors.response.use(
   (response) => responseUseService(response),
   responseHasError
 );
 
+// 요청 인터셉터 추가
 ApiNonAuthService.interceptors.request.use(requestUseService, requestHasError);

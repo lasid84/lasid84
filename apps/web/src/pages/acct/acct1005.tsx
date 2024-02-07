@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import PageTitle from "shared/tmpl/page-title"
 import SearchForm from "page-parts/acct/acct1005-search-row"
-import ListGrid from "page-parts/acct/acct1005-list-grid-before"
+import ListGrid from "page-parts/acct/acct1005-list-grid" //-before
 import { SubmitHandler } from "react-hook-form"
 import { useInvoiceStore } from "states/acct/acct1005.store";
 import { useGetData, useLoadData } from "page-parts/acct/acct1005"
@@ -48,6 +48,7 @@ const Acct1005: React.FC = () => {
                     {/* 검색 */}
                     {/* <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData || null} /> */}
                     {/* <Detail/> */}
+                    
 
                     {/* 코드 리스트 */}
                     <ListGrid listItem={selectResult || null} /></div>
