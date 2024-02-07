@@ -7,6 +7,8 @@ import { useSession } from 'next-auth/react';
 import { useUserSettings, setUserSetting } from "states/useUserSettings";
 import { useStore } from "utils/zustand";
 
+
+
 function App({ children }: PropsWithChildren) {
   const { lang } = useConfigs((state) => state.config);
 

@@ -19,6 +19,7 @@ export type Layout1Props = {
   children: React.ReactNode;
 };
 
+
 const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const config = useConfigs((state) => state.config);
 

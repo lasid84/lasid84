@@ -16,8 +16,6 @@ const ListGrid: React.FC<Props> = () => {
             <PageContent
                 right={<>버튼</>}
             >
-
-
             </PageContent>
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>

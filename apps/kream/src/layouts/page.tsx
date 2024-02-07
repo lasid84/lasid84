@@ -2,9 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-// import Centered from "layouts/centered";
-// import LoginTypeA from "./login-type-A";
-// import LoginTypeB from "./login-type-B";
+import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import Layout1 from "layouts/layout-1";
 import { useConfigs } from "states/useConfigs";
 import AuthProvider from "@/components/provider/AuthProvider";
@@ -14,7 +12,10 @@ export type LayoutProps = {
   children: React.ReactNode;
 };
 
+
+
 const Layouts: React.FC<LayoutProps> = ({ children }) => {
+
   const config = useConfigs((state) => state.config);
   const configActions = useConfigs((state) => state.actions);
   const { background } = config;
@@ -82,6 +83,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
         // <AuthProvider>
           <Layout1>
             {children}
+            <ProgressBar height="4px" color="#FF5500" shallowRouting/>
           </Layout1>
         // </AuthProvider>
       );
