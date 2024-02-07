@@ -127,7 +127,7 @@
       }
     }
   }
-  [data-collapsed="fase"] {
+  [data-collapsed="false"] {
     .l1 {
       @apply truncate;
       > .left-sidebar-item {
