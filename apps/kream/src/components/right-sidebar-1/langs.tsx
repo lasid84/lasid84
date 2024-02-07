@@ -8,9 +8,9 @@ type Option = {
 
 const Langs: React.FC = () => {
   const langs: Option[] = [
-    {key: "한국어", value: "kr"},
-    {key: "English", value: "en"},
-    {key: "日本語", value: "jp"},
+    {key: "kr", value: "한국어"},
+    {key: "en", value: "English"},
+    {key: "jp", value: "日本語"},
   ];
 
   const configActions = useConfigs((state) => state.actions);
@@ -49,6 +49,7 @@ const Langs: React.FC = () => {
       </div>
       <div className="flex flex-col">
           <Select 
+              id='1'
               name="language"
               onChange={selectLangChange}
               options={[

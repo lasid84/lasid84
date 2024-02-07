@@ -1,14 +1,12 @@
 'use server';
 
-import { signIn } from '@/auth';
+import { signIn } from '@/app/api/auth/auth';
 import { AuthError, User } from 'next-auth';
 import { z } from 'zod';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { postCall,  executFunction } = require("@repo/kwe-lib/components/api.service");
-
-import { auth } from '@/auth';
 
 export type UserFormProps = {
   user_id: string;
@@ -126,6 +124,7 @@ export async function authenticate(
       }
       
       const userData:any = await getUserData({user_id: formData.user_id, user_nm: data.user_nm});
+      
 
       await signIn('credentials', {
         ...userData[0],

@@ -1,13 +1,11 @@
 
-import NextAuth, {Session} from 'next-auth';
-import { Auth } from "@auth/core"
+import NextAuth, { DefaultSession, Session } from 'next-auth';
 import { authConfig } from './auth.config';
-import { JWT } from '@auth/core/jwt';
 import { z } from 'zod';
 
 //자격공급자 추가
 import Credentials from 'next-auth/providers/credentials';
-import { setUserSetting, useUserSettings } from "states/useUserSettings";
+import { JWT } from 'next-auth/jwt';
 
 // import { sql } from '@vercel/postgres';
 // import type { User } from '@/app/lib/definitions';
@@ -15,30 +13,6 @@ import { setUserSetting, useUserSettings } from "states/useUserSettings";
 
 const {postCall, executFunction} = require('@repo/kwe-lib/components/api.service.js');
 const {log} = require('@repo/kwe-lib/components/logHelper');
-
-const getUser = (async ({user_id, user_nm}:{user_id:string, user_nm:string}) => {
-  try {
-      // update();
-      console.log("=====================start getUserData", user_id, user_nm);
-      // const user_id = await session?.user.email;
-      // const user_nm = await session?.user.name;
-
-      const inparam = ["in_user_id", "in_user_nm", "in_ipaddr"];
-      // const invalue = [data.user_id, data.user_nm, data.ipaddr];
-      const invalue = [user_id, user_nm, ''];
-      const inproc = 'public.f_admn_get_userauth'; 
-      const cursorData = await executFunction(inproc,inparam, invalue);  
-      
-      console.log("========================cursorData", cursorData);
-      if (cursorData !== null) {   
-          return cursorData[0];
-      }           
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  } finally {
-
-  };
-});
  
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -108,29 +82,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       //   }
       //   return false;
       // },  
-      jwt: async ({ user, token }) => {
-        // log("jwt0", user);
-        if (user) {
-          // const userData = await getUserData({user_id:user.email!, user_nm:user.name!})
-          // // token.uid = user.user_id;
-          // console.log("jwt", userData);
-          token = {
-            ...token,
-            ...user
-          }
-        }
-        // log("jwt", user, token);
-        return token;
-      },
-      async session({session, token}) {
-        session.user = {
-          ...session.user,
-          ...token
-        }
+    //   jwt: async ({ user, token }) => {
+    //     // log("jwt0", user);
+    //     if (user) {
+    //       // const userData = await getUserData({user_id:user.email!, user_nm:user.name!})
+    //       // // token.uid = user.user_id;
+    //       // console.log("jwt", userData);
+    //       token = {
+    //         ...token,
+    //         ...user
+    //       }
+    //     }
+    //     // log("jwt", user, token);
+    //     return token;
+    //   },
+    //   async session({session, token}) {
+    //     session.user = {
+    //       ...session.user,
+    //       ...token
+    //     }
 
-        // log("seesion0", session);
-        return session;      
-      }
+    //     // log("seesion0", session);
+    //     return session;      
+    //   }
     },
     // session: {
     //   strategy: 'jwt',

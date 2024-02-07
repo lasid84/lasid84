@@ -9,7 +9,7 @@ import { useUserSettings } from "states/useUserSettings";
 import { useConfigs } from "states/useConfigs";
 
 import { getUserData } from "page-parts/com/login/login"
-import { auth, signOut } from '@/auth';
+import { auth, signOut } from '@/app/api/auth/auth';
 import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useSession } from "next-auth/react";
 

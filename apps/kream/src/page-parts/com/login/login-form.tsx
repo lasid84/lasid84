@@ -14,7 +14,7 @@ import { useUserSettings } from "states/useUserSettings";
 import { useNavigation, setNavigationData } from "states/useNavigation";
 import { useConfigs } from "states/useConfigs";
 
-import { auth } from '@/auth';
+import { auth } from '@/app/api/auth/auth';
 import {getSession, signIn, signOut} from "next-auth/react";
 import { Login } from "@/page-parts/com/login/login";
 
