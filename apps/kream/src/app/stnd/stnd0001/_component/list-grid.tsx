@@ -16,7 +16,7 @@ type Props = {
 }
 const ListGrid: React.FC<Props> = ({ listItem }) => {
     const containerStyle = useMemo(() => "flex flex-col w-full", []);
-    const gridStyle = useMemo(() => "w-full h-[450px]", []);
+    const gridStyle = useMemo(() => "w-full h-[600px]", []);
     const [rowData, setRowData] = useState([]);
 
     const columns = useMemo(() => {
@@ -56,7 +56,7 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
             p.api.hideOverlay();
             p?.api?.sizeColumnsToFit();
         },
-        isRowSelectable: (params: any) => (params?.data?.tran_prog_stat > "E" ? false : true),
+        isRowSelectable: (params: any) => (params?.data?.use_yn > "Y" ? false : true),
     };
 
     useEffect(() => {
