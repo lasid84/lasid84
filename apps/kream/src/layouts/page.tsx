@@ -54,30 +54,9 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
   // }
 
   switch (pathname) {
-    // case "/404":
-    // case "/500":
-    //   return <Centered>{children}</Centered>;
-    // case "/example/login-1":
-    // case "/example/login-2":
-    // case "/example/login-3":
-    // case "/logout":
-    // case "/reset-password":
-    // case "/forgot-password":
-    // case "/lock-screen":
-    // case "/subscribe":
-    // case "/error-page":
-    // case "/coming-soon":
-    //   return <Centered>{children}</Centered>;
-    // case "/example/login-new-1":
-    //   return <LoginTypeA>{children}</LoginTypeA>;
-    // case "/example/login-new-2":
+
     case "/login":
-    //   return <LoginTypeB>{children}</LoginTypeB>;
         return <>{children}</>
-    // case "/sidebars":
-    //   return <>{children}</>;
-    // case "/epod":
-    //   return <>{children}</>;
     default:
       return (
         // <AuthProvider>

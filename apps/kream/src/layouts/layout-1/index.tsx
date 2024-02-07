@@ -49,9 +49,6 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   return (
     // <AuthProvider>
     <App>
-      {/* <Head>
-          <title>KREAM Web</title>
-        </Head> */}
       <div
         data-layout={layout}
         data-collapsed={collapsed}

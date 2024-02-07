@@ -3,13 +3,18 @@
 import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useConfigs } from "states/useConfigs";
 import { redirect, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useMemo } from "react";
 import { useUserSettings } from "states/useUserSettings";
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { shallow } from "zustand/shallow";
+import LoadingComponent from "../../page-parts/com/loading/loading"
 
 export default function Navbar() {
   const config = useConfigs((state) => state.config);
+  const {
+    data: userSettings,
+    actions: userSettingsActions
+  } = useUserSettings((state) => state);
   const { rightSidebar, collapsed } = config;
   const configActions = useConfigs((state) => state.actions);
   // const [user_nm, setUserNm] = useState('');
@@ -29,10 +34,20 @@ export default function Navbar() {
   const router = useRouter();
 
   console.log("navbar", !user_nm, user_nm);
+  
+  const isLoading = useMemo(() => {
+    //client data loading 용
+    return (userSettings.loading && userSettings.loading == "ON")
+  }, [userSettings.loading])
 
   return (
     <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800 h-[3.75rem]">
-
+      {
+        isLoading &&
+        <div className="absolute h-screen w-full z-50">
+          <LoadingComponent />
+        </div>
+      }
       {true &&
         // // ? <div className="flex items-center justify-start w-full">
         // //   <button
