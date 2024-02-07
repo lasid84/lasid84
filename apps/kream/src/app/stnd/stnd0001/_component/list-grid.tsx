@@ -1,6 +1,6 @@
 "use client"
 
-import PageContent from "@/shared/tmpl/page-grid"
+import PageContent from "@/shared/tmpl/page-content"
 import { useMemo } from "react";
 import {AgGridReact} from "ag-grid-react"
 
@@ -14,7 +14,7 @@ const ListGrid: React.FC<Props> = () => {
     return (
         <>
             <PageContent
-                right={<>버튼</>}
+                right={<>이벤트 버튼</>}
             >
             </PageContent>
             <div className={containerStyle}>

@@ -5,7 +5,7 @@ const pageProps = {
     title: "사용자 기준정보",
     transKey: "nav.stnd.stnd0001",
     desc: "사용자 기준정보",
-    url: "stnd0005"
+    url: "stnd0001"
 }
 
 //탐색경로 설정
