@@ -22,12 +22,12 @@ const brcmp = [
 
 const Stnd0001: React.FC = () => {
     //grid data
-    const { data: selectResult } = useGetData()
+    const { data: selectResult, isInitialLoading, isError } = useGetData()
     return (
         <>
             <PageTitle title={pageProps.title} brcmp={brcmp} />
             <SearchForm />
-            <ListGrid listItem={selectResult||null} />
+            <ListGrid listItem={selectResult||null} isInitialLoading={isInitialLoading} isError={isError} />
         </>
     )
 

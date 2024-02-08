@@ -10,11 +10,15 @@ import {
     gridUtilDefaultOptions,
     gridOverLayTemplate
 } from "utils/grid";
+import LoadingComponent from "@/page-parts/com/loading/loading";
 
 type Props = {
     listItem: any | null
+    isInitialLoading: any
+    isError: any
 }
-const ListGrid: React.FC<Props> = ({ listItem }) => {
+
+const ListGrid: React.FC<Props> = ({ listItem, isInitialLoading, isError }) => {
     const containerStyle = useMemo(() => "flex flex-col w-full", []);
     const gridStyle = useMemo(() => "w-full h-[600px]", []);
     const [rowData, setRowData] = useState([]);
@@ -60,7 +64,9 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
     };
 
     useEffect(() => {
-        if (listItem) {            
+        console.log('isLoading', isInitialLoading)
+        console.log('isError', isError)
+        if (listItem) {
             setRowData(listItem.data.cursorData[0]);
             gridRef?.current?.api?.hideOverlay();
         } else {
@@ -68,7 +74,8 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
         }
     }, [listItem]);
 
-
+    // api service axios interceptors를 통해 zustand query status 관리
+    // if (isInitialLoading) { return <><LoadingComponent /></> }
     return (
         <>
             <PageContent
