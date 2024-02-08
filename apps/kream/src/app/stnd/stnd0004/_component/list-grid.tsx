@@ -10,11 +10,20 @@ import {
     gridUtilDefaultOptions,
     gridOverLayTemplate
 } from "utils/grid";
+import { TButtonBlue } from "@/page-parts/tmpl/form/button"
+import { useStnd0004Store } from "@/states/stnd/stnd0004.store"
+import Modal from "./popup";
 
 type Props = {
     listItem: any | null
 }
 const ListGrid: React.FC<Props> = ({ listItem }) => {
+
+        //zustand
+        const actions = useStnd0004Store((state) => state.actions)
+        const isPopOpen = useStnd0004Store((state) => state.isPopOpen)
+        const popType = useStnd0004Store((state) => state.popType);
+    
 
     const containerStyle = useMemo(() => "flex flex-col w-full", []);
     const gridStyle = useMemo(() => "w-full h-[450px]", []);
@@ -73,7 +82,9 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
     return (
         <>
             <PageContent
-                right={<>이벤트 버튼</>}
+                right={<> <TButtonBlue label="등록" onClick={() => {
+                    actions.setPopOpen(true)
+                }} /></>}
             >
             </PageContent>
             <div className={containerStyle}>
@@ -83,6 +94,11 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
                         gridOptions={gridOptions}
                         rowData={rowData}
                         columnDefs={columns}
+                    />
+                    <Modal
+                    isOpen={isPopOpen}
+                    popType={popType}
+                    setIsOpen={actions.setPopOpen}
                     />
                 </div>
             </div>

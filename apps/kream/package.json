@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
+    "@hookform/resolvers": "^3.3.4",
     "@repo/kwe-lib": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^4.36.1",
@@ -28,6 +31,7 @@
     "react-icons": "^4.12.0",
     "react-switch": "^6.1.0",
     "zod": "^3.22.4",
+    "zod-i18n-map": "^2.25.0",
     "zustand": "^4.5.0"
   },
   "devDependencies": {

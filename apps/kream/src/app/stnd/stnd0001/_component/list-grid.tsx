@@ -19,6 +19,9 @@ type Props = {
 }
 
 const ListGrid: React.FC<Props> = ({ listItem, isInitialLoading, isError }) => {
+
+
+
     const containerStyle = useMemo(() => "flex flex-col w-full", []);
     const gridStyle = useMemo(() => "w-full h-[600px]", []);
     const [rowData, setRowData] = useState([]);
@@ -79,9 +82,11 @@ const ListGrid: React.FC<Props> = ({ listItem, isInitialLoading, isError }) => {
     return (
         <>
             <PageContent
-                right={<>이벤트 버튼</>}
+                right={
+                   <>이벤트버튼</>
+                }
             >
-            </PageContent>
+            </PageContent >
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>
                     <AgGridReact
