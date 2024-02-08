@@ -19,11 +19,11 @@ type Props = {
 }
 const ListGrid: React.FC<Props> = ({ listItem }) => {
 
-        //zustand
-        const actions = useStnd0004Store((state) => state.actions)
-        const isPopOpen = useStnd0004Store((state) => state.isPopOpen)
-        const popType = useStnd0004Store((state) => state.popType);
-    
+    //zustand
+    const actions = useStnd0004Store((state) => state.actions)
+    const isPopOpen = useStnd0004Store((state) => state.isPopOpen)
+    const popType = useStnd0004Store((state) => state.popType);
+
 
     const containerStyle = useMemo(() => "flex flex-col w-full", []);
     const gridStyle = useMemo(() => "w-full h-[450px]", []);
@@ -35,19 +35,23 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
         ({
             title: key,
             field: key,
-            width: 100,
             sorter: 'string',
+            floatingFilter : true,
+            filter: 'agTextColumnFilter',
         }));
     }, [listItem])
 
     const gridRef: any = useRef<any>(null);
     const gridListRef = useRef<any | null>(null);
+
+    const defaultColDef = {
+        ...gridUtilDefaultColDef,
+        filter: 'agTextColumnFilter',
+        editable: true,
+        cellStyle: { textAlign: "left" }, //왼쪽 정렬
+    }
+
     const gridOptions: GridOptions = {
-        defaultColDef: {
-            ...gridUtilDefaultColDef,
-            editable: false,
-            cellStyle: { textAlign: "left" }, //왼쪽 정렬
-        },
         ...gridRowHeight,
         ...gridUtilDefaultOptions,
         ...gridOverLayTemplate,
@@ -70,7 +74,7 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
     };
 
     useEffect(() => {
-        if (listItem) {            
+        if (listItem) {
             setRowData(listItem.data.cursorData[0]);
             gridRef?.current?.api?.hideOverlay();
         } else {
@@ -94,11 +98,12 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
                         gridOptions={gridOptions}
                         rowData={rowData}
                         columnDefs={columns}
+                        defaultColDef={defaultColDef}
                     />
                     <Modal
-                    isOpen={isPopOpen}
-                    popType={popType}
-                    setIsOpen={actions.setPopOpen}
+                        isOpen={isPopOpen}
+                        popType={popType}
+                        setIsOpen={actions.setPopOpen}
                     />
                 </div>
             </div>

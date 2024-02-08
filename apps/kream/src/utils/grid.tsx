@@ -99,7 +99,7 @@ const gridUtilDefaultColDef = {
   headerClass: "text-center",
   suppressMenu: true, //메뉴 안보이게 true
   sortable: true, //정렬 사용 true
-  filter: false, //필터 사용 X true
+  filter: 'agTextColumnFilter', //필터 사용
   resizable: true, //사이즈 변경 가능하게
   suppressMovable: false, // 컬럼 이동 막기 false
 };
