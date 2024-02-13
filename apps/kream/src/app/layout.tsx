@@ -22,6 +22,8 @@ import { useSession } from "next-auth/react";
 import { SessionProvider } from "next-auth/react"
 import AuthProvider from "components/provider/AuthProvider";
 import  Layout from 'layouts/page'
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,7 +37,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   console.log("app/layout.tsx");
+
   return (
     <>
        <html lang="en">

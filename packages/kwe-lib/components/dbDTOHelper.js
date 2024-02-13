@@ -19,11 +19,12 @@ async function initconnectionString() {
     // var config = new Config("/configs/server.ini");
     // await config.load();
     // connstr = config.get("db.connstr");
-    // console.log("connstr", connstr);
+    log("connstr", connstr);
     return connstr
 }
 
 async function callFunction(pProcName, pParamsList, pValueList) {
+  log("callFunction");
   const connectionString = await initconnectionString();
   // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
   const client = new Client({ connectionString });

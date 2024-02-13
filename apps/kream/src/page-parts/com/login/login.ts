@@ -4,9 +4,11 @@ import { signIn } from '@/app/api/auth/auth';
 import { AuthError, User } from 'next-auth';
 import { z } from 'zod';
 import { unstable_noStore as noStore } from 'next/cache';
+import { returnData, checkADLogin,  executFunction } from 'services/api.services';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
-const { postCall,  executFunction } = require("@repo/kwe-lib/components/api.service");
+// const { postCall,  executFunction } = require("@repo/kwe-lib/components/api.service");
+
 
 export type UserFormProps = {
   user_id: string;
@@ -30,18 +32,28 @@ export const getUserData = (async (userData:userData) => {
 
       log("getUserData", userData);
 
-      const inparam = ["in_user_id", "in_user_nm", "in_ipaddr"];
-      // const invalue = [data.user_id, data.user_nm, data.ipaddr];
-      const invalue = [userData.user_id, userData.user_nm, ''];
-      const inproc = 'public.f_admn_get_userauth'; 
-      const cursorData = await executFunction(inproc,inparam, invalue);  
+      // const inparam = ["in_user_id", "in_user_nm", "in_ipaddr"];
+      // // const invalue = [data.user_id, data.user_nm, data.ipaddr];
+      // const invalue = [userData.user_id, userData.user_nm, ''];
+      // const inproc = 'public.f_admn_get_userauth'; 
+      // // const cursorData = await executFunction(inproc,inparam, invalue);  
+
+      const params = {
+        inparam: ["in_user_id", "in_user_nm", "in_ipaddr"],
+        invalue: [userData.user_id, userData.user_nm, ''],
+        inproc: 'public.f_admn_get_userauth',
+        isShowLoading: true
+      }
+
+      const cursorData:any = await executFunction(params);  
       
       log("========================cursorData", cursorData);
       if (cursorData !== null) {   
-          return cursorData[0];
+          return cursorData![0];
       }           
-  } catch (error) {
-    console.error('Error fetching data:', error);
+  } catch (err) {
+    const typedErr = err as Error;
+    console.error('Error fetching data:', typedErr.message);
   } finally {
 
   };
@@ -113,8 +125,11 @@ export async function authenticate(
         user_id: formData.user_id,
         password: formData.password
       };
-      const {data} = await postCall(param)
 
+      log("login param: ", param);
+      const {data} = await checkADLogin(param)
+
+      log("login data: ", data);
       if (!data.success) {
         return ({
           data: null,
@@ -122,9 +137,12 @@ export async function authenticate(
           success: false
         });
       }
+
+      log("!")
       
       const userData:any = await getUserData({user_id: formData.user_id, user_nm: data.user_nm});
       
+      log("2", JSON.stringify(userData));
 
       await signIn('credentials', {
         ...userData[0],
@@ -138,6 +156,6 @@ export async function authenticate(
       });
       
     } catch (error) {
-        log("server login : ", JSON.stringify(error), "==========================");
+        log("server login : ", JSON.stringify(error));
     }
   }

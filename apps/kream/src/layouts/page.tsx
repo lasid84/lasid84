@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 // import Centered from "layouts/centered";
 // import LoginTypeA from "./login-type-A";
@@ -9,6 +9,7 @@ import Layout1 from "layouts/layout-1";
 import { useConfigs } from "states/useConfigs";
 import AuthProvider from "@/components/provider/AuthProvider";
 import { useHotkeys } from "react-hotkeys-hook";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -39,8 +40,17 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
     [background]
   );
 
-  // const router = useRouter();
-  // const { pathname, query } = router;
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   const pathname = usePathname()
   console.log("app/layouts/page.tsx", pathname);
@@ -81,7 +91,9 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
       return (
         // <AuthProvider>
           <Layout1>
+            <QueryClientProvider client={queryClient}>
             {children}
+            </QueryClientProvider>
           </Layout1>
         // </AuthProvider>
       );

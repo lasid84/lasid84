@@ -31,7 +31,7 @@ async function init() {
 
 // 사용자 인증 및 계정 체크 함수
 async function checkAccount(user_id, password, callback) {
-    log('start :', user_id, password);
+    // log('start :', user_id, password);
     await init();
 
     const client = ldap.createClient({
@@ -43,7 +43,7 @@ async function checkAccount(user_id, password, callback) {
           console.error('LDAP authentication failed:', err);
           callback(false, err.message)
         } else {
-          log('LDAP authentication succeeded');
+          // log('LDAP authentication succeeded');
       
             // 사용자 정보 조회
             const searchFilter = `(sAMAccountName=${user_id})`;
@@ -56,7 +56,7 @@ async function checkAccount(user_id, password, callback) {
               
             let entries = [];  
             client.search(`${baseDN}`, { ...options}, (searchErr, searchRes) => {
-                log("search start")
+                // log("search start")
             if (searchErr) {
                 console.error('Error searching for user:', searchErr);
             } else {
@@ -80,7 +80,7 @@ async function checkAccount(user_id, password, callback) {
                   });
 
                 searchRes.on('end', function(result) {
-                    log('status: ' + result.status);
+                    // log('status: ' + result.status);
 
                     client.unbind((err) => {
                         if (err) {

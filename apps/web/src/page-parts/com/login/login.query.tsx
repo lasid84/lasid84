@@ -17,13 +17,19 @@
 //   return data;
 // };
 
-import {postCall} from '@repo/kwe-lib/components/api.service';
+import {postCall2} from '@repo/kwe-lib/components/api.service';
+
 import {log} from '@repo/kwe-lib/components/logHelper';
 
 export const loginUser = async (params: any) => {
   params["url"] = "/login";
-  const  data  = await postCall(params);
-  // log("data in login.query2", JSON.stringify(data))
+  const  data  = await postCall2(params);
+  // const config = {
+  //   ...params,
+  //   url: "http://10.33.63.171:5000" + "/login"
+  // }
+  // const  data  = await postCall(config);
+  log("data in login.query2", JSON.stringify(data))
   return data;
 };
 

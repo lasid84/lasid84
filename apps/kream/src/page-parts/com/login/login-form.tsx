@@ -102,6 +102,7 @@ export default function LoginForm() {
 
           const res = await Login({user_id:user.user_id, password:user.password});
 
+          log(res);
           if (!res!.success) {
             setErrMessage(res?.message);
             return;
@@ -109,9 +110,12 @@ export default function LoginForm() {
 
           setErrMessage('');
 
+          log("res in login-form : ", res);
+
           userSettingsActions!.setData({ ...res?.data });
           router.replace('/');
       } catch (err) {
+        log("login-form err", err);
         setErrMessage(JSON.stringify(err));
         return;
       }
@@ -251,10 +255,10 @@ export default function LoginForm() {
                     value: 4,
                     message: "비밀번호는 4자리 이상의 문자열을 사용하세요",
                   },
-                  maxLength: {
-                    value: 8,
-                    message: "Your password should have no more than 8 characters",
-                  },
+                  // maxLength: {
+                  //   value: 8,
+                  //   message: "Your password should have no more than 8 characters",
+                  // },
                 }}
                 // handleChange={onChangePassword}
               />

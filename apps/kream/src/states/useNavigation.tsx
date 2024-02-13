@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { useUserSettings } from "states/useUserSettings";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
-const { executFunction }  =  require('@repo/kwe-lib/components/api.service');
+const { executFunction }  =  require('services/api.services');
 
 import {
     FiCheckCircle,
@@ -91,10 +91,18 @@ async function getMenuList (userInfo:any) {
 
     // console.log("getMenuList :", userInfo.permission_id);
 
-    const inparam = ['in_permission_id','in_menu_type', 'in_user_id', 'in_ipaddr'];
-    const invalue = [userInfo.permission_id, 'UI', userInfo.user_id, '1.2.3.4'];
-    const inproc = 'public.f_admn_get_menulist';
-    const menus = await executFunction(inproc,inparam, invalue)
+    // const inparam = ['in_permission_id','in_menu_type', 'in_user_id', 'in_ipaddr'];
+    // const invalue = [userInfo.permission_id, 'UI', userInfo.user_id, '1.2.3.4'];
+    // const inproc = 'public.f_admn_get_menulist';
+    
+    const params = {
+      inparam: ['in_permission_id','in_menu_type', 'in_user_id', 'in_ipaddr'],
+      invalue: [userInfo.permission_id, 'UI', userInfo.user_id, '1.2.3.4'],
+      inproc: 'public.f_admn_get_menulist',
+      isShowLoading: false
+    };
+
+    const menus = await executFunction(params)
     
     log("menus", menus);
 
