@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 
 import { useState, useRef, useCallback, useEffect, useReducer, createContext, useMemo, Dispatch, useContext } from "react";
@@ -15,11 +16,22 @@ const pageProps = {
     transKey: "nav.acct.acct2003",
     desc: "세금계산서생성화면입니다",
     url: "acct2003"
+=======
+import PageTitle from "../../../shared/tmpl/page-title"
+import ListGrid from "./_component/list-grid"
+import SearchForm from "./_component/search-form"
+const pageProps = {
+    title: "차지코드관리",
+    transKey: "nav.stnd.stnd0006",
+    desc: "차지코드관리",
+    url: "stnd0004"
+>>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281
 }
 
 //탐색경로 설정
 const brcmp = [
     { title: "Home", url: "/", last: false },
+<<<<<<< HEAD
     { title: "작성중", url: "/", last: false },
     { title: pageProps.transKey, url: pageProps.url, last: true },
 ]
@@ -124,3 +136,22 @@ export default function Home() {
             
     );
 }
+=======
+    { title: "STND", url: "/", last: false },
+    { title: pageProps.title, url: pageProps.url, last: true },
+]
+
+const Stnd0006: React.FC = () => {
+
+    return (
+        <>
+            <PageTitle title={pageProps.title} brcmp={brcmp} />
+            <SearchForm/>
+            <ListGrid listItem={null}/>
+        </>
+    )
+
+}
+
+export default Stnd0006
+>>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281

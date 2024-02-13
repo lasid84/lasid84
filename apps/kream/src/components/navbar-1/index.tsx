@@ -3,13 +3,18 @@
 import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useConfigs } from "states/useConfigs";
 import { redirect, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useMemo } from "react";
 import { useUserSettings } from "states/useUserSettings";
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { shallow } from "zustand/shallow";
+import LoadingComponent from "../../page-parts/com/loading/loading"
 
 export default function Navbar() {
   const config = useConfigs((state) => state.config);
+  const {
+    data: userSettings,
+    actions: userSettingsActions
+  } = useUserSettings((state) => state);
   const { rightSidebar, collapsed } = config;
   const configActions = useConfigs((state) => state.actions);
   // const [user_nm, setUserNm] = useState('');
@@ -25,15 +30,25 @@ export default function Navbar() {
       setGreeting(user_nm + "님 안녕하세요");
     }
   }, [user_nm])
-  
+
   const router = useRouter();
 
   console.log("navbar", !user_nm, user_nm);
+  
+  const isLoading = useMemo(() => {
+    //client data loading 용
+    return (userSettings.loading && userSettings.loading == "ON")
+  }, [userSettings.loading])
 
   return (
-    <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800">
-
-      { true && 
+    <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800 h-[3.75rem]">
+      {
+        isLoading &&
+        <div className="absolute h-screen w-full z-50">
+          <LoadingComponent />
+        </div>
+      }
+      {true &&
         // // ? <div className="flex items-center justify-start w-full">
         // //   <button
         // //     onClick={() =>
@@ -47,7 +62,7 @@ export default function Navbar() {
         // //   </button>
         // //   <span className="ml-auto"></span>
         // //   <p>이 페이지는 로그인이 필요한 페이지입니다./{user_nm}</p>
-          
+
         // //   <button
         // //     className="flex items-center justify-center h-12 mx-4"
         // //     onClick={() => router.push("/login")}>
@@ -71,22 +86,22 @@ export default function Navbar() {
           <span className="ml-auto"></span>
 
           <button
-            className="flex items-center justify-center h-12 mx-4"
+            className="flex items-center justify-center h-[3.7rem] mx-4"
             onClick={() => null}>
             <FiUser size={18} />
             <span className="ml-1">{greeting}</span>
           </button>
           <button
-            className="flex items-center justify-center h-12 mx-4"
-            onClick={()=>{
+            className="flex items-center justify-center h-[3.7rem] mx-4"
+            onClick={() => {
               localStorage.removeItem('USER_SETTINGS')
-              signOut({callbackUrl:"/login"});              
-              }}>
+              signOut({ callbackUrl: "/login" });
+            }}>
             <FiExternalLink size={18} />
             <span className="ml-1">로그아웃</span>
           </button>
           <button
-            className="flex items-center justify-center h-12 mx-4"
+            className="flex items-center justify-center  h-[3.7rem] mx-4"
             onClick={() =>
               configActions.
                 setConfig({
@@ -94,7 +109,7 @@ export default function Navbar() {
                 })
             }>
             <FiSettings size={18} />
-            <span className="ml-1">설정</span>
+            <span className="ml-1 hidden md:flex">설정</span>
           </button></div>
       }
 

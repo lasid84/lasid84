@@ -64,7 +64,7 @@ const LogoImg: React.FC = () => {
         <button
           onClick={() => configActions.setConfig({ collapsed: !collapsed, }) }
           className="block ml-auto mr-4 lg:hidden">
-          <FiMenu size={20} />
+          {/* <FiMenu size={20} /> */}
         </button>
       </div>
     );

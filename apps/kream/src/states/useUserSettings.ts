@@ -22,6 +22,12 @@ interface UserSettingsState {
   token:string
   /*KREAM용 추가 끝*/
 
+  /* 브라우저용 추가*/
+  loading : string,
+  hasError : boolean,
+  errMsg : string,
+  /* 브라우저용 추가 끝*/
+
   // user_lev: string;
   // user_type: string;
   // email?: string;
@@ -50,6 +56,13 @@ const initialState: UserSettingsState = {
   ufs_id: "",
   token: "",
   /*KREAM용 추가 끝*/
+
+  /*브라우저용 추가*/
+  loading : "OFF",
+  hasError : false,
+  errMsg : "",
+  /* 브라우저용 추가 끝*/
+  
   // user_lev: "",
   // user_type: "",
   // email: "",
