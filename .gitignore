@@ -40,3 +40,5 @@ yarn-error.log*
 #config
 apps/api/dist/configs/
 apps/web/dist/configs/
+
+apps/kream/package.json
