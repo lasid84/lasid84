@@ -9,7 +9,6 @@ import Layout1 from "layouts/layout-1";
 import { useConfigs } from "states/useConfigs";
 import AuthProvider from "@/components/provider/AuthProvider";
 import { useHotkeys } from "react-hotkeys-hook";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -56,17 +55,17 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
     [background]
   );
 
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            retry: false,
-            refetchOnWindowFocus: false,
-          },
-        },
-      })
-  );
+  // const [queryClient] = useState(
+  //   () =>
+  //     new QueryClient({
+  //       defaultOptions: {
+  //         queries: {
+  //           retry: false,
+  //           refetchOnWindowFocus: false,
+  //         },
+  //       },
+  //     })
+  // );
 
   const pathname = usePathname()
   console.log("app/layouts/page.tsx", pathname);
@@ -89,12 +88,9 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
           <Layout1>
             <QueryClientProvider client={queryClient}>
             {children}
-<<<<<<< HEAD
             </QueryClientProvider>
-=======
             <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE ==='local'}/>
             <ProgressBar height="4px" color="#FF5500" shallowRouting />
->>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281
           </Layout1>
         </QueryClientProvider>
         // </AuthProvider>

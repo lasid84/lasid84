@@ -1,4 +1,5 @@
 import { useFormContext } from "react-hook-form";
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export interface SelectOptionProps {
   key: any;
@@ -10,7 +11,6 @@ export type SelectProps = {
   name: string;
   options: SelectOptionProps[];
   value?: any;
-  defaultValue?:string;
   width?: string;
   height?: string;
   readOnly?: boolean;
@@ -26,7 +26,6 @@ export const Select: React.FC<SelectProps> = ({
   name,
   options,
   value,
-  defaultValue,
   rules = {},
   width = "w-full",
   height = "h-8",
@@ -36,8 +35,27 @@ export const Select: React.FC<SelectProps> = ({
   onChange,
   isPlaceholder = true,
 }) => {
-  const { register } = useFormContext();
+  const { register, setValue, getValues } = useFormContext();
   let readOnlyCss;
+  let currentValue = value ? value : getValues()[name];
+  if (!currentValue) {
+    options.map((option, i) => {
+      if (i == 0) {
+        currentValue = option.key;
+        setValue(name, currentValue);
+      }
+    });
+  };
+
+  rules = {
+    ...rules,
+    onChange: () => {
+      setValue(name, currentValue);
+    },
+  };
+
+  log("====",currentValue, JSON.stringify(options[0]));
+  
   if (readOnly) {
     readOnlyCss = "read-only:bg-gray-100";
   }
@@ -46,16 +64,15 @@ export const Select: React.FC<SelectProps> = ({
       {...register(name, rules)}
       id={id}
       name={name}
-      //  defaultValue={value}
       disabled={readOnly}
-      value={value}
-      defaultValue={defaultValue}
+      // value={currentValue}
+      defaultValue={currentValue}
       onChange={onChange}
       className={`block ${width} ${height} p-0 pl-2 text-[13px] form-select ${readOnlyCss} ${
         isAdd ? "border-orange-400" : "border-gray-300"
       } bg-white mx-1 my-1 focus:ring-blue-500 focus:border-blue-500 focus:ring-0 rounded`}>
       {/* {isPlaceholder ? <option value="">{placeholder}</option> : <></>} */}
-      {options?.map((option) => (
+      {options?.map((option, i) => (
         <option key={option.key} value={option.key}>
           {option.value}
         </option>

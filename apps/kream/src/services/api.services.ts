@@ -62,21 +62,19 @@ function init(isAuth: boolean | undefined, isShowLoading: boolean) {
 
 export async function executFunction(params:exeFuncParams) {
 
-    log("=====executFunction : ");
-
     try {
     const {inproc, inparam, invalue, isAuth, isShowLoading } = params;
     
     const config = await init(isAuth, isShowLoading);
 
-    log("=====executFunction : ", inproc, inparam, invalue, isAuth, isShowLoading, config);
-
     const returnData:returnData = await dataCall(inproc,inparam, invalue, config);
     const { cursorData, numericData, textData } = returnData;
 
     if (numericData !== 0) {
-        alert(numericData + " : " + textData);
-        return;
+        // alert(numericData + " : " + textData);
+
+        log("==",numericData + " : " + textData);
+        return null;
     }
 
     return cursorData;

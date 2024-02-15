@@ -2,6 +2,8 @@
 import { HTMLInputTypeAttribute } from "react";
 import { useFormContext } from "react-hook-form";
 
+const { toStringByFormatting } = require('@repo/kwe-lib/components/dateHelper');
+
 export type InputProps = {
   id: string;
   name: string;
@@ -39,6 +41,7 @@ export const Input: React.FC<InputProps> = ({
     setValue(name, numberOnlyText);
   };
   let readOnlyCss;
+  let currentValue = value;
   if (type === "number") {
     // rules = { valueAsNumber: true };
     rules = {
@@ -50,6 +53,7 @@ export const Input: React.FC<InputProps> = ({
   if (type === "date") {
     // valueAsdate = false로 변경 (yyyy/mm/dd format read)
     rules = { valueAsDate: false };
+    currentValue = value ? value : toStringByFormatting(new Date(), '-');
   }
   if (readOnly && !notAppliedReadOnlyCss) {
     readOnlyCss = "read-only:bg-gray-100";
@@ -61,7 +65,8 @@ export const Input: React.FC<InputProps> = ({
       type={type}
       name={name}
       readOnly={readOnly}
-      value={value}
+      // value={currentValue}
+      defaultValue={currentValue}
       id={id}
       width={width}
       className={`form-input block ${width} ${height} ${readOnlyCss} ${

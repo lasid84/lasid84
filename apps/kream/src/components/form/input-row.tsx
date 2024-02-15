@@ -1,5 +1,6 @@
 import { Input } from "components/react-hook-form/input-row";
 import { HTMLInputTypeAttribute } from "react";
+import { OnChangeValue } from "react-select";
 
 export type InputProps2 = {
   id: string;
@@ -43,6 +44,7 @@ export const TInput2: React.FC<InputProps2> = ({
           readOnly={readOnly}
           isAdd={isAdd}
           notAppliedReadOnlyCss={notAppliedReadOnlyCss}
+          
           rules={rules}
         />
         {children}

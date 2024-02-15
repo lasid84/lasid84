@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 'use client';
 
 import { useState, useRef, useCallback, useEffect, useReducer, createContext, useMemo, Dispatch, useContext } from "react";
@@ -7,31 +7,26 @@ import { SubmitHandler } from "react-hook-form";
 import { useUserSettings } from "states/useUserSettings";
 import { SearchState, reducer, useGetData } from "./data";
 import { SearchForm } from "./form"
+// import SearchForm from "./_component/search-form"
 // import { useGetData } from "./test";
+
+import TanstackReactTable from '@/components/form/test/tanStackReactTable/tanStackReactTable';
+import FullWidthResizable from 'components/form/test/tanStackReactTable/fullWidthResizable';
+import HeaderFilters from 'components/form/test/reactDataGrid/HeaderFilters';
+import ListGrid from './_component/list-grid';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
-const pageProps = {
-    title: "세금계산서생성(COD)",
-    transKey: "nav.acct.acct2003",
-    desc: "세금계산서생성화면입니다",
-    url: "acct2003"
-=======
-import PageTitle from "../../../shared/tmpl/page-title"
-import ListGrid from "./_component/list-grid"
-import SearchForm from "./_component/search-form"
 const pageProps = {
     title: "차지코드관리",
     transKey: "nav.stnd.stnd0006",
     desc: "차지코드관리",
     url: "stnd0004"
->>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281
 }
 
 //탐색경로 설정
 const brcmp = [
     { title: "Home", url: "/", last: false },
-<<<<<<< HEAD
     { title: "작성중", url: "/", last: false },
     { title: pageProps.transKey, url: pageProps.url, last: true },
 ]
@@ -72,7 +67,9 @@ export default function Home() {
       };
     const { data: LoadData } = useGetData(params);
      
-
+    let arr = []
+    arr.push(params);
+    arr.push(params);
     //grid data
     // const { data: selectResult } = useGetData(searchParam)
 
@@ -84,10 +81,11 @@ export default function Home() {
     return (
         <TableContext.Provider value={val}>
             <PageTitle title={pageProps.title} brcmp={brcmp} />
-            <SearchForm /*onSubmit={handleSearchSubmit}*/ loadItem={LoadData||null} />
-            <div>
-                {JSON.stringify(LoadData)}
-            </div>
+            <SearchForm /*onSubmit={handleSearchSubmit}*/ loadItem={LoadData} />
+            {/* <TanstackReactTable/> */}
+            {/* <HeaderFilters direction="rtl" /> */}
+            {/* <ListGrid listItem={arr}/> */}
+            <FullWidthResizable/>
         </TableContext.Provider>
            
                 //  <div>
@@ -136,22 +134,3 @@ export default function Home() {
             
     );
 }
-=======
-    { title: "STND", url: "/", last: false },
-    { title: pageProps.title, url: pageProps.url, last: true },
-]
-
-const Stnd0006: React.FC = () => {
-
-    return (
-        <>
-            <PageTitle title={pageProps.title} brcmp={brcmp} />
-            <SearchForm/>
-            <ListGrid listItem={null}/>
-        </>
-    )
-
-}
-
-export default Stnd0006
->>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281

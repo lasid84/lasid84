@@ -96,7 +96,7 @@ async function getMenuList (userInfo:any) {
     const inproc = 'public.f_admn_get_menulist';
     const menus = await executFunction(inproc,inparam, invalue)
     
-    log("menus", menus);
+    log("menus", menus[0]);
 
     const navigationData: NavigationState[] = [{
         parent_seq: -1,

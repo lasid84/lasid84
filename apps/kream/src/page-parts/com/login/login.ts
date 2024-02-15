@@ -44,10 +44,8 @@ export const getUserData = (async (userData:userData) => {
         inproc: 'public.f_admn_get_userauth',
         isShowLoading: true
       }
-
       const cursorData:any = await executFunction(params);  
-      
-      log("========================cursorData", cursorData);
+      log("====", cursorData)
       if (cursorData !== null) {   
           return cursorData![0];
       }           
@@ -126,10 +124,8 @@ export async function authenticate(
         password: formData.password
       };
 
-      log("login param: ", param);
       const {data} = await checkADLogin(param)
 
-      log("login data: ", data);
       if (!data.success) {
         return ({
           data: null,
@@ -137,23 +133,23 @@ export async function authenticate(
           success: false
         });
       }
-
-      log("!")
       
       const userData:any = await getUserData({user_id: formData.user_id, user_nm: data.user_nm});
       
-      log("2", JSON.stringify(userData));
+      if (userData !== null ){
+        log("2", JSON.stringify(userData));
 
-      await signIn('credentials', {
-        ...userData[0],
-        redirect:false
-      });
+        await signIn('credentials', {
+          ...userData[0],
+          redirect:false
+        });
 
-      return ({
-        data: {...userData[0]},
-        message: data.message, 
-        success: true
-      });
+        return ({
+          data: {...userData[0]},
+          message: data.message, 
+          success: true
+        });
+    }
       
     } catch (error) {
         log("server login : ", JSON.stringify(error));

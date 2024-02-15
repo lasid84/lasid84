@@ -11,10 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
-<<<<<<< HEAD
-=======
     "@hookform/resolvers": "^3.3.4",
->>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281
     "@repo/kwe-lib": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^4.36.1",
@@ -39,34 +36,14 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "@auth/core": "^0.25.0",
-    "@hookform/resolvers": "^3.3.4",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/typography": "^0.5.10",
-    "@tanstack/react-query": "^4.36.1",
-    "@types/node": "^20",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "autoprefixer": "^10.0.1",
-    "axios": "^1.6.7",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.0",
-    "internal-ip": "^8.0.0",
-    "material-react-table": "^2.11.2",
-    "postcss": "^8",
-    "react-i18next": "^12.3.1",
-    "request-ip": "^3.3.0",
-    "supports-color": "^9.4.0",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5",
-    "zod-i18n-map": "^2.25.0"
-=======
     "@auth/core": "^0.25.1",
+    "@faker-js/faker": "^8.4.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
+    "@tanstack/match-sorter-utils": "^8.11.8",
+    "@tanstack/react-table": "^8.12.0",
+    "@tanstack/table-core": "^8.12.0",
     "@types/node": "^20.11.16",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
@@ -80,6 +57,5 @@
     "supports-color": "^9.4.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
->>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281
   }
 }

@@ -26,9 +26,12 @@ async function initconnectionString() {
 async function callFunction(pProcName, pParamsList, pValueList) {
   log("callFunction");
   const connectionString = await initconnectionString();
+  log("0.1");
   // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
   const client = new Client({ connectionString });
   
+  log("0.2");
+
   try {
     
     let schema;
@@ -43,11 +46,13 @@ async function callFunction(pProcName, pParamsList, pValueList) {
         procName = pProcName;
       }
 
-    //console.log(pProcName, pParamsList, pValueList);
+    log("1.", pProcName, pParamsList, pValueList);
 
     const strParam = pParamsList.toString();
     const resultArgument = await getArgument(schema, procName, strParam);
     
+    log("1.5", resultArgument.getNumericData());
+
     if (resultArgument.getNumericData() !== 0)
         return resultArgument;
 
@@ -132,7 +137,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     await client.query('COMMIT');
     
 
-    //console.log(resultArray);
+    console.log(resultArray);
     dc.setCursorData(resultArray);
 
     return dc;

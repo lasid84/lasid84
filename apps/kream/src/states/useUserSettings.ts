@@ -109,11 +109,6 @@ const persistUserSettingsStore = persist(
 export const useUserSettings = create<UserSettingsStore>()(persistUserSettingsStore);
 
 export const setUserSetting = async (user:any) => {
-  // const session = await auth();
   console.log("setUserSetting start", user);
-  // const userInfo = useUserSettings.getState().data;
-  // console.log("userInfo : ",userInfo);
-  // const navigationData = await getMenuList(userInfo);
   await useUserSettings.setState({ data: user });
-  console.log("setUserSetting : ",useUserSettings.getState().data);
 };

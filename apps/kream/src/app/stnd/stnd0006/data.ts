@@ -33,7 +33,7 @@ export const reducer = (state:any, action:any) => {
   }
 }
 
-export const Acct2003Load = (p:any) => {
+export const Acct2003Load = async (p:any) => {
   unstable_noStore();
   const params = {
     inparam: ["in_user_id", "in_ipaddr"],
@@ -42,7 +42,7 @@ export const Acct2003Load = (p:any) => {
     isShowLoading: false
   }
   log("Acct2003Load", p);
-  return executFunction(params);
+  return await executFunction(params);
 }
 
 export const useGetData = (searchParam: any) => {

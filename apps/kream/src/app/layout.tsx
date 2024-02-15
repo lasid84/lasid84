@@ -21,16 +21,14 @@ import "css/vendors/ReactToastify.css";
 import { useSession } from "next-auth/react";
 import { SessionProvider } from "next-auth/react"
 import AuthProvider from "components/provider/AuthProvider";
-<<<<<<< HEAD
+
 import  Layout from 'layouts/page'
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-=======
-import Layout from 'layouts/page'
-import Router from "next/router";
-import NProgress from "nprogress";
 
->>>>>>> c03cfa43b16528ff44aae3f839fbf134b8811281
+import Router from "next/router";
+// import NProgress from "nprogress";
+
 
 const inter = Inter({ subsets: ["latin"] });
 

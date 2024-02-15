@@ -3,7 +3,7 @@
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
-import React, { useState, useEffect, Dispatch, useContext } from "react";
+import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -26,20 +26,22 @@ export interface returnData {
   textData : string;
 }
 
-export interface loadItem {
-  data : returnData[]
+export interface typeloadItem {
+  data : {} | undefined
 }
 
 type Props = {
   onSubmit: SubmitHandler<any>;
-  loadItem : loadItem|null;
+  loadItem : typeloadItem;
 };
 
 // export function SearchForm({searchParams, dispatch}) {
-export const SearchForm = (loadItem:any) => {
+export const SearchForm = memo(({loadItem}:any) => {
+
+  log("====", JSON.stringify(loadItem));
 
   log("SearchForm", JSON.stringify(loadItem));
-  const { searchParams, dispatch } = useAppContext();
+  const { message, dispatch } = useAppContext();
 
     // 다국어
     const { t } = useTranslation();
@@ -57,8 +59,6 @@ export const SearchForm = (loadItem:any) => {
     job_or : z.coerce.string(),
     no: z.coerce.string(),
   })
-
-  const [Params, setSearchParam] = useState({});
 
   // acct3002검색스키마 선언
   const formSchema = acct3002SearchSchema
@@ -94,39 +94,21 @@ export const SearchForm = (loadItem:any) => {
   const [salebuy, setSalebuy] = useState([])
   const [custcode, setCustcode] = useState([])
 
-//   const actions = useInvoiceStore((state: { actions: any; }) => state.actions)
-//   const searchParam = useInvoiceStore((state: { searchParam: any; }) => state.searchParam)
-
-
-  // useEffect(() => { 
-  //   if(loadItem){
-  //     console.log('acct3002-search' ,loadItem.data)
-  //     setTransmode(loadItem.data.cursorData[0]) 
-  //     setTranstype(loadItem.data.cursorData[1])
-  //     setJobor(loadItem.data.cursorData[3])
-  //     setSalebuy(loadItem.data.cursorData[4])
-  //   }
-  //     // actions.setSearchParam({
-  //     //   trans_type: gTransType,
-  //     //   trans_mode: gTransMode,
-  //     //   office_cd: gOfficeId
-  //     // })
+  useEffect(() => { 
+    if(loadItem){
       
-    
-  // }, [loadItem])
-
-//   useEffect(() => {
-//     const searchValue = { ...searchParams, }
-//     reset({ ...searchValue })
-//   }, [searchParams]);
-
-useEffect(() => {
-  log("Params", Params);
-}, [Params]);
+      setTransmode(loadItem[0]) 
+      setTranstype(loadItem[1])
+      setJobor(loadItem[3])
+      setSalebuy(loadItem[4])
+    }    
+  }, [loadItem])
 
   const onSubmit = () => {
     log("form search의 onSubmit", dispatch)
     dispatch({ type: CHANGE_SEARCH_PARAM, id:'3'});
+
+    alert(JSON.stringify(getValues()));
   }
 
   return (
@@ -138,17 +120,17 @@ useEffect(() => {
               <TSubmitButton label={t("search")} />
               <TCancelButton label={t("reset")}onClick={() => {
                 setFocus("trans_mode");
-                // reset();
+                reset();
               }} />
             </>
           }>
           <div>
-            <TInput2 id="fr_date" label="기간(시작일자)" type="date">
+            <TInput2 id="fr_date" label="시작일자" type="date" >
               {errors?.fr_date?.message && (
                 <ErrorMessage>{errors.fr_date.message}</ErrorMessage>
               )}
             </TInput2>
-            <TInput2 id="to_date" label="(종료일자)" type="date">
+            <TInput2 id="to_date" label="종료일자" type="date">
               {errors?.to_date?.message && <ErrorMessage>{errors.to_date.message}</ErrorMessage>}
             </TInput2>
           </div>
@@ -160,7 +142,6 @@ useEffect(() => {
               isPlaceholder={false}
               outerClassName="w-full space-y-1"
               defaultValue={gTransMode}
-              onChange={(e) => {console.log(e.target.id, e.target.value); setSearchParam({ id: e.target.value })}}
               options={transmode}
             />
             {errors?.trans_mode?.message && <ErrorMessage>{errors.trans_mode.message}</ErrorMessage>}
@@ -171,7 +152,6 @@ useEffect(() => {
               isPlaceholder={false}
               outerClassName="w-full space-y-1"
               defaultValue={gTransType}
-              onChange={(e) => setSearchParam({ trans_type: e.target.value })}
               options={transtype}
             />
           {errors?.trans_type?.message && <ErrorMessage>{errors.trans_type.message}</ErrorMessage>}
@@ -203,7 +183,6 @@ useEffect(() => {
             isPlaceholder={false}
             outerClassName="w-full"
             defaultValue={gOfficeId}
-            onChange={(e) => setSearchParam({ job_or: e.target.value })}
             options={jobor}
           />
           {errors?.job_or?.message && <ErrorMessage>{errors.job_or.message}</ErrorMessage>}
@@ -213,7 +192,6 @@ useEffect(() => {
             isPlaceholder={false}
             outerClassName="w-full"
             defaultValue={gOfficeId}
-            onChange={(e) => setSearchParam({ sale_buy: e.target.value })}
             options={salebuy}
           />
           {errors?.sale_buy?.message && <ErrorMessage>{errors.sale_buy.message}</ErrorMessage>}
@@ -222,6 +200,6 @@ useEffect(() => {
       </form>
     </FormProvider>
   );
-}
+});
 
 
