@@ -131,4 +131,12 @@ export default function FullWidthResizable() {
                   )
                 })}
               </tr>
-           
+            )
+          })}
+        </tbody>
+      </table>
+      <div className="h-4" />
+    </div>
+  )
+}
+
