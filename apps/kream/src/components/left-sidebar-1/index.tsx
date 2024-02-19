@@ -7,6 +7,7 @@ import Item from "components/left-sidebar-1/item";
 import LogoImg from "components/left-sidebar-1/logo-img";
 import { useUserSettings } from "states/useUserSettings";
 import { useSession } from 'next-auth/react';
+const { log } = require("@repo/kwe-lib/components/logHelper");
 
 interface Props {
     Children?: JSX.Element | JSX.Element[]
@@ -17,7 +18,7 @@ const LeftSidebar: React.FC<Props> = () => {
     const navigation = useNavigation((state) => state.navigation);
 
     useEffect(() => {
-        console.log("LeftSidebar start");
+        log("LeftSidebar start");
         setNavigationData();
     }, []);
 

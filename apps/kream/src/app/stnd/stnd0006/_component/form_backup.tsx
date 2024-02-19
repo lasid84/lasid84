@@ -12,13 +12,10 @@ import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch from "layouts/search-form/page-search-row";
 import { TInput2, TSelect2, TCancelButton, TSubmitButton } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
-import { TableContext, useAppContext } from "./page";
-import { CHANGE_SEARCH_PARAM, Acct2003Load } from "./data";
-import { useGetData } from './test'
+import { TableContext, useAppContext } from "../page";
+import { SEARCH } from "./model";
+import { useGetData } from '../test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
-
-//import { useCustomer, useLoadData } from "states/useCodes";
-//import { MultiColumnComboBoxOverview } from "components/dropdowns/ComboSelect" 
 
 export interface returnData {
   cursorData : []
@@ -38,10 +35,7 @@ type Props = {
 // export function SearchForm({searchParams, dispatch}) {
 export const SearchForm = memo(({loadItem}:any) => {
 
-  log("====", JSON.stringify(loadItem));
-
-  log("SearchForm", JSON.stringify(loadItem));
-  const { message, dispatch } = useAppContext();
+  const { dispatch, needSearch } = useAppContext();
 
     // 다국어
     const { t } = useTranslation();
@@ -101,14 +95,15 @@ export const SearchForm = memo(({loadItem}:any) => {
       setTranstype(loadItem[1])
       setJobor(loadItem[3])
       setSalebuy(loadItem[4])
+
+      // onSubmit();
     }    
   }, [loadItem])
 
   const onSubmit = () => {
-    log("form search의 onSubmit", dispatch)
-    dispatch({ type: CHANGE_SEARCH_PARAM, id:'3'});
-
-    alert(JSON.stringify(getValues()));
+    const params = getValues();
+    log("onSubmit", params)
+    dispatch({ type: SEARCH, params: params});
   }
 
   return (

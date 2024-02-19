@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import { useUserSettings } from "@/states/useUserSettings";
 import { useStore } from "@/utils/zustand";
 import { memo } from "react";
+const { log } = require("@repo/kwe-lib/components/logHelper");
 
 import AuthProvider from 'components/provider/AuthProvider'
 
@@ -27,7 +28,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const [layout, setLayout] = useState<string>(config.layout);
   const [collapsed, setCollapsed] = useState<boolean>(config.collapsed);
   // const { data:session, update, status} = useSession();
-  console.log("app/layouts/layout-1/index.tsx");
+  log("app/layouts/layout-1/index.tsx");
 
   useEffect(() => {
     setBackground(config.background)
@@ -60,7 +61,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
           <div className="">
             <LeftSidebar1 />
           </div>
-          <div className="main w-full h-screen text-gray-900 main bg-gray-50 dark:bg-gray-900 dark:text-white">
+          <div className="w-full h-screen text-gray-900 main bg-gray-50 dark:bg-gray-900 dark:text-white">
             <Navbar1 />
             <div className="h-[calc(100vh-60px)] overflow-y-auto px-4 py-4">{children}</div>
           </div>

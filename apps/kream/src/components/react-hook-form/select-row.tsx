@@ -54,7 +54,7 @@ export const Select: React.FC<SelectProps> = ({
     },
   };
 
-  log("====",currentValue, JSON.stringify(options[0]));
+  // log("====",currentValue, JSON.stringify(options[0]));
   
   if (readOnly) {
     readOnlyCss = "read-only:bg-gray-100";

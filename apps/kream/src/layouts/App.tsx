@@ -7,6 +7,8 @@ import { useSession } from 'next-auth/react';
 import { useUserSettings, setUserSetting } from "states/useUserSettings";
 import { useStore } from "utils/zustand";
 
+const { log } = require('@repo/kwe-lib/components/logHelper');
+
 
 
 function App({ children }: PropsWithChildren) {
@@ -47,7 +49,7 @@ function App({ children }: PropsWithChildren) {
   //     return <>/{element}</>;
   // }
 
-    console.log("app/layouts/App.tsx");
+    log("app/layouts/App.tsx");
 
   return (
     <>

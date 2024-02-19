@@ -26,6 +26,8 @@ import  Layout from 'layouts/page'
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const { log } = require("@repo/kwe-lib/components/logHelper");
+
 import Router from "next/router";
 // import NProgress from "nprogress";
 
@@ -45,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  console.log("app/layout.tsx");
+  log("app/layout.tsx");
 
   return (
     <>

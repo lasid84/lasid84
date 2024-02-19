@@ -1,3 +1,5 @@
+
+
 const axios = require("axios");
 const {AxiosResponse} = require("axios");
 const ini = require("ini");
@@ -7,7 +9,7 @@ const { log } = require('./logHelper');
 
 async function init(configParam) {
 
-  log("init : ", configParam);
+  // log("init : ", configParam);
   const config = {
     baseURL: configParam.url,
     headers: {"Content-Type": "application/json"},
@@ -18,7 +20,7 @@ async function init(configParam) {
 
   client.defaults.timeout = 30000;
 
-  log("config : ",config);
+  // log("config : ",config);
 
   return client;
 }
@@ -32,7 +34,7 @@ async function dataCall(inproc, inparam, invalue, config) {
     const url = '/api/data';
     const client = await init(config);
 
-    log("info", config.isShowLoading, inproc, inparam, invalue);
+    // log("info", config.isShowLoading, inproc, inparam, invalue);
 
     const response = await client.post(url, {inproc, inparam, invalue});
 
@@ -93,7 +95,7 @@ const postCall = async (params) => {
 
 const openPopup = (message) => {
   try {
-  alert(message);
+  // alert(message);
   console.log(message);
   } catch (err) {
     

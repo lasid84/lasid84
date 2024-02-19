@@ -1,15 +1,32 @@
 "use client"
 
 import PageContent from "@/shared/tmpl/page-content"
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {AgGridReact} from "ag-grid-react"
 import { GridOptions, Column, CellClickedEvent } from "ag-grid-community";
+import { TableContext, useAppContext } from "../page";
+import { BsCloudDrizzleFill } from "react-icons/bs";
+
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
     listItem: any | null
+    colVisible: {
+      col: string[]
+      visible:boolean
+    }
+}
+
+type cols = {
+  field: string;
+  hide: boolean;
 }
 
 const ListGrid: React.FC<Props> = (props) => {
+
+    // log("======================listgrid 시작", props.listItem)
+    const [colDefs, setColDefs] = useState<cols[]>([]);
+    const [mainData, setMainData] = useState([{}]);
 
     const gridOptions: GridOptions = useMemo(() => {
         return {
@@ -34,15 +51,32 @@ const ListGrid: React.FC<Props> = (props) => {
       }, []);
     
   const containerStyle = useMemo(() => "flex flex-col w-full", []);
-  const gridStyle = useMemo(() => "w-full h-[450px]", []);
+  const gridStyle = useMemo(() => "w-full h-[550px]", []);
 
-  const { listItem } = props;
+  const { listItem, colVisible } = props;
 
-  const [colDefs, setColDefs] = useState([
-    { field: "user_id" },
-    { field: "ipaddr" },
-  ]);
+  useEffect(() => {
+    if (Array.isArray(listItem) && listItem.length > 0) {
+      let cols:any[] = [];
+      const columns = Object.keys(listItem[0]);
+      columns.map((col:string) => {
 
+        let isHide: boolean = colVisible["visible"];
+        if (colVisible["col"].indexOf(col) > -1) {
+          isHide = !colVisible["visible"]
+        }
+
+        cols.push({
+          field:col,
+          hide: isHide
+        });
+      });      
+      setColDefs(cols);
+      setMainData(listItem);
+    }
+    // log("colDefs", colDefs);
+  }, [listItem]);
+  
     return (
         <>
             <PageContent
@@ -53,8 +87,8 @@ const ListGrid: React.FC<Props> = (props) => {
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>
                     <AgGridReact
-                        gridOptions={gridOptions}
-                       rowData={listItem}
+                       gridOptions={gridOptions}
+                       rowData={mainData}
                        columnDefs={colDefs}
                     />
                 </div>

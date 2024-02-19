@@ -10,7 +10,7 @@ import { Input } from "components/react-hook-form/input";
 
 import { useStore } from "utils/zustand";
 import { useUserSettings } from "states/useUserSettings";
-import { Login } from "@/page-parts/com/login/login";
+import { Login } from "@/app/login/_components/login";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 

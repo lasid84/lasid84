@@ -10,6 +10,8 @@ import { useConfigs } from "states/useConfigs";
 import AuthProvider from "@/components/provider/AuthProvider";
 import { useHotkeys } from "react-hotkeys-hook";
 
+const { log } = require("@repo/kwe-lib/components/logHelper");
+
 export type LayoutProps = {
   children: React.ReactNode;
 };
@@ -68,7 +70,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
   // );
 
   const pathname = usePathname()
-  console.log("app/layouts/page.tsx", pathname);
+  log("app/layouts/page.tsx", pathname);
   // let relativeURL = "";
   // if (query?.slug) {
   //   relativeURL = pathname.replace("/[...slug]", "");
@@ -86,9 +88,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
         // <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <Layout1>
-            <QueryClientProvider client={queryClient}>
             {children}
-            </QueryClientProvider>
             <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE ==='local'}/>
             <ProgressBar height="4px" color="#FF5500" shallowRouting />
           </Layout1>

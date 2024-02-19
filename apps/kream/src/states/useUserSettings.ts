@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
+const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type OptionProps = {
   label: string;
@@ -20,6 +21,7 @@ interface UserSettingsState {
   trans_type: string;
   ufs_id:string;
   token:string
+  ipaddr:string
   /*KREAM용 추가 끝*/
 
   /* 브라우저용 추가*/
@@ -55,6 +57,7 @@ const initialState: UserSettingsState = {
   trans_type: "",
   ufs_id: "",
   token: "",
+  ipaddr: "",
   /*KREAM용 추가 끝*/
 
   /*브라우저용 추가*/
@@ -109,6 +112,6 @@ const persistUserSettingsStore = persist(
 export const useUserSettings = create<UserSettingsStore>()(persistUserSettingsStore);
 
 export const setUserSetting = async (user:any) => {
-  console.log("setUserSetting start", user);
+  log("setUserSetting start", user);
   await useUserSettings.setState({ data: user });
 };

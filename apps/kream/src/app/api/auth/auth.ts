@@ -26,40 +26,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             .object({ user_id: z.string(), user_nm: z.string() })
             .safeParse(credentials);
 
-            log("auth", parsedCredentials.success, credentials);
+            // log("auth", parsedCredentials.success, credentials);
 
             if (parsedCredentials.success) {
                 // const { user_id, password } = parsedCredentials.data;
                 const { user_id, user_nm } = parsedCredentials.data;
-                // const user = await getUser(email);
-                // const param = {
-                //   url: "/login",
-                //   user_id:user_id,
-                //   password:password
-                // };
 
-                // log("auth의 signIn", param);
-
-                // const {data} = await postCall(param)
-
-                // // if (!data.success) return null;
-
-                // if (!data.success) {
-                //   console.log(JSON.stringify(data));
-                //   throw new Error("made by stephen : "+data.message);
-                //   // return { error: data.message };
-                // }
-
-                // const passwordsMatch = await bcrypt.compare(password, user.password);
-                
-                // const userData:any = await getUser({user_id:user_id, user_nm :data.user_nm});
-                // await setUserSetting({...userData[0]});
-
-                // console.log("auth last:", useUserSettings.getState().data);
-                
-                // if (passwordsMatch) return user;
-
-                // return userData[0];
                 return {
                   id:user_id,
                   email:user_id,
@@ -68,45 +40,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 }
             }
 
-            console.log('Invalid credentials', parsedCredentials.error.issues[0].message);
+            log('Invalid credentials', parsedCredentials.error.issues[0].message);
             return null;
         },
       }),
     ],
     callbacks: {
-      // async signIn({ user, account, profile, email, credentials }) 
-      // {
-      //   console.log("------sign iin", user.error, user/*, account, profile, email, credentials*/);
-      //   if(user?.error) {
-      //     throw new Error('custom error to the client')
-      //   }
-      //   return false;
-      // },  
-    //   jwt: async ({ user, token }) => {
-    //     // log("jwt0", user);
-    //     if (user) {
-    //       // const userData = await getUserData({user_id:user.email!, user_nm:user.name!})
-    //       // // token.uid = user.user_id;
-    //       // console.log("jwt", userData);
-    //       token = {
-    //         ...token,
-    //         ...user
-    //       }
-    //     }
-    //     // log("jwt", user, token);
-    //     return token;
-    //   },
-    //   async session({session, token}) {
-    //     session.user = {
-    //       ...session.user,
-    //       ...token
-    //     }
-
-    //     // log("seesion0", session);
-    //     return session;      
-    //   }
     },
-    // session: {
-    //   strategy: 'jwt',
-    // },
 });

@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback, useEffect } from "react"
 import PageTitle from "shared/tmpl/page-title"
 import { SubmitHandler } from "react-hook-form"
-// import SearchForm from "page-parts/acct/acct2003-search-row"
-// import CodeListGrid from "page-parts/acct/acct2003-list-gird"
+import SearchForm from "page-parts/acct/acct3002-search-row"
+import CodeListGrid from "page-parts/acct/acct2003-list-gird"
 import { useInvoiceStore } from "states/acct/acct2003.store";
 import { useGetData, useLoadData } from "page-parts/acct/acct2003"
 import { useUserSettings } from "states/useUserSettings";
@@ -45,13 +45,7 @@ const Acct2003: React.FC = () => {
 
     return (
         <>
-            {!session?.user
-                ? <div className="w-full h-full rounded-[5px] bg-white border mb-2">
-                    <div>
-                        <span className="ag-overlay-loading-center">로그인 해주세요</span>
-                    </div>
-                </div>
-                : <div>
+             <div>
                     {/* 제목 */}
                     <PageTitle title={pageProps.title} brcmp={brcmp} />
                     <div className="flex">
@@ -95,7 +89,7 @@ const Acct2003: React.FC = () => {
                     </div>
                     {/* 코드 리스트 */}
                     <CodeListGrid listItem={selectResult || null} /></div>
-            }
+            
         </>
     );
 }

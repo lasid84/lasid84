@@ -1,3 +1,8 @@
+"use server"
+
+import { auth } from '@/app/api/auth/auth';
+import { RedirectType, redirect } from "next/navigation";
+
 const { dataCall, postCall } = require('@repo/kwe-lib/components/api.service');
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -8,7 +13,8 @@ type exeFuncParams = {
     inparam: string[]
     invalue: string[]
     isAuth?: boolean | undefined
-    isShowLoading: boolean
+    isShowLoading?: boolean | undefined
+    isLoginPage?: boolean | undefined
 };
 
 type checkLogin = {
@@ -29,7 +35,7 @@ export interface returnData {
     textData: string;
   }
 
-function init(isAuth: boolean | undefined, isShowLoading: boolean) {
+function init(isAuth: boolean | undefined, isShowLoading?: boolean) {
 
     const config = {
         isAuth: !isAuth ? false : isAuth,
@@ -62,6 +68,13 @@ function init(isAuth: boolean | undefined, isShowLoading: boolean) {
 
 export async function executFunction(params:exeFuncParams) {
 
+    const session = await auth();
+
+    // console.log("==============",session, params.isLoginPage)
+    if (!session && !params.isLoginPage) {
+        redirect("/login", RedirectType.replace);
+    }
+
     try {
     const {inproc, inparam, invalue, isAuth, isShowLoading } = params;
     
@@ -69,6 +82,8 @@ export async function executFunction(params:exeFuncParams) {
 
     const returnData:returnData = await dataCall(inproc,inparam, invalue, config);
     const { cursorData, numericData, textData } = returnData;
+
+    // log("==",numericData + " : " + textData, params);
 
     if (numericData !== 0) {
         // alert(numericData + " : " + textData);

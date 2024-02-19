@@ -37,15 +37,8 @@ const Acct3002: React.FC = () => {
     const handleSearchSubmit: SubmitHandler<any> = useCallback((params) => {}, [searchParam])
 
     return (
-        <>
-            {!session?.user
-                ? <div className="flex">
-                    {/* <div className="w-full h-full rounded-[5px] bg-white border mb-2"> */}
-                    <div>
-                        <span className="ag-overlay-loading-center">로그인해주세요</span>
-                    </div>
-                </div>
-                : <div>
+        <> 
+        <div>
                     {/* 제목 */}
                     <PageTitle title={pageProps.title} brcmp={brcmp} />
                     <div className="flex">
@@ -56,7 +49,6 @@ const Acct3002: React.FC = () => {
                     </div>
                     {/* 코드 리스트 */}
                     <CodeListGrid listItem={selectResult || null}/></div>
-            }
         </>
     );
 }

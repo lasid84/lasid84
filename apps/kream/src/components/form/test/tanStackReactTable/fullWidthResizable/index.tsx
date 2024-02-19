@@ -1,4 +1,5 @@
-import React from 'react'
+
+import React, { memo } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
@@ -67,7 +68,8 @@ interface ReactTableProps<T extends object> {
   columns: ColumnDef<T>[];
  }
 
-export default function FullWidthResizable() {
+// export default function FullWidthResizable() {
+export const FullWidthResizable = memo(() => {
   const data = React.useMemo<Person[]>(() => makeData(20), [])
 
   const table = useReactTable({
@@ -138,5 +140,6 @@ export default function FullWidthResizable() {
       <div className="h-4" />
     </div>
   )
-}
+})
+
 

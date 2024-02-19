@@ -8,6 +8,7 @@ import { useUserSettings } from "states/useUserSettings";
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { shallow } from "zustand/shallow";
 import LoadingComponent from "../../page-parts/com/loading/loading"
+const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export default function Navbar() {
   const config = useConfigs((state) => state.config);
@@ -33,7 +34,7 @@ export default function Navbar() {
 
   const router = useRouter();
 
-  console.log("navbar", !user_nm, user_nm);
+  log("navbar", !user_nm, user_nm);
   
   const isLoading = useMemo(() => {
     //client data loading 용
@@ -44,7 +45,7 @@ export default function Navbar() {
     <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800 h-[3.75rem]">
       {
         isLoading &&
-        <div className="absolute h-screen w-full z-50">
+        <div className="absolute z-50 w-full h-screen">
           <LoadingComponent />
         </div>
       }
@@ -109,7 +110,7 @@ export default function Navbar() {
                 })
             }>
             <FiSettings size={18} />
-            <span className="ml-1 hidden md:flex">설정</span>
+            <span className="hidden ml-1 md:flex">설정</span>
           </button></div>
       }
 

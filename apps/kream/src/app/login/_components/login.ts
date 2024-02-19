@@ -42,10 +42,10 @@ export const getUserData = (async (userData:userData) => {
         inparam: ["in_user_id", "in_user_nm", "in_ipaddr"],
         invalue: [userData.user_id, userData.user_nm, ''],
         inproc: 'public.f_admn_get_userauth',
-        isShowLoading: true
+        isLoginPage: true
       }
       const cursorData:any = await executFunction(params);  
-      log("====", cursorData)
+      // log("====", cursorData)
       if (cursorData !== null) {   
           return cursorData![0];
       }           
@@ -137,7 +137,7 @@ export async function authenticate(
       const userData:any = await getUserData({user_id: formData.user_id, user_nm: data.user_nm});
       
       if (userData !== null ){
-        log("2", JSON.stringify(userData));
+        // log("2", JSON.stringify(userData));
 
         await signIn('credentials', {
           ...userData[0],

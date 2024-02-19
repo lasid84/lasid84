@@ -5,7 +5,7 @@ import { FiChevronRight } from "react-icons/fi";
 import type { NavigationState } from "states/useNavigation";
 
 
-const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
+const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_param}) => {
   const [hidden, setHidden] = useState<boolean>(true);
 
   const pathname = usePathname();
@@ -21,7 +21,12 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items}) => {
   }
   if (items.length === 0) {
     return (
-      <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
+      // <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
+      <Link href={{
+        pathname: url,
+        query: {title:title, params:menu_param }
+        }} 
+        className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
           {icon}
           <span className="w-full title">{title}</span>
           {badge && (

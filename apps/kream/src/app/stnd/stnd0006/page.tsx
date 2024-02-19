@@ -1,136 +1,58 @@
 
 'use client';
 
-import { useState, useRef, useCallback, useEffect, useReducer, createContext, useMemo, Dispatch, useContext } from "react";
+import {useEffect, useReducer, createContext, useMemo, useContext } from "react";
 import PageTitle from "components/page-title/page-title";
 import { SubmitHandler } from "react-hook-form";
 import { useUserSettings } from "states/useUserSettings";
-import { SearchState, reducer, useGetData } from "./data";
-import { SearchForm } from "./form"
-// import SearchForm from "./_component/search-form"
-// import { useGetData } from "./test";
+import { SearchState, reducer, SP_Load, SP_GetData } from "./_component/data";
+import  SearchForm  from "./_component/search-form"
 
 import TanstackReactTable from '@/components/form/test/tanStackReactTable/tanStackReactTable';
-import FullWidthResizable from 'components/form/test/tanStackReactTable/fullWidthResizable';
+import { FullWidthResizable } from 'components/form/test/tanStackReactTable/fullWidthResizable';
 import HeaderFilters from 'components/form/test/reactDataGrid/HeaderFilters';
 import ListGrid from './_component/list-grid';
+import { useGetData } from "components/react-query/useMyQuery";
+import { TableContext } from "components/contextAPI/contextProvider";
+
+import { LOAD, SEARCH, SEARCH_FINISH } from "./_component/model";
+
+import { useSearchParams } from 'next/navigation'
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
-const pageProps = {
-    title: "차지코드관리",
-    transKey: "nav.stnd.stnd0006",
-    desc: "차지코드관리",
-    url: "stnd0004"
-}
 
-//탐색경로 설정
-const brcmp = [
-    { title: "Home", url: "/", last: false },
-    { title: "작성중", url: "/", last: false },
-    { title: pageProps.transKey, url: pageProps.url, last: true },
-]
+export default function STND0006() {
+    // const q = JSON.parse(query); 
 
-type State = {
-    searchParams: {}
-    dispatch: any
-  };
+    const queryParam = useSearchParams()
+    const  title = queryParam.get('title');
+    // log(queryParam.getAll);
 
-export const TableContext = createContext<State>({
-    searchParams: {},
-    dispatch: () => {},
-  });
-
-
-export function useAppContext() {
-    return useContext(TableContext);
-}
-
-export default function Home() {
-    // const searchState = SearchState;
     const [state, dispatch] = useReducer(reducer, SearchState);
-    const { searchParams } = state;
+    const { searchParams, needSearch } = state;
 
-    const val = useMemo(() => {return { searchParams, dispatch }}, [state]);
-    
+    const val = useMemo(() => {return { searchParams, needSearch, dispatch }}, [state]);
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load);
+    const { data: mainData, refetch: mainRefetch } = useGetData(searchParams, SEARCH, SP_GetData, {enable:false});
+    const colVisible = {col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc"], visible:true}
+
     useEffect(() => {
-        log("==========", state.searchParams, searchParams);
-    }, [state.searchParams]);
-
-
-    //Load data..
-    // const { data: LoadData } = useLoadData()
-
-    const params = {
-        user_id: 'stephen',
-        ipaddr: '1.1.1.1'
-      };
-    const { data: LoadData } = useGetData(params);
-     
-    let arr = []
-    arr.push(params);
-    arr.push(params);
-    //grid data
-    // const { data: selectResult } = useGetData(searchParam)
-
-    // const handleSearchSubmit: SubmitHandler<any> = useCallback((params) => {
-    //     console.log('handleSearchSubmit', params)
-    //     actions.setSearchParam(params)
-    // }, [searchParam])
+        if (needSearch) {
+            mainRefetch();
+            dispatch({type:SEARCH_FINISH, needSearch:false});
+            log("====useEffect refetch 완료", needSearch, searchParams);
+        }
+    }, [needSearch]);
 
     return (
         <TableContext.Provider value={val}>
-            <PageTitle title={pageProps.title} brcmp={brcmp} />
-            <SearchForm /*onSubmit={handleSearchSubmit}*/ loadItem={LoadData} />
+            <PageTitle title={title!} /*brcmp={brcmp}*/ />
+            <SearchForm /*onSubmit={handleSearchSubmit}*/ loadItem={initData} />
             {/* <TanstackReactTable/> */}
             {/* <HeaderFilters direction="rtl" /> */}
-            {/* <ListGrid listItem={arr}/> */}
-            <FullWidthResizable/>
-        </TableContext.Provider>
-           
-                //  <div>
-                    
-                //     <div className="flex">
-                //         <div className="w-full rounded-[5px] bg-white border mb-2">
-                //             {/* 검색 */}
-                //             <SearchForm onSubmit={handleSearchSubmit} loadItem={LoadData||null} />
-                //         </div>
-                //         {/* grid data와 결합하는 side component */}
-                //         <div className="w-2/12 rounded-[5px] bg-white border mb-2 space-y-2">
-                //             <div className="px-4 py-2 space-y-1">
-                //                 <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                //                     계산서일
-                //                 </div>
-                //                 <input
-                //                     name="name"
-                //                     type="date"
-                //                     className="w-full px-4 py-1 font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded text-s hover:text-cyan-700 hover:border-blue-700"
-                //                 />
-                //                 {isCOD
-                //                     ? <></>
-                //                     : <><div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                //                         취합구분
-                //                     </div>
-                //                         <input
-                //                             name="name"
-                //                             type="date"
-                //                             className="w-full px-4 py-1 font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded text-s hover:text-cyan-700 hover:border-blue-700"
-                //                         />
-                //                         <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-                //                             발행처
-                //                         </div>
-                //                         <input
-                //                             name="name"
-                //                             type="date"
-                //                             className="w-full px-4 py-1 font-bold text-gray-500 uppercase bg-transparent border border-gray-400 rounded text-s hover:text-cyan-700 hover:border-blue-700"
-                //                         /></>
-                //                 }
-
-                //             </div>
-                //         </div>
-                //     </div>
-                //     {/* 코드 리스트 */}
-                //     <CodeListGrid listItem={selectResult || null} /></div>
-            
+            <ListGrid listItem={mainData} colVisible={colVisible}/>
+            {/* <FullWidthResizable/> */}
+        </TableContext.Provider>            
     );
 }

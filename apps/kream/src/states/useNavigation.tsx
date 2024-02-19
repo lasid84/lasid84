@@ -30,6 +30,7 @@ export type NavigationState = {
     url?: string | undefined;
     items: NavigationState[];
     icon?: React.ReactNode;
+    menu_param?: string
     badge?: {
         color: string;
         text: string | number;
@@ -142,7 +143,7 @@ async function getMenuList (userInfo:any) {
     (menuItem) => menuItem.parent_seq == 0
   );
 
-     console.log("navigationData", navigationData)
+     log("navigationData", navigationData)
     return navigationData;    
 }
 
@@ -159,9 +160,9 @@ const useNavigationStore = create<NavigationStore>((set) => ({
   export const useNavigation = useNavigationStore;
   
   export const setNavigationData = async () => {
-    console.log("setNavigationData start");
+    log("setNavigationData start");
     const userInfo = useUserSettings.getState().data;
-    console.log("userInfo : ",userInfo);
+    //log("userInfo : ",userInfo);
     const navigationData = await getMenuList(userInfo);
     useNavigationStore.setState({ navigation: navigationData });
   };
