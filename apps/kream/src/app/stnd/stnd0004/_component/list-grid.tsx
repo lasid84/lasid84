@@ -101,6 +101,7 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
                         defaultColDef={defaultColDef}
                     />
                     <Modal
+                        
                         isOpen={isPopOpen}
                         popType={popType}
                         setIsOpen={actions.setPopOpen}

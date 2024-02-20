@@ -26,24 +26,38 @@ export const initStndValue: Stnd0005Type = {
     use_yn: '',
 }
 
+export const initSearchParam: SearchParamType = {
+    grp_cd: 'ALL',
+}
+
+export interface SearchParamType  {
+    grp_cd : string | undefined,
+}
 
 type Stnd0005Store = {
+    searchParam : SearchParamType,
     isPopOpen: boolean,
-    // targetValue : TargetValueType,
     popType: string;
     popData: any;
     actions: {
-        // setTargetValue: (payload: Partial<TargetValueType>) => void;
+        setSearchParam:  (payload: Partial<SearchParamType>) => void;
         setPopOpen: (isPopOpen: boolean, popType?: string) => void;
         setPopData: (payload: Partial<Stnd0005Type>) => void;
     }
 }
 
 const stnd0005Store = (set: any) => ({
+    searchParam: initSearchParam,
     isPopOpen: false,
     popType: PopType.CREATE,
     popData: {},
     actions: {
+        setSearchParam: (payload: Partial<SearchParamType>) => {
+            set((state: any) => {
+                state.searchParam = { ...state.searchParam, ...payload };
+                return { ...state, searchParam: { ...state.searchParam } };
+            });
+        },
         setPopOpen: (isOpen: boolean, popType = PopType.CREATE) => {
             set((state: any) => {
                 state.isPopOpen = isOpen;
@@ -56,15 +70,9 @@ const stnd0005Store = (set: any) => ({
                 return { ...state, popData: { ...payload } }
             })
         }
-        // setTargetValue: (payload: Partial<TargetValueType>) => {
-        //     set((state: any) => {
-        //         state.targetValue = { ...state.targetValue, ...payload };
-        //         return { ...state, targetValue: { ...state.targetValue } }
-        //     })
-        // },
     },
 })
 
-export const useStnd0004Store = create<Stnd0005Store>()(
-    process.env.NODE_ENV !== "production" ? devtools(stnd0005Store) : stnd0005Store
+export const useStnd0005Store = create<Stnd0005Store>()(
+    process.env.NODE_ENV !== "production" ? stnd0005Store : stnd0005Store
 )
