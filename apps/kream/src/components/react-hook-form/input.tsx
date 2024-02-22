@@ -1,50 +1,3 @@
-// import {useFormContext} from "react-hook-form";
-// export type InputProps = {
-//   id: string;
-//   name: string;
-//   type:
-//     | "text"
-//     | "email"
-//     | "url"
-//     | "password"
-//     | "date"
-//     | "datetime-local"
-//     | "month"
-//     | "search"
-//     | "tel"
-//     | "time"
-//     | "week"
-//     | "number";
-//   rules?: Record<string, any>;
-//   width?: string;
-//   height?: string;
-//   placeholder?: string;
-//   readOnly?: boolean;
-// };
-
-// export const Input: React.FC<InputProps> = ({
-//   id,
-//   name,
-//   type,
-//   rules = {},
-//   readOnly=false,
-//   width = "w-full",
-//   height = "h-8",
-//   placeholder = "",
-// }) => {
-//   const {register} = useFormContext();
-//   return (
-//     <input
-//       {...register(name, rules)}
-//       placeholder={placeholder}
-//       type={type}
-//       name={name}
-//       id={id}
-//       className={`form-input block ${width} ${height} border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 flex-grow-1 focus:border-blue-500 focus:ring-0 text-sm rounded`}
-//       readOnly={readOnly}
-//     />
-//   );
-// };
 import { HTMLInputTypeAttribute, ChangeEventHandler } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -115,7 +68,7 @@ export const Input: React.FC<InputProps> = ({
       className={`form-input block ${width} ${height} ${readOnlyCss} ${
         isAdd ? "border-orange-400" : "border-gray-300"
       } bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded`}
-      // onChange={handleChange}
+      onChange={handleChange}
     />
   );  
 };
