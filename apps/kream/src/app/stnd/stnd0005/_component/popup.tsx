@@ -10,6 +10,7 @@ import { PopType, setModalValue } from "@/utils/modal";
 import { useMemo, useState, useEffect } from "react";
 import Select from "react-select"
 import { useStnd0005Store } from "@/states/stnd/stnd0005.store";
+import {useUpdateData} from "./stnd0005"
 
 export interface returnData {
     numericData: any,
@@ -38,6 +39,8 @@ const Modal: React.FC<Props> = ({ loadData, isOpen, popType, setIsOpen }) => {
         setIsOpen(false, popType);
         // reset();
     }
+
+    const {mutate : updatestnd0005} = useUpdateData() //UPDATE
 
     const formZodSchema = useMemo(() => {
         return z.object({
@@ -78,6 +81,11 @@ const Modal: React.FC<Props> = ({ loadData, isOpen, popType, setIsOpen }) => {
             ...param
         }
         console.log("params:: ", params)
+        if(popType===PopType.CREATE){
+
+        }else{
+
+        }
     }
 
     const [options, setOptions] = useState<any>(undefined)
