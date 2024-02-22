@@ -3,16 +3,16 @@
 import { executFunction } from "@/services/api.services";
 // import { useQuery } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
-import { LOAD, SEARCH, SEARCH_FINISH } from "./model";
+import { LOAD, SEARCH, SEARCH_FINISH, SELECTED_ROW } from "./model";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 // import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // import axios, { AxiosResponse } from "axios";
 
-export const SearchState = {
+export const PageState = {
     searchParams: {},
     needSearch: false,
-
+    selectedRow: {}
   };
 
 export const reducer = (state:any, action:any) => {
@@ -35,6 +35,12 @@ export const reducer = (state:any, action:any) => {
       return {
         ...state,
         needSearch: action.needSearch
+      }
+    case SELECTED_ROW:
+      log("data", JSON.stringify(action.selectedRow));
+      return {
+        ...state,
+        selectedRow:action.selectedRow
       }
   }
 

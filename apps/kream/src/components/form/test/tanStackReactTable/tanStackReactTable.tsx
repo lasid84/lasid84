@@ -178,6 +178,13 @@ export default function TanstackReactTable() {
 
   return (
     <div className="p-2">
+      <div className="text-lg font-bold text-3xl">
+        TanStack React Table 
+        <br></br>
+        장점 : 커스텀하기 쉬울듯
+        <br></br>
+        단점 : 안이쁨/커스텀 하기 빡실듯?
+        </div>
       <div>
         <DebouncedInput
           value={globalFilter ?? ''}
