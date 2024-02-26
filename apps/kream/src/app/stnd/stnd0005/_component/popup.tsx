@@ -9,8 +9,8 @@ import { ErrorMessage } from "@/components/react-hook-form";
 import { PopType, setModalValue } from "@/utils/modal";
 import { useMemo, useState, useEffect } from "react";
 import Select from "react-select"
-import { useStnd0005Store } from "@/states/stnd/stnd0005.store";
-import {useUpdateData} from "./stnd0005"
+// import { useStnd0005Store } from "@/states/stnd/stnd0005.store";
+import { useUpdateData } from "./stnd0005"
 
 export interface returnData {
     numericData: any,
@@ -21,26 +21,28 @@ type Props = {
     isOpen: boolean;
     popType: string;
     setIsOpen: (val: boolean, popType?: string) => void;
-    setData?: (data: any) => void;
-    loadData: {
-        data: returnData
-    } | undefined,
+    //setData?: (data: any) => void;
+    selectedData: {}
+    loadItem: any | null
 }
-const Modal: React.FC<Props> = ({ loadData, isOpen, popType, setIsOpen }) => {
-    const selectedData = useStnd0005Store((state) => state.popData)
+
+const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIsOpen }) => {
+    // const selectedData = useStnd0005Store((state) => state.popData)
 
 
     // 선택된 데이터 Select컴포넌트 처리
     const [useYn, setUseYn] = useState<string>("Y")
-    const [useGrpCd, setUseGrpCd] = useState<string>()
+    const [grpcd, setGrpCd] = useState<string>("ALL")
+    const [useGrpCd, setUseGrpCd] = useState([])
     const { t, zodStringRequired } = useZod()
 
+
     const closeModal = () => {
-        setIsOpen(false, popType);
+        setIsOpen(false);
         // reset();
     }
 
-    const {mutate : updatestnd0005} = useUpdateData() //UPDATE
+    const { mutate: updatestnd0005 } = useUpdateData() //UPDATE
 
     const formZodSchema = useMemo(() => {
         return z.object({
@@ -81,20 +83,19 @@ const Modal: React.FC<Props> = ({ loadData, isOpen, popType, setIsOpen }) => {
             ...param
         }
         console.log("params:: ", params)
-        if(popType===PopType.CREATE){
+        if (popType === PopType.CREATE) {
 
-        }else{
+        } else {
 
         }
     }
 
-    const [options, setOptions] = useState<any>(undefined)
-
+    //const [groupcd, setGroupcd] = useState(undefined)
     useEffect(() => {
-        if (loadData) {
-            setOptions(loadData.data.cursorData)
+        if (loadItem) {
+            setUseGrpCd(loadItem[0])
         }
-    }, [loadData, options]);
+    }, [loadItem])
 
     useEffect(() => {
         reset()
@@ -103,12 +104,15 @@ const Modal: React.FC<Props> = ({ loadData, isOpen, popType, setIsOpen }) => {
         }
         if (popType === PopType.UPDATE) {
             setModalValue(selectedData, setValue, getValues)
+            setGrpCd(selectedData.grp_cd)
+            console.log('welectedDAt??', selectedData)
+            console.log('wwhat is your group id@@@@@@@@@@@@@@@@@@@@?', grpcd)
             //select 컴포넌트 추가설정
             setUseYn(selectedData.use_yn)
-            setUseGrpCd(selectedData.grp_cd)
 
+            //setUseGrpCd(selectedData.grp_cd)
         }
-    },[popType, isOpen])
+    }, [popType, isOpen])
 
     return (
 
@@ -131,11 +135,14 @@ const Modal: React.FC<Props> = ({ loadData, isOpen, popType, setIsOpen }) => {
                             type={"USE_YN"}
                             label="grp_cd"
                             allYn={false}
-                            options={options && options[0]}
+                            options={useGrpCd}
+                            // placeholder={grpcd}
                             isPlaceholder={false}
+                            value={grpcd}
                             // value={options && options.find((options: any) => options.value === value)}
                             onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                                setUseGrpCd(event.target.value)
+                                console.log('안녕,,',event.target)
+                                setGrpCd(event.target.label)
                             }}
                         >
                             {errors?.grp_cd?.message && <ErrorMessage>{errors.grp_cd.message}</ErrorMessage>}

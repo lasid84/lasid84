@@ -15,8 +15,9 @@ type SelectProps = {
   id: string;
   type: string;
   label: string;
-  options? : SelectOptionProps[];
+  options? : SelectOptionProps[] ;
   value?: string;
+  defaultValue?:string;
   placeholder?: string;
   width?: string;
   children?: any;
@@ -35,6 +36,7 @@ export const TSelectCode: React.FC<SelectProps> = ({
   label,
   options,
   value,
+  defaultValue,
   placeholder,
   width = "w-full",
   children,
@@ -69,6 +71,7 @@ export const TSelectCode: React.FC<SelectProps> = ({
         id={id}
         name={id}
         value={value}
+        defaultValue={defaultValue}
         placeholder={placeholder}
         width={width}
         options={options}

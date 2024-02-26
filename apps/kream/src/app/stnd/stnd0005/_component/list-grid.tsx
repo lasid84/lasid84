@@ -25,6 +25,7 @@ export interface returnData {
   cursorData: string[],
 }
 type Props = {
+  loadItem: any | null
   listItem: any | null
   colVisible?: {
     col: string[]
@@ -43,10 +44,12 @@ const ListGrid: React.FC<Props> = (props) => {
   // log("======================listgrid 시작", props.listItem)
 
   const { dispatch } = useAppContext();
+  const { loadItem } = props;
 
   const gridRef = useRef<any | null>(null);
   const [colDefs, setColDefs] = useState<cols[]>([]);
   const [mainData, setMainData] = useState([{}]);
+  const [selectedData, setSelectedData] = useState({})
 
   const defaultColDef = useMemo(() => {
     return {
@@ -71,6 +74,8 @@ const ListGrid: React.FC<Props> = (props) => {
 
   const containerStyle = useMemo(() => "flex flex-col w-full", []);
   const gridStyle = useMemo(() => "w-full h-[550px]", []);
+  const [isOpen, setIsOpen] = useState(false)
+  const [popType, setPopType] = useState(PopType.CREATE)
 
   const { listItem, colVisible } = props;
 
@@ -102,13 +107,18 @@ const ListGrid: React.FC<Props> = (props) => {
     const selectedRow = gridRef.current.api.getSelectedRows()[0];
     log(selectedRow);
     dispatch({ type: SELECTED_ROW, selectedRow: selectedRow });
-
+    setIsOpen(true)
+    setPopType(PopType.UPDATE)
+    setSelectedData(selectedRow)
   }, []);
 
   return (
     <>
       <PageContent
         right={<> <TButtonBlue label="등록" onClick={() => {
+          setIsOpen(true)
+          setSelectedData('')
+          setPopType(PopType.CREATE)
           //actions.setPopOpen(true)
         }} /></>}
       >
@@ -123,12 +133,13 @@ const ListGrid: React.FC<Props> = (props) => {
             defaultColDef={defaultColDef}
             onSelectionChanged={onSelectionChanged}
           />
-          {/* <Modal
-                        loadData={loadData}
-                        isOpen={isPopOpen}
-                        popType={popType}
-                        setIsOpen={actions.setPopOpen}
-                    /> */}
+          <Modal
+            loadItem={loadItem}
+            selectedData={selectedData}
+            popType={popType}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
         </div>
       </div>
     </>

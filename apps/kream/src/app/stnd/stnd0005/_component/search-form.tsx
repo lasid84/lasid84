@@ -23,10 +23,10 @@ export interface typeloadItem {
     data: {} | undefined
 }
 
-export interface Props {
-    onSubmit: SubmitHandler<any>;
-    loadItem: typeloadItem;
-}
+// export interface Props {
+//     onSubmit: SubmitHandler<any>;
+//     loadItem: typeloadItem;
+// }
 
 export const stnd0005SearchSchema = z.object({
     grp_cd: z.coerce.string(),
@@ -37,16 +37,22 @@ export const formSchema = stnd0005SearchSchema
 // stnd0005검색스키마 타입선언
 export type FormType = z.infer<typeof stnd0005SearchSchema>
 
-//React.FC<Props> = ({ loadItem }: Props) => {
-const SearchForm = memo(({loadItem}:any) => {
+type Props = {
+    loadItem: any | null
+}
+
+const SearchForm: React.FC<Props> = (props) => {    
+  const { loadItem } = props;
+    //const SearchForm = memo(({loadItem}:any) => {
     // 다국어
     const { t } = useTranslation();
     z.setErrorMap(makeZodI18nMap({ t }));
 
     const methods = useForm<FormType>({
         resolver: zodResolver(formSchema),
-        defaultValues:{grp_cd:'ALL'}
+        defaultValues: { grp_cd: 'ALL' }
     });
+
     const {
         handleSubmit,
         reset,
@@ -82,9 +88,10 @@ const SearchForm = memo(({loadItem}:any) => {
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <><PageSearch
-                    right={
-                        <TSubmitButton label={t("search")} />
-                    }>
+                    // right={
+                    //     <TSubmitButton label={t("search")} />
+                    // }
+                    >
                     <label className="space-y-2">{t("grp_cd_nm")}</label>
                     <Controller
                         control={control}
@@ -94,7 +101,7 @@ const SearchForm = memo(({loadItem}:any) => {
                             <Select
                                 id="grp_cd"
                                 inputId="grp_cd"
-                                placeholder='ALL'                      
+                                placeholder='ALL'
                                 options={groupcd}
                                 ref={ref}
                                 //value={groupcd && groupcd.find((options: any) => options.value === value)}
@@ -111,6 +118,6 @@ const SearchForm = memo(({loadItem}:any) => {
         </FormProvider >
     )
 
-})
+}
 
 export default SearchForm
