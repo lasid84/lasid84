@@ -16,11 +16,7 @@ type SelectProps = {
   id: string;
   type: string;
   label: string;
-<<<<<<< HEAD
   options? : SelectOptionProps[] | undefined;
-=======
-  options? : SelectOptionProps[] ;
->>>>>>> f9fd4392f6e796d166d24ca8a30803b0c381885b
   value?: string;
   defaultValue?:string;
   placeholder?: string;
