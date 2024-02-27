@@ -26,6 +26,7 @@
       "states/*": ["./src/states/*"],
       "css/*": ["./src/css/*"],
       "services/*": ["./src/services/*"],
+      "api/*": ["./src/api/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

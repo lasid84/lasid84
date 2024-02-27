@@ -123,7 +123,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
         if (val === null)
           continue;
         
-        log("-------------------------------------------------", val);
+        // log("-------------------------------------------------", val);
         const fetchAllQuery = `FETCH ALL FROM "${val}";`;
         const cursorResult  = (await client.query(fetchAllQuery));
         //console.log(val);
@@ -136,8 +136,6 @@ async function callFunction(pProcName, pParamsList, pValueList) {
 
     await client.query('COMMIT');
     
-
-    console.log(resultArray);
     dc.setCursorData(resultArray);
 
     return dc;

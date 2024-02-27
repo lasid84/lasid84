@@ -1,5 +1,5 @@
-import { FiShoppingCart } from "react-icons/fi";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { FiShoppingCart, FiArrowDown as ChevronDownIcon } from "react-icons/fi";
+// import { ChevronDownIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { RiRefreshLine } from "react-icons/ri";
 

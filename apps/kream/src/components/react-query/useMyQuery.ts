@@ -10,26 +10,11 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
   const user_id = useUserSettings((state) => state.data.user_id);
   const ipaddr = useUserSettings((state) => state.data.ipaddr);
 
-  const params = {
-    ...searchParam,
-    user_id: user_id,
-    ipaddr: ipaddr
-  }
-  const { isLoading, data, isError, refetch } = useQuery([queryNm, params], queryFn, { ...option });
-  return { data, isLoading, isError, refetch }
-};
-
-
-export const useUpdateData = () => {
-  const queryClient = useQueryClient();
-  return useMutation(SP_UpdateData, {
-    onSuccess: (res) => { 
-      queryClient.invalidateQueries(["SEARCH",{"grp_cd":"ALL","user_id":"doni.lee"}])
-
-    },
-    onMutate: async (data) => { },
-    onError: (err, data, context) => {
-      console.log('PLEASE TRY AGAIN')
+    const params = {
+      ...searchParam,
+      user_id: user_id,
+      ipaddr: ipaddr
     }
-  })
-}
+    const { isLoading, data, isError, refetch } = useQuery([queryNm, params], queryFn, {...option});
+    return { data, isLoading, isError, refetch }
+  };

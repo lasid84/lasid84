@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm, UseFormHandleSubmit } from "react-hook-form";
 import { InputWrapper } from "components/react-hook-form/input-wrapper";
@@ -32,6 +32,12 @@ export default function LoginForm() {
     const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
     
     const router = useRouter();
+
+    useEffect(() => {
+      userSettingsActions?.reset();
+      // localStorage.removeItem("access_token");
+      // localStorage.removeItem("refresh_token");
+    }, []);
   
     const methods = useForm<FormProps>({
       defaultValues: {
@@ -50,18 +56,12 @@ export default function LoginForm() {
       // e.preventDefault();
 
       try {
-
           const res = await Login({user_id:user.user_id, password:user.password});
-
-          log(res);
           if (!res!.success) {
             setErrMessage(res?.message);
             return;
           };
-
           setErrMessage('');
-
-          log("res in login-form : ", res);
 
           userSettingsActions!.setData({ ...res?.data });
           router.replace('/');

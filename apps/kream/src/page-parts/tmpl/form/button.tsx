@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useConfigs } from "../../../states/useConfigs";
-import { FiShoppingCart } from "react-icons/fi";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { FiShoppingCart, FiArrowDown as ChevronDownIcon } from "react-icons/fi";
+// import { ChevronDownIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { RiRefreshLine } from "react-icons/ri";
 import { FaArrowsAltH } from "react-icons/fa";

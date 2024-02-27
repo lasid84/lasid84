@@ -19,14 +19,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({           
       async authorize(credentials) {
-          log("authorize 시작");
+          // log("authorize 시작");
 
           const parsedCredentials = z
             // .object({ user_id: z.string(), password: z.string().min(6) })
             .object({ user_id: z.string(), user_nm: z.string() })
             .safeParse(credentials);
 
-            // log("auth", parsedCredentials.success, credentials);
+            // log("=====auth", parsedCredentials.success, credentials);
 
             if (parsedCredentials.success) {
                 // const { user_id, password } = parsedCredentials.data;
@@ -35,16 +35,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 return {
                   id:user_id,
                   email:user_id,
-                  name:user_nm,
-                  ...credentials
+                  name:user_nm
                 }
             }
 
-            log('Invalid credentials', parsedCredentials.error.issues[0].message);
+            // log('Invalid credentials', parsedCredentials.error.issues[0].message);
             return null;
         },
       }),
     ],
-    callbacks: {
+    callbacks: {  
     },
 });

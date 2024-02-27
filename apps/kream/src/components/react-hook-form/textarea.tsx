@@ -6,6 +6,8 @@ export type TextareaProps = {
   rows?: number;
   placeholder?: string;
   width?: string;
+  height?: string;
+  readOnly?: boolean
 };
 
 export const Textarea: React.FC<TextareaProps> = ({

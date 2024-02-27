@@ -3,7 +3,7 @@ import Colors, { PaletteProps } from "./colors";
 import Close from "./close";
 import Sidebar from "./sidebar";
 import Langs from "./langs";
-import { BaseSyntheticEvent, useRef, useEffect, useState } from "react";
+import { BaseSyntheticEvent, useRef, useEffect, useState, RefObject } from "react";
 import { useConfigs } from "states/useConfigs";
 
 const RightSidebar: React.FC = () => {
@@ -17,7 +17,7 @@ const RightSidebar: React.FC = () => {
 
 
 
-  const rightSideBarRef = useRef();
+  const rightSideBarRef:RefObject<HTMLDivElement> = useRef(null);
   const configActions = useConfigs((state) => state.actions);
 
   const [translate, setTranslate] = useState("translate-x-64");

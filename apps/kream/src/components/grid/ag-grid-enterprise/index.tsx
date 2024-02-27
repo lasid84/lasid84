@@ -3,7 +3,7 @@
 import { AgGridReact } from 'ag-grid-react'; // AG Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
-import 'ag-grid-enterprise';
+// import 'ag-grid-enterprise';
 
 import PageContent from "@/shared/tmpl/page-content"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -32,7 +32,7 @@ type cols = {
   floatingFilter?:boolean;
 }
 
-const isFirstColumn = (params) => {
+const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; }; column: any; }) => {
   var displayedColumns = params.api.getAllDisplayedColumns();
   var thisIsFirstColumn = displayedColumns[0] === params.column;
   return thisIsFirstColumn;
@@ -40,9 +40,9 @@ const isFirstColumn = (params) => {
 
 const ListGrid: React.FC<Props> = (props) => {
 
-    // log("======================listgrid 시작", props.listItem)
+    const { dispatch, needSearch } = useAppContext();
 
-    const { dispatch } = useAppContext();
+    // log("======================listgrid 시작", needSearch, props.listItem)
 
     const gridRef = useRef<any | null>(null);
     const [colDefs, setColDefs] = useState<cols[]>([]);

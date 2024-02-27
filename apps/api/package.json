@@ -8,6 +8,7 @@
     "lint": "echo 'Add lint script here'"
   },
   "dependencies": {
+    "@auth/core": "^0.25.1",
     "@repo/kwe-lib": "*",
     "@repo/ui": "*",
     "body-parser": "^1.20.2",
