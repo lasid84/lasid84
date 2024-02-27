@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
 import Layout1 from "layouts/layout-1";
 import { useConfigs } from "states/useConfigs";
+import { ToastContainer } from "react-toastify";
+import { toastConfig } from "@/configs/toast.config";
 import AuthProvider from "@/components/provider/AuthProvider";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -92,6 +94,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
             <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE ==='local'}/>
             <ProgressBar height="4px" color="#FF5500" shallowRouting />
           </Layout1>
+          <ToastContainer {...toastConfig} />
         </QueryClientProvider>
         // </AuthProvider>
       );

@@ -23,7 +23,6 @@ import { SessionProvider } from "next-auth/react"
 import AuthProvider from "components/provider/AuthProvider";
 
 import  Layout from 'layouts/page'
-import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");

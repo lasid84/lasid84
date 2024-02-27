@@ -67,7 +67,7 @@ function init(isAuth: boolean | undefined, isShowLoading?: boolean) {
 // }
 
 export async function executFunction(params:exeFuncParams) {
-
+    console.log('a나한ㅌfldf')
     const session = await auth();
 
     // console.log("==============",session, params.isLoginPage)
@@ -83,7 +83,7 @@ export async function executFunction(params:exeFuncParams) {
     const returnData:returnData = await dataCall(inproc,inparam, invalue, config);
     const { cursorData, numericData, textData } = returnData;
 
-    // log("==",numericData + " : " + textData, params);
+    log("==",numericData + " : " + textData, params);
 
     if (numericData !== 0) {
         // alert(numericData + " : " + textData);
