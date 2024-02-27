@@ -1,136 +1,149 @@
 "use client"
 
 import PageContent from "@/shared/tmpl/page-content"
-import { useMemo, useRef, useState, useEffect,useCallback } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { GridOptions } from "ag-grid-community"
 import { AgGridReact } from "ag-grid-react"
 import {
-    gridRowHeight,
-    gridUtilDefaultColDef,
-    gridUtilDefaultOptions,
-    gridOverLayTemplate
+  gridRowHeight,
+  gridUtilDefaultColDef,
+  gridUtilDefaultOptions,
+  gridOverLayTemplate
 } from "utils/grid";
 import { TButtonBlue } from "@/page-parts/tmpl/form/button"
 import { useStnd0005Store } from "@/states/stnd/stnd0005.store";
 import Modal from "./popup"
 import { PopType } from "@/utils/modal";
+import { useAppContext } from "@/components/provider/contextProvider";
+import { SELECTED_ROW } from "./model";
+
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export interface returnData {
-    numericData: any,
-    textData: string,
-    cursorData: string[],
+  numericData: any,
+  textData: string,
+  cursorData: string[],
 }
 type Props = {
-    listItem: any | null
-    isInitialLoading: any
-    isError: any
-    loadData: {
-        data: returnData
-    } | undefined,
+  loadItem: any | null
+  listItem: any | null
+  colVisible?: {
+    col: string[]
+    visible: boolean
+  }
 }
 
-const ListGrid: React.FC<Props> = ({ loadData, listItem, isInitialLoading, isError }) => {
-    //zustand
-    const actions = useStnd0005Store((state) => state.actions)
-    const isPopOpen = useStnd0005Store(((state) => state.isPopOpen))
-    const popType = useStnd0005Store((state) => state.popType)
+type cols = {
+  field: string;
+  hide: boolean;
+  filter?: boolean;
+  floatingFilter?: boolean;
+}
 
-    const containerStyle = useMemo(() => "flex flex-col w-full", []);
-    const gridStyle = useMemo(() => "w-full h-[600px]", []);
-    const [rowData, setRowData] = useState([]);
+const ListGrid: React.FC<Props> = (props) => {
+  // log("======================listgrid 시작", props.listItem)
 
-    const columns = useMemo(() => {
-        //early return
-        if (listItem === undefined || listItem === null || !listItem || listItem.length === 0) return [];//early return
-        const firstRow = listItem.data.cursorData[0][0];
-        return Object.keys(firstRow).map((key) =>
-        ({
-            title: key,
-            field: key,
-            width: 180,
-            sorter: 'string',
-            floatingFilter: true,
-            filter: 'agTextColumnFilter',
-        }));
-    }, [listItem])
-    const gridRef: any = useRef<any>(null);
-    const gridListRef = useRef<any | null>(null);
-    const gridOptions: GridOptions = {
-        defaultColDef: {
-            ...gridUtilDefaultColDef,
-            editable: false,
-            cellStyle: { textAlign: "left" }, //왼쪽 정렬
-        },
-        ...gridRowHeight,
-        ...gridUtilDefaultOptions,
-        ...gridOverLayTemplate,
-        rowSelection: "multiple",
-        suppressRowClickSelection: true,  // 행 클릭만으로 선택되지 않도록 : true, Clipboard에 영향 미침, cell만 복사
-        suppressCopyRowsToClipboard: true, // true => row 복사 대신 cell 복사
-        suppressHorizontalScroll: false,
-        suppressColumnVirtualisation: true,
-        suppressRowVirtualisation: true,
-        enableRangeSelection: true,
-        // Grid row번호 고정시 사용
-        onSortChanged(e: any) {
-            e.api.refreshCells();
-        },
-        onGridReady(p: any) {
-            p.api.hideOverlay();
-            p?.api?.sizeColumnsToFit();
-        },
-        isRowSelectable: (params: any) => (params?.data?.use_yn > "Y" ? false : true),
+  const { dispatch } = useAppContext();
+  const { loadItem } = props;
+
+  const gridRef = useRef<any | null>(null);
+  const [colDefs, setColDefs] = useState<cols[]>([]);
+  const [mainData, setMainData] = useState([{}]);
+  const [selectedData, setSelectedData] = useState({})
+
+  const defaultColDef = useMemo(() => {
+    return {
+      flex: 1,
+      minWidth: 100,
+      sorter: 'string',
+      floatingFilter: true,
+      filter: 'agTextColumnFilter',
     };
+  }, []);
 
-    useEffect(() => {
-        console.log('isLoading', isInitialLoading)
-        console.log('isError', isError)
-        if (listItem) {
-            setRowData(listItem.data.cursorData[0]);
-            gridRef?.current?.api?.hideOverlay();
-        } else {
-            gridRef?.current?.api?.showLoadingOverlay();
-        }
-    }, [listItem]);
+  const gridOptions: GridOptions = useMemo(() => {
+    return {
+      rowHeight: 25,
+      headerHeight: 25,
+      enableRangeSelection: true,  // enterprise
+      // copyHeadersToClipboard:true,
+      suppressMultiRangeSelection: true,
+      rowSelection: 'multiple',
+    };
+  }, []);
 
-    // api service axios interceptors를 통해 zustand query status 관리
-    // if (isInitialLoading) { return <><LoadingComponent /></> }
-    //Row클릭
-    const cellClickedHandler = useCallback((event: any) => {
-        const columnId: string = event.column.getColId();
-        console.log('클릭이벤트 데이터 확인', event.data)       
-        if (columnId === "grp_cd") {
-          actions.setPopData(event.data);
-          actions.setPopOpen(true, PopType.UPDATE);
+  const containerStyle = useMemo(() => "flex flex-col w-full", []);
+  const gridStyle = useMemo(() => "w-full h-[550px]", []);
+  const [isOpen, setIsOpen] = useState(false)
+  const [popType, setPopType] = useState(PopType.CREATE)
+
+  const { listItem, colVisible } = props;
+
+  useEffect(() => {
+    if (Array.isArray(listItem) && listItem.length > 0) {
+      let cols: cols[] = [];
+      const columns = Object.keys(listItem[0]);
+      columns.map((col: string) => {
+
+        let isHide: boolean = colVisible!["visible"];
+        if (colVisible!["col"].indexOf(col) > -1) {
+          isHide = !colVisible!["visible"]
         }
-    }, [])
-    return (
-        <>
-            <PageContent
-                right={<> <TButtonBlue label="등록" onClick={() => {
-                    actions.setPopOpen(true)
-                }} /></>}
-            >
-            </PageContent >
-            <div className={containerStyle}>
-                <div className={`ag-theme-custom ${gridStyle}`}>
-                    <AgGridReact
-                        ref={gridListRef}
-                        gridOptions={gridOptions}
-                        rowData={rowData}
-                        columnDefs={columns}
-                        onCellClicked={cellClickedHandler}
-                    />
-                    <Modal
-                        loadData={loadData}
-                        isOpen={isPopOpen}
-                        popType={popType}
-                        setIsOpen={actions.setPopOpen}
-                    />
-                </div>
-            </div>
-        </>
-    )
+
+        cols.push({
+          field: col,
+          hide: isHide,
+          floatingFilter: true
+
+        });
+      });
+      setColDefs(cols);
+      setMainData(listItem);
+    }
+    // log("colDefs", colDefs);
+  }, [listItem]);
+
+  const onSelectionChanged = useCallback(() => {
+    const selectedRow = gridRef.current.api.getSelectedRows()[0];
+    log(selectedRow);
+    dispatch({ type: SELECTED_ROW, selectedRow: selectedRow });
+    setIsOpen(true)
+    setPopType(PopType.UPDATE)
+    setSelectedData(selectedRow)
+  }, []);
+
+  return (
+    <>
+      <PageContent
+        right={<> <TButtonBlue label="등록" onClick={() => {
+          setIsOpen(true)
+          setSelectedData('')
+          setPopType(PopType.CREATE)
+          //actions.setPopOpen(true)
+        }} /></>}
+      >
+      </PageContent >
+      <div className={containerStyle}>
+        <div className={`ag-theme-custom ${gridStyle}`}>
+          <AgGridReact
+            ref={gridRef}
+            gridOptions={gridOptions}
+            rowData={mainData}
+            columnDefs={colDefs}
+            defaultColDef={defaultColDef}
+            onSelectionChanged={onSelectionChanged}
+          />
+          <Modal
+            loadItem={loadItem}
+            selectedData={selectedData}
+            popType={popType}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
+        </div>
+      </div>
+    </>
+  )
 }
 
 export default ListGrid

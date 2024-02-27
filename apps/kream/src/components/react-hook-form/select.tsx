@@ -1,8 +1,12 @@
 import { useFormContext } from "react-hook-form";
 
 export interface SelectOptionProps {
+<<<<<<< HEAD
   key: any;
   label?: any;
+=======
+  label: any;
+>>>>>>> f9fd4392f6e796d166d24ca8a30803b0c381885b
   value: any;
 }
 
@@ -47,7 +51,6 @@ export const Select: React.FC<SelectProps> = ({
       {...register(name, rules)}
       id={id}
       name={name}
-      //  defaultValue={value}
       disabled={readOnly}
       value={value}
       defaultValue={defaultValue}
@@ -58,8 +61,8 @@ export const Select: React.FC<SelectProps> = ({
       style="padding:0px"
       {/* {isPlaceholder ? <option value="">{placeholder}</option> : <></>} */}
       {options?.map((option) => (
-        <option key={option.key} value={option.key}>
-          {option.value}
+        <option label={option.label} value={option.label}>
+          {option.label}
         </option>
       ))}
     </select>
