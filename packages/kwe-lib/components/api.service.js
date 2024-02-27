@@ -7,50 +7,32 @@ const { log } = require('./logHelper');
 //const serverUrl = 'http://10.33.63.50:5005';
  const serverUrl = 'http://10.33.63.171:5000';
 
-async function init(configParam) {
+ export async function init(configParam) {
 
-  // log("init : ", configParam);
   const config = {
     baseURL: configParam.url,
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${configParam.accessToken}`
+    },
     withCredentials: configParam.isAuth ? true : false,
   }
-
   const client = axios.create(config);
-
   client.defaults.timeout = 30000;
-
-  // log("config : ",config);
 
   return client;
 }
 
-async function dataCall(inproc, inparam, invalue, config) {
+export async function dataCall(client, inproc, inparam, invalue, config) {
   try {
-
-    // var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
-    // var url = objectPath.get(iniData, "main.url");
-    // const url = 'http://10.33.63.171:5000/api/data';
+    // log("dataCall");
     const url = '/api/data';
-    const client = await init(config);
-
-    // log("info", config.isShowLoading, inproc, inparam, invalue);
-
+    // const client = await init(config);
     const response = await client.post(url, {inproc, inparam, invalue});
-
-    // const response = config.isShowLoading ? 
-    //                       await client.post<AxiosResponse>(url, {inproc, inparam, invalue})
-    //                     : await client.post(url, {inproc, inparam, invalue})
-
-    // log("call finish", JSON.stringify(response.data));
+    // log("-----------------", response)
     const { numericData, textData, cursorData } = response.data
-    // // log("start api service", numericData)
-    // if (numericData !== 0)
-    // {
-    //   openPopup(numericData + " : " +  textData);
-    //   throw new Error(textData);
-    //   return null;
-    // }
+
+    log("dataCall:", numericData, textData)
 
     return {
       numericData: numericData,
@@ -68,19 +50,20 @@ async function dataCall(inproc, inparam, invalue, config) {
   };
 };
 
-const postCall = async (params) => {
+export const postCall = async (params) => {
   
   try {
     // log("postCall params1 : ", params);  
     const {user_id, password, url, isShowLoading} = params;
     const client = await init(params);
+    // const client = params.client;
     // log("postCall params2 : ", params);
     const response = isShowLoading ? 
                           await client.post<AxiosResponse>(url, {user_id: user_id,password: password})
                         : await client.post(url, {user_id: user_id,password: password});
 
-    // log("postCall", data);
-    // log("postCall", url, params.user_id, params.password);
+    log("postCall params1 : ", response.data);
+
     return response;
   } catch (err) {
     log("postCall err1 :", JSON.stringify(err));
@@ -103,21 +86,19 @@ const openPopup = (message) => {
 };
 
 
-
+/*아래는 구버전(web) 용********************/
 async function init2() {
 
   const client = axios.create({
     baseURL: serverUrl,
   });
-
   client.defaults.timeout = 30000;
 
   return client;
 }
 
-async function executFunction(inproc, inparam, invalue) {
+export async function executFunction(inproc, inparam, invalue) {
   try {
-
     // var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     // var url = objectPath.get(iniData, "main.url");
     // const url = 'http://10.33.63.171:5000/api/data';
@@ -144,9 +125,7 @@ async function executFunction(inproc, inparam, invalue) {
   };
 };
 
-const postCall2 = async (params) => {
-  
-  // const url = serverUrl + params.url;
+export const postCall2 = async (params) => {
   
   const url = params.url;
   const client = await init2();
@@ -156,15 +135,16 @@ const postCall2 = async (params) => {
   });
 
   // log("postCall", data);
-  log("postCall", url, params);
+  // log("postCall", url, params);
   return data;
 };
 
 
-module.exports = {
-  executFunction,
-  dataCall,
-  postCall,
-  postCall2
-}
+// module.exports = {
+//   init,
+//   executFunction,
+//   dataCall,
+//   postCall,
+//   postCall2
+// }
 

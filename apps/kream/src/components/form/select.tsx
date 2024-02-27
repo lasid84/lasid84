@@ -4,6 +4,7 @@ import { LabelTop } from "components/react-hook-form/label";
 import { Select } from "components/react-hook-form/select";
 
 type SelectOption = {
+  key : string;
   label: string;
   value: string;
 };
@@ -40,7 +41,7 @@ export const TSelect: React.FC<SelectProps> = ({
   readOnly = false,
 }) => {
   if (allYn) {
-    options = [{ value: "", label: "전체(All)" }, ...options];
+    options = [{ key: id, value: "", label: "전체(All)" }, ...options];
   }
   return (
     <InputWrapper outerClassName={outerClassName ? outerClassName : ""} inline={false}>

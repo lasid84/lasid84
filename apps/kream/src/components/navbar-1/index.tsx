@@ -5,7 +5,8 @@ import { useConfigs } from "states/useConfigs";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState,useMemo } from "react";
 import { useUserSettings } from "states/useUserSettings";
-import { useSession, signIn, signOut } from 'next-auth/react';
+// import { useSession, signIn, signOut } from 'next-auth/react';
+import { logOut } from "@/services/serverAction";
 import { shallow } from "zustand/shallow";
 import LoadingComponent from "../../page-parts/com/loading/loading"
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -96,7 +97,8 @@ export default function Navbar() {
             className="flex items-center justify-center h-[3.7rem] mx-4"
             onClick={() => {
               localStorage.removeItem('USER_SETTINGS')
-              signOut({ callbackUrl: "/login" });
+              // signOut({ callbackUrl: "/login" });
+              logOut();
             }}>
             <FiExternalLink size={18} />
             <span className="ml-1">로그아웃</span>

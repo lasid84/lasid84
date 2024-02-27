@@ -18,18 +18,9 @@ import "css/ag-grid/ag-grid.css";
 import "css/ag-grid/ag-theme-custom.css";
 import "css/vendors/ReactToastify.css";
 
-import { useSession } from "next-auth/react";
-import { SessionProvider } from "next-auth/react"
-import AuthProvider from "components/provider/AuthProvider";
-
 import  Layout from 'layouts/page'
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
-
-import Router from "next/router";
-// import NProgress from "nprogress";
 
 
 const inter = Inter({ subsets: ["latin"] });

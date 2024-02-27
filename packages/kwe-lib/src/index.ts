@@ -9,6 +9,9 @@ export const path = require("path");
 // import { path as arp } from 'app-root-path'
 
 export { path as arp } from 'app-root-path';
+
+export const { signJwtAccessToken, verifyJwt } = require('../components/jsonWebToken');
+
 // export {executFunction} from '../components/api.service2';
 // const homedir = require("os");
 // export callFunction = require("../components/dbDTOHelper.ts")

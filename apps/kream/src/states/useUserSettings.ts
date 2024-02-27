@@ -29,18 +29,6 @@ interface UserSettingsState {
   hasError : boolean,
   errMsg : string,
   /* 브라우저용 추가 끝*/
-
-  // user_lev: string;
-  // user_type: string;
-  // email?: string;
-  // selected_cust_biz_name: string;
-  // selected_cust_biz_id: number;
-  // selected_cust_biz_key: string;
-  // selected_wh_name: string;
-  // selected_wh_id: number;
-  // selected_wh_key: string;
-  // cust_biz_list: OptionProps[];
-  // wh_list: OptionProps[];
 }
 
 // Define the initial state using that type
@@ -65,24 +53,13 @@ const initialState: UserSettingsState = {
   hasError : false,
   errMsg : "",
   /* 브라우저용 추가 끝*/
-  
-  // user_lev: "",
-  // user_type: "",
-  // email: "",
-  // selected_cust_biz_name: "",
-  // selected_cust_biz_id: 0,
-  // selected_cust_biz_key: "",
-  // selected_wh_name: "",
-  // selected_wh_id: 0,
-  // selected_wh_key: "",
-  // cust_biz_list: [{ label: "", value: "", id: 0 }],
-  // wh_list: [{ label: "", value: "", id: 0 }],
 };
 
 type UserSettingsStore = {
   data: UserSettingsState;
   actions: {
     setData: (payload: Partial<UserSettingsState>) => void;
+    reset: () => void;
   };
 };
 
@@ -95,6 +72,11 @@ const userSettingsStore = (set: any) => ({
           ...state.data,
           ...payload,
         },
+      }));
+    },
+    reset: () => {
+      set(() => ({
+        data: initialState,
       }));
     },
   },

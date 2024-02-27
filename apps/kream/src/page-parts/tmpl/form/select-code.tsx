@@ -7,7 +7,8 @@ import { Select } from "components/react-hook-form/select";
 import { useRouter } from "next/router";
 
 export interface SelectOptionProps {
-  label: any;
+  key: any;
+  label?: any;
   value: any;
 }
 
@@ -15,7 +16,7 @@ type SelectProps = {
   id: string;
   type: string;
   label: string;
-  options? : SelectOptionProps[];
+  options? : SelectOptionProps[] | undefined;
   value?: string;
   placeholder?: string;
   width?: string;

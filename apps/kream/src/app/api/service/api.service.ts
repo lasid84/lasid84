@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useUserSettings } from "../../../states/useUserSettings"
+import { useUserSettings } from "states/useUserSettings"
 
 // 기본 API 서비스
 export const ApiService = axios.create({

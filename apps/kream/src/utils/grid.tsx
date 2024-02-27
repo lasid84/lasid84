@@ -1,8 +1,8 @@
 import { ValueGetterParams } from "ag-grid-enterprise";
 import { AgGridReact } from "ag-grid-react";
-import { valueGetterMethods } from "./params";
+// import { valueGetterMethods } from "./params";
 // import moment from "moment";
-import { devConsoleLog } from "./dev";
+// import { devConsoleLog } from "./dev";
 
 const AgGridApi = (gridRef: any) => {
   if (!gridRef.current) {

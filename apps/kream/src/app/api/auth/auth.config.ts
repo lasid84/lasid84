@@ -1,8 +1,11 @@
 import { request } from 'http';
-import type { NextAuthConfig, Profile } from 'next-auth';
+import type { NextAuthConfig, Session } from 'next-auth';
+import type { AdapterUser } from "@auth/core/adapters";
+import type { JWT } from "@auth/core/jwt";
 const {log} = require('@repo/kwe-lib/components/logHelper');
  
 export const authConfig = {
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/login',
   },
@@ -30,10 +33,43 @@ export const authConfig = {
       
       // return false;
     },
+    //// session({session, token}: {session: Session; user?:AdapterUser; token?:JWT}) {
+    // session({session, token}) {
+    //   console.log(`Auth Sess = ${JSON.stringify(session)}`)
+    //   console.log(`Auth Tok = ${JSON.stringify(token)}`)
+    //   if (token?.jti) {
+    //       session.token = token.jti // Put the provider's access token in the session so that we can access it client-side and server-side with `auth()`
+    //   }
+    //   console.log(`Auth Sess = ${JSON.stringify(session)}`)
+    //   return session
+    // },
+    // async jwt({ token, user, account, profile }) {
+    //   log("==========", token, " / ", user, account, profile);
+    //   return {...token}
+    // },
+    // async session({session, token, user}) {
+    //   session.user = token;
+    //   log("==========session", session, token, " / ");
+    //   return session;
+    // }
+
+    
+    // async session({session, token}: {session: Session; user?:AdapterUser; token?:JWT}) {
+      
+    //   // console.log('session:', token, session);
+
+    //   session = {
+    //     ...session,
+    //     token: token?.jti
+    //   }
+    
+    //   return session;
+    //   // return session;
+    // },
   },
   providers: [], // Add providers with an empty array for now
   session: {
-    maxAge: 60*60*12,
+    maxAge: 60*60*24,
     strategy: "jwt"
   } 
 } satisfies NextAuthConfig;

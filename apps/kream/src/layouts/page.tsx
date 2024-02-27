@@ -90,7 +90,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
           <Layout1>
             {children}
             <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE ==='local'}/>
-            <ProgressBar height="4px" color="#FF5500" shallowRouting />
+            {/* <ProgressBar height="4px" color="#FF5500" shallowRouting /> */}
           </Layout1>
         </QueryClientProvider>
         // </AuthProvider>

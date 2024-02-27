@@ -14,6 +14,7 @@ export const useGetData = (searchParam: any, queryNm:any, queryFn: any, option?:
       user_id: user_id,
       ipaddr: ipaddr
     }
-    const { isLoading, data, isError, refetch } = useQuery([queryNm, params], queryFn, {...option});
-    return { data, isLoading, isError, refetch }
+
+    const { isLoading, data, isError, refetch, remove } = useQuery([queryNm, params], queryFn, {...option});
+    return { data, isLoading, isError, refetch, remove }
   };
