@@ -135,8 +135,8 @@ const ListGrid: React.FC<Props> = (props) => {
             defaultColDef={defaultColDef}
             //onSelectionChanged={onSelectionChanged}
             onCellClicked={onCellClickedHandler}
-
           />
+          
           <Modal
             loadItem={loadItem}
             selectedData={selectedData}

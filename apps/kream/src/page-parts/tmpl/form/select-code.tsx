@@ -41,7 +41,7 @@ export const TSelectCode: React.FC<SelectProps> = ({
   placeholder,
   width = "w-full",
   children,
-  allYn = false,
+  allYn,
   readOnly = false,
   isAdd = false,
   isRequired = false,
@@ -72,6 +72,7 @@ export const TSelectCode: React.FC<SelectProps> = ({
         id={id}
         name={id}
         value={value}
+        allYn={allYn}
         defaultValue={defaultValue}
         placeholder={placeholder}
         width={width}

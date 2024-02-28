@@ -15,7 +15,7 @@ import Select from "react-select"
 import { PageState, reducer, SP_UpdateData } from "../_component/data"
 import { useGetData, useUpdateData } from "components/react-query/useMyQuery";
 import { UPDATE } from '../_component/model'
-
+import { LOAD, SEARCH, SEARCH_FINISH } from "../_component/model";
 
 export interface returnData {
     numericData: any,
@@ -34,8 +34,9 @@ type Props = {
 const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIsOpen }) => {
     // const selectedData = useStnd0005Store((state) => state.popData)
 
-    const mutation = useMutation(SP_UpdateData)
-    const {mutate} = useUpdateData()
+    //const mutation = useMutation(SP_UpdateData)
+    //const {mutate} = useUpdateData(SEARCH, SP_UpdateData, { enable: false })
+    const { Update, Create } = useUpdateData()
 
     // 선택된 데이터 Select컴포넌트 처리
     const [useYn, setUseYn] = useState<string>("Y")
@@ -112,145 +113,155 @@ const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIs
 
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<FormZodType> = useCallback((param) => {
-        mutate(param,{
-            onSuccess: (res: any) => {
-                console.log("onSuccess from SP_UpdateData");
-                toastSuccess("수정되었습니다.");
-                setIsOpen(false)
-              },
-        })
-    },[mutation])
+        if (popType === PopType.UPDATE) {
+            Update.mutate(param, {
+                onSuccess: (res: any) => {
+                    console.log("onSuccess from SP_UpdateData");
+                    toastSuccess("수정되었습니다.");
+                    setIsOpen(false)
+                },
+            })
+        } else {
+            Create.mutate(param, {
+                onSuccess: (res: any) => {
+                    console.log("onSuccess from SP_CreateData");
+                    toastSuccess("등록되었습니다.");
+                    setIsOpen(false)
+                },
+            })
+        }
+    }, [])
 
 
-//const [groupcd, setGroupcd] = useState(undefined)
-useEffect(() => {
-    if (loadItem) {
-        setUseGrpCd(loadItem[0])
-    }
-}, [loadItem])
+    //const [groupcd, setGroupcd] = useState(undefined)
+    useEffect(() => {
+        if (loadItem) {
+            setUseGrpCd(loadItem[0])
+        }
+    }, [loadItem])
 
-useEffect(() => {
-    reset()
-    if (popType === PopType.CREATE) {
-        setFocus("grp_cd")
-    }
-    if (popType === PopType.UPDATE) {
-        setModalValue(selectedData, setValue, getValues)
-        //select 컴포넌트 추가설정
-        setGrpCd(selectedData.grp_cd)
-        setUseYn(selectedData.use_yn)
+    useEffect(() => {
+        reset()
+        if (popType === PopType.CREATE) {
+            setFocus("grp_cd")
+        }
+        if (popType === PopType.UPDATE) {
+            setModalValue(selectedData, setValue, getValues)
+            //select 컴포넌트 추가설정
+            setGrpCd(selectedData.grp_cd)
+            setUseYn(selectedData.use_yn)
 
-        //setUseGrpCd(selectedData.grp_cd)
-    }
-}, [popType, isOpen])
+            //setUseGrpCd(selectedData.grp_cd)
+        }
+    }, [popType, isOpen])
 
-return (
+    return (
 
-    <FormProvider{...formZodMethods}>
-        <form onSubmit={handleSubmit(onFormSubmit)}>
-            <DialogBasic
-                isOpen={isOpen}
-                onClose={closeModal}
-                title={"종합코드 관리 " + (popType === PopType.CREATE ? "등록" : "수정")}
-                bottomRight={
-                    <>
-                        <TButtonBlue label={"저장"} onClick={handleSubmit(onFormSubmit)} />
-                        <TButtonGray label={"취소"} onClick={closeModal} />
-                    </>
-                }
-            >
-                <div className="flex flex-col md:grid md:grid-cols-3 gap-4">
-                    <TSelectCode
-                        id="grp_cd"
-                        type={"USE_YN"}
-                        label="grp_cd"
-                        allYn={false}
-                        options={useGrpCd}
-                        readOnly={popType === PopType.UPDATE}
-                        isPlaceholder={false}
-                        value={grpcd}
-                        // value={options && options.find((options: any) => options.value === value)}
-                        onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                            setGrpCd(event.target.value)
-                        }}
-                    >
-                        {errors?.grp_cd?.message && <ErrorMessage>{errors.grp_cd.message}</ErrorMessage>}
-                    </TSelectCode>
-
-                    <div className="col-span-2">
-                        <TInput label="grp_cd_nm" id="grp_cd_nm" >
-                            {errors?.grp_cd_nm?.message && (
-                                <ErrorMessage>{errors.grp_cd_nm.message}</ErrorMessage>
-                            )}
-                        </TInput>
-                    </div>
-                    <TInput label="cd" id="cd" readOnly={popType === PopType.UPDATE}>
-                        {errors?.cd?.message && (
-                            <ErrorMessage>{errors.cd.message}</ErrorMessage>
-                        )}
-                    </TInput>
-                    <div className="col-span-2">
-                        <TInput label="cd_nm" id="cd_nm">
-                            {errors?.cd_nm?.message && (
-                                <ErrorMessage>{errors.cd_nm.message}</ErrorMessage>
-                            )}
-                        </TInput>
-                    </div>
-                    <div className="col-span-3">
-                        <TInput label="cd_desc" id="cd_desc">
-                            {errors?.cd_desc?.message && (
-                                <ErrorMessage>{errors.cd_desc.message}</ErrorMessage>
-                            )}
-                        </TInput>
-                    </div>
-                    <div className="col-span-3">
-                        <TInput label="remark" id="remark">
-                            {errors?.remark?.message && (
-                                <ErrorMessage>{errors.remark.message}</ErrorMessage>
-                            )}
-                        </TInput>
-                    </div>
-                    <div className="col-span-3">
-                        <TInput label="cd_mgcd1" id="cd_mgcd1">
-                            {errors?.cd_mgcd1?.message && (
-                                <ErrorMessage>{errors.cd_mgcd1.message}</ErrorMessage>
-                            )}
-                        </TInput>
-                    </div>
-                    <div className="col-span-3">
-                        <TInput label="cd_mgcd2" id="cd_mgcd2">
-                            {errors?.cd_mgcd2?.message && (
-                                <ErrorMessage>{errors.cd_mgcd2.message}</ErrorMessage>
-                            )}
-                        </TInput>
-                    </div>
-                    <div className="col-span-3">
+        <FormProvider{...formZodMethods}>
+            <form onSubmit={handleSubmit(onFormSubmit)}>
+                <DialogBasic
+                    isOpen={isOpen}
+                    onClose={closeModal}
+                    title={"종합코드 관리 " + (popType === PopType.CREATE ? "등록" : "수정")}
+                    bottomRight={
+                        <>
+                            <TButtonBlue label={"저장"} onClick={handleSubmit(onFormSubmit)} />
+                            <TButtonGray label={"취소"} onClick={closeModal} />
+                        </>
+                    }
+                >
+                    <div className="flex flex-col md:grid md:grid-cols-3 gap-4">
                         <TSelectCode
-                            id="use_yn"
+                            id="grp_cd"
                             type={"USE_YN"}
-                            label="사용여부"
-                            options={[
-                                { label: "Y", value: "Y" },
-                                { label: "N", value: "N" },
-                            ]}
-                            allYn={true}
+                            label="grp_cd"
+                            allYn={false}
+                            options={useGrpCd}
+                            readOnly={popType === PopType.UPDATE}
                             isPlaceholder={false}
-                            value={useYn}
+                            value={grpcd}
+                            // value={options && options.find((options: any) => options.value === value)}
                             onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                                setUseYn(event.target.value)
+                                setGrpCd(event.target.value)
                             }}
                         >
-                            {errors?.use_yn?.message && <ErrorMessage>{errors.use_yn.message}</ErrorMessage>}
+                            {errors?.grp_cd?.message && <ErrorMessage>{errors.grp_cd.message}</ErrorMessage>}
                         </TSelectCode>
+
+                        <div className="col-span-2">
+                            <TInput label="grp_cd_nm" id="grp_cd_nm" >
+                                {errors?.grp_cd_nm?.message && (
+                                    <ErrorMessage>{errors.grp_cd_nm.message}</ErrorMessage>
+                                )}
+                            </TInput>
+                        </div>
+                        <TInput label="cd" id="cd" readOnly={popType === PopType.UPDATE}>
+                            {errors?.cd?.message && (
+                                <ErrorMessage>{errors.cd.message}</ErrorMessage>
+                            )}
+                        </TInput>
+                        <div className="col-span-2">
+                            <TInput label="cd_nm" id="cd_nm">
+                                {errors?.cd_nm?.message && (
+                                    <ErrorMessage>{errors.cd_nm.message}</ErrorMessage>
+                                )}
+                            </TInput>
+                        </div>
+                        <div className="col-span-3">
+                            <TInput label="cd_desc" id="cd_desc">
+                                {errors?.cd_desc?.message && (
+                                    <ErrorMessage>{errors.cd_desc.message}</ErrorMessage>
+                                )}
+                            </TInput>
+                        </div>
+                        <div className="col-span-3">
+                            <TInput label="remark" id="remark">
+                                {errors?.remark?.message && (
+                                    <ErrorMessage>{errors.remark.message}</ErrorMessage>
+                                )}
+                            </TInput>
+                        </div>
+                        <div className="col-span-3">
+                            <TInput label="cd_mgcd1" id="cd_mgcd1">
+                                {errors?.cd_mgcd1?.message && (
+                                    <ErrorMessage>{errors.cd_mgcd1.message}</ErrorMessage>
+                                )}
+                            </TInput>
+                        </div>
+                        <div className="col-span-3">
+                            <TInput label="cd_mgcd2" id="cd_mgcd2">
+                                {errors?.cd_mgcd2?.message && (
+                                    <ErrorMessage>{errors.cd_mgcd2.message}</ErrorMessage>
+                                )}
+                            </TInput>
+                        </div>
+                        <div className="col-span-3">
+                            <TSelectCode
+                                id="use_yn"
+                                type={"USE_YN"}
+                                label="사용여부"
+                                options={[
+                                    { label: "Y", value: "Y" },
+                                    { label: "N", value: "N" },
+                                ]}
+                                allYn={true}
+                                isPlaceholder={false}
+                                value={useYn}
+                                onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                                    setUseYn(event.target.value)
+                                }}
+                            >
+                                {errors?.use_yn?.message && <ErrorMessage>{errors.use_yn.message}</ErrorMessage>}
+                            </TSelectCode>
+                        </div>
+
                     </div>
 
-                </div>
+                </DialogBasic>
+            </form>
+        </FormProvider>
 
-            </DialogBasic>
-        </form>
-    </FormProvider>
-
-)
+    )
 
 }
 
