@@ -63,9 +63,9 @@ export async function executFunction(params:exeFuncParams) {
     try {      
         const {inproc, inparam, invalue, isAuth, isShowLoading } = params;
         
-        // log("===================");
-        // const token = useUserSettings((state) => state.data.token);
-        // log("===================",token);
+         //log("===================");
+         //const token = useUserSettings((state) => state.data.token);
+         //log("===================",token);
         const config = await initConfig(isAuth, token);
         const client = await init(config);
 

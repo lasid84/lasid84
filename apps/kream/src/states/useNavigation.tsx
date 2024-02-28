@@ -102,7 +102,7 @@ async function getMenuList (userInfo:any) {
       inproc: 'public.f_admn_get_menulist',
       isShowLoading: false
     };
-
+    log('params', params)
     const menus = await executFunction(params)
     
     log("menus", menus);
