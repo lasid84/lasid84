@@ -16,6 +16,7 @@ import { TableContext } from "@/components/provider/contextProvider";
 // import Grid from 'components/grid/tabulator';
 // import ReactDataGrid from 'components/grid/react-data-grid'
 import AgGrid from 'components/grid/ag-grid-enterprise';
+import type { GridOption } from 'components/grid/ag-grid-enterprise';
 
 import { LOAD, SEARCH, SEARCH_FINISH } from "./_component/model";
 
@@ -35,23 +36,29 @@ export default function STND0006() {
     const { searchParams, needSearch, selectedRow } = state;
 
     const val = useMemo(() => {return { searchParams, needSearch, dispatch }}, [state]);
-    const { data: initData } = useGetData(searchParams, LOAD, SP_Load);
+    const { data: initData } = useGetData(searchParams, "STND0006_LOAD", SP_Load);
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH, SP_GetData, {enable:false});
-    const colVisible = {col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc"], visible:true}
+    const gridOption: GridOption = {
+        colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
+        checkbox: ["trans_mode"],
+        editable: ["trans_mode"],
+        dataType: { "create_date" : "date"},
+        isMultiSelect: false
+    }
 
     useEffect(() => {
         if (needSearch) {
             mainRefetch();
             dispatch({type:SEARCH_FINISH, needSearch:false});
-            log("====useEffect refetch 완료", needSearch, searchParams);
+            // log("====useEffect refetch 완료", needSearch, searchParams);
         }
     }, [needSearch]);
 
     return (
         <TableContext.Provider value={val}>
             <PageTitle title={title!} /*brcmp={brcmp}*/ />
-            <SearchForm /*onSubmit={handleSearchSubmit}*/ loadItem={initData} />
-            <AgGrid listItem={mainData} colVisible={colVisible}/>
+            <SearchForm loadItem={initData} />
+            <AgGrid loadItem={initData} listItem={mainData} options={gridOption}/>
             <div>{selectedRow?.charge_code}</div>
             <div>{selectedRow?.vat_type}</div>
             <div>{selectedRow?.report_category}</div>

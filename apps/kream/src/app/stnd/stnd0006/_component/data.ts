@@ -37,7 +37,7 @@ export const reducer = (state:any, action:any) => {
         needSearch: action.needSearch
       }
     case SELECTED_ROW:
-      log("data", JSON.stringify(action.selectedRow));
+      // log("data", JSON.stringify(action.selectedRow));
       return {
         ...state,
         selectedRow:action.selectedRow
@@ -70,7 +70,7 @@ export const SP_GetData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
 
   const {trans_mode, trans_type, user_id, ipaddr } = Param;
-  log("searchData:", trans_mode, trans_type);
+  // log("searchData:", trans_mode, trans_type);
   
   const params = {
     inparam : [

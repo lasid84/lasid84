@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { InputWrapper } from "components/react-hook-form/input-wrapper";
 import { LabelTop } from "components/react-hook-form/label";
 import { Select } from "components/react-hook-form/select-row";
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type SelectOption = {
   label: string;
@@ -41,14 +42,14 @@ export const TSelect2: React.FC<SelectProps> = ({
 
   let selectoptions:any[] = []
 
-  if (options.length > 1) {
+  if (options?.length >= 1) {
     options.map((item:any, i) => {
       var label = item[Object.keys(item)[0]]
       var value = item[Object.keys(item)[1]]
       selectoptions.push({ key: label, value: value })
     })
   }
-  
+  // log("select-row", options)
   return (
     <div className="flex flex-row items-start">
       <label
@@ -64,7 +65,7 @@ export const TSelect2: React.FC<SelectProps> = ({
         width={width}
         options={selectoptions}
         isPlaceholder={isPlaceholder}
-        onChange={onChange}
+        // onChange={onChange}
         readOnly={readOnly}
       />
       {children}

@@ -137,7 +137,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     await client.query('COMMIT');
     
     dc.setCursorData(resultArray);
-
+    // log("================", JSON.stringify(dc.getCursorData()[0][0]));
     return dc;
   } catch (err) {
     // Rollback the transaction block in case of an error

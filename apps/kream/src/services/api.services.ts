@@ -54,7 +54,7 @@ export async function executFunction(params:exeFuncParams) {
 
     const session = await getSession();
     const token = await getToken();
-    log("executeFunction", session, token);
+    // log("executeFunction", session, token, params);
     // if (!session && !params.isLoginPage) {        
     if (!session) {        
         return navigate('/login');
@@ -78,7 +78,7 @@ export async function executFunction(params:exeFuncParams) {
         const { cursorData, numericData, textData } = returnData;
 
         // sleep(5000);
-        log("here", returnData)
+        // log("here", returnData)
         if (numericData !== 0) {
             alert(numericData + " : " + textData);
 
@@ -110,7 +110,7 @@ export async function checkADLogin(params:checkLogin) {
 }
 
 const requestUseService = (config: any) => {
-    log("requestUseService");
+    // log("requestUseService");
     useUserSettings.getState().actions.setData({ loading: "ON" });
     // const access_token = localStorage.getItem("access_token") || "";
     // config.headers["Authorization"] = `Bearer ${access_token}`;
@@ -119,13 +119,13 @@ const requestUseService = (config: any) => {
 };
 
 const requestHasError = (error: any) => {
-    log("requestHasError");
+    // log("requestHasError");
     useUserSettings.getState().actions.setData({ loading: "OFF" });
     return Promise.reject(error);
 };
 
 const responseUseService = (response: any) => {
-    log("responseUseService");
+    // log("responseUseService");
     setTimeout(() => {
         useUserSettings.getState().actions.setData({ loading: "OFF" });
         // log("requestUseService 시작 OFF")
@@ -134,7 +134,7 @@ const responseUseService = (response: any) => {
 };
 
 const responseHasError = async (error: any) => {
-    log("responseHasError");
+    // log("responseHasError");
     useUserSettings.getState().actions.setData({ loading: "OFF" });
     const originalRequest = error.config;
     // response가 없을 경우 : server connection fail

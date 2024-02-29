@@ -32,7 +32,7 @@ export const Select: React.FC<SelectProps> = ({
   readOnly = false,
   isAdd = false,
   placeholder = "선택(select)",
-  onChange,
+  // onChange,
   isPlaceholder = true,
 }) => {
   const { register, setValue, getValues } = useFormContext();
@@ -41,6 +41,7 @@ export const Select: React.FC<SelectProps> = ({
   if (!currentValue) {
     options.map((option, i) => {
       if (i == 0) {
+        log
         currentValue = option.key;
         setValue(name, currentValue);
       }
@@ -67,7 +68,7 @@ export const Select: React.FC<SelectProps> = ({
       disabled={readOnly}
       // value={currentValue}
       defaultValue={currentValue}
-      onChange={onChange}
+      // onChange={onChange}
       className={`block ${width} ${height} p-0 pl-2 text-[13px] form-select ${readOnlyCss} ${
         isAdd ? "border-orange-400" : "border-gray-300"
       } bg-white mx-1 my-1 focus:ring-blue-500 focus:border-blue-500 focus:ring-0 rounded`}>

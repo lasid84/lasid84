@@ -1,11 +1,12 @@
 'use client'
 
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { initReactI18next, useTranslation } from 'react-i18next';
 import { useConfigs } from 'states/useConfigs';
 import { useSession } from 'next-auth/react';
 import { useUserSettings, setUserSetting } from "states/useUserSettings";
 import { useStore } from "utils/zustand";
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -16,40 +17,37 @@ function App({ children }: PropsWithChildren) {
 
   const { i18n } = useTranslation();
 
-  // const {data:session, update, status} = useSession();
-  // const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
-  // const user_nm = useUserSettings((state)=>state.data.user_nm);
- 
-  // useEffect(() => {
-  //   console.log("App useEfect [session?.user]", session?.user.email);
-  //   const user = session?.user;
-  //   console.log("App useEfect [session?.user]", user);
-  //     setUserSetting({...session?.user});
-  //     // () => {
-  //     //   userSettingsActions!.setData({ ...user });
-  //     //   // userSettingsActions!.setData({ user_id: user.user_id });
-  //     //   // userSettingsActions!.setData({ user_nm: user.name });
-  //     // }
-  // }, [!session?.user]);
+//   const resources = {
+//     en: {
+//         translation: {
+//           "trans_mode": "mode",
+//           "n.selected": "{{n}} selected."
+//       }
+//     },
+//     ko: {
+//         translation: {
+//           "trans_mode": "모드1!!",
+//           "n.selected": "{{n}} selected."
+//       }
+//     }
+// };
+
+// i18n.use(initReactI18next) // passes i18n down to react-i18next
+//     .init({
+//         resources,
+//         lng: lang,
+//         fallbackLng: lang,
+//         keySeparator: false, // we do not use keys in form messages.welcome
+//         interpolation: {
+//             escapeValue: false // react already safes from xss
+//         }
+//     });
 
   // useEffect(() => {
   //   i18n.changeLanguage(lang);
-  // }, [
-  //   i18n,
-  //   lang,
-  // ]);
+  // }, [i18n,lang,]);
 
-  // const [element, setElement] = useState<HTMLElement | null>(null);
-
-  // useEffect(() => {
-  //     setElement(document.getElementById('app'));
-  // }, []);
-
-  // if (!element) {
-  //     return <>/{element}</>;
-  // }
-
-    log("app/layouts/App.tsx");
+  log("app/layouts/App.tsx");
 
   return (
     <>

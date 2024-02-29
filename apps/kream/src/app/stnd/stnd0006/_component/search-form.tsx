@@ -34,7 +34,7 @@ type Props = {
 // export function SearchForm({searchParams, dispatch}) {
 const SearchForm = memo(({loadItem}:any) => {
 
-  const { dispatch, needSearch } = useAppContext();
+  const { dispatch } = useAppContext();
 
     // 다국어
     const { t } = useTranslation();
