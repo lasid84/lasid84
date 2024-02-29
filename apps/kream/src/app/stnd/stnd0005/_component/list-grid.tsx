@@ -3,6 +3,7 @@
 import PageContent from "@/shared/tmpl/page-content"
 import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { GridOptions } from "ag-grid-community"
+import { toastSuccess } from "@/page-parts/tmpl/toast";
 import { AgGridReact } from "ag-grid-react"
 import {
   gridRowHeight,
@@ -103,7 +104,8 @@ const ListGrid: React.FC<Props> = (props) => {
     // log("colDefs", colDefs);
   }, [listItem]);
 
-  const onSelectionChanged = useCallback(() => {
+  //onSelectionChanged
+  const onCellClickedHandler = useCallback(() => {
     const selectedRow = gridRef.current.api.getSelectedRows()[0];
     log(selectedRow);
     dispatch({ type: SELECTED_ROW, selectedRow: selectedRow });
@@ -131,8 +133,10 @@ const ListGrid: React.FC<Props> = (props) => {
             rowData={mainData}
             columnDefs={colDefs}
             defaultColDef={defaultColDef}
-            onSelectionChanged={onSelectionChanged}
+            //onSelectionChanged={onSelectionChanged}
+            onCellClicked={onCellClickedHandler}
           />
+          
           <Modal
             loadItem={loadItem}
             selectedData={selectedData}

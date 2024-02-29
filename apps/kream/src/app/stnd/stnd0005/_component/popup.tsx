@@ -4,13 +4,18 @@ import { useStnd0004Store } from "@/states/stnd/stnd0004.store"
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useZod } from "utils/zod"
+import { toastSuccess } from "@/page-parts/tmpl/toast";
 import { TButtonBlue, TButtonGray, TInput, TSelectCode } from "@/page-parts/tmpl/form";
 import { ErrorMessage } from "@/components/react-hook-form";
 import { PopType, setModalValue } from "@/utils/modal";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Select from "react-select"
 // import { useStnd0005Store } from "@/states/stnd/stnd0005.store";
-import { useUpdateData } from "./stnd0005"
+import { PageState, reducer, SP_UpdateData } from "../_component/data"
+import { useGetData, useUpdateData } from "components/react-query/useMyQuery";
+import { UPDATE } from '../_component/model'
+import { LOAD, SEARCH, SEARCH_FINISH } from "../_component/model";
 
 export interface returnData {
     numericData: any,
@@ -29,6 +34,9 @@ type Props = {
 const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIsOpen }) => {
     // const selectedData = useStnd0005Store((state) => state.popData)
 
+    //const mutation = useMutation(SP_UpdateData)
+    //const {mutate} = useUpdateData(SEARCH, SP_UpdateData, { enable: false })
+    const { Update, Create } = useUpdateData()
 
     // 선택된 데이터 Select컴포넌트 처리
     const [useYn, setUseYn] = useState<string>("Y")
@@ -42,7 +50,6 @@ const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIs
         // reset();
     }
 
-    const { mutate: updatestnd0005 } = useUpdateData() //UPDATE
 
     const formZodSchema = useMemo(() => {
         return z.object({
@@ -78,17 +85,53 @@ const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIs
         control,
     } = formZodMethods;
 
-    const onFormSubmit: SubmitHandler<FormZodType> = async (param) => {
-        const params = {
-            ...param
-        }
-        console.log("params:: ", params)
-        if (popType === PopType.CREATE) {
+    // const onFormSubmit: SubmitHandler<FormZodType> = async (param) => {
+    //     const selectedRow = {
+    //         ...param
+    //     }
+    //     console.log("params:: ", selectedRow)
+    //     if (popType === PopType.CREATE) {
+    //     } else {
+    //         SP_UpdateData(param)       
+    //     }
+    // }
 
+    // //Use useMutation from react-query
+    // const onFormSubmit: SubmitHandler<FormZodType> = useCallback((param) => {
+
+    //     mutation.mutate(param, {
+    //         onSuccess: (data, variables, context) => {
+    //             console.log('success',data)
+    //             //queryClient.invalidateQueries(["SP_GetData"])
+    //         },
+    //         onError: (error, variables, context) => {
+    //             console.error(error)
+    //         },
+    //         onSettled: (data, error, variables, context) => { },
+    //     })
+    // },[mutation])
+
+    //Refactore by using custom hook
+    const onFormSubmit: SubmitHandler<FormZodType> = useCallback((param) => {
+        if (popType === PopType.UPDATE) {
+            Update.mutate(param, {
+                onSuccess: (res: any) => {
+                    console.log("onSuccess from SP_UpdateData");
+                    toastSuccess("수정되었습니다.");
+                    setIsOpen(false)
+                },
+            })
         } else {
-
+            Create.mutate(param, {
+                onSuccess: (res: any) => {
+                    console.log("onSuccess from SP_CreateData");
+                    toastSuccess("등록되었습니다.");
+                    setIsOpen(false)
+                },
+            })
         }
-    }
+    }, [])
+
 
     //const [groupcd, setGroupcd] = useState(undefined)
     useEffect(() => {
@@ -104,10 +147,8 @@ const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIs
         }
         if (popType === PopType.UPDATE) {
             setModalValue(selectedData, setValue, getValues)
-            setGrpCd(selectedData.grp_cd)
-            console.log('welectedDAt??', selectedData)
-            console.log('wwhat is your group id@@@@@@@@@@@@@@@@@@@@?', grpcd)
             //select 컴포넌트 추가설정
+            setGrpCd(selectedData.grp_cd)
             setUseYn(selectedData.use_yn)
 
             //setUseGrpCd(selectedData.grp_cd)
@@ -136,26 +177,25 @@ const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIs
                             label="grp_cd"
                             allYn={false}
                             options={useGrpCd}
-                            // placeholder={grpcd}
+                            readOnly={popType === PopType.UPDATE}
                             isPlaceholder={false}
                             value={grpcd}
                             // value={options && options.find((options: any) => options.value === value)}
                             onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                                console.log('안녕,,',event.target)
-                                setGrpCd(event.target.label)
+                                setGrpCd(event.target.value)
                             }}
                         >
                             {errors?.grp_cd?.message && <ErrorMessage>{errors.grp_cd.message}</ErrorMessage>}
                         </TSelectCode>
 
                         <div className="col-span-2">
-                            <TInput label="grp_cd_nm" id="grp_cd_nm">
+                            <TInput label="grp_cd_nm" id="grp_cd_nm" >
                                 {errors?.grp_cd_nm?.message && (
                                     <ErrorMessage>{errors.grp_cd_nm.message}</ErrorMessage>
                                 )}
                             </TInput>
                         </div>
-                        <TInput label="cd" id="cd">
+                        <TInput label="cd" id="cd" readOnly={popType === PopType.UPDATE}>
                             {errors?.cd?.message && (
                                 <ErrorMessage>{errors.cd.message}</ErrorMessage>
                             )}

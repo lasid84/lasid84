@@ -122,7 +122,7 @@ export const getUserData = (async (userData:userData) => {
         user_id: formData.user_id,
         password: formData.password
       };
-
+      console.log("?@@?")
       const {data} = await checkADLogin(param)
       if (!data.success) {
         return ({

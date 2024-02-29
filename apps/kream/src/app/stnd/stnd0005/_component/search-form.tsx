@@ -71,7 +71,6 @@ const SearchForm: React.FC<Props> = (props) => {
 
     useEffect(() => {
         if (loadItem) {
-            console.log('llllllllllllllllllllloadItem', loadItem[0])
             setGroupcd(loadItem[0])
             onSubmit();
         }

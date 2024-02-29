@@ -27,7 +27,6 @@ const initialState = {
   };
 
 export default function LoginForm() {
-
     const [errMessage, setErrMessage] = useState('');
     const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
     

@@ -19,6 +19,7 @@ import "css/ag-grid/ag-theme-custom.css";
 import "css/vendors/ReactToastify.css";
 
 import  Layout from 'layouts/page'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
