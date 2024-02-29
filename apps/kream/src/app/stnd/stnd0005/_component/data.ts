@@ -126,8 +126,8 @@ export const SP_UpdateData = async (param: any) => {
       , cd_mgcd1
       , cd_mgcd2
       , use_yn
-      , ''
-      , ''
+      , user_id
+      , ipaddr
     ],
     inproc: 'public.f_stnd0005_upd_codesetlist',
     isShowLoading: true

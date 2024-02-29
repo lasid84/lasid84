@@ -4,7 +4,7 @@ import { useStnd0004Store } from "@/states/stnd/stnd0004.store"
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useZod } from "utils/zod"
-import { toastSuccess } from "@/page-parts/tmpl/toast";
+import { toastSuccess,toastError } from "@/page-parts/tmpl/toast";
 import { TButtonBlue, TButtonGray, TInput, TSelectCode } from "@/page-parts/tmpl/form";
 import { ErrorMessage } from "@/components/react-hook-form";
 import { PopType, setModalValue } from "@/utils/modal";
@@ -113,24 +113,29 @@ const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIs
 
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<FormZodType> = useCallback((param) => {
+        console.log('onFormSubmit: poptype?',popType)
         if (popType === PopType.UPDATE) {
             Update.mutate(param, {
                 onSuccess: (res: any) => {
-                    console.log("onSuccess from SP_UpdateData");
-                    toastSuccess("수정되었습니다.");
+                    toastSuccess("수정되었습니다."+res);
                     setIsOpen(false)
                 },
+                onError:(res:any) =>{
+                    toastError("수정에실패했습니다."+res);
+                }
             })
         } else {
             Create.mutate(param, {
                 onSuccess: (res: any) => {
-                    console.log("onSuccess from SP_CreateData");
-                    toastSuccess("등록되었습니다.");
+                    toastSuccess("등록되었습니다."+res);
                     setIsOpen(false)
                 },
+                onError:(res:any) =>{
+                    toastError("등록에실패했습니다."+res);
+                }
             })
         }
-    }, [])
+    }, [popType])
 
 
     //const [groupcd, setGroupcd] = useState(undefined)

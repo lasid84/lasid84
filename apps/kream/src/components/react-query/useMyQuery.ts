@@ -39,31 +39,34 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
 
 export const useUpdateData = () => {
   const queryClient = useQueryClient();
-  const Update =  useMutation(SP_UpdateData, {
-    onSuccess: (res) => { 
-      queryClient.invalidateQueries(["SEARCH",{"grp_cd":"ALL","user_id":"doni.lee"}])
-
+  const Update = useMutation(SP_UpdateData, {
+    onSuccess: (res:any, data:any, context:any) => {
+      queryClient.invalidateQueries(["SEARCH", { "grp_cd": "ALL", "user_id": "doni.lee" }])
+      console.log('onUpdate',res,data,context)
     },
     onMutate: async (data) => { },
     onError: (err, data, context) => {
       console.log('PLEASE TRY AGAIN')
     }
   })
-  const Create =  useMutation(SP_CreateData, {
-    onSuccess: (res) => { 
-      queryClient.invalidateQueries(["SEARCH",{"grp_cd":"ALL","user_id":"doni.lee"}])
-
+  const Create = useMutation(SP_CreateData, {
+    onSuccess: (res:any, data:any, context:any) => {
+      queryClient.invalidateQueries(["SEARCH", { "grp_cd": "ALL", "user_id": "doni.lee" }])
+      console.log('onCreate',res,data,context)
     },
     onMutate: async (data) => { },
     onError: (err, data, context) => {
       console.log('PLEASE TRY AGAIN')
+      return { err, data, context }
     }
   })
-  return {Update,
-          Create}
+  return {
+    Update,
+    Create
+  }
 }
 
 
-  //   const { isLoading, data, isError, refetch, remove } = useQuery([queryNm, params], queryFn, {...option});
-  //   return { data, isLoading, isError, refetch, remove }
-  // };
+//   const { isLoading, data, isError, refetch, remove } = useQuery([queryNm, params], queryFn, {...option});
+//   return { data, isLoading, isError, refetch, remove }
+// };
