@@ -16,7 +16,7 @@ import { PageState, reducer, SP_UpdateData } from "../_component/data"
 import { useGetData, useUpdateData } from "components/react-query/useMyQuery";
 import { UPDATE } from '../_component/model'
 import { LOAD, SEARCH, SEARCH_FINISH } from "../_component/model";
-
+import {useRouter, usePathname} from 'next/navigation'
 export interface returnData {
     numericData: any,
     textData: string,
@@ -32,11 +32,9 @@ type Props = {
 }
 
 const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIsOpen }) => {
-    // const selectedData = useStnd0005Store((state) => state.popData)
-
-    //const mutation = useMutation(SP_UpdateData)
-    //const {mutate} = useUpdateData(SEARCH, SP_UpdateData, { enable: false })
-    const { Update, Create } = useUpdateData()
+    const router = usePathname()
+    console.log('query.폴더명',router)
+    const { Update, Create } = useUpdateData(router)
 
     // 선택된 데이터 Select컴포넌트 처리
     const [useYn, setUseYn] = useState<string>("Y")

@@ -66,13 +66,13 @@ export const SP_Load = async (searchParam: any) => {
     inproc: 'public.f_stnd0005_load',
     isShowLoading: false
   }
-  // log("Acct2003Load", p);
+   log("Acct0005Load");
   const result = await executFunction(params);
   return result;
 }
 
 export const SP_GetData = async (searchParam: any) => {
-  console.log('searchParam', searchParam.queryKey[1])
+  console.log('searc111111111111hParam', searchParam)
   const Param = searchParam.queryKey[1]
 
   const { grp_cd, user_id, ipaddr } = Param;
