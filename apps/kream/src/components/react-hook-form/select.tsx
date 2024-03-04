@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 export interface SelectOptionProps {
-  key: any;
+  key?: any;
   label?: any;
   value: any;
 }

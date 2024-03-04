@@ -2,23 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+// import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
 import Layout1 from "layouts/layout-1";
 import { useConfigs } from "states/useConfigs";
 import { ToastContainer } from "react-toastify";
 import { toastConfig } from "@/configs/toast.config";
-import AuthProvider from "@/components/provider/AuthProvider";
 import { useHotkeys } from "react-hotkeys-hook";
+import { setI18n } from 'components/i18n/i18n';
+import { useTranslation } from "react-i18next";
+import 'components/i18n/i18n';
+
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export type LayoutProps = {
   children: React.ReactNode;
 };
-
-
 
 const Layouts: React.FC<LayoutProps> = ({ children }) => {
 
@@ -73,6 +74,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
 
   const pathname = usePathname()
   log("app/layouts/page.tsx", pathname);
+  
   // let relativeURL = "";
   // if (query?.slug) {
   //   relativeURL = pathname.replace("/[...slug]", "");

@@ -12,9 +12,9 @@ import { useSession } from "next-auth/react";
 import { useUserSettings } from "@/states/useUserSettings";
 import { useStore } from "@/utils/zustand";
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { setI18n } from "@/components/i18n/i18n";
 const { log } = require("@repo/kwe-lib/components/logHelper");
-
-import AuthProvider from 'components/provider/AuthProvider'
 
 export type Layout1Props = {
   children: React.ReactNode;
@@ -42,10 +42,12 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
     setCollapsed(config.collapsed)
   }, [config.collapsed]);
 
-  // useEffect(() => {
-  //   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
-  //   userSettingsActions?.setData({...session?.user})
-  // }, []);
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+      setI18n();
+    
+  }, [i18n])
 
   return (
     // <AuthProvider>

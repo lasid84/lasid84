@@ -17,7 +17,7 @@ export type SelectProps = {
   isAdd?: boolean;
   rules?: Record<string, any>;
   placeholder?: string;
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  // onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   isPlaceholder?: boolean;
 };
 
@@ -41,7 +41,6 @@ export const Select: React.FC<SelectProps> = ({
   if (!currentValue) {
     options.map((option, i) => {
       if (i == 0) {
-        log
         currentValue = option.key;
         setValue(name, currentValue);
       }
@@ -50,9 +49,10 @@ export const Select: React.FC<SelectProps> = ({
 
   rules = {
     ...rules,
-    onChange: () => {
-      setValue(name, currentValue);
-    },
+    // onChange: () => {
+    //   currentValue = getValues()[name];
+    //   setValue(name, currentValue);
+    // },
   };
 
   // log("====",currentValue, JSON.stringify(options[0]));

@@ -4,21 +4,14 @@
 import {useEffect, useReducer, useMemo } from "react";
 import PageTitle from "components/page-title/page-title";
 import { useUserSettings } from "states/useUserSettings";
-import { PageState, reducer, SP_Load, SP_GetData } from "./_component/data";
+import { SP_Load, SP_GetData } from "./_component/data";
+import { PageState, SET_ISSELECT, reducer } from "components/provider/contextProvider";
+import { LOAD, SEARCH, SEARCH_FINISH } from "components/provider/contextProvider";
 import  SearchForm  from "./_component/search-form"
-
-// import TanstackReactTable from 'components/form/test/tanStackReactTable/tanStackReactTable';
-// import { FullWidthResizable } from 'components/form/test/tanStackReactTable/fullWidthResizable';
-// import HeaderFilters from 'components/form/test/reactDataGrid/HeaderFilters';
-import ListGrid from './_component/list-grid';
 import { useGetData } from "components/react-query/useMyQuery";
 import { TableContext } from "@/components/provider/contextProvider";
-// import Grid from 'components/grid/tabulator';
-// import ReactDataGrid from 'components/grid/react-data-grid'
 import AgGrid from 'components/grid/ag-grid-enterprise';
 import type { GridOption } from 'components/grid/ag-grid-enterprise';
-
-import { LOAD, SEARCH, SEARCH_FINISH } from "./_component/model";
 
 import { useSearchParams } from 'next/navigation'
 
@@ -33,10 +26,10 @@ export default function STND0006() {
     // log(queryParam.getAll);
 
     const [state, dispatch] = useReducer(reducer, PageState);
-    const { searchParams, needSearch, selectedRow } = state;
+    const { searchParams, needSearch, selectedRow, isChangeSelect } = state;
 
-    const val = useMemo(() => {return { searchParams, needSearch, dispatch }}, [state]);
-    const { data: initData } = useGetData(searchParams, "STND0006_LOAD", SP_Load);
+    const val = useMemo(() => {return { searchParams, needSearch, selectedRow, isChangeSelect, dispatch }}, [state]);
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load);
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH, SP_GetData, {enable:false});
     const gridOption: GridOption = {
         colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
@@ -47,12 +40,18 @@ export default function STND0006() {
     }
 
     useEffect(() => {
+        // log("====useEffect refetch 시작", needSearch, searchParams);
         if (needSearch) {
             mainRefetch();
             dispatch({type:SEARCH_FINISH, needSearch:false});
             // log("====useEffect refetch 완료", needSearch, searchParams);
         }
     }, [needSearch]);
+
+    useEffect(() => {
+        log("isChangeSelect : ", isChangeSelect);
+        // dispatch({type:SET_ISSELECT})
+    }, [isChangeSelect]);
 
     return (
         <TableContext.Provider value={val}>

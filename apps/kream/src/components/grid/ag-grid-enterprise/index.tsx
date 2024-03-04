@@ -10,8 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, PasteEndEvent, ValueFormatterParams, GridReadyEvent } from "ag-grid-community";
 
 import { useAppContext } from "@/components/provider/contextProvider";
-import { SELECTED_ROW } from '@/app/stnd/stnd0006/_component/model';
-import './styles.css';
+import { SELECTED_ROW } from 'components/provider/contextProvider';
 import { useTranslation } from 'react-i18next';
 
 // import { SELECTED_ROW } from "./model";
@@ -38,6 +37,7 @@ export type GridOption = {
 
 type cols = {
   field: string;
+  headerName?: string;
   hide: boolean;
   editable: boolean;
   valueFormatter?: any;
@@ -133,11 +133,12 @@ const ListGrid: React.FC<Props> = (props) => {
   
   useEffect(() => {
     if (Array.isArray(listItem) && listItem.length > 0) {
-      log('===listitem', listItem);
       let cols:cols[] = [];
+      //컬럼 셋팅
       const columns = Object.keys(listItem[0]);
       columns.map((col:string) => {
 
+        //컬럼별 visible 셋팅
         let isHide: boolean = false;
         if (options?.colVisible) {
           const optVisible:boolean = !!options.colVisible["visible"];
@@ -145,12 +146,13 @@ const ListGrid: React.FC<Props> = (props) => {
           if (optVisible) {
             isHide = optVisible;
             if (optCols.indexOf(col) > -1) {
-              log("===", col);
+              // log("===", col);
               isHide = !optVisible;
             }
           }
         }
 
+        //cell 수정 여부 셋팅
         let isEditable = false;
         if (options?.editable) {
           const optCols:string[] = options.editable;
@@ -159,6 +161,7 @@ const ListGrid: React.FC<Props> = (props) => {
           }          
         };
 
+        //cell 데이터 타입 셋팅(기본:text)
         var cellOption:any = {
             cellDataType : 'text'
         };
@@ -178,6 +181,7 @@ const ListGrid: React.FC<Props> = (props) => {
           }
         };
 
+        //체크박스 셋팅
         if (options?.checkbox) {
           if (options.checkbox.indexOf(col) > -1) {
             cellOption = {
@@ -190,6 +194,7 @@ const ListGrid: React.FC<Props> = (props) => {
         
         cols.push({
           field:col,
+          headerName:t(col),
           hide: isHide,
           editable: isEditable,
           ...cellOption
@@ -199,7 +204,7 @@ const ListGrid: React.FC<Props> = (props) => {
       setMainData(listItem);
     }
     // log("colDefs", colDefs);
-  }, [listItem]);
+  }, [listItem, t]);
 
   const onSelectionChanged = useCallback(() => {
     const selectedRow = gridRef.current.api.getSelectedRows()[0];

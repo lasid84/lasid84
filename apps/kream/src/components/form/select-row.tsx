@@ -27,13 +27,12 @@ type SelectProps = {
 export const TSelect2: React.FC<SelectProps> = ({
   id,
   label,
-  value,
-  defaultValue,
   options,
+  value,  
+  defaultValue,
   placeholder,
   width = "w-full",
   children,
-
   isPlaceholder = true,
   onChange,
   outerClassName,
@@ -41,7 +40,7 @@ export const TSelect2: React.FC<SelectProps> = ({
 }) => {
 
   let selectoptions:any[] = []
-
+  
   if (options?.length >= 1) {
     options.map((item:any, i) => {
       var label = item[Object.keys(item)[0]]

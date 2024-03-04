@@ -1,16 +1,18 @@
 import {useConfigs} from "states/useConfigs";
-import { Select } from "@repo/ui/src/select/select";
+import { TSelect } from "components/form/select";
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Option = {
   key: string;
+  label: string;
   value: string;
 };
 
 const Langs: React.FC = () => {
   const langs: Option[] = [
-    {key: "kr", value: "한국어"},
-    {key: "en", value: "English"},
-    {key: "jp", value: "日本語"},
+    { key: "ko", label: "한국어", value: "ko" },
+    { key: "en", label: "English", value: "en" },
+    { key: "jp", label: "日本語", value: "jp" },
   ];
 
   const configActions = useConfigs((state) => state.actions);
@@ -36,6 +38,8 @@ const Langs: React.FC = () => {
 
   const selectLangChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
+    const key = event.target;
+    log(key, value);
     configActions.setConfig({ 
         lang: value,
         rightSidebar: false,
@@ -48,16 +52,19 @@ const Langs: React.FC = () => {
         언어 선택
       </div>
       <div className="flex flex-col">
-          <Select 
-              id='1'
-              name="language"
-              onChange={selectLangChange}
-              options={[
-              {key: "kr", value: "한국어"},
-              {key: "en", value: "English"},
-              {key: "jp", value: "Japanese"},
-              ]}
-          />  
+      <select
+          id='1'
+          // disabled={readOnly}
+          // defaultValue={currentValue}
+          onChange={selectLangChange}
+          className={`block w-full h-8 p-0 pl-2 text-[13px] form-select border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 focus:ring-0 rounded` }>
+          {/* {isPlaceholder ? <option value="">{placeholder}</option> : <></>} */}
+          {langs?.map((option, i) => (
+            <option key={option.key} value={option.key}>
+              {option.label}
+            </option>
+          ))}
+        </select>           
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ import PageSearch from "layouts/search-form/page-search-row";
 import { TInput2, TSelect2, TCancelButton, TSubmitButton } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { useAppContext } from "@/components/provider/contextProvider";
-import { SEARCH } from "./model";
+import { SEARCH } from "components/provider/contextProvider";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -78,7 +78,7 @@ const SearchForm = memo(({loadItem}:any) => {
 
   useEffect(() => { 
     if(loadItem){
-      
+      // log("t: ", t('trans_mode'), t);
       setTransmode(loadItem[0]) 
       setTranstype(loadItem[1])
 
@@ -87,6 +87,7 @@ const SearchForm = memo(({loadItem}:any) => {
   }, [loadItem])
 
   const onSubmit = () => {
+    // log("onSubmit")
     const params = getValues();
     // log("onSubmit", params)
     dispatch({ type: SEARCH, params: params});
