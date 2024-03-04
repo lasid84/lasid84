@@ -16,8 +16,8 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
     user_id: user_id,
     ipaddr: ipaddr
   }
-  const { isLoading, data, isError, refetch } = useQuery([queryNm, params], queryFn, { ...option });
-  return { data, isLoading, isError, refetch }
+  const { isLoading, data, isError, refetch, remove } = useQuery([queryNm, params], queryFn, { ...option });
+  return { data, isLoading, isError, refetch, remove }
 };
 
 //searchParams, SEARCH, SP_GetData, { enable: false }
@@ -45,18 +45,15 @@ export const useUpdateData = () => {
 
     },
     onMutate: async (data) => { },
-    onError: (err, data, context) => {
-      console.log('PLEASE TRY AGAIN')
-    }
+    
   })
   const Create =  useMutation(SP_CreateData, {
     onSuccess: (res) => { 
-      queryClient.invalidateQueries(["SEARCH",{"grp_cd":"ALL","user_id":"doni.lee"}])
-
+      queryClient.invalidateQueries(["SEARCH",{"grp_cd":"ALL","user_id":"doni.lee"}])      
     },
     onMutate: async (data) => { },
     onError: (err, data, context) => {
-      console.log('PLEASE TRY AGAIN')
+      console.log('PLEASE TRY AGAIN1', err)
     }
   })
   return {Update,

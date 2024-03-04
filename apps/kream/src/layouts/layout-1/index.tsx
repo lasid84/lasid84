@@ -15,6 +15,7 @@ import { memo } from "react";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 import AuthProvider from 'components/provider/AuthProvider'
+import i18n, { setI18n } from "@/components/i18n/i18n";
 
 export type Layout1Props = {
   children: React.ReactNode;
@@ -41,6 +42,13 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   useEffect(() => {
     setCollapsed(config.collapsed)
   }, [config.collapsed]);
+
+  // useEffect(()=> {
+  //   log('===================',Object.keys(i18n).length)
+  //   if (Object.keys(i18n).length) {
+  //     i18n.changeLanguage(config.lang);
+  //   }
+  // },[i18n, config.lang]);
 
   // useEffect(() => {
   //   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);

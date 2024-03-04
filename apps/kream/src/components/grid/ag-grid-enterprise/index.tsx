@@ -133,7 +133,7 @@ const ListGrid: React.FC<Props> = (props) => {
   
   useEffect(() => {
     if (Array.isArray(listItem) && listItem.length > 0) {
-      log('===listitem', listItem);
+      // log('===listitem', listItem);
       let cols:cols[] = [];
       const columns = Object.keys(listItem[0]);
       columns.map((col:string) => {
@@ -145,7 +145,7 @@ const ListGrid: React.FC<Props> = (props) => {
           if (optVisible) {
             isHide = optVisible;
             if (optCols.indexOf(col) > -1) {
-              log("===", col);
+              // log("===", col);
               isHide = !optVisible;
             }
           }

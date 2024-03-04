@@ -36,7 +36,7 @@ export default function STND0006() {
     const { searchParams, needSearch, selectedRow } = state;
 
     const val = useMemo(() => {return { searchParams, needSearch, dispatch }}, [state]);
-    const { data: initData } = useGetData(searchParams, "STND0006_LOAD", SP_Load);
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load);
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH, SP_GetData, {enable:false});
     const gridOption: GridOption = {
         colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },

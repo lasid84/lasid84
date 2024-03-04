@@ -3,6 +3,7 @@
 // import { NextRequest, NextResponse } from "next/server";
 import { useUserSettings } from "states/useUserSettings"
 import { navigate, getSession, getCookies, getToken } from './serverAction';
+import { toastWaring } from "@/page-parts/tmpl/toast";
 
 
 const { init, dataCall, postCall } = require('@repo/kwe-lib/components/api.service');
@@ -52,9 +53,10 @@ function initConfig(isAuth: boolean | undefined, token:any) {
 
 export async function executFunction(params:exeFuncParams) {
 
+    // log("executeFunction", params);
     const session = await getSession();
     const token = await getToken();
-    // log("executeFunction", session, token, params);
+    // log("executeFunction", session, token);
     // if (!session && !params.isLoginPage) {        
     if (!session) {        
         return navigate('/login');
@@ -78,9 +80,10 @@ export async function executFunction(params:exeFuncParams) {
         const { cursorData, numericData, textData } = returnData;
 
         // sleep(5000);
-        // log("here", returnData)
+        // log("here", inproc, returnData)
         if (numericData !== 0) {
-            alert(numericData + " : " + textData);
+            // alert(numericData + " : " + textData);
+            toastWaring((numericData + " : " + textData))
 
             // log("==",numericData + " : " + textData);
             return null;
@@ -89,7 +92,7 @@ export async function executFunction(params:exeFuncParams) {
         return cursorData;
     } catch (err) {
         const typedErr = err as Error
-        // log("executFunction", typedErr.message);
+        log("executFunction", typedErr.message);
     } finally {
         // useUserSettings.getState().actions.setData({ loading: "OFF" });
     }
