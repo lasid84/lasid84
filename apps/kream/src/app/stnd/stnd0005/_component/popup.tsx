@@ -4,7 +4,7 @@ import { useStnd0004Store } from "@/states/stnd/stnd0004.store"
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useZod } from "utils/zod"
-import { toastSuccess } from "@/page-parts/tmpl/toast";
+import { toastSuccess,toastError } from "@/page-parts/tmpl/toast";
 import { TButtonBlue, TButtonGray, TInput, TSelectCode } from "@/page-parts/tmpl/form";
 import { ErrorMessage } from "@/components/react-hook-form";
 import { PopType, setModalValue } from "@/utils/modal";
@@ -16,7 +16,7 @@ import { PageState, reducer, SP_UpdateData } from "../_component/data"
 import { useGetData, useUpdateData } from "components/react-query/useMyQuery";
 import { UPDATE } from '../_component/model'
 import { LOAD, SEARCH, SEARCH_FINISH } from "../_component/model";
-
+import {useRouter, usePathname} from 'next/navigation'
 export interface returnData {
     numericData: any,
     textData: string,
@@ -32,11 +32,9 @@ type Props = {
 }
 
 const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIsOpen }) => {
-    // const selectedData = useStnd0005Store((state) => state.popData)
-
-    //const mutation = useMutation(SP_UpdateData)
-    //const {mutate} = useUpdateData(SEARCH, SP_UpdateData, { enable: false })
-    const { Update, Create } = useUpdateData()
+    const router = usePathname()
+    console.log('query.폴더명',router)
+    const { Update, Create } = useUpdateData(router)
 
     // 선택된 데이터 Select컴포넌트 처리
     const [useYn, setUseYn] = useState<string>("Y")
@@ -113,24 +111,29 @@ const Modal: React.FC<Props> = ({ loadItem, selectedData, popType, isOpen, setIs
 
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<FormZodType> = useCallback((param) => {
+        console.log('onFormSubmit: poptype?',popType)
         if (popType === PopType.UPDATE) {
             Update.mutate(param, {
                 onSuccess: (res: any) => {
-                    console.log("onSuccess from SP_UpdateData");
-                    toastSuccess("수정되었습니다.");
+                    toastSuccess("수정되었습니다."+res);
                     setIsOpen(false)
                 },
+                onError:(res:any) =>{
+                    toastError("수정에실패했습니다."+res);
+                }
             })
         } else {
             Create.mutate(param, {
                 onSuccess: (res: any) => {
-                    console.log("onSuccess from SP_CreateData");
-                    toastSuccess("등록되었습니다.");
+                    toastSuccess("등록되었습니다."+res);
                     setIsOpen(false)
                 },
+                onError:(res:any) =>{
+                    toastError("등록에실패했습니다."+res);
+                }
             })
         }
-    }, [])
+    }, [popType])
 
 
     //const [groupcd, setGroupcd] = useState(undefined)
