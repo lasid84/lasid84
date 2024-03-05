@@ -25,8 +25,8 @@ const Stnd0005: React.FC = () => {
     const val = useMemo(() => {
         return { searchParams, needSearch, dispatch }
     }, [state])
-    const { data: initData } = useGetData([], router, SP_Load, { staleTime: 100000 });
-    const { data: mainData, refetch: mainRefetch } = useGetData(searchParams, router, SP_GetData, { enable: false });
+    const { data: initData } = useGetData([], LOAD, SP_Load, { staleTime: 100000 });
+    const { data: mainData, refetch: mainRefetch } = useGetData(searchParams, SEARCH, SP_GetData, { enable: false });
     const colVisible = { col: ["grp_cd", "grp_cd_nm", "cd", "cd_nm", "cd_desc", "remark", 'cd_mgcd1'], visible: true }
 
 

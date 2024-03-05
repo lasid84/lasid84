@@ -20,11 +20,11 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
   return { data, isLoading, isError, refetch, remove }
 };
 
-export const useUpdateData = (pageName?: string) => {
+export const useUpdateData = (model?: string) => {
   const queryClient = useQueryClient();
   const Update = useMutation(SP_UpdateData, {
     onSuccess: (res:any, data:any, context:any) => {
-      queryClient.invalidateQueries([pageName])
+      queryClient.invalidateQueries([model])
       //console.log('????????????@',pageName)
       console.log('onUpdate',res,data,context)
     },
@@ -34,7 +34,7 @@ export const useUpdateData = (pageName?: string) => {
   const Create = useMutation(SP_CreateData, {
     onSuccess: (res:any, data:any, context:any) => {
       // queryClient.invalidateQueries([`${pageName}`+'_SEARCH'])
-      queryClient.invalidateQueries([pageName])      
+      queryClient.invalidateQueries([model])      
       console.log('onCreate',res,data,context)
     },
     onMutate: async (data) => { },
