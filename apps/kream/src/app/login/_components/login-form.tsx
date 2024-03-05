@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm, UseFormHandleSubmit } from "react-hook-form";
@@ -7,75 +6,78 @@ import { InputWrapper } from "components/react-hook-form/input-wrapper";
 import { Label } from "components/react-hook-form/label";
 import { ErrorMessage } from "components/react-hook-form/error-message";
 import { Input } from "components/react-hook-form/input";
-
 import { useStore } from "utils/zustand";
 import { useUserSettings } from "states/useUserSettings";
 import { Login } from "@/app/login/_components/login";
+import { FaSpinner } from "react-icons/fa";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export type FormProps = {
-    user_id: string;
-    password: string;
-  };
+  user_id: string;
+  password: string;
+};
 
 const initialState = {
-    success: false,
-    message: '',
-    user_id: '',
-    user_nm:''
-  };
+  success: false,
+  message: '',
+  user_id: '',
+  user_nm: ''
+};
 
 export default function LoginForm() {
-    const [errMessage, setErrMessage] = useState('');
-    const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
-    
-    const router = useRouter();
+  const [errMessage, setErrMessage] = useState('');
+  const [isCircle, setIsCircle] = useState<boolean>(false)
+  const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
 
-    useEffect(() => {
-      userSettingsActions?.reset();
-      // localStorage.removeItem("access_token");
-      // localStorage.removeItem("refresh_token");
-    }, []);
-  
-    const methods = useForm<FormProps>({
-      defaultValues: {
-        user_id: "",
-        password: "",
-      },
-    });
-    const {
-      handleSubmit,
-      reset,
-      formState: { errors },
-    } = methods;
+  const router = useRouter();
 
-  
-    const onSubmit = async (user: FormProps) => {
-      // e.preventDefault();
+  useEffect(() => {
+    userSettingsActions?.reset();
+    // localStorage.removeItem("access_token");
+    // localStorage.removeItem("refresh_token");
+  }, []);
 
-      try {
-          const res = await Login({user_id:user.user_id, password:user.password});
-          if (!res!.success) {
-            setErrMessage(res?.message);
-            return;
-          };
-          setErrMessage('');
+  const methods = useForm<FormProps>({
+    defaultValues: {
+      user_id: "",
+      password: "",
+    },
+  });
+  const {
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = methods;
 
-          userSettingsActions!.setData({ ...res?.data });
-          router.replace('/');
-      } catch (err) {
-        log("login-form err", err);
-        setErrMessage(JSON.stringify(err));
+
+  const onSubmit = async (user: FormProps) => {
+    // e.preventDefault();
+
+    try {
+      setIsCircle(true)
+      const res = await Login({ user_id: user.user_id, password: user.password });
+      if (!res!.success) {
+        setErrMessage(res?.message);
+        setIsCircle(false)
         return;
-      }
-    };
+      };
+      setErrMessage('');
+
+      userSettingsActions!.setData({ ...res?.data });
+      router.replace('/');
+    } catch (err) {
+      log("login-form err", err);
+      setErrMessage(JSON.stringify(err));
+      return;
+    }
+  };
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* <form onSubmit={onSubmit} className="space-y-6"> */}
-      {/* <form action={dispatch} className="space-y-6"> */}
+        {/* <form onSubmit={onSubmit} className="space-y-6"> */}
+        {/* <form action={dispatch} className="space-y-6"> */}
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-y-1 gap-x-2 sm:grid-cols-12">
             <InputWrapper outerClassName="sm:col-span-12">
@@ -86,7 +88,7 @@ export default function LoginForm() {
                 type="text"
                 height="h-12"
                 rules={{ required: "사용자ID를 입력하세요" }}
-                // handleChange={onChangeId}
+              // handleChange={onChangeId}
               />
               {errors?.user_id?.message && <ErrorMessage>{errors.user_id.message}</ErrorMessage>}
             </InputWrapper>
@@ -109,7 +111,7 @@ export default function LoginForm() {
                   //   message: "Your password should have no more than 8 characters",
                   // },
                 }}
-                // handleChange={onChangePassword}
+              // handleChange={onChangePassword}
               />
               {errors?.password?.message && <ErrorMessage>{errors.password.message}</ErrorMessage>}
             </InputWrapper>
@@ -133,9 +135,10 @@ export default function LoginForm() {
           <button
             type="submit"
             className="justify-center w-full h-12 px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:bg-gray-600">
-            Sign In
+          {isCircle ?  <><FaSpinner className="justify-center w-full animate-spin" size={20} color="#f070f3" /></> : 'Sign In' }
           </button>
         </div>
+        {/* {clsx("animate-spin", isCircle &&"hidden", !isCircle && "")} */}
         {/* <div className="flex flex-row items-center justify-center">
           <span>
             Don't have an account yet? <a className="text-blue-500"> Sign up</a>
