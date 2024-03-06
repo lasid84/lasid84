@@ -19,6 +19,7 @@ export type SelectProps = {
   placeholder?: string;
   // onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   isPlaceholder?: boolean;
+  allYn?: boolean;
 };
 
 export const Select: React.FC<SelectProps> = ({
@@ -34,14 +35,17 @@ export const Select: React.FC<SelectProps> = ({
   placeholder = "선택(select)",
   // onChange,
   isPlaceholder = true,
+  allYn = false
 }) => {
   const { register, setValue, getValues } = useFormContext();
   let readOnlyCss;
+  
   let currentValue = value ? value : getValues()[name];
   if (!currentValue) {
     options.map((option, i) => {
       if (i == 0) {
         currentValue = option.key;
+        // log("=-=-=-", getValues(), options);      
         setValue(name, currentValue);
       }
     });
@@ -52,6 +56,7 @@ export const Select: React.FC<SelectProps> = ({
     // onChange: () => {
     //   currentValue = getValues()[name];
     //   setValue(name, currentValue);
+    //   log(name, currentValue)
     // },
   };
 
@@ -73,11 +78,15 @@ export const Select: React.FC<SelectProps> = ({
         isAdd ? "border-orange-400" : "border-gray-300"
       } bg-white mx-1 my-1 focus:ring-blue-500 focus:border-blue-500 focus:ring-0 rounded`}>
       {/* {isPlaceholder ? <option value="">{placeholder}</option> : <></>} */}
-      {options?.map((option, i) => (
-        <option key={option.key} value={option.key}>
-          {option.value}
-        </option>
-      ))}
+      {options?.map((option, i) => {
+        // if (!allYn && option.value==='ALL') return null;
+        return <> 
+          <option key={option.key} value={option.key}>
+            {option.value}
+          </option>
+        </>
+      }
+      )};
     </select>
   );
 };

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {FiPlus} from "react-icons/fi";
 // import Breadcrumb,{ BreadcrumbItemProps } from  "@repo/ui/src/breadcrumb/breadcrumb"; 
 
@@ -7,7 +8,7 @@ export type PageTitleProps = {
   // brcmp?: BreadcrumbItemProps[];
   brcmp?:any;
 };
-const PageTitle: React.FC<PageTitleProps> = ({title, desc, brcmp}) => {
+const PageTitle: React.FC<PageTitleProps> = memo(({title, desc, brcmp}) => {
   return (
     <div className="w-full mb-1">
       <div className="flex flex-row items-center justify-between mb-2">
@@ -29,6 +30,6 @@ const PageTitle: React.FC<PageTitleProps> = ({title, desc, brcmp}) => {
       </div>
     </div>
   );
-};
+});
 
 export default PageTitle;

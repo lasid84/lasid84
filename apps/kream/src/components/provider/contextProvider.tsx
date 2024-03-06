@@ -1,25 +1,45 @@
-import { createContext, useContext } from "react";
+import { ReactPropTypes, createContext, useContext } from "react";
+
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export const SEARCH = 'SEARCH';
 export const SEARCH_FINISH = 'SEARCH_FINISH';
 export const LOAD = 'LOAD';
 export const SELECTED_ROW = 'SELECTED_ROW';
-export const SET_ISSELECT = 'SET_ISSELECT';
+export const SET_CHANGESELECT = 'SET_CHANGESELECT';
+export const ROW_CLICK = 'ROW_CLICK';
+export const NEW = 'NEW';
+
+export const PopType = {
+  CREATE: "C",
+  UPDATE: "U",
+  DELETE: "D",
+  READ: "R",
+};
 
 
 export type State = {
-    searchParams: any
-    dispatch?: any
-    needSearch: boolean
-    selectedRow?: {},
+    type?: string
+    searchParams?: any
+    dispatch?: any    
+    selectedRow?: any
+    inputValue?:any
+    crudType?: 'C' | 'R' | 'U' | 'D'
+
+    isSearch?: boolean
     isChangeSelect?: boolean
+    isGridClick?: boolean
+    
   };
 
 export const PageState = {
+    type: '',
     searchParams: {},
-    needSearch: false,
     selectedRow: {},
-    isChangeSelect: false
+
+    isSearch: false,
+    isChangeSelect: false,
+    isGridClick: false,
   };
 
 export const TableContext = createContext<State>({
@@ -27,38 +47,45 @@ export const TableContext = createContext<State>({
   });
 
   export const reducer = (state:State, action:any) => {
-  
-    switch (action.type) {
+    var type = action.type? action.type : 'type';
+    switch (type) {
       case LOAD:
         const { params } = action;
         
-        // return useGetData(params);
-      case SEARCH:
+      //   // return useGetData(params);
+      // case SEARCH:
+      //   return {
+      //     ...state,
+      //     searchParams: {
+      //       ...state.searchParams,
+      //       ...action.params
+      //     },
+      //     isSearch: true
+      //   }
+      // case SEARCH_FINISH:
+      //   return {
+      //     ...state,
+      //     isSearch: action.isSearch
+      //   }
+      // case SELECTED_ROW:
+      //   // log("data", JSON.stringify(action.selectedRow));
+      //   return {
+      //     ...state,
+      //     selectedRow:action.selectedRow,
+      //   }
+      // case ROW_CLICK:
+      // case NEW:
+      //   // log("data", JSON.stringify(action.selectedRow));
+      //   return {
+      //     ...state,
+      //     ...action,
+      //     isChangeSelect:!state.isChangeSelect
+      //   }
+      default:
+        // log("default", state, action);
         return {
           ...state,
-          searchParams: {
-            ...state.searchParams,
-            ...action.params
-          },
-          needSearch: true
-        }
-      case SEARCH_FINISH:
-        return {
-          ...state,
-          needSearch: action.needSearch
-        }
-      case SELECTED_ROW:
-        // log("data", JSON.stringify(action.selectedRow));
-        return {
-          ...state,
-          selectedRow:action.selectedRow,
-          isChangeSelect:true
-        }
-      case SET_ISSELECT:
-        // log("data", JSON.stringify(action.selectedRow));
-        return {
-          ...state,
-          isChangeSelect:!state.isChangeSelect
+          ...action
         }
     }
   

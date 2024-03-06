@@ -6,11 +6,11 @@ import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme appli
 // import 'ag-grid-enterprise';
 
 import PageContent from "@/shared/tmpl/page-content"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, PasteEndEvent, ValueFormatterParams, GridReadyEvent } from "ag-grid-community";
 
-import { useAppContext } from "@/components/provider/contextProvider";
-import { SELECTED_ROW } from 'components/provider/contextProvider';
+import { PopType, useAppContext } from "components/provider/contextProvider";
+import { SELECTED_ROW, ROW_CLICK } from 'components/provider/contextProvider';
 import { useTranslation } from 'react-i18next';
 
 // import { SELECTED_ROW } from "./model";
@@ -38,12 +38,14 @@ export type GridOption = {
 type cols = {
   field: string;
   headerName?: string;
-  hide: boolean;
-  editable: boolean;
+  hide?: boolean;
+  editable?: boolean;
   valueFormatter?: any;
-  cellDataType: string;  
-  headerCheckboxSelection: boolean;
-  checkboxSelection: boolean;
+  cellDataType?: string;  
+  headerCheckboxSelection?: boolean;
+  checkboxSelection?: boolean;
+  valueGetter?: string;
+  floatingFilter?: boolean
 }
 
 const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; }; column: any; }) => {
@@ -61,7 +63,7 @@ const numberFormatter = (params: ValueFormatterParams) => {
   return Math.floor(+params.value).toLocaleString();
 }
 
-const ListGrid: React.FC<Props> = (props) => {
+const ListGrid: React.FC<Props> = memo((props) => {
 
     const { dispatch } = useAppContext();
     const { t } = useTranslation();
@@ -75,12 +77,11 @@ const ListGrid: React.FC<Props> = (props) => {
 
     const { listItem, options } = props;
 
-    // log("===========", dateFormatter('20240228102032'))
-
+    //Column Defualt 설정
     const defaultColDef = useMemo(() => {
       return {
         // flex: 1,
-        minWidth: 50,
+        // minWidth: 20,
         filter: 'agTextColumnFilter',
         floatingFilter: true,        
         // headerCheckboxSelection: checkbox ? isFirstColumn : false,
@@ -88,6 +89,7 @@ const ListGrid: React.FC<Props> = (props) => {
       };
     }, []);
 
+    //Grid Defualt 설정
     const gridOptions: GridOptions = useMemo(() => {
         return {
           rowHeight: 25,
@@ -96,9 +98,10 @@ const ListGrid: React.FC<Props> = (props) => {
           // copyHeadersToClipboard:true,
           suppressMultiRangeSelection:true,
           rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
+          groupIncludeTotalFooter: true,
           autoSizeStrategy: {
             type: 'fitCellContents',
-            defaultMinWidth: 50,
+            defaultMinWidth: 20,
             // columnLimits: [
             //     {
             //         colId: 'country',
@@ -134,7 +137,14 @@ const ListGrid: React.FC<Props> = (props) => {
   useEffect(() => {
     if (Array.isArray(listItem) && listItem.length > 0) {
       let cols:cols[] = [];
+
       //컬럼 셋팅
+      cols.push({
+          field:'No',
+          valueGetter: 'node.rowIndex + 1',
+          floatingFilter: false,
+      });
+
       const columns = Object.keys(listItem[0]);
       columns.map((col:string) => {
 
@@ -186,11 +196,16 @@ const ListGrid: React.FC<Props> = (props) => {
           if (options.checkbox.indexOf(col) > -1) {
             cellOption = {
               ...cellOption,
-              headerCheckboxSelection: true,
+              headerCheckboxSelection: options?.isMultiSelect ? true : false,
               checkboxSelection: true
             }
           }
         }
+
+        // cellOption = {
+        //   ...cellOption,
+        //   aggFunc: 'count'
+        // }
         
         cols.push({
           field:col,
@@ -208,11 +223,16 @@ const ListGrid: React.FC<Props> = (props) => {
 
   const onSelectionChanged = useCallback(() => {
     const selectedRow = gridRef.current.api.getSelectedRows()[0];
-    log(selectedRow);
+    log("SElectionChanged", selectedRow);
     // setSelectedRow(selectedRow);    
-    dispatch({type:SELECTED_ROW, selectedRow:selectedRow});
+    dispatch({selectedRow:selectedRow, isChangeSelect:true, crudType:PopType.UPDATE});
     // document.querySelector('#selectedRows').innerHTML =
     //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
+  }, []);
+
+  const onRowClicked = useCallback(() => {
+    log("onRowClick")
+    dispatch({type:ROW_CLICK, isGridClick:true});
   }, []);
 
   const onCellValueChanged = useCallback((params: CellValueChangedEvent) => {
@@ -252,17 +272,18 @@ const ListGrid: React.FC<Props> = (props) => {
                       // rowSelection={'single'}
                       // onGridReady={onGridReady}
                       // enableRangeSelection={true}
+                      onRowClicked={onRowClicked}
                       onSelectionChanged={onSelectionChanged}
                       onCellValueChanged={onCellValueChanged}
-                      onCutStart={onCutStart}
-                      onCutEnd={onCutEnd}
-                      onPasteStart={onPasteStart}
-                      onPasteEnd={onPasteEnd}
+                      // onCutStart={onCutStart}
+                      // onCutEnd={onCutEnd}
+                      // onPasteStart={onPasteStart}
+                      // onPasteEnd={onPasteEnd}
                   />
               </div>
           </div>
         </>
     )
-}
+});
 
 export default ListGrid

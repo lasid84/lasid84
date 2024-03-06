@@ -22,6 +22,7 @@ type SelectProps = {
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   outerClassName?: string;
   readOnly?: boolean;
+  allYn?: boolean;
 };
 
 export const TSelect2: React.FC<SelectProps> = ({
@@ -37,23 +38,29 @@ export const TSelect2: React.FC<SelectProps> = ({
   onChange,
   outerClassName,
   readOnly = false,
+  allYn = true
 }) => {
 
   let selectoptions:any[] = []
   
-  if (options?.length >= 1) {
+  if (options?.length > 0) {
     options.map((item:any, i) => {
-      var label = item[Object.keys(item)[0]]
-      var value = item[Object.keys(item)[1]]
-      selectoptions.push({ key: label, value: value })
+      var key = item[Object.keys(item)[0]];
+      var value = item[Object.keys(item)[1]];
+      // log(key, value)
+      if (!allYn && value === 'ALL') return;
+      if (!value) value = key;
+      selectoptions.push({ key: key, value: value });
     })
   }
   // log("select-row", options)
   return (
-    <div className="flex flex-row items-start">
+    // <div className="flex flex-row items-start">
+    <div className="w-full space-y-1">
       <label
         htmlFor={id}
-        className={`w-full md:text-right mx-1 py-2`}>
+        // className={`w-full md:text-right mx-1 py-2`}>
+        className={`block text-[13px] font-medium whitespace-nowrap`}>
         {label}
       </label>
       <Select
@@ -66,6 +73,7 @@ export const TSelect2: React.FC<SelectProps> = ({
         isPlaceholder={isPlaceholder}
         // onChange={onChange}
         readOnly={readOnly}
+        allYn={allYn}
       />
       {children}
     </div>

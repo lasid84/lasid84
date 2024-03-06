@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-
+const { log } = require('@repo/kwe-lib/components/logHelper');
 export interface SelectOptionProps {
   key?: any;
   label?: any;
@@ -44,6 +44,9 @@ export const Select: React.FC<SelectProps> = ({
   if (readOnly) {
     readOnlyCss = "read-only:bg-gray-100";
   }
+
+  // log("=======", options);
+
   return (
     <select
       {...register(name, rules)}
@@ -63,12 +66,12 @@ export const Select: React.FC<SelectProps> = ({
       ))} */}
 
       {allYn ? options?.map((option) => (
-        <option label={option.label} value={option.label}>
+        <option key={option.label} value={option.label}>
           {option.label}
         </option>)
       ) : options?.map((option) => {
         if (option.label !== 'ALL') {
-          return <option label={option.label} value={option.label}>
+          return <option key={option.label} value={option.label}>
             {option.label}
           </option>
         }

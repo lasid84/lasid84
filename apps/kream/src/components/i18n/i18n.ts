@@ -41,21 +41,21 @@ export async function setI18n() {
 
     languages.map((row:any) => {
         objEN[row.code] = row.eng ? row.eng : row.code;
-        objKO[row.code] = row.kor ? row.kor : row.code;;
-        objJP[row.code] = row.jpn ? row.jpn : row.code;;
+        objKO[row.code] = row.kor ? row.kor : row.code;
+        objJP[row.code] = row.jpn ? row.jpn : row.code;
     });
 
-    const resources = {
-        en: {
-            translation: objEN
-        },
-        ko: {
-            translation: objKO
-        },
-        jp: {
-            translation: objJP
-        }
-    };
+    // const resources = {
+    //     en: {
+    //         translation: objEN
+    //     },
+    //     ko: {
+    //         translation: objKO
+    //     },
+    //     jp: {
+    //         translation: objJP
+    //     }
+    // };
 
     // i18n
     // .use(Backend)

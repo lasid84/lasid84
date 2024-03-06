@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { MutationFunction, UseMutationOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnyCnameRecord } from "dns";
 import { useUserSettings } from "states/useUserSettings";
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -46,5 +46,34 @@ export const useUpdateData = (model?: string) => {
   return {
     Update,
     Create
+  }
+}
+
+export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, option?:any) => {
+  const queryClient = useQueryClient();
+  const Update = useMutation(['key'], mutationFn, {
+    // ...option,
+    onSuccess: (res:any, data:any, context:any) => {
+      log("onSuccess : ", data)
+      queryClient.invalidateQueries([queryKey]);
+    },
+    onMutate: async (data) => {log("onMutate : ", queryClient) },
+    
+  });
+  // const Create = useMutation(SP_CreateData, {
+  //   onSuccess: (res:any, data:any, context:any) => {
+  //     // queryClient.invalidateQueries([`${pageName}`+'_SEARCH'])
+  //     queryClient.invalidateQueries([queryKey])      
+  //     console.log('onCreate',res,data,context)
+  //   },
+  //   onMutate: async (data) => { },
+  //   onError: (err, data, context) => {
+  //     console.log('PLEASE TRY AGAIN')
+  //     return { err, data, context }
+  //   }
+  // })
+  return {
+    Update,
+    // Create
   }
 }

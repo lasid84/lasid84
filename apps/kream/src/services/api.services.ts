@@ -3,7 +3,7 @@
 // import { NextRequest, NextResponse } from "next/server";
 import { useUserSettings } from "states/useUserSettings"
 import { navigate, getSession, getCookies, getToken } from './serverAction';
-import { toastWaring } from "@/page-parts/tmpl/toast";
+import { toastSuccess, toastWaring } from "@/page-parts/tmpl/toast";
 
 
 const { init, dataCall, postCall } = require('@repo/kwe-lib/components/api.service');
@@ -20,6 +20,7 @@ type exeFuncParams = {
     isAuth?: boolean | undefined
     isShowLoading?: boolean | undefined
     isLoginPage?: boolean | undefined
+    isShowComplete?: boolean | undefined
 };
 
 type checkLogin = {
@@ -63,7 +64,7 @@ export async function executFunction(params:exeFuncParams) {
     }
 
     try {      
-        const {inproc, inparam, invalue, isAuth, isShowLoading } = params;
+        const {inproc, inparam, invalue, isAuth, isShowLoading, isShowComplete } = params;
         
          //log("===================");
          //const token = useUserSettings((state) => state.data.token);
@@ -82,16 +83,14 @@ export async function executFunction(params:exeFuncParams) {
         const returnData:returnData = await dataCall(client, inproc,inparam, invalue, config);
         const { cursorData, numericData, textData } = returnData;
 
-        // sleep(5000);
-        // log("here", inproc, returnData)
         if (numericData !== 0) {
-            // alert(numericData + " : " + textData);
             toastWaring((numericData + " : " + textData))
-
             // log("==",numericData + " : " + textData);
             return null;
         }
-
+        if (isShowComplete) {
+            toastSuccess(numericData + " : " + textData);
+        }
         return cursorData;
     } catch (err) {
         const typedErr = err as Error
