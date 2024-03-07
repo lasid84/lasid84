@@ -18,7 +18,7 @@ const LeftSidebar: React.FC<Props> = () => {
     const navigation = useNavigation((state) => state.navigation);
 
     useEffect(() => {
-        log("LeftSidebar start");
+        // log("LeftSidebar start");
         setNavigationData();
     }, []);
 

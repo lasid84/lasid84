@@ -125,6 +125,7 @@ async function getMenuList (userInfo:any) {
         icon: menu.parent_seq === '0' ? getIcon(menu.image_index) : undefined,
         title: menu.menu_name,
         items: [],
+        menu_param: menu.menu_param
       };
 
       menuMap.set(menu.menu_seq, menuItem);
@@ -143,7 +144,6 @@ async function getMenuList (userInfo:any) {
     (menuItem) => menuItem.parent_seq == 0
   );
 
-     log("navigationData", navigationData)
     return navigationData;    
 }
 
@@ -160,7 +160,6 @@ const useNavigationStore = create<NavigationStore>((set) => ({
   export const useNavigation = useNavigationStore;
   
   export const setNavigationData = async () => {
-    log("setNavigationData start");
     const userInfo = useUserSettings.getState().data;
     //log("userInfo : ",userInfo);
     const navigationData = await getMenuList(userInfo);

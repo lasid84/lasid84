@@ -1,14 +1,40 @@
+'use client'
+
+import { NavigationState, useNavigation } from "states/useNavigation";
 import { memo } from "react";
 import {FiPlus} from "react-icons/fi";
+import { usePathname, useSearchParams } from "next/navigation";
 // import Breadcrumb,{ BreadcrumbItemProps } from  "@repo/ui/src/breadcrumb/breadcrumb"; 
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export type PageTitleProps = {
-  title: string;
   desc?: string;
   // brcmp?: BreadcrumbItemProps[];
   brcmp?:any;
 };
-const PageTitle: React.FC<PageTitleProps> = memo(({title, desc, brcmp}) => {
+
+function getMenuTitle(menu: NavigationState[], url:string, menu_param:string|null):string|undefined {
+  var title;
+  for (var obj of menu) {
+    if (obj.items.length > 0) {
+      title = getMenuTitle(obj.items, url, menu_param);
+      
+      if (title) return title;
+    } else {
+      // log("title", obj, menu, url, menu_param);
+      if (obj.url === url && obj.menu_param === (menu_param || '')) return obj.title;
+    }
+  }
+}
+
+const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
+
+  const navigation = useNavigation((state) => state.navigation);
+  const router = usePathname();
+  const queryParam = useSearchParams();
+  const params = queryParam.get('params');
+  const title = getMenuTitle(navigation, router, params);
+
   return (
     <div className="w-full mb-1">
       <div className="flex flex-row items-center justify-between mb-2">

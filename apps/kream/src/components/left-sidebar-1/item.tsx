@@ -1,18 +1,20 @@
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams  } from "next/navigation";
 import Link from "next/link";
 import { FiChevronRight } from "react-icons/fi";
 import type { NavigationState } from "states/useNavigation";
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
 const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_param}) => {
   const [hidden, setHidden] = useState<boolean>(true);
 
   const pathname = usePathname();
+  const queryParam = useSearchParams();
+  const params = queryParam.get('params');
+  
+  let active = pathname === url && params == menu_param ? true : false;
 
-
-
-  let active = pathname === url ? true : false;
   if (pathname === "/" && url === "/dashboard") {
     active = true;
   }
@@ -20,11 +22,13 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
     active = false;
   }
   if (items.length === 0) {
+    var query;
+    if (menu_param) query = {params:menu_param};
     return (
       // <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
       <Link href={{
         pathname: url,
-        query: {title:title, params:menu_param }
+        query: { ...query }
         }} 
         className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
           {icon}
