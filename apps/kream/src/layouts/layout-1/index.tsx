@@ -42,12 +42,11 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
     setCollapsed(config.collapsed)
   }, [config.collapsed]);
 
-  const { i18n } = useTranslation();
+  // const { i18n } = useTranslation();
 
   useEffect(() => {
-      setI18n();
-    
-  }, [i18n])
+      setI18n(config.lang);    
+  }, [])
 
   return (
     // <AuthProvider>

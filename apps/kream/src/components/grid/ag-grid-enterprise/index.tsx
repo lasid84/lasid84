@@ -29,7 +29,8 @@ export type GridOption = {
     colVisible?: {
       col: string[]
       visible:boolean
-    }
+    },
+    colDisable?: string[],
     editable?: string[];
     dataType?: {[index: string]: string}; //date, number, text
     isMultiSelect?: boolean
@@ -137,7 +138,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   useEffect(() => {
     if (Array.isArray(listItem) && listItem.length > 0) {
       let cols:cols[] = [];
-
+      
       //컬럼 셋팅
       cols.push({
           field:'No',
@@ -147,6 +148,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
       const columns = Object.keys(listItem[0]);
       columns.map((col:string) => {
+        var cellOption:any = {};
 
         //컬럼별 visible 셋팅
         let isHide: boolean = false;
@@ -165,14 +167,31 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //cell 수정 여부 셋팅
         let isEditable = false;
         if (options?.editable) {
-          const optCols:string[] = options.editable;
-          if (optCols.indexOf(col) > -1) {
+          const optEditable:string[] = options.editable;
+          if (optEditable.indexOf(col) > -1) {
             isEditable = true;
           }          
         };
 
+        if (options?.colDisable) {
+          const optDisable:string[] = options.colDisable;
+          if (optDisable.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              isEditable: false,
+              // cellClass: 'rag-gray'
+              cellStyle: {
+                // you can use either came case or dashes, the grid converts to whats needed
+                // backgroundColor: '#aaffaa', // light green
+                backgroundColor: '#d3d3d3', // lightGray
+              },
+            }
+          }     
+        }
+
         //cell 데이터 타입 셋팅(기본:text)
-        var cellOption:any = {
+        cellOption = {
+            ...cellOption,
             cellDataType : 'text'
         };
         if (options?.dataType) {
@@ -180,6 +199,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           
           if (optCols[col] === 'date') {            
             cellOption = {
+              ...cellOption,
               // cellDataType : optCols[col],
               valueFormatter: dateFormatter,
             }
@@ -232,7 +252,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onRowClicked = useCallback(() => {
     log("onRowClick")
-    dispatch({type:ROW_CLICK, isGridClick:true});
+    dispatch({isGridClick:true});
   }, []);
 
   const onCellValueChanged = useCallback((params: CellValueChangedEvent) => {

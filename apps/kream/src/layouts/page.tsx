@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-// import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
 import Layout1 from "layouts/layout-1";
@@ -10,9 +9,7 @@ import { useConfigs } from "states/useConfigs";
 import { ToastContainer } from "react-toastify";
 import { toastConfig } from "@/configs/toast.config";
 import { useHotkeys } from "react-hotkeys-hook";
-import { setI18n } from 'components/i18n/i18n';
-import { useTranslation } from "react-i18next";
-import 'components/i18n/i18n';
+// import 'components/i18n/i18n';
 
 
 const { log } = require("@repo/kwe-lib/components/logHelper");

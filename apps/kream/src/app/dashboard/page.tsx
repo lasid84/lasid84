@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function Home() {
-  // const { i18n } = useTranslation();
+  const { t } = useTranslation();
   // const { lang } = useConfigs((state) => state.config);
 
   // useEffect(() => {
@@ -16,7 +16,7 @@ export default function Home() {
   
   return (
     <>
-      시작
+      {t("grp_cd")}
       {/* {session ? JSON.stringify(session) : "X"} */}
     </>
   );

@@ -112,7 +112,7 @@ const SearchForm = memo(({loadItem}:any) => {
 
   const onNew = () => {
     // dispatch({ type: SELECTED_ROW, selectedRow: null});
-    dispatch({ type: NEW, selectedRow: null, crudType:PopType.CREATE, isGridClick:true});
+    dispatch({ selectedRow: null, crudType:PopType.CREATE, isGridClick:true});
   }
 
   return (
@@ -121,7 +121,7 @@ const SearchForm = memo(({loadItem}:any) => {
         <PageSearch
           right={
             <>
-              <TButtonBlue label={t("search")} onClick={onSearch}/>
+              <TButtonBlue label={t("search")} onClick={onSearch} />
               <TButtonBlue label={t("new")} onClick={onNew}/>
               <TCancelButton label={t("reset")}onClick={() => {
                 setFocus("trans_mode");

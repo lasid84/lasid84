@@ -29,7 +29,8 @@ export type State = {
     isSearch?: boolean
     isChangeSelect?: boolean
     isGridClick?: boolean
-    
+    isGridRowAdd?: boolean,
+    isGridRowDelete?: boolean,
   };
 
 export const PageState = {
@@ -40,6 +41,8 @@ export const PageState = {
     isSearch: false,
     isChangeSelect: false,
     isGridClick: false,
+    isGridRowAdd: false,
+    isGridRowDelete: false,
   };
 
 export const TableContext = createContext<State>({

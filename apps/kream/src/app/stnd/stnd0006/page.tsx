@@ -27,14 +27,18 @@ export default function STND0006() {
         , isSearch, isChangeSelect, isGridClick } = state;
 
     const val = useMemo(() => {return { searchParams, isSearch, selectedRow, isChangeSelect, isGridClick, crudType, dispatch }}, [state]);
-    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 600 });
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH, SP_GetData, {enable:false});
     const gridOption: GridOption = {
         colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
+        colDisable: ["trans_mode", "trans_type"],
         // checkbox: ["trans_mode"],
         editable: ["trans_mode"],
         dataType: { "create_date" : "date"},
-        isMultiSelect: false
+        isMultiSelect: false,
+        // rowadd
+        // rowdelete
+
     };
 
     useEffect(() => {
@@ -46,15 +50,15 @@ export default function STND0006() {
 
     return (
         <TableContext.Provider value={val}>
-            <PageTitle /*title={title!} brcmp={brcmp}*/ />
+            <PageTitle />
             <SearchForm loadItem={initData} />
-            <AgGrid loadItem={initData} listItem={mainData} options={gridOption}/>
+            <AgGrid
+                loadItem={initData}
+                listItem={mainData}
+                options={gridOption}/>
             <Modal
-            loadItem={initData}
-            // selectedData={selectedRow}
-            // popType={crudType}
-            // isOpen={isGridClick as boolean}
+                loadItem={initData}
             />
-        </TableContext.Provider>            
+        </TableContext.Provider>
     );
 }

@@ -22,7 +22,7 @@ const initialState: ConfigState = {
     collapsed: false,
     rightSidebar: false,
     background: "light",
-    lang: "kr",
+    lang: "KOR",
 };
 
 type ConfigsStore = {

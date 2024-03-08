@@ -23,15 +23,11 @@ const App: React.FC<LayoutProps> = ({ children }) => {
 
   const { lang } = useConfigs((state) => state.config);
 
-  const { i18n } = useTranslation();
+  const { i18n, ready } = useTranslation();
 
   useEffect(() => {
-    log(lang)
-    i18n.changeLanguage(lang);
-  }, [
-    i18n,
-    lang,
-  ]);
+      i18n.changeLanguage(lang);
+  }, [i18n,lang]);
 
   log("app/layouts/App.tsx");
 

@@ -10,6 +10,7 @@ import { useStore } from "utils/zustand";
 import { useUserSettings } from "states/useUserSettings";
 import { Login } from "@/app/login/_components/login";
 import { FaSpinner } from "react-icons/fa";
+import { useConfigs } from "states/useConfigs";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -29,6 +30,7 @@ export default function LoginForm() {
   const [errMessage, setErrMessage] = useState('');
   const [isCircle, setIsCircle] = useState<boolean>(false)
   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
+  const configActions = useConfigs((state) => state.actions);
 
   const router = useRouter();
 
@@ -65,6 +67,9 @@ export default function LoginForm() {
       setErrMessage('');
 
       userSettingsActions!.setData({ ...res?.data });
+      configActions.setConfig({ 
+        lang: res?.data.lang
+    });
       router.replace('/');
     } catch (err) {
       log("login-form err", err);
