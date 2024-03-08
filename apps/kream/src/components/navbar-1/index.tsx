@@ -8,7 +8,6 @@ import { useUserSettings } from "states/useUserSettings";
 // import { useSession, signIn, signOut } from 'next-auth/react';
 import { logOut } from "@/services/serverAction";
 import { shallow } from "zustand/shallow";
-import LoadingComponent from "../../page-parts/com/loading/loading"
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export default function Navbar() {
@@ -37,19 +36,9 @@ export default function Navbar() {
 
   log("navbar", !user_nm, user_nm);
   
-  const isLoading = useMemo(() => {
-    //client data loading 용
-    return (userSettings.loading && userSettings.loading == "ON")
-  }, [userSettings.loading])
 
   return (
     <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800 h-[3.75rem]">
-      {
-        isLoading &&
-        <div className="absolute z-50 w-full h-screen">
-          <LoadingComponent />
-        </div>
-      }
       {true &&
         // // ? <div className="flex items-center justify-start w-full">
         // //   <button

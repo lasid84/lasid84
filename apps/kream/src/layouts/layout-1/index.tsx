@@ -11,9 +11,10 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useUserSettings } from "@/states/useUserSettings";
 import { useStore } from "@/utils/zustand";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { setI18n } from "@/components/i18n/i18n";
+import LoadingComponent from "../../components/loading/loading"
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export type Layout1Props = {
@@ -45,11 +46,23 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   // const { i18n } = useTranslation();
 
   useEffect(() => {
-      setI18n(config.lang);    
+    setI18n(config.lang);
   }, [])
+
+  const {
+    data: userSettings,
+    actions: userSettingsActions
+  } = useUserSettings((state) => state);
+
+  const isLoading = useMemo(() => {
+    //client data loading 용
+    return (userSettings.loading && userSettings.loading == "ON")
+  }, [userSettings.loading])
+
 
   return (
     // <AuthProvider>
+
     <App>
       <div
         data-layout={layout}
@@ -57,6 +70,13 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
         data-background={background}
         className={`font-sans antialiased text-sm disable-scrollbars ${background === "dark" ? "dark" : "light"
           }`}>
+        {
+          isLoading &&
+          <div className="absolute z-50 w-full h-screen">
+            <LoadingComponent />
+          </div>
+        }
+
         <RightSidebar1 />
         <div className="wrapper">
           <div className="">
@@ -64,6 +84,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
           </div>
           <div className="w-full h-screen text-gray-900 main bg-gray-50 dark:bg-gray-900 dark:text-white">
             <Navbar1 />
+
             <div className="h-[calc(100vh-60px)] overflow-y-auto px-4 py-4">{children}</div>
           </div>
         </div>
