@@ -29,7 +29,7 @@ const LeftSidebar: React.FC<Props> = () => {
             {/*<div className="dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">*/}
             {navigation.map((menu, i) => (
               <Fragment key={i}>
-                {/*<Title>{menu.title}</Title>*/}
+                {/* <Title>{menu.title}</Title> */}
                 <ul>
                   {menu.items.map((l0, a) => (
                     <li key={a} className="l0 border-b border-[#F2F2F2] dark:border-[#c7d0dc]">

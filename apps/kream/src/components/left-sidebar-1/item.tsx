@@ -3,10 +3,12 @@ import { usePathname, useSearchParams  } from "next/navigation";
 import Link from "next/link";
 import { FiChevronRight } from "react-icons/fi";
 import type { NavigationState } from "states/useNavigation";
+import { useTranslation } from "react-i18next";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
 const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_param}) => {
+  const {t} = useTranslation();
   const [hidden, setHidden] = useState<boolean>(true);
 
   const pathname = usePathname();
@@ -32,7 +34,7 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
         }} 
         className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
           {icon}
-          <span className="w-full title">{title}</span>
+          <span className="w-full title">{t(title)}</span>
           {badge && (
             <span className={`badge badge-circle badge-sm ${badge.color}`}>
               {badge.text}
@@ -47,7 +49,7 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
       className={`left-sidebar-item ${active ? "active" : ""} ${
         hidden ? "hidden-sibling " : "open-sibling "      }`}>
       {icon}
-      <span className="title">{title}</span>
+      <span className="title">{t(title)}</span>
       {badge && (
         <span className={`badge badge-circle badge-sm ${badge.color}`}>
           {badge.text}

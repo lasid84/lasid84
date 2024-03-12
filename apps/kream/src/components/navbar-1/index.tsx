@@ -3,11 +3,12 @@
 import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useConfigs } from "states/useConfigs";
 import { redirect, useRouter } from "next/navigation";
-import { useEffect, useState,useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useUserSettings } from "states/useUserSettings";
 // import { useSession, signIn, signOut } from 'next-auth/react';
 import { logOut } from "@/services/serverAction";
 import { shallow } from "zustand/shallow";
+import { useTranslation } from "react-i18next";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export default function Navbar() {
@@ -22,20 +23,21 @@ export default function Navbar() {
   let user_nm = useUserSettings((state) => state.data.user_nm, shallow);
   const [greeting, setGreeting] = useState('');
   // const user_nm = useUserSettings.getState().data.user_nm;
+  const { t } = useTranslation();
 
   useEffect(() => {
     // if (!user_nm) {
     //   router.replace("/login");
     // }
     if (user_nm) {
-      setGreeting(user_nm + "님 안녕하세요");
+      setGreeting(user_nm);
     }
   }, [user_nm])
 
   const router = useRouter();
 
   log("navbar", !user_nm, user_nm);
-  
+
 
   return (
     <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800 h-[3.75rem]">
@@ -80,7 +82,7 @@ export default function Navbar() {
             className="flex items-center justify-center h-[3.7rem] mx-4"
             onClick={() => null}>
             <FiUser size={18} />
-            <span className="ml-1">{greeting}</span>
+            <span className="ml-1">{greeting === '' ? greeting : greeting + t("nav_hello")}</span>
           </button>
           <button
             className="flex items-center justify-center h-[3.7rem] mx-4"
@@ -90,7 +92,7 @@ export default function Navbar() {
               logOut();
             }}>
             <FiExternalLink size={18} />
-            <span className="ml-1">로그아웃</span>
+            <span className="ml-1"> {t("logout")}</span>
           </button>
           <button
             className="flex items-center justify-center  h-[3.7rem] mx-4"
@@ -101,7 +103,7 @@ export default function Navbar() {
                 })
             }>
             <FiSettings size={18} />
-            <span className="hidden ml-1 md:flex">설정</span>
+            <span className="hidden ml-1 md:flex">{t("setting")}</span>
           </button></div>
       }
 
