@@ -70,4 +70,9 @@ module.exports = {
     //   });
     // }),
   ],
+  variants:{
+    extend : {
+      backgroudColor : ['disabled'],
+    }
+  },
 };

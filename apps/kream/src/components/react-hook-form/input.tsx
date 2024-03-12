@@ -1,5 +1,6 @@
-import { HTMLInputTypeAttribute, ChangeEventHandler } from "react";
+import { HTMLInputTypeAttribute, ChangeEventHandler, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import clsx from "clsx"
 
 export type InputProps = {
   id: string;
@@ -12,6 +13,7 @@ export type InputProps = {
   height?: string;
   placeholder?: string;
   value?: any;
+  isCircle?: boolean;
   notAppliedReadOnlyCss?: boolean;
   handleChange?:ChangeEventHandler<HTMLInputElement>
 };
@@ -21,12 +23,13 @@ export const Input: React.FC<InputProps> = ({
   name,
   type,
   rules = {},
-  readOnly = false,
+  readOnly,
   isAdd = false,
   notAppliedReadOnlyCss = false,
   width = "w-full",
   height = "h-8",
   placeholder = "",
+  isCircle,
   value  
 }) => {
   const { register, setValue, getValues } = useFormContext();
@@ -51,22 +54,22 @@ export const Input: React.FC<InputProps> = ({
     // valueAsdate = false로 변경 (yyyy/mm/dd format read)
     rules = { valueAsDate: false };
   }
-  if (readOnly && !notAppliedReadOnlyCss) {
-    readOnlyCss = "read-only:bg-gray-100";
-  }
+ 
+
   return (
     <input
       {...register(name, rules)}
       placeholder={placeholder}
+      autoComplete="on"
       type={type}
       name={name}
       readOnly={readOnly}
       value={value}
       id={id}
       width={width}
-      className={`form-input block ${width} ${height} ${readOnlyCss} ${
-        isAdd ? "border-orange-400" : "border-gray-300"
-      } bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded`}
+      disabled={isCircle}
+      className={clsx(`form-input block ${width} ${height} disabled:bg-gray-300
+        bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded`)}
     />
   );  
 };

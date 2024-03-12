@@ -8,6 +8,7 @@ import { ErrorMessage } from "components/react-hook-form/error-message";
 import { Input } from "components/react-hook-form/input";
 import { useStore } from "utils/zustand";
 import { useUserSettings } from "states/useUserSettings";
+import clsx from "clsx";
 import { Login } from "@/app/login/_components/login";
 import { FaSpinner } from "react-icons/fa";
 import { useConfigs } from "states/useConfigs";
@@ -41,10 +42,10 @@ export default function LoginForm() {
   }, []);
 
   const methods = useForm<FormProps>({
-    defaultValues: {
-      user_id: "",
-      password: "",
-    },
+    // defaultValues: {
+    //   user_id: "",
+    //   password: "",
+    // },
   });
   const {
     handleSubmit,
@@ -92,6 +93,7 @@ export default function LoginForm() {
                 name="user_id"
                 type="text"
                 height="h-12"
+                isCircle={isCircle}
                 rules={{ required: "사용자ID를 입력하세요" }}
               // handleChange={onChangeId}
               />
@@ -105,6 +107,7 @@ export default function LoginForm() {
                 name="password"
                 type="password"
                 height="h-12"
+                isCircle={isCircle}
                 rules={{
                   required: "비밀번호를 입력하세요",
                   minLength: {
@@ -139,7 +142,8 @@ export default function LoginForm() {
         <div className="flex justify-start space-x-2">
           <button
             type="submit"
-            className="justify-center w-full h-12 px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:bg-gray-600">
+            className={clsx("justify-center w-full h-12 px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2",
+            isCircle && "hover:bg-gray-600 ring-gray-500  bg-gray-600 ring-2 ring-offset-2")}>
           {isCircle ?  <><FaSpinner className="justify-center w-full animate-spin" size={20} color="#f070f3" /></> : 'Sign In' }
           </button>
         </div>
