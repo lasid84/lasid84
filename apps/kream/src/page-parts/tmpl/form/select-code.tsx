@@ -7,33 +7,30 @@ import { Select } from "components/react-hook-form/select";
 import { useRouter } from "next/router";
 
 export interface SelectOptionProps {
-  key: any;
-  label?: any;
-  value: any;
+  label: string;
+  value: string;
 }
 
 type SelectProps = {
   id: string;
-  type: string;
   label: string;
-  options? : SelectOptionProps[] | undefined;
+  options? : SelectOptionProps[];
   value?: string;
   defaultValue?:string;
   placeholder?: string;
   width?: string;
   children?: any;
   allYn?: boolean;
-  readOnly?: boolean;
   isAdd?: boolean;
   isRequired?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   isPlaceholder?: boolean;
+  readOnly?: boolean;
   isModal?: boolean;
 };
 
 export const TSelectCode: React.FC<SelectProps> = ({
   id,
-  type,
   label,
   options,
   value,

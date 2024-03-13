@@ -43,7 +43,7 @@ export default function Login() {
             </div>
             <div className="flex flex-col justify-center px-4 py-6 space-y-2">
               <span className="mt-4 ml-4 text-2xl font-extrabold">Welcome</span>
-              <span className="ml-4 text-sm">하단의 ID/PW를 입력하세요</span>
+              <span className="ml-4 text-sm">Please enter ID/PW at the bottom</span>
             </div>
             <div className="p-8">
               {/* <AuthSession> */}

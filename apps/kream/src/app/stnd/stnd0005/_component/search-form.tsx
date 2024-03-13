@@ -6,52 +6,41 @@ import PageSearch from "../../../../shared/tmpl/page-search"
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { useEffect, useState, useCallback, memo } from "react"
 import Select from "react-select"
-import { TInput2, TSelect2, TCancelButton, TSubmitButton } from "components/form";
-import { useAppContext } from "@/components/provider/contextProvider";
-import { SEARCH } from "./model"
+import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
+import { PopType, useAppContext } from "@/components/provider/contextProvider";
+import { SEARCH, NEW, SELECTED_ROW } from "components/provider/contextProvider";
 import { useUserSettings } from "@/states/useUserSettings";
+import { StringifyOptions } from "querystring";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
-    numericData: any,
-    textData: string,
-    cursorData: string[],
+    cursorData : []
+    numericData : number;
+    textData : string;
 }
 
 export interface typeloadItem {
     data: {} | undefined
 }
 
-// export interface Props {
-//     onSubmit: SubmitHandler<any>;
-//     loadItem: typeloadItem;
-// }
-
-export const stnd0005SearchSchema = z.object({
-    grp_cd: z.coerce.string(),
-})
-
-// stnd0005검색스키마 선언
-export const formSchema = stnd0005SearchSchema
-// stnd0005검색스키마 타입선언
-export type FormType = z.infer<typeof stnd0005SearchSchema>
-
 type Props = {
-    loadItem: any | null
+    // onSubmit: SubmitHandler<any>;
+    loadItem: typeloadItem | any
 }
 
-const SearchForm: React.FC<Props> = (props) => {    
-  const { loadItem } = props;
+const SearchForm: React.FC<Props> = (props) => {
+    const { loadItem } = props;
+
+    const { dispatch } = useAppContext()
+    const [groupcd, setGroupcd] = useState<any>([])
+        let selectoptions:any[] = []
     //const SearchForm = memo(({loadItem}:any) => {
     // 다국어
     const { t } = useTranslation();
     z.setErrorMap(makeZodI18nMap({ t }));
 
-    const methods = useForm<FormType>({
-        resolver: zodResolver(formSchema),
-        defaultValues: { grp_cd: 'ALL' }
-    });
+    const methods = useForm({})
 
     const {
         handleSubmit,
@@ -64,38 +53,58 @@ const SearchForm: React.FC<Props> = (props) => {
         formState: { errors, isSubmitSuccessful },
     } = methods;
 
-
-    const { dispatch, needSearch } = useAppContext()
-
-    const [groupcd, setGroupcd] = useState([])
-
     useEffect(() => {
+
         if (loadItem) {
-            setGroupcd(loadItem[0])
-            onSubmit();
+            loadItem[0].map((item:any) => {
+                var key = item[Object.keys(item)[0]];
+                var label = item[Object.keys(item)[1]];
+                log(key, label)
+                selectoptions.push({ value: key, label: key + " "+ label });
+              })
+            setGroupcd(selectoptions)
+            onSearch();
         }
     }, [loadItem])
 
     const onSubmit = () => {
         const params = getValues()
-        console.log('parammmmmmmmmmmmmmmmmmms', params)
-        dispatch({ type: SEARCH, params: params })
     }
+
+    const onSearch = () => {
+        const params = getValues();
+        log("onSearch", params)
+        dispatch({ type: SEARCH, searchParams: params, isSearch: true });
+    }
+
+    const onNew = () => {
+        // dispatch({ type: SELECTED_ROW, selectedRow: null});
+        dispatch({ selectedRow: null, crudType: PopType.CREATE, isGridClick: true });
+    }
+
+
 
 
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <><PageSearch
-                    // right={
-                    //     <TSubmitButton label={t("search")} />
-                    // }
-                    >
-                    <label className="space-y-2">{t("grp_cd_nm")}</label>
+                    right={
+                        <>
+                            <TButtonBlue label={t("search")} onClick={onSearch} />
+                            <TButtonBlue label={t("new")} onClick={onNew} />
+                            <TCancelButton label={t("reset")} onClick={() => {
+                                setFocus("grp_cd");
+                                reset();
+                            }} />
+                        </>
+                    }
+                >
+                    <label className="space-y-2">{t("grp_cd")}</label>
                     <Controller
                         control={control}
                         name="grp_cd"
-                        defaultValue={'defaultValues'}
+                        defaultValue={'ALL'}
                         render={({ field: { onChange, value, ref } }) => (
                             <Select
                                 id="grp_cd"
@@ -103,10 +112,10 @@ const SearchForm: React.FC<Props> = (props) => {
                                 placeholder='ALL'
                                 options={groupcd}
                                 ref={ref}
-                                //value={groupcd && groupcd.find((options: any) => options.value === value)}
-                                // onChange={(options: any) => onChange(options.label)}
+                                value={groupcd && groupcd.find((options: any) => options.key === value)}                               
                                 onChange={(selectedOption: any) => {
-                                    onChange(selectedOption.label); // 선택된 옵션의 라벨로 grp_cd 필드 값 변경
+                                    console.log("afdsfdsfadsfasf",selectedOption)
+                                    onChange(selectedOption.value); // 선택된 옵션의 라벨로 grp_cd 필드 값 변경
                                     handleSubmit(onSubmit)(); // 폼 제출
                                 }}
                             />

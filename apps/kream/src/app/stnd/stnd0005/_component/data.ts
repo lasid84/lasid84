@@ -1,57 +1,11 @@
 
 
 import { executFunction } from "@/services/api.services";
-// import { useQuery } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
-import { LOAD, SEARCH, SEARCH_FINISH, SELECTED_ROW, UPDATE } from "./model";
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
 
-export const PageState = {
-  searchParams: {},
-  needSearch: false,
-  selectedRow: {}
-};
-
-export const reducer = (state: any, action: any) => {
-
-  switch (action.type) {
-    case LOAD:
-      const { params } = action;
-
-    // return useGetData(params);
-    case SEARCH:
-      return {
-        ...state,
-        searchParams: {
-          ...state.searchParams,
-          ...action.params
-        },
-        needSearch: true
-      }
-    case SEARCH_FINISH:
-      return {
-        ...state,
-        needSearch: action.needSearch
-      }
-    case SELECTED_ROW:
-      log("data", JSON.stringify(action.selectedRow));
-      return {
-        ...state,
-        selectedRow: action.selectedRow
-      }
-    case UPDATE:
-      log("selectedrow > update data", JSON.stringify(action.selectedRow));
-      return {
-        ...state,
-        selectedRow: action.selectedRow
-      }
-  }
-
-  return state;
-}
 
 interface cursorData {
   cursorData: {}[]
@@ -134,7 +88,6 @@ export const SP_UpdateData = async (param: any) => {
   }
 
   const result = await executFunction(params);
-  console.log('resultafds',result)
   return result![0];
 }
 

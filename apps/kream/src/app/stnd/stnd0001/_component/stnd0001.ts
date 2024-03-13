@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
-import {AxiosResponse} from "axios"
-import {ApiService} from '../../../api/service/api.service'
+import { AxiosResponse } from "axios"
+import { executFunction } from "@/services/api.services";
 
 export interface returnData {
     cursorData: []
@@ -8,18 +8,21 @@ export interface returnData {
     textData: string;
 }
 
-export const getData = () => {
+export const getData = async () => {
     const Param = ""
-    const inparam = ["in_user", "in_ipaddr"]
-    const invalue = ['doni.lee', '']
-    const inproc = 'public.f_stnd0001_get_user'
-    return ApiService.post<AxiosResponse>(`/api/data`, { inproc, inparam, invalue })
+    const params = {
+        inparam: ["in_user", "in_ipaddr"],
+         invalue: ['doni.lee', ''],
+         inproc: 'public.f_stnd0001_get_user'
+    }
+    const result = await executFunction(params);
+    return result;
 }
 
 // GetData hooks
 export const useGetData = () => {
     const { isInitialLoading, data, isError } = useQuery(["getData_stnd0001"], getData)
-    return { isInitialLoading, data, isError } 
+    return { isInitialLoading, data, isError }
 }
 
 

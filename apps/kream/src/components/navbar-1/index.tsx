@@ -2,7 +2,6 @@
 
 import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useConfigs } from "states/useConfigs";
-import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { useUserSettings } from "states/useUserSettings";
 // import { useSession, signIn, signOut } from 'next-auth/react';
@@ -26,15 +25,11 @@ export default function Navbar() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // if (!user_nm) {
-    //   router.replace("/login");
-    // }
     if (user_nm) {
       setGreeting(user_nm);
     }
   }, [user_nm])
 
-  const router = useRouter();
 
   log("navbar", !user_nm, user_nm);
 
@@ -42,29 +37,6 @@ export default function Navbar() {
   return (
     <div className="text-gray-900 bg-white border-b border-gray-100 dark:bg-gray-900 dark:text-white dark:border-gray-800 h-[3.75rem]">
       {true &&
-        // // ? <div className="flex items-center justify-start w-full">
-        // //   <button
-        // //     onClick={() =>
-        // //       configActions.
-        // //         setConfig({
-        // //           collapsed: !collapsed,
-        // //         })
-        // //     }
-        // //     className="mx-4">
-        // //     <FiMenu size={20} />
-        // //   </button>
-        // //   <span className="ml-auto"></span>
-        // //   <p>이 페이지는 로그인이 필요한 페이지입니다./{user_nm}</p>
-
-        // //   <button
-        // //     className="flex items-center justify-center h-12 mx-4"
-        // //     onClick={() => router.push("/login")}>
-        // //      <FiUser size={18} />
-        // //     <span className="ml-1">로그인</span>
-        // //      </button>
-        // // </div>
-        // // :
-
         <div className="flex items-center justify-start w-full">
           <button
             onClick={() =>
