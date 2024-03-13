@@ -50,10 +50,11 @@ export type GridOption = {
       visible:boolean
     },
     colDisable?: string[],
+    minWidth?:  {[key: string]: number},
     alignLeft?: string[],                 //기본 정렬은 가운데
     alignRight?: string[],                //dataType : number면 자동 우측 정렬
     editable?: string[];
-    dataType?: {[index: string]: string}; //date, number, text
+    dataType?: {[key: string]: string}; //date, number, text, bizno
     isMultiSelect?: boolean
     isAutoFitColData?: boolean
 };
@@ -283,6 +284,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
               cellStyle: { textAlign: "right" },
               valueFormatter: numberFormatter,
             }
+          } else if (optCols[col] === 'bizno') {
+            cellOption = {
+              ...cellOption,
+              valueFormatter: bizNoFormatter,
+            }
           }
         };
 
@@ -325,22 +331,25 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         //Select 셋팅
         if (options?.select) {
-          var selectCols = Object.keys(options.select);
-          if (selectCols.indexOf(col) > -1) {
+          var arrCols = Object.keys(options.select);
+          if (arrCols.indexOf(col) > -1) {
             cellOption = {
               ...cellOption,
-              // editable:true,
-              // headerCheckboxSelection: options?.isMultiSelect ? true : false,
-              // checkboxSelection: true,
-              // valueParser: checkBoxParser,
-              // valueFormatter: checkBoxFormatter,
-              // cellDataType: 'boolean',
-              // cellRenderer: 'agCheckboxCellRenderer',
               cellEditor: 'agSelectCellEditor',
               cellEditorParams: {
                 values: options.select[col],
               } as ISelectCellEditorParams,
             }
+          }
+        }
+
+        if (options?.minWidth) {
+          var arrCols = Object.keys(options.minWidth);
+          if (arrCols.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              minWidth: options.minWidth[col]
+            };
           }
         }
 
@@ -455,19 +464,19 @@ const numberFormatter = (params: ValueFormatterParams) => {
 }
 
 const checkBoxFormatter = (params: ValueFormatterParams) => {
-  log("checkBoxFormatter", params, params.value === 'Y' ? true : false)
+  // log("checkBoxFormatter", params, params.value === 'Y' ? true : false)
   return params.value === 'Y' ? true : false;
 }
 
-function checkBoxParser(params: ValueParserParams) {
-  log("checkBoxParser", params)
-  return params.newValue === 'Y' ? true : false;
+const bizNoFormatter = (params: ValueFormatterParams) => {
+  // log("bizNoFormatter", params)
+  return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
 }
 
-
-
-
-
+function checkBoxParser(params: ValueParserParams) {
+  // log("checkBoxParser", params)
+  return params.newValue === 'Y' ? true : false;
+}
 
 
 

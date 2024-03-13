@@ -13,6 +13,7 @@ import PageSearch from "layouts/search-form/page-search-row";
 
 import { TButtonBlue } from "components/form";
 import { CellValueChangedEvent, IRowNode, SelectionChangedEvent } from "ag-grid-community";
+import { toastSuccess } from "@/page-parts/tmpl/toast";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -39,14 +40,15 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
 
     useEffect(() => {
         if (initData) {
-            log(initData[0].data)
+            // log(initData[0].data)
             const gridOption: GridOption = {
                 colVisible: { col : ["cust_code", "cont_seq", "fax_num"], visible:false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
                 checkbox: ["use_yn", "def"],
-                select: {"user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
+                select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
+                minWidth: {"email": 200},
                 // editable: ["trans_mode"],
-                // dataType: { "create_date" : "date", "vat_rt":"number"},
+                dataType: { "create_date" : "date", "vat_rt":"number", "bz_reg_no":"bizno"},
                 // isMultiSelect: false,
                 // isAutoFitCol: true,
                 // alignLeft: ["major_category", "bill_gr1_nm"],
@@ -91,7 +93,9 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
               }
             }
           });
-        log("onSave", gridRef.current.api, modifiedRows);
+        // log("onSave", gridRef.current.api, modifiedRows);
+        toastSuccess('Success.');
+
     };
 
     return (

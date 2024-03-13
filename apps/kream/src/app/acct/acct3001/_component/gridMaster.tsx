@@ -31,7 +31,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         // checkbox: ["no"],
         // editable: ["trans_mode"],
-        // dataType: { "create_date" : "date", "vat_rt":"number"},
+        dataType: { "bz_reg_no":"bizno"},
         // isMultiSelect: false,
         isAutoFitColData: false,
         // alignLeft: ["major_category", "bill_gr1_nm"],

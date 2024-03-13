@@ -3,6 +3,7 @@
 import { executFunction } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
+import { FaBullseye } from "react-icons/fa6";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 // import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -114,7 +115,7 @@ export const SP_UpdateData = async (param: any) => {
     ],
     inproc: 'account.f_acct3001_upd_cont_detail',
     isShowLoading: true,
-    isShowComplete:true,
+    isShowComplete:false,
     }
   
     const result = await executFunction(params);
@@ -156,7 +157,7 @@ export const SP_InsertData = async (param: any) => {
     ],
     inproc: 'account.f_acct3001_ins_cont_detail',
     isShowLoading: true,
-    isShowComplete:true,
+    isShowComplete:false,
     }
   
     const result = await executFunction(params);
