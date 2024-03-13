@@ -17,7 +17,7 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
     ipaddr: ipaddr
   }
   const { isLoading, data, isError, refetch, remove } = useQuery([queryNm, params], queryFn, { ...option });
-  log('useGetData', searchParam, isLoading)
+  // log('useGetData', queryNm, searchParam, isLoading)
   return { data, isLoading, isError, refetch, remove }
 };
 
@@ -51,6 +51,8 @@ export const useUpdateData = (model?: string) => {
 }
 
 export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, option?:any) => {
+  const user_id = useUserSettings((state) => state.data.user_id);
+  const ipaddr = useUserSettings((state) => state.data.ipaddr);
   const queryClient = useQueryClient();
   const Update = useMutation(['key'], mutationFn, {
     // ...option,
@@ -58,23 +60,29 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
       // log("onSuccess : ", data)
       queryClient.invalidateQueries([queryKey]);
     },
-    onMutate: async (data) => {log("onMutate : ", queryClient) },
-    
+    onMutate: async (data) => {
+      log("onMutate : ", queryClient, data);
+      data["user_id"] = user_id;
+      data["ipaddr"] = ipaddr;
+    },
   });
-  // const Create = useMutation(SP_CreateData, {
-  //   onSuccess: (res:any, data:any, context:any) => {
-  //     // queryClient.invalidateQueries([`${pageName}`+'_SEARCH'])
-  //     queryClient.invalidateQueries([queryKey])      
-  //     console.log('onCreate',res,data,context)
-  //   },
-  //   onMutate: async (data) => { },
-  //   onError: (err, data, context) => {
-  //     console.log('PLEASE TRY AGAIN')
-  //     return { err, data, context }
-  //   }
-  // })
+
+  const Create = useMutation(['key'], mutationFn, {
+    onSuccess: (res:any, data:any, context:any) => {
+      queryClient.invalidateQueries([queryKey])      
+    },
+    onMutate: async (data) => {
+      
+      data["user_id"] = user_id;
+      data["ipaddr"] = ipaddr;
+    },
+    // onError: (err, data, context) => {
+    //   console.log('PLEASE TRY AGAIN')
+    //   return { err, data, context }
+    // }
+  })
   return {
     Update,
-    // Create
+    Create
   }
 }

@@ -1,38 +1,9 @@
-1. service/api.service.ts
-  1) secret_key 프로젝트 공유방법(현재 하드코딩...)
-    -> axios interceptor에서 처리하도록 검토
-  2) interceptor 부분 맘에 안듬.. 
-    -> 설정확인:해제 안됨 -> 완료
+1. 커서데이터 구조 변경(data, fields)
 
-2. 폴더 정리
-  1) page-parts, api/service 없애기 
-    -> api/service 삭제, page-parts 재검토
-
-3. useQuery 초기데이터(Load) refreshtime 확인 
-   -> 전역변수화
-
-5. useQuery 다시 호출 되는 버그
-
-10. hook-form -> provider 감싸야되므로 일반건은?(right-sidebar의 select)
-  
-
-11. hook-form, 일반컴포넌트 구분, 컴포넌트 정리 필요...(지금은 감싼게 너무 많고 어지러움)
+2. grid 구조 변경
+  - 이벤트는 오버라이딩해서 사용(ex : onCellValueChanged)
+  - 
 
 
-12. custome select 를 만들어보자(select + ag grid)
 
-13. login 처리중일때 버튼, 입력창 disable 처리
-  -> enter 입력시 수정
-
-14. grid 초기 그리드옵션 안먹음...(autosizestrategy : fitCellContents)
-   - 두번째 들어가면 적용됨... 원인 파악해야됨
-
-15. 다국어처리
-  1. 현재 설정 언어 저장 안됨
-  2. 로그인화면, sidebar들도 다국어 처리 필요
-
-16. 다크모드 조정
-
-17. ToDo 공유시트로 만들자
-
-18. 사이드바 메뉴 아이콘 정리
+이동 : https://teams.microsoft.com/_#/apps/1c256a65-83a6-4b5c-9ccf-78f8afb6f1e8/sections/MyNotebook

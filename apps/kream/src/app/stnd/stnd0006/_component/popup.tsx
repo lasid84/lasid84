@@ -4,7 +4,7 @@ import { TButtonBlue, TButtonGray, TInput, TSelectCode } from "@/page-parts/tmpl
 import { PopType, setModalValue } from "@/utils/modal";
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { PageState, useAppContext } from "components/provider/contextProvider"
-import { SET_CHANGESELECT, ROW_CLICK, SEARCH } from "components/provider/contextProvider";
+import { SEARCH_M } from "components/provider/contextProvider";
 import { SP_UpdateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 
@@ -19,10 +19,10 @@ type Props = {
 
 const Modal: React.FC<Props> = ({ loadItem }) => {
 
-    const { dispatch, selectedRow, crudType:popType, isGridClick:isOpen, searchParams } = useAppContext();
+    const { dispatch, mSelectedRow, crudType:popType, isGridClick:isOpen, searchParams } = useAppContext();
     const router = usePathname()
     console.log('query.폴더명',router)
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH);
+    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
 
     // 선택된 데이터 Select컴포넌트 처리
     const [transmode, setTransmode] = useState([]);
@@ -39,9 +39,9 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         // resolver: zodResolver(formZodSchema),
         defaultValues: {
             trans_mode: popType === PopType.CREATE 
-                    ? searchParams.trans_mode : selectedRow?.trans_mode,
+                    ? searchParams.trans_mode : mSelectedRow?.trans_mode,
             trans_type: popType === PopType.CREATE 
-                    ? searchParams.trans_type : selectedRow?.trans_type,
+                    ? searchParams.trans_type : mSelectedRow?.trans_type,
             use_yn: "Y",
         },
     });
@@ -66,7 +66,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
       }, [loadItem]);
 
     useEffect(() => {        
-        var modetype = selectedRow?.trans_mode + selectedRow?.trans_type;
+        var modetype = mSelectedRow?.trans_mode + mSelectedRow?.trans_type;
         switch (modetype) {
             case "AE": setBillGr1Cd(loadItem[7]); break;
             case "AI": setBillGr1Cd(loadItem[8]); break;
@@ -74,7 +74,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
             case "OI": setBillGr1Cd(loadItem[10]); break;
         }
 
-    }, [selectedRow])
+    }, [mSelectedRow])
 
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
@@ -131,7 +131,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 label={"trans_mode"}
                                 allYn={false}
                                 isPlaceholder={false}
-                                value={selectedRow?.trans_mode}
+                                value={mSelectedRow?.trans_mode}
                                 options={transmode}
                                 />
                         </div>                            
@@ -142,7 +142,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 label={"trans_type"}
                                 allYn={false}
                                 isPlaceholder={false}
-                                value={selectedRow?.trans_type}
+                                value={mSelectedRow?.trans_type}
                                 options={transtype}
                                 />
                         </div>
@@ -152,7 +152,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 label={"prod_gr_cd"}
                                 // allYn={false}
                                 // isPlaceholder={false}
-                                value={selectedRow?.prod_gr_cd}
+                                value={mSelectedRow?.prod_gr_cd}
                                 options={prodGrCd}
                                 />
                         </div>
@@ -161,7 +161,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="charge_code" 
                                 id="charge_code" 
-                                value={selectedRow?.charge_code}
+                                value={mSelectedRow?.charge_code}
                                 >
                             </TInput>
                         </div>
@@ -169,7 +169,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="charge_desc" 
                                 id="charge_desc" 
-                                value={selectedRow?.charge_desc}
+                                value={mSelectedRow?.charge_desc}
                                 >
                             </TInput>
                         </div>
@@ -178,7 +178,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="vat_yn" 
                                 id="vat_yn" 
-                                value={selectedRow?.vat_yn}
+                                value={mSelectedRow?.vat_yn}
                                 >
                             </TInput>
                         </div>
@@ -186,7 +186,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="vat_type" 
                                 id="vat_type" 
-                                value={selectedRow?.vat_type}
+                                value={mSelectedRow?.vat_type}
                                 >
                             </TInput>
                         </div>
@@ -195,7 +195,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="vat_rt" 
                                 id="vat_rt"
-                                value={selectedRow?.vat_rt}
+                                value={mSelectedRow?.vat_rt}
                                 >
                             </TInput>
                         </div>
@@ -203,7 +203,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="fins_yn" 
                                 id="fins_yn"
-                                value={selectedRow?.fins_yn}
+                                value={mSelectedRow?.fins_yn}
                                 >
                             </TInput>
                         </div>
@@ -212,7 +212,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="fin_category" 
                                 id="fin_category"
-                                value={selectedRow?.fin_category}
+                                value={mSelectedRow?.fin_category}
                                 >
                             </TInput>
                         </div>
@@ -222,7 +222,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TInput 
                                 label="rem_prt_yn" 
                                 id="rem_prt_yn"
-                                value={selectedRow?.rem_prt_yn}
+                                value={mSelectedRow?.rem_prt_yn}
                                 >
                                 {/* {errors?.cd_mgcd2?.message && (
                                     <ErrorMessage>{errors.cd_mgcd2.message}</ErrorMessage>
@@ -235,7 +235,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 label={"bill_gr1_cd"}
                                 allYn={false}
                                 isPlaceholder={false}
-                                value={selectedRow?.bill_gr1_cd}
+                                value={mSelectedRow?.bill_gr1_cd}
                                 options={billGr1Cd}
                                 />
                         </div>  
@@ -250,7 +250,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 ]}
                                 allYn={true}
                                 isPlaceholder={false}
-                                value={selectedRow?.use_yn}
+                                value={mSelectedRow?.use_yn}
                                 // onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                                 //     setUseYn(event.target.value)
                                 // }}

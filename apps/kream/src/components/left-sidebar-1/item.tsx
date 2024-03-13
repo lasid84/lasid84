@@ -15,7 +15,7 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
   
-  let active = pathname === url && params == menu_param ? true : false;
+  let active = pathname === url && (!params || (params == menu_param)) ? true : false;
 
   if (pathname === "/" && url === "/dashboard") {
     active = true;

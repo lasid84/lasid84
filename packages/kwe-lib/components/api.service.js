@@ -32,7 +32,7 @@ export async function dataCall(client, inproc, inparam, invalue, config) {
     // log("-----------------", response)
     const { numericData, textData, cursorData } = response.data
 
-    log("dataCall:", numericData, textData)
+    // log("dataCall:", numericData, textData)
 
     return {
       numericData: numericData,

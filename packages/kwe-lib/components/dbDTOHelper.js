@@ -19,18 +19,18 @@ async function initconnectionString() {
     // var config = new Config("/configs/server.ini");
     // await config.load();
     // connstr = config.get("db.connstr");
-    log("connstr", connstr);
+    // log("connstr", connstr);
     return connstr
 }
 
 async function callFunction(pProcName, pParamsList, pValueList) {
-  log("callFunction");
+  // log("callFunction");
   const connectionString = await initconnectionString();
-  log("0.1");
+  // log("0.1");
   // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
   const client = new Client({ connectionString });
   
-  log("0.2");
+  // log("0.2");
 
   try {
     
@@ -46,12 +46,12 @@ async function callFunction(pProcName, pParamsList, pValueList) {
         procName = pProcName;
       }
 
-    log("1.", pProcName, pParamsList, pValueList);
+    // log("1.", pProcName, pParamsList, pValueList);
 
     const strParam = pParamsList.toString();
     const resultArgument = await getArgument(schema, procName, strParam);
     
-    log("1.5", resultArgument.getNumericData());
+    // log("1.5", resultArgument.getNumericData());
 
     if (resultArgument.getNumericData() !== 0)
         return resultArgument;
@@ -79,6 +79,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     const dc = new dataContainer();
     var cursorName = [];
 
+    // log("=======queryResult", queryResult)
     for (const row of resultArgument.getCursorData()[0].rows) {
 
       const paramName = row['parameter_name'];
@@ -118,6 +119,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     
 
     const resultArray = [];
+    const fieldsArray = [];
     for (let val of cursorName)
     {
         if (val === null)
@@ -127,9 +129,9 @@ async function callFunction(pProcName, pParamsList, pValueList) {
         const fetchAllQuery = `FETCH ALL FROM "${val}";`;
         const cursorResult  = (await client.query(fetchAllQuery));
         //console.log(val);
-        //console.log(cursorResult);
+        // log("================", cursorResult);
         //console.log(cursorResult.rows);
-        resultArray.push(cursorResult.rows);
+        resultArray.push({ data:cursorResult.rows, fields:cursorResult.fields});
 
         //await client.query(`CLOSE "${val}";`);
     }
@@ -137,7 +139,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     await client.query('COMMIT');
     
     dc.setCursorData(resultArray);
-    // log("================", JSON.stringify(dc.getCursorData()[0][0]));
+    // log("================", JSON.stringify(dc.getCursorData()[0]));
     return dc;
   } catch (err) {
     // Rollback the transaction block in case of an error

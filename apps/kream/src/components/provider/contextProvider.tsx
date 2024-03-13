@@ -2,15 +2,11 @@ import { ReactPropTypes, createContext, useContext } from "react";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
-export const SEARCH = 'SEARCH';
-export const SEARCH_FINISH = 'SEARCH_FINISH';
+export const SEARCH_M = 'SEARCH_M';
+export const SEARCH_D = 'SEARCH_D';
 export const LOAD = 'LOAD';
-export const SELECTED_ROW = 'SELECTED_ROW';
-export const SET_CHANGESELECT = 'SET_CHANGESELECT';
-export const ROW_CLICK = 'ROW_CLICK';
-export const NEW = 'NEW';
 
-export const PopType = {
+export const crudType = {
   CREATE: "C",
   UPDATE: "U",
   DELETE: "D",
@@ -22,27 +18,27 @@ export type State = {
     type?: string
     searchParams?: any
     dispatch?: any    
-    selectedRow?: any
-    inputValue?:any
+    mSelectedRow?: any    //마스터 그리드 선택 Row
+    dSelectedRow?: any    //디테일 그리드 선택 Row
+    inputValue?: any
     crudType?: 'C' | 'R' | 'U' | 'D'
 
-    isSearch?: boolean
-    isChangeSelect?: boolean
-    isGridClick?: boolean
-    isGridRowAdd?: boolean,
-    isGridRowDelete?: boolean,
+    isMSearch?: boolean
+    isDSearch?: boolean
+    isMChangeSelect?: boolean
+    isDChangeSelect?: boolean
   };
 
 export const PageState = {
     type: '',
     searchParams: {},
-    selectedRow: {},
+    mSelectedRow: {},
+    dSelectedRow: {},
 
-    isSearch: false,
-    isChangeSelect: false,
-    isGridClick: false,
-    isGridRowAdd: false,
-    isGridRowDelete: false,
+    isMSearch: false,
+    isDSearch: false,
+    isMChangeSelect: false,
+    isDChangeSelect: false,
   };
 
 export const TableContext = createContext<State>({

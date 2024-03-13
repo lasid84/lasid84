@@ -72,16 +72,21 @@ export async function executFunction(params:exeFuncParams) {
         const config = await initConfig(isAuth, token);
         const client = await init(config);
 
+        // log("isShowLoading", isShowLoading);
         if (isShowLoading) {
             client.interceptors.request.use(requestUseService, requestHasError);
             client.interceptors.response.use((response: any) => responseUseService(response), responseHasError);
-        } else {
+        } 
+        else {
+            useUserSettings.getState().actions.setData({ loading: "OFF" });
             client.interceptors.request.eject(requestUseService, requestHasError);
             client.interceptors.response.eject((response: any) => responseUseService(response), responseHasError);
         }
 
         const returnData:returnData = await dataCall(client, inproc,inparam, invalue, config);
         const { cursorData, numericData, textData } = returnData;
+
+        // log("====================================", cursorData);
 
         if (numericData !== 0) {
             toastWaring((numericData + " : " + textData))
@@ -124,7 +129,7 @@ const requestUseService = (config: any) => {
 };
 
 const requestHasError = (error: any) => {
-    // log("requestHasError");
+    log("requestHasError");
     useUserSettings.getState().actions.setData({ loading: "OFF" });
     return Promise.reject(error);
 };
@@ -133,13 +138,13 @@ const responseUseService = (response: any) => {
     // log("responseUseService");
     setTimeout(() => {
         useUserSettings.getState().actions.setData({ loading: "OFF" });
-        // log("requestUseService 시작 OFF")
+        log("requestUseService 시작 OFF")
     }, 300);
     return response;
 };
 
 const responseHasError = async (error: any) => {
-    // log("responseHasError");
+    log("responseHasError");
     useUserSettings.getState().actions.setData({ loading: "OFF" });
     const originalRequest = error.config;
     // response가 없을 경우 : server connection fail
