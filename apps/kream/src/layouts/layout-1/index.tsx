@@ -15,6 +15,7 @@ import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { setI18n } from "@/components/i18n/i18n";
 import LoadingComponent from "../../components/loading/loading"
+import PageTitle from "@/components/page-title/page-title";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export type Layout1Props = {
@@ -56,7 +57,8 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
   const isLoading = useMemo(() => {
     //client data loading 용
-    return (userSettings.loading && userSettings.loading == "ON")
+    log("userSettings.loading", userSettings.loading);
+    return (userSettings.loading == "ON")
   }, [userSettings.loading])
 
 
@@ -84,6 +86,10 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
           </div>
           <div className="w-full h-screen text-gray-900 main bg-gray-50 dark:bg-gray-900 dark:text-white">
             <Navbar1 />
+<<<<<<< HEAD
+=======
+            <PageTitle />
+>>>>>>> 93fad74cc3f7867e36757138d3137eac9e0d0864
             <div className="h-[calc(100vh-60px)] overflow-y-auto px-4 py-4">{children}</div>
           </div>
         </div>

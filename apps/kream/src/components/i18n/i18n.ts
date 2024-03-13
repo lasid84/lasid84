@@ -31,7 +31,7 @@ const SP_GetData = async () => {
 
 export async function setI18n(lang:string) {
 
-    log("시작 : ", i18n);
+    // log("시작 : ", i18n);
     
     const languages:any = await SP_GetData();
     let objEN:any = {};
@@ -41,8 +41,8 @@ export async function setI18n(lang:string) {
     // log("objEN", objEN);
     // log("objKO", objKO);
     // log("objEN", objJP);
-
-    languages.map((row:any) => {
+    // log("languages", languages);
+    languages.data.map((row:any) => {
         objEN[row.code] = row.eng ? row.eng : row.code;
         objKO[row.code] = row.kor ? row.kor : row.code;
         objJP[row.code] = row.jpn ? row.jpn : row.code;
@@ -65,7 +65,7 @@ export async function setI18n(lang:string) {
     i18n.addResourceBundle('JPN', 'translation', objJP);
     i18n.changeLanguage(lang);
 
-    log("seti18n 종료",i18n);
+    // log("seti18n 종료",i18n);
 }
 
 
@@ -73,7 +73,7 @@ i18n
     // .use(Backend)
     .use(initReactI18next)
     .init({
-        debug: process.env.NODE_ENV === 'development' ? true : false,
+        // debug: process.env.NODE_ENV === 'development' ? true : false,
         // resources,
         defaultNS: "translation",
         // lng: lang ? lang : 'ko', // 기본 설정 언어, 'cimode'로 설정할 경우 키 값으로 출력된다.

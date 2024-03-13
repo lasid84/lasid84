@@ -69,7 +69,7 @@ export default function LoginForm() {
 
       userSettingsActions!.setData({ ...res?.data });
       configActions.setConfig({ 
-        lang: res?.data.lang
+        lang: res?.data.lang ? res?.data.lang : 'KOR'
     });
       router.replace('/');
     } catch (err) {

@@ -85,10 +85,10 @@ async function getMenuList(userInfo: any) {
     inproc: 'public.f_admn_get_menulist',
     isShowLoading: false
   };
-  log('params', params)
+  // log('params', params)
   const menus = await executFunction(params)
 
-  log("menus", menus);
+  // log("menus", menus);
 
   const navigationData: NavigationState[] = [{
     parent_seq: -1,
@@ -99,7 +99,7 @@ async function getMenuList(userInfo: any) {
 
   const menuMap = new Map<number, NavigationState>();
 
-  menus[0].forEach((menu: any) => {
+  menus[0].data.forEach((menu: any) => {
     if (menu.use_yn === "Y") {
       const menuItem: NavigationState = {
         parent_seq: menu.parent_seq,

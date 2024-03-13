@@ -111,6 +111,7 @@ export const createServer = (): Express => {
 
         const {inproc, inparam, invalue} = req.body;
         const result = await callFunction(inproc, inparam, invalue);
+        log(result)
         res.json(result);
       } catch (err) {
         console.log('Error fetching data:', err);
@@ -137,7 +138,7 @@ export const createServer = (): Express => {
           dc = await callFunction(params.inproc, params.inparam, params.invalue);  
           if (dc.getNumericData() === 0) {   
             // 인증 성공시 처리
-            res.json({ success: true, message: 'Authentication successful', user_nm: userObject, userData:dc.getCursorData()[0], token : token });
+            res.json({ success: true, message: 'Authentication successful', user_nm: userObject, userData:dc.getCursorData()[0].data, token : token });
           }
           else {
             res.json({ success:false, message: dc.getNumericData() + ' - ' + dc.getTextData(), token:'', userData: '' });
