@@ -50,7 +50,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 // editable: ["trans_mode"],
                 dataType: { "create_date" : "date", "vat_rt":"number", "bz_reg_no":"bizno"},
                 // isMultiSelect: false,
-                // isAutoFitCol: true,
+                isAutoFitColData: true,
                 // alignLeft: ["major_category", "bill_gr1_nm"],
                 // alignRight: [],
             };

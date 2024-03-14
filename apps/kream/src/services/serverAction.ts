@@ -1,6 +1,6 @@
 'use server'
 
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { auth, signOut } from '@/app/api/auth/auth';
 import { redirect } from 'next/navigation';
 import { decode } from "next-auth/jwt";
@@ -47,3 +47,10 @@ export async function getToken() {
     return token;
 };
 
+// 안됨
+// export const getIP = () => {
+//     const header = headers()
+//     var ip = (header.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0]
+//     log("ip", ip);
+//     return ip;
+// };

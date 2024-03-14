@@ -22,24 +22,24 @@ const Modal: React.FC<Props> = ({ isOpen, popType, setIsOpen, setData }) => {
     }
 
     return (
+        <></>
+        // <FormProvider>
+        //     <form>
+        //         <DialogBasic
+        //         isOpen={isOpen}
+        //         onClose={closeModal}
+        //         title={"등록"}
+        //         bottomRight={
+        //             <>
+        //             <TButtonBlue label={"저장"}/>
+        //             <TButtonGray label={"취소"} onClick={closeModal}/>
+        //             </>
+        //         }
+        //         >
 
-        <FormProvider>
-            <form>
-                <DialogBasic
-                isOpen={isOpen}
-                onClose={closeModal}
-                title={"등록"}
-                bottomRight={
-                    <>
-                    <TButtonBlue label={"저장"}/>
-                    <TButtonGray label={"취소"} onClick={closeModal}/>
-                    </>
-                }
-                >
-
-                </DialogBasic>
-            </form>
-        </FormProvider>
+        //         </DialogBasic>
+        //     </form>
+        // </FormProvider>
 
     )
 

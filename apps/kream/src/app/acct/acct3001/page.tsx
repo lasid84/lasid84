@@ -21,10 +21,10 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 export default function ACCT3001() {
 
     const [state, dispatch] = useReducer(reducer, PageState);
-    const { searchParams, mSelectedRow, crudType
-        , isMSearch, isMChangeSelect } = state;
+    const { searchParams, mSelectedRow, dSelectedRow, crudType
+        , isMSearch } = state;
 
-    const val = useMemo(() => {return { searchParams, isMSearch, mSelectedRow, isMChangeSelect, crudType, dispatch }}, [state]);
+    const val = useMemo(() => {return { searchParams, isMSearch, mSelectedRow, dSelectedRow, crudType, dispatch }}, [state]);
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     
     return (
@@ -37,10 +37,6 @@ export default function ACCT3001() {
                     <DetailGrid initData={initData}/>
                 </div>
             </div>
-            {/* <DetailGrid
-                loadItem={initData}
-                listItem={mainData}
-                options={gridOption_d}/> */}
         </TableContext.Provider>
     );
 }

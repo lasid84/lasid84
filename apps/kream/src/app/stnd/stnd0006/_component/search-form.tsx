@@ -11,8 +11,8 @@ import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch from "layouts/search-form/page-search-row";
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
-import { PopType, useAppContext } from "@/components/provider/contextProvider";
-import { SEARCH, NEW, SELECTED_ROW } from "components/provider/contextProvider";
+import { crudType, useAppContext } from "components/provider/contextProvider";
+import { shallow } from "zustand/shallow";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -36,26 +36,13 @@ const SearchForm = memo(({loadItem}:any) => {
 
   log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
-  const [isReady, setReady] = useState(false);
 
-    // 다국어
-    const { t } = useTranslation();
-    // z.setErrorMap(makeZodI18nMap({ t }));
-  // 인보이스 검색스키마
-  // const acct3002SearchSchema = z.object({
-  //   trans_mode: z.coerce.string(),
-  //   trans_type: z.coerce.string(),
-  // })
-
-  // // acct3002검색스키마 선언
-  // const formSchema = acct3002SearchSchema
-  // // acct3002검색스키마 타입선언
-  // type FormType = z.infer<typeof acct3002SearchSchema>
+  // 다국어
+  const { t } = useTranslation();
 
   //사용자 정보
-  const gOfficeId = useUserSettings((state) => state.data.office_cd)
-  const gTransMode = useUserSettings((state) => state.data.trans_mode)
-  const gTransType = useUserSettings((state) => state.data.trans_type)
+  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
+  const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
   // const methods = useForm<FormType>({
     const methods = useForm({
@@ -81,25 +68,16 @@ const SearchForm = memo(({loadItem}:any) => {
 
   useEffect(() => { 
     if(loadItem){
-      // log("t: ", t('trans_mode'), loadItem);
-      setTransmode(loadItem[0]) 
-      setTranstype(loadItem[1])
+      // log("=================", loadItem[0].data, loadItem[1].data)
+      setTransmode(loadItem[0].data) 
+      setTranstype(loadItem[1].data)
 
-      // onSubmit();
-      // handleSubmit(onSubmit)();
       onSearch();
-      // setReady(true);
     }    
   }, [loadItem])
 
-  // useEffect(() => {
-  //   onSearch();
-  // }, [isReady]);
-
   const onSubmit = () => {
-    log("onSubmit")
     const params = getValues();
-    log("onSubmit", params)
     // dispatch({ type: SEARCH, params: params});
   }
 
@@ -107,12 +85,12 @@ const SearchForm = memo(({loadItem}:any) => {
     // log("onSearch")
     const params = getValues();
     log("onSearch", params)
-    dispatch({ type: SEARCH, searchParams: params, isSearch:true});
+    dispatch({ searchParams: params, isMSearch:true});
   }
 
   const onNew = () => {
     // dispatch({ type: SELECTED_ROW, selectedRow: null});
-    dispatch({ selectedRow: null, crudType:PopType.CREATE, isGridClick:true});
+    dispatch({ mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
   }
 
   return (

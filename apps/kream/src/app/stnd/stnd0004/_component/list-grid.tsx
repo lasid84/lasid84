@@ -87,9 +87,8 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
         <>
             <PageContent
                 right={<> <TButtonBlue label="등록" onClick={() => {
-                    actions.setPopOpen(true)
-                }} /></>}
-            >
+                    actions.setPopOpen(true);
+                } } /></>} children={undefined}            >
             </PageContent>
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>

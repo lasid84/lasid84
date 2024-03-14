@@ -24,7 +24,7 @@ const Stnd0004: React.FC = () => {
     return (
         <>
             <PageTitle title={pageProps.title} brcmp={brcmp} />
-            <SearchForm/>
+            {/* <SearchForm/> */}
             <ListGrid listItem={selectResult||null}/>
         </>
     )

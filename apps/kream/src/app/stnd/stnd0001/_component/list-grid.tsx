@@ -10,7 +10,7 @@ import {
     gridUtilDefaultOptions,
     gridOverLayTemplate
 } from "utils/grid";
-import LoadingComponent from "@/page-parts/com/loading/loading";
+import LoadingComponent from "components/loading/loading";
 
 type Props = {
     listItem: any | null
@@ -82,10 +82,7 @@ const ListGrid: React.FC<Props> = ({ listItem, isInitialLoading, isError }) => {
     return (
         <>
             <PageContent
-                right={
-                   <>이벤트버튼</>
-                }
-            >
+                right={<>이벤트버튼</>} children={undefined}            >
             </PageContent >
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>

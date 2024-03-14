@@ -47,7 +47,7 @@ export const TSelect2: React.FC<SelectProps> = ({
     options.map((item:any, i) => {
       var key = item[Object.keys(item)[0]];
       var value = item[Object.keys(item)[1]];
-      log(key, value)
+      // log("==================", key, value)
       if (!allYn && value === 'ALL') return;
       if (!value) value = key;
       selectoptions.push({ key: key, value: value });
