@@ -6,7 +6,7 @@ import { PopType } from "@/utils/modal";
 import { useState, useEffect, useCallback } from "react";
 import Select from "react-select"
 import { TSelect2 } from "@/components/form/select-row";
-import { PageState, useAppContext, SEARCH } from "components/provider/contextProvider"
+import { PageState, useAppContext, SEARCH_M } from "components/provider/contextProvider"
 import { SP_UpdateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 
@@ -18,18 +18,18 @@ type Props = {
 
 const Modal: React.FC<Props> = ({ loadItem }) => {
 
-    const { dispatch, selectedRow, crudType: popType, isGridClick: isOpen, searchParams } = useAppContext();
+    const { dispatch, mSelectedRow, crudType: popType, isMChangeSelect: isOpen, searchParams } = useAppContext();
 
     const { Update,
         // Create
-    } = useUpdateData2(SP_UpdateData, SEARCH)
+    } = useUpdateData2(SP_UpdateData, SEARCH_M)
 
     // 선택된 데이터 Select컴포넌트 처리
     const [useYn, setUseYn] = useState<string>("Y")
     const [grpcd, setGrpCd] = useState([])
 
     const closeModal = () => {
-        dispatch({ isGridClick: false });
+        dispatch({ isMChangeSelect: false });
         reset();
     }
 
@@ -80,7 +80,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         //     setGrpCd(selectedData.grp_cd)
         //     setUseYn(selectedData.use_yn)
         // }
-    }, [popType, isOpen, selectedRow])
+    }, [popType, isOpen, mSelectedRow])
 
     return (
 
@@ -96,14 +96,15 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <TButtonGray label={"취소"} onClick={closeModal} />
                         </>
                     }
-                >
+                > 
+                <></>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
                         <TSelect2
                             id="grp_cd"
                             label={"grp_cd"}
                             allYn={false}
                             isPlaceholder={false}
-                            value={selectedRow?.grp_cd_nm}
+                            value={mSelectedRow?.grp_cd_nm}
                             options={grpcd}
                         // readOnly={popType === PopType.UPDATE}
                         // value={options && options.find((options: any) => options.value === value)}
@@ -118,41 +119,41 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             </TInput> */}
                         </div>
                         <TInput label="cd" id="cd" readOnly={popType === PopType.UPDATE}
-                            value={selectedRow?.cd}>
+                            value={mSelectedRow?.cd}>
                             {/* {errors?.cd?.message && (
                                 <ErrorMessage>{errors.cd.message}</ErrorMessage>
                             )} */}
                         </TInput>
                         <div className="col-span-2">
-                            <TInput label="cd_nm" id="cd_nm" value={selectedRow?.cd_nm}>
+                            <TInput label="cd_nm" id="cd_nm" value={mSelectedRow?.cd_nm}>
                                 {/* {errors?.cd_nm?.message && (
                                     <ErrorMessage>{errors.cd_nm.message}</ErrorMessage>
                                 )} */}
                             </TInput>
                         </div>
                         <div className="col-span-3">
-                            <TInput label="cd_desc" id="cd_desc" value={selectedRow?.cd_desc}>
+                            <TInput label="cd_desc" id="cd_desc" value={mSelectedRow?.cd_desc}>
                                 {/* {errors?.cd_desc?.message && (
                                     <ErrorMessage>{errors.cd_desc.message}</ErrorMessage>
                                 )} */}
                             </TInput>
                         </div>
                         <div className="col-span-3">
-                            <TInput label="remark" id="remark" value={selectedRow?.remark}>
+                            <TInput label="remark" id="remark" value={mSelectedRow?.remark}>
                                 {/* {errors?.remark?.message && (
                                     <ErrorMessage>{errors.remark.message}</ErrorMessage>
                                 )} */}
                             </TInput>
                         </div>
                         <div className="col-span-3">
-                            <TInput label="cd_mgcd1" id="cd_mgcd1" value={selectedRow?.cd_mgcd1}>
+                            <TInput label="cd_mgcd1" id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1}>
                                 {/* {errors?.cd_mgcd1?.message && (
                                     <ErrorMessage>{errors.cd_mgcd1.message}</ErrorMessage>
                                 )} */}
                             </TInput>
                         </div>
                         <div className="col-span-3">
-                            <TInput label="cd_mgcd2" id="cd_mgcd2" value={selectedRow?.cd_mgcd2}>
+                            <TInput label="cd_mgcd2" id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2}>
                                 {/* {errors?.cd_mgcd2?.message && (
                                     <ErrorMessage>{errors.cd_mgcd2.message}</ErrorMessage>
                                 )} */}
@@ -169,7 +170,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 ]}
                                 allYn={true}
                                 isPlaceholder={false}
-                                value={selectedRow?.use_yn}
+                                value={mSelectedRow?.use_yn}
                             >
                                 {errors?.use_yn?.message && <ErrorMessage>{errors.use_yn.message}</ErrorMessage>}
                             </TSelect2>

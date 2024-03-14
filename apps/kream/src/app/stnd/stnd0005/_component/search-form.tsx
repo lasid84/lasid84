@@ -7,8 +7,8 @@ import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-for
 import { useEffect, useState, useCallback, memo } from "react"
 import Select from "react-select"
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
-import { PopType, useAppContext } from "@/components/provider/contextProvider";
-import { SEARCH, NEW, SELECTED_ROW } from "components/provider/contextProvider";
+import { crudType, useAppContext } from "@/components/provider/contextProvider";
+import { SEARCH_M } from "components/provider/contextProvider";
 import { useUserSettings } from "@/states/useUserSettings";
 import { StringifyOptions } from "querystring";
 
@@ -56,7 +56,7 @@ const SearchForm: React.FC<Props> = (props) => {
     useEffect(() => {
 
         if (loadItem) {
-            loadItem[0].map((item:any) => {
+            loadItem[0].data.map((item:any) => {
                 var key = item[Object.keys(item)[0]];
                 var label = item[Object.keys(item)[1]];
                 log(key, label)
@@ -74,12 +74,12 @@ const SearchForm: React.FC<Props> = (props) => {
     const onSearch = () => {
         const params = getValues();
         log("onSearch", params)
-        dispatch({ type: SEARCH, searchParams: params, isSearch: true });
+        dispatch({ type: SEARCH_M, searchParams: params, isSearch: true });
     }
 
     const onNew = () => {
         // dispatch({ type: SELECTED_ROW, selectedRow: null});
-        dispatch({ selectedRow: null, crudType: PopType.CREATE, isGridClick: true });
+        dispatch({ selectedRow: null, crudType: crudType.CREATE, isGridClick: true });
     }
 
 
