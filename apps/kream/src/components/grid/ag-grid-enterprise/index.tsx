@@ -49,6 +49,7 @@ export type GridOption = {
       col: string[]
       visible:boolean
     },
+    gridHeight?: string,
     colDisable?: string[],
     minWidth?:  {[key: string]: number},
     alignLeft?: string[],                 //기본 정렬은 가운데
@@ -74,17 +75,16 @@ type cols = {
 
 
 const ListGrid: React.FC<Props> = memo((props) => {
-
     const { t } = useTranslation();
 
     const [colDefs, setColDefs] = useState<cols[]>([]);
     const [mainData, setMainData] = useState([{}]);
 
-    const containerStyle = useMemo(() => "flex flex-col w-full", []);
-    const gridStyle = useMemo(() => "w-full h-[65vh]", []);
-
-    const [ready, setReady] = useState(false);
+    const [gridStyle, setGridStyle] = useState({height: "100%"});
     const { listItem, options } = props;
+
+    const containerStyle = useMemo(() => "flex flex-col w-full", []);
+    // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
 
     //Column Defualt 설정
     const defaultColDef = useMemo(() => {
@@ -160,18 +160,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
       //         })
       //       )
       // }, [listItem?.data]);
-
-  // async function wait() {
-  //   await sleep(1000);
-  //   log("sleep");
-  //   autoSizeAll(false);
-  // }
-
-  // useEffect(() => {
-  //   if (ready) {      
-  //     wait();
-  //   }
-  // }, [ready])
   
   //컬럼 세팅
   useEffect(() => {
@@ -377,6 +365,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
     // log("colDefs", colDefs);
   }, [listItem, t]);
+
+  useEffect(() => {
+    if (options?.gridHeight) {
+      log("options?.gridHeight", options?.gridHeight)
+      setGridStyle({height : options?.gridHeight});
+    }
+  }, [options?.gridHeight]);
   
   const autoSizeAll = (skipHeader: boolean = false) => {
 
@@ -395,8 +390,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
           <div className={containerStyle}>
               <div 
                 // className={`ag-theme-quartz ${gridStyle}`}
-                className={`ag-theme-custom ${gridStyle}`}
-                // style={{height:500}}
+                className={`ag-theme-custom w-full`}
+                style={gridStyle}
               >
                   <AgGridReact
                       ref={props.gridRef}

@@ -28,9 +28,9 @@ function getMenuTitle(menu: NavigationState[], url:string, menu_param:string|nul
     }
   }
 
-  if (!title && parent && url !== "/dashboard") {
+  if (!title && parent && (url !== "/dashboard" && url !== "/")) {
     log("==page-title", menu, url);
-    navigate("/not-found")
+    // navigate("/not-found")
   }
 }
 
