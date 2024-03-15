@@ -72,6 +72,7 @@ export default function LoginForm() {
       configActions.setConfig({ 
         lang: res?.data.lang ? res?.data.lang : 'KOR'
     });
+      
       router.replace('/');
     } catch (err) {
       log("login-form err", err);

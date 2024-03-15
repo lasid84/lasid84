@@ -32,7 +32,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
 
   const {user_id, ipaddr } = Param;
-  // log("searchData:", trans_mode, trans_type);
+  log("search Master Data:", Param);
   
   const params = {
     inparam : [
@@ -56,7 +56,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
 
   const {cust_code, user_id, ipaddr } = Param;
-  // log("searchData:", trans_mode, trans_type);
+  log("search Detail Data:", Param);
   
   const params = {
     inparam : [

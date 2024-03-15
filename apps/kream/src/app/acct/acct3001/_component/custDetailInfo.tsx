@@ -1,4 +1,4 @@
-import { useAppContext } from "components/provider/contextProvider";
+import { useAppContext } from "components/provider/contextObjectProvider";
 import { TInput } from "page-parts/tmpl/form"
 import { useCallback } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -6,7 +6,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 const CustomerDetail: React.FC = () => {    
 
-    const { dispatch, mSelectedRow, crudType:popType } = useAppContext();
+    const { dispatch, objState } = useAppContext();
 
     const formZodMethods = useForm({
         // resolver: zodResolver(formZodSchema),
@@ -27,7 +27,7 @@ const CustomerDetail: React.FC = () => {
 
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
         
-    }, [popType]);
+    }, [objState.popType]);
 
     return (
         <FormProvider{...formZodMethods}>
@@ -36,50 +36,50 @@ const CustomerDetail: React.FC = () => {
                     <TInput 
                         label="cust_code" 
                         id="cust_code" 
-                        value={mSelectedRow?.cust_code}
+                        value={objState.mSelectedRow?.cust_code}
                         >
                     </TInput>
                     <TInput 
                         label="executive_nm" 
                         id="executive_nm" 
-                        value={mSelectedRow?.executive_nm}
+                        value={objState.mSelectedRow?.executive_nm}
                         >
                     </TInput>
                     <TInput 
                         label="cust_nm" 
                         id="cust_nm" 
-                        value={mSelectedRow?.cust_nm}
+                        value={objState.mSelectedRow?.cust_nm}
                         >
                     </TInput>
                     <TInput 
                         label="bz_con" 
                         id="bz_con" 
-                        value={mSelectedRow?.bz_con}
+                        value={objState.mSelectedRow?.bz_con}
                         >
                     </TInput>
                     <TInput 
                         label="cust_nm_eng" 
                         id="cust_nm_eng" 
-                        value={mSelectedRow?.cust_nm_eng}
+                        value={objState.mSelectedRow?.cust_nm_eng}
                         >
                     </TInput>
                     <TInput 
                         label="bz_item" 
                         id="bz_item" 
-                        value={mSelectedRow?.bz_item}
+                        value={objState.mSelectedRow?.bz_item}
                         >
                     </TInput>
                     <TInput 
                         label="bz_reg_no" 
                         id="bz_reg_no" 
-                        value={mSelectedRow?.bz_reg_no}
+                        value={objState.mSelectedRow?.bz_reg_no}
                         >
                     </TInput>
                     <div className="col-span-2">
                         <TInput 
                             label="addr1" 
                             id="addr1" 
-                            value={mSelectedRow?.addr1}
+                            value={objState.mSelectedRow?.addr1}
                             >
                         </TInput>
                     </div>
@@ -87,7 +87,7 @@ const CustomerDetail: React.FC = () => {
                         <TInput 
                             label="addr1" 
                             id="addr1" 
-                            value={mSelectedRow?.addr1}
+                            value={objState.mSelectedRow?.addr1}
                             >
                         </TInput>
                     </div>

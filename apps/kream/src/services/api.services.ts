@@ -78,7 +78,7 @@ export async function executFunction(params:exeFuncParams) {
             client.interceptors.response.use((response: any) => responseUseService(response), responseHasError);
         } 
         else {
-            useUserSettings.getState().actions.setData({ loading: "OFF" });
+            // useUserSettings.getState().actions.setData({ loading: "OFF" });
             client.interceptors.request.eject(requestUseService, requestHasError);
             client.interceptors.response.eject((response: any) => responseUseService(response), responseHasError);
         }

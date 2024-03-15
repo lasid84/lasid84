@@ -76,6 +76,7 @@ export async function Login(
       if (data.data !== null ) {
         await signIn('credentials', {
           ...data.userData[0],
+          callbackUrl: "/",
           redirect:false
         });
 

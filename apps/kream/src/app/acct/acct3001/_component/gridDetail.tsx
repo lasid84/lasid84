@@ -3,10 +3,9 @@
 
 import {useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
 import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
-import { PageState, crudType, reducer, useAppContext } from "components/provider/contextProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextProvider";
+import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
+import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
-import { TableContext } from "@/components/provider/contextProvider";
 import Grid, { isFirstColumn, getFirstColumn, onGridRowAdd, onCellValueChanged, onSelectionChanged } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import PageSearch from "layouts/search-form/page-search-row";
@@ -14,6 +13,7 @@ import PageSearch from "layouts/search-form/page-search-row";
 import { TButtonBlue } from "components/form";
 import { CellValueChangedEvent, IRowNode, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "@/page-parts/tmpl/toast";
+import { Anonymous_Pro } from "next/font/google";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -24,19 +24,19 @@ type Props = {
 const DetailGrid: React.FC<Props> = ({ initData }) => {    
 
     const gridRef = useRef<any | null>(null);
-    const { dispatch, mSelectedRow, isDSearch } = useAppContext();
+    const { dispatch, objState } = useAppContext();
     const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [ gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(mSelectedRow, SEARCH_D, SP_GetDetailData, {enable:false});
+    const { data: mainData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData, {enable:false});
 
     useEffect(() => {
-        if (isDSearch) {
-            mainRefetch();
+        if (objState.isDSearch) {
+            detailRefetch();
             dispatch({isDSearch:false});
         }
-    }, [isDSearch]);
+    }, [objState?.isDSearch]);
 
     useEffect(() => {
         if (initData) {
@@ -44,6 +44,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             const gridOption: GridOption = {
                 colVisible: { col : ["cust_code", "cont_seq", "fax_num"], visible:false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+                gridHeight: "33vh",
                 checkbox: ["use_yn", "def"],
                 select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: {"email": 200},
@@ -59,15 +60,20 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
         }
     }, [initData])
     
-    const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
-        const selectedRow = onSelectionChanged(param);
-        dispatch({dSelectedRow:{...selectedRow}});
+    const handleSelectionChanged = (param:SelectionChangedEvent) => {
+        log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
+        const row = onSelectionChanged(param);
+        // var newRow:any = [];
+        // newRow[1] = row;
+        // log("detail selectionchange2", newRow);
+        dispatch({dSelectedRow:row});
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
-    }, []);
+    };
 
-    const handleCellValueChanged = useCallback((param:CellValueChangedEvent) => {
-        const val = onCellValueChanged(param);
+    const handleCellValueChanged = (param:CellValueChangedEvent) => {
+        log("handleCellValueChanged");
+        // const val = onCellValueChanged(param);
         gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
@@ -76,25 +82,26 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 node.setDataValue('def', false);
             }
           })
-    },[]);
+        };
 
     const onSave = () => {        
-        const modifiedRows:any = [];
-        gridRef.current.api.forEachNode((node:any) => {
-            var data = node.data;
-            gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
+        log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
+        // const modifiedRows:any = [];
+        // gridRef.current.api.forEachNode((node:any) => {
+        //     var data = node.data;
+        //     gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
             
-            if (data.__changed) {
-              if (data.cust_code && data.cont_seq) { //수정
-                Update.mutate(data);
-              } else { //신규
-                data.cust_code = mSelectedRow.cust_code;
-                Create.mutate(data);
-              }
-            }
-          });
-        // log("onSave", gridRef.current.api, modifiedRows);
-        toastSuccess('Success.');
+        //     if (data.__changed) {
+        //       if (data.cust_code && data.cont_seq) { //수정
+        //         Update.mutate(data);
+        //       } else { //신규
+        //         data.cust_code = selectedRow![1].cust_code;
+        //         Create.mutate(data);
+        //       }
+        //     }
+        //   });
+        // // log("onSave", gridRef.current.api, modifiedRows);
+        // toastSuccess('Success.');
 
     };
 
@@ -115,8 +122,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 listItem={mainData as gridData}
                 options={gridOptions}
                 event={{
-                    onSelectionChanged: handleSelectionChanged,
-                    onCellValueChanged: handleCellValueChanged
+                    // onCellValueChanged: handleCellValueChanged,
+                    // onSelectionChanged: handleSelectionChanged                    
                 }}
                 />
         </>

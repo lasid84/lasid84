@@ -3,15 +3,12 @@
 
 import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
 import { SP_GetMasterData } from "./data";
-import { PageState, crudType, reducer, useAppContext } from "components/provider/contextProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextProvider";
+import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
+import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import { TableContext } from "@/components/provider/contextProvider";
 import Grid, {onRowClicked, onSelectionChanged} from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
-import { useSearchParams } from 'next/navigation'
-import { propagateServerField } from "next/dist/server/lib/render-server";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -23,11 +20,13 @@ type Props = {
 const MasterGrid: React.FC<Props> = ({ initData }) => {    
 
     const gridRef = useRef<any | null>(null);
-    const { dispatch, searchParams, isMSearch } = useAppContext();
+    const { dispatch, objState } = useAppContext();
+    // const { searchParams, isMSearch, mSelectedRow } = objState;
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetMasterData, {enable:false});
+    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, {enable:false});
     const gridOption: GridOption = {
         colVisible: { col : ["cust_code", "cust_nm", "bz_reg_no"], visible:true },
+        gridHeight: "100%",
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         // checkbox: ["no"],
         // editable: ["trans_mode"],
@@ -38,26 +37,34 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         // alignRight: [],
     };
     
-    const handleRowClicked = useCallback((param: RowClickedEvent) => {
+    const handleRowClicked = (param: RowClickedEvent) => {
         var data = onRowClicked(param);
         log("handleRowClicked", data)
         // dispatch({isDSearch:true});
-      }, []);
+      };
 
-    const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
-        const selectedRow = onSelectionChanged(param);
-        log("handleSelectionChanged", selectedRow);
-        dispatch({mSelectedRow:selectedRow, isDSearch:true});
+    const handleSelectionChanged1 = (param:SelectionChangedEvent) => {
+        
+        const row = onSelectionChanged(param)
+        // var newRow = [...selectedRow!]
+        // newRow[0] = row
+        // var newSearch = [
+        //     ...isSearch!,
+        // ]
+        // newSearch[1] = true;
+        log("MAster handleSelectionChanged");
+        dispatch({mSelectedRow:row, isDSearch:true});
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
-    }, []);
+    };
 
     useEffect(() => {
-        if (isMSearch) {
+        if (objState.isMSearch) {
             mainRefetch();
+            log("mainisSearch", objState.isMSearch);
             dispatch({isMSearch:false});
         }
-    }, [isMSearch]);
+    }, [objState?.isMSearch]);
 
     return (
         <Grid
@@ -67,7 +74,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
             options={gridOption}
             event={{
                 onRowClicked: handleRowClicked,
-                onSelectionChanged: handleSelectionChanged,
+                onSelectionChanged: handleSelectionChanged1,
             }}
         />
             

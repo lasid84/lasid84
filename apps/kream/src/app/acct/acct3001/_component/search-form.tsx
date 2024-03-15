@@ -8,8 +8,7 @@ import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch from "layouts/search-form/page-search-row";
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
-import { crudType, useAppContext } from "@/components/provider/contextProvider";
-import { SEARCH_M } from "components/provider/contextProvider";
+import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -57,8 +56,8 @@ const SearchForm = memo(({initData}:Props) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    // log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch:true});
+    log("onSearch", params);
+    dispatch({searchParams: params, isMSearch:true});
   }
 
   return (

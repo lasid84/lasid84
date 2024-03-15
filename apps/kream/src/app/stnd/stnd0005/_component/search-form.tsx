@@ -6,7 +6,7 @@ import PageSearch from "../../../../shared/tmpl/page-search"
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { useEffect, useState, useCallback, memo } from "react"
 import Select from "react-select"
-import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
+import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue,TButtonDarkgray } from "components/form";
 import { crudType, useAppContext } from "@/components/provider/contextProvider";
 import { SEARCH_M } from "components/provider/contextProvider";
 import { useUserSettings } from "@/states/useUserSettings";
@@ -91,16 +91,16 @@ const SearchForm: React.FC<Props> = (props) => {
                 <><PageSearch
                     right={
                         <>
-                            <TButtonBlue label={t("search")} onClick={onSearch} />
-                            <TButtonBlue label={t("new")} onClick={onNew} />
+                            <TButtonDarkgray label={t("search")} onClick={onSearch} />
                             <TCancelButton label={t("reset")} onClick={() => {
                                 setFocus("grp_cd");
                                 reset();
                             }} />
+                            <TButtonBlue label={t("new")} onClick={onNew} />
                         </>
                     }
                 >
-                    <label className="space-y-2">{t("grp_cd")}</label>
+                    <label className="px-1 py-1 text-align:right">{t("grp_cd")}</label>
                     <Controller
                         control={control}
                         name="grp_cd"
