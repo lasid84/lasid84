@@ -8,11 +8,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const { t } = useTranslation();
-  // const { lang } = useConfigs((state) => state.config);
-
-  // useEffect(() => {
-  //     setI18n(lang);
-  // }, [i18n, lang])
+  
   
   return (
     <>

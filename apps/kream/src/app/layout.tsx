@@ -20,6 +20,7 @@ import "css/vendors/ReactToastify.css";
 
 import  Layout from 'layouts/page'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 

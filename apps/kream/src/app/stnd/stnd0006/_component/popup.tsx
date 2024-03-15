@@ -19,7 +19,7 @@ type Props = {
 
 const Modal: React.FC<Props> = ({ loadItem }) => {
 
-    const { dispatch, mSelectedRow, crudType:popType, isGridClick:isOpen, searchParams } = useAppContext();
+    const { dispatch, mSelectedRow, crudType:popType, isPopUpOpen:isOpen, searchParams } = useAppContext();
     const router = usePathname()
     console.log('query.폴더명',router)
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
@@ -31,7 +31,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     const [billGr1Cd, setBillGr1Cd] = useState([]);
     
     const closeModal = () => {
-        dispatch({isGridClick:false});
+        dispatch({isPopUpOpen:false});
         reset();
     }
 
@@ -59,21 +59,22 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => { 
         if(loadItem){
-          setTransmode(loadItem[0]) 
-          setTranstype(loadItem[1])
-          setprodGrCd(loadItem[2])
+          setTransmode(loadItem[0].data) 
+          setTranstype(loadItem[1].data)
+          setprodGrCd(loadItem[2].data)
         }    
       }, [loadItem]);
 
     useEffect(() => {        
-        var modetype = mSelectedRow?.trans_mode + mSelectedRow?.trans_type;
-        switch (modetype) {
-            case "AE": setBillGr1Cd(loadItem[7]); break;
-            case "AI": setBillGr1Cd(loadItem[8]); break;
-            case "OE": setBillGr1Cd(loadItem[9]); break;
-            case "OI": setBillGr1Cd(loadItem[10]); break;
+        if (mSelectedRow && Object.keys(mSelectedRow).length > 0) {
+            var modetype = mSelectedRow?.trans_mode + mSelectedRow?.trans_type;
+            switch (modetype) {
+                case "AE": setBillGr1Cd(loadItem[7].data); break;
+                case "AI": setBillGr1Cd(loadItem[8].data); break;
+                case "OE": setBillGr1Cd(loadItem[9].data); break;
+                case "OI": setBillGr1Cd(loadItem[10].data); break;
+            }
         }
-
     }, [mSelectedRow])
 
     //Refactore by using custom hook
@@ -96,6 +97,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => {
         reset()
+        log("popup mSelectedRow :", mSelectedRow);
         if (popType === PopType.CREATE) {
             setFocus("trans_mode")
         }

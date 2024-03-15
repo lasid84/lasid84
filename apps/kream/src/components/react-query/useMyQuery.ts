@@ -5,18 +5,20 @@ import { AnyCnameRecord } from "dns";
 import { useUserSettings } from "states/useUserSettings";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 import { SP_UpdateData, SP_CreateData } from "@/app/stnd/stnd0005/_component/data";
+import { usePathname } from "next/navigation";
 
 export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?: any) => {
   
   const user_id = useUserSettings((state) => state.data.user_id);
   const ipaddr = useUserSettings((state) => state.data.ipaddr);
+  const path = usePathname() + "/";
 
   const params = {
     ...searchParam,
     user_id: user_id,
     ipaddr: ipaddr
   }
-  const { isLoading, data, isError, refetch, remove } = useQuery([queryNm, params], queryFn, { ...option });
+  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, params], queryFn, { ...option });
   // log('useGetData', queryNm, searchParam, isLoading)
   return { data, isLoading, isError, refetch, remove }
 };

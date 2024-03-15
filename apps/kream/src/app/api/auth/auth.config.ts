@@ -11,7 +11,7 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      log("authorized 시작")
+      // log("authorized 시작", nextUrl)
       const isLoggedIn = !!auth?.user;
       const isLogInPage = nextUrl.pathname.startsWith('/login');
 
@@ -22,6 +22,7 @@ export const authConfig = {
           // console.log("1.5---------------", isLoggedIn, isLogInPage, auth, nextUrl);
           // return true;
           return Response.redirect(new URL('/', nextUrl));
+          // return Response.redirect(new URL('/'));
         };
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {

@@ -50,11 +50,15 @@ const SearchForm = memo(({initData}:Props) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+  useEffect(() => {
+    onSearch();
+  }, [])
+
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
     // log("onSearch", params);
-    dispatch({ type: SEARCH_M, searchParams: params, isMSearch:true});
+    dispatch({ searchParams: params, isMSearch:true});
   }
 
   return (

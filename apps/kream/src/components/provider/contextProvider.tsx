@@ -27,18 +27,19 @@ export type State = {
     isDSearch?: boolean
     isMChangeSelect?: boolean
     isDChangeSelect?: boolean
+    isPopUpOpen?: boolean
   };
 
 export const PageState = {
-    type: '',
+  
     searchParams: {},
     mSelectedRow: {},
     dSelectedRow: {},
+    
 
     isMSearch: false,
     isDSearch: false,
-    isMChangeSelect: false,
-    isDChangeSelect: false,
+    isPopUpOpen: false,
   };
 
 export const TableContext = createContext<State>({

@@ -58,9 +58,9 @@ export const SP_UpdateData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("param : ", param)
+  // log("param : ", param)
   const {trans_mode, trans_type, prod_gr_cd,charge_code,charge_desc,ass_transaction,category,major_category,report_category,vat_yn,billing_yn,vat_type,rem_prt_yn,vat_rt,fe_prt_yn,fins_yn,fe_ref_item,fin_category,use_yn,uas_gl_code,rem_prt_nm,bill_gr1_cd,bill_gr2_cd,gl_gr1_cd,gl_gr2_cd,user_id,ipaddr } = Param;
-  log("==================================SP_UpdateData:", Param,trans_mode,trans_type,prod_gr_cd,charge_code,charge_desc,ass_transaction,category,major_category,report_category,vat_yn,billing_yn,vat_type,rem_prt_yn,vat_rt,fe_prt_yn,fins_yn,fe_ref_item,fin_category,use_yn,uas_gl_code,rem_prt_nm,bill_gr1_cd,bill_gr2_cd,gl_gr1_cd,gl_gr2_cd,user_id,ipaddr);
+  // log("==================================SP_UpdateData:", Param,trans_mode,trans_type,prod_gr_cd,charge_code,charge_desc,ass_transaction,category,major_category,report_category,vat_yn,billing_yn,vat_type,rem_prt_yn,vat_rt,fe_prt_yn,fins_yn,fe_ref_item,fin_category,use_yn,uas_gl_code,rem_prt_nm,bill_gr1_cd,bill_gr2_cd,gl_gr1_cd,gl_gr2_cd,user_id,ipaddr);
   const params = {
     inparam : [
       "in_trans_mode"
