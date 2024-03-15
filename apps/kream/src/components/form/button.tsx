@@ -17,7 +17,7 @@ export const TSubmitButton: React.FC<ButtonProps> = ({ label }) => {
   return (
     <button
       type="submit"
-      className="h-[28px] px-4 py-1 text-xs font-bold text-white bg-[#19a6e7] rounded hover:bg-[#0d95d4]">
+      className="h-[32px] px-4 py-1 text-xs font-bold text-white bg-[#19a6e7] rounded hover:bg-[#0d95d4]">
       {label}
     </button>
   );
@@ -28,7 +28,7 @@ export const TCancelButton: React.FC<ButtonProps> = ({ label, onClick }) => {
     <button
       onClick={onClick}
       type="button"
-      className="h-[28px] px-4 py-1 rounded text-xs font-bold text-black bg-gray-200 border border-gray-400 hover:bg-gray-300 ">
+      className="h-[32px] px-4 py-1 rounded text-xs font-bold text-black bg-gray-200 border border-gray-400 hover:bg-gray-300 ">
       {label}
     </button>
   );
@@ -56,12 +56,12 @@ export const TButtonRed: React.FC<ButtonProps> = ({ label, onClick }) => {
   );
 };
 
-export const TButtonBlack: React.FC<ButtonProps> = ({ label, onClick }) => {
+export const TButtonDarkgray : React.FC<ButtonProps> = ({ label, onClick }) => {
   return (
     <button
       onClick={onClick}
       type="button"
-      className="h-[32px] px-4 py-2 text-xs font-bold text-white bg-[#333333] rounded hover:bg-gray-600 ">
+      className="h-[32px] px-4 py-2 text-xs font-bold text-white bg-[#333322] rounded hover:bg-gray-500 ">
       {label}
     </button>
   );

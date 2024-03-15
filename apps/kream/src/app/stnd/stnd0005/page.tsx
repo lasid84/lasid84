@@ -43,8 +43,7 @@ const Stnd0005: React.FC = () => {
 
     return (
 
-        <TableContext.Provider value={val}>
-            <PageTitle />
+        <TableContext.Provider value={val}>           
             <SearchForm loadItem={initData} />
             <AgGrid
                 loadItem={initData}

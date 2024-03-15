@@ -80,7 +80,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const [colDefs, setColDefs] = useState<cols[]>([]);
     const [mainData, setMainData] = useState([{}]);
 
-    const containerStyle = useMemo(() => "flex flex-col w-full", []);
+    const containerStyle = useMemo(() => "flex flex-col w-full py-2", []);
     const gridStyle = useMemo(() => "w-full h-[65vh]", []);
 
     const [ready, setReady] = useState(false);
