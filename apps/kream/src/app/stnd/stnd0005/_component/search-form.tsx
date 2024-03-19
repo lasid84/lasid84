@@ -1,40 +1,36 @@
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { useEffect, useState, useCallback, memo } from "react"
 import { makeZodI18nMap } from "zod-i18n-map";
 import { zodResolver } from "@hookform/resolvers/zod";
-import PageSearch from "../../../../shared/tmpl/page-search"
+// import PageSearch from "../../../../shared/tmpl/page-search"
+import PageSearch from "@/layouts/search-form/page-search-row"
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { useEffect, useState, useCallback, memo } from "react"
 import Select from "react-select"
-import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue,TButtonDarkgray } from "components/form";
-import { crudType, useAppContext } from "@/components/provider/contextProvider";
-import { SEARCH_M } from "components/provider/contextProvider";
-import { useUserSettings } from "@/states/useUserSettings";
-import { StringifyOptions } from "querystring";
+import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
+import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
+
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
-    cursorData : []
-    numericData : number;
-    textData : string;
+    cursorData: []
+    numericData: number;
+    textData: string;
 }
 
-export interface typeloadItem {
-    data: {} | undefined
-}
 
 type Props = {
     // onSubmit: SubmitHandler<any>;
-    loadItem: typeloadItem | any
+    initData: any | undefined;
 }
 
 const SearchForm: React.FC<Props> = (props) => {
-    const { loadItem } = props;
+    const { initData } = props;
 
-    const { dispatch } = useAppContext()
+    const { dispatch, objState } = useAppContext()
     const [groupcd, setGroupcd] = useState<any>([])
-        let selectoptions:any[] = []
+    let selectoptions: any[] = []
     //const SearchForm = memo(({loadItem}:any) => {
     // 다국어
     const { t } = useTranslation();
@@ -54,40 +50,35 @@ const SearchForm: React.FC<Props> = (props) => {
     } = methods;
 
     useEffect(() => {
-
-        if (loadItem) {
-            loadItem[0].data.map((item:any) => {
+        if (initData) {
+            initData[0].data.map((item: any) => {
                 var key = item[Object.keys(item)[0]];
                 var label = item[Object.keys(item)[1]];
                 log(key, label)
-                selectoptions.push({ value: key, label: key + " "+ label });
-              })
+                selectoptions.push({ value: key, label: key + " " + label });
+            })
             setGroupcd(selectoptions)
-            onSearch();
+            //onSearch();
         }
-    }, [loadItem])
+    }, [initData])
 
-    const onSubmit = () => {
-        const params = getValues()
-    }
 
     const onSearch = () => {
         const params = getValues();
-        log("onSearch", params)
-        dispatch({ type: SEARCH_M, searchParams: params, isSearch: true });
+        log("onSearch", objState.isMSearch)
+        dispatch({searchParams: params, isMSearch: true });
     }
 
     const onNew = () => {
         // dispatch({ type: SELECTED_ROW, selectedRow: null});
-        dispatch({ selectedRow: null, crudType: crudType.CREATE, isGridClick: true });
+        dispatch(objState.push({ selectedRow: null, crudType: crudType.CREATE, isGridClick: true }));
     }
-
-
 
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form>
+            {/* onSubmit={handleSubmit(onSubmit)} */}
                 <><PageSearch
                     right={
                         <>
@@ -96,7 +87,7 @@ const SearchForm: React.FC<Props> = (props) => {
                                 setFocus("grp_cd");
                                 reset();
                             }} />
-                            <TButtonBlue label={t("new")} onClick={onNew} />
+                            {/* <TButtonBlue label={t("new")} onClick={onNew} /> */}
                         </>
                     }
                 >
@@ -112,11 +103,11 @@ const SearchForm: React.FC<Props> = (props) => {
                                 placeholder='ALL'
                                 options={groupcd}
                                 ref={ref}
-                                value={groupcd && groupcd.find((options: any) => options.key === value)}                               
+                                value={groupcd && groupcd.find((options: any) => options.key === value)}
                                 onChange={(selectedOption: any) => {
-                                    console.log("afdsfdsfadsfasf",selectedOption)
+                                    console.log("afdsfdsfadsfasf", selectedOption)
                                     onChange(selectedOption.value); // 선택된 옵션의 라벨로 grp_cd 필드 값 변경
-                                    handleSubmit(onSubmit)(); // 폼 제출
+                                    handleSubmit(onSearch)(); // 폼 제출
                                 }}
                             />
                         )}
@@ -125,7 +116,6 @@ const SearchForm: React.FC<Props> = (props) => {
             </form>
         </FormProvider >
     )
-
 }
 
 export default SearchForm

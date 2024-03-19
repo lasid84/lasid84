@@ -465,7 +465,7 @@ const checkBoxFormatter = (params: ValueFormatterParams) => {
 
 const bizNoFormatter = (params: ValueFormatterParams) => {
   // log("bizNoFormatter", params)
-  return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
+  // return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
 }
 
 function checkBoxParser(params: ValueParserParams) {

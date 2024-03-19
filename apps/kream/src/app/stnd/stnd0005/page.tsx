@@ -1,56 +1,36 @@
 'use client'
 
-import { useReducer, useMemo, useEffect } from "react"
-import PageTitle from "components/page-title/page-title";
-import { SP_Load, SP_GetData } from "./_component/data"
-import { PageState, reducer } from "components/provider/contextProvider";
-import { LOAD, SEARCH_M } from "components/provider/contextProvider";
+import { useReducer, useMemo } from "react"
+import { SP_Load } from "./_component/data"
+import { reducer, TableContext } from "components/provider/contextObjectProvider";
+import { LOAD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
-import { TableContext } from "@/components/provider/contextProvider"
-import AgGrid from 'components/grid/ag-grid-enterprise';
-import type { GridOption } from 'components/grid/ag-grid-enterprise';
-import Modal from './_component/popup';
-
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-
+import MasterGrid from './_component/gridMaster'
 
 const Stnd0005: React.FC = () => {
 
-    const [state, dispatch] = useReducer(reducer, PageState)
-    const { searchParams, mSelectedRow, crudType, isMSearch, isMChangeSelect } = state;
-
-    const val = useMemo(() => { return { searchParams, isMSearch, mSelectedRow, isMChangeSelect, crudType, dispatch } }, [state]);
-    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    const { data: mainData, refetch: mainRefetch } = useGetData(searchParams, SEARCH_M, SP_GetData, { enable: false });
-
-    const gridOption: GridOption = {
-        colVisible: { col: ["grp_cd", "grp_cd_nm", "cd", "cd_nm", "cd_desc", "remark", 'cd_mgcd1'], visible: true },
-        colDisable: ["grp_cd"],
-        editable: ["grp_cd_nm"],
-        dataType: { "create_date": "date" },
-        isMultiSelect: false,
-    }
-
-
-    useEffect(() => {
-        if (isMSearch) {
-            mainRefetch();
-            dispatch({isSearch:false});
+    const [state, dispatch] = useReducer(reducer, {
+        objState: {
+            searchParams: {},
+            isMSearch: false,
+            mSelectedRow: {},
         }
-    }, [isMSearch]);
+    })
+    const { objState } = state;
+    const { searchParams } = objState;
+    const val = useMemo(() => { return { dispatch, objState }}, [state]);
+
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
-
-        <TableContext.Provider value={val}>           
-            <SearchForm loadItem={initData} />
-            <AgGrid
-                loadItem={initData}
-                listItem={mainData}
-                options={gridOption} />
-            <Modal
-                loadItem={initData} />
+        <TableContext.Provider value={val}>
+            <SearchForm initData={initData} />
+            <div className="flex flex-col w-full">
+                <div className={`ag-theme-custom w-full h-[450px]`}>
+                    <MasterGrid initData={initData} />
+                </div>
+            </div>
         </TableContext.Provider>
 
     )
