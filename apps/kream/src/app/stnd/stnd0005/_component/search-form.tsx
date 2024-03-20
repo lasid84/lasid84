@@ -10,6 +10,7 @@ import Select from "react-select"
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
 import { ReactSelect, Label, LabelTop, InputWrapper } from "@/components/react-hook-form"
+import { SetFilterModelValuesType } from "ag-grid-enterprise/dist/lib/setFilter/setValueModel";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -33,7 +34,9 @@ const SearchForm: React.FC<Props> = (props) => {
     const { t } = useTranslation();
     z.setErrorMap(makeZodI18nMap({ t }));
 
-    const methods = useForm({})
+    const methods = useForm({
+        defaultValues:{grp_cd:"ALL"}
+    })
 
     const {
         handleSubmit,
@@ -54,7 +57,7 @@ const SearchForm: React.FC<Props> = (props) => {
                 selectoptions.push({ value: key, label: key + " " + label });
             })
             setGroupcd(selectoptions)
-            //onSearch();
+            onSearch();
         }
     }, [initData])
 
@@ -64,6 +67,8 @@ const SearchForm: React.FC<Props> = (props) => {
         log("onSearch", objState.isMSearch)
         dispatch({ searchParams: params, isMSearch: true });
     }
+
+
 
     return (
         <FormProvider {...methods}>
@@ -75,12 +80,13 @@ const SearchForm: React.FC<Props> = (props) => {
                             <TCancelButton label={t("reset")} onClick={() => {
                                 setFocus("grp_cd");
                                 reset();
+                                
                             }} />
                         </>
                     }>
                     <InputWrapper outerClassName="" inline={false}>
                         <LabelTop id="grp_cd">{t("grp_cd")}</LabelTop>
-                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} />
+                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} defaultValue={groupcd?? {label:"ALL", value:"ALL"}}/>
                     </InputWrapper>
                 </PageSearch>
             </form>

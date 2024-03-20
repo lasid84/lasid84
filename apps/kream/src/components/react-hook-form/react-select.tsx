@@ -10,6 +10,7 @@ export type ReactSelectProps = {
   id: string;
   name: string;
   options: ReactSelectOptionProps[];
+  defaultValue? : {}
   rules?: Record<string, any>;
   placeholder?: string;
   isMulti?: boolean;
@@ -20,6 +21,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = ({
   name,
   placeholder,
   options,
+  defaultValue,
   rules = {},
   isMulti = false,
 }) => {
@@ -35,8 +37,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = ({
           <div className="block w-full flex-grow-1">
             <ReactSelectComponent
               //{...field}
+              defaultValue={{label:"ALL", value:"ALL"}}
               isMulti={isMulti}
-              placeholder={placeholder}
               options={options}
               instanceId={id}              
               onChange={(target:any)=>{
