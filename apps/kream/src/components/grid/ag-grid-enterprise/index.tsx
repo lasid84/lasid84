@@ -5,7 +5,6 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme applied to the grid
 // import 'ag-grid-enterprise';
 
-import PageContent from "@/shared/tmpl/page-content"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy, SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent } from "ag-grid-community";
 

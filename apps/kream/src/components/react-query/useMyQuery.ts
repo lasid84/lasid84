@@ -38,7 +38,6 @@ export const useUpdateData = (model?: string) => {
     onSuccess: (res:any, data:any, context:any) => {
       // queryClient.invalidateQueries([`${pageName}`+'_SEARCH'])
       queryClient.invalidateQueries([model])      
-      console.log('onCreate',res,data,context)
     },
     onMutate: async (data) => { },
     onError: (err, data, context) => {
@@ -56,6 +55,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
   const user_id = useUserSettings((state) => state.data.user_id);
   const ipaddr = useUserSettings((state) => state.data.ipaddr);
   const queryClient = useQueryClient();
+
   const Update = useMutation(['key'], mutationFn, {
     // ...option,
     onSuccess: (res:any, data:any, context:any) => {
@@ -71,10 +71,10 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
 
   const Create = useMutation(['key'], mutationFn, {
     onSuccess: (res:any, data:any, context:any) => {
+      log("onSuccess : ", data)
       queryClient.invalidateQueries([queryKey])  
     },
     onMutate: async (data) => {
-      
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;
     },

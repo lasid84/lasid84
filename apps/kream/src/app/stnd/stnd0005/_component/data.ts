@@ -90,7 +90,7 @@ export const SP_UpdateData = async (param: any) => {
   return result![0];
 }
 
-export const SP_CreateData = async (param: any) => {
+export const SP_InsertData = async (param: any) => {
   console.log('SP_CreateData_params', param)
   const Param = param
   const { grp_cd, cd, cd_nm, cd_desc,cd_mgcd1, cd_mgcd2, use_yn, user_id, ipaddr } = Param;

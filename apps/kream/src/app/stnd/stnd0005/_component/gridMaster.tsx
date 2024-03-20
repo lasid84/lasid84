@@ -5,12 +5,13 @@ import { useEffect, useRef } from "react";
 import { SP_GetMasterData } from "./data";
 import { useAppContext, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid, { onRowClicked, onSelectionChanged } from 'components/grid/ag-grid-enterprise';
+import Grid, { onRowClicked, onSelectionChanged, onGridRowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import Modal from './popup';
 import { TButtonBlue } from "components/form";
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community"
 import PageContent from "@/layouts/search-form/page-search-row";
+import { PopType } from "@/utils/modal";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -22,13 +23,12 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-
     // const [gridOptions, setGridOptions] = useState<GridOption>();
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enable: false });
     const gridOption: GridOption = {
         colVisible: { col: ["grp_cd", "grp_cd_nm", "cd", "cd_nm", "cd_desc", "cd_mgcd1", "cd_mgcd2", "use_yn"], visible: true },
-        // colDisable: ["grp_cd", "grp_cd_nm", "cd"],
+        colDisable: ["grp_cd", "grp_cd_nm", "cd"],
         checkbox: ["use_yn"],
         gridHeight: "70vh",
         // dataType: { "bz_reg_no":"bizno"},
@@ -53,13 +53,17 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         if (objState.isMSearch) {
             //mainRefetch();
             log("mainisSearctqtqwttqh", objState.isMSearch);
-            dispatch({isMSearch : false});
+            dispatch({ isMSearch: false });
         }
     }, [objState.isMSearch]);
 
-    const onSave = ()=>{
+    const onSave = () => {
         log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
-        
+
+    }
+    const onPopup = () => {
+        log("--------------------", objState.isPopupOpen, objState.crudType)
+        dispatch({ isPopupOpen: true, crudType: PopType.CREATE })
     }
 
     return (
@@ -67,11 +71,12 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
             <PageContent
                 right={
                     <>
-                        <TButtonBlue label={"add"} />
-                        <TButtonBlue label={"save"} onClick={onSave}/>
+                        <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current)} />
+                        <TButtonBlue label={"save"} onClick={onSave} />
+                        <TButtonBlue label={"popup"} onClick={onPopup} />
                     </>
                 }>
-                     <></>
+                <></>
             </PageContent>
             <Grid
                 gridRef={gridRef}
@@ -83,8 +88,8 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                     onSelectionChanged: handleSelectionChanged,
                 }}
             />
-            {/* <Modal loadItem={initData} />  */}
-            
+            <Modal initData={initData} />
+
         </>
 
     );

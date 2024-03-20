@@ -1,4 +1,4 @@
-import PageTitle from "../../../shared/tmpl/page-title"
+
 import ListGrid from "./_component/list-grid"
 import SearchForm from "./_component/search-form"
 const pageProps = {
@@ -19,7 +19,7 @@ const Stnd0007: React.FC = () => {
 
     return (
         <>
-            <PageTitle title={pageProps.title} brcmp={brcmp} />
+
             {/* <SearchForm/> */}
             <ListGrid listItem={null}/>
         </>

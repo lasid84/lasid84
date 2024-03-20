@@ -27,18 +27,21 @@ export const ReactSelect: React.FC<ReactSelectProps> = ({
 
   return (
     <Controller
+    control={control}
       name={name}
-      control={control}
       rules={rules}
-      render={({field}) => {
+      render={({field:{onChange}}) => {
         return (
           <div className="block w-full flex-grow-1">
             <ReactSelectComponent
-              {...field}
+              //{...field}
               isMulti={isMulti}
               placeholder={placeholder}
               options={options}
-              instanceId={id}
+              instanceId={id}              
+              onChange={(target:any)=>{
+                onChange(target.value)
+              }}                         
             />
           </div>
         );

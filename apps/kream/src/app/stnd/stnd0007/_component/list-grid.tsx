@@ -1,6 +1,6 @@
 "use client"
 
-import PageContent from "@/shared/tmpl/page-content"
+
 import { useMemo } from "react";
 import {AgGridReact} from "ag-grid-react"
 
@@ -13,9 +13,7 @@ const ListGrid: React.FC<Props> = () => {
   const gridStyle = useMemo(() => "w-full h-[450px]", []);
     return (
         <>
-            <PageContent
-                right={<>이벤트 버튼</>} children={undefined}            >
-            </PageContent>
+
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>
                     <AgGridReact
