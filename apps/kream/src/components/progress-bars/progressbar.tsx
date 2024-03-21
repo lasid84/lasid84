@@ -23,7 +23,7 @@ export type ProgressBarProps = {
         className={`relative flex flex-row w-full text-center text-xs items-center h-5`}>
         <div
           style={{width: `${width}%`}}
-          className={`absolute top-0 w-full ${color} text-white`}>
+          className={`absolute top-0 w-full bg-${color}-500 text-white`}>
           {width}%
         </div>
       </div>

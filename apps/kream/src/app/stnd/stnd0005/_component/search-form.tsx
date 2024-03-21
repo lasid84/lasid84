@@ -24,8 +24,8 @@ type Props = {
 }
 export function random(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min)) + min;
-  }
-  
+}
+
 
 const SearchForm: React.FC<Props> = (props) => {
     const { initData } = props;
@@ -71,8 +71,6 @@ const SearchForm: React.FC<Props> = (props) => {
         log("onSearch", objState.isMSearch)
         dispatch({ searchParams: params, isMSearch: true });
     }
-    const palette = ["bg-red-500", "bg-green-500", "bg-blue-500"];
-
 
     return (
         <FormProvider {...methods}>
@@ -87,11 +85,9 @@ const SearchForm: React.FC<Props> = (props) => {
                             }} />
                         </>
                     }>
-                    {palette.map((color, i) => (
-                        <div className="mb-8" key={i}>
-                            <ProgressBarWithText width={random(30, 70)} color={color} />
-                        </div>
-                    ))}
+
+                    <ProgressBarWithText width={random(30, 70)} color={"red"} />
+
                     <InputWrapper outerClassName="" inline={false}>
                         <LabelTop id="grp_cd">{t("grp_cd")}</LabelTop>
                         <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} defaultValue={groupcd ?? { label: "ALL", value: "ALL" }} />
