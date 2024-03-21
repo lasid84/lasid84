@@ -13,7 +13,10 @@ import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "co
 import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { shallow } from "zustand/shallow";
-// import { useGetData } from './test'
+
+import CustomSelect from "components/select/customSelect";
+import { GridOption, gridData } from "@/components/grid/ag-grid-enterprise";
+
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -67,14 +70,14 @@ const SearchForm = memo(({loadItem}:any) => {
   const [transtype, setTranstype] = useState([])
 
   useEffect(() => { 
-    if(loadItem){
+    if(loadItem?.length){
       // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0].data) 
-      setTranstype(loadItem[1].data)
+      setTransmode(loadItem[0]) 
+      setTranstype(loadItem[1])
 
       onSearch();
     }    
-  }, [loadItem])
+  }, [loadItem?.length])
 
   const onSubmit = () => {
     const params = getValues();
@@ -93,6 +96,21 @@ const SearchForm = memo(({loadItem}:any) => {
     dispatch({ mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
   }
 
+  const gridOption: GridOption = {
+    colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:false },
+    colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+    checkbox: ["no"],
+    editable: ["trans_mode"],
+    dataType: { "create_date" : "date", "vat_rt":"number"},
+    isMultiSelect: false,
+    isAutoFitColData: true,
+    alignLeft: ["major_category", "bill_gr1_nm"],
+    alignRight: [],
+    // rowadd
+    // rowdelete
+
+};
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
@@ -108,7 +126,7 @@ const SearchForm = memo(({loadItem}:any) => {
             </>
           }>
           <div>
-            <TSelect2
+            {/* <TSelect2
               id="trans_mode"
               label={t("trans_mode")}
             //   allYn={false}
@@ -116,9 +134,22 @@ const SearchForm = memo(({loadItem}:any) => {
               outerClassName="w-full space-y-1"
               defaultValue={gTransMode}
               options={transmode}
-            />
+            /> */}
             {/* {errors?.trans_mode?.message && <ErrorMessage>{errors.trans_mode.message}</ErrorMessage>} */}
-            <TSelect2
+            <CustomSelect
+              id="trans_mode"
+              // label="trans_mode"
+              listItem = {transmode as gridData}
+              valueCol= {["trans_mode"]}
+              displayCol = "name"
+              gridOption = {{
+                colVisible: { col : ["trans_mode", "name"], visible:true },
+              }}
+              // gridStyle={{width:'400px', height:'200px'}}
+              // style={{width:'1000px'}}
+              // isNoSelect={false}
+            />
+            {/* <TSelect2
               id="trans_type"
               label={t("trans_type")}
             //   allYn={false}
@@ -126,8 +157,21 @@ const SearchForm = memo(({loadItem}:any) => {
               outerClassName="w-full space-y-1"
               defaultValue={gTransType}
               options={transtype}
-            />
+            /> */}
           {/* {errors?.trans_type?.message && <ErrorMessage>{errors.trans_type.message}</ErrorMessage>} */}
+            <CustomSelect
+              id="trans_type"
+              // label="trans_mode"
+              listItem = {transtype as gridData}
+              valueCol= {["trans_type"]}
+              displayCol = "name"
+              gridOption = {{
+                colVisible: { col : ["trans_type", "name"], visible:true },
+              }}
+              // gridStyle={{width:'400px', height:'200px'}}
+              // style={{width:'1000px'}}
+              // isNoSelect={false}
+            />
           </div>
         </PageSearch>
       </form>

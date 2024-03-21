@@ -7,7 +7,7 @@ import { PageState, crudType, reducer, useAppContext } from "components/provider
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import { TableContext } from "@/components/provider/contextProvider";
-import Grid, {onRowClicked, onSelectionChanged} from 'components/grid/ag-grid-enterprise';
+import Grid, {onRowClicked, onSelectionChanged, autoSizeAll} from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
 import { useSearchParams } from 'next/navigation'
@@ -18,7 +18,7 @@ import Modal from "./popup";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData : any | null;
+    initData? : any | null;
   };
 
 const MasterGrid: React.FC<Props> = ({ initData }) => {    
@@ -28,7 +28,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enable:false});
     const gridOption: GridOption = {
-        colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:false },
+        colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
         colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         checkbox: ["no"],
         editable: ["trans_mode"],
@@ -57,12 +57,13 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     }, []);
 
     useEffect(() => {
-        if (isMSearch) {
+        if (isMSearch && gridRef) {
             log("gridMaster", searchParams)
             mainRefetch();
             dispatch({isMSearch:false});
+            // autoSizeAll(gridRef.current);
         }
-    }, [isMSearch]);
+    }, [isMSearch, gridRef]);
 
     return (
         <>

@@ -2,7 +2,7 @@ import DialogBasic from "@/page-parts/tmpl/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
 import { TButtonBlue, TButtonGray, TInput, TSelectCode } from "@/page-parts/tmpl/form";
 import { PopType, setModalValue } from "@/utils/modal";
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import { PageState, useAppContext } from "components/provider/contextProvider"
 import { SEARCH_M } from "components/provider/contextProvider";
 import { SP_UpdateData } from './data';
@@ -21,7 +21,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     const { dispatch, mSelectedRow, crudType:popType, isPopUpOpen:isOpen, searchParams } = useAppContext();
     const router = usePathname()
-    console.log('query.폴더명',router)
+    console.log('query.폴더명',router, loadItem);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
 
     // 선택된 데이터 Select컴포넌트 처리
@@ -66,16 +66,17 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
       }, [loadItem]);
 
     useEffect(() => {        
-        if (mSelectedRow && Object.keys(mSelectedRow).length > 0) {
+        log("=====", loadItem);
+        if (loadItem && mSelectedRow && Object.keys(mSelectedRow).length > 0) {
             var modetype = mSelectedRow?.trans_mode + mSelectedRow?.trans_type;
             switch (modetype) {
-                case "AE": setBillGr1Cd(loadItem[7].data); break;
-                case "AI": setBillGr1Cd(loadItem[8].data); break;
-                case "OE": setBillGr1Cd(loadItem[9].data); break;
-                case "OI": setBillGr1Cd(loadItem[10].data); break;
+                case "AE": setBillGr1Cd(loadItem[7]?.data); break;
+                case "AI": setBillGr1Cd(loadItem[8]?.data); break;
+                case "OE": setBillGr1Cd(loadItem[9]?.data); break;
+                case "OI": setBillGr1Cd(loadItem[10]?.data); break;
             }
         }
-    }, [mSelectedRow])
+    }, [mSelectedRow, loadItem])
 
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
@@ -270,4 +271,4 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
 }
 
-export default Modal
+export default Modal;

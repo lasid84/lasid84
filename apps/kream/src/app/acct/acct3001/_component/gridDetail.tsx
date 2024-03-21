@@ -6,12 +6,12 @@ import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
-import Grid, { isFirstColumn, getFirstColumn, onGridRowAdd, onCellValueChanged, onSelectionChanged } from 'components/grid/ag-grid-enterprise';
+import Grid, { isFirstColumn, getFirstColumn, onGridRowAdd, onCellValueChanged, onSelectionChanged, onRowClicked } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import PageSearch from "layouts/search-form/page-search-row";
 
 import { TButtonBlue } from "components/form";
-import { CellValueChangedEvent, IRowNode, SelectionChangedEvent } from "ag-grid-community";
+import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "@/page-parts/tmpl/toast";
 import { Anonymous_Pro } from "next/font/google";
 
@@ -29,14 +29,16 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [ gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: mainData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData, {enable:false});
+    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData, {enable:false});
 
-    useEffect(() => {
-        if (objState.isDSearch) {
-            detailRefetch();
-            dispatch({isDSearch:false});
-        }
-    }, [objState?.isDSearch]);
+    /* state 변경 시 useQuery 등록한 데이터 모두 콜 하는듯... */
+    // useEffect(() => {
+    //     if (objState.isDSearch) {
+    //         console.log("Detail useEffect", objState.isDSearch)
+    //         detailRefetch();
+    //         dispatch({isDSearch:false});
+    //     }
+    // }, [objState.mSelectedRow, objState.isDSearch]);
 
     useEffect(() => {
         if (initData) {
@@ -71,9 +73,15 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };
 
+    const handleRowClicked = (param:RowClickedEvent) => {
+        log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
+        const row = onRowClicked(param);
+        dispatch({dSelectedRow:row});
+    };
+
     const handleCellValueChanged = (param:CellValueChangedEvent) => {
         log("handleCellValueChanged");
-        // const val = onCellValueChanged(param);
+        onCellValueChanged(param);
         gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
@@ -86,22 +94,22 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
 
     const onSave = () => {        
         log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
-        // const modifiedRows:any = [];
-        // gridRef.current.api.forEachNode((node:any) => {
-        //     var data = node.data;
-        //     gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
-            
-        //     if (data.__changed) {
-        //       if (data.cust_code && data.cont_seq) { //수정
-        //         Update.mutate(data);
-        //       } else { //신규
-        //         data.cust_code = selectedRow![1].cust_code;
-        //         Create.mutate(data);
-        //       }
-        //     }
-        //   });
-        // // log("onSave", gridRef.current.api, modifiedRows);
-        // toastSuccess('Success.');
+        const modifiedRows:any = [];
+        gridRef.current.api.forEachNode((node:any) => {
+            var data = {...node.data};
+            gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
+            // console.log(data);
+            if (data.__changed) {
+              if (data.cust_code && data.cont_seq) { //수정
+                Update.mutate(data);
+              } else { //신규
+                data.cust_code = objState.mSelectedRow.cust_code;
+                Create.mutate(data);
+              }
+            }
+          });
+        // log("onSave", gridRef.current.api, modifiedRows);
+        toastSuccess('Success.');
 
     };
 
@@ -110,7 +118,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             <PageSearch
                 right={
                 <>
-                <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current)} />
+                <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
                 <TButtonBlue label={"save"} onClick={onSave} />
                 </>
             }>
@@ -119,11 +127,11 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             <Grid
                 gridRef={gridRef}
                 loadItem={initData}
-                listItem={mainData as gridData}
+                listItem={detailData as gridData}
                 options={gridOptions}
                 event={{
-                    // onCellValueChanged: handleCellValueChanged,
-                    // onSelectionChanged: handleSelectionChanged                    
+                    onCellValueChanged: handleCellValueChanged,
+                    onSelectionChanged: handleSelectionChanged
                 }}
                 />
         </>

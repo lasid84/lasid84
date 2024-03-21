@@ -28,7 +28,7 @@ export default function STND0006() {
 
     const val = useMemo(() => {return { searchParams, isMSearch, mSelectedRow, isPopUpOpen, crudType, dispatch }}, [state]);
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    
+    log("initData", initData, searchParams)
     return (
         <TableContext.Provider value={val}>
             <SearchForm loadItem={initData} />

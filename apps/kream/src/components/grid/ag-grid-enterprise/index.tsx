@@ -3,11 +3,12 @@
 import { AgGridReact } from 'ag-grid-react'; // AG Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme applied to the grid
+// import "ag-grid-community/styles/ag-theme-quartz.css" // Optional Theme applied to the grid
 // import 'ag-grid-enterprise';
 
 import PageContent from "@/shared/tmpl/page-content"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy, SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent } from "ag-grid-community";
+import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy, SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent } from "ag-grid-community";
 
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
@@ -40,6 +41,7 @@ type GridEvent = {
   onPasteStart?: (params: PasteStartEvent) => void;
   onPasteEnd?: (params: PasteEndEvent) => void;
   onColumnResized?: (params: ColumnResizedEvent) => void;
+  onGridReady?: (params: GridReadyEvent) => void;
 }
 
 export type GridOption = {
@@ -50,6 +52,7 @@ export type GridOption = {
       visible:boolean
     },
     gridHeight?: string,
+    gridWidth?: string,
     colDisable?: string[],
     minWidth?:  {[key: string]: number},
     alignLeft?: string[],                 //기본 정렬은 가운데
@@ -58,6 +61,7 @@ export type GridOption = {
     dataType?: {[key: string]: string}; //date, number, text, bizno
     isMultiSelect?: boolean
     isAutoFitColData?: boolean
+    isNoSelect?: boolean
 };
 
 type cols = {
@@ -73,28 +77,31 @@ type cols = {
   // floatingFilter?: boolean
 }
 
-
 const ListGrid: React.FC<Props> = memo((props) => {
     const { t } = useTranslation();
 
     const [colDefs, setColDefs] = useState<cols[]>([]);
     const [mainData, setMainData] = useState([{}]);
 
-    const [gridStyle, setGridStyle] = useState({height: "100%"});
+    const [gridStyle, setGridStyle] = useState({height: "65vh"});
     const { listItem, options } = props;
 
-    const containerStyle = useMemo(() => "flex flex-col w-full", []);
+    const containerStyle = useMemo(() => "flex-col w-full", []);
     // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
+    const [isReady, setReady] = useState(false);
+    
+    // const [defaultColDef, setDefaultColDef] = useState({});
 
     //Column Defualt 설정
     const defaultColDef = useMemo(() => {
       return {
         // flex: !!options?.flex ? options.flex : 0,
+        // flex: options?.isAutoFitColData? 0 : 1,
         // minWidth: 20,
         filter: 'agTextColumnFilter',
         floatingFilter: true,      
         headerClass: "text-center",
-        editable:true
+        editable:true,
       };
     }, []);
 
@@ -110,31 +117,66 @@ const ListGrid: React.FC<Props> = memo((props) => {
           rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
           // groupIncludeTotalFooter: true,
           stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
-          // autoSizeStrategy: {
-          //   type: 'fitCellContents',
-          //   defaultMinWidth: 20,
-          //   // columnLimits: [
-          //   //     {
-          //   //         colId: 'country',
-          //   //         minWidth: 900
-          //   //     }
-          //   // ]
+          // autoSizeStrategy: {            
+          //     type: 'fitCellContents',
+          //     defaultMinWidth: 20,
+          //     // columnLimits: [
+          //     //     {
+          //     //         colId: 'country',
+          //     //         minWidth: 900
+          //     //     }
+          //     // ]
+              
+          // },
+          // onGridReady: () => {
+          //   log("onGridReady")
+          //   setDefaultColDef(
+          //     {
+          //       // flex: !!options?.flex ? options.flex : 0,
+          //       flex: options?.isAutoFitColData? 0 : 1,
+          //       // minWidth: 20,
+          //       filter: 'agTextColumnFilter',
+          //       floatingFilter: true,      
+          //       headerClass: "text-center",
+          //       editable:true
+          //     }
+          //   );
+          //   autoSizeAll(props.gridRef)
           // },
           onComponentStateChanged: () => {
               // log("onRowDataUpdated", ready);
+              if (!options?.isNoSelect) {
+                props.gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
+                  if (i === 0) {
+                    node.setSelected(true);
+                    log("onComponentStateChanged selected", node)
+                  }
+                })
+              }
               if (options?.isAutoFitColData) {
                 // setReady(true);
-                autoSizeAll();
+                autoSizeAll(props.gridRef);
               }
-              props.gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
-                if (i === 0) {
-                  node.setSelected(true);
-                }
-              })
+
               // props.gridRef.current.api.refreshCells();
           }, 
           onCellValueChanged: onCellValueChanged,
           ...props.event
+        };
+      }, []);
+
+      const autoSizeStrategy = useMemo<
+    | SizeColumnsToFitGridStrategy
+    | SizeColumnsToFitProvidedWidthStrategy
+    | SizeColumnsToContentStrategy
+      >(() => {
+        if (!options?.isAutoFitColData) {
+          return {
+            type: 'fitGridWidth',
+          };
+        }
+        return {
+          type: 'fitCellContents',
         };
       }, []);
 
@@ -160,6 +202,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
       //         })
       //       )
       // }, [listItem?.data]);
+
+  useEffect(() => {
+    if(isReady) autoSizeAll(props.gridRef);
+  }, [isReady]);
   
   //컬럼 세팅
   useEffect(() => {
@@ -205,7 +251,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
         if (!options?.isAutoFitColData) {
           cellOption = {
             ...cellOption,
-            flex: 1
+            flex: 1,
+            width:100
           }
         }
 
@@ -373,24 +420,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
   }, [options?.gridHeight]);
   
-  const autoSizeAll = (skipHeader: boolean = false) => {
-
-    // gridRef.current.api.sizeColumnToFit();
-
-    log('autoSizeAll called!!!!!!!!');
-    const allColumnIds: string[] = [];
-    props.gridRef.current?.api.getColumns().forEach((column:any) => {
-      allColumnIds.push(column.getId());
-    });
-    props.gridRef.current?.api.autoSizeColumns(allColumnIds, skipHeader);
-  };
-
     return (
         <>
           <div className={containerStyle}>
               <div 
                 // className={`ag-theme-quartz ${gridStyle}`}
-                className={`ag-theme-custom w-full`}
+                // className={`ag-theme-quartz w-full`}
+                className={`ag-theme-custom w-full p-0.5`}
                 style={gridStyle}
               >
                   <AgGridReact
@@ -402,6 +438,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
                       defaultColDef={defaultColDef}
                       // editType={'fullRow'}
                       // onCellValueChanged={onCellValueChanged}
+                      autoSizeStrategy={autoSizeStrategy}
                   />
               </div>
           </div>
@@ -410,6 +447,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 });
 
 export const onRowClicked = (param:RowClickedEvent) => {
+    log("onRowClicked")
     return {"colId": param.node.id, ...param.node.data};
 }
 
@@ -420,9 +458,15 @@ export const onSelectionChanged = (param:SelectionChangedEvent) => {
 }
 
 export const onCellValueChanged = (param:CellValueChangedEvent) => {
+  // log("onCellValueChanged")
   param.node.data['__changed'] = true
   return {"col": param.column.getColId(), "oldValue" : param.oldValue, "newValue": param.newValue};
 };
+
+export const onRowDataUpdated = (event: RowDataUpdatedEvent) => {
+    // updateRowCount('rowDataUpdated');
+    log('Row Data Updated', event);
+  }
 
 export const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; }; column: any; }) => {
   var displayedColumns = params.api.getAllDisplayedColumns();
@@ -436,18 +480,44 @@ export const getFirstColumn = (params: { api: { getAllDisplayedColumns: () => an
   return thisIsFirstColumn.colId;
 };
 
-export const onGridRowAdd = async (gridRef: {api:any}) => {
+export const onGridRowAdd = async (gridRef: {api:any}, initData:{} = {}) => {
   // var data = gridRef.api.getRenderedNodes();
   // log("===============", data);
   var col = getFirstColumn(gridRef);
   var rowCount = gridRef.api.getRenderedNodes().length;
-  await gridRef.api.applyTransaction({add:[{}]});
+
+  // log("onGridRowAdd", gridRef.api.getAllDisplayedColumns());
+
+  await gridRef.api.applyTransaction({add:[initData]});
   gridRef.api.setFocusedCell(rowCount, col);
   gridRef.api.startEditingCell({
       rowIndex: rowCount,
       colkey: col
   });
 };
+
+export const onGridReady = (param:any) => {
+  console.log("onGridReady");
+}
+
+export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
+
+  // gridRef.current.api.sizeColumnToFit();
+
+  log('autoSizeAll called!!!!!!!!', gridApi);
+  // if (!gridApi) return;
+
+  // const allColumnIds: string[] = [];
+  // gridApi.current?.api.getColumns().forEach((column:any) => {
+  //   if (column.visible) allColumnIds.push(column.getId());
+  // });
+  // gridApi.current?.api.autoSizeColumns(allColumnIds, skipHeader);
+
+  // if (!gridApi.current) gridApi.current?.api.autoSizeAllColumns(skipHeader); 
+
+  // log('autoSizeAll called!!!!!!!! 완료', allColumnIds);
+};
+
 
 const dateFormatter = (params: ValueFormatterParams) => {
   return stringToFullDateString(params.value, '-');

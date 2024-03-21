@@ -32,7 +32,7 @@ const CustomerDetail: React.FC = () => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="flex flex-col gap-2 md:grid md:grid-cols-2">
+                <div className="flex flex-col gap-2 md:grid md:grid-cols-2 p-5">
                     <TInput 
                         label="cust_code" 
                         id="cust_code" 
