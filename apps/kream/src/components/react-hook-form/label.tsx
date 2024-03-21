@@ -1,29 +1,18 @@
+import { useTranslation } from "react-i18next";
+
+
 export type LabelProps = {
-  id?: string;
-  children: React.ReactNode;
+  id: string;
+  name?: string;
+  // name?: React.ReactNode;
 };
 
-export const Label: React.FC<LabelProps> = ({id, children}) => {
-  if (!id) {
-    return (
-      <div className="block text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-        {children}
-      </div>
-    );
-  }
-  return (
-    <label
-      htmlFor={id}
-      className="block text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-      {children}
-    </label>
-  );
-};
-export const LabelTop: React.FC<LabelProps> = ({id, children}) => {
-  if (!id) {
+export const Label: React.FC<LabelProps> = ({id, name}) => {
+  const { t } = useTranslation()
+  if (!name) {    
     return (
       <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-        {children}
+        {t(id)}
       </div>
     );
   }
@@ -31,7 +20,7 @@ export const LabelTop: React.FC<LabelProps> = ({id, children}) => {
     <label
       htmlFor={id}
       className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
-      {children}
+      {t(name as string)}
     </label>
   );
 };

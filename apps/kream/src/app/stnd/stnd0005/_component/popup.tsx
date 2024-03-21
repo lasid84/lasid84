@@ -3,14 +3,14 @@ import DialogBasic from "@/page-parts/tmpl/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
 import { TButtonBlue, TButtonGray, TInput } from "@/page-parts/tmpl/form";
 import { ErrorMessage } from "@/components/react-hook-form";
-import { PopType , setModalValue} from "@/utils/modal";
+import { PopType, setModalValue } from "@/utils/modal";
 import { useState, useEffect, useCallback } from "react";
 import Select from "react-select"
 import { TSelect2 } from "@/components/form/select-row";
 import { useAppContext, SEARCH_M, crudType } from "components/provider/contextObjectProvider"
 import { SP_UpdateData, SP_InsertData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
-import { ReactSelect, Label, LabelTop, InputWrapper } from "@/components/react-hook-form"
+import { ReactSelect } from "components/select/react-select"
 
 
 
@@ -120,19 +120,8 @@ const Modal: React.FC<Props> = (props) => {
                 >
                     <></>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
-                        <InputWrapper outerClassName="" inline={false}>
-                            <LabelTop id="grp_cd2">{t("grp_cd")}</LabelTop>
-                            <ReactSelect id="grp_cd2" name="grp_cd" options={groupcd} />
-                        </InputWrapper>
-                        {/* <TSelect2
-                            id="grp_cd"
-                            label={"grp_cd"}
-                            allYn={false}
-                            isPlaceholder={false}
-                            value={mSelectedRow?.grp_cd_nm}
-                            options={grpcd}
-                            readOnly={popType === PopType.UPDATE}
-                        /> */}
+
+                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} />
 
                         <TInput label="cd" id="cd" readOnly={popType === PopType.UPDATE} value={mSelectedRow?.cd}>
                         </TInput>

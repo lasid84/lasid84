@@ -9,7 +9,7 @@ import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-for
 import Select from "react-select"
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
-import { ReactSelect, Label, LabelTop, InputWrapper } from "@/components/react-hook-form"
+import { ReactSelect} from "components/select/react-select"
 import { ProgressBarWithText } from "@/components/progress-bars/progressbar";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -22,10 +22,6 @@ export interface returnData {
 type Props = {
     initData: any | undefined;
 }
-export function random(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
 
 const SearchForm: React.FC<Props> = (props) => {
     const { initData } = props;
@@ -67,8 +63,6 @@ const SearchForm: React.FC<Props> = (props) => {
 
     const onSearch = () => {
         const params = getValues()
-        console.log('params?', params)
-        log("onSearch", objState.isMSearch)
         dispatch({ searchParams: params, isMSearch: true });
     }
 
@@ -85,13 +79,7 @@ const SearchForm: React.FC<Props> = (props) => {
                             }} />
                         </>
                     }>
-
-                    <ProgressBarWithText width={random(30, 70)} color={"red"} />
-
-                    <InputWrapper outerClassName="" inline={false}>
-                        <LabelTop id="grp_cd">{t("grp_cd")}</LabelTop>
-                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} defaultValue={groupcd ?? { label: "ALL", value: "ALL" }} />
-                    </InputWrapper>
+                    <ReactSelect id="grp_cd" name="grp" options={groupcd} defaultValue={{ label: "ALL", value: "ALL" }} inline={true}/>
                 </PageSearch>
             </form>
         </FormProvider >

@@ -5,7 +5,6 @@ export * from "./input";
 export * from "./label";
 export * from "./numeric-input";
 export * from "./radio";
-export * from "./react-select";
 export * from "./select";
 export * from "./switch";
 export * from "./textarea";
