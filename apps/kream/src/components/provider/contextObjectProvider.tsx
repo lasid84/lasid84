@@ -33,7 +33,7 @@ export const TableContext = createContext<State>({
       default:
         log("default", state, action);
         return {
-          ...state,
+          // ...state,
           objState: {
             ...state.objState,
             ...action

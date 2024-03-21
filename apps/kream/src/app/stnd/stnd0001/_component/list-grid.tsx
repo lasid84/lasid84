@@ -1,6 +1,5 @@
 "use client"
 
-import PageContent from "@/shared/tmpl/page-content"
 import { useMemo, useRef, useState, useEffect } from "react";
 import { GridOptions } from "ag-grid-community"
 import { AgGridReact } from "ag-grid-react"
@@ -81,9 +80,6 @@ const ListGrid: React.FC<Props> = ({ listItem, isInitialLoading, isError }) => {
     // if (isInitialLoading) { return <><LoadingComponent /></> }
     return (
         <>
-            <PageContent
-                right={<>이벤트버튼</>} children={undefined}            >
-            </PageContent >
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>
                     <AgGridReact

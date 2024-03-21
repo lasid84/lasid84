@@ -6,7 +6,6 @@ import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme appli
 // import "ag-grid-community/styles/ag-theme-quartz.css" // Optional Theme applied to the grid
 // import 'ag-grid-enterprise';
 
-import PageContent from "@/shared/tmpl/page-content"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy, SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent } from "ag-grid-community";
 
@@ -535,7 +534,7 @@ const checkBoxFormatter = (params: ValueFormatterParams) => {
 
 const bizNoFormatter = (params: ValueFormatterParams) => {
   // log("bizNoFormatter", params)
-  return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
+  // return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
 }
 
 function checkBoxParser(params: ValueParserParams) {

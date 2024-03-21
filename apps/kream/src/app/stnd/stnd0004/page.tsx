@@ -1,6 +1,6 @@
 'use client'
 
-import PageTitle from "../../../shared/tmpl/page-title"
+
 import ListGrid from "./_component/list-grid"
 import SearchForm from "./_component/search-form"
 import { useGetData } from "./_component/stnd0004"
@@ -23,7 +23,7 @@ const Stnd0004: React.FC = () => {
     const {data : selectResult} = useGetData()
     return (
         <>
-            <PageTitle title={pageProps.title} brcmp={brcmp} />
+
             {/* <SearchForm/> */}
             <ListGrid listItem={selectResult||null}/>
         </>

@@ -16,21 +16,20 @@ export const SP_Load = async (searchParam: any) => {
   const { user_id, ipaddr } = searchParam;
   const params = {
     inparam: ["in_user", "in_ipaddr"],
-    invalue: ['doni.lee', '10.33.33.96'],
+    invalue: [user_id, ipaddr],
     inproc: 'public.f_stnd0005_load',
     isShowLoading: false
   }
-   log("Acct0005Load");
+   log("STND0005 Load");
   const result = await executFunction(params);
   return result;
 }
 
-export const SP_GetData = async (searchParam: any) => {
-  console.log('searc111111111111hParam', searchParam)
+export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
 
   const { grp_cd, user_id, ipaddr } = Param;
-  log("searchData:", grp_cd);
+  log("searchData:", Param);
 
   const params = {
     inparam: [
@@ -91,7 +90,7 @@ export const SP_UpdateData = async (param: any) => {
   return result![0];
 }
 
-export const SP_CreateData = async (param: any) => {
+export const SP_InsertData = async (param: any) => {
   console.log('SP_CreateData_params', param)
   const Param = param
   const { grp_cd, cd, cd_nm, cd_desc,cd_mgcd1, cd_mgcd2, use_yn, user_id, ipaddr } = Param;

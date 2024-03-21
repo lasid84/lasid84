@@ -1,46 +1,42 @@
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { useEffect, useState, useCallback, memo } from "react"
 import { makeZodI18nMap } from "zod-i18n-map";
 import { zodResolver } from "@hookform/resolvers/zod";
-import PageSearch from "../../../../shared/tmpl/page-search"
-import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import { useEffect, useState, useCallback, memo } from "react"
-import Select from "react-select"
-import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue,TButtonDarkgray } from "components/form";
-import { crudType, useAppContext } from "@/components/provider/contextProvider";
-import { SEARCH_M } from "components/provider/contextProvider";
-import { useUserSettings } from "@/states/useUserSettings";
-import { StringifyOptions } from "querystring";
 
+import PageSearch from "@/layouts/search-form/page-search"
+import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
+import Select from "react-select"
+import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
+import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
+import { ReactSelect, Label, LabelTop, InputWrapper } from "@/components/react-hook-form"
+import { SetFilterModelValuesType } from "ag-grid-enterprise/dist/lib/setFilter/setValueModel";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
-    cursorData : []
-    numericData : number;
-    textData : string;
-}
-
-export interface typeloadItem {
-    data: {} | undefined
+    cursorData: []
+    numericData: number;
+    textData: string;
 }
 
 type Props = {
-    // onSubmit: SubmitHandler<any>;
-    loadItem: typeloadItem | any
+    initData: any | undefined;
 }
 
 const SearchForm: React.FC<Props> = (props) => {
-    const { loadItem } = props;
+    const { initData } = props;
 
-    const { dispatch } = useAppContext()
+    const { dispatch, objState } = useAppContext()
     const [groupcd, setGroupcd] = useState<any>([])
-        let selectoptions:any[] = []
-    //const SearchForm = memo(({loadItem}:any) => {
+    let selectoptions: any[] = []
+
     // 다국어
     const { t } = useTranslation();
     z.setErrorMap(makeZodI18nMap({ t }));
 
-    const methods = useForm({})
+    const methods = useForm({
+        defaultValues:{grp_cd:"ALL"}
+    })
 
     const {
         handleSubmit,
@@ -54,78 +50,48 @@ const SearchForm: React.FC<Props> = (props) => {
     } = methods;
 
     useEffect(() => {
-
-        if (loadItem) {
-            loadItem[0].data.map((item:any) => {
+        if (initData) {
+            initData[0].data.map((item: any) => {
                 var key = item[Object.keys(item)[0]];
                 var label = item[Object.keys(item)[1]];
-                log(key, label)
-                selectoptions.push({ value: key, label: key + " "+ label });
-              })
+                selectoptions.push({ value: key, label: key + " " + label });
+            })
             setGroupcd(selectoptions)
             onSearch();
         }
-    }, [loadItem])
-
-    const onSubmit = () => {
-        const params = getValues()
-    }
+    }, [initData])
 
     const onSearch = () => {
-        const params = getValues();
-        log("onSearch", params)
-        dispatch({ type: SEARCH_M, searchParams: params, isSearch: true });
+        const params = getValues()
+        console.log('params?', params)
+        log("onSearch", objState.isMSearch)
+        dispatch({ searchParams: params, isMSearch: true });
     }
-
-    const onNew = () => {
-        // dispatch({ type: SELECTED_ROW, selectedRow: null});
-        dispatch({ selectedRow: null, crudType: crudType.CREATE, isGridClick: true });
-    }
-
 
 
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <><PageSearch
+            <form onSubmit={handleSubmit(onSearch)}>
+                <PageSearch
                     right={
                         <>
                             <TButtonDarkgray label={t("search")} onClick={onSearch} />
                             <TCancelButton label={t("reset")} onClick={() => {
                                 setFocus("grp_cd");
                                 reset();
+                                
                             }} />
-                            <TButtonBlue label={t("new")} onClick={onNew} />
                         </>
-                    }
-                >
-                    <label className="px-1 py-1 text-align:right">{t("grp_cd")}</label>
-                    <Controller
-                        control={control}
-                        name="grp_cd"
-                        defaultValue={'ALL'}
-                        render={({ field: { onChange, value, ref } }) => (
-                            <Select
-                                id="grp_cd"
-                                inputId="grp_cd"
-                                placeholder='ALL'
-                                options={groupcd}
-                                ref={ref}
-                                value={groupcd && groupcd.find((options: any) => options.key === value)}                               
-                                onChange={(selectedOption: any) => {
-                                    console.log("afdsfdsfadsfasf",selectedOption)
-                                    onChange(selectedOption.value); // 선택된 옵션의 라벨로 grp_cd 필드 값 변경
-                                    handleSubmit(onSubmit)(); // 폼 제출
-                                }}
-                            />
-                        )}
-                    />
-                </PageSearch></>
+                    }>
+                    <InputWrapper outerClassName="" inline={false}>
+                        <LabelTop id="grp_cd">{t("grp_cd")}</LabelTop>
+                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} defaultValue={groupcd?? {label:"ALL", value:"ALL"}}/>
+                    </InputWrapper>
+                </PageSearch>
             </form>
         </FormProvider >
     )
-
 }
 
 export default SearchForm

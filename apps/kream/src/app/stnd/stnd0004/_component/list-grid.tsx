@@ -1,6 +1,5 @@
 "use client"
 
-import PageContent from "@/shared/tmpl/page-content"
 import { useMemo, useRef, useState, useEffect } from "react";
 import { GridOptions } from "ag-grid-community"
 import { AgGridReact } from "ag-grid-react"
@@ -85,11 +84,7 @@ const ListGrid: React.FC<Props> = ({ listItem }) => {
 
     return (
         <>
-            <PageContent
-                right={<> <TButtonBlue label="등록" onClick={() => {
-                    actions.setPopOpen(true);
-                } } /></>} children={undefined}            >
-            </PageContent>
+            
             <div className={containerStyle}>
                 <div className={`ag-theme-custom ${gridStyle}`}>
                     <AgGridReact
