@@ -10,7 +10,7 @@ import Select from "react-select"
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
 import { ReactSelect, Label, LabelTop, InputWrapper } from "@/components/react-hook-form"
-import { SetFilterModelValuesType } from "ag-grid-enterprise/dist/lib/setFilter/setValueModel";
+import { ProgressBarWithText } from "@/components/progress-bars/progressbar";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -22,6 +22,10 @@ export interface returnData {
 type Props = {
     initData: any | undefined;
 }
+export function random(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+  
 
 const SearchForm: React.FC<Props> = (props) => {
     const { initData } = props;
@@ -35,7 +39,7 @@ const SearchForm: React.FC<Props> = (props) => {
     z.setErrorMap(makeZodI18nMap({ t }));
 
     const methods = useForm({
-        defaultValues:{grp_cd:"ALL"}
+        defaultValues: { grp_cd: "ALL" }
     })
 
     const {
@@ -67,7 +71,7 @@ const SearchForm: React.FC<Props> = (props) => {
         log("onSearch", objState.isMSearch)
         dispatch({ searchParams: params, isMSearch: true });
     }
-
+    const palette = ["bg-red-500", "bg-green-500", "bg-blue-500"];
 
 
     return (
@@ -80,13 +84,17 @@ const SearchForm: React.FC<Props> = (props) => {
                             <TCancelButton label={t("reset")} onClick={() => {
                                 setFocus("grp_cd");
                                 reset();
-                                
                             }} />
                         </>
                     }>
+                    {palette.map((color, i) => (
+                        <div className="mb-8" key={i}>
+                            <ProgressBarWithText width={random(30, 70)} color={color} />
+                        </div>
+                    ))}
                     <InputWrapper outerClassName="" inline={false}>
                         <LabelTop id="grp_cd">{t("grp_cd")}</LabelTop>
-                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} defaultValue={groupcd?? {label:"ALL", value:"ALL"}}/>
+                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} defaultValue={groupcd ?? { label: "ALL", value: "ALL" }} />
                     </InputWrapper>
                 </PageSearch>
             </form>

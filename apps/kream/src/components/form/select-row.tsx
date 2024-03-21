@@ -5,7 +5,7 @@ import { Select } from "components/react-hook-form/select-row";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type SelectOption = {
-  key: string;
+  label: string;
   value: string;
 };
 

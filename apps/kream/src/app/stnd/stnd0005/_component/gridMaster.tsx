@@ -40,7 +40,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const handleRowClicked = (param: RowClickedEvent) => {
         var data = onRowClicked(param);
         log("handleRowClicked", data)
-        // dispatch({isDSearch:true});
+        dispatch({ isPopupOpen: true, crudType: PopType.UPDATE })
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
@@ -66,6 +66,11 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         dispatch({ isPopupOpen: true, crudType: PopType.CREATE })
     }
 
+    // const onPopup2 = () => {
+    //     log("--------------------", objState.isPopupOpen, objState.crudType)
+    //     dispatch({ isPopupOpen: true, crudType: PopType.UPDATE })
+    // }
+
     return (
         <>
             <PageContent
@@ -73,7 +78,8 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                     <>
                         <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current)} />
                         <TButtonBlue label={"save"} onClick={onSave} />
-                        <TButtonBlue label={"popup"} onClick={onPopup} />
+                        <TButtonBlue label={"new"} onClick={onPopup} />
+                        {/* <TButtonBlue label={"popup2"} onClick={onPopup2} /> */}
                     </>
                 }>
                 <></>

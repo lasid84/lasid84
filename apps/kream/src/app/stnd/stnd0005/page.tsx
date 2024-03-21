@@ -24,7 +24,7 @@ const Stnd0005: React.FC = () => {
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
-        <TableContext.Provider value={val}>
+        <TableContext.Provider value={val}>                
             <SearchForm initData={initData} />
             <div className="flex flex-col w-full">
                 <div className={`ag-theme-custom w-full h-[450px]`}>
