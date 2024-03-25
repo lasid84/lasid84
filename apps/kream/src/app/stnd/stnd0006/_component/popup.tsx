@@ -248,8 +248,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 // type={"USE_YN"}
                                 label="사용여부"
                                 options={[
-                                    { label: "Y", value: "Y" },
-                                    { label: "N", value: "N" },
+                                    { key: 'Y', label: "Y", value: "Y" },
+                                    { key: 'Y', label: "N", value: "N" },
                                 ]}
                                 allYn={true}
                                 isPlaceholder={false}

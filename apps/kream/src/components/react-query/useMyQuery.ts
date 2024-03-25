@@ -4,7 +4,7 @@ import { MutationFunction, UseMutationOptions, useMutation, useQuery, useQueryCl
 import { AnyCnameRecord } from "dns";
 import { useUserSettings } from "states/useUserSettings";
 const { log } = require('@repo/kwe-lib/components/logHelper');
-import { SP_UpdateData, SP_CreateData } from "@/app/stnd/stnd0005/_component/data";
+import { SP_UpdateData } from "@/app/stnd/stnd0005/_component/data";
 import { usePathname } from "next/navigation";
 
 export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?: any) => {

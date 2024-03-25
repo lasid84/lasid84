@@ -1,3 +1,4 @@
+import { MaskedInputField } from "@/components/input";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { TInput } from "page-parts/tmpl/form"
 import { useCallback } from "react";
@@ -32,64 +33,90 @@ const CustomerDetail: React.FC = () => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="flex flex-col gap-2 md:grid md:grid-cols-2 p-5">
-                    <TInput 
+                <div className="flex flex-col gap-2 p-5 md:grid md:grid-cols-2">
+                    {/* <TInput 
                         label="cust_code" 
                         id="cust_code" 
                         value={objState.mSelectedRow?.cust_code}
                         >
-                    </TInput>
-                    <TInput 
-                        label="executive_nm" 
+                    </TInput> */}
+                    <MaskedInputField 
+                        id="cust_code" 
+                        // label="cust_code"
+                        value={objState.mSelectedRow?.cust_code}
+                        // width="w-80"
+                        // height="h-12"
+                        options = {{ 
+                            // type:"number",
+                            // limit:7,
+                            // isAllowDecimal:true,
+                            // decimalCnt:2,
+                            // myPlaceholder:"Enter business number" 
+                            // myPlaceholder:"bz_reg_no"
+                            // inline:{true}
+                            isReadOnly:true
+                        }}
+                        />
+                    <MaskedInputField 
                         id="executive_nm" 
                         value={objState.mSelectedRow?.executive_nm}
-                        >
-                    </TInput>
-                    <TInput 
-                        label="cust_nm" 
+                        options = {{ 
+                            isReadOnly:true
+                        }}
+                        />
+                    <MaskedInputField 
                         id="cust_nm" 
                         value={objState.mSelectedRow?.cust_nm}
-                        >
-                    </TInput>
-                    <TInput 
-                        label="bz_con" 
+                        options = {{ 
+                            isReadOnly:true
+                        }}
+                        />
+                    <MaskedInputField 
                         id="bz_con" 
                         value={objState.mSelectedRow?.bz_con}
-                        >
-                    </TInput>
-                    <TInput 
-                        label="cust_nm_eng" 
+                        options = {{ 
+                            isReadOnly:true
+                        }}
+                        />
+                    <MaskedInputField 
                         id="cust_nm_eng" 
                         value={objState.mSelectedRow?.cust_nm_eng}
-                        >
-                    </TInput>
-                    <TInput 
-                        label="bz_item" 
+                        options = {{ 
+                            isReadOnly:true
+                        }}
+                        />
+                    <MaskedInputField 
                         id="bz_item" 
                         value={objState.mSelectedRow?.bz_item}
-                        >
-                    </TInput>
-                    <TInput 
-                        label="bz_reg_no" 
+                        options = {{ 
+                            isReadOnly:true
+                        }}
+                        />
+                    <MaskedInputField 
                         id="bz_reg_no" 
                         value={objState.mSelectedRow?.bz_reg_no}
-                        >
-                    </TInput>
+                        options = {{ 
+                            type:"bz_reg_no",
+                            isReadOnly:true
+                        }}
+                        />
                     <div className="col-span-2">
-                        <TInput 
-                            label="addr1" 
+                        <MaskedInputField 
                             id="addr1" 
                             value={objState.mSelectedRow?.addr1}
-                            >
-                        </TInput>
+                            options = {{ 
+                                isReadOnly:true
+                            }}
+                        />
                     </div>
                     <div className="col-span-2">
-                        <TInput 
-                            label="addr1" 
-                            id="addr1" 
-                            value={objState.mSelectedRow?.addr1}
-                            >
-                        </TInput>
+                        <MaskedInputField 
+                            id="addr2" 
+                            value={objState.mSelectedRow?.addr2}
+                            options = {{ 
+                                isReadOnly:true
+                            }}
+                        />
                     </div>
                 </div>
             </form>

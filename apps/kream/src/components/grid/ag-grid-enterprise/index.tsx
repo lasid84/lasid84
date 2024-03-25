@@ -169,6 +169,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     | SizeColumnsToFitProvidedWidthStrategy
     | SizeColumnsToContentStrategy
       >(() => {
+        log("=====options?.isAutoFitColData", options?.isAutoFitColData);
         if (!options?.isAutoFitColData) {
           return {
             type: 'fitGridWidth',
@@ -202,9 +203,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
       //       )
       // }, [listItem?.data]);
 
-  useEffect(() => {
-    if(isReady) autoSizeAll(props.gridRef);
-  }, [isReady]);
+  // useEffect(() => {
+  //   if(isReady) autoSizeAll(props.gridRef);
+  // }, [isReady]);
   
   //컬럼 세팅
   useEffect(() => {
@@ -502,15 +503,17 @@ export const onGridReady = (param:any) => {
 export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
 
   // gridRef.current.api.sizeColumnToFit();
-
-  log('autoSizeAll called!!!!!!!!', gridApi);
+  var rowCount = gridApi.current?.api.getRowNode();
+  log('autoSizeAll called!!!!!!!!', gridApi.current?.api, rowCount);
   // if (!gridApi) return;
 
-  // const allColumnIds: string[] = [];
-  // gridApi.current?.api.getColumns().forEach((column:any) => {
-  //   if (column.visible) allColumnIds.push(column.getId());
-  // });
-  // gridApi.current?.api.autoSizeColumns(allColumnIds, skipHeader);
+  if (!rowCount) return;
+  
+  const allColumnIds: string[] = [];
+  gridApi.current?.api.getColumns().forEach((column:any) => {
+    if (column.visible) allColumnIds.push(column.getId());
+  });
+  gridApi.current?.api.autoSizeColumns(allColumnIds, skipHeader);
 
   // if (!gridApi.current) gridApi.current?.api.autoSizeAllColumns(skipHeader); 
 

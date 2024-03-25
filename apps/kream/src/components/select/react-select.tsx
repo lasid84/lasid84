@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Controller, useFormContext } from "react-hook-form";
 import { default as ReactSelectComponent } from "react-select";
-import { Label, InputWrapper } from "@/components/react-hook-form"
+// import { Label, InputWrapper } from "components/react-hook-form"
+import { InputWrapper } from "components/wrapper"
+import { Label } from "components/label"
 
 
 export interface ReactSelectOptionProps {

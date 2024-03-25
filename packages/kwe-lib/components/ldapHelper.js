@@ -32,70 +32,74 @@ async function init() {
 // 사용자 인증 및 계정 체크 함수
 async function checkAccount(user_id, password, callback) {
     // log('start :', user_id, password);
-    await init();
+    try {
+      await init();
 
-    const client = ldap.createClient({
-        url: ldapServerUrl, // LDAP 서버 주소와 포트
-      });
-    
-    client.bind(`${user_id}@kwekr.local`, password, (err) => {
-        if (err) {
-          console.error('LDAP authentication failed:', err);
-          callback(false, err.message)
-        } else {
-          // log('LDAP authentication succeeded');
+      const client = ldap.createClient({
+          url: ldapServerUrl, // LDAP 서버 주소와 포트
+        });
       
-            // 사용자 정보 조회
-            const searchFilter = `(sAMAccountName=${user_id})`;
-            // const searchFilter = '(objectClass=person)';
-            const options = {
-                filter: searchFilter,
-                scope:'sub',
-                // attributes:['sAMAccountName']
-              };
-              
-            let entries = [];  
-            client.search(`${baseDN}`, { ...options}, (searchErr, searchRes) => {
-                // log("search start")
-            if (searchErr) {
-                console.error('Error searching for user:', searchErr);
-            } else {
+      client.bind(`${user_id}@kwekr.local`, password, (err) => {
+          if (err) {
+            console.error('LDAP authentication failed:', err);
+            callback(false, err.message)
+          } else {
+            // log('LDAP authentication succeeded');
+        
+              // 사용자 정보 조회
+              const searchFilter = `(sAMAccountName=${user_id})`;
+              // const searchFilter = '(objectClass=person)';
+              const options = {
+                  filter: searchFilter,
+                  scope:'sub',
+                  // attributes:['sAMAccountName']
+                };
                 
-                searchRes.on('searchEntry', (entry) => {
-                    const user = JSON.parse(JSON.stringify(entry.attributes));
-                    // console.log('entry:', JSON.stringify(entry.attributes));
-                    // console.log(user[1]["values"].toString())
-                    callback(true, user[1]["values"].toString());
-                  });
-              
-                searchRes.on('error', (error) => {
-                    console.error('Error fetching user information:', error);
-                  });
-
-                  searchRes.on('searchReference', (ref) => {
-                    console.error('searchReference', JSON.stringify(ref));
-                  });
-                  searchRes.on('page', (error) => {
-                    console.error('page');
-                  });
-
-                searchRes.on('end', function(result) {
-                    // log('status: ' + result.status);
-
-                    client.unbind((err) => {
-                        if (err) {
-                          log('Error while unbinding:', err);
-                        } else {
-                          log('Client unbound successfully.');
-                        }});
-
-                });
+              let entries = [];  
+              client.search(`${baseDN}`, { ...options}, (searchErr, searchRes) => {
+                  // log("search start")
+              if (searchErr) {
+                  console.error('Error searching for user:', searchErr);
+              } else {
+                  
+                  searchRes.on('searchEntry', (entry) => {
+                      const user = JSON.parse(JSON.stringify(entry.attributes));
+                      // console.log('entry:', JSON.stringify(entry.attributes));
+                      // console.log(user[1]["values"].toString())
+                      callback(true, user[1]["values"].toString());
+                    });
                 
-                log("search end")
-            }
-            });
-        }
-      });
+                  searchRes.on('error', (error) => {
+                      console.error('Error fetching user information:', error);
+                    });
+
+                    searchRes.on('searchReference', (ref) => {
+                      console.error('searchReference', JSON.stringify(ref));
+                    });
+                    searchRes.on('page', (error) => {
+                      console.error('page');
+                    });
+
+                  searchRes.on('end', function(result) {
+                      // log('status: ' + result.status);
+
+                      client.unbind((err) => {
+                          if (err) {
+                            log('Error while unbinding:', err);
+                          } else {
+                            log('Client unbound successfully.');
+                          }});
+
+                  });
+                  
+                  log("search end")
+              }
+              });
+          }
+        });
+      } catch (ex) {
+        log(ex);
+      }
 };
 
 // const ActiveDirectory = require('activedirectory2').promiseWrapper;

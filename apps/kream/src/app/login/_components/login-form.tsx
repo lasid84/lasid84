@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { FormEvent, MouseEventHandler, Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FormProvider, useForm, UseFormHandleSubmit } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm, UseFormHandleSubmit } from "react-hook-form";
 import { InputWrapper } from "components/react-hook-form/input-wrapper";
 import { Label } from "components/react-hook-form/label";
 import { ErrorMessage } from "components/react-hook-form/error-message";
@@ -38,8 +38,8 @@ export default function LoginForm() {
 
   useEffect(() => {
     userSettingsActions?.reset();
-    // localStorage.removeItem("access_token");
-    // localStorage.removeItem("refresh_token");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
   }, []);
 
   const methods = useForm<FormProps>({
@@ -51,12 +51,16 @@ export default function LoginForm() {
   const {
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = methods;
 
 
-  const onSubmit = async (user: FormProps) => {
-    // e.preventDefault();
+  const onSubmit = async (e:React.MouseEvent<HTMLElement>) => {
+  // const onSubmit: SubmitHandler<FormProps> = async (user, e) => {    
+    // log("==================================onSumit", e)
+    e.preventDefault();
+    var user = getValues();
 
     try {
       setIsCircle(true)
@@ -78,18 +82,20 @@ export default function LoginForm() {
       log("login-form err", err);
       setErrMessage(JSON.stringify(err));
       return;
+    } finally {
+      // reset();
     }
   };
-
+  
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* <form onSubmit={handleSubmit(onSubmit)} className="space-y-6"> */}
         {/* <form onSubmit={onSubmit} className="space-y-6"> */}
-        {/* <form action={dispatch} className="space-y-6"> */}
+        <form className="space-y-6">
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-y-1 gap-x-2 sm:grid-cols-12">
             <InputWrapper outerClassName="sm:col-span-12">
-              <Label id="email">UserId</Label>
+              <Label id="email" name="User ID"/>
               <Input
                 id="user_id"
                 name="user_id"
@@ -103,7 +109,7 @@ export default function LoginForm() {
             </InputWrapper>
 
             <InputWrapper outerClassName="sm:col-span-12 mt-4">
-              <Label id="password">Password</Label>
+              <Label id="password" name="Password"/>
               <Input
                 id="password"
                 name="password"
@@ -142,12 +148,16 @@ export default function LoginForm() {
           </div>
         </div>
         <div className="flex justify-start space-x-2">
+          {/* <Suspense fallback={<FaSpinner className="justify-center w-full animate-spin" size={20} color="#f070f3" />}> */}
           <button
-            type="submit"
+            // type="submit"
+            type="button"
+            onClick={(e) => onSubmit(e)}
             className={clsx("justify-center w-full h-12 px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2",
             isCircle && "hover:bg-gray-600 ring-gray-500  bg-gray-600 ring-2 ring-offset-2")}>
           {isCircle ?  <><FaSpinner className="justify-center w-full animate-spin" size={20} color="#f070f3" /></> : 'Sign In' }
           </button>
+          {/* </Suspense> */}
         </div>
         {/* {clsx("animate-spin", isCircle &&"hidden", !isCircle && "")} */}
         {/* <div className="flex flex-row items-center justify-center">
