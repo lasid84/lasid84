@@ -13,7 +13,7 @@ export type ReactSelectProps = {
     id: string;
     name?: string;
     options: ReactSelectOptionProps[];
-    defaultValue?: {}
+    // defaultValue?: {}
     rules?: Record<string, any>;
     placeholder?: string;
     isMulti?: boolean;
@@ -25,12 +25,14 @@ export const ReactSelect: React.FC<ReactSelectProps> = ({
     name,
     placeholder,
     options,
-    defaultValue,
+    // defaultValue,
     rules = {},
     isMulti = false,
     inline,
 }) => {
     const { control } = useFormContext();
+
+
     return (
         <>
             <InputWrapper outerClassName="" inline={inline}>
@@ -39,12 +41,14 @@ export const ReactSelect: React.FC<ReactSelectProps> = ({
                     control={control}
                     name={id}
                     rules={rules}
-                    render={({ field: { onChange } }) => {
+                    render={({ field: { onChange, value, ref } }) => {
                         return (
                             <div className="block w-full flex-grow-1">
                                 <ReactSelectComponent
                                     //{...field}
-                                    defaultValue={defaultValue}
+                                    ref={ref}
+                                    value={options.find((option) => option.value === value)}
+                                    // defaultValue={defaultValue}
                                     isMulti={isMulti}
                                     options={options}
                                     instanceId={id}

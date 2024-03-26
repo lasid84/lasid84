@@ -45,7 +45,7 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
 
   return (
     <div className="w-full mb-1">
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row items-center justify-between mt-1 mb-2">
         <div className="flex flex-col">
            <div className="text-lg font-bold px-6">{t(title!)}</div>
            { desc && 

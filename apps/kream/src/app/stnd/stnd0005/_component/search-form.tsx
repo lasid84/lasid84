@@ -79,7 +79,7 @@ const SearchForm: React.FC<Props> = (props) => {
                             }} />
                         </>
                     }>
-                    <ReactSelect id="grp_cd" name="grp" options={groupcd} defaultValue={{ label: "ALL", value: "ALL" }} inline={true}/>
+                    <ReactSelect id="grp_cd" name="grp" options={groupcd} inline={true}/>
                 </PageSearch>
             </form>
         </FormProvider >
