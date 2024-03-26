@@ -2,7 +2,7 @@
 
 import { cookies, headers } from 'next/headers'
 import { auth, signOut } from '@/app/api/auth/auth';
-import { redirect } from 'next/navigation';
+import { redirect, RedirectType } from 'next/navigation';
 import { decode } from "next-auth/jwt";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 import { signJwtAccessToken, verifyJwt } from '@repo/kwe-lib/components/jsonWebToken';
@@ -18,7 +18,8 @@ export async function getSession() {
 }
 
 export async function logOut() {
-    // signOut({ callbackUrl: "/login" });
+    // await signOut({ redirect: false });
+    // await signOut({redirectTo:"/login"});
     await signOut();
     redirect("/login");
 }

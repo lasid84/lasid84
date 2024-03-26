@@ -8,6 +8,7 @@ export const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/login',
+    
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -15,7 +16,7 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const isLogInPage = nextUrl.pathname.startsWith('/login');
 
-      // console.log("1.---------------", isLoggedIn, isOnDashboard, auth);
+      // console.log("1.---------------", isLoggedIn, isLogInPage, auth, nextUrl);
 
       if (isLogInPage) {
         if (isLoggedIn) { 
@@ -23,10 +24,11 @@ export const authConfig = {
           // return true;
           return Response.redirect(new URL('/', nextUrl));
           // return Response.redirect(new URL('/'));
-        };
+        } 
+        console.log("1.---------------", isLoggedIn, isLogInPage, auth, nextUrl);
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        nextUrl.username = auth.user.name;
+        // nextUrl.username = auth.user.name;
         // console.log("2.---------------", auth.user, nextUrl);
         // return Response.redirect(new URL('/dashboard', nextUrl));
          return true;

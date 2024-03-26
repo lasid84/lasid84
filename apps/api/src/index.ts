@@ -12,9 +12,10 @@ import { createServer } from './server.ts';
 
 //var port = process.env.PORT || 5001;
 async function init () {
+  var server;
   try {
     var port = 0;
-    const server = createServer();
+    server = createServer();
 
     var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     port = objectPath.get(iniData, "main.port");
@@ -24,7 +25,7 @@ async function init () {
       log(`api running on ${port}`);
     });
   } catch (err) {
-    log(err);
+    log("index ", err);
   }
 }
 

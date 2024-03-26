@@ -6,8 +6,10 @@ import { useEffect, useState, useMemo } from "react";
 import { useUserSettings } from "states/useUserSettings";
 // import { useSession, signIn, signOut } from 'next-auth/react';
 import { logOut } from "@/services/serverAction";
+import {signOut} from "next-auth/react";
 import { shallow } from "zustand/shallow";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "next/navigation";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export default function Navbar() {
@@ -23,6 +25,8 @@ export default function Navbar() {
   const [greeting, setGreeting] = useState('');
   // const user_nm = useUserSettings.getState().data.user_nm;
   const { t } = useTranslation();
+
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (user_nm) {
@@ -62,6 +66,10 @@ export default function Navbar() {
               localStorage.removeItem('USER_SETTINGS')
               // signOut({ callbackUrl: "/login" });
               logOut();
+              // signOut({
+              //   redirect:true,
+              //   // callbackUrl:'/login'
+              // })
             }}>
             <FiExternalLink size={18} />
             <span className="ml-1"> {t("logout")}</span>
