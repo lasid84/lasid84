@@ -242,7 +242,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 options={billGr1Cd}
                                 />
                         </div>  
-                        <div className="col-span-3">
+                        {/* <div className="col-span-3">
                             <TSelect2
                                 id="use_yn"
                                 // type={"USE_YN"}
@@ -259,7 +259,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 // }}
                             />
                             
-                        </div>
+                        </div> */}
 
                     </div>
 

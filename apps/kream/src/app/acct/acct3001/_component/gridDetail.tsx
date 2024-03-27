@@ -10,7 +10,8 @@ import Grid, { isFirstColumn, getFirstColumn, onGridRowAdd, onCellValueChanged, 
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import PageSearch from "layouts/search-form/page-search-row";
 
-import { TButtonBlue } from "components/form";
+// import { TButtonBlue } from "components/form";
+import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "@/page-parts/tmpl/toast";
 import { Anonymous_Pro } from "next/font/google";
@@ -118,8 +119,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             <PageSearch
                 right={
                 <>
-                <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
-                <TButtonBlue label={"save"} onClick={onSave} />
+                <Button label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
+                <Button label={"save"} onClick={onSave} />
                 </>
             }>
                 <></>

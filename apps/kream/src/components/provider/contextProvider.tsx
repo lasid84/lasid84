@@ -83,10 +83,11 @@ export const TableContext = createContext<State>({
       //   }
       default:
         // log("default", state, action);
-        return {
-          ...state,
-          ...action
-        }
+        // return {
+        //   ...state,
+        //   ...action
+        // }
+        return Object.assign({}, state, action);
     }
   
     return state;

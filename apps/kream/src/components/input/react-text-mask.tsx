@@ -24,7 +24,7 @@ type Props = {
     isAllowDecimal?:boolean,  //소수점 허용 여부
     decimalCnt?: number       //소수점 자리수
     myPlaceholder?: string;   //
-    isReadOnly?:boolean;       //읽기전용여부
+    isReadOnly?:boolean;      //읽기전용여부
   };
 };
 

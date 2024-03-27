@@ -18,7 +18,7 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
     user_id: user_id,
     ipaddr: ipaddr
   }
-  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, { ...option });
+  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, { /*staleTime: 1000 * 10,*/ ...option, refetchOnWindowFocus: false });
   log('useGetData', queryNm, searchParam, isLoading)
   return { data, isLoading, isError, refetch, remove }
 };
@@ -34,7 +34,7 @@ export const useUpdateData = (model?: string) => {
     onMutate: async (data) => { },
     
   })
-  const Create = useMutation(SP_CreateData, {
+  const Create = useMutation(SP_UpdateData, {
     onSuccess: (res:any, data:any, context:any) => {
       // queryClient.invalidateQueries([`${pageName}`+'_SEARCH'])
       queryClient.invalidateQueries([model])      

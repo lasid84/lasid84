@@ -1,7 +1,7 @@
 
 'use client';
 
-import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
+import {useEffect, useReducer, useMemo, useCallback, useRef, memo } from "react";
 import { SP_GetData } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextProvider";
@@ -56,14 +56,14 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     }, []);
 
-    useEffect(() => {
-        if (isMSearch && gridRef) {
-            log("gridMaster", searchParams)
-            mainRefetch();
-            dispatch({isMSearch:false});
-            // autoSizeAll(gridRef.current);
-        }
-    }, [isMSearch, gridRef]);
+    // useEffect(() => {
+    //     if (isMSearch && gridRef) {
+    //         log("gridMaster", searchParams)
+    //         mainRefetch();
+    //         dispatch({isMSearch:false});
+    //         // autoSizeAll(gridRef.current);
+    //     }
+    // }, [isMSearch, gridRef]);
 
     return (
         <>
@@ -77,9 +77,9 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                     onSelectionChanged: handleSelectionChanged,
                 }}
                 />
-            <Modal
+            {/* <Modal
                 loadItem={initData}
-            />
+            /> */}
         </>
             
     );

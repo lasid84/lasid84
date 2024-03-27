@@ -76,7 +76,7 @@ type cols = {
   // floatingFilter?: boolean
 }
 
-const ListGrid: React.FC<Props> = memo((props) => {
+const ListGrid: React.FC<Props> = (props) => {
     const { t } = useTranslation();
 
     const [colDefs, setColDefs] = useState<cols[]>([]);
@@ -248,13 +248,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
       columns.map((col:string, i) => {
         var cellOption:any = {};
 
-        if (!options?.isAutoFitColData) {
-          cellOption = {
-            ...cellOption,
-            flex: 1,
-            width:100
-          }
-        }
+        // if (!options?.isAutoFitColData) {
+        //   cellOption = {
+        //     ...cellOption,
+        //     flex: 1,
+        //     // width:100
+        //   }
+        // }
 
         //컬럼별 visible 셋팅
         let isHide: boolean = false;
@@ -444,7 +444,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           </div>
         </>
     )
-});
+};
 
 export const onRowClicked = (param:RowClickedEvent) => {
     log("onRowClicked")

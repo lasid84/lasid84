@@ -5,8 +5,8 @@ import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch from "layouts/search-form/page-search-row";
-import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
+import PageSearch from "layouts/search-form/page-search";
+import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
 // import { useGetData } from './test'
@@ -23,7 +23,8 @@ type Props = {
   initData : any | undefined;
 };
 
-const SearchForm = memo(({initData}:Props) => {
+// const SearchForm = memo(({initData}:Props) => {
+const SearchForm: React.FC<Props> = (props) => {
 
   // log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
@@ -66,7 +67,7 @@ const SearchForm = memo(({initData}:Props) => {
         <PageSearch
           right={
             <>
-              <TButtonBlue label={"search"} onClick={onSearch} />
+              <Button label={"search"} onClick={onSearch} />
               {/* <TButtonBlue label={t("new")} onClick={() => { } } /> */}
               {/* <TCancelButton label={t("reset")} onClick={() => { } } /> */}
             </>
@@ -76,7 +77,6 @@ const SearchForm = memo(({initData}:Props) => {
       </form>
     </FormProvider>
   );
-});
-
+};
 
 export default SearchForm

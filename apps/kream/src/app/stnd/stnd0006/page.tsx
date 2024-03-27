@@ -24,11 +24,11 @@ export default function STND0006() {
     const gridRef = useRef<any | null>(null);
     const [state, dispatch] = useReducer(reducer, PageState);
     const { searchParams, mSelectedRow, crudType
-        , isMSearch, isPopUpOpen } = state;
+        , isPopUpOpen } = state;
 
-    const val = useMemo(() => {return { searchParams, isMSearch, mSelectedRow, isPopUpOpen, crudType, dispatch }}, [state]);
-    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    log("initData", initData, searchParams)
+    const val = useMemo(() => {return { searchParams, mSelectedRow, isPopUpOpen, crudType, dispatch }}, [state]);
+    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    
     return (
         <TableContext.Provider value={val}>
             <SearchForm loadItem={initData} />

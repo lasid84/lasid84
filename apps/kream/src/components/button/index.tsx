@@ -70,11 +70,17 @@ const getIcon = (label:string, icon:JSX.Element) => {
     var size = 18;
     if (icon) return cloneElement(icon as ReactElement, { size });;
 
-    switch (label) {
+    switch (label.toLowerCase()) {
         case "search":
             icon = <FiShoppingCart size={size} />;
             break;
+        case "new":
+            icon = <FiShoppingCart size={size} />;
+            break;            
         case "add":
+            icon = <FiShoppingCart size={size} />;
+            break;            
+        case "save":
             icon = <FiShoppingCart size={size} />;
             break;
         case "reset":
@@ -101,6 +107,7 @@ export const Button : React.FC<ButtonProps> = ( props ) => {
             ${isHidden ? "hidden" : ""}
             ${disabledCss}
         `}
+        id={label}
         onClick={onClick}
         type={type ? type : "button"}
         disabled={disabled ? true : false }

@@ -39,10 +39,10 @@ const initialState: UserSettingsState = {
   /*KREAM용 추가*/ 
   permission_id: "",
   user_grp_id: "",
-  office_cd: "",
+  office_cd: "ALL",
   dept_cd: "",
-  trans_mode: "",
-  trans_type: "",
+  trans_mode: "ALL",
+  trans_type: "ALL",
   ufs_id: "",
   token: "",
   ipaddr: "",
@@ -67,6 +67,12 @@ const userSettingsStore = (set: any) => ({
   data: initialState,
   actions: {
     setData: (payload: Partial<UserSettingsState>) => {
+      payload = {
+        ...payload,
+        office_cd: !payload.office_cd ? 'ALL' : payload.office_cd,
+        trans_mode: !payload.trans_mode ? 'ALL' : payload.trans_mode,
+        trans_type: !payload.trans_type ? 'ALL' : payload.trans_type
+      }
       set((state: any) => ({
         data: {
           ...state.data,
