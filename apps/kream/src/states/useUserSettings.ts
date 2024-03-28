@@ -15,10 +15,10 @@ interface UserSettingsState {
   /*KREAM용 추가*/ 
   permission_id: string;
   user_grp_id: string;
-  office_cd: string;
+  office_cd?: string | undefined;
   dept_cd: string;
-  trans_mode: string;
-  trans_type: string;
+  trans_mode: string | undefined;
+  trans_type?: string | undefined;
   ufs_id:string;
   token:string
   ipaddr:string
@@ -67,6 +67,12 @@ const userSettingsStore = (set: any) => ({
   data: initialState,
   actions: {
     setData: (payload: Partial<UserSettingsState>) => {
+      ['office_cd', 'trans_mode', 'trans_type'].forEach(col => {
+        var val = payload[col as keyof UserSettingsState];
+        if (val === '') {
+          payload[col as keyof UserSettingsState] = 'ALL' as any;
+        }
+      });
       set((state: any) => ({
         data: {
           ...state.data,

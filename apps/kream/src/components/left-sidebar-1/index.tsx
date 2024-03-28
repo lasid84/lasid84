@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, memo } from "react";
 import { useNavigation, setNavigationData } from "states/useNavigation";
 import Title from "components/left-sidebar-1/title";
 import Item from "components/left-sidebar-1/item";
@@ -13,7 +13,7 @@ interface Props {
     Children?: JSX.Element | JSX.Element[]
 }
 
-const LeftSidebar: React.FC<Props> = () => {
+const LeftSidebar: React.FC<Props> = memo(() => {
     // const { data: session } = useSession();
     const navigation = useNavigation((state) => state.navigation);
 
@@ -70,6 +70,6 @@ const LeftSidebar: React.FC<Props> = () => {
           </div>
         </div>
       );
-    };
+    });
 
 export default LeftSidebar;

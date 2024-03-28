@@ -8,14 +8,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch from "layouts/search-form/page-search-row";
-import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
+import PageSearch from "layouts/search-form/page-search";
+// import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
+import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { shallow } from "zustand/shallow";
 
 import CustomSelect from "components/select/customSelect";
 import { GridOption, gridData } from "@/components/grid/ag-grid-enterprise";
+import { ReactSelect, data } from "@/components/select/react-select2";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -44,15 +46,16 @@ const SearchForm = memo(({loadItem}:any) => {
   const { t } = useTranslation();
 
   //사용자 정보
-  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
+  const gTransMode = useUserSettings((state) => {log(state.data); return state.data.trans_mode}, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
-
+  
   // const methods = useForm<FormType>({
     const methods = useForm({
     // resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   ...initSearchValue,
-    // }
+    defaultValues: {
+      trans_mode : gTransMode || 'ALL',
+      trans_type : gTransType || 'ALL'
+    }
   });
 
   const {
@@ -66,8 +69,8 @@ const SearchForm = memo(({loadItem}:any) => {
   } = methods;
 
   // //Set select box data
-  const [transmode, setTransmode] = useState([])
-  const [transtype, setTranstype] = useState([])
+  const [transmode, setTransmode] = useState<any>();
+  const [transtype, setTranstype] = useState<any>();
 
   useEffect(() => { 
     if(loadItem?.length){
@@ -76,18 +79,23 @@ const SearchForm = memo(({loadItem}:any) => {
       setTranstype(loadItem[1])
 
       onSearch();
+      // onSubmit();
+      // handleSubmit(onSubmit)();
     }    
   }, [loadItem?.length])
 
+  // const onSubmit = (data: any, event: React.BaseSyntheticEvent<object, any, any>) => {
   const onSubmit = () => {
     const params = getValues();
+    log("search-form onSubmit", params, transmode, transtype);
     // dispatch({ type: SEARCH, params: params});
+    onSearch();
   }
 
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params)
+    log("onSearch", params, getValues('trans_mode'));
     dispatch({ searchParams: params, isMSearch:true});
   }
 
@@ -117,14 +125,33 @@ const SearchForm = memo(({loadItem}:any) => {
         <PageSearch
           right={
             <>
-              <TButtonBlue label={t("search")} onClick={onSearch} />
-              <TButtonBlue label={t("new")} onClick={onNew}/>
-              <TCancelButton label={t("reset")}onClick={() => {
+              <Button label={"search"} onClick={onSearch} />
+              <Button label={"new"} onClick={onNew}/>
+              <Button label={"reset"}onClick={() => {
                 setFocus("trans_mode");
                 reset();
               }} />
             </>
           }>
+          <ReactSelect 
+            id="trans_mode" label="trans_mode" dataSrc={transmode as data} 
+            options={{
+              keyCol:"trans_mode",
+              displayCol:['trans_mode', 'name'],
+              // inline:true,
+              // defaultValue: {label:'A Air', value:'A'}
+              defaultValue : getValues('trans_mode')
+            }}
+          />
+          <ReactSelect 
+            id="trans_type" label="trans_type" dataSrc={transtype as data}
+            options={{
+              keyCol:"trans_type",
+              displayCol:['name'],
+              // inline:true,
+              defaultValue:getValues('trans_type')
+            }}
+          />
           <div>
             {/* <TSelect2
               id="trans_mode"
@@ -136,7 +163,7 @@ const SearchForm = memo(({loadItem}:any) => {
               options={transmode}
             /> */}
             {/* {errors?.trans_mode?.message && <ErrorMessage>{errors.trans_mode.message}</ErrorMessage>} */}
-            <CustomSelect
+            {/* <CustomSelect
               id="trans_mode"
               // label="trans_mode"
               listItem = {transmode as gridData}
@@ -148,7 +175,7 @@ const SearchForm = memo(({loadItem}:any) => {
               // gridStyle={{width:'400px', height:'200px'}}
               // style={{width:'1000px'}}
               // isNoSelect={false}
-            />
+            /> */}
             {/* <TSelect2
               id="trans_type"
               label={t("trans_type")}
@@ -159,7 +186,7 @@ const SearchForm = memo(({loadItem}:any) => {
               options={transtype}
             /> */}
           {/* {errors?.trans_type?.message && <ErrorMessage>{errors.trans_type.message}</ErrorMessage>} */}
-            <CustomSelect
+            {/* <CustomSelect
               id="trans_type"
               // label="trans_mode"
               listItem = {transtype as gridData}
@@ -171,7 +198,7 @@ const SearchForm = memo(({loadItem}:any) => {
               // gridStyle={{width:'400px', height:'200px'}}
               // style={{width:'1000px'}}
               // isNoSelect={false}
-            />
+            /> */}
           </div>
         </PageSearch>
       </form>

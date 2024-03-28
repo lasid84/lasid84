@@ -2,7 +2,7 @@
 
 import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useConfigs } from "states/useConfigs";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, memo } from "react";
 import { useUserSettings } from "states/useUserSettings";
 // import { useSession, signIn, signOut } from 'next-auth/react';
 import { logOut } from "@/services/serverAction";
@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "next/navigation";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
-export default function Navbar() {
+function Navbar() {
   const config = useConfigs((state) => state.config);
   const {
     data: userSettings,
@@ -94,4 +94,4 @@ export default function Navbar() {
   );
 };
 
-// export default Navbar;
+export default memo(Navbar);

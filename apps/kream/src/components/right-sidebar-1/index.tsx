@@ -3,10 +3,10 @@ import Colors, { PaletteProps } from "./colors";
 import Close from "./close";
 import Sidebar from "./sidebar";
 import Langs from "./langs";
-import { BaseSyntheticEvent, useRef, useEffect, useState, RefObject } from "react";
+import { BaseSyntheticEvent, useRef, useEffect, useState, RefObject, memo } from "react";
 import { useConfigs } from "states/useConfigs";
 
-const RightSidebar: React.FC = () => {
+const RightSidebar: React.FC = memo(() => {
   const colors: PaletteProps[] = [
     { bg: "bg-white", text: "text-white", name: "light" },
     { bg: "bg-gray-900", text: "text-gray-900", name: "dark" },
@@ -79,6 +79,6 @@ const RightSidebar: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default RightSidebar;

@@ -23,7 +23,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const { dispatch, objState } = useAppContext();
     // const { searchParams, isMSearch, mSelectedRow } = objState;
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, {enable:false});
+    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, {enabled:false});
     const gridOption: GridOption = {
         colVisible: { col : ["cust_code", "cust_nm", "bz_reg_no"], visible:true },
         gridHeight: "100%",

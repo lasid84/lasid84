@@ -10,7 +10,8 @@ import Grid, { isFirstColumn, getFirstColumn, onGridRowAdd, onCellValueChanged, 
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import PageSearch from "layouts/search-form/page-search-row";
 
-import { TButtonBlue } from "components/form";
+// import { TButtonBlue } from "components/form";
+import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "@/page-parts/tmpl/toast";
 import { Anonymous_Pro } from "next/font/google";
@@ -29,7 +30,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [ gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData, {enable:false});
+    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData);
 
     /* state 변경 시 useQuery 등록한 데이터 모두 콜 하는듯... */
     // useEffect(() => {
@@ -118,8 +119,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             <PageSearch
                 right={
                 <>
-                <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
-                <TButtonBlue label={"save"} onClick={onSave} />
+                <Button label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
+                <Button label={"save"} onClick={onSave} />
                 </>
             }>
                 <></>

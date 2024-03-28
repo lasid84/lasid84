@@ -76,7 +76,7 @@ type cols = {
   // floatingFilter?: boolean
 }
 
-const ListGrid: React.FC<Props> = memo((props) => {
+const ListGrid: React.FC<Props> = (props) => {
     const { t } = useTranslation();
 
     const [colDefs, setColDefs] = useState<cols[]>([]);
@@ -88,6 +88,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const containerStyle = useMemo(() => "flex-col w-full", []);
     // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
     const [isReady, setReady] = useState(false);
+    const gridRef = props.gridRef;
     
     // const [defaultColDef, setDefaultColDef] = useState({});
 
@@ -145,7 +146,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           onComponentStateChanged: () => {
               // log("onRowDataUpdated", ready);
               if (!options?.isNoSelect) {
-                props.gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
+                gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
                   if (i === 0) {
                     node.setSelected(true);
                     log("onComponentStateChanged selected", node)
@@ -154,7 +155,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               }
               if (options?.isAutoFitColData) {
                 // setReady(true);
-                autoSizeAll(props.gridRef);
+                // autoSizeAll(props.gridRef);
               }
 
               // props.gridRef.current.api.refreshCells();
@@ -252,7 +253,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           cellOption = {
             ...cellOption,
             flex: 1,
-            width:100
+            // width:100
           }
         }
 
@@ -271,15 +272,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
         }
 
         //cell 수정 여부 셋팅
-        if (options?.editable) {
-          const optEditable:string[] = options.editable;
-          if (optEditable.indexOf(col) > -1) {
-            cellOption = {
-              ...cellOption,
-              editable: true
-            }
-          }          
-        };
+        const optEditable:string[] = options?.editable ? options?.editable : [];
+        cellOption = {
+          ...cellOption,
+          editable: optEditable.indexOf(col) > -1
+        }
 
         if (options?.colDisable) {
           const optDisable:string[] = options.colDisable;
@@ -415,10 +412,18 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   useEffect(() => {
     if (options?.gridHeight) {
-      log("options?.gridHeight", options?.gridHeight)
+      // log("options?.gridHeight", options?.gridHeight)
       setGridStyle({height : options?.gridHeight});
     }
   }, [options?.gridHeight]);
+
+  useEffect(() => {
+    if (gridRef.current.api && gridRef.current.api.getRenderedNodes().length && options?.isAutoFitColData) {
+      autoSizeAll(gridRef.current);
+    }
+  }, [gridRef.current, gridRef.current?.api?.getRenderedNodes()])
+
+
   
     return (
         <>
@@ -430,7 +435,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 style={gridStyle}
               >
                   <AgGridReact
-                      ref={props.gridRef}
+                      ref={gridRef}
                       gridOptions={gridOptions}
                       // onGridReady={onGridReady}
                       rowData={mainData}
@@ -444,7 +449,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           </div>
         </>
     )
-});
+};
 
 export const onRowClicked = (param:RowClickedEvent) => {
     log("onRowClicked")
@@ -497,27 +502,27 @@ export const onGridRowAdd = async (gridRef: {api:any}, initData:{} = {}) => {
 };
 
 export const onGridReady = (param:any) => {
-  console.log("onGridReady");
+  log("onGridReady");
 }
 
 export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
 
   // gridRef.current.api.sizeColumnToFit();
-  var rowCount = gridApi.current?.api.getRowNode();
-  log('autoSizeAll called!!!!!!!!', gridApi.current?.api, rowCount);
+  // var rowCount = gridApi.current?.api.getRowNode();
+  var rowCount = gridApi?.api?.getRenderedNodes().length;
+  log('autoSizeAll called!!!!!!!!', gridApi, rowCount);
   // if (!gridApi) return;
 
   if (!rowCount) return;
   
-  const allColumnIds: string[] = [];
-  gridApi.current?.api.getColumns().forEach((column:any) => {
+const allColumnIds: string[] = [];
+  gridApi.api.getColumns().forEach((column:any) => {
     if (column.visible) allColumnIds.push(column.getId());
   });
-  gridApi.current?.api.autoSizeColumns(allColumnIds, skipHeader);
+  gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
 
   // if (!gridApi.current) gridApi.current?.api.autoSizeAllColumns(skipHeader); 
 
-  // log('autoSizeAll called!!!!!!!! 완료', allColumnIds);
 };
 
 

@@ -1,7 +1,7 @@
 
 'use client';
 
-import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
+import {useEffect, useReducer, useMemo, useCallback, useRef, memo } from "react";
 import { SP_GetData } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextProvider";
@@ -26,10 +26,10 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const gridRef = useRef<any | null>(null);
     const { dispatch, searchParams, isMSearch } = useAppContext();
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enable:false});
+    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:false});
     const gridOption: GridOption = {
         colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
-        colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+        // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         checkbox: ["no"],
         editable: ["trans_mode"],
         dataType: { "create_date" : "date", "vat_rt":"number"},

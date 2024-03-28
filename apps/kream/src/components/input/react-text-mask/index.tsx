@@ -2,10 +2,12 @@
 import React, { KeyboardEventHandler, memo, useEffect, useState } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import MaskedInput, { Mask, MaskedInputProps } from 'react-text-mask';
-import { InputWrapper } from '../wrapper';
-import { Label } from '../label';
+import MaskedInput, { Mask, MaskedInputProps, conformToMask} from 'react-text-mask';
+// import  conformToMask from './conformToMask'
+import { InputWrapper } from 'components/wrapper';
+import { Label } from 'components/label';
 import clsx from 'clsx';
+import createNumberMask from './createNumberMask';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -22,20 +24,21 @@ type Props = {
     type?: string;            //number, text,  custom: ipaddr, bz_reg_no
     limit?: number;           //입력 자릿수 제한
     isAllowDecimal?:boolean,  //소수점 허용 여부
-    decimalCnt?: number       //소수점 자리수
+    decimalLimit?: number     //소수점 자리수
     myPlaceholder?: string;   //
-    isReadOnly?:boolean;       //읽기전용여부
+    isReadOnly?:boolean;      //읽기전용여부
   };
 };
 
-export const MaskedInputField: React.FC<Props> = memo((props:Props) => {
+export const MaskedInputField: React.FC<Props> = (props:Props) => {
   const { control } = useFormContext();
   const { t } = useTranslation();
   if (!control) return null;
 
   const {id, label, value, width, height, options = {} } = props;
-  const { type, myPlaceholder, inline, isAllowDecimal,decimalCnt, isReadOnly = false } = options;
+  const { type, myPlaceholder, inline, isReadOnly = false } = options;
   const {mask, pipe, placeholder} = getMask(type, options);
+
   const defWidth = width ? width : "w-full";
   const defHeight = height ? height : "h-8";
 
@@ -51,10 +54,10 @@ export const MaskedInputField: React.FC<Props> = memo((props:Props) => {
 
   function handleBlur(event:any) {
     // log("handleBlur", event.target.value, defWidth, defHeight);
-    if (type === 'number' && event.target.value) {
-      const newVal = event.target.value.replace(/,/g, "");
-      event.target.value = parseFloat(newVal).toLocaleString('ko-KR').toString();
-    }
+    // if (type === 'number' && event.target.value) {
+    //   const newVal = event.target.value.replace(/,/g, "");
+    //   event.target.value = parseFloat(newVal).toLocaleString('ko-KR').toString();
+    // }
   }
 
   return (
@@ -69,8 +72,9 @@ export const MaskedInputField: React.FC<Props> = memo((props:Props) => {
                 {...field}
                 className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
                 mask={mask! || false}
-                pipe={pipe}
-                value={value}
+                // pipe={pipe}
+                // value={value}
+                defaultValue={value}
                 readOnly={isReadOnly}
                 placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
                 // onChange={(e) => {
@@ -87,7 +91,7 @@ export const MaskedInputField: React.FC<Props> = memo((props:Props) => {
         />
     </InputWrapper>
   );
-});
+};
 
 
 
@@ -115,6 +119,7 @@ function getMask(type:string = "", options:any={}): Partial<MaskedInputProps>  {
     case "bz_reg_no":
       return (
         {
+          placeholder: "",
           mask: [/\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, /\d/]
         }
       );
@@ -145,28 +150,33 @@ function getMask(type:string = "", options:any={}): Partial<MaskedInputProps>  {
         //   }
         //   return maskArray;
         // },
-        mask: (value: string) => {
-          const maskArray: (string | RegExp)[] = [];
-          var newVal = value.replace(/,/g, "");
+        // mask: (value: string) => {
+        //   const maskArray: (string | RegExp)[] = [];
+        //   var newVal = value.replace(/,/g, "");
           
-          const length = newVal.length;
-          for (let i = 0; i < length; i++) {
-            if (options.limit && options.limit <= i) return maskArray;
-            if (options.isAllowDecimal && newVal.charAt(i) === '.') {
-              maskArray.push('.');
-            } else {
-              if (options.decimalCnt) {
-                var idx = maskArray.indexOf('.') + 1;
-                // log(idx, maskArray.slice(idx))
-                if (idx && maskArray.slice(idx).length >= options.decimalCnt) return maskArray;
-              }
+        //   const length = newVal.length;
+        //   for (let i = 0; i < length; i++) {
+        //     if (options.limit && options.limit <= i) return maskArray;
+        //     if (options.isAllowDecimal && newVal.charAt(i) === '.') {
+        //       maskArray.push('.');
+        //     } else {
+        //       if (options.decimalCnt) {
+        //         var idx = maskArray.indexOf('.') + 1;
+        //         // log(idx, maskArray.slice(idx))
+        //         if (idx && maskArray.slice(idx).length >= options.decimalCnt) return maskArray;
+        //       }
               
-              maskArray.push(/\d/);
-            }
-          }
+        //       maskArray.push(/\d/);
+        //     }
+        //   }
           
-          return maskArray;
-        },
+        //   return maskArray;
+        // },
+        mask: createNumberMask({
+            allowDecimal: options.isAllowDecimal,
+            decimalLimit: options.decimalLimit,
+            integerLimit: options.limit
+          }),
         // pipe: (value: string) => {
         //   // return parseFloat(value).toLocaleString('ko-KR').toString();
         //   log(document.activeElement, document.activeElement?.tagName.includes('bz_reg_no'))

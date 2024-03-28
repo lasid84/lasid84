@@ -56,7 +56,7 @@ const Home: React.FC = () => {
               type:"number",
               limit:7,
               isAllowDecimal:true,
-              decimalCnt:2,
+              decimalLimit:2,
               // myPlaceholder:"Enter business number" 
             // myPlaceholder:"bz_reg_no"
             // inline:{true}
