@@ -1,12 +1,12 @@
 
 'use client';
 
-import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
-import { SP_GetMasterData } from "./data";
+import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
+import { SP_GetMasterData, SP_GetInvoiceMasterContent } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
+import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid, {onRowClicked, onSelectionChanged} from 'components/grid/ag-grid-enterprise';
+import Grid, { onRowClicked, onSelectionChanged } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
@@ -14,37 +14,46 @@ import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData : any | null;
-  };
+    initData: any | null;
+};
 
-const MasterGrid: React.FC<Props> = ({ initData }) => {    
+const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
     // const { searchParams, isMSearch, mSelectedRow } = objState;
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, {enable:false});
+    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enable: false });
+    const { data: mainDetailData } = useGetData(objState?.searchParams, SEARCH_MD, SP_GetInvoiceMasterContent, { enable: false });
+
+    
     const gridOption: GridOption = {
-        colVisible: { col : ["cust_code", "cust_nm", "bz_reg_no"], visible:true },
+        colVisible: { col: ["billto_nm_kor", "house_bl_no", "invoice_no", "invoice_sts", "billing_yn", "shipper_code", "shipper_nm", "consign_code", "consign_nm"], visible: true },
         gridHeight: "100%",
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         // checkbox: ["no"],
         // editable: ["trans_mode"],
-        dataType: { "bz_reg_no":"bizno"},
+        dataType: { "bz_reg_no": "bizno" },
         // isMultiSelect: false,
         isAutoFitColData: false,
         // alignLeft: ["major_category", "bill_gr1_nm"],
         // alignRight: [],
     };
-    
-    const handleRowClicked = (param: RowClickedEvent) => {
+
+    const handleRowClicked = async (param: RowClickedEvent) => {
         var data = onRowClicked(param);
         log("handleRowClicked", data)
-        // dispatch({isDSearch:true});
-      };
+        // var invoice = data.invoice_no
+        // console.log('랄랄라',invoice)
+        // const result = SP_GetInvoiceMasterContent(data.invoice_no)
+        // console.log('랄랄라 result?',result)
 
-    const handleSelectionChanged1 = (param:SelectionChangedEvent) => {
-        
+        // dispatch({ mSelectedRow: data })
+        // dispatch({isDSearch:true});
+    };
+
+    const handleSelectionChanged1 = (param: SelectionChangedEvent) => {
+
         const row = onSelectionChanged(param)
         // var newRow = [...selectedRow!]
         // newRow[0] = row
@@ -53,7 +62,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         // ]
         // newSearch[1] = true;
         log("MAster handleSelectionChanged");
-        dispatch({mSelectedRow:row, isDSearch:true});
+        dispatch({ mSelectedRow: row, isDSearch: true });
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };
@@ -62,7 +71,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         if (objState.isMSearch) {
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
-            dispatch({isMSearch:false});
+            dispatch({ isMSearch: false });
         }
     }, [objState?.isMSearch]);
 
@@ -77,7 +86,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                 onSelectionChanged: handleSelectionChanged1,
             }}
         />
-            
+
     );
 }
 

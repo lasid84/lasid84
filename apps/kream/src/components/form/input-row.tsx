@@ -1,10 +1,12 @@
 import { Input } from "components/react-hook-form/input-row";
 import { HTMLInputTypeAttribute } from "react";
 import { OnChangeValue } from "react-select";
+import { Label } from "components/label"
+import { InputWrapper } from "components/wrapper"
 
-export type InputProps2 = {
+export type InputProps = {
   id: string;
-  label: string;
+  name: string;
   width?: string;
   children?: any;
   readOnly?: boolean;
@@ -13,11 +15,12 @@ export type InputProps2 = {
   type?: HTMLInputTypeAttribute;
   value?: any;
   rules?: any;
+  nolabel?: boolean;
 };
 
-export const TInput2: React.FC<InputProps2> = ({
+export const TInput2: React.FC<InputProps> = ({
   id,
-  label,
+  name,
   width = "w-full",
   children,
   readOnly = false,
@@ -26,15 +29,20 @@ export const TInput2: React.FC<InputProps2> = ({
   type = "text",
   value,
   rules = {},
+  nolabel,
 }) => {
   return (
-    <div className="flex flex-row items-start mx-1">
-      <label
+    <>
+      {/* <label
         htmlFor={id}
-        className={`w-full md:text-right mx-1 py-2`}>
-        {label}
-      </label>
-      {/* <div className='flex flex-col w-full '> */}
+        className={`w-full md:text-right mx-1 py-2 max-w-24`}>
+        {id}
+      </label> */}
+      <InputWrapper inline={true}>
+        { !nolabel &&
+          <Label id={id} {...(name && { name: name })} />
+        }
+        {/* <div className='flex flex-col w-full '> */}
         <Input
           id={id}
           name={id}
@@ -44,12 +52,13 @@ export const TInput2: React.FC<InputProps2> = ({
           readOnly={readOnly}
           isAdd={isAdd}
           notAppliedReadOnlyCss={notAppliedReadOnlyCss}
-          
+
           rules={rules}
         />
         {children}
-      {/* </div> */}
-    </div>
+        {/* </div> */}
+      </InputWrapper>
+    </>
   );
 };
 

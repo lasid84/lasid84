@@ -4,7 +4,8 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export const SEARCH_M = 'SEARCH_M';
 export const SEARCH_D = 'SEARCH_D';
-export const LOAD = 'LOAD';
+export const LOAD = 'LOAD'
+export const SEARCH_MD = "SEARCH_MD"
 
 export const crudType = {
   CREATE: "C",

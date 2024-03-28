@@ -13,7 +13,7 @@ export const Label: React.FC<LabelProps> = ({id, name}) => {
   return (
     <label
       htmlFor={id}
-      className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+      className="block text-xs font-medium justify-center text-right text-gray-700 dark:text-gray-200 whitespace-nowrap min-w-14 max-w-24">
       {t(name? name : id)}
     </label>
   );

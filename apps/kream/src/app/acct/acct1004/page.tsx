@@ -30,23 +30,20 @@ export default function ACCT1004() {
     const { objState } = state;
     const { searchParams, isMSearch } = objState;
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
-
-
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
         <TableContext.Provider value={val}>
-            {/* <div>{searchParams}{isMSearch}</div> */}
             <SearchForm initData={initData} />
-            <div className="grid w-full grid-cols-3">
-                <MasterGrid initData={initData} />
-                <div className="col-span-2">
-                    {/* <div className={selectedTab === "ALL" ? "" : "hidden"}> */}
-                        <CustomerDetail />
-                    {/* </div> */}
-                    <DetailGrid initData={initData} />
+            <div className="w-full grid grid-cols-3">
+                <div className="flex col-span-2">
+                    <MasterGrid initData={initData} />
+                </div>
+                <div className="flex col-span-1">
+                    <CustomerDetail />
                 </div>
             </div>
+            <DetailGrid initData={initData} />
         </TableContext.Provider>
     );
 }

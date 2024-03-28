@@ -7,37 +7,37 @@ import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch from "layouts/search-form/page-search-row";
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
+import { shallow } from "zustand/shallow";
+
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
-import { ReactSelect} from "components/select/react-select"
+import { ReactSelect } from "components/select/react-select"
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
-  cursorData : []
-  numericData : number;
-  textData : string;
+  cursorData: []
+  numericData: number;
+  textData: string;
 }
 
 type Props = {
   // onSubmit: SubmitHandler<any>;
-  initData : any | undefined;
+  initData: any | undefined;
 };
 
-const SearchForm = memo(({initData}:Props) => {
+const SearchForm: React.FC<Props> = (props) => {
+  const { initData } = props;
 
   // log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
-  let selectoptions: any[] = []
+
   // //사용자 정보
-  // const gTransMode = useUserSettings((state) => state.data.trans_mode)
-  // const gTransType = useUserSettings((state) => state.data.trans_type)
+  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
+  const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
   const methods = useForm({
-    // resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   ...initSearchValue,
-    // }
+    defaultValues: { trans_mode: "", trans_type: "" }
   });
 
   const {
@@ -50,23 +50,42 @@ const SearchForm = memo(({initData}:Props) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+  // //Set select box data
+  const [transmode, setTransmode] = useState([])
+  const [transtype, setTranstype] = useState([])
+  
   useEffect(() => {
+
     if (initData) {
-        initData[0].data.map((item: any) => {
-            var key = item[Object.keys(item)[0]];
-            var label = item[Object.keys(item)[1]];
-            selectoptions.push({ value: key, label: key + " " + label });
-        })
-        setGroupcd(selectoptions)
-        onSearch();
+      console.log('initdata', initData)
+      
+      // initData.map((arr: any, i: any) => {
+      //   console.log('arr', arr)
+      //   // let selectoptions: any[i] = []
+      //   let selectoptions: Array<any> = new Array(25);
+      //   var key = ''
+      //   var label = ''
+      //   var index = i
+      //   console.log('selectoptions',index)
+      //   arr.data.map((item: any) => {
+      //     key = item[Object.keys(item)[0]];
+      //     label = item[Object.keys(item)[1]];
+      //     selectoptions[0].push({ value: key, label: key + " " + label });
+      //   })
+      //   console.log('selectoptions[indezx[',selectoptions[index])
+      //   console.log('iiiiiii', selectoptions)
+      // })
+      setTransmode(initData[0])
+      setTranstype(initData[1])
+      onSearch();
     }
-}, [initData])
+  }, [initData])
 
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
     log("onSearch", params);
-    dispatch({searchParams: params, isMSearch:true});
+    dispatch({ searchParams: params, isMSearch: true });
   }
 
   return (
@@ -76,21 +95,22 @@ const SearchForm = memo(({initData}:Props) => {
           right={
             <>
               <TButtonBlue label={"search"} onClick={onSearch} />
-              {/* <TButtonBlue label={t("new")} onClick={() => { } } /> */}
-              {/* <TCancelButton label={t("reset")} onClick={() => { } } /> */}
+              <TButtonBlue label={"createtax"} onClick={() => { }} />
+              <TCancelButton label={"searchccn"} onClick={() => { }} />
+              <TCancelButton label={"modifyVAT"} onClick={() => { }} />
             </>
           }>
-            <ReactSelect id="grp_cd" name="grp" options={groupcd} inline={true}/>
-            <ReactSelect id="grp_cd" name="grp" options={groupcd} inline={true}/>
-             <TInput2 id="grp_cd" label="grp_cd" type="date"/>   
-             <TInput2 id="grp_cd" label="grp_cd" type="date"/>   
-             <ReactSelect id="grp_cd" name="grp" options={groupcd} inline={true}/>
-             <TInput2 id="grp_cd" label="grp_cd"  />   
+          {/* <ReactSelect id="trans_mode" options={transmode} inline={true} />
+          <ReactSelect id="trans_type" options={transtype} inline={true} />
+          <TInput2 id="fr_date" type="date" />
+          <TInput2 id="to_date" type="date" />
+          <ReactSelect id="cust_code" options={groupcd} inline={true} />
+          <TInput2 id="invoice_no" name="bl/inv no." /> */}
         </PageSearch>
       </form>
     </FormProvider>
   );
-});
+};
 
 
 export default SearchForm

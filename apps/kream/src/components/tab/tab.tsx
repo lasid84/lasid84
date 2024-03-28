@@ -22,7 +22,7 @@ export default function Tab({ tabList, allYn = false, onClickTab }: Props) {
     useEffect(() => setSelectedTab(allYn ? "ALL" : ""), [allYn]);
 
     return (
-        <div className="flex">
+        <div className="w-full flex">
             <div className="flex flex space-x-1">
                 {tabList?.map(({ code, cd_name }, idx) => (
                     <div key={idx} className="flex-none  bg-transparent">
@@ -30,8 +30,8 @@ export default function Tab({ tabList, allYn = false, onClickTab }: Props) {
                             onClick={() => setSelectedTab(code)}
                             className={
                                 code === selectedTab
-                                    ? "font-bold text-md px-4 py-3 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
-                                    : "font-bold text-md px-4 py-3 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
+                                    ? "font-medium text-xs px-4 py-1 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
+                                    : "font-medium text-xs px-4 py-1 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
                             }
                             type="button">
                             {cd_name}

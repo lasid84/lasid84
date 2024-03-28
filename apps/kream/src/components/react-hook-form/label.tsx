@@ -11,7 +11,7 @@ export const Label: React.FC<LabelProps> = ({id, name}) => {
   const { t } = useTranslation()
   if (!name) {    
     return (
-      <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+      <div className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap max-w-24">
         {t(id)}
       </div>
     );
@@ -19,7 +19,7 @@ export const Label: React.FC<LabelProps> = ({id, name}) => {
   return (
     <label
       htmlFor={id}
-      className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+      className="block text-xs font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap max-w-24">
       {t(name as string)}
     </label>
   );

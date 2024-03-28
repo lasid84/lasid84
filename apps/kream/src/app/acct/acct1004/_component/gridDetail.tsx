@@ -44,11 +44,12 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
         if (initData) {
             // log(initData[0].data)
             const gridOption: GridOption = {
-                colVisible: { col : ["cust_code", "cont_seq", "fax_num"], visible:false },
+                colVisible: { col : [ "invoice_no", "vat_rt", "fe_ref_item", "uas_gl_code", "vat_yn", "fins_yn", "rem_prt_yn", "fe_prt_yn"
+                , "gl_code", "bill_yn"], visible:false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
                 gridHeight: "33vh",
                 checkbox: ["use_yn", "def"],
-                select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
+                // select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: {"email": 200},
                 // editable: ["trans_mode"],
                 dataType: { "create_date" : "date", "vat_rt":"number", "bz_reg_no":"bizno"},
@@ -118,8 +119,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             <PageSearch
                 right={
                 <>
-                <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
-                <TButtonBlue label={"save"} onClick={onSave} />
+                {/* <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
+                <TButtonBlue label={"save"} onClick={onSave} /> */}
                 </>
             }>
                 <></>
