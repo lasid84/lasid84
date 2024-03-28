@@ -34,7 +34,7 @@ export default function ACCT1004() {
 
     return (
         <TableContext.Provider value={val}>
-            <SearchForm initData={initData} />
+            <SearchForm loadItem={initData} />
             <div className="w-full grid grid-cols-3">
                 <div className="flex col-span-2">
                     <MasterGrid initData={initData} />

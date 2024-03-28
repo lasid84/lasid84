@@ -8,9 +8,10 @@ import PageSearch from "layouts/search-form/page-search-row";
 import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
-
+import { MaskedInputField, Input } from 'components/input';
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
-import { ReactSelect } from "components/select/react-select"
+import { ReactSelect, data } from "@/components/select/react-select2";
+
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -20,13 +21,18 @@ export interface returnData {
   textData: string;
 }
 
+export interface typeloadItem {
+  data : {} | undefined
+}
+
+
 type Props = {
-  // onSubmit: SubmitHandler<any>;
-  initData: any | undefined;
+  onSubmit: SubmitHandler<any>;
+  loadItem : typeloadItem;
 };
 
 const SearchForm: React.FC<Props> = (props) => {
-  const { initData } = props;
+  const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
@@ -37,7 +43,14 @@ const SearchForm: React.FC<Props> = (props) => {
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
   const methods = useForm({
-    defaultValues: { trans_mode: "", trans_type: "" }
+    defaultValues: {
+      trans_mode : gTransMode || 'ALL',
+      trans_type : gTransType || 'ALL',
+      fr_date : '',
+      to_date : '',
+      no : '',
+      cust_code : ''
+      }
   });
 
   const {
@@ -51,35 +64,22 @@ const SearchForm: React.FC<Props> = (props) => {
   } = methods;
 
   // //Set select box data
-  const [transmode, setTransmode] = useState([])
-  const [transtype, setTranstype] = useState([])
+  const [transmode, setTransmode] = useState<any>();
+  const [transtype, setTranstype] = useState<any>();
+  const [custcode, setCustcode] = useState<any>();
   
-  useEffect(() => {
+  useEffect(() => { 
+    if(loadItem?.length){
+      // log("=================", loadItem[0].data, loadItem[1].data)
+      setTransmode(loadItem[0]) 
+      setTranstype(loadItem[1])
+      setCustcode(loadItem[8])
 
-    if (initData) {
-      console.log('initdata', initData)
-      
-      // initData.map((arr: any, i: any) => {
-      //   console.log('arr', arr)
-      //   // let selectoptions: any[i] = []
-      //   let selectoptions: Array<any> = new Array(25);
-      //   var key = ''
-      //   var label = ''
-      //   var index = i
-      //   console.log('selectoptions',index)
-      //   arr.data.map((item: any) => {
-      //     key = item[Object.keys(item)[0]];
-      //     label = item[Object.keys(item)[1]];
-      //     selectoptions[0].push({ value: key, label: key + " " + label });
-      //   })
-      //   console.log('selectoptions[indezx[',selectoptions[index])
-      //   console.log('iiiiiii', selectoptions)
-      // })
-      setTransmode(initData[0])
-      setTranstype(initData[1])
       onSearch();
-    }
-  }, [initData])
+      // onSubmit();
+      // handleSubmit(onSubmit)();
+    }    
+  }, [loadItem?.length])
 
   const onSearch = () => {
     // log("onSearch")
@@ -100,12 +100,39 @@ const SearchForm: React.FC<Props> = (props) => {
               <TCancelButton label={"modifyVAT"} onClick={() => { }} />
             </>
           }>
-          {/* <ReactSelect id="trans_mode" options={transmode} inline={true} />
-          <ReactSelect id="trans_type" options={transtype} inline={true} />
-          <TInput2 id="fr_date" type="date" />
-          <TInput2 id="to_date" type="date" />
-          <ReactSelect id="cust_code" options={groupcd} inline={true} />
-          <TInput2 id="invoice_no" name="bl/inv no." /> */}
+
+          <ReactSelect 
+            id="trans_mode" label="trans_mode" dataSrc={transmode as data} 
+            options={{
+              keyCol:"trans_mode",
+              displayCol:['name'],
+              inline:true,
+              // defaultValue: {label:'A Air', value:'A'}
+              defaultValue : getValues('trans_mode')
+            }}
+          />
+          <ReactSelect 
+            id="trans_type" label="trans_type" dataSrc={transtype as data}
+            options={{
+              keyCol:"trans_type",
+              displayCol:['name'],
+              inline:true,
+              defaultValue:getValues('trans_type')
+            }}
+          />
+            {/* <ReactSelect 
+            id="cust_code" label="cust_code" dataSrc={custcode as data}
+            options={{
+              keyCol:"cust_code",
+              displayCol:['cust_nm'],
+              inline:true,
+              defaultValue:getValues('cust_code')
+            }}
+          /> */}
+          <Input id="fr_date" type="date" inline={true}/>
+          <Input id="to_date" type="date" inline={true}/>
+          <Input id="no" name="bl/inv no." inline={true}/>
+
         </PageSearch>
       </form>
     </FormProvider>

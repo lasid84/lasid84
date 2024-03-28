@@ -15,7 +15,6 @@ interface cursorData {
 
 export const SP_Load = async (searchParam: any) => {
   // unstable_noStore();
-
   const { user_id, ipaddr } = searchParam;
   const params = {
     inparam: ["in_user_id", "in_ipaddr"],
@@ -25,24 +24,6 @@ export const SP_Load = async (searchParam: any) => {
   }
   // log("Acct1004Load", p);
   const result = await executFunction(params);
-
-  console.log('re2sult', result)
-
-  // let selectoptions: Array<any> = new Array(result.length)
-  result.map((arr: any, i: any) => {
-    console.log('result_arr', arr)
-    var key = ''
-    var label = ''
-    let options: any[] = []
-    let selectoptions: any[] = []
-    arr.data.map((item: any) => {
-      key = item[Object.keys(item)[0]];
-      label = item[Object.keys(item)[1]];
-      selectoptions.push({ value: key, label: key + " " + label });
-    })
-    options.push({...selectoptions})
-    console.log('result_options', options)
-  })
   return result;
 }
 
@@ -79,23 +60,13 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
-  return result
-  // console.log("fffff", result![0])
-  // console.log('어쩌지', result![0].data[0].invoice_no)
-  // params.invalue[4] = result![0].data[0].invoice_no
-  // console.log('params??', params)
-  // const result2 = await executFunction(params);
-
-
-  // return result2![0];
-  // }
-  // } 
+  return result![0]
 }
 
 export const SP_GetInvoiceMasterContent = async (invoice: any) => {
-  const Param = searchParam.queryKey[1]
+  // const Param = searchParam.queryKey[1]
 
-  const { invoice_no, user_id, ipaddr } = Param;
+  // const { invoice_no, user_id, ipaddr } = Param;
 
   const params = {
     inparam: [
@@ -115,8 +86,8 @@ export const SP_GetInvoiceMasterContent = async (invoice: any) => {
       , '20230331'
       , invoice
       , ''
-      , user_id
-      , ipaddr
+      , ''
+      , ''
     ],
     inproc: 'account.f_acct1004_get_master',
     isShowLoading: true

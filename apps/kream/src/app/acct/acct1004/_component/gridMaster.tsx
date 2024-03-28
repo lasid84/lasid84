@@ -35,7 +35,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         // editable: ["trans_mode"],
         dataType: { "bz_reg_no": "bizno" },
         // isMultiSelect: false,
-        isAutoFitColData: false,
+        // isAutoFitColData: false,
         // alignLeft: ["major_category", "bill_gr1_nm"],
         // alignRight: [],
     };
