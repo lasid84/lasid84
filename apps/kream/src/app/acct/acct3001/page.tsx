@@ -35,7 +35,6 @@ export default function ACCT3001() {
     
     return (
         <TableContext.Provider value={val}>
-            {/* <div>{searchParams}{isMSearch}</div> */}
             <SearchForm initData={initData} />
             <div className="grid w-full grid-cols-3">
                 <MasterGrid initData={initData}/>

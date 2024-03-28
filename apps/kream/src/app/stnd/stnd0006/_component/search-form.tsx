@@ -53,8 +53,8 @@ const SearchForm = memo(({loadItem}:any) => {
     const methods = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
-      trans_mode : gTransMode,
-      trans_type : gTransType
+      trans_mode : gTransMode || 'ALL',
+      trans_type : gTransType || 'ALL'
     }
   });
 
@@ -96,7 +96,7 @@ const SearchForm = memo(({loadItem}:any) => {
     // log("onSearch")
     const params = getValues();
     log("onSearch", params, getValues('trans_mode'));
-    dispatch({ searchParams: params});
+    dispatch({ searchParams: params, isMSearch:true});
   }
 
   const onNew = () => {

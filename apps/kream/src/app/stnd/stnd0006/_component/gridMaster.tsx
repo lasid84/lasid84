@@ -26,10 +26,10 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const gridRef = useRef<any | null>(null);
     const { dispatch, searchParams, isMSearch } = useAppContext();
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enable:false});
+    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:false});
     const gridOption: GridOption = {
         colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
-        colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+        // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         checkbox: ["no"],
         editable: ["trans_mode"],
         dataType: { "create_date" : "date", "vat_rt":"number"},
@@ -56,14 +56,14 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     }, []);
 
-    // useEffect(() => {
-    //     if (isMSearch && gridRef) {
-    //         log("gridMaster", searchParams)
-    //         mainRefetch();
-    //         dispatch({isMSearch:false});
-    //         // autoSizeAll(gridRef.current);
-    //     }
-    // }, [isMSearch, gridRef]);
+    useEffect(() => {
+        if (isMSearch && gridRef) {
+            log("gridMaster", searchParams)
+            mainRefetch();
+            dispatch({isMSearch:false});
+            // autoSizeAll(gridRef.current);
+        }
+    }, [isMSearch, gridRef]);
 
     return (
         <>
@@ -77,9 +77,9 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                     onSelectionChanged: handleSelectionChanged,
                 }}
                 />
-            {/* <Modal
+            <Modal
                 loadItem={initData}
-            /> */}
+            />
         </>
             
     );

@@ -73,7 +73,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     }, [dataSrc]);
 
     useEffect(() => {
-        log(firstLab, firstVal)
+        // log(firstLab, firstVal)
         if (firstLab && firstVal) {
             setSelectedVal({
                 label: firstLab,

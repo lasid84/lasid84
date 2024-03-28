@@ -15,10 +15,10 @@ interface UserSettingsState {
   /*KREAM용 추가*/ 
   permission_id: string;
   user_grp_id: string;
-  office_cd: string;
+  office_cd?: string | undefined;
   dept_cd: string;
-  trans_mode: string;
-  trans_type: string;
+  trans_mode: string | undefined;
+  trans_type?: string | undefined;
   ufs_id:string;
   token:string
   ipaddr:string
@@ -39,10 +39,10 @@ const initialState: UserSettingsState = {
   /*KREAM용 추가*/ 
   permission_id: "",
   user_grp_id: "",
-  office_cd: "ALL",
+  office_cd: "",
   dept_cd: "",
-  trans_mode: "ALL",
-  trans_type: "ALL",
+  trans_mode: "",
+  trans_type: "",
   ufs_id: "",
   token: "",
   ipaddr: "",
@@ -67,12 +67,12 @@ const userSettingsStore = (set: any) => ({
   data: initialState,
   actions: {
     setData: (payload: Partial<UserSettingsState>) => {
-      payload = {
-        ...payload,
-        office_cd: !payload.office_cd ? 'ALL' : payload.office_cd,
-        trans_mode: !payload.trans_mode ? 'ALL' : payload.trans_mode,
-        trans_type: !payload.trans_type ? 'ALL' : payload.trans_type
-      }
+      ['office_cd', 'trans_mode', 'trans_type'].forEach(col => {
+        var val = payload[col as keyof UserSettingsState];
+        if (val === '') {
+          payload[col as keyof UserSettingsState] = 'ALL' as any;
+        }
+      });
       set((state: any) => ({
         data: {
           ...state.data,

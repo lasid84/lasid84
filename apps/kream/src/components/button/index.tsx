@@ -67,6 +67,7 @@ const getColor = (label:string, color:string = '') => {
 }
 
 const getIcon = (label:string, icon:JSX.Element) => {
+    if (icon === null) return null;
     var size = 18;
     if (icon) return cloneElement(icon as ReactElement, { size });;
 

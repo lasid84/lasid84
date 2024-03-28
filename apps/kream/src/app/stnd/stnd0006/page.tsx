@@ -5,8 +5,8 @@ import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
 import PageTitle from "components/page-title/page-title";
 import { useUserSettings } from "states/useUserSettings";
 import { SP_Load, SP_GetData } from "./_component/data";
-import { PageState, reducer } from "components/provider/contextProvider";
-import { LOAD, SEARCH_M } from "components/provider/contextProvider";
+import { PageState, reducer } from "components/provider/contextObjectProvider";
+import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import  SearchForm  from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
 import { TableContext } from "@/components/provider/contextProvider";
@@ -22,11 +22,19 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 export default function STND0006() {
 
     const gridRef = useRef<any | null>(null);
-    const [state, dispatch] = useReducer(reducer, PageState);
-    const { searchParams, mSelectedRow, crudType
-        , isPopUpOpen } = state;
+    const [state, dispatch] = useReducer(reducer, {
+        objState: {
+            searchParams:{}, 
+            isMSearch: false,
+            mSelectedRow: {},
+            isPopUpOpen: false
+        }
+    });
+    const { objState } = state;
+    const { searchParams, mSelectedRow, crudType, isMSearch
+        , isPopUpOpen } = objState;
 
-    const val = useMemo(() => {return { searchParams, mSelectedRow, isPopUpOpen, crudType, dispatch }}, [state]);
+    const val = useMemo(() => {return { searchParams, mSelectedRow, isMSearch, isPopUpOpen, crudType, dispatch }}, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     
     return (
