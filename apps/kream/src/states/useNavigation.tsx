@@ -46,6 +46,8 @@ export type NavigationState = {
 // Define the initial state using that type
 export type NavigationStore = {
   navigation: NavigationState[];
+  menu_arr: string [];
+  isReady?: boolean;
   openMenu: string;
   isOpen: boolean,
   actions: {
@@ -81,7 +83,7 @@ async function getMenuList(userInfo: any) {
 
   const params = {
     inparam: ['in_permission_id', 'in_menu_type', 'in_user_id', 'in_ipaddr'],
-    invalue: [userInfo.permission_id, 'UI', userInfo.user_id, '1.2.3.4'],
+    invalue: [userInfo.permission_id, 'WEB', userInfo.user_id, ''],
     inproc: 'public.f_admn_get_menulist',
     isShowLoading: false
   };
@@ -98,6 +100,7 @@ async function getMenuList(userInfo: any) {
   }];
 
   const menuMap = new Map<number, NavigationState>();
+  var menuArr:string[] = ['dashboard'];
 
   menus[0].data.forEach((menu: any) => {
     if (menu.use_yn === "Y") {
@@ -119,6 +122,9 @@ async function getMenuList(userInfo: any) {
           parentMenuItem.items.push(menuItem);
         }
       }
+
+      if (menu.menu_code) menuArr.push(menu.menu_code + menu.menu_param);
+
     }
   });
 
@@ -126,12 +132,13 @@ async function getMenuList(userInfo: any) {
     // eslint-disable-next-line
     (menuItem) => menuItem.parent_seq == 0
   );
-
-  return navigationData;
+  return { navigationData, menuArr };
 }
 
 const useNavigationStore = create<NavigationStore>((set) => ({
   navigation: [],
+  menu_arr: ['dashboard'],
+  isReady: false,
   openMenu: '',
   isOpen: false,
   actions: {
@@ -145,6 +152,6 @@ export const useNavigation = useNavigationStore;
 export const setNavigationData = async () => {
   const userInfo = useUserSettings.getState().data;
   //log("userInfo : ",userInfo);
-  const navigationData = await getMenuList(userInfo);
-  useNavigationStore.setState({ navigation: navigationData });
+  const {navigationData, menuArr} = await getMenuList(userInfo);
+  useNavigationStore.setState({ navigation: navigationData, menu_arr: menuArr, isReady:true });
 };

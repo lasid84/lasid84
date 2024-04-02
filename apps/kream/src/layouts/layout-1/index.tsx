@@ -7,21 +7,30 @@ import LeftSidebar1 from "components/left-sidebar-1";
 import RightSidebar1 from "components/right-sidebar-1";
 import App from "../App";
 import { useEffect, useState } from "react";
-// import {devConsoleLog} from "../../utils/dev";
-import { useSession } from "next-auth/react";
-import { useUserSettings } from "@/states/useUserSettings";
-import { useStore } from "@/utils/zustand";
+import { useUserSettings } from "states/useUserSettings";
 import { memo, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { setI18n } from "@/components/i18n/i18n";
+import { setI18n } from "components/i18n/i18n";
 import LoadingComponent from "../../components/loading/loading"
-import PageTitle from "@/components/page-title/page-title";
+import PageTitle from "components/page-title/page-title";
+import { useNavigation } from "states/useNavigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { toastWaring } from "@/components/toast";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export type Layout1Props = {
   children: React.ReactNode;
 };
 
+function checkAuth(menu: string[], url:string, menu_param:string|null):boolean {
+  const parts = url.split('/');
+  const lastPart = parts[parts.length - 1].toUpperCase().trim();
+
+  if (lastPart === 'DASHBOARD') return true;
+
+  if (menu.some(m => m === lastPart.trim() + menu_param?.trim())) return true;
+
+  return false;
+}
 
 const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const config = useConfigs((state) => state.config);
@@ -29,7 +38,12 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const [background, setBackground] = useState<string>(config.background);
   const [layout, setLayout] = useState<string>(config.layout);
   const [collapsed, setCollapsed] = useState<boolean>(config.collapsed);
-  // const { data:session, update, status} = useSession();
+  const [menus, isReady] = useNavigation((state) => [state.menu_arr, state.isReady]);
+  const url = usePathname();
+  const queryParam = useSearchParams();
+  const params = queryParam.get('params');
+  const router = useRouter();
+  
   log("app/layouts/layout-1/index.tsx");
 
   useEffect(() => {
@@ -50,6 +64,15 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
     setI18n(config.lang);
   }, [])
 
+  useEffect(() => {
+    if (isReady) {
+      if (!checkAuth(menus, url, params)) {
+        toastWaring(url + " 권한이 없습니다.");
+        router.replace('/');
+      }
+    }
+  }, [isReady])
+
   const {
     data: userSettings,
     actions: userSettingsActions
@@ -57,7 +80,6 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
   const isLoading = useMemo(() => {
     //client data loading 용
-    log("userSettings.loading", userSettings.loading);
     return (userSettings.loading == "ON")
   }, [userSettings.loading])
 

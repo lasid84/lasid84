@@ -25,6 +25,7 @@ function getMenuTitle(menu: NavigationState[], url:string, menu_param:string|nul
     } else {
       // log("title", obj, menu, url, menu_param);
       if (obj.url === url && obj.menu_param === (menu_param || '')) return obj.title;
+      // else return undefined;
     }
   }
 
@@ -47,7 +48,7 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
     <div className="w-full mb-1">
       <div className="flex flex-row items-center justify-between mt-1 mb-2">
         <div className="flex flex-col">
-           <div className="text-lg font-bold px-6">{t(title!)}</div>
+           <div className="px-6 text-lg font-bold">{t(title!)}</div>
            { desc && 
             <div className="text-xs font-light text-gray-500 uppercase">
                 {desc}
