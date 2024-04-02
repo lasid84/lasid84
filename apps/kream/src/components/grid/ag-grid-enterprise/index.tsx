@@ -510,7 +510,7 @@ export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
   // gridRef.current.api.sizeColumnToFit();
   // var rowCount = gridApi.current?.api.getRowNode();
   var rowCount = gridApi?.api?.getRenderedNodes().length;
-  log('autoSizeAll called!!!!!!!!', gridApi, rowCount);
+  // log('autoSizeAll called!!!!!!!!', gridApi, rowCount);
   // if (!gridApi) return;
 
   if (!rowCount) return;

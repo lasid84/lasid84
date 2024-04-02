@@ -1,5 +1,5 @@
 
-import React, { KeyboardEventHandler, memo, useEffect, useState } from 'react';
+import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask} from 'react-text-mask';
@@ -27,54 +27,105 @@ type Props = {
     decimalLimit?: number     //소수점 자리수
     myPlaceholder?: string;   //
     isReadOnly?:boolean;      //읽기전용여부
+    noLabel?:boolean;
   };
+
+  events?: {
+    onChange?: (e:ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e:KeyboardEventHandler<HTMLInputElement>) => void;
+    onBlur?: (e:FocusEvent<HTMLInputElement>) => void;
+    onFocus?: (e:FocusEvent<HTMLInputElement>) => void;
+  }
 };
 
 export const MaskedInputField: React.FC<Props> = (props:Props) => {
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
   const { t } = useTranslation();
   if (!control) return null;
 
-  const {id, label, value, width, height, options = {} } = props;
-  const { type, myPlaceholder, inline, isReadOnly = false } = options;
+  const {id, label, value, width, height, options = {}, events } = props;
+  const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false } = options;
   const {mask, pipe, placeholder} = getMask(type, options);
+
+  const [selectedVal, setSelectedVal] = useState<string | undefined>(value || undefined);
 
   const defWidth = width ? width : "w-full";
   const defHeight = height ? height : "h-8";
 
-  function handleEnter(event:any){
-    if (event.key === "Enter") {
-        const form = event.target.form;
-        const index = [...form].indexOf(event.target);
-        // log(index)
-        form[index + 1].focus();
-        event.preventDefault();
-      }
+  useEffect(() => {
+    // log("MaskedInputField useEffect", id, value, selectedVal);
+    setValue(id, value);
+    setSelectedVal(value);
+  }, [value])
+
+  function handleKeyDown(e:any){
+    try {
+        if (e.key === "Enter") {
+            const form = e.target.form;
+            // log(e.target, form);
+            const index = [...form].indexOf(e.target);
+            // log(index)
+            form[index + 1].focus();
+            e.preventDefault();
+        }
+    
+        if (events?.onKeyDown) {
+        events.onKeyDown(e);
+        }
+    } catch (ex) {
+
+    }
   }
 
-  function handleBlur(event:any) {
-    // log("handleBlur", event.target.value, defWidth, defHeight);
+  function handleBlur(e:FocusEvent<HTMLInputElement>) {
+    log("handleBlur", e.target.value);
     // if (type === 'number' && event.target.value) {
     //   const newVal = event.target.value.replace(/,/g, "");
     //   event.target.value = parseFloat(newVal).toLocaleString('ko-KR').toString();
     // }
+
+    if (events?.onBlur) {
+      events.onBlur(e);
+    }
+  }
+
+  function handleChange(e:ChangeEvent<HTMLInputElement>) {
+    log("handleChange", e?.target?.value)
+    
+    setValue(id, e?.target?.value);
+    setSelectedVal(e?.target?.value);
+
+    if (events?.onChange) {
+      events.onChange(e);
+    }
+  }
+
+  function handleFocus(e:FocusEvent<HTMLInputElement>) {
+    log("handleChange", e.target?.value)
+    
+    setValue(id, e?.target?.value);
+    setSelectedVal(e?.target?.value);
+
+    if (events?.onChange) {
+      events.onChange(e);
+    }
   }
 
   return (
     <InputWrapper outerClassName="" inline={inline}>
-      <Label id={id} name={label}/>
+      {!noLabel && <Label id={id} name={label}/>}
       <Controller
           name = {id}
           control={control}
           // defaultValue = {val}
           render={({field}) => (
               <MaskedInput
-                {...field}
+                // {...field}
                 className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
                 mask={mask! || false}
                 // pipe={pipe}
-                // value={value}
-                defaultValue={value}
+                value={selectedVal}
+                // defaultValue={value}
                 readOnly={isReadOnly}
                 placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
                 // onChange={(e) => {
@@ -83,9 +134,10 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
                 // }}
                 guide={false}
                 // showMask={true}
-                onKeyDown={(e) => handleEnter(e)}
+                onKeyDown={(e) => handleKeyDown(e)}
                 onBlur={(e) => handleBlur(e)}
-                
+                onChange={(e: any) => { handleChange(e);}}
+                onFocus={(e: any) => { handleFocus(e);}}
               />
           )}
         />

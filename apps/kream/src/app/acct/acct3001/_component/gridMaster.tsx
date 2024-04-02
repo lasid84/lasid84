@@ -43,7 +43,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         // dispatch({isDSearch:true});
       };
 
-    const handleSelectionChanged1 = (param:SelectionChangedEvent) => {
+    const handleSelectionChanged = (param:SelectionChangedEvent) => {
         
         const row = onSelectionChanged(param)
         // var newRow = [...selectedRow!]
@@ -74,7 +74,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
             options={gridOption}
             event={{
                 onRowClicked: handleRowClicked,
-                onSelectionChanged: handleSelectionChanged1,
+                onSelectionChanged: handleSelectionChanged,
             }}
         />
             

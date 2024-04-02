@@ -9,7 +9,7 @@ import { PageState, reducer } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import  SearchForm  from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
-import { TableContext } from "@/components/provider/contextProvider";
+import { TableContext } from "@/components/provider/contextObjectProvider";
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import  Modal  from './_component/popup';
 import Grid from './_component/gridMaster';
@@ -27,14 +27,15 @@ export default function STND0006() {
             searchParams:{}, 
             isMSearch: false,
             mSelectedRow: {},
-            isPopUpOpen: false
+            isPopUpOpen: false,
+            popType: null
         }
     });
     const { objState } = state;
     const { searchParams, mSelectedRow, crudType, isMSearch
         , isPopUpOpen } = objState;
 
-    const val = useMemo(() => {return { searchParams, mSelectedRow, isMSearch, isPopUpOpen, crudType, dispatch }}, [state]);
+    const val = useMemo(() => {return { objState, dispatch }}, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     
     return (

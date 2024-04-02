@@ -8,7 +8,8 @@ import { ReactElement, cloneElement } from "react";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export type ButtonProps = {
-  label: string;
+  id: string;
+  label?: string;
   onClick?: any;
   color?: string;
   icon?: any;
@@ -96,7 +97,7 @@ const getIcon = (label:string, icon:JSX.Element) => {
 export const Button : React.FC<ButtonProps> = ( props ) => {
 
     const { t } = useTranslation();
-    const { label, disabled, color, type, isHidden, icon
+    const { id, label, disabled, color, type, isHidden, icon
           , onClick
     } = props;
 
@@ -104,7 +105,7 @@ export const Button : React.FC<ButtonProps> = ( props ) => {
 
     return (
       <button
-        className= {`flex flex-row gap-2 h-[32px] px-4 py-2 text-xs font-bold ${getColor(label, color)}
+        className= {`flex flex-row gap-2 h-[32px] px-4 py-2 text-xs font-bold ${getColor(label?label:id, color)}
             ${isHidden ? "hidden" : ""}
             ${disabledCss}
         `}
@@ -113,7 +114,7 @@ export const Button : React.FC<ButtonProps> = ( props ) => {
         type={type ? type : "button"}
         disabled={disabled ? true : false }
         >
-        {getIcon(label, icon)}
+        {getIcon(label ? label : id, icon)}
         {/* {direction && <ChevronDownIcon
             className={clsx(
             "w-8 ml-2 duration-300 ease-in-out fill-black",
@@ -124,7 +125,7 @@ export const Button : React.FC<ButtonProps> = ( props ) => {
             )}
             aria-hidden="true"
         />} */}
-        {t(label.toLowerCase())}
+        {t((label?label:id).toLowerCase())}
       </button>
     );
   };

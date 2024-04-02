@@ -3,10 +3,9 @@
 
 import {useEffect, useReducer, useMemo, useCallback, useRef, memo } from "react";
 import { SP_GetData } from "./data";
-import { PageState, crudType, reducer, useAppContext } from "components/provider/contextProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextProvider";
+import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
+import { SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import { TableContext } from "@/components/provider/contextProvider";
 import Grid, {onRowClicked, onSelectionChanged, autoSizeAll} from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
@@ -24,7 +23,8 @@ type Props = {
 const MasterGrid: React.FC<Props> = ({ initData }) => {    
 
     const gridRef = useRef<any | null>(null);
-    const { dispatch, searchParams, isMSearch } = useAppContext();
+    const { dispatch, objState = {} } = useAppContext();
+    const { searchParams, isMSearch } = objState;
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:false});
     const gridOption: GridOption = {
@@ -45,7 +45,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const handleRowClicked = useCallback((param: RowClickedEvent) => {
         var data = onRowClicked(param);
         log("handleRowClicked", data)
-        dispatch({isPopUpOpen:true});
+        dispatch({isPopUpOpen:true, crudType:crudType.UPDATE});
       }, []);
 
     const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
