@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
-import Grid, { GridOption, gridData, onGridReady, onRowClicked } from '@/components/grid/ag-grid-enterprise';
+import Grid, { GridOption, gridData } from '@/components/grid/ag-grid-enterprise';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IRowNode, RowClickedEvent } from 'ag-grid-community';
 import { useTranslation } from 'react-i18next';
@@ -113,17 +113,17 @@ function CustomSelect(props:Props) {
     }, []);
 
     const handelRowClicked = (param:RowClickedEvent) => {
-        var row = onRowClicked(param);
-        log("handelRowClicked", param);
-        var val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
-        setDisplayText(val);
-        setSelectedValue(row);
-        toggleOptions();
+      var selectedRow = {"colId": param.node.id, ...param.node.data}
+      log("handelRowClicked", param);
+      var val = displayCol ? selectedRow[displayCol] : selectedRow[Object.keys(selectedRow)[0]];
+      setDisplayText(val);
+      setSelectedValue(selectedRow);
+      toggleOptions();
     }
 
     const handleOnGridReady = (param:any) => {
       log("handleOnGridReady");
-      onGridReady(param);
+      // onGridReady(param);
       // setIsReady(true);
     }
 

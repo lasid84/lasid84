@@ -1,9 +1,0 @@
-1. 커서데이터 구조 변경(data, fields)
-
-2. grid 구조 변경
-  - 이벤트는 오버라이딩해서 사용(ex : onCellValueChanged)
-  - 
-
-
-
-이동 : https://teams.microsoft.com/_#/apps/1c256a65-83a6-4b5c-9ccf-78f8afb6f1e8/sections/MyNotebook

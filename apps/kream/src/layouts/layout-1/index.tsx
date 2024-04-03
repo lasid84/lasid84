@@ -6,7 +6,7 @@ import Navbar1 from "components/navbar-1";
 import LeftSidebar1 from "components/left-sidebar-1";
 import RightSidebar1 from "components/right-sidebar-1";
 import App from "../App";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useUserSettings } from "states/useUserSettings";
 import { memo, useMemo } from "react";
 import { setI18n } from "components/i18n/i18n";
@@ -27,7 +27,9 @@ function checkAuth(menu: string[], url:string, menu_param:string|null):boolean {
 
   if (lastPart === 'DASHBOARD') return true;
 
-  if (menu.some(m => m === lastPart.trim() + menu_param?.trim())) return true;
+  if (menu.some(m => m === lastPart.trim() + (menu_param ? menu_param : ''))) return true;
+
+  // log("checkAuth", lastPart.trim(), menu_param, lastPart.trim() + (menu_param ? menu_param : ''));
 
   return false;
 }
@@ -67,6 +69,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   useEffect(() => {
     if (isReady) {
       if (!checkAuth(menus, url, params)) {
+        log(menus, url, isReady);
         toastWaring(url + " 권한이 없습니다.");
         router.replace('/');
       }
@@ -86,7 +89,6 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
   return (
     // <AuthProvider>
-
     <App>
       <div
         data-layout={layout}

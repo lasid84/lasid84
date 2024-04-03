@@ -1,5 +1,5 @@
 export * from "./input";
-export * from "./input-row";
+// export * from "./input-row";
 export * from "./inputWithButton"
 export * from "./select";
 export * from "./select-row";

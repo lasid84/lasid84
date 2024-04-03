@@ -14,7 +14,7 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import  Modal  from './_component/popup';
 import Grid from './_component/gridMaster';
 
-import { useSearchParams } from 'next/navigation'
+// import { useSearchParams } from 'next/navigation'
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 

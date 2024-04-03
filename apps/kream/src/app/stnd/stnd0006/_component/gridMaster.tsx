@@ -9,7 +9,6 @@ import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
-import { useSearchParams } from 'next/navigation'
 import { propagateServerField } from "next/dist/server/lib/render-server";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import Modal from "./popup";

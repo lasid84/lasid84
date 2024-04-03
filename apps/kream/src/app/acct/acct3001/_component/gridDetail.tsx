@@ -51,10 +51,10 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 checkbox: ["use_yn", "def"],
                 select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: {"email": 200},
-                // editable: ["trans_mode"],
+                editable: ["pic_nm", "email", "cust_office", "tel_num", "fax_num", "user_dept", "bz_plc_cd"],
                 dataType: { "create_date" : "date", "vat_rt":"number", "bz_reg_no":"bizno"},
                 // isMultiSelect: false,
-                isAutoFitColData: true,
+                isAutoFitColData: false,
                 // alignLeft: ["major_category", "bill_gr1_nm"],
                 // alignRight: [],
             };
@@ -66,6 +66,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const handleSelectionChanged = (param:SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
+        log("handleSelectionChanged", selectedRow)
         dispatch({dSelectedRow:selectedRow});
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
@@ -74,8 +75,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const handleRowClicked = (param:RowClickedEvent) => {
         log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
         // const row = onRowClicked(param);
-        var selectedRow = {"colId": param.node.id, ...param.node.data}
-        dispatch({dSelectedRow:selectedRow});
+        // var selectedRow = {"colId": param.node.id, ...param.node.data}
+        // dispatch({dSelectedRow:selectedRow});
     };
 
     const handleCellValueChanged = (param:CellValueChangedEvent) => {

@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { SP_GetMasterData } from "./data";
 import { useAppContext, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid, { onRowClicked, onSelectionChanged, onGridRowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import Modal from './popup';
 import { TButtonBlue } from "components/form";
@@ -38,15 +38,17 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
 
     const handleRowClicked = (param: RowClickedEvent) => {
-        var data = onRowClicked(param);
-        log("handleRowClicked", data)
-        dispatch({ isPopupOpen: true, crudType: PopType.UPDATE })
+        // var data = onRowClicked(param);
+        var selectedRow = {"colId": param.node.id, ...param.node.data}
+        // log("handleRowClicked", selectedRow)
+        dispatch({ mSelectedRow: selectedRow, isPopupOpen: true, crudType: PopType.UPDATE })
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
-        const selectedRow = onSelectionChanged(param);
+        // const selectedRow = onSelectionChanged(param);
+        const selectedRow = param.api.getSelectedRows()[0];
         log("handleSelectionChanged", selectedRow);
-        dispatch({ mSelectedRow: selectedRow, isMSearch: true });
+        // dispatch({ mSelectedRow: selectedRow, isMSearch: true });
     };
 
     useEffect(() => {
@@ -76,7 +78,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
             <PageContent
                 right={
                     <>
-                        <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current)} />
+                        <TButtonBlue label={"add"} onClick={() => rowAdd(gridRef.current)} />
                         <TButtonBlue label={"save"} onClick={onSave} />
                         <TButtonBlue label={"new"} onClick={onPopup} />
                         {/* <TButtonBlue label={"popup2"} onClick={onPopup2} /> */}

@@ -77,7 +77,7 @@ type cols = {
   // floatingFilter?: boolean
 }
 
-const ListGrid: React.FC<Props> = (props) => {
+const ListGrid: React.FC<Props> = memo((props) => {
     const { t } = useTranslation();
 
     const [colDefs, setColDefs] = useState<cols[]>([]);
@@ -93,6 +93,7 @@ const ListGrid: React.FC<Props> = (props) => {
     const { event } = props
     
     // const [defaultColDef, setDefaultColDef] = useState({});
+    // log("ListGrid", listItem);
 
     //Column Defualt 설정
     const defaultColDef = useMemo(() => {
@@ -148,6 +149,8 @@ const ListGrid: React.FC<Props> = (props) => {
           onComponentStateChanged: () => {
               // log("onRowDataUpdated", ready);
               if (!options?.isNoSelect) {
+                log("gridRef.current.api", gridRef.current.api.getSelectedNodes(), gridRef.current.api.getSelectedNodes().length);
+                if (gridRef.current.api.getSelectedNodes().length > 0) return;
                 gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
                   if (i === 0) {
                     node.setSelected(true);
@@ -419,13 +422,13 @@ const ListGrid: React.FC<Props> = (props) => {
   }
 
   const onSelectionChanged = (param:SelectionChangedEvent) => {
-    const selectedRow = param.api.getSelectedRows()[0]; 
-    log("onSelectionChanged", selectedRow)
+    // const selectedRow = param.api.getSelectedRows()[0]; 
+    // log("onSelectionChanged", selectedRow)
     // return param.api.getSelectedRows()[0];
 
     if (event?.onSelectionChanged) event.onSelectionChanged(param);
 
-    autoSizeAll(param);
+    if (options?.isAutoFitColData) autoSizeAll(param);
   }
 
   const onRowClicked = (param:RowClickedEvent) => {
@@ -517,7 +520,7 @@ const ListGrid: React.FC<Props> = (props) => {
           </div>
         </>
     )
-};
+});
 
 export const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; }; column: any; }) => {
   var displayedColumns = params.api.getAllDisplayedColumns();
