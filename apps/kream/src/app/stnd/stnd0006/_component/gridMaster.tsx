@@ -6,7 +6,7 @@ import { SP_GetData } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid, {onRowClicked, onSelectionChanged, autoSizeAll} from 'components/grid/ag-grid-enterprise';
+import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
 import { useSearchParams } from 'next/navigation'
@@ -41,19 +41,23 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         // rowdelete
 
     };
-    
+    /*
+        handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
+    */
     const handleRowClicked = useCallback((param: RowClickedEvent) => {
-        var data = onRowClicked(param);
-        log("handleRowClicked", data)
-        dispatch({isPopUpOpen:true, crudType:crudType.UPDATE});
+        // var data = onRowClicked(param);
+        var selectedRow = {"colId": param.node.id, ...param.node.data}
+        log("handleRowClicked", selectedRow);
+        dispatch({mSelectedRow:selectedRow, isPopUpOpen:true, crudType:crudType.UPDATE});
       }, []);
 
     const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
-        const selectedRow = onSelectionChanged(param);
-        log("handleSelectionChanged", selectedRow);
-        dispatch({mSelectedRow:selectedRow});
-        // document.querySelector('#selectedRows').innerHTML =
-        //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
+        // // const selectedRow = onSelectionChanged(param);
+        // const selectedRow = param.api.getSelectedRows()[0];
+        // log("handleSelectionChanged", selectedRow);
+        // dispatch({mSelectedRow:selectedRow});
+        // // document.querySelector('#selectedRows').innerHTML =
+        // //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     }, []);
 
     useEffect(() => {

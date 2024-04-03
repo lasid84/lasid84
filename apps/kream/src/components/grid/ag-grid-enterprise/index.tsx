@@ -41,6 +41,7 @@ type GridEvent = {
   onPasteEnd?: (params: PasteEndEvent) => void;
   onColumnResized?: (params: ColumnResizedEvent) => void;
   onGridReady?: (params: GridReadyEvent) => void;
+  onRowDataUpdated?: (params: RowDataUpdatedEvent) => void;
 }
 
 export type GridOption = {
@@ -89,6 +90,7 @@ const ListGrid: React.FC<Props> = (props) => {
     // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
     const [isReady, setReady] = useState(false);
     const gridRef = props.gridRef;
+    const { event } = props
     
     // const [defaultColDef, setDefaultColDef] = useState({});
 
@@ -153,15 +155,10 @@ const ListGrid: React.FC<Props> = (props) => {
                   }
                 })
               }
-              if (options?.isAutoFitColData) {
-                // setReady(true);
-                // autoSizeAll(props.gridRef);
-              }
-
-              // props.gridRef.current.api.refreshCells();
           }, 
-          onCellValueChanged: onCellValueChanged,
-          ...props.event
+          // onCellValueChanged: onCellValueChanged,
+          // onSelectionChanged: onSelectionChanged,
+          // ...props.event
         };
       }, []);
 
@@ -417,12 +414,72 @@ const ListGrid: React.FC<Props> = (props) => {
     }
   }, [options?.gridHeight]);
 
-  useEffect(() => {
-    if (gridRef.current.api && gridRef.current.api.getRenderedNodes().length && options?.isAutoFitColData) {
-      autoSizeAll(gridRef.current);
-    }
-  }, [gridRef.current, gridRef.current?.api?.getRenderedNodes()])
+  const onGridReady = (param:GridReadyEvent) => {
+    log("onGridReady");
+  }
 
+  const onSelectionChanged = (param:SelectionChangedEvent) => {
+    const selectedRow = param.api.getSelectedRows()[0]; 
+    log("onSelectionChanged", selectedRow)
+    // return param.api.getSelectedRows()[0];
+
+    if (event?.onSelectionChanged) event.onSelectionChanged(param);
+
+    autoSizeAll(param);
+  }
+
+  const onRowClicked = (param:RowClickedEvent) => {
+    log("onRowClicked")
+    // return {"colId": param.node.id, ...param.node.data};
+
+    if (event?.onRowClicked) event.onRowClicked(param);
+  }
+
+  const onCellValueChanged = (param:CellValueChangedEvent) => {
+    // log("onCellValueChanged")
+    param.node.data['__changed'] = true
+    // return {"col": param.column.getColId(), "oldValue" : param.oldValue, "newValue": param.newValue};
+
+    if (event?.onCellValueChanged) event.onCellValueChanged(param);
+  };
+
+  const onRowDataUpdated = (param: RowDataUpdatedEvent) => {
+    // updateRowCount('rowDataUpdated');
+    log('onRowDataUpdated', param);
+
+    if (event?.onRowDataUpdated) event.onRowDataUpdated(param);
+  }
+
+  const onCutStart = (param: CutStartEvent) => {
+    // updateRowCount('rowDataUpdated');
+    log('onCutStart', param);
+
+    if (event?.onCutStart) event.onCutStart(param);
+  }
+  const onCutEnd = (param: CutEndEvent) => {
+    // updateRowCount('rowDataUpdated');
+    log('onCutEnd', param);
+
+    if (event?.onCutEnd) event.onCutEnd(param);
+  }
+  const onPasteStart = (param: PasteStartEvent) => {
+    // updateRowCount('rowDataUpdated');
+    log('onPasteStart', param);
+
+    if (event?.onPasteStart) event.onPasteStart(param);
+  }
+  const onPasteEnd = (param: PasteEndEvent) => {
+    // updateRowCount('rowDataUpdated');
+    log('onPasteEnd', param);
+
+    if (event?.onPasteEnd) event.onPasteEnd(param);
+  }
+  const onColumnResized = (param: ColumnResizedEvent) => {
+    // updateRowCount('rowDataUpdated');
+    log('onColumnResized', param);
+
+    if (event?.onColumnResized) event.onColumnResized(param);
+  }                      
 
   
     return (
@@ -444,34 +501,23 @@ const ListGrid: React.FC<Props> = (props) => {
                       // editType={'fullRow'}
                       // onCellValueChanged={onCellValueChanged}
                       autoSizeStrategy={autoSizeStrategy}
+                      onGridReady={onGridReady}
+                      onSelectionChanged={onSelectionChanged}
+                      onRowClicked={onRowClicked}
+                      onCellValueChanged={onCellValueChanged}
+                      onRowDataUpdated={onRowDataUpdated}
+                      onCutStart={onCutStart}
+                      onCutEnd={onCutEnd}
+                      onPasteStart={onPasteStart}
+                      onPasteEnd={onPasteEnd}
+                      onColumnResized={onColumnResized}
+
                   />
               </div>
           </div>
         </>
     )
 };
-
-export const onRowClicked = (param:RowClickedEvent) => {
-    log("onRowClicked")
-    return {"colId": param.node.id, ...param.node.data};
-}
-
-export const onSelectionChanged = (param:SelectionChangedEvent) => {
-  // log("onSelectionChanged", param)
-  // const selectedRow = gridRef.current.api.getSelectedRows()[0]; 
-  return param.api.getSelectedRows()[0];
-}
-
-export const onCellValueChanged = (param:CellValueChangedEvent) => {
-  // log("onCellValueChanged")
-  param.node.data['__changed'] = true
-  return {"col": param.column.getColId(), "oldValue" : param.oldValue, "newValue": param.newValue};
-};
-
-export const onRowDataUpdated = (event: RowDataUpdatedEvent) => {
-    // updateRowCount('rowDataUpdated');
-    log('Row Data Updated', event);
-  }
 
 export const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; }; column: any; }) => {
   var displayedColumns = params.api.getAllDisplayedColumns();
@@ -485,7 +531,7 @@ export const getFirstColumn = (params: { api: { getAllDisplayedColumns: () => an
   return thisIsFirstColumn.colId;
 };
 
-export const onGridRowAdd = async (gridRef: {api:any}, initData:{} = {}) => {
+export const rowAdd = async (gridRef: {api:any}, initData:{} = {}) => {
   // var data = gridRef.api.getRenderedNodes();
   // log("===============", data);
   var col = getFirstColumn(gridRef);
@@ -501,16 +547,12 @@ export const onGridRowAdd = async (gridRef: {api:any}, initData:{} = {}) => {
   });
 };
 
-export const onGridReady = (param:any) => {
-  log("onGridReady");
-}
-
 export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
 
   // gridRef.current.api.sizeColumnToFit();
   // var rowCount = gridApi.current?.api.getRowNode();
   var rowCount = gridApi?.api?.getRenderedNodes().length;
-  // log('autoSizeAll called!!!!!!!!', gridApi, rowCount);
+  log('autoSizeAll called!!!!!!!!', gridApi, rowCount);
   // if (!gridApi) return;
 
   if (!rowCount) return;

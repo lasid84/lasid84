@@ -32,7 +32,7 @@ export const TableContext = createContext<State>({
     var type = action.type? action.type : 'type';
     switch (type) {
       default:
-        log("default", state, action);
+        // log("default", state, action);
         return {
           // ...state,
           objState: {
