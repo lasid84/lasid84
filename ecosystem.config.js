@@ -55,7 +55,7 @@ module.exports = {
       path : '/home/sdd_it/KREAM_Web',
       version: '0.1.2',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env production --only api',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --version 0.1.2 --env production --only api',
     },
     web_prod : {
       key : './id_rsa-api-prod', 
