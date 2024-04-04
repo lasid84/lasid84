@@ -132,14 +132,10 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
           render={({field}) => (
               <MaskedInput
                 // {...field}
-<<<<<<< HEAD
-                className={clsx(`form-input block ${defWidth} ${defHeight} border-gray-200 disabled:bg-gray-200 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] read-only:bg-gray-100`)}
-=======
-                className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-${bgColor} flex-grow-1
+                className={clsx(`form-input block ${defWidth} ${defHeight} border-gray-100 disabled:bg-gray-300 bg-${bgColor} flex-grow-1
                  focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
                  ${freeStyles}
                  `)}
->>>>>>> 0d8eb278e106b9e46690333c60dd16e9c1cac3d9
                 mask={mask! || false}
                 // pipe={pipe}
                 value={selectedVal}
