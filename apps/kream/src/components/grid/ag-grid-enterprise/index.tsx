@@ -588,10 +588,10 @@ export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
   if (!rowCount) return;
   
 const allColumnIds: string[] = [];
-  // gridApi.api.getColumns().forEach((column:any) => {
-  //   if (column.visible) allColumnIds.push(column.getId());
-  // });
-  // gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
+  gridApi.api.getColumns().forEach((column:any) => {
+    if (column.visible) allColumnIds.push(column.getId());
+  });
+  gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
 
   // if (!gridApi.current) gridApi.current?.api.autoSizeAllColumns(skipHeader); 
 
