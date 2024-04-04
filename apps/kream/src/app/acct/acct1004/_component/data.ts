@@ -30,12 +30,10 @@ export const SP_Load = async (searchParam: any) => {
 export const SP_GetMasterData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
-  console.log('paramg확인', Param)
 
   const { trans_mode, trans_type, fr_date, to_date, no, cust_code, user_id, ipaddr } = Param;
-  log("search Master Data:", Param);
-  log("search Master Data:", fr_date.replace(/[^0-9]/g, ""))
-
+  log("searchMasterData:", Param);
+  log("searchMasterData:", fr_date);
 
   const params = {
     inparam: [
@@ -62,7 +60,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
-  console.log('result', result)
+  console.log('resultresult', result)
   return result![0]
 }
 
