@@ -43,6 +43,7 @@ module.exports = {
       'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env development',
     },
     api_prod : {
+      name: 'api',
       key : './id_rsa-api-prod', 
       user : 'sdd_it',
       host : ['10.33.63.171'],
