@@ -5,6 +5,7 @@ module.exports = {
       script: 'node index.js',
       cwd: "./apps/api/dist",
       autorestart: true,    
+      version: '0.1.2',
       watch: '.',
       env: {
         NODE_ENV: 'production'
@@ -17,6 +18,7 @@ module.exports = {
       // instances: 4,
       // exec_mode: 'cluster',
       autorestart: true,    
+      version: '0.1.2',
       watch: '.',
       env: {
         NODE_ENV: 'production'
@@ -26,7 +28,8 @@ module.exports = {
       name: 'web',
       script: 'npm start',
       cwd: './apps/web',
-      autorestart: true,    
+      autorestart: true,
+      version: '0.1.2',    
       watch: '.'
     }
   ],
