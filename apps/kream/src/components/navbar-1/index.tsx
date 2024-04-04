@@ -65,11 +65,11 @@ function Navbar() {
             onClick={() => {
               localStorage.removeItem('USER_SETTINGS')
               // signOut({ callbackUrl: "/login" });
-              logOut();
-              // signOut({
-              //   redirect:true,
-              //   // callbackUrl:'/login'
-              // })
+              // logOut();
+              signOut({
+                redirect:true,
+                callbackUrl:'/login'
+              })
             }}>
             <FiExternalLink size={18} />
             <span className="ml-1"> {t("logout")}</span>

@@ -12,7 +12,7 @@ import PageSearch from "layouts/search-form/page-search";
 // import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
-import { crudType, useAppContext } from "components/provider/contextProvider";
+import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { shallow } from "zustand/shallow";
 
 import CustomSelect from "components/select/customSelect";
@@ -46,7 +46,7 @@ const SearchForm = memo(({loadItem}:any) => {
   const { t } = useTranslation();
 
   //사용자 정보
-  const gTransMode = useUserSettings((state) => {log(state.data); return state.data.trans_mode}, shallow)
+  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
   
   // const methods = useForm<FormType>({
@@ -100,8 +100,9 @@ const SearchForm = memo(({loadItem}:any) => {
   }
 
   const onNew = () => {
-    // dispatch({ type: SELECTED_ROW, selectedRow: null});
-    dispatch({ mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
+    const params = getValues();
+    dispatch({ searchParams: params, mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
+    log("onNew", params);
   }
 
   const gridOption: GridOption = {
@@ -125,12 +126,12 @@ const SearchForm = memo(({loadItem}:any) => {
         <PageSearch
           right={
             <>
-              <Button label={"search"} onClick={onSearch} />
-              <Button label={"new"} onClick={onNew}/>
-              <Button label={"reset"}onClick={() => {
+              <Button id={"search"} onClick={onSearch} />
+              <Button id={"new"} onClick={onNew}/>
+              {/* <Button id={"reset"} onClick={() => {
                 setFocus("trans_mode");
                 reset();
-              }} />
+              }} /> */}
             </>
           }>
           <ReactSelect 

@@ -6,7 +6,7 @@ import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
-import Grid, { isFirstColumn, getFirstColumn, onGridRowAdd, onCellValueChanged, onSelectionChanged, onRowClicked } from 'components/grid/ag-grid-enterprise';
+import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import PageSearch from "layouts/search-form/page-search-row";
 
@@ -47,14 +47,14 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             const gridOption: GridOption = {
                 colVisible: { col : ["cust_code", "cont_seq", "fax_num"], visible:false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-                gridHeight: "33vh",
+                gridHeight: "30vh",
                 checkbox: ["use_yn", "def"],
                 select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: {"email": 200},
-                // editable: ["trans_mode"],
+                editable: ["pic_nm", "email", "cust_office", "tel_num", "fax_num", "user_dept", "bz_plc_cd"],
                 dataType: { "create_date" : "date", "vat_rt":"number", "bz_reg_no":"bizno"},
                 // isMultiSelect: false,
-                isAutoFitColData: true,
+                isAutoFitColData: false,
                 // alignLeft: ["major_category", "bill_gr1_nm"],
                 // alignRight: [],
             };
@@ -64,25 +64,23 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     }, [initData])
     
     const handleSelectionChanged = (param:SelectionChangedEvent) => {
-        log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
-        const row = onSelectionChanged(param);
-        // var newRow:any = [];
-        // newRow[1] = row;
-        // log("detail selectionchange2", newRow);
-        dispatch({dSelectedRow:row});
+        // const row = onSelectionChanged(param);
+        const selectedRow = param.api.getSelectedRows()[0];
+        log("handleSelectionChanged", selectedRow)
+        dispatch({dSelectedRow:selectedRow});
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };
 
     const handleRowClicked = (param:RowClickedEvent) => {
         log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
-        const row = onRowClicked(param);
-        dispatch({dSelectedRow:row});
+        // const row = onRowClicked(param);
+        // var selectedRow = {"colId": param.node.id, ...param.node.data}
+        // dispatch({dSelectedRow:selectedRow});
     };
 
     const handleCellValueChanged = (param:CellValueChangedEvent) => {
         log("handleCellValueChanged");
-        onCellValueChanged(param);
         gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
@@ -119,8 +117,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             <PageSearch
                 right={
                 <>
-                <Button label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
-                <Button label={"save"} onClick={onSave} />
+                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {"use_yn": true, "def":false})} />
+                <Button id={"save"} onClick={onSave} />
                 </>
             }>
                 <></>

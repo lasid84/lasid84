@@ -32,6 +32,8 @@ export const authConfig = {
         // console.log("2.---------------", auth.user, nextUrl);
         // return Response.redirect(new URL('/dashboard', nextUrl));
          return true;
+      } else {
+        console.log('==============isLoggedIn', isLoggedIn);
       }
       
       // return false;

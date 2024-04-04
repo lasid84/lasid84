@@ -25,13 +25,7 @@ type Props = {
 
 // const SearchForm = memo(({initData}:Props) => {
 const SearchForm: React.FC<Props> = (props) => {
-
-  // log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
-
-  // //사용자 정보
-  // const gTransMode = useUserSettings((state) => state.data.trans_mode)
-  // const gTransType = useUserSettings((state) => state.data.trans_type)
 
   const methods = useForm({
     // resolver: zodResolver(formSchema),
@@ -67,9 +61,7 @@ const SearchForm: React.FC<Props> = (props) => {
         <PageSearch
           right={
             <>
-              <Button label={"search"} onClick={onSearch} />
-              {/* <TButtonBlue label={t("new")} onClick={() => { } } /> */}
-              {/* <TCancelButton label={t("reset")} onClick={() => { } } /> */}
+              <Button id={"search"} onClick={onSearch} />
             </>
           }>
             <></>

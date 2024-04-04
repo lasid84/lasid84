@@ -38,10 +38,10 @@ export const TInput2: React.FC<InputProps> = ({
         className={`w-full md:text-right mx-1 py-2 max-w-24`}>
         {id}
       </label> */}
-      <InputWrapper inline={true}>
+      {/* <InputWrapper inline={true}>
         { !nolabel &&
           <Label id={id} {...(name && { name: name })} />
-        }
+        } */}
         {/* <div className='flex flex-col w-full '> */}
         <Input
           id={id}
@@ -57,7 +57,7 @@ export const TInput2: React.FC<InputProps> = ({
         />
         {children}
         {/* </div> */}
-      </InputWrapper>
+      {/* </InputWrapper> */}
     </>
   );
 };

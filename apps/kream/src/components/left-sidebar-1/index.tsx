@@ -18,7 +18,6 @@ const LeftSidebar: React.FC<Props> = memo(() => {
     const navigation = useNavigation((state) => state.navigation);
 
     useEffect(() => {
-        // log("LeftSidebar start");
         setNavigationData();
     }, []);
 

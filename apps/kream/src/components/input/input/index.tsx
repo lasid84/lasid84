@@ -1,8 +1,8 @@
 import { HTMLInputTypeAttribute, ChangeEventHandler, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import clsx from "clsx"
-import { InputWrapper } from "../wrapper";
-import { Label } from "../label";
+import { InputWrapper } from "components/wrapper";
+import { Label } from "components/label";
 
 export type InputProps = {
   id: string;
@@ -56,7 +56,7 @@ export const Input: React.FC<InputProps> = ({
   }
   if (type === "date") {
     // valueAsdate = false로 변경 (yyyy/mm/dd format read)
-    rules = { valueAsDate: false };
+    rules = { valueAsDate: true };
   }
 
   function handleKeyDown(event:any){

@@ -11,8 +11,6 @@ import MasterGrid from './_component/gridMaster';
 import DetailGrid from './_component/gridDetail';
 import CustomerDetail from './_component/custDetailInfo';
 
-import { useSearchParams } from 'next/navigation'
-
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 

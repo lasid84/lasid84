@@ -3,7 +3,7 @@
 // import { NextRequest, NextResponse } from "next/server";
 import { useUserSettings } from "states/useUserSettings"
 import { navigate, getSession, getCookies, getToken } from './serverAction';
-import { toastSuccess, toastWaring } from "@/page-parts/tmpl/toast";
+import { toastSuccess, toastWaring } from "components/toast";
 
 
 const { init, dataCall, postCall } = require('@repo/kwe-lib/components/api.service');

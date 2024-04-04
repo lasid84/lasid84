@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { InputWrapper } from "components/react-hook-form/input-wrapper";
-import { LabelTop } from "components/react-hook-form/label";
+// import { LabelTop } from "components/react-hook-form/label";
 import { Select } from "components/react-hook-form/select";
 
 type SelectOption = {
@@ -45,7 +45,7 @@ export const TSelect: React.FC<SelectProps> = ({
   }
   return (
     <InputWrapper outerClassName={outerClassName ? outerClassName : ""} inline={false}>
-      <LabelTop>{label}</LabelTop>
+      {/* <LabelTop>{label}</LabelTop> */}
       <Select
         id={id}
         name={id}

@@ -21,6 +21,7 @@ import "css/vendors/ReactToastify.css";
 import  Layout from 'layouts/page'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { Suspense } from "react";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -47,9 +48,11 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           {/* <AuthProvider> */}
-          <Layout>
-            {children}
-          </Layout>
+          <Suspense>
+            <Layout>
+              {children}
+            </Layout>
+          </Suspense>
           {/* </AuthProvider> */}
         </body>
       </html>

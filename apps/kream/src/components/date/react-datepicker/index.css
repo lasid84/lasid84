@@ -1,0 +1,12 @@
+.react-datepicker__day--outside-month {
+    color: #e0e0e0 !important;
+    /* pointer-events: none; */
+  }
+
+  .react-datepicker__input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }

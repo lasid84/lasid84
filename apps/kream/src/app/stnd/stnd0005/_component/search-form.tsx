@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import PageSearch from "@/layouts/search-form/page-search"
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import Select from "react-select"
-import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
+import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
 import { ReactSelect} from "components/select/react-select"
 import { ProgressBarWithText } from "@/components/progress-bars/progressbar";

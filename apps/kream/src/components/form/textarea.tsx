@@ -1,4 +1,4 @@
-import { InputWrapper, LabelTop, Textarea } from "components/react-hook-form";
+import { InputWrapper, Textarea } from "components/react-hook-form";
 
 type TextareaProps = {
   id: string;
@@ -21,7 +21,7 @@ export const TTextarea: React.FC<TextareaProps> = ({
 }) => {
   return (
     <InputWrapper outerClassName="w-full" inline={false}>
-      <LabelTop>{label}</LabelTop>
+      {/* <LabelTop>{label}</LabelTop> */}
       <Textarea id={id} name={id} width={width} rows={rows} height={height} readOnly={readOnly} />
       {children}
     </InputWrapper>

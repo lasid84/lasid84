@@ -4,10 +4,12 @@ import { TInput } from "page-parts/tmpl/form"
 import { useCallback } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
 const CustomerDetail: React.FC = () => {    
 
     const { dispatch, objState } = useAppContext();
+    const { mSelectedRow } = objState;
 
     const formZodMethods = useForm({
         // resolver: zodResolver(formZodSchema),
@@ -43,7 +45,7 @@ const CustomerDetail: React.FC = () => {
                     <MaskedInputField 
                         id="cust_code" 
                         // label="cust_code"
-                        value={objState.mSelectedRow?.cust_code}
+                        value={mSelectedRow?.cust_code}
                         // width="w-80"
                         // height="h-12"
                         options = {{ 
@@ -59,7 +61,7 @@ const CustomerDetail: React.FC = () => {
                         />
                     <MaskedInputField 
                         id="executive_nm" 
-                        value={objState.mSelectedRow?.executive_nm}
+                        value={mSelectedRow?.executive_nm}
                         options = {{ 
                             isReadOnly:true
                         }}

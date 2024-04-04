@@ -28,6 +28,7 @@ export const useUpdateData = (model?: string) => {
   const Update = useMutation(SP_UpdateData, {
     onSuccess: (res:any, data:any, context:any) => {
       queryClient.invalidateQueries([model])
+      
       //console.log('????????????@',pageName)
       console.log('onUpdate',res,data,context)
     },
@@ -60,7 +61,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
     // ...option,
     onSuccess: (res:any, data:any, context:any) => {
       // log("onSuccess : ", data)
-      queryClient.invalidateQueries([queryKey]);
+      // queryClient.invalidateQueries([queryKey]);
     },
     onMutate: async (data) => {
       log("onMutate : ", queryClient, data);
@@ -71,8 +72,8 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
 
   const Create = useMutation(['key'], mutationFn, {
     onSuccess: (res:any, data:any, context:any) => {
-      log("onSuccess : ", data)
-      queryClient.invalidateQueries([queryKey])  
+      // log("onSuccess : ", data)
+      // queryClient.invalidateQueries([queryKey])  
     },
     onMutate: async (data) => {
       data["user_id"] = user_id;

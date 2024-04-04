@@ -3,14 +3,12 @@
 
 import {useEffect, useReducer, useMemo, useCallback, useRef, memo } from "react";
 import { SP_GetData } from "./data";
-import { PageState, crudType, reducer, useAppContext } from "components/provider/contextProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextProvider";
+import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
+import { SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import { TableContext } from "@/components/provider/contextProvider";
-import Grid, {onRowClicked, onSelectionChanged, autoSizeAll} from 'components/grid/ag-grid-enterprise';
+import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
-import { useSearchParams } from 'next/navigation'
 import { propagateServerField } from "next/dist/server/lib/render-server";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import Modal from "./popup";
@@ -24,7 +22,8 @@ type Props = {
 const MasterGrid: React.FC<Props> = ({ initData }) => {    
 
     const gridRef = useRef<any | null>(null);
-    const { dispatch, searchParams, isMSearch } = useAppContext();
+    const { dispatch, objState = {} } = useAppContext();
+    const { searchParams, isMSearch } = objState;
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:false});
     const gridOption: GridOption = {
@@ -41,19 +40,23 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         // rowdelete
 
     };
-    
+    /*
+        handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
+    */
     const handleRowClicked = useCallback((param: RowClickedEvent) => {
-        var data = onRowClicked(param);
-        log("handleRowClicked", data)
-        dispatch({isPopUpOpen:true});
+        // var data = onRowClicked(param);
+        var selectedRow = {"colId": param.node.id, ...param.node.data}
+        log("handleRowClicked", selectedRow);
+        dispatch({mSelectedRow:selectedRow, isPopUpOpen:true, crudType:crudType.UPDATE});
       }, []);
 
     const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
-        const selectedRow = onSelectionChanged(param);
-        log("handleSelectionChanged", selectedRow);
-        dispatch({mSelectedRow:selectedRow});
-        // document.querySelector('#selectedRows').innerHTML =
-        //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
+        // // const selectedRow = onSelectionChanged(param);
+        // const selectedRow = param.api.getSelectedRows()[0];
+        // log("handleSelectionChanged", selectedRow);
+        // dispatch({mSelectedRow:selectedRow});
+        // // document.querySelector('#selectedRows').innerHTML =
+        // //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     }, []);
 
     useEffect(() => {
