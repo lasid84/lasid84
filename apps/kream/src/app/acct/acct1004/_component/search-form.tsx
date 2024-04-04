@@ -9,8 +9,9 @@ import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "co
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
-import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
+import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
+import dayjs from 'dayjs'
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -31,11 +32,11 @@ type Props = {
   loadItem : typeloadItem;
 };
 
-const SearchForm: React.FC<Props> = (props) => {
-  const { loadItem } = props;
+const SearchForm = memo(({loadItem}:any) => {
+  // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
-  const { dispatch } = useAppContext();
+  const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
 
   // //사용자 정보
@@ -46,8 +47,8 @@ const SearchForm: React.FC<Props> = (props) => {
     defaultValues: {
       trans_mode : gTransMode || 'ALL',
       trans_type : gTransType || 'ALL',
-      fr_date : '',
-      to_date : '',
+      fr_date : dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
+      to_date : dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
       no : '',
       cust_code : ''
       }
@@ -137,7 +138,7 @@ const SearchForm: React.FC<Props> = (props) => {
       </form>
     </FormProvider>
   );
-};
+});
 
 
 export default SearchForm

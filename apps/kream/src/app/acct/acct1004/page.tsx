@@ -24,22 +24,24 @@ export default function ACCT1004() {
             isMSearch: false,
             isDSearch: false,
             mSelectedRow: {},
+            mSelectedDetail : {},
             dSelectedRow: {},
         }
     });
     const { objState } = state;
-    const { searchParams, isMSearch } = objState;
-    const val = useMemo(() => { return { dispatch, objState } }, [state]);
-    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen } = objState;
+    
+    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
+    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
         <TableContext.Provider value={val}>
             <SearchForm loadItem={initData} />
-            <div className="w-full grid grid-cols-3">
-                <div className="flex col-span-2">
+            <div className="w-full grid grid-cols-5 space-x-1">
+                <div className="flex col-span-3">
                     <MasterGrid initData={initData} />
                 </div>
-                <div className="flex col-span-1">
+                <div className="flex col-span-2">
                     <CustomerDetail />
                 </div>
             </div>

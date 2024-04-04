@@ -30,7 +30,7 @@ export const Input: React.FC<InputProps> = ({
   isAdd = false,
   notAppliedReadOnlyCss = false,
   width = "w-full",
-  height = "h-8",
+  height,
   placeholder = "",
   isCircle,
   value,
