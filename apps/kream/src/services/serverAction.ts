@@ -5,7 +5,7 @@ import { auth, signOut } from '@/app/api/auth/auth';
 import { redirect, RedirectType } from 'next/navigation';
 import { decode } from "next-auth/jwt";
 const { log } = require('@repo/kwe-lib/components/logHelper');
-import { signJwtAccessToken, verifyJwt } from '@repo/kwe-lib/components/jsonWebToken';
+const { signJwtAccessToken, verifyJwt } = require('@repo/kwe-lib/components/jsonWebToken');
 
  
 export async function navigate(url: string) {
@@ -44,7 +44,9 @@ export async function getToken() {
         token: sessionToken,
         secret: process.env.NEXTAUTH_SECRET!
     });
-    const token = signJwtAccessToken({user_id:decoded!.email, user_nm:decoded!.name});
+    if (!decoded?.email) return null;
+
+    const token = signJwtAccessToken({user_id:decoded?.email, user_nm:decoded?.name});
     return token;
 };
 

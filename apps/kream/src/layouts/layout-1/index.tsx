@@ -25,7 +25,7 @@ function checkAuth(menu: string[], url:string, menu_param:string|null):boolean {
   const parts = url.split('/');
   const lastPart = parts[parts.length - 1].toUpperCase().trim();
 
-  if (lastPart === 'DASHBOARD') return true;
+  if (url === '/' || lastPart === 'DASHBOARD') return true;
 
   if (menu.some(m => m === lastPart.trim() + (menu_param ? menu_param : ''))) return true;
 

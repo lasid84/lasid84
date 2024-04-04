@@ -83,6 +83,17 @@ const Home: React.FC = () => {
           />
           <DatePicker 
             id={"to_date"} value="20240330" 
+            options={{
+              inline:true,
+              textAlign:'center',
+              // fontSize:''
+              // bgColor:"blue-100",
+              // textAlign:"right",
+              // fontSize:"15px",
+              // fontBold:"light"
+              // radius:"full",
+              freeStyles:"underline border-1 border-slate-300"
+            }}
             // height="h-20"
           />
           {/* <NextDatePicker

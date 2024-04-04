@@ -16,7 +16,7 @@ importers:
         version: link:packages/typescript-config
       '@turbo/gen':
         specifier: ^1.11.3
-        version: 1.11.3(@types/node@20.12.2)(typescript@5.3.3)
+        version: 1.11.3(@types/node@20.12.4)(typescript@5.3.3)
       prettier:
         specifier: ^3.2.4
         version: 3.2.4
@@ -4117,7 +4117,7 @@ packages:
       - typescript
     dev: true
 
-  /@turbo/gen@1.11.3(@types/node@20.12.2)(typescript@5.3.3):
+  /@turbo/gen@1.11.3(@types/node@20.12.4)(typescript@5.3.3):
     resolution: {integrity: sha512-cHGRj7Jn7Hw1cA7NuwWYfYdhEliQX4LuSfEB9L1m8ifGkHalU3bbYXcehzLThmckpGpUQGnXYx0UtVudbQ42HA==}
     hasBin: true
     dependencies:
@@ -4129,7 +4129,7 @@ packages:
       minimatch: 9.0.3
       node-plop: 0.26.3
       proxy-agent: 6.3.1
-      ts-node: 10.9.1(@types/node@20.12.2)(typescript@5.3.3)
+      ts-node: 10.9.1(@types/node@20.12.4)(typescript@5.3.3)
       update-check: 1.5.4
       validate-npm-package-name: 5.0.0
     transitivePeerDependencies:
@@ -4395,8 +4395,8 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@20.12.2:
-    resolution: {integrity: sha512-zQ0NYO87hyN6Xrclcqp7f8ZbXNbRfoGWNcMvHTPQp9UUrwI0mI7XBz+cu7/W6/VClYo2g63B0cjull/srU7LgQ==}
+  /@types/node@20.12.4:
+    resolution: {integrity: sha512-E+Fa9z3wSQpzgYQdYmme5X3OTuejnnTx88A6p6vkkJosR3KBz+HpE3kqNm98VE6cfLFcISx7zW7MsJkH6KwbTw==}
     dependencies:
       undici-types: 5.26.5
     dev: true
@@ -14194,7 +14194,7 @@ packages:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
-  /ts-node@10.9.1(@types/node@20.12.2)(typescript@5.3.3):
+  /ts-node@10.9.1(@types/node@20.12.4)(typescript@5.3.3):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -14213,7 +14213,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.12.2
+      '@types/node': 20.12.4
       acorn: 8.10.0
       acorn-walk: 8.2.0
       arg: 4.1.3

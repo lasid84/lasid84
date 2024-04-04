@@ -2,12 +2,15 @@
 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
-import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme applied to the grid
+// import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme applied to the grid
+import "./style.css";
 // import "ag-grid-community/styles/ag-theme-quartz.css" // Optional Theme applied to the grid
 // import 'ag-grid-enterprise';
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy, SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent } from "ag-grid-community";
+import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, 
+  PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy, 
+  SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent } from "ag-grid-community";
 
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
@@ -105,6 +108,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         floatingFilter: true,      
         headerClass: "text-center",
         editable:true,
+        suppressMenu: true
       };
     }, []);
 
@@ -117,9 +121,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
           // enableRangeSelection:true,  // enterprise
           // copyHeadersToClipboard:true,
           // suppressMultiRangeSelection:true,
-          rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
+          // rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
           // groupIncludeTotalFooter: true,
+          rowMultiSelectWithClick: true,
+          // suppressRowClickSelection: false,
           stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
+          animateRows: true,
           // autoSizeStrategy: {            
           //     type: 'fitCellContents',
           //     defaultMinWidth: 20,
@@ -146,6 +153,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
           //   );
           //   autoSizeAll(props.gridRef)
           // },
+          navigateToNextCell(params) {
+            const suggestedNextCell = params.nextCellPosition;
+
+            // this is some code
+            const KEY_UP = 'ArrowUp';
+            const KEY_DOWN = 'ArrowDown';
+        
+            const noUpOrDownKey = params.key !== KEY_DOWN && params.key !== KEY_UP;
+            if (noUpOrDownKey) {
+                return suggestedNextCell;
+            }
+        
+            params.api.forEachNode(node => {
+                if (node.rowIndex === suggestedNextCell?.rowIndex) {
+                    node.setSelected(true);
+                }
+            });
+        
+            return suggestedNextCell;
+          },
           onComponentStateChanged: () => {
               // log("onRowDataUpdated", ready);
               if (!options?.isNoSelect) {
@@ -561,10 +588,10 @@ export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
   if (!rowCount) return;
   
 const allColumnIds: string[] = [];
-  // gridApi.api.getColumns().forEach((column:any) => {
-  //   if (column.visible) allColumnIds.push(column.getId());
-  // });
-  // gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
+  gridApi.api.getColumns().forEach((column:any) => {
+    if (column.visible) allColumnIds.push(column.getId());
+  });
+  gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
 
   // if (!gridApi.current) gridApi.current?.api.autoSizeAllColumns(skipHeader); 
 

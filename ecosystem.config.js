@@ -4,7 +4,7 @@ module.exports = {
       name: 'api',
       script: 'node index.js',
       cwd: "./apps/api/dist",
-      autorestart: true,    
+      autorestart: true,
       watch: '.',
       env: {
         NODE_ENV: 'production'
@@ -16,7 +16,7 @@ module.exports = {
       cwd: "./apps/batch/dist",
       // instances: 4,
       // exec_mode: 'cluster',
-      autorestart: true,    
+      autorestart: true,
       watch: '.',
       env: {
         NODE_ENV: 'production'
@@ -26,7 +26,8 @@ module.exports = {
       name: 'web',
       script: 'npm start',
       cwd: './apps/web',
-      autorestart: true,    
+      autorestart: true,
+      version: '0.1.2',    
       watch: '.'
     }
   ],
@@ -43,6 +44,7 @@ module.exports = {
       'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env development',
     },
     api_prod : {
+      name: 'api',
       key : './id_rsa-api-prod', 
       user : 'sdd_it',
       host : ['10.33.63.171'],
@@ -50,7 +52,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env production --only api',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --version 0.1.2 --env production --only api',
     },
     web_prod : {
       key : './id_rsa-api-prod', 

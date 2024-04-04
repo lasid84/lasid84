@@ -9,17 +9,14 @@
 
 const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
-//const { connect } = require('http2');
 const { pgm, type, idx, isHeadless } = workerData;
-// const { log, sleep, executFunction } = require("kwe-lib");
-
-// import { log } from '@repo/kwe-lib/components/logHelper';
-// import { sleep } from '@repo/kwe-lib/components/sleep';
-// import { executFunction } from "@repo/kwe-lib/components/api.service";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 // import { sleep } from '@repo/kwe-lib/components/sleep';
-const { executFunction } = require('@repo/kwe-lib/components/api.service.js');
+// const { executFunction } = require('@repo/kwe-lib/components/api.service.js');
+const { init, dataCall } = require('@repo/kwe-lib/components/api.service.js');
+const { ini, objectPath, fs } = require("@repo/kwe-lib");
+const { signJwtAccessToken } = require('@repo/kwe-lib/components/jsonWebToken.js');
 
 
 let onExcute = false;
@@ -32,6 +29,16 @@ let requestHeaders;
 let header;
 let lastExcute;
 let isNeedLogin = false;
+
+var iniData;
+var url;
+var token;
+
+async function initService() {
+    iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
+    url = objectPath.get(iniData, "main.url");
+    log("initService", url, token);
+}
 
 async function startBrowser() {
     log(idx, "start Brower headless: ", isHeadless, errCnt);
@@ -66,6 +73,23 @@ async function startBrowser() {
     lastExcute = new Date();
 };
 
+async function executFunction(inproc, inparam, invalue) {
+    token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
+    const client = await init({url:url, isAuth:false, accessToken:token});
+    
+    const { cursorData, numericData, textData } = await dataCall(client, inproc,inparam, invalue,'');
+
+    log("executFunction", url, inproc,inparam, invalue, numericData, textData, cursorData);
+    if (numericData !== 0)
+    {
+        let errMsg = numericData + " : " +  textData;
+      log(errMsg);
+      throw new Error(errMsg);
+    }
+
+    return cursorData;
+}
+
 async function login() {
 
     try { 
@@ -77,8 +101,8 @@ async function login() {
         const inproc = 'scrap.f_scrp0001_get_script'; 
         const cursorData = await executFunction(inproc, inparam, invalue);
 
-        const acctInfo = cursorData[0];
-        const scripts = cursorData[1];
+        const acctInfo = cursorData[0].data;
+        const scripts = cursorData[1].data;
 
         await page.setRequestInterception(true);
         page.on('request', (request) => {
@@ -192,7 +216,8 @@ async function callElementSelector(script, data) {
 
 async function setInitBLIFData(pgm_code = pgm) {
     try {
-        
+        await initService();
+
         const inparam = ['in_pgm_code', 'in_idx', 'in_user_id', 'in_ipaddr'];
         const invalue = [pgm_code, idx, '', ''];
         const inproc = 'scrap.f_scrp0001_set_init_if_data'; 
@@ -601,7 +626,7 @@ async function getBLIFData() {
         const inproc = 'scrap.f_scrp0001_get_if_scrap'; 
         const cursorData = await executFunction(inproc, inparam, invalue);
 
-        return cursorData[0];
+        return cursorData[0].data;
         
     } catch (ex) {
         log("ex_login:", ex)
@@ -617,7 +642,7 @@ async function getScript(pgm_code = pgm) {
     const inproc = 'scrap.f_scrp0002_get_script_api'; 
     const cursorData = await executFunction(inproc, inparam, invalue);
 
-    return cursorData[1];
+    return cursorData[1].data;
     //log(isHeadless);
     // arrThread = new Array(thread_cnt);
     // for (var i = 0; i < thread_cnt; i++) {

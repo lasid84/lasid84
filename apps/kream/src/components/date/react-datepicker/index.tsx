@@ -28,6 +28,15 @@ type Props = {
     dateFormat?:string;
     inline?: boolean;         //라벨명 위치
     myPlaceholder?: string;   //
+
+    /* Tailwind Style */
+    bgColor?: string;         //Background Color (ingerit, current, transparent, black, white, slate-50......)
+    fontSize?: string;        //Font Size (xs, sm, base, lg, xl, 2xl......)
+    fontWeight?: string;      //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
+    textAlign?: string;       //Text Align (left, center, right)
+    radius?: string;          //Border Radius (none, sm, '', md, lg, xl, 2xl, full, ......)
+    freeStyles?:string;       //freestyle
+
     isReadOnly?:boolean;      //읽기전용여부
     rules?: Record<string, any>;
     noLabel?:boolean;
@@ -45,7 +54,10 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     // registerLocale("ko", ko);
     const { control, setValue } = useFormContext();
     const { id, label, value, width, height,  options = {}, events } = props;
-    const { dateFormat = 'yyyy-MM-dd', myPlaceholder, inline = false, noLabel = false} = options;
+    const { dateFormat = 'yyyy-MM-dd', myPlaceholder, inline = false, noLabel = false,
+            textAlign = "left", bgColor = "white", fontSize = "13px", fontWeight = "normal",
+            freeStyles = '', radius = 'none'
+    } = options;
     let { rules } = options;
 
     const [selectedVal, setSelectedVal] = useState<Date | null>(new Date());
@@ -93,13 +105,6 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     const handleCalendarClose = () => log("Calendar closed");
     const handleCalendarOpen = () => log("Calendar opened");
 
-    const parseDateString = (str: string | number | Date) => {
-        // 여기서 문자열을 Date 객체로 변환하는 로직을 구현합니다.
-        // 예를 들어, 문자열 형식이 'YYYYMMDD'일 경우에는 'YYYY-MM-DD'로 변환할 수 있습니다.
-        // 여기서는 단순히 문자열을 Date 객체로 변환하는 parse 메서드를 사용하겠습니다.
-        return new Date(str);
-      };
-
     return (
         <InputWrapper outerClassName="" inline={inline}>
             {!noLabel && <Label id={id} name={label}  />}
@@ -111,7 +116,11 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
                     render={({ field }) => (
                         <ReactDatePicker
                             // className={clsx(`${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
-                            className={clsx(`form-input block ${defWidth} ${defHeight} border-gray-200 disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
+                            // className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
+                            className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-${bgColor} flex-grow-1
+                                    focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
+                                    ${freeStyles}
+                                    `)}
                             customInput= {
                                 <MaskedInput
                                     pipe={autoCorrectedDatePipe}

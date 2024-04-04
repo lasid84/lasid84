@@ -10,6 +10,7 @@
     "dev": "turbo dev",
     "dev:api": "turbo dev --filter api",
     "dev:kream": "turbo dev --filter kream",
+    "dev:batch": "turbo dev --filter batch",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "heroku-postbuild": "if [ $CLIENT_ENV ]; then pnpm run prod-api; elif [ $SERVER_ENV ]; then pnpm run prod-batch; else echo no environment detected, please set CLIENT_ENV or SERVER_ENV; fi",

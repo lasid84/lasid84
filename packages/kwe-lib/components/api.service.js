@@ -7,7 +7,7 @@ const { log } = require('./logHelper');
 //const serverUrl = 'http://10.33.63.50:5005';
  const serverUrl = 'http://10.33.63.171:5000';
 
- export async function init(configParam) {
+ async function init(configParam) {
 
   const config = {
     baseURL: configParam.url,
@@ -23,7 +23,7 @@ const { log } = require('./logHelper');
   return client;
 }
 
-export async function dataCall(client, inproc, inparam, invalue, config) {
+async function dataCall(client, inproc, inparam, invalue, config) {
   try {
     // log("dataCall");
     const url = '/api/data';
@@ -50,7 +50,7 @@ export async function dataCall(client, inproc, inparam, invalue, config) {
   };
 };
 
-export const postCall = async (params) => {
+const postCall = async (params) => {
   
   try {
     // log("postCall params1 : ", params);  
@@ -97,7 +97,7 @@ async function init2() {
   return client;
 }
 
-export async function executFunction(inproc, inparam, invalue) {
+async function executFunction(inproc, inparam, invalue) {
   try {
     // var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     // var url = objectPath.get(iniData, "main.url");
@@ -125,7 +125,7 @@ export async function executFunction(inproc, inparam, invalue) {
   };
 };
 
-export const postCall2 = async (params) => {
+const postCall2 = async (params) => {
   
   const url = params.url;
   const client = await init2();
@@ -140,11 +140,11 @@ export const postCall2 = async (params) => {
 };
 
 
-// module.exports = {
-//   init,
-//   executFunction,
-//   dataCall,
-//   postCall,
-//   postCall2
-// }
+module.exports = {
+  init,
+  executFunction,
+  dataCall,
+  postCall,
+  postCall2
+}
 
