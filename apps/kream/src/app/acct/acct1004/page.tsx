@@ -42,7 +42,7 @@ export default function ACCT1004() {
                     <MasterGrid initData={initData} />
                 </div>
                 <div className="flex col-span-2">
-                    <CustomerDetail />
+                    <CustomerDetail loadItem={initData} />
                 </div>
             </div>
             <DetailGrid initData={initData} />

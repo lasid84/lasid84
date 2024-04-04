@@ -56,7 +56,7 @@ export const Input: React.FC<InputProps> = ({
   }
   if (type === "date") {
     // valueAsdate = false로 변경 (yyyy/mm/dd format read)
-    rules = { valueAsDate: true };
+    rules = { valueAsDate: false };
   }
 
   function handleKeyDown(event:any){

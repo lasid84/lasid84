@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-type tab = {
-    code: any;
-    cd_name: string;
+export interface tab {
+    cd: any;
+    cd_nm: string;
 };
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function Tab({ tabList, onClickTab }: Props) {
-    const [selectedTab, setSelectedTab] = useState<any>("NORMAL");
+    const [selectedTab, setSelectedTab] = useState<any>("NM");
 
     useEffect(() => {
         selectedTab && onClickTab(selectedTab);
@@ -21,17 +21,17 @@ export default function Tab({ tabList, onClickTab }: Props) {
     return (
         <div className="w-full flex ">
             <div className="flex flex">
-                {tabList?.map(({ code, cd_name }, idx) => (
+                {tabList?.map(({ cd, cd_nm }, idx) => (
                     <div key={idx} className="flex-none  bg-transparent">
                         <button
-                            onClick={() => setSelectedTab(code)}
+                            onClick={() => setSelectedTab(cd)}
                             className={
-                                code === selectedTab
+                                cd === selectedTab
                                     ? "font-medium text-xs px-2 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
                                     : "font-medium text-xs px-2 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
                             }
                             type="button">
-                            {cd_name}
+                            {cd_nm}
                         </button>
                     </div>
                 ))}

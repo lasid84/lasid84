@@ -83,7 +83,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
   switch (pathname) {
 
     case "/login":
-      return <>{children}</>
+      return <><div className="bg-center bg-no-repeat bg-cover bg-[url('/images/bg-login-3.png')]">{children}</div></>
     default:
       return (
         // <AuthProvider>

@@ -1,20 +1,24 @@
 import { useAppContext } from "components/provider/contextObjectProvider";
-import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
+import { useEffect, useReducer, useMemo, useCallback, useRef, memo } from "react";
 import { TInput2 } from "components/form/input-row"
 import { MaskedInputField, Input } from 'components/input';
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageContent from "layouts/search-form/page-content"
 import { useState } from "react"
-import Tab from "components/tab/tab"
+import Tab, { tab } from "components/tab/tab"
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
+
+export interface typeloadItem {
+    data: {} | undefined
+}
 type Props = {
-    initData?: any | null;
+    loadItem: typeloadItem;
 };
 
 
-const CustomerDetail: React.FC = () => {
+const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
 
     const { dispatch, objState } = useAppContext();
     const { searchParams, isMSearch, mSelectedRow, mSelectedDetail } = objState;
@@ -25,31 +29,25 @@ const CustomerDetail: React.FC = () => {
         },
     });
 
-    type TypeTab = "NORMAL" | "DETAIL" | "ADDRESS"
 
-    const TAB_LIST = [
-        { cd_name: "NORMAL", code: "NORMAL" },
-        { cd_name: "DETAIL", code: "DETAIL" },
-        { cd_name: "ADDRESS", code: "ADDRESS" },
-    ];
+    const [tab, settab] = useState<tab[]>()
+    const [selectedTab, setselectedTab] = useState<string>("NM");
 
-    const [selectedTab, setSelectedTab] = useState<string>("NORMAL");
-
+    useEffect(() => {
+        if (loadItem?.length) {
+            log("loadItem", loadItem[14].data)
+            settab(loadItem[14].data)
+        }
+    }, [loadItem?.length])
     const {
         handleSubmit,
-        reset,
-        setFocus,
-        setValue,
-        resetField,
-        getValues,
         formState: { errors },
         control,
     } = formZodMethods;
 
-    const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-    }, []);
+    const onFormSubmit: SubmitHandler<any> = useCallback((param) => { }, []);
 
-    const handleOnClickTab = (code: any) => { setSelectedTab(code) }
+    const handleOnClickTab = (code: any) => { setselectedTab(code) }
 
     useEffect(() => {
         if (objState.isMDSearch) {
@@ -60,16 +58,15 @@ const CustomerDetail: React.FC = () => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="w-full flex flex-col gap-2">
+                <div className="w-full flex space-y-2 flex-col gap-2">
                     <PageContent
-                        title={<Tab tabList={TAB_LIST} onClickTab={handleOnClickTab} />}>
-                        <div className={`flex flex-col w-full h-[381px] ${selectedTab == "NORMAL" ? "" : "hidden"}`}>
+                        title={<Tab tabList={tab} onClickTab={handleOnClickTab} />}>
+                        <div className={`flex flex-col w-full h-[400px] ${selectedTab == "NM" ? "" : "hidden"}`}>
                             <div className=" md:grid md:grid-cols-5 overflow-y-auto">
                                 <div className={"col-span-2"}>
                                     <MaskedInputField id="trans_mode" value={objState.mSelectedDetail?.trans_mode} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="invoice_no" value={objState.mSelectedDetail?.invoice_no} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="apply_to_invoice" value={objState.mSelectedDetail?.apply_to_invoice} options={{ inline: true }} height='h-6' />
-
                                     <MaskedInputField id="invoice_dd" value={objState.mSelectedDetail?.invoice_dd} options={{ inline: true, type: "date" }} height='h-6' />
                                     <MaskedInputField id="confirm_dd" value={objState.mSelectedDetail?.confirm_dd} options={{ inline: true, type: "date" }} height='h-6' />
                                     <MaskedInputField id="invoice_type" value={objState.mSelectedDetail?.invoice_type} options={{ inline: true }} height='h-6' />
@@ -88,17 +85,19 @@ const CustomerDetail: React.FC = () => {
 
                                 </div>
                                 <div className={"col-span-1"}>
-                                    <MaskedInputField id="trans_type" value={objState.mSelectedDetail?.trans_type} options={{ inline: true }} height='h-6' />
-                                    <MaskedInputField id="invoice_sts" value={objState.mSelectedDetail?.invoice_sts} options={{ inline: true }} height='h-6' />
-                                    <MaskedInputField id="apply_to_sts" value={objState.mSelectedDetail?.apply_to_sts} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="trans_type" value={objState.mSelectedDetail?.trans_type} options={{ inline: true, noLabel: true }} height='h-6' />
+                                    <MaskedInputField id="invoice_sts" value={objState.mSelectedDetail?.invoice_sts} options={{ inline: true, noLabel: true }} height='h-6' />
+                                    <MaskedInputField id="apply_to_sts" value={objState.mSelectedDetail?.apply_to_sts} options={{ inline: true, noLabel: true }} height='h-6' />
                                     <div className="h-12" />
-                                    <MaskedInputField id="invoice_type2" value={objState.mSelectedDetail?.invoice_type} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="invoice_type2" value={objState.mSelectedDetail?.invoice_type2} options={{ inline: true, noLabel: true }} height='h-6' />
                                     <div className="h-12" />
-                                    <MaskedInputField id="house_bl_type" value={objState.mSelectedDetail?.ccn_type} options={{ inline: true }} height='h-6' />
-                                    <div className="h-30" />
+                                    <MaskedInputField id="house_bl_type" value={objState.mSelectedDetail?.ccn_type} options={{ inline: true, noLabel: true }} height='h-6' />
+                                    <div className="h-12" />
+                                    <div className="h-12" />
+                                    <div className="h-6" />
                                     <MaskedInputField id="dest_port" value={objState.mSelectedDetail?.mbl_no} options={{ inline: true }} height='h-6' />
-                                    <div className="h-30" />
-                                    <MaskedInputField id="tax_seq2" value={objState.mSelectedDetail?.house_bl_type} options={{ inline: true }} height='h-6' />
+                                    <div className="h-6" />
+                                    <MaskedInputField id="tax_seq2" value={objState.mSelectedDetail?.house_bl_type} options={{ inline: true, noLabel: true }} height='h-6' />
 
                                 </div>
                                 <div className={"col-span-2"}>
@@ -122,12 +121,12 @@ const CustomerDetail: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full flex flex-col w-full h-[371px] ${selectedTab == "DETAIL" ? "" : "hidden"}`}>
+                        <div className={`w-full flex flex-col w-full h-[400px] ${selectedTab == "DE" ? "" : "hidden"}`}>
                             <div className=" md:grid md:grid-cols-5 overflow-y-auto">
                                 <div className={"col-span-2"}>
                                     <MaskedInputField id="shipper_code" value={objState.mSelectedDetail?.shipper_code} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="consign_code" value={objState.mSelectedDetail?.consign_code} options={{ inline: true }} height='h-6' />
-                                    <MaskedInputField id="description" value={objState.mSelectedDetail?.description} options={{ inline: true }} height='h-6' />
+                                    {/* <MaskedInputField id="description" value={objState.mSelectedDetail?.description} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="vessel_nm" value={objState.mSelectedDetail?.vessel_nm} options={{ inline: true, type: "date" }} height='h-6' />
                                     <MaskedInputField id="voyage_no" value={objState.mSelectedDetail?.voyage_no} options={{ inline: true, type: "date" }} height='h-6' />
                                     <div className="h-6" />
@@ -140,28 +139,45 @@ const CustomerDetail: React.FC = () => {
                                     <MaskedInputField id="lc_no" value={objState.mSelectedDetail?.lc_no} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="shipment_no" value={objState.mSelectedDetail?.shipment_no} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="comm_invoice" value={objState.mSelectedDetail?.comm_invoice} options={{ inline: true }} height='h-6' />
-                                    <MaskedInputField id="po_no" value={objState.mSelectedDetail?.po_no} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="po_no" value={objState.mSelectedDetail?.po_no} options={{ inline: true }} height='h-6' /> */}
 
                                 </div>
-                                <div className={"col-span-1"}>
-                                    <MaskedInputField id="shipper_nm" value={objState.mSelectedDetail?.trans_type} options={{ inline: true }} height='h-6' />
-                                    <MaskedInputField id="consign_nm" value={objState.mSelectedDetail?.invoice_sts} options={{ inline: true }} height='h-6' />
-                                    <div className="h-12" />
-                                    <MaskedInputField id="tot_pieces" value={objState.mSelectedDetail?.apply_to_sts} options={{ inline: true }} height='h-6' />
+                                <div className={"col-span-3"}>
+                                    <MaskedInputField id="shipper_nm" value={objState.mSelectedDetail?.shipper_nm} options={{ inline: true, noLabel: true }} height='h-6' />
+                                    <MaskedInputField id="consign_nm" value={objState.mSelectedDetail?.consign_nm} options={{ inline: true, noLabel: true }} height='h-6' />
+                                    {/* <div className="h-12" />
+                                    <MaskedInputField id="tot_pieces" value={objState.mSelectedDetail?.tot_pieces} options={{ inline: true }} height='h-6' />
                                     <div className="h-12" />
                                     <MaskedInputField id="tot_slac_stc" value={objState.mSelectedDetail?.tot_slac_stc} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="tot_gross_wt" value={objState.mSelectedDetail?.tot_gross_wt} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="tot_charge_wt" value={objState.mSelectedDetail?.tot_charge_wt} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="tot_volumn_wt" value={objState.mSelectedDetail?.tot_volumn_wt} options={{ inline: true }} height='h-6' />
-                                    <div className="h-12" />
+                                    <div className="h-12" /> */}
+                                </div>
+                                <div className={"col-span-5"}>
+                                    <MaskedInputField id="description" value={objState.mSelectedDetail?.description} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="vessel_nm" value={objState.mSelectedDetail?.vessel_nm} options={{ inline: true, type: "date" }} height='h-6' />
                                 </div>
                                 <div className={"col-span-2"}>
+                                    <MaskedInputField id="voyage_no" value={objState.mSelectedDetail?.voyage_no} options={{ inline: true, type: "date" }} height='h-6' />
+                                    <MaskedInputField id="carrier" value={objState.mSelectedDetail?.carrier} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="flight_no" value={objState.mSelectedDetail?.flight_no} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="free_house_term" value={objState.mSelectedDetail?.free_house_term} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="service_type" value={objState.mSelectedDetail?.service_type} options={{ inline: true }} height='h-6' />
+                                </div>
+                                <div className={"col-span-2"}>
+                                    <div className="h-12" />
+                                    <MaskedInputField id="tot_pieces" value={objState.mSelectedDetail?.tot_pieces} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="tot_slac_stc" value={objState.mSelectedDetail?.tot_slac_stc} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="tot_gross_wt" value={objState.mSelectedDetail?.tot_gross_wt} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="tot_charge_wt" value={objState.mSelectedDetail?.tot_charge_wt} options={{ inline: true }} height='h-6' />
+                                    <MaskedInputField id="tot_volumn_wt" value={objState.mSelectedDetail?.tot_volumn_wt} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="uom_gross_wt" value={objState.mSelectedDetail?.uom_gross_wt} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="uom_charge_wt" value={objState.mSelectedDetail?.uom_charge_wt} options={{ inline: true }} height='h-6' />
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full flex flex-col h-[371px] overflow-auto ${selectedTab == "ADDRESS" ? "" : "hidden"}`}>
+                        <div className={`w-full flex flex-col h-[400px] overflow-auto ${selectedTab == "AD" ? "" : "hidden"}`}>
                             <div className="w-full md:grid md:grid-cols-5 overflow-y-auto">
                                 <div className={"col-span-5"}>
                                     <MaskedInputField id="country_code" value={objState.mSelectedDetail?.country_code} options={{ inline: true }} height='h-6' />
@@ -208,14 +224,11 @@ const CustomerDetail: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-
-
                     </PageContent>
-
                 </div>
             </form>
         </FormProvider>
     );
-}
+})
 
 export default CustomerDetail;
