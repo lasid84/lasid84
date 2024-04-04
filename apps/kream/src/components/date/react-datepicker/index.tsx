@@ -111,7 +111,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
                     render={({ field }) => (
                         <ReactDatePicker
                             // className={clsx(`${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
-                            className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
+                            className={clsx(`form-input block ${defWidth} ${defHeight} border-gray-200 disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
                             customInput= {
                                 <MaskedInput
                                     pipe={autoCorrectedDatePipe}

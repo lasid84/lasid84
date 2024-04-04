@@ -23,16 +23,16 @@ export interface returnData {
 }
 
 export interface typeloadItem {
-  data : {} | undefined
+  data: {} | undefined
 }
 
 
 type Props = {
   onSubmit: SubmitHandler<any>;
-  loadItem : typeloadItem;
+  loadItem: typeloadItem;
 };
 
-const SearchForm = memo(({loadItem}:any) => {
+const SearchForm = memo(({ loadItem }: any) => {
   // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
@@ -45,13 +45,13 @@ const SearchForm = memo(({loadItem}:any) => {
 
   const methods = useForm({
     defaultValues: {
-      trans_mode : gTransMode || 'ALL',
-      trans_type : gTransType || 'ALL',
-      fr_date : dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date : dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      no : '',
-      cust_code : ''
-      }
+      trans_mode: gTransMode || 'ALL',
+      trans_type: gTransType || 'ALL',
+      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
+      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
+      no: '',
+      cust_code: ''
+    }
   });
 
   const {
@@ -68,18 +68,18 @@ const SearchForm = memo(({loadItem}:any) => {
   const [transmode, setTransmode] = useState<any>();
   const [transtype, setTranstype] = useState<any>();
   const [custcode, setCustcode] = useState<any>();
-  
-  useEffect(() => { 
-    if(loadItem?.length){
+
+  useEffect(() => {
+    if (loadItem?.length) {
       // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0]) 
+      setTransmode(loadItem[0])
       setTranstype(loadItem[1])
       setCustcode(loadItem[8])
 
       onSearch();
       // onSubmit();
       // handleSubmit(onSubmit)();
-    }    
+    }
   }, [loadItem?.length])
 
   const onSearch = () => {
@@ -102,37 +102,37 @@ const SearchForm = memo(({loadItem}:any) => {
             </>
           }>
 
-          <ReactSelect 
-            id="trans_mode" label="trans_mode" dataSrc={transmode as data} 
+          <ReactSelect
+            id="trans_mode" label="trans_mode" dataSrc={transmode as data}
             options={{
-              keyCol:"trans_mode",
-              displayCol:['name'],
-              inline:true,
+              keyCol: "trans_mode",
+              displayCol: ['name'],
+              inline: true,
               // defaultValue: {label:'A Air', value:'A'}
-              defaultValue : getValues('trans_mode')
+              defaultValue: getValues('trans_mode')
             }}
           />
-          <ReactSelect 
+          <ReactSelect
             id="trans_type" label="trans_type" dataSrc={transtype as data}
             options={{
-              keyCol:"trans_type",
-              displayCol:['name'],
-              inline:true,
-              defaultValue:getValues('trans_type')
+              keyCol: "trans_type",
+              displayCol: ['name'],
+              inline: true,
+              defaultValue: getValues('trans_type')
             }}
           />
-            {/* <ReactSelect 
+          {/* <ReactSelect
             id="cust_code" label="cust_code" dataSrc={custcode as data}
             options={{
-              keyCol:"cust_code",
-              displayCol:['cust_nm'],
-              inline:true,
-              defaultValue:getValues('cust_code')
+              keyCol: "cust_code",
+              displayCol: ['cust_nm'],
+              inline: true,
+              defaultValue: getValues('cust_code')
             }}
           /> */}
-          <Input id="fr_date" type="date" inline={true}/>
-          <Input id="to_date" type="date" inline={true}/>
-          <Input id="no" name="bl/inv no." inline={true}/>
+          <Input id="fr_date" type="date" inline={true} />
+          <Input id="to_date" type="date" inline={true} />
+          <Input id="no" name="bl/inv no." inline={true} />
 
         </PageSearch>
       </form>
