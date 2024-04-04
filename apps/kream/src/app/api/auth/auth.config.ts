@@ -74,7 +74,8 @@ export const authConfig = {
   },
   providers: [], // Add providers with an empty array for now
   session: {
-    maxAge: 60*60*24,
+    // maxAge: 60*60*24,
+    maxAge: 60,
     strategy: "jwt"
   } 
 } satisfies NextAuthConfig;

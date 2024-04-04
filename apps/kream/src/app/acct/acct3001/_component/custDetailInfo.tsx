@@ -56,7 +56,12 @@ const CustomerDetail: React.FC = () => {
                             // myPlaceholder:"Enter business number" 
                             // myPlaceholder:"bz_reg_no"
                             // inline:{true}
-                            isReadOnly:true
+                            isReadOnly:true,
+                            // bgColor:"blue-100",
+                            // textAlign:"right",
+                            // fontSize:"15px",
+                            // fontBold:"light"
+                            freeStyles:"underline border-1 border-slate-300"
                         }}
                         />
                     <MaskedInputField 

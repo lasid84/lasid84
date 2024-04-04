@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
-    "lib": ["ES2015"],
-    "module": "CommonJS",
+    // "lib": ["ES2015"],
+    // "module": "CommonJS",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
     "outDir": "./dist",
     "noImplicitAny": false
   },

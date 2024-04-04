@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "tsup --watch --onSuccess \"node dist/index.js\"",
+    "dev": "set NODE_ENV=\"development\" && tsup --watch --onSuccess \"node dist/index.js\"",
     "build": "tsup",
     "test": "echo 'Add test script here'",
     "lint": "echo 'Add lint script here'"

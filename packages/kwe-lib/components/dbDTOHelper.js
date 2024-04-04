@@ -79,7 +79,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     const dc = new dataContainer();
     var cursorName = [];
 
-    // log("=======queryResult", queryResult)
+    log("=======queryResult", queryResult)
     for (const row of resultArgument.getCursorData()[0].rows) {
 
       const paramName = row['parameter_name'];

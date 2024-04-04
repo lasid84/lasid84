@@ -57,7 +57,7 @@ export async function executFunction(params:exeFuncParams) {
     // log("executeFunction", params);
     const session = await getSession();
     const token = await getToken();
-    // log("executeFunction", session, token);
+    log("executeFunction", session, token);
     // if (!session && !params.isLoginPage) {        
     if (!session) {        
         return navigate('/login');

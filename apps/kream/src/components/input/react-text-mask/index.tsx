@@ -26,6 +26,14 @@ type Props = {
     isAllowDecimal?:boolean,  //소수점 허용 여부
     decimalLimit?: number     //소수점 자리수
     myPlaceholder?: string;   //
+    /* Tailwind Style */
+    bgColor?: string;         //Background Color (ingerit, current, transparent, black, white, slate-50......)
+    fontSize?: string;        //Font Size (xs, sm, base, lg, xl, 2xl......)
+    fontWeight?: string;      //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
+    textAlign?: string;       //Text Align (left, center, right)
+    radius?: string;          //Border Radius (none, sm, '', md, lg, xl, 2xl, full, ......)
+    freeStyles?:string;       //freestyle
+
     isReadOnly?:boolean;      //읽기전용여부
     noLabel?:boolean;
   };
@@ -44,7 +52,10 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
   if (!control) return null;
 
   const {id, label, value, width, height, options = {}, events } = props;
-  const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false } = options;
+  const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false,
+    textAlign = "left", bgColor = "white", fontSize = "13px", fontWeight = "normal",
+    freeStyles = '', radius = 'none'
+   } = options;
   const {mask, pipe, placeholder} = getMask(type, options);
 
   const [selectedVal, setSelectedVal] = useState<string | undefined>(value || undefined);
@@ -121,7 +132,10 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
           render={({field}) => (
               <MaskedInput
                 // {...field}
-                className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
+                className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-${bgColor} flex-grow-1
+                 focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
+                 ${freeStyles}
+                 `)}
                 mask={mask! || false}
                 // pipe={pipe}
                 value={selectedVal}
@@ -133,6 +147,7 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
                 //     // setValue(name, e.target.value);
                 // }}
                 guide={false}
+                
                 // showMask={true}
                 onKeyDown={(e) => handleKeyDown(e)}
                 onBlur={(e) => handleBlur(e)}
