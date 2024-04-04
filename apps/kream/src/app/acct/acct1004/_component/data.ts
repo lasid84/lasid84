@@ -30,11 +30,47 @@ export const SP_Load = async (searchParam: any) => {
 export const SP_GetMasterData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
+  console.log('paramg확인', Param)
+
+  const { trans_mode, trans_type, fr_date, to_date, no, cust_code, user_id, ipaddr } = Param;
+  log("search Master Data:", Param);
+  log("search Master Data:", fr_date.replace(/[^0-9]/g, ""))
+
+
+  const params = {
+    inparam: [
+      "in_trans_mode"
+      , "in_trans_type"
+      , "in_fr_date"
+      , "in_to_date"
+      , "in_no"
+      , "in_cust_code"
+      , "in_user_id"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      trans_mode
+      , trans_type
+      , fr_date.replace(/[^0-9]/g, "")
+      , to_date.replace(/[^0-9]/g, "")
+      , no
+      , cust_code
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'account.f_acct1004_get_master',
+    isShowLoading: true
+  }
+  const result = await executFunction(params);
+  console.log('result', result)
+  return result![0]
+}
+
+export const SP_GetInvoiceMasterContent = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
 
   const { invoice_no, user_id, ipaddr } = Param;
-  log("search Master Data:", Param);
 
-  // if (invoice_no + "" == "") {
   const params = {
     inparam: [
       "in_trans_mode"
@@ -55,39 +91,6 @@ export const SP_GetMasterData = async (searchParam: any) => {
       , ''
       , user_id
       , ipaddr
-    ],
-    inproc: 'account.f_acct1004_get_master',
-    isShowLoading: true
-  }
-  const result = await executFunction(params);
-  return result![0]
-}
-
-export const SP_GetInvoiceMasterContent = async (invoice: any) => {
-  // const Param = searchParam.queryKey[1]
-
-  // const { invoice_no, user_id, ipaddr } = Param;
-
-  const params = {
-    inparam: [
-      "in_trans_mode"
-      , "in_trans_type"
-      , "in_fr_date"
-      , "in_to_date"
-      , "in_no"
-      , "in_cust_code"
-      , "in_user_id"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      'ALL'
-      , 'ALL'
-      , '20230101'
-      , '20230331'
-      , invoice
-      , ''
-      , ''
-      , ''
     ],
     inproc: 'account.f_acct1004_get_master',
     isShowLoading: true

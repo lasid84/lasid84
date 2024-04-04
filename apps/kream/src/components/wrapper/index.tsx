@@ -36,7 +36,7 @@ export const InlineInputWrapper: React.FC<InlineInputWrapperProps> = ({
 }) => {
   return (
     <div className={outerClassName}>
-      <div className="flex items-center space-x-2 justify-items-start">
+      <div className="flex items-center space-x-2 space-y-1 justify-items-start">
         {children}
       </div>
     </div>

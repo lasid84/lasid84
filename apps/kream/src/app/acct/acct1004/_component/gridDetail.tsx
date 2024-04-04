@@ -47,7 +47,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 colVisible: { col : [ "invoice_no", "vat_rt", "fe_ref_item", "uas_gl_code", "vat_yn", "fins_yn", "rem_prt_yn", "fe_prt_yn"
                 , "gl_code", "bill_yn"], visible:false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-                gridHeight: "33vh",
+                gridHeight: "23vh",
                 checkbox: ["use_yn", "def"],
                 // select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: {"email": 200},
@@ -116,15 +116,13 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
 
     return (
         <>
-            <PageSearch
+            {/* <PageSearch
                 right={
                 <>
-                {/* <TButtonBlue label={"add"} onClick={() => onGridRowAdd(gridRef.current, {"use_yn": true, "def":false})} />
-                <TButtonBlue label={"save"} onClick={onSave} /> */}
                 </>
             }>
                 <></>
-            </PageSearch>
+            </PageSearch> */}
             <Grid
                 gridRef={gridRef}
                 loadItem={initData}

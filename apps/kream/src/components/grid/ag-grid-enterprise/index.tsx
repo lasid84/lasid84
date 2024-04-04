@@ -86,7 +86,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const [colDefs, setColDefs] = useState<cols[]>([]);
     const [mainData, setMainData] = useState([{}]);
 
-    const [gridStyle, setGridStyle] = useState({height: "65vh"});
+    const [gridStyle, setGridStyle] = useState({height: "85vh"});
     const { listItem, options } = props;
 
     const containerStyle = useMemo(() => "flex-col w-full", []);
@@ -588,10 +588,10 @@ export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
   if (!rowCount) return;
   
 const allColumnIds: string[] = [];
-  gridApi.api.getColumns().forEach((column:any) => {
-    if (column.visible) allColumnIds.push(column.getId());
-  });
-  gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
+  // gridApi.api.getColumns().forEach((column:any) => {
+  //   if (column.visible) allColumnIds.push(column.getId());
+  // });
+  // gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
 
   // if (!gridApi.current) gridApi.current?.api.autoSizeAllColumns(skipHeader); 
 
