@@ -60,7 +60,8 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     } = options;
     let { rules } = options;
 
-    const [selectedVal, setSelectedVal] = useState<Date | null>(new Date());
+    // const [selectedVal, setSelectedVal] = useState<Date | null>(new Date());
+    const [selectedVal, setSelectedVal] = useState<Date | null>();
 
     const defWidth = width ? width : "w-full";
     const defHeight = height ? height : "h-8";
@@ -73,6 +74,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
 
     useEffect(() => {
         if (selectedVal) {
+            console.log('selectedVal',selectedVal)
             setValue(id, DateToString(selectedVal));
         }
     }, [selectedVal]);
@@ -80,6 +82,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     useEffect(() => {
         if (value) {
             var date = stringToDate(value);
+            console.log('value rendering,,,,', date)
             setSelectedVal(date);
             setValue(id, DateToString(date));
         }

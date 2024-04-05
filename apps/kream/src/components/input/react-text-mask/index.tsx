@@ -17,6 +17,7 @@ type Props = {
   label?:string;
   value?:string;
   width?:string;
+  lwidth?:string;
   height?:string;
 
   options?: {
@@ -51,9 +52,9 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
   const { t } = useTranslation();
   if (!control) return null;
 
-  const {id, label, value, width, height, options = {}, events } = props;
+  const {id, label, value, width, lwidth, height, options = {}, events } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false,
-    textAlign = "left", bgColor = "white", fontSize = "13px", fontWeight = "normal",
+    textAlign, bgColor = "white", fontSize = "13px", fontWeight = "normal",
     freeStyles = '', radius = 'none'
    } = options;
   const {mask, pipe, placeholder} = getMask(type, options);
@@ -124,7 +125,7 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
 
   return (
     <InputWrapper outerClassName="" inline={inline}>
-      {!noLabel && <Label id={id} name={label}/>}
+      {!noLabel && <Label id={id} name={label} lwidth={lwidth}/>}
       <Controller
           name = {id}
           control={control}
@@ -132,7 +133,7 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
           render={({field}) => (
               <MaskedInput
                 // {...field}
-                className={clsx(`form-input block ${defWidth} ${defHeight} border-gray-100 disabled:bg-gray-300 bg-${bgColor} flex-grow-1
+                className={clsx(`form-input block ${defWidth} ${defHeight} border-gray-200 disabled:bg-gray-300 bg-${bgColor} flex-grow-1
                  focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
                  ${freeStyles}
                  `)}

@@ -171,7 +171,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                     rules={rules}
                     render={({ field: { onChange } }) => {
                         return (
-                            <div className="block w-full flex-grow-1">
+                            <div className="p-1 block w-full flex-grow-1 h-8">
                             {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                                 <ReactSelectComponent
                                     //{...field}

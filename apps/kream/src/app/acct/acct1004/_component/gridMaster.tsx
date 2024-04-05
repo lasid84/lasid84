@@ -29,7 +29,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const gridOption: GridOption = {
         colVisible: { col: ["billto_nm_kor", "house_bl_no", "invoice_no", "invoice_sts", "billing_yn", "shipper_code", "shipper_nm", "consign_code", "consign_nm"], visible: true },
         gridHeight: "48vh",
-        minWidth: {"invoice_no": 150},
+        minWidth: {"invoice_no": 150,  "house_bl_no": 120},
         dataType: { "bz_reg_no": "bizno" },
         isAutoFitColData: false,
     };

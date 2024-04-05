@@ -4,6 +4,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IRowNode, RowClickedEvent } from 'ag-grid-community';
 import { useTranslation } from 'react-i18next';
 import { useFormContext } from 'react-hook-form';
+import { Label } from 'components/label';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -18,6 +19,7 @@ type Props = {
   style?:Style
   isNoSelect?:boolean     // 초기 렌더시 첫번째값 선택 여부
   defaultValue?: string   // 기본값, 설정시 isNoSelect는 무시
+  inline?:boolean
 }
 
 type GridStyle = {
@@ -41,7 +43,7 @@ function CustomSelect(props:Props) {
     // const [isReady, setIsReady] = useState(false);
 
     const { register, setValue, getValues } = useFormContext();
-    const { id, label, listItem, valueCol, displayCol, gridOption, gridStyle, style, isNoSelect } = props;
+    const { id, label, listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isNoSelect } = props;
     const defaultStyle = {
       width : '200px',
       ...style
@@ -138,9 +140,11 @@ function CustomSelect(props:Props) {
     <>
       <div        
         {...register(id)}
-        className="custom-select-container"
+        className="flex items-center space-x-2 justify-items-start custom-select-container"
         style={{position: 'relative'}}
-      >{label? t(label) : t(id)}
+      >
+        <Label id={id} name={label}/>
+        {/* {label? t(label) : t(id)} */}
         <div ref={ref}
             className={`custom-select ${isOpen ? 'active' : ''}`} 
             onClick={toggleOptions} 
