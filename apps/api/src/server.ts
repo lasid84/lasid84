@@ -1,5 +1,5 @@
 import { json, urlencoded } from "body-parser";
-import express from "express";
+import express, { type Express } from "express";
 import morgan from "morgan";
 import cors from "cors";
 // const jwt = require('jsonwebtoken');
@@ -11,13 +11,12 @@ import compression from "compression";
 // const {callFunction} = require("@repo/kwe-lib/components/dbDTOHelper.ts");
 import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
 import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
-// import { log } from '@repo/kwe-lib/components/logHelper';
-const { log } = require('@repo/kwe-lib/components/logHelper')
+import { log } from '@repo/kwe-lib/components/logHelper';
 import { dataContainer } from '@repo/kwe-lib/components/dataContainer';
 // import { decode } from '@repo/kwe-lib/components/next-auth/jwt';
 // import {decode} from '@auth/core/jwt';
 
-export const createServer = () => {
+export const createServer = (): Express => {
 
   let type;
   if (process.env.NODE_ENV === "production") {
@@ -121,7 +120,7 @@ export const createServer = () => {
     })
     .post('/login', async (req, res) =>  {
       const { user_id, password } = req.body;
-      await checkAccount(user_id, password, async (isAuthenticated, userObject) => {
+      await checkAccount(user_id, password, async (isAuthenticated:any, userObject:any) => {
         if (isAuthenticated) {
           log("userObject:",userObject);
           // 세션에 사용자 정보 저장
@@ -135,7 +134,7 @@ export const createServer = () => {
             invalue: [user_id, userObject, ''],
             inproc: 'public.f_admn_get_userauth'
           }
-          let dc = new dataContainer(); 
+          let dc:any = new dataContainer(); 
           dc = await callFunction(params.inproc, params.inparam, params.invalue);  
           if (dc.getNumericData() === 0) {   
             // 인증 성공시 처리

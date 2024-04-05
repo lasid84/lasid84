@@ -10,26 +10,3 @@
   "extends": "@repo/typescript-config/base.json",
   "include": ["."]
 }
-<<<<<<< HEAD
-
-
-// {
-//   "compilerOptions": {
-//     // "lib": ["ES2015"],
-//     // "module": "CommonJS",
-//     "lib": ["dom", "dom.iterable", "esnext"],
-//     "allowJs": true,
-//     "skipLibCheck": true,
-//     "strict": true,
-//     "noEmit": true,
-//     "esModuleInterop": true,
-//     "module": "esnext",
-//     "outDir": "./dist",
-//     "noImplicitAny": false
-//   },
-//   "exclude": ["node_modules"],
-//   "extends": "@repo/typescript-config/base.json",
-//   "include": ["."]
-// }
-=======
->>>>>>> parent of 7e0505d (ㅠㅠㅠ)
