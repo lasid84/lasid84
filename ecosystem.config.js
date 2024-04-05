@@ -1,23 +1,8 @@
 module.exports = {
-  apps : [
-    {
-      name: 'api_xxxx',
-      script: 'node index.js',
-      cwd: "./apps/kwe-api/dist",
-      // instances: 4,
-      // exec_mode: 'cluster',
-      autorestart: true,
-      watch: '.',
-      env: {
-        NODE_ENV: 'production'
-      }
-    },
-    {
-      name: 'api',      
+  apps : [{
+      name: 'api',
       script: 'node index.js',
       cwd: "./apps/api/dist",
-      // instances: 4,
-      // exec_mode: 'cluster',
       autorestart: true,
       watch: '.',
       env: {

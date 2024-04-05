@@ -11,7 +11,8 @@ import compression from "compression";
 // const {callFunction} = require("@repo/kwe-lib/components/dbDTOHelper.ts");
 import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
 import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
-import { log } from '@repo/kwe-lib/components/logHelper';
+// import { log } from '@repo/kwe-lib/components/logHelper';
+const { log } = require('@repo/kwe-lib/components/logHelper')
 import { dataContainer } from '@repo/kwe-lib/components/dataContainer';
 // import { decode } from '@repo/kwe-lib/components/next-auth/jwt';
 // import {decode} from '@auth/core/jwt';

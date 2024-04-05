@@ -1,7 +1,7 @@
 // const { ini, objectPath, fs } = require("@repo/kwe-lib");
-// const { log } = require("@repo/kwe-lib/components/logHelper");
+const { log } = require("@repo/kwe-lib/components/logHelper");
 import { ini, objectPath, fs } from "@repo/kwe-lib";
-import { log } from "@repo/kwe-lib/components/logHelper";
+// import { log } from "@repo/kwe-lib/components/logHelper";
 // const ini = require("ini");
 // const fs = require("fs");
 // const objectPath = require("objectPath");
