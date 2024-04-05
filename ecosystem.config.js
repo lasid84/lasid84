@@ -2,8 +2,8 @@ module.exports = {
   apps : [
     {
       name: 'api',
-      script: 'node index.js',
-      cwd: "/home/sdd_it/KREAM_Web/source/apps/api/dist/",
+      script: 'node /home/sdd_it/KREAM_Web/source/apps/api/dist/index.js',
+      // cwd: "",
       autorestart: true,
       watch: '.',
       env: {
