@@ -1,7 +1,7 @@
 module.exports = {
   apps : [
     {
-      name: 'kwe-api',
+      name: 'api',
       script: 'node index.js',
       cwd: "./apps/kwe-api/dist",
       // instances: 4,
