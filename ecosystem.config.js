@@ -43,7 +43,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env development',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api',
     },
     api_prod : {
       name: 'api',
@@ -64,7 +64,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter web && pm2 reload ecosystem.config.js --env production --only web',
+      'post-deploy' : 'pnpm install && pnpm build --filter web && pm2 reload ecosystem.config.js --only web',
     },
     batch_prod : {
       key : './id_rsa-batch-prod', 
