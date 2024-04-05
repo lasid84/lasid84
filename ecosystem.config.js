@@ -27,7 +27,10 @@ module.exports = {
       script: 'npm start',
       cwd: './apps/web',
       autorestart: true,
-      watch: '.'
+      watch: '.',
+      env: {
+        NODE_ENV: 'production'
+      }
     }
   ],
 
