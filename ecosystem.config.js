@@ -1,6 +1,5 @@
 module.exports = {
-  apps : [
-    {
+  apps : [{
       name: 'api',
       script: 'node index.js',
       cwd: "./apps/api/dist",
@@ -27,8 +26,10 @@ module.exports = {
       script: 'npm start',
       cwd: './apps/web',
       autorestart: true,
-      version: '0.1.2',    
-      watch: '.'
+      watch: '.',
+      env: {
+        NODE_ENV: 'production'
+      }
     }
   ],
 
@@ -41,7 +42,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --env development',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api',
     },
     api_prod : {
       name: 'api',
@@ -52,8 +53,18 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --version 0.1.2 --env production --only api',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api',
     },
+    // batch_prod : {
+    //   key : './id_rsa-batch-prod', 
+    //   user : 'sdd_it',
+    //   host : ['10.33.63.172'],
+    //   ref  : 'origin/main',
+    //   repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
+    //   path : '/home/sdd_it/KREAM_Web',
+    //   ssh_options: ['StrictHostKeyChecking=no'],
+    //   'post-deploy' : 'pnpm install && pnpm build --filter kwe-api && pm2 reload ecosystem.config.js --only kwe-api',
+    // },
     web_prod : {
       key : './id_rsa-api-prod', 
       user : 'sdd_it',
@@ -62,7 +73,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter web && pm2 reload ecosystem.config.js --env production --only web',
+      'post-deploy' : 'pnpm install && pnpm build --filter web && pm2 reload ecosystem.config.js --only web',
     },
     batch_prod : {
       key : './id_rsa-batch-prod', 
@@ -73,6 +84,16 @@ module.exports = {
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
       'post-deploy' : 'pnpm install && pnpm build --filter batch && pm2 reload ecosystem.config.js --only batch',
-    }
+    },
+    // batch_prod : {
+    //   key : './id_rsa-api-prod', 
+    //   user : 'sdd_it',
+    //   host : ['10.33.63.171'],
+    //   ref  : 'origin/main',
+    //   repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
+    //   path : '/home/sdd_it/KREAM_Web',
+    //   ssh_options: ['StrictHostKeyChecking=no'],
+    //   'post-deploy' : 'pnpm install && pnpm build --filter batch && pm2 reload ecosystem.config.js --only batch',
+    // }
   }
 };

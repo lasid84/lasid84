@@ -1,6 +1,6 @@
 // const { ini, objectPath, fs } = require("@repo/kwe-lib");
-// const { log } = require("@repo/kwe-lib/components/logHelper");
 import { ini, objectPath, fs } from "@repo/kwe-lib";
+// const { log } = require("@repo/kwe-lib/components/logHelper");
 import { log } from "@repo/kwe-lib/components/logHelper";
 // const ini = require("ini");
 // const fs = require("fs");
@@ -16,13 +16,13 @@ async function init () {
   try {
     var port = 0;
     server = createServer();
-
-    var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
+    log("process.cwd() : ", process.cwd())
+    var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
     port = objectPath.get(iniData, "main.port");
     // port = 5005;
     log(`??`, port);
     server.listen(port, () => {
-      log(`api running on ${port}`);
+      console.log(`api running on ${port}`);
     });
   } catch (err) {
     log("index ", err);
