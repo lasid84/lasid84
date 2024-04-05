@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'kwe-api',
       script: 'node index.js',
-      cwd: "./apps/api/dist",
+      cwd: "./apps/kwe-api/dist",
       // instances: 4,
       // exec_mode: 'cluster',
       autorestart: true,
