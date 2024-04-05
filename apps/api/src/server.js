@@ -1,5 +1,5 @@
 import { json, urlencoded } from "body-parser";
-import express, { type Express } from "express";
+import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 // const jwt = require('jsonwebtoken');
@@ -16,7 +16,7 @@ import { dataContainer } from '@repo/kwe-lib/components/dataContainer';
 // import { decode } from '@repo/kwe-lib/components/next-auth/jwt';
 // import {decode} from '@auth/core/jwt';
 
-export const createServer = (): Express => {
+export const createServer = () => {
 
   let type;
   if (process.env.NODE_ENV === "production") {
@@ -120,7 +120,7 @@ export const createServer = (): Express => {
     })
     .post('/login', async (req, res) =>  {
       const { user_id, password } = req.body;
-      await checkAccount(user_id, password, async (isAuthenticated:any, userObject:any) => {
+      await checkAccount(user_id, password, async (isAuthenticated, userObject) => {
         if (isAuthenticated) {
           log("userObject:",userObject);
           // 세션에 사용자 정보 저장

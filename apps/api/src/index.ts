@@ -5,7 +5,7 @@ import { log } from "@repo/kwe-lib/components/logHelper";
 // const ini = require("ini");
 // const fs = require("fs");
 // const objectPath = require("objectPath");
-import { createServer } from './server.ts';
+import { createServer } from './server.js';
 // const {createServer} = require("./server.ts");
 
 //var path: string = process.cwd();
@@ -17,7 +17,7 @@ async function init () {
     var port = 0;
     server = createServer();
     log("process.cwd() : ", process.cwd())
-    var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
+    var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
     port = objectPath.get(iniData, "main.port");
     // port = 5005;
     log(`??`, port);
