@@ -1,9 +1,11 @@
 module.exports = {
   apps : [
     {
-      name: 'kwe_api',
-      script: 'node /home/sdd_it/KREAM_Web/source/apps/api/dist/index.js',
-      // cwd: "",
+      name: 'kwe-api',
+      script: 'node index.js',
+      cwd: "./apps/api/dist",
+      // instances: 4,
+      // exec_mode: 'cluster',
       autorestart: true,
       watch: '.',
       env: {
@@ -43,10 +45,10 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api',
+      'post-deploy' : 'pnpm install && pnpm build --filter kwe-api && pm2 reload ecosystem.config.js --only kwe-api',
     },
     api_prod : {
-      name: 'kwe_api',
+      name: 'kwe-api',
       key : './id_rsa-api-prod', 
       user : 'sdd_it',
       host : ['10.33.63.171'],
@@ -54,7 +56,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter kwe_api && pm2 reload ecosystem.config.js --only kwe_api',
+      'post-deploy' : 'pnpm install && pnpm build --filter kwe-api && pm2 reload ecosystem.config.js --only kwe-api',
     },
     web_prod : {
       key : './id_rsa-api-prod', 
