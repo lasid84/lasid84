@@ -63,7 +63,7 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                         title={<Tab tabList={tab} onClickTab={handleOnClickTab} />}>
                         <div className={`flex flex-col w-full h-[400px] ${selectedTab == "NM" ? "" : "hidden"}`}>
                             <div className=" md:grid md:grid-cols-5 overflow-y-auto">
-                                <div className={"col-span-2"}>
+                                <div className={"space-y-1 space-x-1 col-span-2"}>
                                     <MaskedInputField id="trans_mode" value={objState.mSelectedDetail?.trans_mode} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="invoice_no" value={objState.mSelectedDetail?.invoice_no} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="apply_to_invoice" value={objState.mSelectedDetail?.apply_to_invoice} options={{ inline: true }} height='h-6' />
@@ -84,13 +84,14 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                                     <MaskedInputField id="billing_dd" value={objState.mSelectedDetail?.billing_dd} options={{ inline: true }} height='h-6' />
 
                                 </div>
-                                <div className={"col-span-1"}>
+                                <div className={"space-x-1 space-y-1 col-span-1"}>
                                     <MaskedInputField id="trans_type" value={objState.mSelectedDetail?.trans_type} options={{ inline: true, noLabel: true }} height='h-6' />
                                     <MaskedInputField id="invoice_sts" value={objState.mSelectedDetail?.invoice_sts} options={{ inline: true, noLabel: true }} height='h-6' />
                                     <MaskedInputField id="apply_to_sts" value={objState.mSelectedDetail?.apply_to_sts} options={{ inline: true, noLabel: true }} height='h-6' />
+                                  
                                     <div className="h-12" />
                                     <MaskedInputField id="invoice_type2" value={objState.mSelectedDetail?.invoice_type2} options={{ inline: true, noLabel: true }} height='h-6' />
-                                    <div className="h-12" />
+                                    <div className="h-14" />
                                     <MaskedInputField id="house_bl_type" value={objState.mSelectedDetail?.ccn_type} options={{ inline: true, noLabel: true }} height='h-6' />
                                     <div className="h-12" />
                                     <div className="h-12" />
@@ -100,7 +101,7 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                                     <MaskedInputField id="tax_seq2" value={objState.mSelectedDetail?.house_bl_type} options={{ inline: true, noLabel: true }} height='h-6' />
 
                                 </div>
-                                <div className={"col-span-2"}>
+                                <div className={"space-x-1 space-y-1 col-span-2"}>
                                     <MaskedInputField id="invoice_curr" value={objState.mSelectedDetail?.invoice_curr} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="local_curr" value={objState.mSelectedDetail?.local_curr} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="invoice_tot" value={objState.mSelectedDetail?.invoice_tot} options={{ inline: true, type: "number" }} height='h-6' />
@@ -122,8 +123,8 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                             </div>
                         </div>
                         <div className={`w-full flex flex-col w-full h-[400px] ${selectedTab == "DE" ? "" : "hidden"}`}>
-                            <div className=" md:grid md:grid-cols-5 overflow-y-auto">
-                                <div className={"col-span-2"}>
+                            <div className="px-5 py-5 md:grid md:grid-cols-5 overflow-y-auto">
+                                <div className={"px-1 py-2 1space-x-1 space-y-1 col-span-2"}>
                                     <MaskedInputField id="shipper_code" value={objState.mSelectedDetail?.shipper_code} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="consign_code" value={objState.mSelectedDetail?.consign_code} options={{ inline: true }} height='h-6' />
                                     {/* <MaskedInputField id="description" value={objState.mSelectedDetail?.description} options={{ inline: true }} height='h-6' />
@@ -142,7 +143,7 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                                     <MaskedInputField id="po_no" value={objState.mSelectedDetail?.po_no} options={{ inline: true }} height='h-6' /> */}
 
                                 </div>
-                                <div className={"col-span-3"}>
+                                <div className={"px-1 py-1  space-x-1 space-y-1 col-span-3"}>
                                     <MaskedInputField id="shipper_nm" value={objState.mSelectedDetail?.shipper_nm} options={{ inline: true, noLabel: true }} height='h-6' />
                                     <MaskedInputField id="consign_nm" value={objState.mSelectedDetail?.consign_nm} options={{ inline: true, noLabel: true }} height='h-6' />
                                     {/* <div className="h-12" />
@@ -154,18 +155,18 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                                     <MaskedInputField id="tot_volumn_wt" value={objState.mSelectedDetail?.tot_volumn_wt} options={{ inline: true }} height='h-6' />
                                     <div className="h-12" /> */}
                                 </div>
-                                <div className={"col-span-5"}>
+                                <div className={"space-x-1 space-y-1 col-span-5"}>
                                     <MaskedInputField id="description" value={objState.mSelectedDetail?.description} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="vessel_nm" value={objState.mSelectedDetail?.vessel_nm} options={{ inline: true, type: "date" }} height='h-6' />
                                 </div>
-                                <div className={"col-span-2"}>
+                                <div className={"space-x-1 space-y-1 col-span-2"}>
                                     <MaskedInputField id="voyage_no" value={objState.mSelectedDetail?.voyage_no} options={{ inline: true, type: "date" }} height='h-6' />
                                     <MaskedInputField id="carrier" value={objState.mSelectedDetail?.carrier} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="flight_no" value={objState.mSelectedDetail?.flight_no} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="free_house_term" value={objState.mSelectedDetail?.free_house_term} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="service_type" value={objState.mSelectedDetail?.service_type} options={{ inline: true }} height='h-6' />
                                 </div>
-                                <div className={"col-span-2"}>
+                                <div className={"space-x-1 space-y-1 col-span-2"}>
                                     <div className="h-12" />
                                     <MaskedInputField id="tot_pieces" value={objState.mSelectedDetail?.tot_pieces} options={{ inline: true }} height='h-6' />
                                     <MaskedInputField id="tot_slac_stc" value={objState.mSelectedDetail?.tot_slac_stc} options={{ inline: true }} height='h-6' />

@@ -83,15 +83,15 @@ export const SP_GetInvoiceMasterContent = async (searchParam: any) => {
     invalue: [
       'ALL'
       , 'ALL'
-      , '20230101'
-      , '20230331'
+      , ''
+      , ''
       , invoice_no
       , ''
       , user_id
       , ipaddr
     ],
     inproc: 'account.f_acct1004_get_master',
-    isShowLoading: true
+    isShowLoading: false
   }
   const result = await executFunction(params);
   return result![0]
