@@ -22,7 +22,7 @@ async function init () {
     // port = 5005;
     log(`??`, port);
     server.listen(port, () => {
-      log(`api running on ${port}`);
+      console.log(`api running on ${port}`);
     });
   } catch (err) {
     log("index ", err);

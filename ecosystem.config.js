@@ -13,9 +13,9 @@ module.exports = {
       }
     },
     {
-      name: 'api',
-      cwd: "/home/sdd_it/KREAM_Web/source/apps/batch/dist",
+      name: 'api',      
       script: 'node index.js',
+      cwd: "./apps/api/dist",
       // instances: 4,
       // exec_mode: 'cluster',
       autorestart: true,
