@@ -10,6 +10,7 @@
   "extends": "@repo/typescript-config/base.json",
   "include": ["."]
 }
+<<<<<<< HEAD
 
 
 // {
@@ -30,3 +31,5 @@
 //   "extends": "@repo/typescript-config/base.json",
 //   "include": ["."]
 // }
+=======
+>>>>>>> parent of 7e0505d (ㅠㅠㅠ)

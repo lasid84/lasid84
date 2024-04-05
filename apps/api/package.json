@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "api",
   "version": "0.1.4",
+=======
+  "name": "kwe_api",
+  "version": "0.1.2",
+>>>>>>> parent of 7e0505d (ㅠㅠㅠ)
   "private": true,
   "scripts": {
     "dev": "set NODE_ENV=\"development\" && tsup --watch --onSuccess \"node dist/index.js\"",
