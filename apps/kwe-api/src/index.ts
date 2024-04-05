@@ -5,7 +5,7 @@ import { log } from "@repo/kwe-lib/components/logHelper";
 // const ini = require("ini");
 // const fs = require("fs");
 // const objectPath = require("objectPath");
-import { createServer } from './server.ts';
+import { createServer } from './server.js';
 // const {createServer} = require("./server.ts");
 
 //var path: string = process.cwd();
