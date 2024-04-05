@@ -1,32 +1,32 @@
-// {
-//   "compilerOptions": {
-//     "lib": ["ES2015"],
-//     "module": "CommonJS",
-//     "esModuleInterop": true,
-//     "outDir": "./dist",
-//     "allowJs": true
-//   },
-//   "exclude": ["node_modules", "dist"],
-//   "extends": "@repo/typescript-config/base.json",
-//   "include": ["."]
-// }
-
-
 {
   "compilerOptions": {
-    // "lib": ["ES2015"],
-    // "module": "CommonJS",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
+    "lib": ["ES2015"],
+    "module": "CommonJS",
     "esModuleInterop": true,
-    "module": "esnext",
     "outDir": "./dist",
-    "noImplicitAny": false
+    "allowJs": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "extends": "@repo/typescript-config/base.json",
   "include": ["."]
 }
+
+
+// {
+//   "compilerOptions": {
+//     // "lib": ["ES2015"],
+//     // "module": "CommonJS",
+//     "lib": ["dom", "dom.iterable", "esnext"],
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "strict": true,
+//     "noEmit": true,
+//     "esModuleInterop": true,
+//     "module": "esnext",
+//     "outDir": "./dist",
+//     "noImplicitAny": false
+//   },
+//   "exclude": ["node_modules"],
+//   "extends": "@repo/typescript-config/base.json",
+//   "include": ["."]
+// }
