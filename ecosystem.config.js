@@ -1,9 +1,21 @@
 module.exports = {
   apps : [
     {
-      name: 'api',
+      name: 'api_xxxx',
       script: 'node index.js',
       cwd: "./apps/kwe-api/dist",
+      // instances: 4,
+      // exec_mode: 'cluster',
+      autorestart: true,
+      watch: '.',
+      env: {
+        NODE_ENV: 'production'
+      }
+    },
+    {
+      name: 'api',
+      cwd: "/home/sdd_it/KREAM_Web/source/apps/batch/dist",
+      script: 'node index.js',
       // instances: 4,
       // exec_mode: 'cluster',
       autorestart: true,
