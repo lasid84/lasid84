@@ -17,7 +17,7 @@
     "ds:api_init": "pm2 deploy api_staging setup",
     "ds:api": "pm2 deploy api_staging update",
     "dp:api_init": "pm2 deploy api_prod setup --force",
-    "dp:api": "pm2 deploy api_prod production update",
+    "dp:api": "pm2 deploy api_prod update",
     "dp:api_f": "pm2 deploy api_prod update --force",
     "dp:batch_i": "pm2 deploy batch_prod setup --force",
     "dp:batch": "pm2 deploy batch_prod update",
