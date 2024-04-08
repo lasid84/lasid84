@@ -104,7 +104,7 @@ async function getMenuList(userInfo: any) {
   const menuMap = new Map<number, NavigationState>();
   var menuArr:string[] = ['dashboard'];
 
-  menus[0].data?.forEach((menu: any) => {
+  menus[0]?.data?.forEach((menu: any) => {
     if (menu.use_yn === "Y") {
       const menuItem: NavigationState = {
         parent_seq: menu.parent_seq,
