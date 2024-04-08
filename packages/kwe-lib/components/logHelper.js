@@ -8,6 +8,10 @@ function log(...args) {
     development && console.log("LOGGER: ", ...args);
   };
 
+  function error(...args) {
+    console.log("Error LOGGER: ", ...args);
+  };
+
   // function myFunction() {
   //   const error = new Error();
   //   if (error.stack) {
@@ -21,5 +25,5 @@ function log(...args) {
   // }
 
 module.exports = {
-  log
+  log, error
 }

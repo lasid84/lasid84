@@ -1,7 +1,7 @@
 const fs = require('fs');
 import { Worker, WorkerOptions } from 'worker_threads';
 // import { path, arp } from '@repo/kwe-lib';
-import { log } from '@repo/kwe-lib/components/logHelper';
+import { log, error } from '@repo/kwe-lib/components/logHelper';
 import { sleep } from '@repo/kwe-lib/components/sleep';
 const path = require("path");
 import { arp }  from '@repo/kwe-lib'
@@ -16,6 +16,7 @@ function init() {
   // console.log(arp);
   // return;
   let filePath = process.cwd() + '/configs/thread.ini'; 
+  // error("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
     //fileContent = fileContent.replaceAll('\r', '');
@@ -80,7 +81,7 @@ async function startWorker() {
 
       // const worker = workerTs('./src/worker.ts', { worderData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false } });
         
-      console.log(arp + '/apps/batch/src/worker-scraping.js');
+      // console.log(arp + '/apps/batch/src/worker-scraping.js');
       
       const worker = new Worker(arp + '/apps/batch/src/worker-scraping.js'
       // worker = new Worker('./components/workers/c.js'

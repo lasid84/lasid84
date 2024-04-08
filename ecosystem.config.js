@@ -1,8 +1,8 @@
 module.exports = {
   apps : [{
       name: 'api',
-      script: 'pnpm start',
-      // cwd: "./apps/api/dist",
+      script: './dist/index.js',
+      cwd: "./apps/api",
       autorestart: true,
       watch: '.',
       env: {
@@ -11,8 +11,8 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'node index.js',
-      cwd: "./apps/batch/dist",
+      script: './dist/index.js',
+      cwd: "./apps/batch",
       // instances: 4,
       // exec_mode: 'cluster',
       autorestart: true,

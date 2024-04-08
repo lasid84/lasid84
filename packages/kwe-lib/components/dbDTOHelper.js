@@ -13,7 +13,8 @@ async function initconnectionString() {
   const objectPath = require("object-path");
   const fs = require("fs").promises;
 
-  var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
+  var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
+  log("process.cwd()", process.cwd())
   connstr = objectPath.get(iniData, "db.connstr");
 
     // var config = new Config("/configs/server.ini");
