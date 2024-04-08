@@ -1,8 +1,8 @@
 module.exports = {
   apps : [{
       name: 'api',
-      script: 'node index.js',
-      cwd: "./apps/api/dist",
+      script: 'pnpm start',
+      cwd: "./apps/api/",
       autorestart: true,
       watch: '.',
       env: {
