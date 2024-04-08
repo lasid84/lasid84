@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "set NODE_ENV=\"development\" && tsup --watch --onSuccess \"node dist/index.js\"",
+    "start": "node dist/index.js",
     "build": "tsup",
     "test": "echo 'Add test script here'",
     "lint": "echo 'Add lint script here'"
