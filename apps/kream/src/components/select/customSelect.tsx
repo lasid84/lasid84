@@ -29,6 +29,7 @@ type GridStyle = {
 
 type Style = {
   width?: string
+  height? : string
 }
 
 function CustomSelect(props:Props) {

@@ -103,7 +103,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           <div className={"col-span-1"}>
             <ReactSelect
               id="trans_mode" label="trans_mode" dataSrc={transmode as data}
-              width="10" height="15px"
+              width="10" height="8px"
               options={{
                 keyCol: "trans_mode",
                 displayCol: ['name'],
@@ -114,7 +114,7 @@ const SearchForm = memo(({ loadItem }: any) => {
 
             <ReactSelect
               id="trans_type" label="trans_type" dataSrc={transtype as data}
-              width="10" height="15px"
+              width="10" height="8px"
               options={{
                 keyCol: "trans_type",
                 displayCol: ['name'],
@@ -139,7 +139,8 @@ const SearchForm = memo(({ loadItem }: any) => {
             <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} height="h-8" />
           </div>
           <div className={"p-1 col-span-2"}>
-            <Input id="no" name="bl/inv no." inline={true} width="w-10000" height="h-8" />
+            {/* <Input id="no" name="bl/inv no." inline={true} width="w-900" height="h-8" /> */}
+
             <CustomSelect
               id="cust_code"
               // label="trans_mode"
@@ -150,10 +151,10 @@ const SearchForm = memo(({ loadItem }: any) => {
                 colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
               }}
               gridStyle={{ width: '600px', height: '300px' }}
-              style={{ width: '1000px', height:"8px"}}
+              style={{ width: '1000px', height: "8px" }}
               inline={true}
-            // isNoSelect={false}
             />
+            <MaskedInputField id="no" label="bl/inv no." options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearch>
       </form>
