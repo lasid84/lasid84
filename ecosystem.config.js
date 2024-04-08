@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
       name: 'api',
       script: 'pnpm start',
-      // cwd: "./apps/api/dist",
+      cwd: "./apps/api",
       autorestart: true,
       watch: '.',
       env: {
