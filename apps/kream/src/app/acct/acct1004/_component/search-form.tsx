@@ -14,6 +14,8 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from 'components/date'
 import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
+import { Button } from 'components/button';
+
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -97,7 +99,7 @@ const SearchForm = memo(({ loadItem }: any) => {
         <PageSearch
           right={
             <>
-              <TButtonBlue label={"search"} onClick={onSearch} />
+              <Button id="search" disabled={false} onClick={onSearch}/>
             </>
           }>
           <div className={"col-span-1"}>
@@ -132,13 +134,13 @@ const SearchForm = memo(({ loadItem }: any) => {
               defaultValue: getValues('cust_code')
             }}
           /> */}
-          <div className={"p-1 col-span-1"}>
-            <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} height="h-8" />
+          <div className={"col-span-1"}>
+            <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} height="h-8" />
             {/* <Input id="fr_date" type="date" inline={true} /> */}
             {/* <Input id="to_date" type="date" inline={true} /> */}
             <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} height="h-8" />
           </div>
-          <div className={"p-1 col-span-2"}>
+          <div className={"col-span-2"}>
             {/* <Input id="no" name="bl/inv no." inline={true} width="w-900" height="h-8" /> */}
 
             <CustomSelect

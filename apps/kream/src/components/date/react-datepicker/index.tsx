@@ -55,7 +55,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     const { control, setValue } = useFormContext();
     const { id, label, value, width, height,  options = {}, events } = props;
     const { dateFormat = 'yyyy-MM-dd', myPlaceholder, inline = false, noLabel = false,
-            textAlign = "left", bgColor = "white", fontSize = "13px", fontWeight = "normal",
+            textAlign = "left", bgColor, fontSize = "13px", fontWeight = "normal",
             freeStyles = '', radius = 'none'
     } = options;
     let { rules } = options;
@@ -120,7 +120,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
                         <ReactDatePicker
                             // className={clsx(`${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
                             // className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
-                            className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-${bgColor} flex-grow-1
+                            className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 ${bgColor} flex-grow-1
                                     focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
                                     ${freeStyles}
                                     `)}

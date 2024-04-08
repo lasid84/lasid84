@@ -12,7 +12,7 @@ export const InputWrapper: React.FC<InputWrapperProps> = ({
   if (inline) {
     return (
       <div className={outerClassName}>
-        <div className="flex items-center space-x-2 justify-items-start">
+        <div className="py-0.5 flex items-center space-x-2 justify-items-start">
           {children}
         </div>
       </div>

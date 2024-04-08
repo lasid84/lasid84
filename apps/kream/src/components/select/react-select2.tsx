@@ -14,8 +14,8 @@ export type data = {
 } | undefined;
 
 export type event = {
-    onChange: (e:any) => void;
-    onFocust: (e:FocusEventHandler<HTMLInputElement>) => void;
+    onChange: (e: any) => void;
+    onFocust: (e: FocusEventHandler<HTMLInputElement>) => void;
     onInputChange: (newValue: string, actionMeta: InputActionMeta) => void;
     /** Handle key down events on the select */
     onKeyDown?: KeyboardEventHandler<HTMLDivElement>;
@@ -33,8 +33,8 @@ export type ReactSelectProps = {
     id: string;
     label?: string;
     dataSrc: data;
-    width?:string;
-    height?:string;
+    width?: string;
+    height?: string;
     options?: {
         keyCol?: string;                //dataSrc.data의 키 컬럼, null 일시 0번째를 키 컬럼으로 사용
         displayCol?: string[];          //select의 보여질 컬럼, 여러개 시 col + ' ' + col 로 표현, 없을시 키(daraSrc.data의 0번째 컬럼) + ' ' + daraSrc.data의 1번째 컬럼
@@ -42,28 +42,28 @@ export type ReactSelectProps = {
         placeholder?: string;           //
         isMulti?: boolean;
         inline?: boolean;
-        isReadOnly?:boolean;            //읽기전용여부
+        isReadOnly?: boolean;            //읽기전용여부
         rules?: Record<string, any>;
-        noLabel?:boolean;
-        isAllYn?:boolean;
+        noLabel?: boolean;
+        isAllYn?: boolean;
     }
     events?: event
 };
 
 export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const { control } = useFormContext();
-    const { id, label, dataSrc, width, height,  options = {}, events } = props;
-    const { keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true} = options;
+    const { id, label, dataSrc, width, height, options = {}, events } = props;
+    const { keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true } = options;
     const [list, setList] = useState<{}[] | undefined>([]);
     const [selectedVal, setSelectedVal] = useState<{} | null>(null);
-    const [ firstVal, setFirstVal] = useState('');
-    const [ firstLab, setFirstLab] = useState('');
+    const [firstVal, setFirstVal] = useState('');
+    const [firstLab, setFirstLab] = useState('');
     const defWidth = width ? width : "w-full";
     const defHeight = height ? height : "h-6";
 
     const { register, setValue, getValues } = useFormContext();
 
-    useEffect(() => {    
+    useEffect(() => {
         setList(
             dataSrc?.data?.map((item: any, i) => {
                 var value = '', label = '';
@@ -76,9 +76,9 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                     label = '';
                     displayCol.forEach((col) => {
                         if (!label) label = item[col];
-                        else label += ' ' + item[col];                       
+                        else label += ' ' + item[col];
                     })
-                    
+
                 }
                 else label = item[Object.keys(item)[1]];
 
@@ -94,7 +94,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         setFirstLab(label);
                     }
                 }
-                
+
                 return { value: value, label: label };
             }).filter(x => x)
         );
@@ -111,7 +111,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         }
     }, [firstLab, firstVal]);
 
-    function handleKeyDown(e:any){
+    function handleKeyDown(e: any) {
         try {
             if (e.key === "Enter") {
                 const form = e.target.form;
@@ -121,18 +121,18 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 form[index + 1].focus();
                 e.preventDefault();
             }
-        
+
             if (events?.onKeyDown) {
-            events.onKeyDown(e);
+                events.onKeyDown(e);
             }
         } catch (ex) {
 
         }
-      }
+    }
 
-    const handleChange = (e:any) => {
+    const handleChange = (e: any) => {
         setValue(id, e.value);
-        setSelectedVal({value:e.value, label:e.label});
+        setSelectedVal({ value: e.value, label: e.label });
 
         if (events?.onChange) {
             events.onChange(e);
@@ -143,50 +143,50 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
 
     const customStyles = {
         control: (base: any) => ({
-          ...base,
-        //   padding : "1px",
-          minHeight: defHeight,
-          height : "30px",
-          fontSize : 13,
-          border : "1px solid #e5e7eb",
-          borderRadius : "0rem",
-          boxShadow: "none",
-          "&:hover": {
+            ...base,
+            //   padding : "1px",
+            minHeight: defHeight,
+            height: "30px",
+            fontSize: 13,
             border: "1px solid #e5e7eb",
-          },
-        //   justifycontent : 
-        //   border: "0 !important",
-        //   boxShadow: "0 !important",
-        //   "&:hover": {
-        //     border: "0 !important"
-        //   }
+            borderRadius: "0rem",
+            boxShadow: "none",
+            "&:hover": {
+                border: "1px solid #e5e7eb",
+            },
+            //   justifycontent : 
+            //   border: "0 !important",
+            //   boxShadow: "0 !important",
+            //   "&:hover": {
+            //     border: "0 !important"
+            //   }
         }),
         valueContainer: (base: any) => ({
-          ...base,
-          height : "30px",
-          justifyContent: "center"
-        }),
-        indicatorSeparator : (base :any) =>({
             ...base,
-            display:"none"
+            height: "30px",
+            justifyContent: "center"
+        }),
+        indicatorSeparator: (base: any) => ({
+            ...base,
+            display: "none"
         }),
         clearIndicator: (base: any) => ({
-          ...base,
-          display : "none",
+            ...base,
+            display: "none",
         }),
-        dropdownIndicator: (base: any, state:any) => ({
-          ...base,
-           padding: `${(30 - 20 - 1 - 1) / 2}px`,
-           transition: 'all .2s ease',
-  transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null
+        dropdownIndicator: (base: any, state: any) => ({
+            ...base,
+            padding: `${(30 - 20 - 1 - 1) / 2}px`,
+            transition: 'all .2s ease',
+            transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null
         }),
-      };
-      
+    };
+
 
     return (
         <>
             <InputWrapper outerClassName="" inline={inline}>
-                {!noLabel && <Label id={id} name={label}  />}
+                {!noLabel && <Label id={id} name={label} />}
                 {/* <div className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                 <Controller
                     control={control}
@@ -194,8 +194,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                     rules={rules}
                     render={({ field: { onChange } }) => {
                         return (
-                            <div className="p-0.5 block w-full flex-grow-1">
-                            {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
+                            <div className="block w-full flex-grow-1">
+                                {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                                 <ReactSelectComponent
                                     //{...field}
                                     // defaultValue={{value:'A'}}
@@ -204,7 +204,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                     options={list}
                                     instanceId={id}
                                     // onChange={(e: any) => { onChange(e.value); /*setSelectedVal({value:e.value, label:e.label})*/ }}
-                                    onChange={(e:any) => { handleChange(e); }}
+                                    onChange={(e: any) => { handleChange(e); }}
                                     onKeyDown={handleKeyDown}
                                     styles={customStyles}
                                 />
