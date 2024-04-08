@@ -15,8 +15,8 @@ function init() {
   // console.log(root);
   // console.log(arp);
   // return;
-  let filePath = process.cwd() + '/dist/configs/thread.ini'; 
-  error("filePath", filePath)
+  let filePath = process.cwd() + '/configs/thread.ini'; 
+  // error("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
     //fileContent = fileContent.replaceAll('\r', '');

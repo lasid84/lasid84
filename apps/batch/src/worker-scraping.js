@@ -35,9 +35,9 @@ var url;
 var token;
 
 async function initService() {
-    iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
+    iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     url = objectPath.get(iniData, "main.url");
-    error("initService", url, token, iniData);
+    // error("initService", url, token, iniData);
 }
 
 async function startBrowser() {
