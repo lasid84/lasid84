@@ -37,7 +37,7 @@ var token;
 async function initService() {
     iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
     url = objectPath.get(iniData, "main.url");
-    log("initService", url, token, iniData);
+    error("initService", url, token, iniData);
 }
 
 async function startBrowser() {
@@ -725,7 +725,7 @@ async function startScraping() {
     }
     catch(ex) {
         if (mainData) {
-            log(idx, ": Parent Ex :", ex, mainData.pgm_code, mainData.bl_no);
+            error(idx, ": Parent Ex :", ex, mainData.pgm_code, mainData.bl_no);
             await setBLIFData(mainData, 'R', '', ex);
         }        
         errCnt++;

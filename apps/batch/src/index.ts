@@ -1,7 +1,7 @@
 const fs = require('fs');
 import { Worker, WorkerOptions } from 'worker_threads';
 // import { path, arp } from '@repo/kwe-lib';
-import { log } from '@repo/kwe-lib/components/logHelper';
+import { log, error } from '@repo/kwe-lib/components/logHelper';
 import { sleep } from '@repo/kwe-lib/components/sleep';
 const path = require("path");
 import { arp }  from '@repo/kwe-lib'
@@ -16,7 +16,7 @@ function init() {
   // console.log(arp);
   // return;
   let filePath = process.cwd() + '/dist/configs/thread.ini'; 
-  log("filePath", filePath)
+  error("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
     //fileContent = fileContent.replaceAll('\r', '');

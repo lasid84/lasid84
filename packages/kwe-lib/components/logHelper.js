@@ -6,7 +6,10 @@ function log(...args) {
     // console.log("LOGGER: ", process.env.NODE_ENV, development);
     // console.log("====", myFunction());
     development && console.log("LOGGER: ", ...args);
-    // console.log("LOGGER: ", ...args);
+  };
+
+  function error(...args) {
+    console.log("Error LOGGER: ", ...args);
   };
 
   // function myFunction() {
@@ -22,5 +25,5 @@ function log(...args) {
   // }
 
 module.exports = {
-  log
+  log, error
 }
