@@ -59,7 +59,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const [ firstVal, setFirstVal] = useState('');
     const [ firstLab, setFirstLab] = useState('');
     const defWidth = width ? width : "w-full";
-    const defHeight = height ? height : "h-8";
+    const defHeight = height ? height : "h-6";
 
     const { register, setValue, getValues } = useFormContext();
 
@@ -139,23 +139,46 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         }
     }
 
+
+
     const customStyles = {
         control: (base: any) => ({
           ...base,
+        //   padding : "1px",
           minHeight: defHeight,
+          height : "30px",
+          fontSize : 13,
+          border : "1px solid #e5e7eb",
+          borderRadius : "0rem",
+          boxShadow: "none",
+          "&:hover": {
+            border: "1px solid #e5e7eb",
+          },
+        //   justifycontent : 
+        //   border: "0 !important",
+        //   boxShadow: "0 !important",
+        //   "&:hover": {
+        //     border: "0 !important"
+        //   }
         }),
         valueContainer: (base: any) => ({
           ...base,
-          height: defHeight,
-          padding: '0 8px',
+          height : "30px",
+          justifyContent: "center"
+        }),
+        indicatorSeparator : (base :any) =>({
+            ...base,
+            display:"none"
         }),
         clearIndicator: (base: any) => ({
           ...base,
-        //   padding: `${(30 - 20 - 1 - 1) / 2}px`,
+          display : "none",
         }),
-        dropdownIndicator: (base: any) => ({
+        dropdownIndicator: (base: any, state:any) => ({
           ...base,
-        //   padding: `${(30 - 20 - 1 - 1) / 2}px`,
+           padding: `${(30 - 20 - 1 - 1) / 2}px`,
+           transition: 'all .2s ease',
+  transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null
         }),
       };
       
@@ -171,7 +194,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                     rules={rules}
                     render={({ field: { onChange } }) => {
                         return (
-                            <div className="p-1 block w-full flex-grow-1 h-8">
+                            <div className="p-0.5 block w-full flex-grow-1">
                             {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                                 <ReactSelectComponent
                                     //{...field}
@@ -183,7 +206,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                     // onChange={(e: any) => { onChange(e.value); /*setSelectedVal({value:e.value, label:e.label})*/ }}
                                     onChange={(e:any) => { handleChange(e); }}
                                     onKeyDown={handleKeyDown}
-                                    // styles={customStyles}
+                                    styles={customStyles}
                                 />
                             </div>
                         );
