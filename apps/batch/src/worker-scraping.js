@@ -11,7 +11,7 @@ const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
 const { pgm, type, idx, isHeadless } = workerData;
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+const { log, error } = require('@repo/kwe-lib/components/logHelper');
 // import { sleep } from '@repo/kwe-lib/components/sleep';
 // const { executFunction } = require('@repo/kwe-lib/components/api.service.js');
 const { init, dataCall } = require('@repo/kwe-lib/components/api.service.js');
@@ -35,6 +35,7 @@ var url;
 var token;
 
 async function initService() {
+    //batch 프로젝트는 process.cwd() : /home/sdd_it/kream_web/apps/batch/dist 임.. 왜 api랑 다른지 모르겠음
     iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
     url = objectPath.get(iniData, "main.url");
     // error("initService", url, token, iniData);
