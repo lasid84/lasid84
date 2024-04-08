@@ -11,7 +11,7 @@ module.exports = {
     },
     {
       name: 'batch',
-      script: 'node index.js',
+      script: 'index.js',
       cwd: "./apps/batch/dist",
       // instances: 4,
       // exec_mode: 'cluster',
