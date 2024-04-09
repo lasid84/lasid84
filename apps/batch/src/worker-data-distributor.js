@@ -38,7 +38,6 @@ async function setIFDataDistribute() {
 }
 
 const mySetInterval = () => {
-    log("??", JSON.stringify(workerData), onExcute)
     setTimeout(() => {
         if (!onExcute) {
             setIFDataDistribute();

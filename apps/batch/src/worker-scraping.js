@@ -17,6 +17,7 @@ const { log, error } = require('@repo/kwe-lib/components/logHelper');
 const { init, dataCall } = require('@repo/kwe-lib/components/api.service.js');
 const { ini, objectPath, fs } = require("@repo/kwe-lib");
 const { signJwtAccessToken } = require('@repo/kwe-lib/components/jsonWebToken.js');
+const { executFunction } = require('./api.service.ts');
 
 
 let onExcute = false;
@@ -28,18 +29,6 @@ let errCnt = 0;
 let requestHeaders;
 let header;
 let lastExcute;
-let isNeedLogin = false;
-
-var iniData;
-var url;
-var token;
-
-async function initService() {
-    //batch 프로젝트는 process.cwd() : /home/sdd_it/kream_web/apps/batch/dist 임.. 왜 api랑 다른지 모르겠음
-    iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
-    url = objectPath.get(iniData, "main.url");
-    // error("initService", url, token, iniData);
-}
 
 async function startBrowser() {
     log(idx, "start Brower headless: ", isHeadless, errCnt);
@@ -73,23 +62,6 @@ async function startBrowser() {
 
     lastExcute = new Date();
 };
-
-async function executFunction(inproc, inparam, invalue) {
-    token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
-    const client = await init({url:url, isAuth:false, accessToken:token});
-    
-    const { cursorData, numericData, textData } = await dataCall(client, inproc,inparam, invalue,'');
-
-    log("executFunction", url, inproc,inparam, invalue, numericData, textData, cursorData);
-    if (numericData !== 0)
-    {
-        let errMsg = numericData + " : " +  textData;
-      log(errMsg);
-      throw new Error(errMsg);
-    }
-
-    return cursorData;
-}
 
 async function login() {
 
@@ -217,8 +189,7 @@ async function callElementSelector(script, data) {
 
 async function setInitBLIFData(pgm_code = pgm) {
     try {
-        await initService();
-
+        
         const inparam = ['in_pgm_code', 'in_idx', 'in_user_id', 'in_ipaddr'];
         const invalue = [pgm_code, idx, '', ''];
         const inproc = 'scrap.f_scrp0001_set_init_if_data'; 
@@ -316,7 +287,7 @@ async function excuteScript(data) {
 async function callAPIPost(data) {
 
     let msg_result;
-
+    let v_tracking = '';
     try {
         // POST 요청 헤더와 데이터를 설정합니다.
         const url = data.url;
@@ -333,6 +304,7 @@ async function callAPIPost(data) {
             }
         }
         
+        v_tracking = 'send post';
         const result = await page.evaluate(async (method, header, url, bodyText) => {
 
             // POST 요청을 보냅니다.
@@ -348,6 +320,8 @@ async function callAPIPost(data) {
             return str;
         }, method, header, url, bodyText);
         
+        // log("callAPIPost", result);
+
         if (result) {
             if (result.count == 0) {
                 let if_yn = type == 'E' ? 'I' : 'E';
@@ -358,12 +332,15 @@ async function callAPIPost(data) {
 
         msg_result = result;
 
+        v_tracking = 'get post result complete';
+
         let arrCol = data.out_col.split(',');
         const out_tabs = data.out_tab.split(',');
         const tabs = data.tab.split(',');
         const ismultirows = data.ismultirow == null ? 'f' : data.ismultirow.split(',');
         let out_tab_cnt = 0;
 
+        v_tracking = 'json data parsing';
         for (const out_tab of out_tabs) {            
             let rows = await GetJsonResult2(result, out_tab.split('.'));
             
@@ -409,12 +386,11 @@ async function callAPIPost(data) {
             }
             out_tab_cnt++;
         }
+        v_tracking = 'json data parsing complete';
 
     } catch(ex) {
-
-        if (msg_result.error == "Unauthorized")
-
-        throw  "callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
+        error(v_tracking);
+        if (msg_result.error == "Unauthorized") throw  "callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
     }
 }
 
