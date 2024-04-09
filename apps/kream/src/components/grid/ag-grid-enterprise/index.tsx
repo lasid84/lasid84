@@ -121,12 +121,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
           // enableRangeSelection:true,  // enterprise
           // copyHeadersToClipboard:true,
           // suppressMultiRangeSelection:true,
-          // rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
+          rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
           // groupIncludeTotalFooter: true,
-          rowMultiSelectWithClick: true,
+          // rowMultiSelectWithClick: true,
           // suppressRowClickSelection: false,
           stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
-          animateRows: true,
+          // animateRows: true,
           // autoSizeStrategy: {            
           //     type: 'fitCellContents',
           //     defaultMinWidth: 20,
@@ -449,8 +449,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onSelectionChanged = (param:SelectionChangedEvent) => {
-    // const selectedRow = param.api.getSelectedRows()[0]; 
-    // log("onSelectionChanged", selectedRow)
+    const selectedRow = param.api.getSelectedRows()[0]; 
+    log("onSelectionChanged", selectedRow)
     // return param.api.getSelectedRows()[0];
 
     if (event?.onSelectionChanged) event.onSelectionChanged(param);
@@ -529,7 +529,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
                       columnDefs={colDefs}
                       defaultColDef={defaultColDef}
                       // editType={'fullRow'}
-                      // onCellValueChanged={onCellValueChanged}
                       autoSizeStrategy={autoSizeStrategy}
                       onGridReady={onGridReady}
                       onSelectionChanged={onSelectionChanged}
