@@ -749,7 +749,7 @@ const mySetInterval = () => {
 
 try {
     log("worker.js시작");
-    setInitBLIFData();
+    // setInitBLIFData(); //데이터 분배 스레드 추가로 사용 안함(worker-data-distributor.js)
     startScraping();
     mySetInterval();
 } catch (ex) {
