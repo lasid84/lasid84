@@ -141,7 +141,7 @@ function CustomSelect(props:Props) {
     <>
       <div        
         {...register(id)}
-        className="flex items-center space-x-2 justify-items-start custom-select-container"
+        className="py-0.5 flex items-center space-x-2 justify-items-start custom-select-container"
         style={{position: 'relative'}}
       >
         <Label id={id} name={label}/>
@@ -174,7 +174,7 @@ function CustomSelect(props:Props) {
         </div>
         {isOpen && 
             <div ref={ref2} 
-                className="absolute left-0 flex bg-opacity-50 top-10" 
+                className="py-0.5 absolute left-0 flex bg-opacity-50 top-10" 
                 style={{...defaultGridStyle}}
               >
               <Grid

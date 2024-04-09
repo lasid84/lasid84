@@ -23,7 +23,7 @@ export default function Tab({ tabList, onClickTab }: Props) {
     return (
         <div className="w-full flex ">
             <div className="flex flex">
-                {tabList?.map(({ cd, cd_nm }, idx) => (
+                {tabList?.map(({ cd }, idx) => (
                     <div key={idx} className="flex-none bg-transparent">
                         <button
                             onClick={() => setSelectedTab(cd)}
@@ -33,7 +33,7 @@ export default function Tab({ tabList, onClickTab }: Props) {
                                     : "font-medium text-xs px-2 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
                             }
                             type="button">
-                            {t(cd_nm)}
+                            {t(cd)}
                         </button>
                     </div>
                 ))}
