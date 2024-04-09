@@ -74,7 +74,6 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
 
     useEffect(() => {
         if (selectedVal) {
-            console.log('selectedVal',selectedVal)
             setValue(id, DateToString(selectedVal));
         }
     }, [selectedVal]);
@@ -82,7 +81,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     useEffect(() => {
         if (value) {
             var date = stringToDate(value);
-            console.log('value rendering,,,,', date)
+            log('value rendering,,,,', date)
             setSelectedVal(date);
             setValue(id, DateToString(date));
         }
