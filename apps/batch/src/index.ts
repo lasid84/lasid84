@@ -15,7 +15,7 @@ function init() {
   // console.log(root);
   // console.log(arp);
   // return;
-  let filePath = process.cwd() + '/configs/thread.ini'; 
+  let filePath = process.cwd() + '/configs/thread.ini';
   // error("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -41,13 +41,14 @@ function init() {
   } catch (error) {
     log('Error reading the file:', error);
   }
-
+ 
 }
 
 async function startWorker() {
   let i = 1;
+  log("arrThread", JSON.stringify(_arrThread));
   for (const thread of _arrThread) {
-    log("log시작:", thread.headless.toLowerCase() == 'true');
+    // log("log시작:", thread.headless.toLowerCase() == 'true', _arrThread);
     // let worker;
     switch (thread.pgm) {
       case "SCRAP_UFSP_HBL":
@@ -78,20 +79,20 @@ async function startWorker() {
       //       wkOpts
       //     );
       //   };
-
-      // const worker = workerTs('./src/worker.ts', { worderData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false } });
-        
-      // console.log(arp + '/apps/batch/src/worker-scraping.js');
       
       const worker = new Worker(arp + '/apps/batch/src/worker-scraping.js'
-      // worker = new Worker('./components/workers/c.js'
             , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
           }});
 
         break;
+      //대상데이터 분배 처리 쓰레드
+      //DeadLock 발생으로 추가
+      case "SCRAP_UFSP":
+        const worker2 = new Worker(arp + '/apps/batch/src/worker-data-distributor.js'
+            , { workerData: { threadList : _arrThread, idx: thread.idx, pgm:thread.pgm }});
+        break;
     }
-    
-    await sleep(10000);
+    await sleep(3000);
     i++;
   }
 }

@@ -56,7 +56,7 @@ const Home: React.FC = () => {
           /> */}
           <MaskedInputField 
             id="bz_reg_no" 
-            value="1248"
+            value="1248.12"
             width="w-80"
             // height="h-20"
             options = {{ 

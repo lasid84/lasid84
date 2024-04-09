@@ -7,7 +7,7 @@
 
 
 
-const { workerData } = require('worker_threads');
+const { workerData } = require('worker_threads'); 
 const  puppeteer = require('puppeteer');
 const { pgm, type, idx, isHeadless } = workerData;
 
@@ -624,7 +624,7 @@ async function getBLIFData() {
         log("Start Script");
         const inparam = ['in_pgm_code', 'in_idx', 'in_type', 'in_user_id', 'in_ipaddr'];
         const invalue = [pgm, idx, type, '', ''];
-        const inproc = 'scrap.f_scrp0001_get_if_scrap'; 
+        const inproc = 'scrap.f_scrp0001_get_if_scrap2'; 
         const cursorData = await executFunction(inproc, inparam, invalue);
 
         return cursorData[0].data;
@@ -754,5 +754,5 @@ try {
     mySetInterval();
 } catch (ex) {
     //log처리 추가
-    log(ex);
+    error(ex);
 }

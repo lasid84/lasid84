@@ -137,10 +137,10 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
                  focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
                  ${freeStyles}
                  `)}
-                mask={mask! || false}
+                mask={mask!}
                 // pipe={pipe}
                 value={selectedVal}
-                // defaultValue={value}
+                defaultValue={value}
                 readOnly={isReadOnly}
                 placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
                 // onChange={(e) => {
