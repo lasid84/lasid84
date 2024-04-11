@@ -71,7 +71,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     useEffect(() => {
         if (mainDetailData) {
-            dispatch({ mSelectedDetail: mainDetailData.data[0] })
+            dispatch({ mSelectedDetail: (mainDetailData as gridData).data[0]})
         }
     }, [mainDetailData]);
 
