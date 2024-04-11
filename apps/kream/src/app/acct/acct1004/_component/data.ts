@@ -129,39 +129,27 @@ export const SP_UpdateData = async (param: any) => {
   // const Param = searchParam.queryKey[1]
   const Param = param;
   log("param : ", param)
-  const { cust_code, cont_seq, pic_nm, email, cust_office, tel_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
+  const { invoice_no, on_board_dd, arrived_dd, user_id, ipaddr } = Param;
   const params = {
     inparam: [
-      "in_cust_code"
-      , "in_cont_seq"
-      , "in_pic_nm"
-      , "in_email"
-      , "in_cust_office"
-      , "in_tel_num"
-      , "in_user_dept"
-      , "in_bz_plc_cd"
-      , "in_use_yn"
-      , "in_def"
+      "in_invoice_no"
+      , "in_on_board_dd"
+      , "in_arrived_dd"
       , "in_user_id"
       , "in_ipaddr"
+      , "in_form"
     ],
     invalue: [
-      cust_code
-      , cont_seq
-      , pic_nm
-      , email
-      , cust_office
-      , tel_num
-      , user_dept
-      , bz_plc_cd
-      , use_yn
-      , def
+      invoice_no
+      , on_board_dd
+      , arrived_dd
       , user_id
       , ipaddr
+      ,'ACCT1004'
     ],
-    inproc: 'account.f_acct3001_upd_cont_detail',
+    inproc: 'account.f_acct1004_upd_invoice_master',
     isShowLoading: true,
-    isShowComplete: false,
+    isShowComplete: true,
   }
 
   const result = await executFunction(params);

@@ -116,7 +116,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 
     return (
         <button
-            className={`p-1 flex flex-row gap-1 h-[32px] px-2 py-2 text-xs font-bold ${getColor(label ? label : id, color)}
+            className={`p-1 flex flex-row gap-1 h-[30px] px-2 py-2 text-xs font-bold items-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
             ${disabledCss}
         `}
