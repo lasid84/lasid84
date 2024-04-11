@@ -22,7 +22,7 @@
     "dp:api_f": "pm2 deploy api_prod update --force",
     "dp:batch_i": "pm2 deploy batch_prod setup --force",
     "dp:batch": "pm2 deploy batch_prod update",
-    "dp:kream": "pm2 deploy kream_prod update --force"
+    "dp:kream": "pm2 deploy kream_prod update"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

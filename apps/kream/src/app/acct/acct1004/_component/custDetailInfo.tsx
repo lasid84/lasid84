@@ -20,11 +20,11 @@ export interface typeloadItem {
     data: {} | undefined
 }
 type Props = {
-    loadItem: typeloadItem;
+    loadItem: any;
 };
 
 
-const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
+const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
 
     const { dispatch, objState } = useAppContext();
 
@@ -69,7 +69,7 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="w-full flex space-y-2 flex-col gap-2">
+                <div className="flex flex-col w-full gap-2 space-y-2">
                     <PageContent
                         left={<Tab tabList={tab} onClickTab={handleOnClickTab} />
                         }
@@ -78,7 +78,7 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                         </>
                         }>
                         <div className={`flex flex-col w-full h-[400px] ${selectedTab == "NM" ? "" : "hidden"}`}>
-                            <div className=" md:grid md:grid-cols-5 overflow-y-auto">
+                            <div className="overflow-y-auto md:grid md:grid-cols-5">
                                 <div className={"p-1 col-span-2"}>
                                     <MaskedInputField id="trans_mode" value={objState.mSelectedDetail?.trans_mode} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="invoice_no" value={objState.mSelectedDetail?.invoice_no} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
@@ -138,7 +138,7 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                             </div>
                         </div>
                         <div className={`w-full flex flex-col w-full h-[400px] ${selectedTab == "DE" ? "" : "hidden"}`}>
-                            <div className="px-5 py-5 md:grid md:grid-cols-5 overflow-y-auto">
+                            <div className="px-5 py-5 overflow-y-auto md:grid md:grid-cols-5">
                                 <div className={"p-1 col-span-2"}>
                                     <MaskedInputField id="shipper_code" value={objState.mSelectedDetail?.shipper_code} options={{ isReadOnly: true, inline: true }} height='h-6' />
                                     <MaskedInputField id="consign_code" value={objState.mSelectedDetail?.consign_code} options={{ isReadOnly: true, inline: true }} height='h-6' />
@@ -172,7 +172,7 @@ const CustomerDetail: React.FC = memo(({ loadItem }: any) => {
                             </div>
                         </div>
                         <div className={`w-full flex flex-col h-[400px] overflow-auto ${selectedTab == "AD" ? "" : "hidden"}`}>
-                            <div className="w-full md:grid md:grid-cols-5 overflow-y-auto">
+                            <div className="w-full overflow-y-auto md:grid md:grid-cols-5">
                                 <div className={"col-span-5"}>
                                     <MaskedInputField id="country_code" value={objState.mSelectedDetail?.country_code} options={{ isReadOnly: true, inline: true }} height='h-6' />
                                     <div className="h-6" />
