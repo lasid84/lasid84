@@ -22,9 +22,9 @@ module.exports = {
       }
     },
     {
-      name: 'web',
+      name: 'kream',
       script: 'npm start',
-      cwd: './apps/web',
+      cwd: './apps/kream',
       autorestart: true,
       watch: '.',
       env: {
@@ -65,15 +65,15 @@ module.exports = {
     //   ssh_options: ['StrictHostKeyChecking=no'],
     //   'post-deploy' : 'pnpm install && pnpm build --filter kwe-api && pm2 reload ecosystem.config.js --only kwe-api',
     // },
-    web_prod : {
-      key : './id_rsa-api-prod', 
+    kream_prod : {
+      key : './id_rsa-kream-prod', 
       user : 'sdd_it',
-      host : ['10.33.63.171'],
+      host : ['10.33.63.174'],
       ref  : 'origin/main',
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter web && pm2 reload ecosystem.config.js --only web',
+      'post-deploy' : 'pnpm install && pnpm build --filter web && pm2 reload ecosystem.config.js --only kream',
     },
     batch_prod : {
       key : './id_rsa-batch-prod', 
