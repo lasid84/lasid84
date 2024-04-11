@@ -110,13 +110,14 @@ export async function checkADLogin(params:checkLogin) {
 
     // log("?")
     const initial = await initConfig(false, "");
-    const conig = {
+    const config = {
         ...initial,
         url: initial.url + params.url,
         user_id: params.user_id,
         password: params.password
     };
-    return await postCall(conig);
+    console.log(config);
+    return await postCall(config);
 }
 
 const requestUseService = (config: any) => {
