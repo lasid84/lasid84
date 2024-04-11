@@ -19,9 +19,9 @@ export async function getSession() {
 
 export async function logOut() {
     // await signOut({ redirect: false });
-    // await signOut({redirectTo:"/login"});
-    await signOut();
-    redirect("/login");
+    await signOut({redirectTo:"/login"});
+    // await signOut();
+    // redirect("/login");
 }
 
 export async function getCookies() {

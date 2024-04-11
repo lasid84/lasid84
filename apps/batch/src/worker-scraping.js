@@ -4,20 +4,12 @@
    2) 리팩토링
 */ 
 
-
-
-
 const { workerData } = require('worker_threads'); 
 const  puppeteer = require('puppeteer');
 const { pgm, type, idx, isHeadless } = workerData;
-
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
-// import { sleep } from '@repo/kwe-lib/components/sleep';
-// const { executFunction } = require('@repo/kwe-lib/components/api.service.js');
-const { init, dataCall } = require('@repo/kwe-lib/components/api.service.js');
-const { ini, objectPath, fs } = require("@repo/kwe-lib");
-const { signJwtAccessToken } = require('@repo/kwe-lib/components/jsonWebToken.js');
 const { executFunction } = require('./api.service.ts');
+const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 
 
 let onExcute = false;
@@ -45,8 +37,11 @@ async function startBrowser() {
 
     if (!browser) {
         log("brower restart")
-        browser = await puppeteer.launch({ headless:isHeadless, 
-        args:[ '--start-maximized' // you can also use '--start-fullscreen'
+        browser = await puppeteer.launch(
+            { headless:isHeadless, 
+                // PUPPETEER_DISABLE_HEADLESS_WARNING: true, 
+                logLevel: "info",
+                args:[ '--start-maximized' // you can also use '--start-fullscreen'
             ],
         defaultviewport: null,
     });
@@ -59,8 +54,10 @@ async function startBrowser() {
     // page.on('dialog', async dialog => {
     //     await dialog.accept();
     //   });
-
-    lastExcute = new Date();
+    
+    // lastExcute = new Date();
+    lastExcute = getKoreaTime();
+    log("lastExcute", lastExcute);
 };
 
 async function login() {
@@ -635,8 +632,8 @@ async function checkSession(isForce = false) {
     }
     else {
         if (lastExcute) {
-            const now = new Date();
-            const diffMSec = now.getTime() - lastExcute.getTime();
+            // const diffMSec = now.getTime() - lastExcute.getTime();
+            const diffMSec = getKoreaTime() - lastExcute.getTime();
             const diffMin = diffMSec / (60 * 1000);
             if (diffMin > 30) {
                 restart = true;
@@ -659,6 +656,25 @@ async function startScraping() {
     try {
         onExcute = true;
         mainData = null;
+
+        log("==================시작", getKoreaTime());
+        const now = getKoreaTime(); 
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+
+        log("==================", now, hours, minutes);
+        if (hours === 8 && minutes === 30) {
+            if (!lastExcute) {
+                await checkSession(true);
+            } else {
+                const diffMSec = now - lastExcute.getTime();
+                const diffMin = diffMSec / (60 * 1000);
+                if (diffMin > 10) {
+                    await checkSession(true);
+                }
+            }
+        }
+
         const datas = await getBLIFData();
         let script;
 
@@ -695,7 +711,8 @@ async function startScraping() {
             log(idx, "----------------------Finish-----------------------", mainData.bl_no);
             await setBLIFData(mainData, 'O', JSON.stringify(resultData), '');
             errCnt = 0;
-            lastExcute = new Date();
+            // lastExcute = new Date();
+            lastExcute = getKoreaTime();
             // log(JSON.stringify(resultData));
         }
 
@@ -704,7 +721,8 @@ async function startScraping() {
         if (mainData) {
             error(idx, ": Parent Ex :", ex, mainData.pgm_code, mainData.bl_no);
             await setBLIFData(mainData, 'R', '', ex);
-        }        
+        }    
+        error(ex)    
         errCnt++;
     } finally {
         onExcute = false;

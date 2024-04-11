@@ -55,6 +55,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     const { control, setValue } = useFormContext();
     const { id, label, value, width, height,  options = {}, events } = props;
     const { dateFormat = 'yyyy-MM-dd', myPlaceholder, inline = false, noLabel = false,
+            isReadOnly = false,
             textAlign = "left", bgColor, fontSize = "13px", fontWeight = "normal",
             freeStyles = '', radius = 'none'
     } = options;
@@ -133,6 +134,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
                             dateFormat={dateFormat}
                             selected={selectedVal}
                             // locale={ko}
+                            readOnly={isReadOnly}
                             shouldCloseOnSelect
                             showIcon
                             // icon={IoCalendarNumberOutline}

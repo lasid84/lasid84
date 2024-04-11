@@ -1,6 +1,6 @@
 const { log } = require('./logHelper');
 
-export function textToDate(text) {
+function textToDate(text) {
     var yyyy = text.slice(0,4);
     var mm = text.slice(4,2);
     var dd = text.slice(6,2);
@@ -13,7 +13,7 @@ export function textToDate(text) {
     return newDate;    
 }
 
-export function stringToDateString(source, delimiter = '') {
+function stringToDateString(source, delimiter = '') {
     if (source) {
         const formattedDate = source.replace(/[\/\-\s]/g, '');
         const year = formattedDate.substring(0,4);
@@ -24,7 +24,7 @@ export function stringToDateString(source, delimiter = '') {
     }
 };
 
-export function DateToString(source, delimiter = '') {
+function DateToString(source, delimiter = '') {
     if (source) {
         const year = source.getFullYear();
         const month = (source.getMonth() + 1).toString().padStart(2,0);
@@ -34,7 +34,7 @@ export function DateToString(source, delimiter = '') {
     }
 };
 
-export function stringToFullDateString(source, delimiter = '-') {
+function stringToFullDateString(source, delimiter = '-') {
     if (source) {
         const year = source.substring(0,4);
         const month = source.substring(4,6);
@@ -47,7 +47,7 @@ export function stringToFullDateString(source, delimiter = '-') {
     }
 };
 
-export function stringToFullDate(source) {
+function stringToFullDate(source) {
     if (source) {
         const year = source.substring(0,4);
         const month = source.substring(4,6);
@@ -60,7 +60,7 @@ export function stringToFullDate(source) {
     }
 };
 
-export function stringToDate(source) {
+function stringToDate(source) {
     if (source) {
         const formattedDate = source.replace(/[\/\-\s]/g, '');
         const year = formattedDate.substring(0,4);
@@ -74,3 +74,45 @@ export function stringToDate(source) {
         }
     }
 };
+
+function getKoreaTime() {
+    // const now = new Date();
+    // const koreaTime = now.toLocaleString("ko-KR", {
+    //     timeZone: "Asia/Seoul",
+    // });
+    // const formattedKoreaTime = koreaTime.replace(/\./g, "-").replace("오후 ", "");
+    // log("koreaTime", koreaTime, formattedKoreaTime, new Date(formattedKoreaTime));
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+    const koreaTimeDiff = 9 * 60 * 60 * 1000;
+    const korNow = new Date(utc+koreaTimeDiff);
+
+    // 년, 월, 일 정보 얻기
+    // const year = korNow.getFullYear();
+    // const month = korNow.getMonth() + 1;
+    // const day = korNow.getDate();
+
+    // // 시, 분, 초 정보 얻기
+    // const hours = korNow.getHours();
+    // const minutes = korNow.getMinutes();
+    // const seconds = korNow.getSeconds();
+
+    // // 현재 날짜와 시간 출력
+    // log(`현재 날짜: ${year}-${month}-${day}`);
+    // log(`현재 시간: ${hours}:${minutes}:${seconds}`);
+
+    // return new Date(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
+    return korNow;
+};
+
+
+
+module.exports = {
+    textToDate,
+    stringToDateString,
+    DateToString,
+    stringToFullDateString,
+    stringToFullDate,
+    stringToDate,
+    getKoreaTime
+  }

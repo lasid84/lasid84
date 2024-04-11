@@ -92,7 +92,7 @@ async function getMenuList(userInfo: any) {
 
   log("menus", menus);
 
-  if (menus[0].data.length <= 0) return{navigationData:undefined, menuArr:undefined};
+  if (!menus) return{navigationData:undefined, menuArr:undefined};
 
   const navigationData: NavigationState[] = [{
     parent_seq: -1,
