@@ -6,6 +6,8 @@ const {log} = require('@repo/kwe-lib/components/logHelper');
  
 export const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
+  trustHost: true,
+  // trustHostedDomain: true,
   pages: {
     signIn: '/login',
     
