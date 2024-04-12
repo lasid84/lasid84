@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,17 +22,44 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "components/*": ["./src/components/*"],
-      "page-parts/*": ["./src/page-parts/*"],
-      "layouts/*": ["./src/layouts/*"],
-      "utils/*": ["./src/utils/*"],
-      "states/*": ["./src/states/*"],
-      "css/*": ["./src/css/*"],
-      "services/*": ["./src/services/*"],
-      "api/*": ["./src/api/*"],
+      "@/*": [
+        "./src/*"
+      ],
+      "components/*": [
+        "./src/components/*"
+      ],
+      "page-parts/*": [
+        "./src/page-parts/*"
+      ],
+      "layouts/*": [
+        "./src/layouts/*"
+      ],
+      "utils/*": [
+        "./src/utils/*"
+      ],
+      "states/*": [
+        "./src/states/*"
+      ],
+      "css/*": [
+        "./src/css/*"
+      ],
+      "services/*": [
+        "./src/services/*"
+      ],
+      "api/*": [
+        "./src/api/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", ".next"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "dist/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next"
+  ]
 }
