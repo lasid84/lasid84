@@ -57,18 +57,18 @@ module.exports = {
     // require("@tailwindcss/line-clamp"),
     require("@tailwindcss/typography"),
     require("@tailwindcss/aspect-ratio"),
-    // plugin(function ({addVariant, e}) {
-    //   addVariant("collapsed", ({modifySelectors, separator}) => {
-    //     modifySelectors(({className}) => {
-    //       return `.collapsed .${e(`collapsed${separator}${className}`)}`;
-    //     });
-    //   });
-    //   addVariant("rtl", ({modifySelectors, separator}) => {
-    //     modifySelectors(({className}) => {
-    //       return `.rtl .${e(`rtl${separator}${className}`)}`;
-    //     });
-    //   });
-    // }),
+    plugin(function ({addVariant, e}) {
+      addVariant("collapsed", ({modifySelectors, separator}) => {
+        modifySelectors(({className}) => {
+          return `.collapsed .${e(`collapsed${separator}${className}`)}`;
+        });
+      });
+      addVariant("rtl", ({modifySelectors, separator}) => {
+        modifySelectors(({className}) => {
+          return `.rtl .${e(`rtl${separator}${className}`)}`;
+        });
+      });
+    }),
   ],
   variants:{
     extend : {

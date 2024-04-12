@@ -1,5 +1,5 @@
 {
-  "name": "kream_web",
+  "name": "kwe",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -8,6 +8,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "start": "turbo start --filter kream",
     "dev:api": "turbo dev --filter api",
     "dev:kream": "turbo dev --filter kream",
     "dev:batch": "turbo dev --filter batch",
