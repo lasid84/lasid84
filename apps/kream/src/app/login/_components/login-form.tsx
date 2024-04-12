@@ -77,7 +77,7 @@ export default function LoginForm() {
         lang: res?.data.lang ? res?.data.lang : 'KOR'
     });
       
-      router.replace('/');
+      router.replace('/dashboard');
     } catch (err) {
       log("login-form err", err);
       setErrMessage(JSON.stringify(err));

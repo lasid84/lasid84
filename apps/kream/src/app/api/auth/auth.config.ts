@@ -34,11 +34,9 @@ export const authConfig = {
         // console.log("2.---------------", auth.user, nextUrl);
         // return Response.redirect(new URL('/dashboard', nextUrl));
          return true;
-      } else {
-        console.log('==============isLoggedIn', isLoggedIn);
-      }
+      } 
       
-      // return false;
+      return false;
     },
     //// session({session, token}: {session: Session; user?:AdapterUser; token?:JWT}) {
     // session({session, token}) {
