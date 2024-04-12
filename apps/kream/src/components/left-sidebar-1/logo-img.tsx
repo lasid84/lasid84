@@ -44,14 +44,17 @@ import {useConfigs} from "states/useConfigs";
 import {useLeftSidebar} from "states/useLeftSidebar";
 import Link from "next/link";
 
+const { log } = require('@repo/kwe-lib/components/logHelper');
+
 const LogoImg: React.FC = () => {
   const configActions = useConfigs((state) => state.actions);
 
   const {name, collapsed} = useConfigs((state) => state.config);
   const {showLogo} = useLeftSidebar((state) => state.leftSidebar);
+  log("logo", showLogo)
   if (showLogo) {
     return (
-      <div className="logo truncate">
+      <div className="truncate logo">
         <Link href="/">
           <div className="flex flex-row items-center justify-start space-x-2">
             <img className={''}
