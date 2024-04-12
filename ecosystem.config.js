@@ -23,7 +23,7 @@ module.exports = {
     },
     {
       name: 'kream',
-      script: 'npm start',
+      script: 'pnpm start',
       cwd: './apps/kream',
       autorestart: true,
       watch: '.',
