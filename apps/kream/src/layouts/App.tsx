@@ -3,7 +3,7 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { setI18n } from 'components/i18n/i18n';
 import { useTranslation } from 'react-i18next';
-import { useConfigs } from '@/states/useConfigs';
+import { useConfigs } from 'states/useConfigs';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 

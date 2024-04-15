@@ -16,6 +16,7 @@ export type PageTitleProps = {
 };
 
 function getMenuTitle(menu: NavigationState[], url:string, menu_param:string|null, parent = true):string|undefined {
+  if (!menu) return '';
   var title;
   for (var obj of menu) {
     if (obj.items.length > 0) {

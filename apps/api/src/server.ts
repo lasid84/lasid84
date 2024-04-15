@@ -119,7 +119,13 @@ export const createServer = (): Express => {
       }
     })
     .post('/login', async (req, res) =>  {
+      log(req.body);
       const { user_id, password } = req.body;
+
+      if (user_id === '') {
+        return res.json({ success:false, message: 'Input ID', token:'', userData:'' })
+      }
+
       await checkAccount(user_id, password, async (isAuthenticated:any, userObject:any) => {
         if (isAuthenticated) {
           log("userObject:",userObject);

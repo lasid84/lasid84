@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
 import Layout1 from "layouts/layout-1";
@@ -9,6 +9,7 @@ import { useConfigs } from "states/useConfigs";
 import { ToastContainer } from "react-toastify";
 import { toastConfig } from "@/configs/toast.config";
 import { useHotkeys } from "react-hotkeys-hook";
+import  AuthProvider  from 'components/provider/AuthProvider'
 // import 'components/i18n/i18n';
 
 
@@ -85,14 +86,17 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
     case "/login":
       return <><div className="bg-center bg-no-repeat bg-cover bg-[url('/images/bg-login-3.png')]">{children}</div></>
     default:
+      
       return (
         // <AuthProvider>
         <QueryClientProvider client={queryClient}>
-          <Layout1>
-            {children}
-            <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE ==='local'}/>
+          <AuthProvider>
+            <Layout1>
+              {children}
+              <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE ==='local'}/>
             {/* <ProgressBar height="4px" color="#FF5500" shallowRouting /> */}
-          </Layout1>
+            </Layout1>
+          </AuthProvider>
           <ToastContainer {...toastConfig} />
         </QueryClientProvider>
         // </AuthProvider>

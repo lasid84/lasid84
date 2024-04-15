@@ -15,6 +15,7 @@ import PageTitle from "components/page-title/page-title";
 import { useNavigation } from "states/useNavigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toastWaring } from "@/components/toast";
+import { getSession } from "@/services/serverAction";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export type Layout1Props = {
@@ -35,6 +36,7 @@ function checkAuth(menu: string[], url:string, menu_param:string|null):boolean {
 }
 
 const Layout1: React.FC<Layout1Props> = ({ children }) => {
+
   const config = useConfigs((state) => state.config);
 
   const [background, setBackground] = useState<string>(config.background);
@@ -67,6 +69,14 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   }, [])
 
   useEffect(() => {
+
+    const sessionCheck = async () => {
+      const session = await getSession();
+      log("layout index session", session);
+      if (!session) router.replace('/login');
+    };
+    sessionCheck();
+
     if (isReady) {
       if (!checkAuth(menus, url, params)) {
         log(menus, url, isReady);

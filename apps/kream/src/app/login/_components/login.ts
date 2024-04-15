@@ -1,6 +1,6 @@
 // 'use server';
 
-// import { signIn } from '@/api/auth/auth';
+// import { signIn } from '@/app/api/auth/auth';
 import { AuthError, User } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import { z } from 'zod';

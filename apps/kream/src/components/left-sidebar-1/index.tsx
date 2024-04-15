@@ -26,7 +26,7 @@ const LeftSidebar: React.FC<Props> = memo(() => {
           <LogoImg />
           <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">
             {/*<div className="dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">*/}
-            {navigation.map((menu, i) => (
+            {navigation && navigation.map((menu, i) => (
               <Fragment key={i}>
                 {/* <Title>{menu.title}</Title> */}
                 <ul>
