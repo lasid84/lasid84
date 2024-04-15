@@ -22,14 +22,15 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
 
-    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enable: false });
-    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetInvoiceMasterContent, { enable: false });
+    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
+    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetInvoiceMasterContent, { enabled: true });
 
 
     const gridOption: GridOption = {
-        colVisible: { col: ["billto_nm_kor", "house_bl_no", "invoice_no", "invoice_sts", "billing_yn", "shipper_code", "shipper_nm", "consign_code", "consign_nm"], visible: true },
+        colVisible: { col: ["billto_nm_kor", "house_bl_no", "invoice_no", "invoice_sts", "billing_yn", /*"shipper_code", "shipper_nm", "consign_code", "consign_nm"*/], visible: true },
         gridHeight: "48vh",
-        minWidth: {"invoice_no": 150,  "house_bl_no": 120},
+        minWidth: {"invoice_no": 150,  "house_bl_no": 120, "billto_nm_kor":200},
+        maxWidth: {"billing_yn": 100},
         dataType: { "bz_reg_no": "bizno" },
         isAutoFitColData: false,
     };

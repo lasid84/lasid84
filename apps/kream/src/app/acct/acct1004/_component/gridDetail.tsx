@@ -28,7 +28,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData, { enable: false });
+    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData, { enabled: true });
 
     /* state 변경 시 useQuery 등록한 데이터 모두 콜 하는듯... */
     // useEffect(() => {
@@ -48,11 +48,20 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                         , "gl_code", "bill_yn"], visible: false
                 },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+                
                 gridHeight: "30vh",
                 // editable: ["trans_mode"],
-                dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
+                dataType: { "create_date": "date", "bz_reg_no": "bizno", 
+                    "invoice_amt":"number", "local_amt":"number" , "vat_rt": "number",
+                    "vat_amt":"number", "actual_cost":"number", "cost_exchg_rt":"number", 
+                    "waybill_amt":"number", "waybill_exchg_rt":"number", 
+                },
+                // typeOptions: {
+                //     "invoice_amt" : {isAllowDecimal:true, decimalLimit:2},
+                //     "local_amt" : {isAllowDecimal:true, decimalLimit:2},
+                // },
                 // isMultiSelect: false,
-                isAutoFitColData: true,
+                // isAutoFitColData: true,
                 // alignLeft: ["major_category", "bill_gr1_nm"],
                 // alignRight: [],
             };

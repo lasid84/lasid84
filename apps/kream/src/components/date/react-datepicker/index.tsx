@@ -44,6 +44,7 @@ type Props = {
 
   events?: {
     onChange? : (date: Date | null, event: React.SyntheticEvent<any> | undefined) => void;
+    onKeyDown? : (event: React.KeyboardEvent<HTMLDivElement>) => void;
   }
 };
 
@@ -87,6 +88,24 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
             setValue(id, DateToString(date));
         }
     }, [value]);
+
+    function handleKeyDown(e:any){
+        try {
+            if (e.key === "Enter") {
+                const form = e.target.form;
+                const index = [...form].indexOf(e.target);
+                log("handleKeyDown", e.target, index, form);
+                form[index + 1].focus();
+                e.preventDefault();
+            }
+        
+            if (events?.onKeyDown) {
+                events.onKeyDown(e);
+            }
+        } catch (ex) {
+    
+        }
+      }
     
     function handelChange(date: Date | null, e: any): void {
         log("handelChange", e?.target, date);
@@ -136,6 +155,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
                             readOnly={isReadOnly}
                             shouldCloseOnSelect
                             showIcon
+                            preventOpenOnFocus
                             // icon={IoCalendarNumberOutline}
                             // showWeekNumbers
                             showPopperArrow={false}
@@ -148,6 +168,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
                             onBlur={handleBlur}
                             onCalendarClose={handleCalendarClose}
                             onCalendarOpen={handleCalendarOpen}
+                            onKeyDown={handleKeyDown}
                             // onInputClick={log("oninputclick")}
                             // dayClassName={(date) =>
                             //     // log("===========dayClassName date", date.getMonth(), selectedVal?.getMonth())

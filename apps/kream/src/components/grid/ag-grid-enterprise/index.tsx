@@ -58,10 +58,18 @@ export type GridOption = {
     gridWidth?: string,
     colDisable?: string[],
     minWidth?:  {[key: string]: number},
+    maxWidth?:  {[key: string]: number},
     alignLeft?: string[],                 //기본 정렬은 가운데
     alignRight?: string[],                //dataType : number면 자동 우측 정렬
     editable?: string[];
-    dataType?: {[key: string]: string}; //date, number, text, bizno
+    dataType?: {[key: string]: string};   //date, number, text, bizno
+    typeOptions?: {[key:string]:{
+      limit?: number;                     //입력 자릿수 제한
+      isAllowDecimal?:boolean             //소수점 허용 여부
+      decimalLimit?: number               //소수점 자리수
+    }}
+    
+
     isMultiSelect?: boolean
     isAutoFitColData?: boolean
     isNoSelect?: boolean
@@ -337,11 +345,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
               valueFormatter: dateFormatter,
             }
           } else if (optCols[col] === 'number') {
+            const typeOpt = options.typeOptions ? options.typeOptions[col] : null;
             cellOption = {
               ...cellOption,
               cellDataType : optCols[col],
               cellStyle: { textAlign: "right" },
-              valueFormatter: numberFormatter,
+              valueFormatter: (params: ValueFormatterParams<any, any>) => numberFormatter(params, typeOpt),
+              // valueFormatter: 
             }
           } else if (optCols[col] === 'bizno') {
             cellOption = {
@@ -408,6 +418,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
             cellOption = {
               ...cellOption,
               minWidth: options.minWidth[col]
+            };
+          }
+        }
+
+        if (options?.maxWidth) {
+          var arrCols = Object.keys(options.maxWidth);
+          if (arrCols.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              maxWidth: options.maxWidth[col]
             };
           }
         }
@@ -602,8 +622,24 @@ const dateFormatter = (params: ValueFormatterParams) => {
   // return stringToDateString(params.value, '-');
 }
 
-const numberFormatter = (params: ValueFormatterParams) => {
-  return Math.floor(+params.value).toLocaleString();
+const numberFormatter = (params: ValueFormatterParams, options:any= null) => {
+  if (options) {
+    const isDecimal = options.isAllowDecimal;
+    const decimalLimit = isDecimal ? (options.decimalLimit ? options.decimalLimit : 2) : 0;
+    let val = (+params.value).toFixed(decimalLimit);
+    let formatted = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return `${formatted}`;
+  } else {
+    let val = params.value;
+    log("numberFormatter", val, !isNaN(val), parseFloat(val), +val);
+    if (!isNaN(val) && parseFloat(val) - Math.trunc(val) === 0) val = (+val).toFixed(0);
+    else val = (+val).toFixed(2);
+    let formatted = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return `${formatted}`;
+  }
+    // if (isDecimal) return (+params.value).toFixed(decimalLimit).toLocaleString();
+    // else return (+params.value).toLocaleString();
+
 }
 
 const checkBoxFormatter = (params: ValueFormatterParams) => {
