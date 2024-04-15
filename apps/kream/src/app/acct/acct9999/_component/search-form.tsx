@@ -15,7 +15,6 @@ import { DateInput, DatePicker } from 'components/date'
 import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
 import { Button } from 'components/button';
-import { gridData } from "@/components/grid/ag-grid-enterprise";
 
 
 // import { useGetData } from './test'
@@ -96,7 +95,7 @@ const SearchForm = memo(({ loadItem }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
         <PageSearch
           right={
             <>

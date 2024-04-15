@@ -13,6 +13,7 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
     <>
       <div className="flex">
         <div className="w-full rounded-[5px] bg-white border mb-2">
+          {title}
           {/*contents*/}
           <div className="w-full px-4 py-1 space-y-2">
             <div className="flex flex-row w-full gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6">

@@ -3,6 +3,8 @@ import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, 
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask} from 'react-text-mask';
+import { SlMagnifierAdd } from "react-icons/sl";
+import { FcExpand } from "react-icons/fc";
 // import  conformToMask from './conformToMask'
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
@@ -19,7 +21,6 @@ type Props = {
   width?:string;
   lwidth?:string;
   height?:string;
-
   options?: {
     inline?: boolean;         //라벨명 위치
     type?: string;            //number, text,  custom: ipaddr, bz_reg_no
@@ -32,11 +33,13 @@ type Props = {
     fontSize?: string;        //Font Size (xs, sm, base, lg, xl, 2xl......)
     fontWeight?: string;      //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
     textAlign?: string;       //Text Align (left, center, right)
+    textAlignLB?:string;
     radius?: string;          //Border Radius (none, sm, '', md, lg, xl, 2xl, full, ......)
     freeStyles?:string;       //freestyle
 
     isReadOnly?:boolean;      //읽기전용여부
     noLabel?:boolean;
+    useIcon?:boolean; 
   };
 
   events?: {
@@ -53,8 +56,8 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
   if (!control) return null;
 
   const {id, label, value, width, lwidth, height, options = {}, events } = props;
-  const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false,
-    textAlign, bgColor, fontSize = "13px", fontWeight = "normal",
+  const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon= false,
+    textAlign, bgColor, textAlignLB, fontSize = "13px", fontWeight = "normal",
     freeStyles = '', radius = 'none'
    } = options;
   const {mask, pipe, placeholder} = getMask(type, options);
@@ -125,7 +128,8 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
 
   return (
     <InputWrapper outerClassName="" inline={inline}>
-      {!noLabel && <Label id={id} name={label} lwidth={lwidth}/>}
+      {!noLabel && <Label id={id} name={label} lwidth={lwidth} textAlignLB={textAlignLB}/>}
+      <div className='flex w-full row'>
       <Controller
           name = {id}
           control={control}
@@ -157,6 +161,8 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
               />
           )}
         />
+        {useIcon &&<div className='px-1 py-1 flex item-center'><FcExpand size="24" border/></div>}
+        </div>
     </InputWrapper>
   );
 };
