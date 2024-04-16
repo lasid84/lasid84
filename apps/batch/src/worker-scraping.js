@@ -39,7 +39,7 @@ async function startBrowser() {
         log("brower restart")
         browser = await puppeteer.launch(
             { headless:isHeadless, 
-                // PUPPETEER_DISABLE_HEADLESS_WARNING: true, 
+                PUPPETEER_DISABLE_HEADLESS_WARNING: true, 
                 logLevel: "info",
                 args:[ '--start-maximized' // you can also use '--start-fullscreen'
             ],
@@ -386,8 +386,7 @@ async function callAPIPost(data) {
         v_tracking = 'json data parsing complete';
 
     } catch(ex) {
-        error(v_tracking);
-        if (msg_result.error == "Unauthorized") throw  "callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
+        if (msg_result.error == "Unauthorized") throw  "tracking : " + v_tracking + " callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
     }
 }
 

@@ -64,7 +64,7 @@ export type GridOption = {
     editable?: string[];
     dataType?: {[key: string]: string};   //date, number, text, bizno
     typeOptions?: {[key:string]:{
-      limit?: number;                     //입력 자릿수 제한
+      // limit?: number;                     //입력 자릿수 제한
       isAllowDecimal?:boolean             //소수점 허용 여부
       decimalLimit?: number               //소수점 자리수
     }}

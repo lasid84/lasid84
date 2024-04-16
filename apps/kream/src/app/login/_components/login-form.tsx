@@ -62,6 +62,11 @@ export default function LoginForm() {
     e.preventDefault();
     var user = getValues();
 
+    if (!user.user_id || !user.password) {
+      setErrMessage('입력해');
+      return;
+    }
+
     try {
       setIsCircle(true)
       const res = await Login({ user_id: user.user_id, password: user.password });
@@ -150,8 +155,8 @@ export default function LoginForm() {
         <div className="flex justify-start space-x-2">
           {/* <Suspense fallback={<FaSpinner className="justify-center w-full animate-spin" size={20} color="#f070f3" />}> */}
           <button
-            // type="submit"
-            type="button"
+            type="submit"
+            // type="button"
             onClick={(e) => onSubmit(e)}
             className={clsx("justify-center w-full h-12 px-3 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2",
             isCircle && "hover:bg-gray-600 ring-gray-500  bg-gray-600 ring-2 ring-offset-2")}>
