@@ -13,6 +13,7 @@ import Tab, { tab, TabICON } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/waybillMain";
 import WBSub from "./_component/waybillSub";
+import WBReference from "./_component/waybillReference"
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -101,6 +102,10 @@ export default function ACCT9999() {
 
                 <div className={`w-full flex ${selectedTab == "ws" ? "" : "hidden"}`}>
                     <WBSub loadItem={initData}/>
+                </div>
+
+                <div className={`w-full flex ${selectedTab == "rf" ? "" : "hidden"}`}>
+                    <WBReference loadItem={initData}/>
                 </div>
 
             </>}

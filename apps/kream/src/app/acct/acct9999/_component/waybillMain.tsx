@@ -125,43 +125,32 @@ const WBMain = memo(({ loadItem }: any) => {
             />
           </div> */}
           <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="agent_type" value={objState.mSelectedDetail?.agent_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="bol_type" value={objState.mSelectedDetail?.bol_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="service_type_code" value={objState.mSelectedDetail?.service_type_code} options={{ isReadOnly: true }} />
-          <MaskedInputField id="execution_date" value={objState.mSelectedDetail?.execution_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="console_date" value={objState.mSelectedDetail?.fr_daconsole_datete} options={{ isReadOnly: true }} />
+          <DatePicker id={"execution_date"} value={objState.mSelectedDetail?.execution_date} options={{ isReadOnly: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} />
+          <DatePicker id={"ic_dc_consol_date"} value={objState.mSelectedDetail?.ic_dc_consol_date} options={{ isReadOnly: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} />
+          {/* <MaskedInputField id="execution_date" value={objState.mSelectedDetail?.execution_date} options={{ isReadOnly: true }} />
+          <MaskedInputField id="ic_dc_consol_date" value={objState.mSelectedDetail?.ic_dc_consol_date} options={{ isReadOnly: true }} /> */}
           <MaskedInputField id="freight_terms" value={objState.mSelectedDetail?.freight_terms} options={{ isReadOnly: true }} />
-          <MaskedInputField id="charge_terms" value={objState.mSelectedDetail?.charge_terms} options={{ isReadOnly: true }} />
-          <MaskedInputField id="cust_shipment_type" value={objState.mSelectedDetail?.cust_shipment_type} options={{ isReadOnly: true }} />
+
+          <MaskedInputField id="customer_shipment_type" value={objState.mSelectedDetail?.customer_shipment_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="movement_type" value={objState.mSelectedDetail?.movement_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="shipping_terms" value={objState.mSelectedDetail?.shipping_terms} options={{ isReadOnly: true }} />
+          <MaskedInputField id="cust_shipment_type" value={objState.mSelectedDetail?.cust_shipment_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="agent_type" value={objState.mSelectedDetail?.agent_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="mwb_no" value={objState.mSelectedDetail?.mwb_no} options={{ isReadOnly: true }} />
           <MaskedInputField id="carrier_code" value={objState.mSelectedDetail?.carrier_code} options={{ isReadOnly: true }} />
+          <MaskedInputField id="freight_ppc_ind" value={objState.mSelectedDetail?.freight_ppc_ind} options={{ isReadOnly: true }} />
+          <MaskedInputField id="other_ppc_ind" value={objState.mSelectedDetail?.other_ppc_ind} options={{ isReadOnly: true }} />
+          <MaskedInputField id="booking_no" value={objState.mSelectedDetail?.booking_no} options={{ isReadOnly: true }} />
           <MaskedInputField id="origin_port" value={objState.mSelectedDetail?.origin_port} options={{ isReadOnly: true }} />
-          <MaskedInputField id="origin_city" value={objState.mSelectedDetail?.origin_city} options={{ isReadOnly: true }} />
+          <MaskedInputField id="origin_city_code" value={objState.mSelectedDetail?.origin_city_code} options={{ isReadOnly: true }} />
           <MaskedInputField id="place_of_receipt" value={objState.mSelectedDetail?.place_of_receipt} options={{ isReadOnly: true }} />
-          <MaskedInputField id="export_cc_point" value={objState.mSelectedDetail?.export_cc_point} options={{ isReadOnly: true }} />
-          <MaskedInputField id="customs_declaration" value={objState.mSelectedDetail?.customs_declaration} options={{ isReadOnly: true }} />
-          <MaskedInputField id="dest_port" value={objState.mSelectedDetail?.dest_port} options={{ isReadOnly: true }} />
-          <MaskedInputField id="dest_city" value={objState.mSelectedDetail?.dest_city} options={{ isReadOnly: true }} />
+          {/* <MaskedInputField id="export_cc_point" value={objState.mSelectedDetail?.export_cc_point} options={{ isReadOnly: true }} />
+          <MaskedInputField id="customs_declaration" value={objState.mSelectedDetail?.customs_declaration} options={{ isReadOnly: true }} /> */}
+          <MaskedInputField id="mpr_port_dest1" value={objState.mSelectedDetail?.mpr_port_dest1} options={{ isReadOnly: true }} />
+          <MaskedInputField id="dest_city_code" value={objState.mSelectedDetail?.dest_city_code} options={{ isReadOnly: true }} />
           <MaskedInputField id="place_of_delivery" value={objState.mSelectedDetail?.place_of_delivery} options={{ isReadOnly: true }} />
-          <MaskedInputField id="import_cc_point" value={objState.mSelectedDetail?.import_cc_point} options={{ isReadOnly: true }} />
-          <MaskedInputField id="security_status" value={objState.mSelectedDetail?.security_status} options={{ isReadOnly: true }} />
 
-          <MaskedInputField id="carrier_waybill_no" value={objState.mSelectedDetail?.carrier_waybill_no} options={{ isReadOnly: true }} />
-          <MaskedInputField id="carrier" value={objState.mSelectedDetail?.carrier} options={{ isReadOnly: true }} />
-          <MaskedInputField id="contact_type" value={objState.mSelectedDetail?.contact_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="salesperson" value={objState.mSelectedDetail?.salesperson} options={{ isReadOnly: true }} />
-          <MaskedInputField id="free_house_terms" value={objState.mSelectedDetail?.free_house_terms} options={{ isReadOnly: true }} />
-          <MaskedInputField id="mhwb_no" value={objState.mSelectedDetail?.fr_damhwb_note} options={{ isReadOnly: true }} />
-          <MaskedInputField id="cs_person_id" value={objState.mSelectedDetail?.cs_person_id} options={{ isReadOnly: true }} />
-          <MaskedInputField id="class_a_agnet" value={objState.mSelectedDetail?.class_a_agnet} options={{ isReadOnly: true }} />
-
-
-          {/* <div className={"col-span-1"}>
-            <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} height="h-8" />
-
-            <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} height="h-8" />
-          </div> */}
-          
           {/* <div className={"col-span-2"}>
             <CustomSelect
               id="cust_code"
@@ -183,43 +172,49 @@ const WBMain = memo(({ loadItem }: any) => {
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Shipper</span>}>
           <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_id" value={objState.mSelectedDetail?.shipper_id} options={{ isReadOnly: true }} />
           </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_name" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_address" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
           </div>
           <div className={"col-span-4"}>
+            <MaskedInputField id="shipper_contact_no" value={objState.mSelectedDetail?.shipper_contact_no} options={{ isReadOnly: true, useIcon: true }} />
+          </div>
+          <div className={"col-span-2"}>
+            <MaskedInputField id="export_salesman_id" value={objState.mSelectedDetail?.export_salesman_id} options={{ isReadOnly: true }} />
           </div>
         </PageSearch>
 
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Consignee</span>}>
           <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_id" value={objState.mSelectedDetail?.shipper_id} options={{ isReadOnly: true }} />
           </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_name" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_address" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
           </div>
           <div className={"col-span-4"}>
+            <MaskedInputField id="cnee_contact_no" value={objState.mSelectedDetail?.cnee_contact_no} options={{ isReadOnly: true, useIcon: true }} />
+          </div>
+          <div className={"col-span-2"}>
+            <MaskedInputField id="import_salesman_id" value={objState.mSelectedDetail?.import_salesman_id} options={{ isReadOnly: true }} />
           </div>
         </PageSearch>
 
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Notify</span>}>
           <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
+            <MaskedInputField id="notify_id" value={objState.mSelectedDetail?.notify_id} options={{ isReadOnly: true }} />
           </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="notify_name" value={objState.mSelectedDetail?.notify_name} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="notify_address_no" value={objState.mSelectedDetail?.notify_address_no} options={{ isReadOnly: true, useIcon: true }} />
+            <MaskedInputField id="notify_contact_no" value={objState.mSelectedDetail?.notify_contact_no} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-4"}>
           </div>
@@ -228,43 +223,63 @@ const WBMain = memo(({ loadItem }: any) => {
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Export Bill To</span>}>
           <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
+            <MaskedInputField id="billto_id" value={objState.mSelectedDetail?.billto_id} options={{ isReadOnly: true }} />
           </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="billto_name" value={objState.mSelectedDetail?.billto_name} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="billto_address_no" value={objState.mSelectedDetail?.billto_address_no} options={{ isReadOnly: true, useIcon: true }} />
           </div>
           <div className={"col-span-4"}>
+            <MaskedInputField id="billto_contact_no" value={objState.mSelectedDetail?.billto_contact_no} options={{ isReadOnly: true, useIcon: true }} />
           </div>
+      
         </PageSearch>
 
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Controlling Party</span>}>
           <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_id" value={objState.mSelectedDetail?.shipper_id} options={{ isReadOnly: true }} />
           </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_name" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_address" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
           </div>
           <div className={"col-span-4"}>
+            <MaskedInputField id="contact" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
+          </div>
+          <div className={"col-span-2"}>
+            <MaskedInputField id="sales_person" value={objState.mSelectedDetail?.sales_person} options={{ isReadOnly: true, useIcon: true }} />
           </div>
         </PageSearch>
 
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Export Non-Freight Bill To</span>}>
           <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_id" value={objState.mSelectedDetail?.shipper_id} options={{ isReadOnly: true }} />
           </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_name" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
+            <MaskedInputField id="shipper_address" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
+            <MaskedInputField id="contact" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true }} />
+          </div>
+          <div className={"col-span-4"}>
+          </div>
+        </PageSearch>
+
+        
+        <PageSearch
+          title={<span className="px-1 py-1 text-blue-500">Party To Contact</span>}>
+          <div className={"col-span-2"}>
+            <MaskedInputField id="dest_terminal_id" value={objState.mSelectedDetail?.dest_terminal_id} options={{ isReadOnly: true }} />
+          </div>  <div className={"col-span-4"}>
+            <MaskedInputField id="shipper_name" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true }} />
+          </div>
+          <div className={"col-span-6"}>
+            <MaskedInputField id="shipper_address" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
+            <MaskedInputField id="contact" value={objState.mSelectedDetail?.shipper_name} options={{ isReadOnly: true }} />
           </div>
           <div className={"col-span-4"}>
           </div>

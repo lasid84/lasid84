@@ -20,7 +20,7 @@ export const InputWrapper: React.FC<InputWrapperProps> = ({
   }
   return (
     <div className={outerClassName}>
-      <div className="space-y-1">{children}</div>
+      <div className="w-full space-y-1">{children}</div>
     </div>
   );
 };
