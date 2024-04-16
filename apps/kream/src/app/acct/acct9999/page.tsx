@@ -4,15 +4,12 @@
 import { useEffect, useReducer, useMemo, useCallback } from "react";
 import { SP_Load, SP_GetMasterData, SP_GetDetailData } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
+import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
 import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import DetailGrid from './_component/gridDetail';
-import CustomerDetail from './_component/custDetailInfo';
 import Tab, { tab, TabICON } from "components/tab/tab"
-
 import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/waybillMain";
 import WBSub from "./_component/waybillSub";
@@ -31,7 +28,13 @@ export default function ACCT9999() {
         console.log('code.terget.innerText', code.target.id)
         dispatch({ MselectedTab: code.target.id })
     }
-    const MhandleonClickICON = (code: any) => { objState.tab1.pop({ cd: code.target.id }) }
+    const MhandleonClickICON = (code: any) => {
+        // objState.tab1.pop({ cd: code.target.id }) 
+        let filtered = objState.tab1.filter((element: any) => {
+            return element.cd != code.target.id
+        })
+        dispatch({ tab1: filtered })
+    }
 
     const [state, dispatch] = useReducer(reducer, {
         objState: {
@@ -51,6 +54,7 @@ export default function ACCT9999() {
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false })
+    //const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetDetailData, { enable: true });
 
 
     useEffect(() => {
@@ -77,16 +81,11 @@ export default function ACCT9999() {
                 // { cd: 'sm', cd_nm: 'summary' }
             ])
             if (objState.tab1.length < 1) {
-                objState.tab1.push({cd: 'Main', cd_nm: 'Main' })
+                objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
             }
         }
     }, [initData])
 
-    useEffect(() => {
-        if (objState.tab1) {
-            //objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
-        }
-    }, [objState.tab1])
 
     return (
         <TableContext.Provider value={val}>
@@ -97,11 +96,11 @@ export default function ACCT9999() {
             </div> : <>
                 <Tab tabList={tab} onClickTab={handleOnClickTab} />
                 <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
-                    <WBMain loadItem={initData} mainData={mainData} />
+                    <WBMain loadItem={initData}  />
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "ws" ? "" : "hidden"}`}>
-                    <WBSub loadItem={initData} mainData={mainData} />
+                    <WBSub loadItem={initData}/>
                 </div>
 
             </>}

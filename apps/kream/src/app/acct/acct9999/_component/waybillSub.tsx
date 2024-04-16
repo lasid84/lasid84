@@ -39,7 +39,7 @@ type Props = {
   loadItem: typeloadItem;
 };
 
-const WBSub = memo(({ loadItem, mainData }: any) => {
+const WBSub = memo(({ loadItem }: any) => {
   // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());

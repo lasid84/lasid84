@@ -36,7 +36,7 @@ export default function Tab({ tabList, onClickTab }: Props) {
                                     ? "px-1 flex font-medium items-center text-xs px-2 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
                                     : "px-1 flex font-medium items-center text-xs px-2 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
                             } type="button">
-                            <div className="p-1 px-1 w-5 h-5 flex-row bg-blue-300 rounded-full text-white text-top">{idx + 1}</div>
+                            <div className="space-x-1 px-1 w-5 h-5 flex-row text-xs items-center bg-blue-300 rounded-full text-white">{idx + 1}</div>
                             {t(cd_nm)}
                         </button>
                     </div>

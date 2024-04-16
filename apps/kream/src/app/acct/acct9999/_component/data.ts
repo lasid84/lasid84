@@ -27,47 +27,10 @@ export const SP_Load = async (searchParam: any) => {
   return result;
 }
 
-export const SP_GetInvoiceMasterContent = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
-  const Param = searchParam.queryKey[1]
-
-  const { trans_mode, trans_type, fr_date, to_date, no, cust_code, user_id, ipaddr } = Param;
-  log("searchMasterData:", Param);
-  log("searchMasterData:", fr_date);
-
-  const params = {
-    inparam: [
-      "in_trans_mode"
-      , "in_trans_type"
-      , "in_fr_date"
-      , "in_to_date"
-      , "in_no"
-      , "in_cust_code"
-      , "in_user_id"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      trans_mode
-      , trans_type
-      , fr_date.replace(/[^0-9]/g, "")
-      , to_date.replace(/[^0-9]/g, "")
-      , no
-      , cust_code
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'account.f_acct1004_get_master',
-    isShowLoading: true
-  }
-  const result = await executFunction(params);
-  console.log('resultresult', result)
-  return result![0]
-}
 //SP_GetInvoiceMasterContent
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-
-  const { invoice_no, user_id, ipaddr } = Param;
+  const { waybill_no, user_id, ipaddr } = Param;
 
   const params = {
     inparam: [
@@ -76,7 +39,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-      '590212008930'
+      waybill_no
       , user_id
       , ipaddr
     ],
@@ -84,34 +47,33 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: false
   }
   const result = await executFunction(params);
-  console.log('result?@',result)
+
   return result![0]
 }
 
 export const SP_GetDetailData = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const { invoice_no, user_id, ipaddr } = Param;
-  log("search Detail Data:", Param);
-
+  const { waybill_no, user_id, ipaddr } = Param;
+  console.log('result waybill_no',waybill_no)
   const params = {
     inparam: [
-      "in_invoice_no"
-      , "in_user_id"
+      "in_hbl_no"
+      , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      invoice_no
+      waybill_no
       , user_id
       , ipaddr
     ],
-    inproc: 'account.f_acct1002_get_detail',
-    isShowLoading: false
+    inproc: 'public.f_acct9999_get_hbl_data',
+    isShowLoading: true
   }
 
   const result = await executFunction(params);
-  return result![0];
+  console.log('result',result)
+  return result![1];
 }
 
 

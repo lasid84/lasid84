@@ -39,7 +39,7 @@ type Props = {
   loadItem: typeloadItem;
 };
 
-const WBMain = memo(({ loadItem, mainData }: any) => {
+const WBMain = memo(({ loadItem }: any) => {
   // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
@@ -124,35 +124,36 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               }}
             />
           </div> */}
-          <MaskedInputField id="waybill_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="agent_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="service_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="execution_date" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="console_date" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="freight_terms" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="charge_terms" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="cust_shipment_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="movement_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="shipping_terms" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="origin_port" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="origin_city" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="place_of_receipt" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="export_cc_point" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="customs_declaration" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="dest_port" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="dest_city" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="place_of_delivery" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="import_cc_point" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="security_status" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
+          <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="agent_type" value={objState.mSelectedDetail?.agent_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="service_type_code" value={objState.mSelectedDetail?.service_type_code} options={{ isReadOnly: true }} />
+          <MaskedInputField id="execution_date" value={objState.mSelectedDetail?.execution_date} options={{ isReadOnly: true }} />
+          <MaskedInputField id="console_date" value={objState.mSelectedDetail?.fr_daconsole_datete} options={{ isReadOnly: true }} />
+          <MaskedInputField id="freight_terms" value={objState.mSelectedDetail?.freight_terms} options={{ isReadOnly: true }} />
+          <MaskedInputField id="charge_terms" value={objState.mSelectedDetail?.charge_terms} options={{ isReadOnly: true }} />
+          <MaskedInputField id="cust_shipment_type" value={objState.mSelectedDetail?.cust_shipment_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="movement_type" value={objState.mSelectedDetail?.movement_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="shipping_terms" value={objState.mSelectedDetail?.shipping_terms} options={{ isReadOnly: true }} />
+          <MaskedInputField id="carrier_code" value={objState.mSelectedDetail?.carrier_code} options={{ isReadOnly: true }} />
+          <MaskedInputField id="origin_port" value={objState.mSelectedDetail?.origin_port} options={{ isReadOnly: true }} />
+          <MaskedInputField id="origin_city" value={objState.mSelectedDetail?.origin_city} options={{ isReadOnly: true }} />
+          <MaskedInputField id="place_of_receipt" value={objState.mSelectedDetail?.place_of_receipt} options={{ isReadOnly: true }} />
+          <MaskedInputField id="export_cc_point" value={objState.mSelectedDetail?.export_cc_point} options={{ isReadOnly: true }} />
+          <MaskedInputField id="customs_declaration" value={objState.mSelectedDetail?.customs_declaration} options={{ isReadOnly: true }} />
+          <MaskedInputField id="dest_port" value={objState.mSelectedDetail?.dest_port} options={{ isReadOnly: true }} />
+          <MaskedInputField id="dest_city" value={objState.mSelectedDetail?.dest_city} options={{ isReadOnly: true }} />
+          <MaskedInputField id="place_of_delivery" value={objState.mSelectedDetail?.place_of_delivery} options={{ isReadOnly: true }} />
+          <MaskedInputField id="import_cc_point" value={objState.mSelectedDetail?.import_cc_point} options={{ isReadOnly: true }} />
+          <MaskedInputField id="security_status" value={objState.mSelectedDetail?.security_status} options={{ isReadOnly: true }} />
 
-          <MaskedInputField id="carrier_waybill_no" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="carrier" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="contact_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="salesperson" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="free_house_terms" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="mhwb_no" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="cs_person_id" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="class_a_agnet" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
+          <MaskedInputField id="carrier_waybill_no" value={objState.mSelectedDetail?.carrier_waybill_no} options={{ isReadOnly: true }} />
+          <MaskedInputField id="carrier" value={objState.mSelectedDetail?.carrier} options={{ isReadOnly: true }} />
+          <MaskedInputField id="contact_type" value={objState.mSelectedDetail?.contact_type} options={{ isReadOnly: true }} />
+          <MaskedInputField id="salesperson" value={objState.mSelectedDetail?.salesperson} options={{ isReadOnly: true }} />
+          <MaskedInputField id="free_house_terms" value={objState.mSelectedDetail?.free_house_terms} options={{ isReadOnly: true }} />
+          <MaskedInputField id="mhwb_no" value={objState.mSelectedDetail?.fr_damhwb_note} options={{ isReadOnly: true }} />
+          <MaskedInputField id="cs_person_id" value={objState.mSelectedDetail?.cs_person_id} options={{ isReadOnly: true }} />
+          <MaskedInputField id="class_a_agnet" value={objState.mSelectedDetail?.class_a_agnet} options={{ isReadOnly: true }} />
 
 
           {/* <div className={"col-span-1"}>
