@@ -27,36 +27,27 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
 
     const gridOption: GridOption = {
-        colVisible: { col: ["waybill_no", "shipment_status", "status", "trans_mode", "trans_type","orig_terminal_id","dest_terminal_id","execution_date"], visible: true },
+        colVisible: { col: ["waybill_no", "shipment_status", "status", "trans_mode", "trans_type", "mpr_port_origin1", "origin_city_code", "execution_date", "waybill_type", "bol_type", "agent_type", "service_type"], visible: true },
         gridHeight: "80vh",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
         isAutoFitColData: false,
     };
 
-    function findIndex(element: any) {
-        if (element.cd === objState.mSelectedRow.waybill_no) {
-            return true
-        }
-    }
 
     const handleRowClicked = async (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
-        log("handleRowClicked", selectedRow)
         if (objState.tab1) {
-            //console.log('검증', objState.tab1.findIndex(findIndex))
-            if (objState.tab1.findIndex(findIndex) !== -1) {
+            if (objState.tab1.findIndex((element: any) => {
+                if (element.cd === selectedRow.waybill_no) { return true }
+            }) !== -1) {
                 dispatch({ MselectedTab: selectedRow.waybill_no })
-            } else {objState.tab1.push({ cd: selectedRow.waybill_no, cd_nm: selectedRow.waybill_no })}
+            } else {
+                objState.tab1.push({ cd: selectedRow.waybill_no, cd_nm: selectedRow.waybill_no })
+                dispatch({ MselectedTab: selectedRow.waybill_no })
+            }
         }
         dispatch({ isMDSearch: true, mSelectedRow: selectedRow });
     };
-
-    useEffect(() => {
-        if (objState.tab1) {
-            //objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
-        }
-    }, [objState.tab1])
-
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
@@ -82,7 +73,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     useEffect(() => {
         if (mainDetailData) {
-            log('mainDetailDataaaaaa',mainDetailData)
+            log('mainDetailDataaaaaa', mainDetailData)
             dispatch({ mSelectedDetail: mainDetailData.data[0] })
         }
     }, [mainDetailData]);

@@ -68,7 +68,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
       , ipaddr
     ],
     inproc: 'public.f_acct9999_get_hbl_data',
-    isShowLoading: true
+    isShowLoading: false
   }
 
   const result = await executFunction(params);

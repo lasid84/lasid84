@@ -25,15 +25,10 @@ export default function ACCT9999() {
 
     const handleOnClickTab = (code: any) => { setselectedTab(code) }
     const MhandleOnClickTab = (code: any) => {
-        console.log('code', code)
-        console.log('code.terget.innerText', code.target.id)
-        dispatch({ MselectedTab: code.target.id })
+        dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } })
     }
     const MhandleonClickICON = (code: any) => {
-        // objState.tab1.pop({ cd: code.target.id }) 
-        let filtered = objState.tab1.filter((element: any) => {
-            return element.cd != code.target.id
-        })
+        let filtered = objState.tab1.filter((element: any) => {return element.cd != code.target.id})
         dispatch({ tab1: filtered })
     }
 
@@ -54,9 +49,6 @@ export default function ACCT9999() {
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false })
-    //const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetDetailData, { enable: true });
-
 
     useEffect(() => {
         if (objState.isMSearch) {
@@ -77,9 +69,6 @@ export default function ACCT9999() {
             { cd: 'sd', cd_nm: 'shipment details' },
             { cd: 'cg', cd_nm: 'charges' },
             { cd: 'st', cd_nm: 'shipment text' },
-                // { cd: 'wi', cd_nm: 'waybill import' },
-                // { cd: 'nf', cd_nm: 'notification' },
-                // { cd: 'sm', cd_nm: 'summary' }
             ])
             if (objState.tab1.length < 1) {
                 objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
@@ -97,33 +86,17 @@ export default function ACCT9999() {
             </div> : <>
                 <Tab tabList={tab} onClickTab={handleOnClickTab} />
                 <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
-                    <WBMain loadItem={initData}  />
+                    <WBMain loadItem={initData} />
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "ws" ? "" : "hidden"}`}>
-                    <WBSub loadItem={initData}/>
+                    <WBSub loadItem={initData} />
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "rf" ? "" : "hidden"}`}>
-                    <WBReference loadItem={initData}/>
+                    <WBReference loadItem={initData} />
                 </div>
-
             </>}
-            {/* <div className={`w-full flex-col ${MselectedTab == "MN" ? "" : "hidden"}`}>
-                <SearchForm loadItem={initData} />
-                <MasterGrid initData={initData} />
-            </div> */}
-
-
-            {/* <div className="w-full grid grid-cols-5 space-x-1">
-                <div className="flex col-span-3">
-                    <MasterGrid initData={initData} />
-                </div>
-                <div className="flex col-span-2">
-                    <CustomerDetail loadItem={initData} />
-                </div>
-            </div>
-            <DetailGrid initData={initData} /> */}
         </TableContext.Provider>
     );
 }
