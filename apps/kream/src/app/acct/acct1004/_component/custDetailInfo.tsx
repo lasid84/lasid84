@@ -55,6 +55,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
 
 
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
+        log("onFormSubmit", param, objState.mSelectedDetail);
         Update.mutate(objState.mSelectedDetail)
     }, [objState.mSelectedDetail]);
 
@@ -90,7 +91,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                                     <MaskedInputField id="mbl_no" value={objState.mSelectedDetail?.mbl_no} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="hbl_no" value={objState.mSelectedDetail?.hbl_no} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <DatePicker id={"on_board_dd"} value={objState.mSelectedDetail?.on_board_dd} options={{ inline: true, textAlign: 'center', freeStyles: "hover:bg-amber-200 underline border-1 border-slate-300  min-w-200 max-w-500" }} height="h-6" />
-                                    <DatePicker id={"arrive_dd"} value={objState.mSelectedDetail?.arrive_dd} options={{ inline: true, textAlign: 'center', freeStyles: "hover:bg-amber-200 underline border-1 border-slate-300  min-w-200 max-w-500" }} height="h-6" />
+                                    <DatePicker id={"arrived_dd"} value={objState.mSelectedDetail?.arrived_dd} options={{ inline: true, textAlign: 'center', freeStyles: "hover:bg-amber-200 underline border-1 border-slate-300  min-w-200 max-w-500" }} height="h-6" />
                                     <MaskedInputField id="billto_code" value={objState.mSelectedDetail?.billto_code} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="billto_nm_kor" value={objState.mSelectedDetail?.billto_nm_kor} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="cust_tax_id" value={objState.mSelectedDetail?.cust_tax_id} options={{ isReadOnly: true, textAlign: 'center', inline: true, type: "bz_reg_no" }} height='h-6' />

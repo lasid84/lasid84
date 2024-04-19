@@ -64,10 +64,22 @@ const Home: React.FC = () => {
               limit:7,
               isAllowDecimal:true,
               decimalLimit:2,
+              textAlign:"right"
               // myPlaceholder:"Enter business number" 
             // myPlaceholder:"bz_reg_no"
             // inline:{true}
               // isReadOnly:true
+            }}
+            />
+            <MaskedInputField 
+            id="num" 
+            value="12444444448"
+            width="w-80"
+            // height="h-20"
+            options = {{ 
+              type:"number",
+              fontSize:"[13px]",
+              textAlign:"right"
             }}
             />
           <ReactSelect 

@@ -42,6 +42,7 @@ export default function createNumberMask({
 
   function numberMask(rawValue = emptyString) {
     const rawValueLength = rawValue.length
+    
 
     if (
       rawValue === emptyString ||
@@ -93,12 +94,13 @@ export default function createNumberMask({
 
     } else {
       if (rawValue.slice(0, prefixLength) === prefix) {
-        // integer = rawValue.slice(prefixLength)
-        integer = rawValue.slice(prefixLength, indexOfLastDecimal)
+        integer = rawValue.slice(prefixLength)
+        // integer = rawValue.slice(prefixLength, indexOfLastDecimal)
       } else {
         integer = rawValue
       }
     }
+
     if (integerLimit && typeof integerLimit === number) {
       const thousandsSeparatorRegex = thousandsSeparatorSymbol === '.' ? '[.]' : `${thousandsSeparatorSymbol}`
       const numberOfThousandSeparators = (integer.match(new RegExp(thousandsSeparatorRegex, 'g')) || []).length
