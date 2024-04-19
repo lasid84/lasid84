@@ -129,7 +129,7 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
   return (
     <InputWrapper outerClassName="" inline={inline}>
       {!noLabel && <Label id={id} name={label} lwidth={lwidth} textAlignLB={textAlignLB}/>}
-      <div className='flex w-full row'>
+      <div className='w-full row'>
       <Controller
           name = {id}
           control={control}

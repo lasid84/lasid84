@@ -10,7 +10,7 @@ import PageSearch from "layouts/search-form/page-search-row";
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
-import { MaskedInputField, Input } from 'components/input';
+import { MaskedInputField, Input, TextArea } from 'components/input';
 
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
@@ -100,21 +100,19 @@ const WBShipmentText = memo(({ loadItem }: any) => {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
-          title={<span className="px-1 py-1 text-blue-500">Shipment Text</span>}>
-         
+          title={<span className="flex px-1 py-1 text-blue-500">Shipment Text</span>}>
+
           <MaskedInputField id="place_of_receipt" value={objState.mSelectedDetail?.place_of_receipt} options={{ isReadOnly: true }} />
           <MaskedInputField id="bol_type" value={objState.mSelectedDetail?.bol_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="place_of_delivery" value={objState.mSelectedDetail?.place_of_delivery} options={{ isReadOnly: true }} />
           <MaskedInputField id="freight_terms" value={objState.mSelectedDetail?.freight_terms} options={{ isReadOnly: true }} />
-
-          <MaskedInputField id="marks_numbers" value={objState.mSelectedDetail?.marks_numbers} options={{ isReadOnly: true }} />
-          <MaskedInputField id="nature_of_goods" value={objState.mSelectedDetail?.nature_of_goods} options={{ isReadOnly: true }} />
-          <MaskedInputField id="body_text" value={objState.mSelectedDetail?.body_text} options={{ isReadOnly: true }} />
-          <MaskedInputField id="handling_info" value={objState.mSelectedDetail?.handling_info} options={{ isReadOnly: true }} />
-          <textarea rows={10} cols={40}>{objState.mSelectedDetail?.handling_info}</textarea>
-          <MaskedInputField id="manifest_description" value={objState.mSelectedDetail?.manifest_description} options={{ isReadOnly: true }} />
-          <MaskedInputField id="accounting_information" value={objState.mSelectedDetail?.accounting_information} options={{ isReadOnly: true }} />
-          <MaskedInputField id="other_charges_info" value={objState.mSelectedDetail?.other_charges_info} options={{ isReadOnly: true }} />
+          <TextArea id="marks_numbers" rows={15} cols={30} value={objState.mSelectedDetail?.marks_numbers} options={{ isReadOnly: true }} />
+          <TextArea id="nature_of_goods" rows={15} cols={30} value={objState.mSelectedDetail?.nature_of_goods} options={{ isReadOnly: true }} />
+          <TextArea id="body_text" rows={15} cols={30} value={objState.mSelectedDetail?.body_text} options={{ isReadOnly: true }} />
+          <TextArea id="handling_info" rows={15} cols={30} value={objState.mSelectedDetail?.handling_info} options={{ isReadOnly: true }} />
+          <TextArea id="manifest_description" rows={15} cols={30} value={objState.mSelectedDetail?.manifest_description} options={{ isReadOnly: true }} />
+          <TextArea id="accounting_information" rows={15} cols={30} value={objState.mSelectedDetail?.accounting_information} options={{ isReadOnly: true }} />
+          <TextArea id="other_charges_info" rows={15} cols={30} value={objState.mSelectedDetail?.other_charges_info} options={{ isReadOnly: true }} />
         </PageSearch>
 
 
