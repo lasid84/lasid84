@@ -44,8 +44,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             // log(initData[0].data)
             const gridOption: GridOption = {
                 colVisible: {
-                    col: ["invoice_no", "vat_rt", "fe_ref_item", "uas_gl_code", "vat_yn", "fins_yn", "rem_prt_yn", "fe_prt_yn"
-                        , "gl_code", "bill_yn"], visible: false
+                    col: ["waybill_no", "record_id", "seq", "charge_code", "charge_desc", "waybill_curr", "waybill_amt"], visible: false
                 },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
                 gridHeight: "30vh",
@@ -60,6 +59,12 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             setGridOptions(gridOption);
         }
     }, [initData])
+
+
+    useEffect(() => {
+        log('result__SP_GetDetailData;;',detailData)
+    }, [detailData])
+
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         //log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);

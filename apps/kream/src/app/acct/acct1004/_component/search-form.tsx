@@ -52,8 +52,8 @@ const SearchForm = memo(({ loadItem }: any) => {
     defaultValues: {
       trans_mode: gTransMode || 'ALL',
       trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
+      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYYMMDD"),
+      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYYMMDD"),
       no: '',
       cust_code: ''
     }
@@ -137,13 +137,9 @@ const SearchForm = memo(({ loadItem }: any) => {
           /> */}
           <div className={"col-span-1"}>
             <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} height="h-8" />
-            {/* <Input id="fr_date" type="date" inline={true} /> */}
-            {/* <Input id="to_date" type="date" inline={true} /> */}
             <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} height="h-8" />
           </div>
           <div className={"col-span-2"}>
-            {/* <Input id="no" name="bl/inv no." inline={true} width="w-900" height="h-8" /> */}
-
             <CustomSelect
               id="cust_code"
               // label="trans_mode"
@@ -157,7 +153,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               style={{ width: '1000px', height: "8px" }}
               inline={true}
             />
-            <MaskedInputField id="no" label="bl/inv no." options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="no" value={objState.searchParams?.no} label="bl/inv no." options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearch>
       </form>

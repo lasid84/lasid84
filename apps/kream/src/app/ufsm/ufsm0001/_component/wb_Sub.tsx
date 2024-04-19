@@ -155,7 +155,7 @@ const WBSub = memo(({ loadItem }: any) => {
 
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Terms</span>}>
-             <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
+             <MaskedInputField id="transport_terms_code" value={objState.mSelectedDetail?.transport_terms_code} options={{ isReadOnly: true }} />
              <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
              <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
              <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />

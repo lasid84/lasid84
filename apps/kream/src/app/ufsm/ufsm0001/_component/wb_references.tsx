@@ -100,17 +100,19 @@ const WBReference = memo(({ loadItem }: any) => {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
-          title={<span className="w-full px-1 py-1 text-blue-500">Routing Summary</span>}>
+          title={<span className="w-full px-1 py-1 text-blue-500">References</span>}>
           <div className="col-span-6">
-            <div>References</div>
             <MasterGrid initData={loadItem} />
           </div>
-          <div className="col-span-6">
-            <div>Milestones</div>
-            <MasterGrid initData={loadItem} />
-          </div>
-
         </PageSearch>
+
+        <PageSearch
+          title={<span className="w-full px-1 py-1 text-blue-500">Milestones</span>}>
+          <div className="col-span-6">
+            <MasterGrid initData={loadItem} />
+          </div>
+        </PageSearch>
+
 
         {/* <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Related ACRs</span>}>

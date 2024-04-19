@@ -19,6 +19,7 @@ import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
 import { Button } from 'components/button';
 import MasterGrid from './gridMaster';
+import DetailGrid from './gridDetail'
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -102,7 +103,7 @@ const WBCharges = memo(({ loadItem }: any) => {
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Charges</span>}>
           <div className="col-span-6">
-            <MasterGrid initData={loadItem} />
+            <DetailGrid initData={loadItem} />
           </div>
         </PageSearch>
 

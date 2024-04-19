@@ -22,13 +22,11 @@ export const SP_Load = async (searchParam: any) => {
     inproc: 'account.f_acct1004_load',
     isShowLoading: false
   }
-  // log("Acct1004Load", p);
   const result = await executFunction(params);
   return result;
 }
 
 export const SP_GetMasterData = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
   const { trans_mode, trans_type, fr_date, to_date, no, cust_code, user_id, ipaddr } = Param;
@@ -49,8 +47,8 @@ export const SP_GetMasterData = async (searchParam: any) => {
     invalue: [
       trans_mode
       , trans_type
-      , fr_date.replace(/[^0-9]/g, "")
-      , to_date.replace(/[^0-9]/g, "")
+      , fr_date
+      , to_date
       , no
       , cust_code
       , user_id
@@ -60,14 +58,13 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
-  console.log('resultresult', result)
   return result![0]
 }
 
 export const SP_GetInvoiceMasterContent = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
 
-  const { invoice_no, user_id, ipaddr } = Param;
+  const { cust_code, to_date, fr_date, trans_mode, trans_type, invoice_no, user_id, ipaddr } = Param;
 
   const params = {
     inparam: [
@@ -81,12 +78,12 @@ export const SP_GetInvoiceMasterContent = async (searchParam: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-      'ALL'
-      , 'ALL'
-      , ''
-      , ''
+      trans_mode
+      , trans_type
+      , fr_date
+      , to_date
       , invoice_no
-      , ''
+      , cust_code
       , user_id
       , ipaddr
     ],
@@ -128,7 +125,7 @@ export const SP_UpdateData = async (param: any) => {
 
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("param : ", param)
+  log("onFormSubmit param : ", param)
   const { invoice_no, on_board_dd, arrived_dd, user_id, ipaddr } = Param;
   const params = {
     inparam: [

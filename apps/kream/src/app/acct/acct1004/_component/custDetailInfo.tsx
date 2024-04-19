@@ -56,7 +56,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
 
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
         log("onFormSubmit", param, objState.mSelectedDetail);
-        Update.mutate(objState.mSelectedDetail)
+        Update.mutate(param)
     }, [objState.mSelectedDetail]);
 
     const handleOnClickTab = (code: any) => { setselectedTab(code) }
