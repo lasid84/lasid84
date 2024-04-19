@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback } from "react";
-import { SP_Load, SP_GetMasterData, SP_GetDetailData } from "./_component/data";
+import { SP_Load  } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
@@ -14,11 +14,13 @@ import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/waybillMain";
 import WBSub from "./_component/waybillSub";
 import WBReference from "./_component/waybillReference"
+import ChargesGrid from "./_component/gridCharges";
+import ShipmentDetailGrid from "./_component/gridShipDetail";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
-export default function ACCT9999() {
+export default function Ufsm0001() {
 
     const [tab, settab] = useState<tab[]>()
     const [selectedTab, setselectedTab] = useState<string>("NM");
@@ -95,6 +97,14 @@ export default function ACCT9999() {
 
                 <div className={`w-full flex ${selectedTab == "rf" ? "" : "hidden"}`}>
                     <WBReference loadItem={initData} />
+                </div>
+
+                <div className={`w-full flex ${selectedTab == "sd" ? "" : "hidden"}`}>
+                    <ShipmentDetailGrid initData={initData} />
+                </div>
+
+                <div className={`w-full flex ${selectedTab == "cg" ? "" : "hidden"}`}>
+                    <ChargesGrid initData={initData} />
                 </div>
             </>}
         </TableContext.Provider>

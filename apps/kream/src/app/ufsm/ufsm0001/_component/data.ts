@@ -47,15 +47,15 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: false
   }
   const result = await executFunction(params);
+  console.log('result?',result)
 
   return result![0]
 }
 
 export const SP_GetDetailData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-
   const { waybill_no, user_id, ipaddr } = Param;
-  console.log('result waybill_no',waybill_no)
+
   const params = {
     inparam: [
       "in_hbl_no"
@@ -72,8 +72,9 @@ export const SP_GetDetailData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-  console.log('result',result)
-  return result![1];
+  console.log('result__SP_GetDetailData',result)
+  //return result![1];
+  return result!;
 }
 
 

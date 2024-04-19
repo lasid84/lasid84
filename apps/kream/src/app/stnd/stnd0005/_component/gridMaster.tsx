@@ -25,7 +25,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const { dispatch, objState } = useAppContext();
     // const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enable: false });
+    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
         colVisible: { col: ["grp_cd", "grp_cd_nm", "cd", "cd_nm", "cd_desc", "cd_mgcd1", "cd_mgcd2", "use_yn"], visible: true },
         colDisable: ["grp_cd", "grp_cd_nm", "cd"],

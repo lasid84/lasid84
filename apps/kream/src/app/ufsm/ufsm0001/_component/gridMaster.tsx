@@ -22,8 +22,8 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
 
-    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enable: false });
-    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetDetailData, { enable: true });
+    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
+    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetDetailData, { enabled: true });
 
 
     const gridOption: GridOption = {
@@ -74,7 +74,9 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     useEffect(() => {
         if (mainDetailData) {
             log('mainDetailDataaaaaa', mainDetailData)
-            dispatch({ mSelectedDetail: mainDetailData.data[0] })
+            log(',mainDetailDataaaaaaaa',mainDetailData[1])
+            log(',mainDetailDataaaaaaaabbbbbb',mainDetailData[1].data[0])
+            dispatch({ mSelectedDetail:mainDetailData[1].data[0] })
         }
     }, [mainDetailData]);
 
