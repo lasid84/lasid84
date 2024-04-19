@@ -11,7 +11,7 @@ import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
-import MasterGrid from '../_component/gridMaster';
+import MasterGrid from './gridMaster';
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from 'components/date'
@@ -99,7 +99,8 @@ const WBSub = memo(({ loadItem }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-        <PageSearch
+
+        {/* <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Print Control</span>}>
           <div className={"flex col-span-3 border "}>
             <div className={"col-span-1"}>
@@ -149,22 +150,17 @@ const WBSub = memo(({ loadItem }: any) => {
           <MaskedInputField id="shipper_or_his_agent_name" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
           <MaskedInputField id="carrier_or_his_agent_name" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
           <MaskedInputField id="product_origin_country" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-        </PageSearch>
+        </PageSearch> */}
 
 
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Terms</span>}>
-          <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-          </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
-          </div>
-          <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
-          </div>
-          <div className={"col-span-4"}>
-          </div>
+             <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
+             <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
+             <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
+             <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
+             <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
+             <MaskedInputField id="waybill_type" value={objState.mSelectedDetail?.waybill_type} options={{ isReadOnly: true }} />
         </PageSearch>
 
         <PageSearch
@@ -189,7 +185,7 @@ const WBSub = memo(({ loadItem }: any) => {
 
         </PageSearch>
 
-        <PageSearch
+        {/* <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Related ACRs</span>}>
             <div className="col-span-6">
             <MasterGrid initData={loadItem} />
@@ -205,7 +201,7 @@ const WBSub = memo(({ loadItem }: any) => {
           </div>
           <div className={"col-span-4"}>
           </div>
-        </PageSearch>
+        </PageSearch> */}
 
       </form>
     </FormProvider>

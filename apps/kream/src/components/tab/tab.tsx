@@ -51,25 +51,22 @@ export default function Tab({ tabList, onClickTab }: Props) {
 export function TabICON({ tabList, onClickTab, onClickICON, MselectedTab }: Props) {
     const { t } = useTranslation();
     return (
-        <div className="w-full flex ">
-            <div className="flex flex">
+        <div className="w-full flex">
+            <div className="flex">
                 {tabList?.map(({ cd, cd_nm }, idx) => (
-                    <div key={idx} className="flex-none bg-transparent">
+                    <div key={idx} className="p-1 flex flex-row bg-transparent">
                         <button
                             id={cd}
                             onClick={onClickTab}
                             className={
                                 cd === MselectedTab
-                                    ? "font-medium text-xs px-2 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
-                                    : "font-medium text-xs px-2 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
+                                    ? "font-medium text-xs px-1 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
+                                    : "font-medium text-xs px-1 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
                             }
-                            type="button">
-                            <div className="flex flex-row items-center p-1"  id={cd}>
-                                {/* <div className="bg-blue-200 rounded">{idx + 1}</div> */}
-                                {t(cd_nm)}
-                                {cd && cd !== 'Main' ? <span className="p-2" onClick={onClickICON}><AiOutlineClose id={cd} /></span> : <></>}
-                            </div>
-                        </button>
+                            type="button">{t(cd_nm)}</button>
+                        {cd && cd !== 'Main' ? <span className={cd === MselectedTab
+                            ? "flex p-1 items-center font-medium text-xs leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
+                            : "flex p-1 items-center font-medium text-xs leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"} onClick={onClickICON}><AiOutlineClose id={cd} /></span> : <></>}
                     </div>
                 ))}
             </div>

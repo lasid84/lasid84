@@ -150,6 +150,10 @@ const WBMain = memo(({ loadItem }: any) => {
           <MaskedInputField id="mpr_port_dest1" value={objState.mSelectedDetail?.mpr_port_dest1} options={{ isReadOnly: true }} />
           <MaskedInputField id="dest_city_code" value={objState.mSelectedDetail?.dest_city_code} options={{ isReadOnly: true }} />
           <MaskedInputField id="place_of_delivery" value={objState.mSelectedDetail?.place_of_delivery} options={{ isReadOnly: true }} />
+          
+          <fieldset  className="underline border-1 ">
+            <legend>IC Consol</legend>          <label>No.{objState.mSelectedDetail?.place_of_delivery}</label>
+          </fieldset>
 
           {/* <div className={"col-span-2"}>
             <CustomSelect

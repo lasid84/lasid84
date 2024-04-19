@@ -11,14 +11,14 @@ import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
-import MasterGrid from './gridMaster';
+
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from 'components/date'
 import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
 import { Button } from 'components/button';
-import { Checkbox } from "@/components/checkbox";
+import MasterGrid from './gridMaster';
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -39,7 +39,7 @@ type Props = {
   loadItem: typeloadItem;
 };
 
-const WBReference = memo(({ loadItem }: any) => {
+const WBCharges = memo(({ loadItem }: any) => {
   // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
@@ -100,33 +100,16 @@ const WBReference = memo(({ loadItem }: any) => {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
-          title={<span className="w-full px-1 py-1 text-blue-500">Routing Summary</span>}>
+          title={<span className="w-full px-1 py-1 text-blue-500">Charges</span>}>
           <div className="col-span-6">
-            <div>References</div>
             <MasterGrid initData={loadItem} />
           </div>
-          <div className="col-span-6">
-            <div>Milestones</div>
-            <MasterGrid initData={loadItem} />
-          </div>
-
         </PageSearch>
 
         <PageSearch
-          title={<span className="px-1 py-1 text-blue-500">Related ACRs</span>}>
+          title={<span className="w-full px-1 py-1 text-blue-500">Invoices</span>}>
           <div className="col-span-6">
             <MasterGrid initData={loadItem} />
-          </div>
-          <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-          </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
-          </div>
-          <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
-          </div>
-          <div className={"col-span-4"}>
           </div>
         </PageSearch>
 
@@ -136,4 +119,4 @@ const WBReference = memo(({ loadItem }: any) => {
 });
 
 
-export default WBReference
+export default WBCharges

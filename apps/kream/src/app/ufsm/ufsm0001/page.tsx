@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback } from "react";
-import { SP_Load  } from "./_component/data";
+import { SP_Load } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
@@ -11,10 +11,13 @@ import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import Tab, { tab, TabICON } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
-import WBMain from "./_component/waybillMain";
-import WBSub from "./_component/waybillSub";
-import WBReference from "./_component/waybillReference"
+import WBMain from "./_component/wb_Main";
+import WBSub from "./_component/wb_Sub";
+import WBReference from "./_component/wb_references"
 import ChargesGrid from "./_component/gridCharges";
+import WBShipmentDetails from "./_component/wb_ShipmentDetails"
+import WBCharges from "./_component/wb_Charges"
+import WBShipmentText from "./_component/wb_ShipmentText"
 import ShipmentDetailGrid from "./_component/gridShipDetail";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -27,11 +30,13 @@ export default function Ufsm0001() {
 
     const handleOnClickTab = (code: any) => { setselectedTab(code) }
     const MhandleOnClickTab = (code: any) => {
+        console.log('filtered MhandleOnClickTab', code.target.id)
         dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } })
     }
     const MhandleonClickICON = (code: any) => {
-        let filtered = objState.tab1.filter((element: any) => {return element.cd != code.target.id})
-        dispatch({ tab1: filtered })
+        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
+        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd,  mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
+
     }
 
     const [state, dispatch] = useReducer(reducer, {
@@ -100,11 +105,15 @@ export default function Ufsm0001() {
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "sd" ? "" : "hidden"}`}>
-                    <ShipmentDetailGrid initData={initData} />
+                    <WBShipmentDetails initData={initData} />
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "cg" ? "" : "hidden"}`}>
-                    <ChargesGrid initData={initData} />
+                    <WBCharges initData={initData} />
+                </div>
+
+                <div className={`w-full flex ${selectedTab == "st" ? "" : "hidden"}`}>
+                    <WBShipmentText initData={initData} />
                 </div>
             </>}
         </TableContext.Provider>
