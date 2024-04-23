@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearchButton from "layouts/search-form/page-search-row";
+import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";

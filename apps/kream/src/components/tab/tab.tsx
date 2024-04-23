@@ -11,21 +11,28 @@ type Props = {
     init?: boolean; // 초기화
     tabList: tab[] | undefined; // 탭 리스트
     MselectedTab?: string;
+    options? : {
+        tabAlign?: string;
+    }
     onClickTab: (selectedTab: any) => void;
     onClickICON?: (selectedTab: any) => void;
 };
 
-export default function Tab({ tabList, onClickTab }: Props) {
+export const Tab: React.FC<Props> = (props:Props)=>{
+// export default function Tab({ tabList, onClickTab }: Props) {
     const { t } = useTranslation();
     const [selectedTab, setSelectedTab] = useState<any>("NM");
+
+    const {init, tabList, MselectedTab, options={}, onClickTab, onClickICON} = props;
+    const {tabAlign} = options
 
     useEffect(() => {
         selectedTab && onClickTab(selectedTab);
     }, [selectedTab]);
 
     return (
-        <div className="w-full flex ">
-            <div className="flex flex">
+        <div className="w-full flex place-items-center">
+            <div className="flex flex place-items-center">
                 {tabList?.map(({ cd, cd_nm }, idx) => (
                     <div key={idx} className="px-1 flex bg-transparent">
 
@@ -45,8 +52,6 @@ export default function Tab({ tabList, onClickTab }: Props) {
         </div>
     );
 }
-
-
 
 export function TabICON({ tabList, onClickTab, onClickICON, MselectedTab }: Props) {
     const { t } = useTranslation();
@@ -73,3 +78,5 @@ export function TabICON({ tabList, onClickTab, onClickICON, MselectedTab }: Prop
         </div>
     );
 }
+
+export default Tab

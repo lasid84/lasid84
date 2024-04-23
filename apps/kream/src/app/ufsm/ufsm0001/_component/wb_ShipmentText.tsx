@@ -101,18 +101,19 @@ const WBShipmentText = memo(({ loadItem }: any) => {
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="flex px-1 py-1 text-blue-500">Shipment Text</span>}>
+          <div className="col-start-1 col-end-2"><MaskedInputField id="place_of_receipt" value={objState.mSelectedDetail?.place_of_receipt} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-2 col-end-3"><MaskedInputField id="bol_type" value={objState.mSelectedDetail?.bol_type} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-3 col-end-4"><MaskedInputField id="place_of_delivery" value={objState.mSelectedDetail?.place_of_delivery} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-4 col-end-5"><MaskedInputField id="freight_terms" value={objState.mSelectedDetail?.freight_terms} options={{ isReadOnly: true }} /></div>
 
-          <MaskedInputField id="place_of_receipt" value={objState.mSelectedDetail?.place_of_receipt} options={{ isReadOnly: true }} />
-          <MaskedInputField id="bol_type" value={objState.mSelectedDetail?.bol_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="place_of_delivery" value={objState.mSelectedDetail?.place_of_delivery} options={{ isReadOnly: true }} />
-          <MaskedInputField id="freight_terms" value={objState.mSelectedDetail?.freight_terms} options={{ isReadOnly: true }} />
-          <TextArea id="marks_numbers" rows={15} cols={30} value={objState.mSelectedDetail?.marks_numbers} options={{ isReadOnly: true }} />
-          <TextArea id="nature_of_goods" rows={15} cols={30} value={objState.mSelectedDetail?.nature_of_goods} options={{ isReadOnly: true }} />
-          <TextArea id="body_text" rows={15} cols={30} value={objState.mSelectedDetail?.body_text} options={{ isReadOnly: true }} />
-          <TextArea id="handling_info" rows={15} cols={30} value={objState.mSelectedDetail?.handling_info} options={{ isReadOnly: true }} />
-          <TextArea id="manifest_description" rows={15} cols={30} value={objState.mSelectedDetail?.manifest_description} options={{ isReadOnly: true }} />
-          <TextArea id="accounting_information" rows={15} cols={30} value={objState.mSelectedDetail?.accounting_information} options={{ isReadOnly: true }} />
-          <TextArea id="other_charges_info" rows={15} cols={30} value={objState.mSelectedDetail?.other_charges_info} options={{ isReadOnly: true }} />
+          <div className="col-start-1 col-end-2 "><TextArea id="marks_numbers" rows={15} cols={35} value={objState.mSelectedDetail?.marks_numbers} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-2 col-end-3 "><TextArea id="nature_of_goods" rows={15} cols={35} value={objState.mSelectedDetail?.nature_of_goods} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-3 col-end-4 "><TextArea id="body_text" rows={15} cols={35} value={objState.mSelectedDetail?.body_text} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-1 col-end-3 col-span-2 "><TextArea id="handling_info" rows={10} cols={70} value={objState.mSelectedDetail?.handling_info} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-3 col-end-5 col-span-2"><TextArea id="manifest_description" rows={10} cols={70} value={objState.mSelectedDetail?.manifest_description} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-1 col-end-3 col-span-2"><TextArea id="accounting_information" rows={10} cols={70} value={objState.mSelectedDetail?.accounting_information} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-3 col-end-5 col-span-2"><TextArea id="other_charges_info" rows={10} cols={70} value={objState.mSelectedDetail?.other_charges_info} options={{ isReadOnly: true }} /></div>
+
         </PageSearch>
 
 
