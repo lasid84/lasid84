@@ -15,15 +15,17 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
         <div className="w-full rounded-[5px] bg-white border mb-2">
           {title}
           {/*contents*/}
-          <div className="w-full px-4 py-1 space-y-2">
-            <div className="flex flex-row w-full gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6">
+          <div className="w-full flex px-4 py-1 space-y-2">
+            <div className="w-10/12 flex gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
-            <div
-              className="flex flex-row w-full gap-2 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6">
-              {addition && addition}
+            <div className="w-2/12 flex flex-row-reverse px-4 py-1 space-y-2 grid grid-cols-1 gap-2 content-end place-items-end">
+              <div className="gap-3 grid grid-cols-2">
+                {right}
+              </div>
             </div>
           </div>
+
           {/*button*/}
           <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
             <div className="grid w-full grid-cols-2">
@@ -33,7 +35,7 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
               </div>
               <div className="flex flex-row gap-2">
                 <span className="ml-auto"></span>
-                {right}
+                {/* {right} */}
               </div>
             </div>
           </div>

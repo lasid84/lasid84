@@ -7,6 +7,9 @@ import { RiRefreshLine } from "react-icons/ri";
 import { RiSaveLine, RiSaveFill, RiSave2Fill   } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { ReactElement, cloneElement } from "react";
+import { GrPowerReset } from "react-icons/gr";
+import { HiOutlineRefresh } from "react-icons/hi";
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -37,15 +40,14 @@ const btnColor: any = {
     'sky-outline': 'bg-transparent hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-400  hover:border-transparent rounded',
     'black': 'text-white bg-black rounded hover:bg-gray-500 disabled:bg-gray-200 hover:bg-gray-300',
     'gray': 'text-black bg-gray-200 rounded border-gray-400 hover:bg-gray-300',
-    'green': 'text-white bg-green-500 rounded hover:bg-green-800',
-    'amber-fill': 'text-white bg-amber-200 rounded hover:bg-amber-500',
-    'green-outline': 'bg-transparent hover:bg-green-600/75 text-green-600/75 hover:text-white border border-green-600/75  hover:border-transparent rounded',
     'gray-outline': 'bg-transparent hover:bg-gray-700/75 text-gray-700/75 hover:text-white border border-gray-700/75  hover:border-transparent rounded',
+    'amber-fill': 'text-white bg-amber-200 rounded hover:bg-amber-500',
+    'green': 'text-white bg-green-500 rounded hover:bg-green-800',
+    'green-outline': 'bg-transparent hover:bg-green-600/75 text-green-600/75 hover:text-white border border-green-600/75  hover:border-transparent rounded',
     'orange-outline': 'bg-transparent hover:bg-orange-600/75 text-orange-600/75 hover:text-white border border-orange-600/75  hover:border-transparent rounded',
-    'red-outline': 'bg-transparent hover:bg-red-600/75 text-red-600/75 hover:text-white border border-red-600/75  hover:border-transparent rounded',
-    
     'pink': 'text-white bg-pink-500 rounded hover:bg-pink-800',
     'red': 'text-white bg-red-500 rounded hover:bg-red-800',
+    'red-outline': 'bg-transparent hover:bg-red-600/75 text-red-600/75 hover:text-white border border-red-600/75  hover:border-transparent rounded',
     'white': 'text-black font-bold bg-white rounded border border-gray-400 hover:bg-gray-100',
 
 }
@@ -68,6 +70,8 @@ const getColor = (label: string, color: string = '') => {
             case "reset":
                 c = 'gray';
                 break;
+            case "refresh":
+                c= 'gray-outline'
             default:
                 c = 'black';
                 break;
@@ -94,11 +98,13 @@ const getIcon = (label: string, icon: JSX.Element) => {
             icon = <TiPlus size={size} />;
             break;
         case "save":
-            icon = <RiSave2Fill  size={size} />;
+            icon = <RiSave2Fill size={size} />;
             break;
         case "reset":
-            icon = <FiShoppingCart size={size} />;
+            icon = <GrPowerReset size={size} />;
             break;
+        case "refresh":
+            icon = <HiOutlineRefresh size={size} />
     }
     return (
         icon
@@ -108,15 +114,14 @@ const getIcon = (label: string, icon: JSX.Element) => {
 export const Button: React.FC<ButtonProps> = (props) => {
 
     const { t } = useTranslation();
-    const { id, label, disabled, color, type, isHidden, icon
-        , onClick
+    const { id, label, disabled, color, type, isHidden, icon , onClick
     } = props;
 
     const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
 
     return (
         <button
-            className={`p-1 flex flex-row gap-1 h-[30px] px-2 py-2 text-xs font-bold items-center ${getColor(label ? label : id, color)}
+            className={`p-1 flex flex-row gap-1 h-[30px] px-2 py-2 text-xs font-bold place-items-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
             ${disabledCss}
         `}

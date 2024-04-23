@@ -100,6 +100,13 @@ const SearchForm = memo(({ loadItem }: any) => {
           right={
             <>
               <Button id="search" disabled={false} onClick={onSearch}/>
+              <Button id="reset" disabled={false} onClick={onSearch}/>
+              <Button id="refresh" disabled={false} onClick={onSearch}/>
+              {/* <Button id="search" disabled={false} onClick={onSearch}/>
+              <Button id="search" disabled={false} onClick={onSearch}/>
+              <Button id="search" disabled={false} onClick={onSearch}/>
+              <Button id="search" disabled={false} onClick={onSearch}/>
+              <Button id="search" disabled={false} onClick={onSearch}/> */}
             </>
           }>
           <div className={"col-span-1"}>
