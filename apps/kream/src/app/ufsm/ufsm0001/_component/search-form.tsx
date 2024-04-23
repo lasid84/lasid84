@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch from "layouts/search-form/page-search-row";
+import PageSearchButton from "layouts/search-form/page-search-row";
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
@@ -96,7 +96,7 @@ const SearchForm = memo(({ loadItem }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
-        <PageSearch
+        <PageSearchButton
           right={
             <>
               <Button id="search" disabled={false} onClick={onSearch}/>
@@ -165,7 +165,7 @@ const SearchForm = memo(({ loadItem }: any) => {
             />
             <MaskedInputField id="no" label="bl/inv no." options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
-        </PageSearch>
+        </PageSearchButton>
       </form>
     </FormProvider>
   );
