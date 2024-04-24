@@ -101,28 +101,32 @@ const WBShipmentDetails = memo(({ loadItem }: any) => {
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Shipment Details & Freight</span>}>
+          <div className="w-full flex col-span-6">
+            <MasterGrid initData={loadItem} />
+          </div>
+          <fieldset className="w-full flex border-solid border-2 p-1 space-y-1 space-x-1 col-span-6">
+            <legend className="text-sx">Total</legend>
+            <MaskedInputField id="pieces" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="pkg_type" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="volume" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="gross_wt" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="volume_wt" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="chargeable_wt" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
+          </fieldset>
+        </PageSearch>
+
+        <PageSearch
+          title={<span className="w-full px-1 py-1 text-blue-500">Freight Charge</span>}>
           <div className="col-span-6">
-            <div>References</div>
             <MasterGrid initData={loadItem} />
           </div>
           <div className="flex w-full col-span-1">
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />           
-          </div>
-          <div className="col-span-6">
-            <div>Milestones</div>
-            <MasterGrid initData={loadItem} />
-          </div>
 
+          </div>
         </PageSearch>
       </form>
     </FormProvider>
