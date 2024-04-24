@@ -49,7 +49,7 @@ type Props = {
 };
 
 // const autoCorrectedDatePipe = createAutoCorrectedDatePipe('mm/dd/yyyy HH:MM')
-const autoCorrectedDatePipe = createAutoCorrectedDatePipe('yyyy-mm-dd');
+const autoCorrectedDatePipe = createAutoCorrectedDatePipe('yyyy-MM-dd');
 
 export const DatePicker: React.FC<Props> = (props:Props) => {
     // registerLocale("ko", ko);
@@ -83,7 +83,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     useEffect(() => {
         if (value) {
             var date = stringToDate(value);
-            log('value rendering,,,,', date)
+            log('value rendering,,,,', date, DateToString(date))
             setSelectedVal(date);
             setValue(id, DateToString(date));
         }

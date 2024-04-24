@@ -116,12 +116,10 @@ export async function checkADLogin(params:checkLogin) {
         user_id: params.user_id,
         password: params.password
     };
-    console.log(config);
     return await postCall(config);
 }
 
 const requestUseService = (config: any) => {
-    log("requestUseService", config);
     useUserSettings.getState().actions.setData({ loading: "ON" });
     // const access_token = localStorage.getItem("access_token") || "";
     // config.headers["Authorization"] = `Bearer ${access_token}`;
@@ -130,7 +128,6 @@ const requestUseService = (config: any) => {
 };
 
 const requestHasError = (error: any) => {
-    log("requestHasError");
     useUserSettings.getState().actions.setData({ loading: "OFF" });
     return Promise.reject(error);
 };
@@ -139,13 +136,11 @@ const responseUseService = (response: any) => {
     // log("responseUseService");
     setTimeout(() => {
         useUserSettings.getState().actions.setData({ loading: "OFF" });
-        log("requestUseService 시작 OFF")
     }, 300);
     return response;
 };
 
 const responseHasError = async (error: any) => {
-    log("responseHasError");
     useUserSettings.getState().actions.setData({ loading: "OFF" });
     const originalRequest = error.config;
     // response가 없을 경우 : server connection fail

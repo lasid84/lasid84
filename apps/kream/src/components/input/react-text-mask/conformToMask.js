@@ -13,7 +13,6 @@ export default function conformToMask(rawValue = emptyString, mask, config = {})
     if (typeof mask === strFunction) {
       // call the mask function to get the mask array
       mask = mask(rawValue, config)
-        console.log("======= conformToMask mask : ", mask)
       // mask functions can setup caret traps to have some control over how the caret moves. We need to process
       // the mask for any caret traps. `processCaretTraps` will remove the caret traps from the mask
       mask = processCaretTraps(mask).maskWithoutCaretTraps

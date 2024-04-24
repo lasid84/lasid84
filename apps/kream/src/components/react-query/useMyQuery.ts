@@ -19,7 +19,7 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
     ipaddr: ipaddr
   }
   const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, { ...option});
-  log('useGetData', queryNm, searchParam, isLoading)
+  // log('useGetData', queryNm, searchParam, isLoading)
   return { data, isLoading, isError, refetch, remove }
 };
 
@@ -30,7 +30,7 @@ export const useUpdateData = (model?: string) => {
       queryClient.invalidateQueries([model])
       
       //console.log('????????????@',pageName)
-      console.log('onUpdate',res,data,context)
+      // console.log('onUpdate',res,data,context)
     },
     onMutate: async (data) => { },
     

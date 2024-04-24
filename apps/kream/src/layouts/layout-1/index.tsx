@@ -28,7 +28,7 @@ function checkAuth(menu: string[], url:string, menu_param:string|null):boolean {
 
   if (url === '/' || lastPart === 'DASHBOARD') return true;
 
-  if (menu.some(m => m === lastPart.trim() + (menu_param ? menu_param : ''))) return true;
+  if (menu?.some(m => m === lastPart.trim() + (menu_param ? menu_param : ''))) return true;
 
   // log("checkAuth", lastPart.trim(), menu_param, lastPart.trim() + (menu_param ? menu_param : ''));
 
@@ -71,6 +71,10 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   useEffect(() => {
 
     const sessionCheck = async () => {
+
+      const user = useUserSettings.getState().data;
+      if (!user.user_id) router.replace('/login');
+
       const session = await getSession();
       log("layout index session", session);
       if (!session) router.replace('/login');

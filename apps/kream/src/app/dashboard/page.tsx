@@ -15,6 +15,8 @@ import { DateInput, DatePicker } from 'components/date'
 import { FormProvider, useForm } from "react-hook-form";
 import { ReactSelect, data } from "components/select/react-select2";
 import NextDatePicker from "components/date/next-tui-date-picker";
+import MaskedInput from "react-text-mask";
+import createNumberMask from "@/components/input/react-text-mask/createNumberMask";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -82,6 +84,21 @@ const Home: React.FC = () => {
               textAlign:"right"
             }}
             />
+          <MaskedInput
+                // {...field} //bg-${bgColor}
+                className={`form-input block border-gray-200 disabled:bg-gray-300 flex-grow-1
+                 focus:border-blue-500 focus:ring-0 text-${'[13px]'} font-${'normal'} read-only:bg-gray-100 
+                 text-right
+                 `}
+                 value={'12444444448'}
+                 mask={
+                  createNumberMask({
+                    allowDecimal: true,
+                    decimalLimit: undefined,
+                    integerLimit: null
+                  })
+                 }
+                />
           <ReactSelect 
             id="trans_mode" label="trans_mode" dataSrc={{data:[{trans_mode:'A', name : 'Air'},{trans_mode:'O', name : 'Ocean'}], field:[]} as data} 
             width="10" height="15px"

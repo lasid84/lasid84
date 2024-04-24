@@ -69,7 +69,8 @@ export type GridOption = {
       decimalLimit?: number               //소수점 자리수
     }}
     
-
+    isShowFilter?: boolean
+    isShowFilterBtn?:boolean
     isMultiSelect?: boolean
     isAutoFitColData?: boolean
     isNoSelect?: boolean
@@ -113,10 +114,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
         // flex: options?.isAutoFitColData? 0 : 1,
         // minWidth: 20,
         filter: 'agTextColumnFilter',
-        floatingFilter: true,      
+        floatingFilter: options?.isShowFilter === undefined || options?.isShowFilter ? true : false,      
         headerClass: "text-center",
         editable:true,
-        suppressMenu: true
+        suppressMenu: true,
+        floatingFilterComponentParams: {suppressFilterButton:!options?.isShowFilterBtn ? true : false },
       };
     }, []);
 
@@ -126,26 +128,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
         return {
           rowHeight: 25,
           headerHeight: 25,
-          // enableRangeSelection:true,  // enterprise
-          // copyHeadersToClipboard:true,
-          // suppressMultiRangeSelection:true,
           rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
           // groupIncludeTotalFooter: true,
           // rowMultiSelectWithClick: true,
           // suppressRowClickSelection: false,
           stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
-          // animateRows: true,
-          // autoSizeStrategy: {            
-          //     type: 'fitCellContents',
-          //     defaultMinWidth: 20,
-          //     // columnLimits: [
-          //     //     {
-          //     //         colId: 'country',
-          //     //         minWidth: 900
-          //     //     }
-          //     // ]
-              
-          // },
+          animateRows: true,
           // onGridReady: () => {
           //   log("onGridReady")
           //   setDefaultColDef(
@@ -386,7 +374,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           if (options.checkbox.indexOf(col) > -1) {
             cellOption = {
               ...cellOption,
-              editable:true,
+              // editable:true,
               headerCheckboxSelection: options?.isMultiSelect ? true : false,
               // checkboxSelection: true,
               valueParser: checkBoxParser,
