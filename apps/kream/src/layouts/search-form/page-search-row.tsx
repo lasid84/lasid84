@@ -52,10 +52,9 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right
             <div className="w-10/12 flex gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
-            <div className="w-2/12 flex flex-cols-reverse px-4 py-1 space-y-2 grid grid-cols-1 gap-2 content-end place-items-end">
-              <div className="gap-3 grid grid-cols-2">
+            <div className="w-2/12 flex flex-row gap-2 place-items-end">
+              <span className="ml-auto"></span>
               {right}
-              </div>
             </div>
           </div>
 

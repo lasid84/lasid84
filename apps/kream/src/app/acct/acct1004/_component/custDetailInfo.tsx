@@ -101,7 +101,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                                     <MaskedInputField id="billing_dd" value={objState.mSelectedDetail?.billing_dd} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
 
                                 </div>
-                                <div className={"col-span-1"}>
+                                <div className={"p-1 col-span-1"}>
                                     <MaskedInputField id="trans_type" value={objState.mSelectedDetail?.trans_type} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
                                     <MaskedInputField id="invoice_sts" value={objState.mSelectedDetail?.invoice_sts} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
                                     <MaskedInputField id="apply_to_sts" value={objState.mSelectedDetail?.apply_to_sts} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
