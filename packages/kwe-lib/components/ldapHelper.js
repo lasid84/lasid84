@@ -1,3 +1,4 @@
+const { error } = require('console');
 const { log } = require('./logHelper');
 const ldap = require('ldapjs');
 
@@ -98,7 +99,7 @@ async function checkAccount(user_id, password, callback) {
           }
         });
       } catch (ex) {
-        log(ex);
+        error(ex);
       }
 };
 
