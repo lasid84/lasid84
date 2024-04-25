@@ -138,7 +138,7 @@ const SearchForm = ({ loadItem }: any) => {
               id="cust_code"
               // label="trans_mode"
               listItem={custcode as gridData}
-              valueCol={["cust_nm"]}
+              valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
               displayCol="cust_nm"
               gridOption={{
                 colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
@@ -146,6 +146,7 @@ const SearchForm = ({ loadItem }: any) => {
               gridStyle={{ width: '600px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
               inline={true}
+              isNoSelect={true}
             />
             <MaskedInputField id="mwb_no" label="mwb_no" value={mwb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
