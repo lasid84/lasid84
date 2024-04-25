@@ -43,7 +43,7 @@ async function checkAccount(user_id, password, callback) {
       client.bind(`${user_id}@kwekr.local`, password, (err) => {
           if (err) {
             console.error('LDAP authentication failed:', err);
-            callback(false, err.message)
+            callback(false, null, err.message)
           } else {
             // log('LDAP authentication succeeded');
         
@@ -61,6 +61,7 @@ async function checkAccount(user_id, password, callback) {
                   // log("search start")
               if (searchErr) {
                   console.error('Error searching for user:', searchErr);
+                  callback(false, null, searchErr)
               } else {
                   
                   searchRes.on('searchEntry', (entry) => {
@@ -72,13 +73,16 @@ async function checkAccount(user_id, password, callback) {
                 
                   searchRes.on('error', (error) => {
                       console.error('Error fetching user information:', error);
+                      callback(false, null, error)
                     });
 
                     searchRes.on('searchReference', (ref) => {
                       console.error('searchReference', JSON.stringify(ref));
+                      callback(false, null, JSON.stringify(ref));
                     });
                     searchRes.on('page', (error) => {
                       console.error('page');
+                      callback(false, null, error);
                     });
 
                   searchRes.on('end', function(result) {
@@ -87,6 +91,7 @@ async function checkAccount(user_id, password, callback) {
                       client.unbind((err) => {
                           if (err) {
                             log('Error while unbinding:', err);
+                            callback(false, null, err);
                           } else {
                             log('Client unbound successfully.');
                           }});

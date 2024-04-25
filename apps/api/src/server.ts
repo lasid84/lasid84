@@ -91,7 +91,7 @@ export const createServer = (): Express => {
         return res.json({ success:false, message: 'Input ID', token:'', userData:'' })
       }
 
-      await checkAccount(user_id, password, async (isAuthenticated:any, userObject:any) => {
+      await checkAccount(user_id, password, async (isAuthenticated:any, userObject:any, err:any) => {
         if (isAuthenticated) {
           // 세션에 사용자 정보 저장
           //req.session.user = userObject;
@@ -117,7 +117,7 @@ export const createServer = (): Express => {
           // 인증 실패시 처리
           log("실패");
           //res.status(401).json({ success: true, message: 'Authentication failed' });
-          res.json({ success:false, message: 'Authentication failed', token:'', userData:'' })
+          res.json({ success:false, message: 'Authentication failed - ' + err, token:'', userData:'' })
         }
       })
     })
