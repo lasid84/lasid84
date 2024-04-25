@@ -79,7 +79,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                         </>
                         }>
                         <div className={`flex flex-col w-full h-[400px] ${selectedTab == "NM" ? "" : "hidden"}`}>
-                            <div className="overflow-y-auto md:grid md:grid-cols-5">
+                            <div className="overflow-y-auto grid md:grid-cols-5">
                                 <div className={"p-1 col-span-2"}>
                                     <MaskedInputField id="trans_mode" value={objState.mSelectedDetail?.trans_mode} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="invoice_no" value={objState.mSelectedDetail?.invoice_no} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
@@ -93,7 +93,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                                     <DatePicker id={"on_board_dd"} value={objState.mSelectedDetail?.on_board_dd} options={{ inline: true, textAlign: 'center', freeStyles: "hover:bg-amber-200 underline border-1 border-slate-300  min-w-200 max-w-500" }} height="h-6" />
                                     <DatePicker id={"arrived_dd"} value={objState.mSelectedDetail?.arrived_dd} options={{ inline: true, textAlign: 'center', freeStyles: "hover:bg-amber-200 underline border-1 border-slate-300  min-w-200 max-w-500" }} height="h-6" />
                                     <MaskedInputField id="billto_code" value={objState.mSelectedDetail?.billto_code} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
-                                    <MaskedInputField id="billto_nm_kor" value={objState.mSelectedDetail?.billto_nm_kor} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
+                                    <MaskedInputField id="billto_nm_kor" value={objState.mSelectedDetail?.billto_nm_kor} options={{ isReadOnly: true, textAlign: 'center', inline: true, outerClassName: 'col-span-3' }} width="w-96" height='h-6' />
                                     <MaskedInputField id="cust_tax_id" value={objState.mSelectedDetail?.cust_tax_id} options={{ isReadOnly: true, textAlign: 'center', inline: true, type: "bz_reg_no" }} height='h-6' />
                                     <MaskedInputField id="origin_port" value={objState.mSelectedDetail?.origin_port} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="freight_term" value={objState.mSelectedDetail?.freight_term} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
@@ -101,17 +101,17 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                                     <MaskedInputField id="billing_dd" value={objState.mSelectedDetail?.billing_dd} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
 
                                 </div>
-                                <div className={"p-1 col-span-1"}>
+                                <div className={"col-span-1"}>
                                     <MaskedInputField id="trans_type" value={objState.mSelectedDetail?.trans_type} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
                                     <MaskedInputField id="invoice_sts" value={objState.mSelectedDetail?.invoice_sts} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
                                     <MaskedInputField id="apply_to_sts" value={objState.mSelectedDetail?.apply_to_sts} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
-                                    <div className="h-12" />
+                                    <div className="h-14" />
                                     <MaskedInputField id="invoice_type2" value={objState.mSelectedDetail?.invoice_type2} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
-                                    <div className="h-12" />
+                                    <div className="h-14" />
                                     <MaskedInputField id="house_bl_type" value={objState.mSelectedDetail?.house_bl_type} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
                                     <div className="h-12" />
                                     <div className="h-12" />
-                                    <div className="h-6" />
+                                    <div className="h-12" />
                                     <MaskedInputField id="dest_port" value={objState.mSelectedDetail?.dest_port} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' lwidth='w-12' />
                                     <div className="h-6" />
                                     <MaskedInputField id="tax_seq2" value={objState.mSelectedDetail?.tax_seq2} options={{ isReadOnly: true, textAlign: 'center', inline: true, noLabel: true }} height='h-6' />
@@ -120,15 +120,15 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                                 <div className={"p-1 col-span-2"}>
                                     <MaskedInputField id="invoice_curr" value={objState.mSelectedDetail?.invoice_curr} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="local_curr" value={objState.mSelectedDetail?.local_curr} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
-                                    <MaskedInputField id="invoice_tot_amt" value={objState.mSelectedDetail?.invoice_tot_amt} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number"}} height='h-6' />
-                                    <MaskedInputField id="invoice_taxable" value={objState.mSelectedDetail?.invoice_taxable} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number",  isAllowDecimal: true}} height='h-6' />
+                                    <MaskedInputField id="invoice_tot_amt" value={objState.mSelectedDetail?.invoice_tot_amt} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number" }} height='h-6' />
+                                    <MaskedInputField id="invoice_taxable" value={objState.mSelectedDetail?.invoice_taxable} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", isAllowDecimal: true }} height='h-6' />
                                     <MaskedInputField id="invoice_taxable1" value={objState.mSelectedDetail?.invoice_taxable1} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
                                     <MaskedInputField id="invoice_taxable2" value={objState.mSelectedDetail?.invoice_taxable2} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
                                     <MaskedInputField id="invoice_taxable3" value={objState.mSelectedDetail?.invoice_taxable3} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
                                     <MaskedInputField id="invoice_non_taxable" value={objState.mSelectedDetail?.invoice_non_taxable} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
                                     <MaskedInputField id="invoice_tot_vat" value={objState.mSelectedDetail?.invoice_tot_vat} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
                                     <MaskedInputField id="exchg_rt" value={objState.mSelectedDetail?.exchg_rt} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
-                                    <MaskedInputField id="local_tot_amt" value={objState.mSelectedDetail?.local_tot_amt} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number"}} height='h-6' />
+                                    <MaskedInputField id="local_tot_amt" value={objState.mSelectedDetail?.local_tot_amt} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number" }} height='h-6' />
                                     <MaskedInputField id="local_taxable" value={objState.mSelectedDetail?.local_taxable} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
                                     <MaskedInputField id="local_taxable1" value={objState.mSelectedDetail?.local_taxable1} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
                                     <MaskedInputField id="local_taxable2" value={objState.mSelectedDetail?.local_taxable2} options={{ isReadOnly: true, textAlign: 'right', inline: true, type: "number", limit: 7, isAllowDecimal: true, decimalLimit: 2 }} height='h-6' />
@@ -221,8 +221,8 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                         </div>
                     </PageContent>
                 </div>
-            </form>
-        </FormProvider>
+            </form >
+        </FormProvider >
     );
 })
 

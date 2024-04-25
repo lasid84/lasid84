@@ -40,6 +40,7 @@ type Props = {
     isReadOnly?:boolean;      //읽기전용여부
     noLabel?:boolean;
     useIcon?:boolean; 
+    outerClassName?:string;    //outerClassName
   };
 
   events?: {
@@ -58,7 +59,7 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
   const {id, label, value, width, lwidth, height, options = {}, events } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon= false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
-    freeStyles = '', radius = 'none'
+    freeStyles = '', radius = 'none', outerClassName=''
    } = options;
   const {mask, pipe, placeholder} = getMask(type, options);
 
@@ -127,9 +128,9 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
   }
 
   return (
-    <InputWrapper outerClassName="" inline={inline}>
+    <InputWrapper outerClassName={outerClassName} inline={inline}>
       {!noLabel && <Label id={id} name={label} lwidth={lwidth} textAlignLB={textAlignLB}/>}
-      <div className='flex w-full row'>
+      <div className={`flex w-full ${outerClassName}`}>
       <Controller
           name = {id}
           control={control}
