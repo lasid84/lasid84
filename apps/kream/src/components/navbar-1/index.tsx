@@ -5,6 +5,7 @@ import { useConfigs } from "states/useConfigs";
 import { useEffect, useState, useMemo, memo } from "react";
 import { useUserSettings } from "states/useUserSettings";
 // import { useSession, signIn, signOut } from 'next-auth/react';
+import PageTitle from "components/page-title/page-title";
 import { logOut } from "@/services/serverAction";
 import {signOut} from "next-auth/react";
 import { shallow } from "zustand/shallow";
@@ -45,13 +46,14 @@ function Navbar() {
           <button
             onClick={() =>
               configActions.
-                setConfig({
-                  collapsed: !collapsed,
-                })
+              setConfig({
+                collapsed: !collapsed,
+              })
             }
             className="mx-4">
             <FiMenu size={20} />
           </button>
+            <PageTitle />
           <span className="ml-auto"></span>
 
           <button

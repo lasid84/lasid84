@@ -46,8 +46,8 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
   const title = getMenuTitle(navigation, router, params);
 
   return (
-    <div className="w-full mb-1">
-      <div className="flex flex-row items-center justify-between mt-1 mb-2">
+    // <div className="w-full">
+      <div className="w-1/2 flex flex-row items-center justify-between mt-1">
         <div className="flex flex-col">
            <div className="px-6 text-lg font-bold">{t(title!)}</div>
            { desc && 
@@ -64,7 +64,7 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
         </div>
         }       
       </div>
-    </div>
+    // </div>
   );
 });
 
