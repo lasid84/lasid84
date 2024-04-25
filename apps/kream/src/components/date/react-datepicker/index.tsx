@@ -3,7 +3,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale'; //한국어 설정
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { SyntheticEvent, forwardRef, useEffect, useState } from 'react';
+import { KeyboardEventHandler, SyntheticEvent, forwardRef, useEffect, useState } from 'react';
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
 import clsx from 'clsx';
@@ -45,6 +45,7 @@ type Props = {
   events?: {
     onChange? : (date: Date | null, event: React.SyntheticEvent<any> | undefined) => void;
     onKeyDown? : (event: React.KeyboardEvent<HTMLDivElement>) => void;
+    onFocus? : (event: React.FocusEvent<HTMLDivElement>) => void;
   }
 };
 
@@ -106,6 +107,16 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     
         }
       }
+
+      function handleFocus(e:React.FocusEvent<HTMLInputElement>) {
+        log("handelFocus", e, document.querySelector('.react-datepicker__input'));
+        // (document.querySelector('.react-datepicker__input') as HTMLInputElement).select();
+        e.target.select();
+
+        if (events?.onFocus) {
+            events.onFocus(e);
+        }
+      }
     
     function handelChange(date: Date | null, e: any): void {
         log("handelChange", e?.target, date);
@@ -164,6 +175,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
                             // showYearDropdown={true}
                             // {...rules}
                             maxDate={new Date('9999-12-31')}
+                            onFocus={handleFocus}
                             onChange={handelChange}
                             onBlur={handleBlur}
                             onCalendarClose={handleCalendarClose}

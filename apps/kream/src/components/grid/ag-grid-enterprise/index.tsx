@@ -181,6 +181,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
                   }
                 })
               }
+
+              // if () {
+              //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
+              // }
           }, 
           // onCellValueChanged: onCellValueChanged,
           // onSelectionChanged: onSelectionChanged,
@@ -594,7 +598,7 @@ export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
 
   if (!rowCount) return;
   
-const allColumnIds: string[] = [];
+  const allColumnIds: string[] = [];
   gridApi.api.getColumns().forEach((column:any) => {
     if (column.visible) allColumnIds.push(column.getId());
   });

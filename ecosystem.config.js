@@ -3,6 +3,7 @@ module.exports = {
       name: 'api',
       script: './dist/index.js',
       cwd: "./apps/api",
+      out_file: '/dev/null',
       autorestart: true,
       watch: '.',
       env: {
@@ -13,6 +14,7 @@ module.exports = {
       name: 'batch',
       script: './dist/index.js',
       cwd: "./apps/batch",
+      out_file: '/dev/null',
       // instances: 4,
       // exec_mode: 'cluster',
       autorestart: true,
@@ -25,6 +27,7 @@ module.exports = {
       name: 'kream',
       script: 'pnpm start',
       cwd: './apps/kream',
+      out_file: '/dev/null',
       autorestart: true,
       watch: '.',
       env: {

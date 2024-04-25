@@ -11,7 +11,7 @@ import compression from "compression";
 // const {callFunction} = require("@repo/kwe-lib/components/dbDTOHelper.ts");
 import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
 import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
-import { log } from '@repo/kwe-lib/components/logHelper';
+import { log, error } from '@repo/kwe-lib/components/logHelper';
 import { dataContainer } from '@repo/kwe-lib/components/dataContainer';
 // import { decode } from '@repo/kwe-lib/components/next-auth/jwt';
 // import {decode} from '@auth/core/jwt';
@@ -59,59 +59,24 @@ export const createServer = (): Express => {
       try {
 
         const accessToken = req.headers['authorization'];
-        log(accessToken)
+        // log(accessToken)
         if (!accessToken) {
           return res.status(401).json({ error: 'Access token not provided' });
         }
-
-        // const decoded = await decode({
-        //     salt: 'authjs.session-token',
-        //     token: accessToken,
-        //     secret: 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E='
-        // });
-
-        // log("decoded: ",decoded);
-
-        // if (!checkNextAuthSessionToken(accessToken)) {
-        //     log("invalid", accessToken);
-        //     return res.status(403).json({ error: 'Invalid access token' });
-        // }
-        // const token = jwt.sign({ userId: 'stephen.lim' }, 'secretKey', { expiresIn: '1h' });
         
         try {
           const decoded = jwt.verify(accessToken, 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=');
-          log(decoded);
         } catch (err) {
-          log("Authorize Error : ", err.message);
+          error("Authorize Error : ", err.message);
           let dc = new dataContainer(); 
           dc.setNumericData(-1);
           dc.setTextData("Authorize Error : "+ err.message);
           return res.json(dc);
         }
         
-
-        // try {
-        //   log("시작================", accessToken);
-        //   const decoded = jwt.verify(accessToken, 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=');
-        //   log("끝================", decoded);
-        // } catch (err) {
-        //   log("err================", err.message);
-        //   return res.status(403).json({ error: 'Invalid access token' });
-        // }
-
-        // // 토큰 검증
-        // jwt.verify(accessToken, 'your_secret_key', (err, decoded) => {
-        //   if (err) {
-        //     return res.status(403).json({ error: 'Invalid access token' });
-        //   }
-        //   req.user = decoded; // 디코딩된 사용자 정보를 요청 객체에 저장
-        //   next();
-        // });
-
-
         const {inproc, inparam, invalue} = req.body;
         const result = await callFunction(inproc, inparam, invalue);
-        log(result)
+        // log(result)
         res.json(result);
       } catch (err) {
         log('Error fetching data:', err);
@@ -128,7 +93,6 @@ export const createServer = (): Express => {
 
       await checkAccount(user_id, password, async (isAuthenticated:any, userObject:any) => {
         if (isAuthenticated) {
-          log("userObject:",userObject);
           // 세션에 사용자 정보 저장
           //req.session.user = userObject;
   
@@ -158,8 +122,7 @@ export const createServer = (): Express => {
       })
     })
     .on('uncaughtException', function (err) {
-      log('An error occurred: ', err);
-      log(err.stack);
+      error('An error occurred: ', err);
     })
     ;
 
