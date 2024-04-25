@@ -48,7 +48,6 @@ function initConfig(isAuth: boolean | undefined, token:any) {
         url: process.env.NEXT_PUBLIC_API_URL,
         accessToken: token
     }
-
     return config;
 }
 
@@ -116,6 +115,7 @@ export async function checkADLogin(params:checkLogin) {
         user_id: params.user_id,
         password: params.password
     };
+    log("checkADLogin", config);
     return await postCall(config);
 }
 

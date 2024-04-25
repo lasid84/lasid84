@@ -718,10 +718,9 @@ async function startScraping() {
     }
     catch(ex) {
         if (mainData) {
-            error(idx, ": Parent Ex :", ex, mainData.pgm_code, mainData.bl_no);
             await setBLIFData(mainData, 'R', '', ex);
         }    
-        error(ex)    
+        error(idx, ": Parent Ex :", ex, mainData.pgm_code, mainData.bl_no);
         errCnt++;
     } finally {
         onExcute = false;
