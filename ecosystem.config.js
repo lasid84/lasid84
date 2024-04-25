@@ -56,7 +56,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api -o "/dev/null"',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api -o NULL',
     },
     // batch_prod : {
     //   key : './id_rsa-batch-prod', 
