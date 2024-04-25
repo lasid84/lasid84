@@ -19,7 +19,7 @@ async function init() {
   const objectPath = require("object-path");
   const fs = require("fs").promises;
 
-  var iniData = ini.decode(await fs.readFile(process.cwd() + "/configs/server.ini", "utf8"));
+  var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
   ldapServerUrl = objectPath.get(iniData, "sso.url");
   baseDN = 'ou=kwekr_user,dc=kwekr,dc=local';
 
