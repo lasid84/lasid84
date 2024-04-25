@@ -11,8 +11,8 @@ import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import Tab, { tab, TabICON } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
-import WBMain from "./_component/wb_Main";
-import WBSub from "./_component/wb_Sub";
+import WBMain from "./_component/wbMain";
+import WBSub from "./_component/wbSub";
 // import WBReference from "./_component/waybillReference"
 // import ChargesGrid from "./_component/gridCharges";
 // import ShipmentDetailGrid from "./_component/gridShipDetail";

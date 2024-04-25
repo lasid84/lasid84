@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, memo } from "react"
 import { makeZodI18nMap } from "zod-i18n-map";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import PageSearch from "@/layouts/search-form/page-search"
+import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import Select from "react-select"
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
@@ -69,7 +69,7 @@ const SearchForm: React.FC<Props> = (props) => {
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSearch)}>
-                <PageSearch
+                <PageSearchButton
                     right={
                         <>
                             <TButtonDarkgray label={t("search")} onClick={onSearch} />
@@ -80,7 +80,7 @@ const SearchForm: React.FC<Props> = (props) => {
                         </>
                     }>
                     <ReactSelect id="grp_cd" name="grp" options={groupcd} inline={true}/>
-                </PageSearch>
+                </PageSearchButton>
             </form>
         </FormProvider >
     )

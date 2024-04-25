@@ -27,7 +27,7 @@ const Stnd0005: React.FC = () => {
         <TableContext.Provider value={val}>                
             <SearchForm initData={initData} />
             <div className="flex flex-col w-full">
-                <div className={`ag-theme-custom w-full h-[450px]`}>
+                <div className={`ag-theme-custom w-full`}>
                     <MasterGrid initData={initData} />
                 </div>
             </div>

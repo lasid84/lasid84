@@ -30,7 +30,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         colVisible: { col: ["grp_cd", "grp_cd_nm", "cd", "cd_nm", "cd_desc", "cd_mgcd1", "cd_mgcd2", "use_yn"], visible: true },
         colDisable: ["grp_cd", "grp_cd_nm", "cd"],
         checkbox: ["use_yn"],
-        gridHeight: "70vh",
+        gridHeight: "h-[calc(100vh-60px)]",
         // dataType: { "bz_reg_no":"bizno"},
         // isMultiSelect: false,
         isAutoFitColData: false,

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch from "layouts/search-form/page-search";
+import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
 // import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
@@ -123,7 +123,7 @@ const SearchForm = memo(({loadItem}:any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
-        <PageSearch
+        <PageSearchButton
           right={
             <>
               <Button id={"search"} onClick={onSearch} />
@@ -201,7 +201,7 @@ const SearchForm = memo(({loadItem}:any) => {
               // isNoSelect={false}
             /> */}
           </div>
-        </PageSearch>
+        </PageSearchButton>
       </form>
     </FormProvider>
   );

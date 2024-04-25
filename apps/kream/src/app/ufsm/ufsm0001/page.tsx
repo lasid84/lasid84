@@ -11,13 +11,13 @@ import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import Tab, { tab, TabICON } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
-import WBMain from "./_component/wb_Main";
-import WBSub from "./_component/wb_Sub";
-import WBReference from "./_component/wb_references"
+import WBMain from "./_component/wbMain";
+import WBSub from "./_component/wbSub";
+import WBReference from "./_component/wbreferences"
+import WBShipmentDetails from "./_component/wbShipmentDetails"
+import WBCharges from "./_component/wbCharges"
+import WBShipmentText from "./_component/wbShipmentText"
 import ChargesGrid from "./_component/gridCharges";
-import WBShipmentDetails from "./_component/wb_ShipmentDetails"
-import WBCharges from "./_component/wb_Charges"
-import WBShipmentText from "./_component/wb_ShipmentText"
 import ShipmentDetailGrid from "./_component/gridShipDetail";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
