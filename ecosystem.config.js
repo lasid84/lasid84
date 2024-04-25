@@ -3,7 +3,7 @@ module.exports = {
       name: 'api',
       script: './dist/index.js',
       cwd: "./apps/api",
-      out_file: "/dev/null",
+      out_file: "NUll",
       autorestart: true,
       watch: '.',
       env: {
@@ -14,7 +14,7 @@ module.exports = {
       name: 'batch',
       script: './dist/index.js',
       cwd: "./apps/batch",
-      out_file: "/dev/null",
+      out_file: "NUll",
       // instances: 4,
       // exec_mode: 'cluster',
       autorestart: true,
@@ -27,7 +27,7 @@ module.exports = {
       name: 'kream',
       script: 'pnpm start',
       cwd: './apps/kream',
-      out_file: "/dev/null",
+      out_file: "NUll",
       autorestart: true,
       watch: '.',
       env: {
@@ -56,7 +56,7 @@ module.exports = {
       repo : 'git@gitlab.kwe.co.kr:sdd_it/kream_web.git',
       path : '/home/sdd_it/KREAM_Web',
       ssh_options: ['StrictHostKeyChecking=no'],
-      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api',
+      'post-deploy' : 'pnpm install && pnpm build --filter api && pm2 reload ecosystem.config.js --only api -o "/dev/null"',
     },
     // batch_prod : {
     //   key : './id_rsa-batch-prod', 
