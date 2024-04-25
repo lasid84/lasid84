@@ -95,7 +95,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const [colDefs, setColDefs] = useState<cols[]>([]);
     const [mainData, setMainData] = useState([{}]);
 
-    const [gridStyle, setGridStyle] = useState({height: "85vh"});
+    const [gridStyle, setGridStyle] = useState({height: "100%"});
     const { listItem, options } = props;
 
     const containerStyle = useMemo(() => "flex-col w-full", []);
@@ -447,7 +447,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   useEffect(() => {
     if (options?.gridHeight) {
-      // log("options?.gridHeight", options?.gridHeight)
+      log("options?.gridHeight", options?.gridHeight)
       setGridStyle({height : options?.gridHeight});
     }
   }, [options?.gridHeight]);
