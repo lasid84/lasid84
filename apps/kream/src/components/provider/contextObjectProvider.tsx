@@ -32,7 +32,10 @@ export const TableContext = createContext<State>({
     var type = action.type? action.type : 'type';
     switch (type) {
       default:
-        // log("default", state, action);
+        // let obj = {...state.objState};
+        // Object.assign(obj,action);
+        // log("default", obj);
+        // return {objState: { ...obj }};
         return {
           // ...state,
           objState: {
@@ -40,6 +43,8 @@ export const TableContext = createContext<State>({
             ...action
           }
         }
+          
+        
     }
   }  
 

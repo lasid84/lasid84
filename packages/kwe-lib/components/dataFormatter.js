@@ -31,7 +31,7 @@ function DateToString(source, delimiter = '') {
         const day = (source.getDate()).toString().padStart(2,0);
 
         return [year, month, day].join(delimiter);
-    }
+    };
 };
 
 function stringToFullDateString(source, delimiter = '-') {
@@ -44,7 +44,7 @@ function stringToFullDateString(source, delimiter = '-') {
         const second = source.substring(12,14);
 
         return [year, month, day].join(delimiter) + " " + (hour ? [hour, min, second].join(":") : "");
-    }
+    };
 };
 
 function stringToFullDate(source) {
@@ -61,6 +61,7 @@ function stringToFullDate(source) {
 };
 
 function stringToDate(source) {
+    log("stringToDate", source);
     if (source) {
         const formattedDate = source.replace(/[\/\-\s]/g, '');
         const year = formattedDate.substring(0,4);

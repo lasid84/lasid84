@@ -73,7 +73,7 @@ export type GridOption = {
     isShowFilterBtn?:boolean
     isMultiSelect?: boolean
     isAutoFitColData?: boolean
-    isNoSelect?: boolean
+    isSelectRowAfterRender?: boolean
 };
 
 type cols = {
@@ -157,6 +157,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
             const KEY_DOWN = 'ArrowDown';
         
             const noUpOrDownKey = params.key !== KEY_DOWN && params.key !== KEY_UP;
+            log("navigateToNextCell", noUpOrDownKey, suggestedNextCell);
             if (noUpOrDownKey) {
                 return suggestedNextCell;
             }
@@ -170,8 +171,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
             return suggestedNextCell;
           },
           onComponentStateChanged: () => {
-              // log("onRowDataUpdated", ready);
-              if (!options?.isNoSelect) {
+              log("onComponentStateChanged", options?.isSelectRowAfterRender);
+              if (options?.isSelectRowAfterRender) {
                 log("gridRef.current.api", gridRef.current.api.getSelectedNodes(), gridRef.current.api.getSelectedNodes().length);
                 if (gridRef.current.api.getSelectedNodes().length > 0) return;
                 gridRef.current.api.forEachNode((node:IRowNode, i:number) => {

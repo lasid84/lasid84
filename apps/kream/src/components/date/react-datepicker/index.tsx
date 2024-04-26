@@ -3,7 +3,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale'; //한국어 설정
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { KeyboardEventHandler, SyntheticEvent, forwardRef, useEffect, useState } from 'react';
+import { KeyboardEventHandler, SyntheticEvent, forwardRef, memo, useEffect, useState } from 'react';
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
 import clsx from 'clsx';
@@ -52,7 +52,7 @@ type Props = {
 // const autoCorrectedDatePipe = createAutoCorrectedDatePipe('mm/dd/yyyy HH:MM')
 const autoCorrectedDatePipe = createAutoCorrectedDatePipe('yyyy-MM-dd');
 
-export const DatePicker: React.FC<Props> = (props:Props) => {
+export const DatePicker: React.FC<Props> = memo((props:Props) => {
     // registerLocale("ko", ko);
     const { control, setValue } = useFormContext();
     const { id, label, value, width, height,  options = {}, events } = props;
@@ -76,16 +76,15 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
     }
 
     useEffect(() => {
-        if (selectedVal) {
+        if (selectedVal || selectedVal === null) {
             setValue(id, DateToString(selectedVal));
         }
     }, [selectedVal]);
 
     useEffect(() => {
-        if (value) {
-            log('start value rendering,,', date)
+        if (value || value === null) {
             var date = stringToDate(value);
-            log('value rendering,,,,', date, DateToString(date))
+            //log('value rendering,,,,', date, DateToString(date))
             setSelectedVal(date);
             setValue(id, DateToString(date));
         }
@@ -96,7 +95,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
             if (e.key === "Enter") {
                 const form = e.target.form;
                 const index = [...form].indexOf(e.target);
-                log("handleKeyDown", e.target, index, form);
+                //log("handleKeyDown", e.target, index, form);
                 form[index + 1].focus();
                 e.preventDefault();
             }
@@ -110,7 +109,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
       }
 
       function handleFocus(e:React.FocusEvent<HTMLInputElement>) {
-        log("handelFocus", e, document.querySelector('.react-datepicker__input'));
+        //log("handelFocus", e, document.querySelector('.react-datepicker__input'));
         // (document.querySelector('.react-datepicker__input') as HTMLInputElement).select();
         e.target.select();
 
@@ -120,7 +119,7 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
       }
     
     function handelChange(date: Date | null, e: any): void {
-        log("handelChange", e?.target, date);
+        //log("handelChange", e?.target, date);
 
         // if (date) { 
             setSelectedVal(date);
@@ -136,8 +135,12 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
         log(e.target)
     }
 
-    const handleCalendarClose = () => log("Calendar closed");
-    const handleCalendarOpen = () => log("Calendar opened");
+    const handleCalendarClose = () => {
+        //log("Calendar closed");
+    };
+    const handleCalendarOpen = () => {
+        //log("Calendar opened");
+    };
 
     return (
         <InputWrapper outerClassName="" inline={inline}>
@@ -195,4 +198,4 @@ export const DatePicker: React.FC<Props> = (props:Props) => {
             {/* </div> */}
         </InputWrapper>
     )
-};
+});

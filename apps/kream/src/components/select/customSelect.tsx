@@ -17,7 +17,7 @@ type Props = {
   gridOption?: GridOption // 
   gridStyle?: GridStyle
   style?:Style
-  isNoSelect?:boolean     // 초기 렌더시 첫번째값 선택 여부
+  isSelectRowAfterRender?:boolean     // 초기 렌더시 첫번째값 선택 여부
   defaultValue?: string   // 기본값, 설정시 isNoSelect는 무시
   inline?:boolean
 }
@@ -44,7 +44,7 @@ function CustomSelect(props:Props) {
     // const [isReady, setIsReady] = useState(false);
 
     const { register, setValue, getValues } = useFormContext();
-    const { id, label, listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isNoSelect } = props;
+    const { id, label, listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender } = props;
     const defaultStyle = {
       width : '200px',
       ...style
@@ -88,7 +88,7 @@ function CustomSelect(props:Props) {
       //     }
       //   })
       // }
-      if (!isNoSelect && listItem?.data) {
+      if (isSelectRowAfterRender && listItem?.data) {
         if (displayText === initText) {
           var row = listItem.data[0];
           var val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
@@ -180,7 +180,7 @@ function CustomSelect(props:Props) {
               <Grid
                   gridRef={gridRef}
                   listItem={listItem}
-                  options={{...gridOption, gridHeight:defaultGridStyle.height, isNoSelect:isNoSelect}}
+                  options={{...gridOption, gridHeight:defaultGridStyle.height, isSelectRowAfterRender:isSelectRowAfterRender}}
                   event={{
                       //  onCellValueChanged: handleCellValueChanged,
                       //  onSelectionChanged: handleSelectionChanged

@@ -115,7 +115,7 @@ export async function checkADLogin(params:checkLogin) {
         user_id: params.user_id,
         password: params.password
     };
-    log("checkADLogin", config);
+    // log("checkADLogin", config);
     return await postCall(config);
 }
 
