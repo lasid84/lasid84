@@ -31,6 +31,10 @@ button {
   }
 }
 
+.mouse-hover{
+  @apply outline-none cursor-pointer;
+}
+
 a,
 input[type="submit"],
 button {
@@ -47,6 +51,8 @@ button:active,
 button:focus {
   @apply outline-none;
 }
+
+
 
 /**
  * hide scrollbars

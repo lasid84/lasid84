@@ -73,8 +73,9 @@ export function TabICON({ tabList, onClickTab, onClickICON, MselectedTab }: Prop
                             }
                             type="button">{t(cd_nm)}</button>
                         {cd && cd !== 'Main' ? <span className={cd === MselectedTab
-                            ? "flex p-1 items-center font-medium text-xs leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
-                            : "flex p-1 items-center font-medium text-xs leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"} onClick={onClickICON}><AiOutlineClose id={cd} /></span> : <></>}
+                            ? "flex p-1 items-center font-medium text-xs leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500 mouse-hover"
+                            : "flex p-1 items-center font-medium text-xs leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500 mouse-hover"} onClick={onClickICON}>
+                                <AiOutlineClose id={cd} /></span> : <></>}
                     </div>
                 ))}
             </div>
