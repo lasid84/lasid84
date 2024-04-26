@@ -9,7 +9,7 @@ import SearchForm from "./_component/search-form"
 import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import Tab, { tab, TabICON } from "components/tab/tab"
+import SubMenuTab, { tab, TabICON } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/wbMain";
 import WBSub from "./_component/wbSub";
@@ -94,7 +94,7 @@ function UFSM0002() {
                 <SearchForm loadItem={initData} />
                 <MasterGrid initData={initData} />
             </div> : <>
-                <Tab tabList={tab} onClickTab={handleOnClickTab} />
+                <SubMenuTab tabList={tab} onClickTab={handleOnClickTab} />
                 <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                     <WBMain loadItem={initData} isSelected={selectedTab === "NM"} />
                 </div>

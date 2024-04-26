@@ -11,27 +11,27 @@ type Props = {
     init?: boolean; // 초기화
     tabList: tab[] | undefined; // 탭 리스트
     MselectedTab?: string;
-    options? : {
+    options?: {
         tabAlign?: string;
     }
     onClickTab: (selectedTab: any) => void;
     onClickICON?: (selectedTab: any) => void;
 };
 
-export const Tab: React.FC<Props> = (props:Props)=>{
-// export default function Tab({ tabList, onClickTab }: Props) {
+export const SubMenuTab: React.FC<Props> = (props: Props) => {
+    // export default function Tab({ tabList, onClickTab }: Props) {
     const { t } = useTranslation();
     const [selectedTab, setSelectedTab] = useState<any>("NM");
 
-    const {init, tabList, MselectedTab, options={}, onClickTab, onClickICON} = props;
-    const {tabAlign} = options
+    const { init, tabList, MselectedTab, options = {}, onClickTab, onClickICON } = props;
+    const { tabAlign } = options
 
     useEffect(() => {
         selectedTab && onClickTab(selectedTab);
     }, [selectedTab]);
 
     return (
-        <div className="w-full flex place-items-center">
+        <div className="w-full flex place-items-center overflow-x-scroll p-1">
             <div className="flex flex place-items-center">
                 {tabList?.map(({ cd, cd_nm }, idx) => (
                     <div key={idx} className="px-1 flex bg-transparent">
@@ -43,8 +43,11 @@ export const Tab: React.FC<Props> = (props:Props)=>{
                                     ? "px-1 flex font-medium items-center text-xs px-2 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
                                     : "px-1 flex font-medium items-center text-xs px-2 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
                             } type="button">
-                            <div className="border-2 w-5 h-5 flex-row text-xs items-center bg-blue-300 rounded-full text-white">{idx + 1}</div>
-                            {t(cd_nm)}
+                            <div className="border-2 w-5 h-5 flex-row text-xs items-center bg-blue-300 rounded-full text-white text-center">{idx + 1}</div>
+                            <div className="flex min-h-full">
+                                <div className="flex items-center self-center place-content-around">{t(cd_nm)}</div>
+                               
+                            </div>                         
                         </button>
                     </div>
                 ))}
@@ -79,4 +82,4 @@ export function TabICON({ tabList, onClickTab, onClickICON, MselectedTab }: Prop
     );
 }
 
-export default Tab
+export default SubMenuTab
