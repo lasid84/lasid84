@@ -33,6 +33,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         maxWidth: {"billing_yn": 100},
         dataType: { "bz_reg_no": "bizno" },
         isAutoFitColData: false,
+        isSelectRowAfterRender:true
     };
 
     const handleRowClicked = async (param: RowClickedEvent) => {

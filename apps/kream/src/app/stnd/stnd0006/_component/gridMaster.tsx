@@ -29,6 +29,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const gridOption: GridOption = {
         colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+        gridHeight: "80vh",
         checkbox: ["no"],
         editable: ["trans_mode"],
         dataType: { "create_date" : "date", "vat_rt":"number"},
