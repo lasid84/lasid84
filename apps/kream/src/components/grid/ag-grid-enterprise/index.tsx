@@ -10,7 +10,8 @@ import "./style.css";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, 
   PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy, 
-  SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent } from "ag-grid-community";
+  SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent, 
+  FirstDataRenderedEvent} from "ag-grid-community";
 
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
@@ -45,6 +46,7 @@ type GridEvent = {
   onColumnResized?: (params: ColumnResizedEvent) => void;
   onGridReady?: (params: GridReadyEvent) => void;
   onRowDataUpdated?: (params: RowDataUpdatedEvent) => void;
+  onFirstDataRendered?: (params: FirstDataRenderedEvent) => void
 }
 
 export type GridOption = {
@@ -90,6 +92,11 @@ type cols = {
 }
 
 const ListGrid: React.FC<Props> = memo((props) => {
+
+    log("ListGrid", props);
+
+    if (!props.listItem) return <></>;
+
     const { t } = useTranslation();
 
     const [colDefs, setColDefs] = useState<cols[]>([]);
@@ -117,8 +124,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
         floatingFilter: options?.isShowFilter === undefined || options?.isShowFilter ? true : false,      
         headerClass: "text-center",
         editable:true,
-        suppressMenu: true,
-        floatingFilterComponentParams: {suppressFilterButton:!options?.isShowFilterBtn ? true : false },
+        // suppressMenu: true,
+        // floatingFilterComponentParams: {suppressFilterButton:!options?.isShowFilterBtn ? true : false },
+        suppressFloatingFilterButton: !options?.isShowFilterBtn ? true : false,
       };
     }, []);
 
@@ -171,22 +179,23 @@ const ListGrid: React.FC<Props> = memo((props) => {
             return suggestedNextCell;
           },
           onComponentStateChanged: () => {
-              log("onComponentStateChanged", options?.isSelectRowAfterRender);
+              log("onComponentStateChanged", gridRef.current.api.getRowNode(mainData.length - 1), mainData.length);
+              
               if (options?.isSelectRowAfterRender) {
-                log("gridRef.current.api", gridRef.current.api.getSelectedNodes(), gridRef.current.api.getSelectedNodes().length);
                 if (gridRef.current.api.getSelectedNodes().length > 0) return;
+                
                 gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
                   if (i === 0) {
-                    node.setSelected(true);
-                    log("onComponentStateChanged selected", node)
+                      node.setSelected(true);
+                      log("onComponentStateChanged selected", node)
                   }
-                })
-              }
+                });
+              };
 
               // if () {
               //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
               // }
-          }, 
+          },
           // onCellValueChanged: onCellValueChanged,
           // onSelectionChanged: onSelectionChanged,
           // ...props.event
@@ -198,12 +207,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
     | SizeColumnsToFitProvidedWidthStrategy
     | SizeColumnsToContentStrategy
       >(() => {
-        log("=====options?.isAutoFitColData", options?.isAutoFitColData);
-        if (!options?.isAutoFitColData) {
-          return {
-            type: 'fitGridWidth',
-          };
-        }
+        // log("=====options?.isAutoFitColData", options?.isAutoFitColData);
+        // if (!options?.isAutoFitColData) {
+        //   return {
+        //     type: 'fitGridWidth',
+        //   };
+        // }
         return {
           type: 'fitCellContents',
         };
@@ -231,36 +240,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
       //         })
       //       )
       // }, [listItem?.data]);
-
-  // useEffect(() => {
-  //   if(isReady) autoSizeAll(props.gridRef);
-  // }, [isReady]);
   
   //컬럼 세팅
   useEffect(() => {
     if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0) {
       let cols:cols[] = [];
-      let dataFormatter = {};
-      
-      // let ischkNo = false;
-      // if (options?.checkbox) {
-      //   ischkNo = (options?.checkbox?.indexOf('no') | 0) > -1 ? true : false;
-      // };
-      // //컬럼 셋팅
-      // cols.push({
-      //     field:'no',
-      //     headerName: 'No',
-      //     valueGetter: 'node.rowIndex + 1',
-      //     floatingFilter: false,
-      //     ...{
-      //       cellDataType : 'text',
-      //       cellStyle: { textAlign: "center" },
-      //       headerCheckboxSelection: options?.isMultiSelect ? true : false,
-      //       checkboxSelection: ischkNo,
-      //     }
-      // });
-
-      // const columns = Object.keys(listItem[0]);
 
       //Field {
       // name: 'cust_code',
@@ -377,6 +361,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //체크박스 셋팅
         if (options?.checkbox) {
           if (options.checkbox.indexOf(col) > -1) {
+            log("checkbox:", col)
             cellOption = {
               ...cellOption,
               // editable:true,
@@ -440,7 +425,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
       setColDefs(cols);
       setMainData(listItem.data.map((row:any)=> {
         if (options?.checkbox) {
-          options?.checkbox.map((col) => row[col] = row[col] === 'Y' ? true : false )
+          options?.checkbox.map((col) => {
+            if (row[col]) row[col] = row[col] === 'Y' ? true : false 
+          })
         }
         return {
           ...row
@@ -468,7 +455,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
     if (event?.onSelectionChanged) event.onSelectionChanged(param);
 
-    if (options?.isAutoFitColData) autoSizeAll(param);
   }
 
   const onRowClicked = (param:RowClickedEvent) => {
@@ -491,6 +477,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     log('onRowDataUpdated', param);
 
     if (event?.onRowDataUpdated) event.onRowDataUpdated(param);
+    
   }
 
   const onCutStart = (param: CutStartEvent) => {
@@ -522,7 +509,39 @@ const ListGrid: React.FC<Props> = memo((props) => {
     log('onColumnResized', param);
 
     if (event?.onColumnResized) event.onColumnResized(param);
-  }                      
+  }
+
+  const onFirstDataRendered = (param: FirstDataRenderedEvent) => {
+    log('onFirstDataRendered', param);
+    if (options?.isAutoFitColData) autoSizeAll(gridRef.current);
+
+    if (event?.onFirstDataRendered) event.onFirstDataRendered(param);
+  }
+
+  const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
+
+    var rowCount = gridApi?.api?.getRenderedNodes().length;
+    log('autoSizeAll called!!!!!!!!', gridApi?.api?.getRenderedNodes(), rowCount);
+
+    const allColumnIds: string[] = [];
+    gridApi.api.getColumns().forEach((column:any) => {
+      if (column.visible) allColumnIds.push(column.getId());
+    });
+    if (allColumnIds.length) gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
+    
+
+    // gridApi.api.getColumns().forEach((column:any) => {
+    //   if (column.visible)  {
+    //     gridApi.api.autoSizeColumn(column.getId(), skipHeader);
+    //   }
+    // });
+  
+    // if (gridApi.current && !isReady) {
+    //   setReady(true);
+      // gridApi.current?.api.autoSizeAllColumns(skipHeader);
+    // } 
+  
+  };
 
   
     return (
@@ -537,12 +556,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
                   <AgGridReact
                       ref={gridRef}
                       gridOptions={gridOptions}
-                      // onGridReady={onGridReady}
                       rowData={mainData}
                       columnDefs={colDefs}
                       defaultColDef={defaultColDef}
-                      // editType={'fullRow'}
-                      autoSizeStrategy={autoSizeStrategy}
+                      // autoSizeStrategy={autoSizeStrategy}
                       onGridReady={onGridReady}
                       onSelectionChanged={onSelectionChanged}
                       onRowClicked={onRowClicked}
@@ -553,6 +570,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
                       onPasteStart={onPasteStart}
                       onPasteEnd={onPasteEnd}
                       onColumnResized={onColumnResized}
+                      onFirstDataRendered={onFirstDataRendered}
 
                   />
               </div>
@@ -589,27 +607,6 @@ export const rowAdd = async (gridRef: {api:any}, initData:{} = {}) => {
   });
 };
 
-export const autoSizeAll = (gridApi:any, skipHeader: boolean = false) => {
-
-  // gridRef.current.api.sizeColumnToFit();
-  // var rowCount = gridApi.current?.api.getRowNode();
-  var rowCount = gridApi?.api?.getRenderedNodes().length;
-  log('autoSizeAll called!!!!!!!!', gridApi, rowCount);
-  // if (!gridApi) return;
-
-  if (!rowCount) return;
-  
-  const allColumnIds: string[] = [];
-  gridApi.api.getColumns().forEach((column:any) => {
-    if (column.visible) allColumnIds.push(column.getId());
-  });
-  gridApi.api.autoSizeColumns(allColumnIds, skipHeader);
-
-  // if (!gridApi.current) gridApi.current?.api.autoSizeAllColumns(skipHeader); 
-
-};
-
-
 const dateFormatter = (params: ValueFormatterParams) => {
   return stringToFullDateString(params.value, '-');
   // return stringToDateString(params.value, '-');
@@ -642,7 +639,7 @@ const checkBoxFormatter = (params: ValueFormatterParams) => {
 
 const bizNoFormatter = (params: ValueFormatterParams) => {
   // log("bizNoFormatter", params)
-  // return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
+  return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
 }
 
 function checkBoxParser(params: ValueParserParams) {

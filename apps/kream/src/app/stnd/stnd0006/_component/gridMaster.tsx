@@ -1,15 +1,13 @@
 
 'use client';
 
-import {useEffect, useReducer, useMemo, useCallback, useRef, memo } from "react";
+import {useEffect, useCallback, useRef, memo, } from "react";
 import { SP_GetData } from "./data";
-import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
+import {  crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-
-import { propagateServerField } from "next/dist/server/lib/render-server";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import Modal from "./popup";
 
@@ -19,7 +17,7 @@ type Props = {
     initData? : any | null;
   };
 
-const MasterGrid: React.FC<Props> = ({ initData }) => {    
+const MasterGrid: React.FC<Props> = memo(({ initData }) => {    
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState = {} } = useAppContext();
@@ -30,13 +28,13 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         gridHeight: "80vh",
-        checkbox: ["no"],
-        editable: ["trans_mode"],
+        // checkbox: ["no"],
+        // editable: ["trans_mode"],
         dataType: { "create_date" : "date", "vat_rt":"number"},
-        isMultiSelect: false,
+        // isMultiSelect: false,
         isAutoFitColData: true,
         alignLeft: ["major_category", "bill_gr1_nm"],
-        alignRight: [],
+        // alignRight: [],
         // rowadd
         // rowdelete
 
@@ -61,24 +59,22 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     }, []);
 
     useEffect(() => {
-        if (isMSearch && gridRef) {
-            log("gridMaster", searchParams)
+        if (isMSearch) {
             mainRefetch();
             dispatch({isMSearch:false});
-            // autoSizeAll(gridRef.current);
         }
-    }, [isMSearch, gridRef]);
+    }, [isMSearch]);
 
     return (
         <>
             <Grid
                 gridRef={gridRef}
-                loadItem={initData}
+                // loadItem={initData}
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
-                    onRowClicked: handleRowClicked,
-                    onSelectionChanged: handleSelectionChanged,
+                    // onRowClicked: handleRowClicked,
+                    // onSelectionChanged: handleSelectionChanged,
                 }}
                 />
             <Modal
@@ -87,6 +83,6 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         </>
             
     );
-}
+});
 
 export default MasterGrid;
