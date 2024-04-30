@@ -1,4 +1,4 @@
-import DialogBasic from "@/page-parts/tmpl/dialog/dialog"
+import DialogBasic from "layouts/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import { crudType, useAppContext } from "components/provider/contextObjectProvider"

@@ -75,9 +75,6 @@ const ShipmentDetailGrid: React.FC<Props> = ({ initData }) => {
     useEffect(() => {
         if (mainDetailData) {
             log('mainDetailDataaaaaa', mainDetailData)
-            setTransmode(mainDetailData[3].data[0])
-            // dispatch({ mSelectedDetail: mainDetailData.data[0] })
-            //dispatch({ mSelectedDetail : mainDetailData[3].data[0] })
         }
     }, [mainDetailData]);
 

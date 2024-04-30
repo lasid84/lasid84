@@ -1,6 +1,5 @@
 import { MaskedInputField } from "@/components/input";
 import { useAppContext } from "components/provider/contextObjectProvider";
-import { TInput } from "page-parts/tmpl/form"
 import { useCallback } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 

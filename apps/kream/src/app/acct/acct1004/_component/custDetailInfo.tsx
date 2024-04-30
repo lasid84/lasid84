@@ -11,7 +11,6 @@ import { useUpdateData2 } from "components/react-query/useMyQuery"
 import { SP_UpdateData } from "./data";
 import { DateInput, DatePicker } from 'components/date'
 import { Button } from 'components/button';
-import { toastSuccess } from "@/page-parts/tmpl/toast";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 

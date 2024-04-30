@@ -74,7 +74,6 @@ const ChargesGrid: React.FC<Props> = ({ initData }) => {
     useEffect(() => {
         if (mainDetailData) {
             log('mainDetailDataaaaaa-gridCharges', mainDetailData)
-            // dispatch({ mSelectedDetail: mainDetailData.data[0] })
         }
     }, [mainDetailData]);
 

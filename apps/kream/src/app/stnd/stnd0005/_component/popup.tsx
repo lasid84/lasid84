@@ -1,17 +1,17 @@
 import { useTranslation } from "react-i18next";
-import DialogBasic from "@/page-parts/tmpl/dialog/dialog"
+import DialogBasic from "layouts/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
-import { TButtonBlue, TButtonGray, TInput } from "@/page-parts/tmpl/form";
 import { ErrorMessage } from "@/components/react-hook-form";
 import { PopType, setModalValue } from "@/utils/modal";
 import { useState, useEffect, useCallback } from "react";
 import Select from "react-select"
 import { TSelect2 } from "@/components/form/select-row";
+import { Button } from "components/button";
 import { useAppContext, SEARCH_M, crudType } from "components/provider/contextObjectProvider"
 import { SP_UpdateData, SP_InsertData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { ReactSelect } from "components/select/react-select"
-
+import { MaskedInputField } from "@/components/input/react-text-mask";
 
 
 type Props = {
@@ -113,32 +113,29 @@ const Modal: React.FC<Props> = (props) => {
                     title={"종합코드 관리 " + (popType === PopType.CREATE ? "등록" : "수정")}
                     bottomRight={
                         <>
-                            <TButtonBlue label={t("save")} onClick={handleSubmit(onFormSubmit)} />
-                            <TButtonGray label={t("cancel")} onClick={closeModal} />
+                            <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} />
+                            <Button id={"cancel"} onClick={closeModal} icon={null} />
                         </>
-                    }
-                >
+                    }>
                     <></>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
 
                         <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} />
-
-                        <TInput label="cd" id="cd" readOnly={popType === PopType.UPDATE} value={mSelectedRow?.cd}>
-                        </TInput>
-                        <div className="col-span-2">
-                            <TInput label="cd_nm" id="cd_nm" ></TInput>
+                        <MaskedInputField id="cd" value={mSelectedRow?.cd_nm} options={{isReadOnly:true}}/>
+                        <div className="col-span-2">                  
+                            <MaskedInputField id="cd_nm" value={mSelectedRow?.cd_nm} options={{}}/>
                         </div>
-                        <div className="col-span-3">
-                            <TInput label="cd_desc" id="cd_desc" ></TInput>
+                        <div className="col-span-3">                           
+                            <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}}/>
                         </div>
-                        <div className="col-span-3">
-                            <TInput label="remark" id="remark"></TInput>
+                        <div className="col-span-3">                           
+                            <MaskedInputField id="remark" value={mSelectedRow?.remark} options={{}}/>
                         </div>
-                        <div className="col-span-3">
-                            <TInput label="cd_mgcd1" id="cd_mgcd1" ></TInput>
+                        <div className="col-span-3">                           
+                            <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}}/>
                         </div>
-                        <div className="col-span-3">
-                            <TInput label="cd_mgcd2" id="cd_mgcd2"></TInput>
+                        <div className="col-span-3">                           
+                            <MaskedInputField id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2} options={{}}/>
                         </div>
                         <div className="col-span-3">
                             <TSelect2

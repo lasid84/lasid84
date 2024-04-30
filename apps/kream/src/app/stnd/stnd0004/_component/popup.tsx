@@ -1,10 +1,9 @@
-import DialogBasic from "@/page-parts/tmpl/dialog/dialog"
 import { useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
 import { useStnd0004Store } from "@/states/stnd/stnd0004.store"
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useZod } from "utils/zod"
-import { TButtonBlue, TButtonGray } from "@/page-parts/tmpl/form/button";
+
 
 type Props = {
     isOpen: boolean;

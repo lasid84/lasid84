@@ -11,7 +11,7 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
 import { TButtonBlue } from "components/form";
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-import { toastSuccess } from "@/page-parts/tmpl/toast";
+import {toastSuccess} from "components/toast"
 import { Anonymous_Pro } from "next/font/google";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
