@@ -51,7 +51,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 checkbox: ["use_yn", "def"],
                 select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: {"email": 200},
-                editable: ["pic_nm", "email", "cust_office", "tel_num", "fax_num", "user_dept", "bz_plc_cd"],
+                editable: ["pic_nm", "email", "cust_office", "tel_num", "fax_num", "user_dept", "bz_plc_cd", "use_yn", "def"],
                 dataType: { "create_date" : "date", "vat_rt":"number", "bz_reg_no":"bizno"},
                 // isMultiSelect: false,
                 isAutoFitColData: false,

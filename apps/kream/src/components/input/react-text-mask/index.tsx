@@ -71,7 +71,7 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
   useEffect(() => {
     // log("MaskedInputField useEffect", id, value, selectedVal);
     setValue(id, value);
-    setSelectedVal(value);
+    setSelectedVal(value === undefined ? '' : value);
   }, [value])
 
   function handleKeyDown(e:any){

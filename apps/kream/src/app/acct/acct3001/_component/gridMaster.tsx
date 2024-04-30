@@ -33,6 +33,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         dataType: { "bz_reg_no": "bizno" },
         // isMultiSelect: false,
         isAutoFitColData: false,
+        isSelectRowAfterRender:true
         // alignLeft: ["major_category", "bill_gr1_nm"],
         // alignRight: [],
     };
@@ -57,6 +58,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     useEffect(() => {
         if (objState.isMSearch) {
+            mainRemove();
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });

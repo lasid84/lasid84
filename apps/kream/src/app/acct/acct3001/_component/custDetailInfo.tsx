@@ -60,7 +60,7 @@ const CustomerDetail: React.FC = () => {
                             // textAlign:"right",
                             // fontSize:"15px",
                             // fontBold:"light"
-                            freeStyles:"underline border-1 border-slate-300"
+                            freeStyles:"border-1 border-slate-300"
                         }}
                         />
                     <MaskedInputField 

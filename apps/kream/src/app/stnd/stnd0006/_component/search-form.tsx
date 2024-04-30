@@ -86,10 +86,10 @@ const SearchForm = memo(({loadItem}:any) => {
 
   // const onSubmit = (data: any, event: React.BaseSyntheticEvent<object, any, any>) => {
   const onSubmit = () => {
-    const params = getValues();
-    log("search-form onSubmit", params, transmode, transtype);
-    // dispatch({ type: SEARCH, params: params});
-    onSearch();
+    // const params = getValues();
+    // log("search-form onSubmit", params, transmode, transtype);
+    // // dispatch({ type: SEARCH, params: params});
+    // onSearch();
   }
 
   const onSearch = () => {
@@ -104,22 +104,6 @@ const SearchForm = memo(({loadItem}:any) => {
     dispatch({ searchParams: params, mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
     log("onNew", params);
   }
-
-  const gridOption: GridOption = {
-    colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:false },
-    colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-    checkbox: ["no"],
-    editable: ["trans_mode"],
-    dataType: { "create_date" : "date", "vat_rt":"number"},
-    isMultiSelect: false,
-    isAutoFitColData: true,
-    alignLeft: ["major_category", "bill_gr1_nm"],
-    alignRight: [],
-    // rowadd
-    // rowdelete
-
-};
-
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
