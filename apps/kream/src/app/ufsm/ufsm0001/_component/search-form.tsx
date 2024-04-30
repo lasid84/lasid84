@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
+import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
@@ -15,6 +15,8 @@ import { DateInput, DatePicker } from 'components/date'
 import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
 import { Button } from 'components/button';
+import { gridData } from "components/grid/ag-grid-enterprise";
+
 
 
 // import { useGetData } from './test'
@@ -53,7 +55,7 @@ const SearchForm = memo(({ loadItem }: any) => {
       trans_type: gTransType || 'ALL',
       fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
       to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      no: '',
+      wb_no: '',
       cust_code: ''
     }
   });
@@ -99,14 +101,9 @@ const SearchForm = memo(({ loadItem }: any) => {
         <PageSearchButton
           right={
             <>
-              <Button id="search" disabled={false} onClick={onSearch}/>
-              <Button id="reset" disabled={false} onClick={onSearch}/>
-              <Button id="refresh" disabled={false} onClick={onSearch}/>
-              {/* <Button id="search" disabled={false} onClick={onSearch}/>
-              <Button id="search" disabled={false} onClick={onSearch}/>
-              <Button id="search" disabled={false} onClick={onSearch}/>
-              <Button id="search" disabled={false} onClick={onSearch}/>
-              <Button id="search" disabled={false} onClick={onSearch}/> */}
+              <Button id="search" disabled={false} onClick={onSearch} />
+              <Button id="reset" disabled={false} onClick={onSearch} />
+              <Button id="refresh" disabled={false} onClick={onSearch} />
             </>
           }>
           <div className={"col-span-1"}>
@@ -132,24 +129,13 @@ const SearchForm = memo(({ loadItem }: any) => {
               }}
             />
           </div>
-          {/* <ReactSelect
-            id="cust_code" label="cust_code" dataSrc={custcode as data}
-            options={{
-              keyCol: "cust_code",
-              displayCol: ['cust_nm'],
-              inline: true,
-              defaultValue: getValues('cust_code')
-            }}
-          /> */}
+          
           <div className={"col-span-1"}>
             <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} height="h-8" />
-            {/* <Input id="fr_date" type="date" inline={true} /> */}
-            {/* <Input id="to_date" type="date" inline={true} /> */}
             <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} height="h-8" />
           </div>
-          <div className={"col-span-2"}>
-            {/* <Input id="no" name="bl/inv no." inline={true} width="w-900" height="h-8" /> */}
 
+          <div className={"col-span-2"}>
             <CustomSelect
               id="cust_code"
               // label="trans_mode"
@@ -163,7 +149,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               style={{ width: '1000px', height: "8px" }}
               inline={true}
             />
-            <MaskedInputField id="no" label="bl/inv no." options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="wb_no" label="bl no." value={objState.searchParams?.wb_no}  options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>

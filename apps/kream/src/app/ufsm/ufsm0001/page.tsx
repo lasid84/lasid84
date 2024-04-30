@@ -23,7 +23,7 @@ import ShipmentDetailGrid from "./_component/gridShipDetail";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
-export default function Ufsm0001() {
+export default function UFSM0001() {
 
     const [tab, settab] = useState<tab[]>()
     const [selectedTab, setselectedTab] = useState<string>("NM");
@@ -59,7 +59,7 @@ export default function Ufsm0001() {
 
     useEffect(() => {
         if (objState.isMSearch) {
-            // mainRefetch();
+            //mainRefetch();
             log("mainisSearch", objState.isMSearch);
             // dispatch({isMSearch:false});
         }

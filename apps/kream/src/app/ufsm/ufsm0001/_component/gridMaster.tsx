@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
-import { SP_GetMasterData, SP_GetDetailData } from "./data";
+import { SP_GetMasterData, SP_GetWBSubData } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
@@ -23,13 +23,14 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const { dispatch, objState } = useAppContext();
 
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetDetailData, { enabled: true });
+    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetWBSubData, { enabled: true });
 
 
     const gridOption: GridOption = {
         colVisible: { col: ["waybill_no", "shipment_status", "status", "trans_mode", "trans_type", "mpr_port_origin1", "origin_city_code", "execution_date", "waybill_type", "bol_type", "agent_type", "service_type"], visible: true },
-        gridHeight: "80vh",
+        gridHeight: "75vh",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
+        dataType :{"execution_date":"date"},
         isAutoFitColData: false,
     };
 
@@ -56,6 +57,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     useEffect(() => {
         if (objState.isMSearch) {
+            mainRefetch();
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });

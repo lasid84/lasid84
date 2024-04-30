@@ -28,7 +28,7 @@ export const SP_Load = async (searchParam: any) => {
 }
 
 //SP_GetInvoiceMasterContent
-export const SP_GetMasterData = async (searchParam: any) => {
+export const SP_GetMasterDatax = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { waybill_no, user_id, ipaddr } = Param;
 
@@ -52,13 +52,46 @@ export const SP_GetMasterData = async (searchParam: any) => {
   return result![0]
 }
 
-export const SP_GetDetailData = async (searchParam: any) => {
+export const SP_GetMasterData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { wb_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr } = Param;
+
+  const params = {
+    inparam: [
+        "in_wb_no"
+      , "in_trans_mode"
+      , "in_trans_type" 
+      , "in_fr_dd"
+      , "in_to_dd"
+      , "in_cust"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      wb_no
+      , trans_mode
+      , trans_type
+      , fr_date
+      , to_date
+      , cust_code
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ufsm.f_ufsm0001_get_wb_main',
+    isShowLoading: true
+  }
+  const result = await executFunction(params);
+  log("params...", params)
+  return result![0]
+}
+
+export const SP_GetWBSubData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { waybill_no, user_id, ipaddr } = Param;
 
   const params = {
     inparam: [
-      "in_hbl_no"
+        "in_wb_no"
       , "in_user"
       , "in_ipaddr"
     ],
@@ -67,15 +100,48 @@ export const SP_GetDetailData = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'public.f_acct9999_get_hbl_data',
-    isShowLoading: false
+    inproc: 'ufsm.f_ufsm0001_get_wb_sub',
+    isShowLoading: true
   }
-
   const result = await executFunction(params);
-  console.log('result__SP_GetDetailData',result)
-  //return result![1];
-  return result!;
+  return result as {}[];
 }
+
+
+// export const SP_GetDetailData = async (searchParam: any) => {
+//   const Param = searchParam.queryKey[1]
+//   const { waybill_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr } = Param;
+
+//   const params = {
+//     inparam: [
+//         "in_wb_no"
+//       , "in_trans_mode"
+//       , "in_trans_type" 
+//       , "in_fr_dd"
+//       , "in_to_dd"
+//       , "in_cust"
+//       , "in_user"
+//       , "in_ipaddr"
+//     ],
+//     invalue: [
+//       waybill_no
+//       , trans_mode
+//       , trans_type
+//       , fr_date
+//       , to_date
+//       , cust_code
+//       , user_id
+//       , ipaddr
+//     ],
+//     inproc: 'ufsm.f_ufsm0001_get_wb_main',
+//     isShowLoading: true
+//   }
+//   log('result__SP_GetDetailData_param',Param)
+//   const result = await executFunction(params);
+//   console.log('result__SP_GetDetailData',result)
+//   //return result![1];
+//   return result!;
+// }
 
 
 export const SP_UpdateData = async (param: any) => {
