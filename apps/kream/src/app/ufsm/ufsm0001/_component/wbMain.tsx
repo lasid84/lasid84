@@ -36,9 +36,10 @@ export interface typeloadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
+  mainData : typeloadItem;
 };
 
-const WBMain = memo(({ loadItem }: any) => {
+const WBMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
@@ -68,7 +69,7 @@ const WBMain = memo(({ loadItem }: any) => {
   const [transtype, setTranstype] = useState<any>();
   const [custcode, setCustcode] = useState<any>();
 
-  const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetMasterData, { enabled: true });
+  // const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetMasterData, { enabled: true });
 
   useEffect(() => {
     if (loadItem?.length) {
@@ -90,8 +91,10 @@ const WBMain = memo(({ loadItem }: any) => {
   }
 
   useEffect(() => {
-    log("maindataaaaaaa", mainData);
-    if (mainData) setData((mainData as gridData)?.data[0]);
+    if (mainData){
+      log("maindataaaaa22aa", mainData);
+      setData((mainData as gridData)?.data[0])
+    }
   }, [mainData])
 
   return (

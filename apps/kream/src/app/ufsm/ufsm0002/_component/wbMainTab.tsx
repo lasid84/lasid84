@@ -10,7 +10,7 @@ import { MaskedInputField, Input } from 'components/input';
 import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
-import SubMenuTab, { tab, TabICON } from "components/tab/tab"
+import SubMenuTab, { tab } from "components/tab/tab"
 import { DateInput, DatePicker } from 'components/date'
 import dayjs from 'dayjs'
 import { gridData } from "components/grid/ag-grid-enterprise";

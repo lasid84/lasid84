@@ -100,60 +100,6 @@ const WBSub = memo(({ loadItem }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-
-        {/* <PageSearch
-          title={<span className="w-full px-1 py-1 text-blue-500">Print Control</span>}>
-          <div className={"flex col-span-3 border "}>
-            <div className={"col-span-1"}>
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-            </div>
-            <div className={"col-span-2 item-center"}>
-              <MaskedInputField id="waybill_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-              <MaskedInputField id="agent_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-            </div>
-          </div>
-          <div className={"flex  col-span-3 border"}>
-            <div className={"col-span-1"}>
-
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-              <Checkbox id="gd" name="gd" label="gd" />
-            </div>
-            <div className={"col-span-2"}>
-              <MaskedInputField id="waybill_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-              <MaskedInputField id="agent_type" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-            </div>
-          </div>
-          <MaskedInputField id="issue_date" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="on_board_date" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="2nd_wt_uom" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="2nd_vol_uom" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="origin_currency" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="dest_currency" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="dest_cer" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="invoice_currency" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="invoice_cer" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="origin_port_lc_description" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="place_of_receipt" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="export_cc_point" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="dest_port_lc_description" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="place_of_delivery" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="shipper_or_his_agent_name" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="carrier_or_his_agent_name" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-          <MaskedInputField id="product_origin_country" value={objState.searchParams?.fr_date} options={{ isReadOnly: true }} />
-        </PageSearch> */}
-
-
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Terms</span>}>
           <fieldset className="w-full flex border-solid border-2 p-1 space-y-1 space-x-1 col-span-6">
