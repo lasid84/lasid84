@@ -11,7 +11,7 @@ export type PageSearchProps = {
 export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      <div className="flex">
+      <div className="w-full flex">
         <div className="w-full rounded-[5px] bg-white mb-2">
           {title}
           <div className="w-full flex px-4 py-1 space-y-1">
@@ -47,7 +47,7 @@ export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, chi
 const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      <div className="flex">
+      <div className="w-full flex">
         <div className="w-full rounded-[5px] bg-white border mb-2">
           {title}
           {/*contents*/}
@@ -80,7 +80,7 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
 export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      <div className="flex">
+      <div className="w-full flex">
         <div className="w-full rounded-[5px] bg-white border mb-2">
           {title}
           {/*contents*/}

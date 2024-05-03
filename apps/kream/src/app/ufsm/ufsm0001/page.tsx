@@ -9,7 +9,7 @@ import SearchForm from "./_component/search-form"
 import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import SubMenuTab, { tab, TabICON } from "components/tab/tab"
+import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/wbMain";
 import WBSub from "./_component/wbSub";
@@ -78,16 +78,13 @@ export default function UFSM0001() {
 
     return (
         <TableContext.Provider value={val}>
-            <TabICON tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
+            <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
             {objState.MselectedTab == "Main" ? <div className={`w-full flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
                 <SearchForm loadItem={initData} />
                 <MasterGrid initData={initData} />
             </div> : <>
-                    <WBMainTab loadItem={initData} />
-                <div className={`w-full flex h-12 overflow-y-scroll`}>
-                    <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
-
-                </div>
+                <WBMainTab loadItem={initData} />
+                <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
 
                 <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                     <WBMain loadItem={initData} />

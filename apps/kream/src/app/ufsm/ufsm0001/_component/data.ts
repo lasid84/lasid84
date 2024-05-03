@@ -100,7 +100,7 @@ export const SP_GetWBSubData = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'ufsm.f_ufsm0001_get_wb_sub',
+    inproc: 'ufsm.f_ufsm0001_get_wb_detail',
     isShowLoading: true
   }
   const result = await executFunction(params);

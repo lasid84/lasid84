@@ -2,17 +2,18 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, memo } from "react";
-import { SP_Load  } from "./_component/data";
+import { SP_Load } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
 import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import SubMenuTab, { tab, TabICON } from "components/tab/tab"
+import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/wbMain";
 import WBSub from "./_component/wbSub";
+import WBMainTab from "./_component/wbMainTab"
 // import WBReference from "./_component/waybillReference"
 // import ChargesGrid from "./_component/gridCharges";
 // import ShipmentDetailGrid from "./_component/gridShipDetail";
@@ -22,7 +23,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 function UFSM0002() {
 
-    const [tab, settab] = useState<tab[]>()
+
     const [selectedTab, setselectedTab] = useState<string>("NM");
 
     const handleOnClickTab = (code: any) => { setselectedTab(code) }
@@ -36,8 +37,8 @@ function UFSM0002() {
         }
     }
     const MhandleonClickICON = (code: any) => {
-        let filtered = objState.tab1.filter((element: any) => {return element.cd != code.target.id})
-        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd,  mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
+        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
+        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
     }
 
     const [state, dispatch] = useReducer(reducer, {
@@ -57,7 +58,7 @@ function UFSM0002() {
     const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab, isFirstRender } = objState;
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
-    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60, enabled:true});
+    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60, enabled: true });
 
     useEffect(() => {
         if (objState.isMSearch) {
@@ -70,16 +71,6 @@ function UFSM0002() {
 
     useEffect(() => {
         if (initData) {
-            // log("loadItem", initData[14].data)
-            // settab(initData[14].data)
-            settab([
-                { cd: 'NM', cd_nm: 'Carrier WB Main' },
-                { cd: 'ws', cd_nm: 'Carrier WB sub' },
-                { cd: 'sd', cd_nm: 'shipment details' },
-                { cd: 'cg', cd_nm: 'charges' },
-                { cd: 'st', cd_nm: 'shipment text' },
-                { cd: 'rf', cd_nm: 'references' },
-            ])
             if (objState.tab1.length < 1) {
                 objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
             }
@@ -89,18 +80,20 @@ function UFSM0002() {
 
     return (
         <TableContext.Provider value={val}>
-            <TabICON tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
+            <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
             {objState.MselectedTab == "Main" ? <div className={`w-full flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
                 <SearchForm loadItem={initData} />
                 <MasterGrid initData={initData} />
             </div> : <>
-                <SubMenuTab tabList={tab} onClickTab={handleOnClickTab} />
+                <WBMainTab loadItem={initData} />
+                <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
+
                 <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                     <WBMain loadItem={initData} isSelected={selectedTab === "NM"} />
                 </div>
 
-                <div className={`w-full flex ${selectedTab == "ws" ? "" : "hidden"}`}>
-                    <WBSub loadItem={initData} isSelected={selectedTab === "ws"}/>
+                <div className={`w-full flex ${selectedTab == "WS" ? "" : "hidden"}`}>
+                    <WBSub loadItem={initData} isSelected={selectedTab === "ws"} />
                 </div>
 
                 {/* <div className={`w-full flex ${selectedTab == "rf" ? "" : "hidden"}`}>
