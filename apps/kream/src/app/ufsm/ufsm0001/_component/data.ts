@@ -19,7 +19,7 @@ export const SP_Load = async (searchParam: any) => {
   const params = {
     inparam: ["in_user_id", "in_ipaddr"],
     invalue: [user_id, ipaddr],
-    inproc: 'account.f_acct1004_load',
+    inproc: 'ufsm.f_ufsm0001_load',
     isShowLoading: false
   }
   // log("Acct1004Load", p);
@@ -43,7 +43,7 @@ export const SP_GetMasterDatax = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'public.f_acct9999_get_hbl_data',
+    inproc: 'ufsm.f_ufsm0001_load',
     isShowLoading: false
   }
   const result = await executFunction(params);

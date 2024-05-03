@@ -8,6 +8,42 @@ export type PageSearchProps = {
 };
 
 //검색조건 1분할
+export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
+  return (
+    <>
+      <div className="flex">
+        <div className="w-full rounded-[5px] bg-white mb-2">
+          {title}
+          <div className="w-full flex px-4 py-1 space-y-1">
+            <div className="w-10/12 flex gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+              {children}
+            </div>
+            <div className="w-2/12 flex flex-row gap-2 place-items-end">
+              <span className="ml-auto"></span>
+              {right}
+            </div>
+          </div>
+
+          {/*button*/}
+          <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
+            <div className="grid w-full grid-cols-2">
+              <div className="flex flex-row gap-2">
+                {left}
+                <span className="ml-auto"></span>
+              </div>
+              <div className="flex flex-row gap-2">
+                <span className="ml-auto"></span>
+                {/* {right} */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+//검색조건 1분할
 const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>

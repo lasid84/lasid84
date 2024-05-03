@@ -9,8 +9,9 @@ export interface tab {
 
 type Props = {
     init?: boolean; // 초기화
-    tabList: tab[] | undefined; // 탭 리스트
+    tabList?: tab[] | undefined; // 탭 리스트
     MselectedTab?: string;
+    loadItem?: any | null
     options?: {
         tabAlign?: string;
     }
@@ -19,12 +20,17 @@ type Props = {
 };
 
 export const SubMenuTab: React.FC<Props> = (props: Props) => {
-    // export default function Tab({ tabList, onClickTab }: Props) {
     const { t } = useTranslation();
     const [selectedTab, setSelectedTab] = useState<any>("NM");
 
-    const { init, tabList, MselectedTab, options = {}, onClickTab, onClickICON } = props;
-    const { tabAlign } = options
+    const {loadItem, onClickTab, } = props;
+    const [tabList, settabList] = useState<tab[]>()
+
+    useEffect(() => {
+        if (loadItem?.length) {
+            settabList(loadItem[14].data)
+        }
+    }, [loadItem?.length])
 
     useEffect(() => {
         selectedTab && onClickTab(selectedTab);

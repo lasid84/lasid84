@@ -19,13 +19,14 @@ import WBCharges from "./_component/wbCharges"
 import WBShipmentText from "./_component/wbShipmentText"
 import ChargesGrid from "./_component/gridCharges";
 import ShipmentDetailGrid from "./_component/gridShipDetail";
+import WBMainTab from "./_component/wbMainTab"
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
+
 export default function UFSM0001() {
 
-    const [tab, settab] = useState<tab[]>()
     const [selectedTab, setselectedTab] = useState<string>("NM");
 
     const handleOnClickTab = (code: any) => { setselectedTab(code) }
@@ -35,7 +36,7 @@ export default function UFSM0001() {
     }
     const MhandleonClickICON = (code: any) => {
         let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
-        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd,  mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
+        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
 
     }
 
@@ -68,15 +69,6 @@ export default function UFSM0001() {
 
     useEffect(() => {
         if (initData) {
-            // log("loadItem", initData[14].data)
-            // settab(initData[14].data)
-            settab([{ cd: 'NM', cd_nm: 'waybill Main' },
-            { cd: 'ws', cd_nm: 'waybill sub' },
-            { cd: 'rf', cd_nm: 'references' },
-            { cd: 'sd', cd_nm: 'shipment details' },
-            { cd: 'cg', cd_nm: 'charges' },
-            { cd: 'st', cd_nm: 'shipment text' },
-            ])
             if (objState.tab1.length < 1) {
                 objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
             }
@@ -91,28 +83,33 @@ export default function UFSM0001() {
                 <SearchForm loadItem={initData} />
                 <MasterGrid initData={initData} />
             </div> : <>
-                <SubMenuTab tabList={tab} onClickTab={handleOnClickTab} />
+                    <WBMainTab loadItem={initData} />
+                <div className={`w-full flex h-12 overflow-y-scroll`}>
+                    <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
+
+                </div>
+
                 <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                     <WBMain loadItem={initData} />
                 </div>
 
-                <div className={`w-full flex ${selectedTab == "ws" ? "" : "hidden"}`}>
+                <div className={`w-full flex ${selectedTab == "WS" ? "" : "hidden"}`}>
                     <WBSub loadItem={initData} />
                 </div>
 
-                <div className={`w-full flex ${selectedTab == "rf" ? "" : "hidden"}`}>
+                <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
                     <WBReference loadItem={initData} />
                 </div>
 
-                <div className={`w-full flex ${selectedTab == "sd" ? "" : "hidden"}`}>
+                <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
                     <WBShipmentDetails initData={initData} />
                 </div>
 
-                <div className={`w-full flex ${selectedTab == "cg" ? "" : "hidden"}`}>
+                <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
                     <WBCharges initData={initData} />
                 </div>
 
-                <div className={`w-full flex ${selectedTab == "st" ? "" : "hidden"}`}>
+                <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
                     <WBShipmentText initData={initData} />
                 </div>
             </>}
