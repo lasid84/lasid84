@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
-import { SP_GetMasterData, SP_GetWBSubData } from "./data";
+import { SP_GetMasterData, SP_GetWBDetailData } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
@@ -23,7 +23,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const { dispatch, objState } = useAppContext();
 
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetWBSubData, { enabled: true });
+    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
 
 
     const gridOption: GridOption = {

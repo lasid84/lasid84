@@ -53,7 +53,7 @@ const SearchForm = memo(({ loadItem }: any) => {
     defaultValues: {
       trans_mode: gTransMode || 'ALL',
       trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
+      fr_date: dayjs().subtract(6, 'month').startOf('month').format("YYYY-MM-DD"),
       to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
       wb_no: '',
       cust_code: ''
