@@ -1,25 +1,14 @@
 'use client'
-
-import { useTranslation } from "react-i18next";
-import { IoExtensionPuzzleOutline } from "react-icons/io5";
-import { SlMagnifierAdd } from "react-icons/sl";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch from "layouts/search-form/page-search-row";
-import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
-import { MaskedInputField, Input } from 'components/input';
-
-import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { ReactSelect, data } from "@/components/select/react-select2";
-import { DateInput, DatePicker } from 'components/date'
+import { useAppContext } from "components/provider/contextObjectProvider";
 import dayjs from 'dayjs'
-import CustomSelect from "components/select/customSelect";
-import { Button } from 'components/button';
-import MasterGrid from './gridMaster';
-import DetailGrid from './gridDetail'
+import GridCharges from './gridCharges'
+import GridInvoices from './gridInvoices'
+import { gridData } from "components/grid/ag-grid-enterprise";
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -38,14 +27,14 @@ export interface typeloadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
+  mainData: typeloadItem;
 };
 
-const WBCharges = memo(({ loadItem }: any) => {
+const WBCharges = memo(({ loadItem, mainData }: any) => {
   // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
-  const [groupcd, setGroupcd] = useState<any>([])
 
   // //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
@@ -73,20 +62,14 @@ const WBCharges = memo(({ loadItem }: any) => {
   } = methods;
 
   // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
-  const [custcode, setCustcode] = useState<any>();
+  const [data, setData] = useState<any>()
+  const [charges, setChargeDetail] = useState<gridData>({})
+  const [invoices, setInvoiceDetail] = useState<gridData>({})
 
   useEffect(() => {
     if (loadItem?.length) {
-      // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
-
       onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
+
     }
   }, [loadItem?.length])
 
@@ -97,20 +80,29 @@ const WBCharges = memo(({ loadItem }: any) => {
     dispatch({ searchParams: params, isMSearch: true });
   }
 
+  useEffect(() => {
+    if (mainData) {
+      setChargeDetail(mainData?.[5] as gridData)
+      setInvoiceDetail(mainData?.[6] as gridData)
+    }
+  }, [mainData])
+
+
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Charges</span>}>
           <div className="col-span-6">
-            <DetailGrid initData={loadItem} />
+          <GridCharges loadData={charges} />
           </div>
         </PageSearch>
 
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Invoices</span>}>
           <div className="col-span-6">
-            <MasterGrid initData={loadItem} />
+          <GridInvoices loadData={invoices} />
           </div>
         </PageSearch>
 

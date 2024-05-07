@@ -1,24 +1,16 @@
 'use client'
-
-import { useTranslation } from "react-i18next";
-import { IoExtensionPuzzleOutline } from "react-icons/io5";
-import { SlMagnifierAdd } from "react-icons/sl";
-import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch from "layouts/search-form/page-search-row";
-import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
-import MasterGrid from './gridMaster';
-import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { ReactSelect, data } from "@/components/select/react-select2";
-import { DateInput, DatePicker } from 'components/date'
+import ShipmentDetailGrid from "./gridShipDetail"
+import GridFCharges from "./gridFCharges"
+import { useAppContext } from "components/provider/contextObjectProvider";
 import dayjs from 'dayjs'
-import CustomSelect from "components/select/customSelect";
-import { Button } from 'components/button';
-import { Checkbox } from "@/components/checkbox";
+import { gridData } from "components/grid/ag-grid-enterprise";
+
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -37,9 +29,10 @@ export interface typeloadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
+  mainData: typeloadItem;
 };
 
-const WBShipmentDetails = memo(({ loadItem }: any) => {
+const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
   // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
@@ -71,17 +64,17 @@ const WBShipmentDetails = memo(({ loadItem }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
-  const [custcode, setCustcode] = useState<any>();
+
+  const [shipmentDetail, setShipmentDetail] = useState<gridData>({});
+  const [freightCharge, setFreightCharge] = useState<gridData>({});
+  const [data, setData] = useState<any>();
 
   useEffect(() => {
     if (loadItem?.length) {
       // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
+      // setTransmode(loadItem[0])
+      // setTranstype(loadItem[1])
+      // setCustcode(loadItem[8])
 
       onSearch();
       // onSubmit();
@@ -96,33 +89,42 @@ const WBShipmentDetails = memo(({ loadItem }: any) => {
     dispatch({ searchParams: params, isMSearch: true });
   }
 
+  useEffect(() => {
+    if (mainData) {
+      setData((mainData?.[0] as gridData).data[0]);
+      setShipmentDetail((mainData?.[3] as gridData))
+      setFreightCharge((mainData?.[4] as gridData))
+    }
+  }, [mainData])
+
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Shipment Details & Freight</span>}>
           <div className="w-full flex col-span-6">
-            <MasterGrid initData={loadItem} />
+            <ShipmentDetailGrid loadData={shipmentDetail} />
           </div>
           <fieldset className="w-full flex border-solid border-2 p-1 space-y-1 space-x-1 col-span-6">
             <legend className="text-sx">Total</legend>
-            <MaskedInputField id="pieces" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="pkg_type" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="volume" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="gross_wt" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="volume_wt" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="chargeable_wt" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="pieces" value={data?.pieces} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="pkg_type" value={data?.pkg_type} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="volume" value={data?.volume} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="gross_wt" value={data?.gross_wt} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="volume_wt" value={data?.volume_wt} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="chargeable_wt" value={data?.chargeable_wt} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
           </fieldset>
         </PageSearch>
 
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Freight Charge</span>}>
           <div className="col-span-6">
-            <MasterGrid initData={loadItem} />
+            <GridFCharges loadData={freightCharge} />
           </div>
           <div className="flex w-full col-span-1">
 

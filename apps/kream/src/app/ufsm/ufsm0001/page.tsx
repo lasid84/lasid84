@@ -2,23 +2,20 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback } from "react";
-import { SP_Load, SP_GetWBDetailData } from "./_component/data";
-import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
+import { SP_Load, SP_GetMasterData, SP_GetWBDetailData } from "./_component/data";
+import {  reducer, TableContext } from "components/provider/contextObjectProvider";
+import { LOAD, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
 import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
-import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/wbMain";
 import WBSub from "./_component/wbSub";
 import WBReference from "./_component/wbreferences"
 import WBShipmentDetails from "./_component/wbShipmentDetails"
 import WBCharges from "./_component/wbCharges"
 import WBShipmentText from "./_component/wbShipmentText"
-import ChargesGrid from "./_component/gridCharges";
-import ShipmentDetailGrid from "./_component/gridShipDetail";
 import WBMainTab from "./_component/wbMainTab"
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -37,7 +34,6 @@ export default function UFSM0001() {
     const MhandleonClickICON = (code: any) => {
         let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
         dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
-
     }
 
     const [state, dispatch] = useReducer(reducer, {
@@ -77,6 +73,13 @@ export default function UFSM0001() {
     }, [initData])
 
 
+    useEffect(() => {
+        if (mainData) {
+            log('ff', mainData)
+        }
+    }, [mainData])
+
+
     return (
         <TableContext.Provider value={val}>
             <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
@@ -86,32 +89,34 @@ export default function UFSM0001() {
                 <MasterGrid initData={initData} /></div>
                 : <>
                     {/* WayBill Detail 화면 상단{Tab} */}
-                    <WBMainTab loadItem={initData} />
+                    <WBMainTab loadItem={initData} mainData={mainData} />
                     <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
+                    
                     {/* WayBill Detail 화면 하단(Sub) */}
                     <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                         <WBMain loadItem={initData} mainData={mainData} />
                     </div>
 
                     <div className={`w-full flex ${selectedTab == "WS" ? "" : "hidden"}`}>
-                        <WBSub loadItem={initData} />
-                    </div>
-
-                    <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
-                        <WBReference loadItem={initData} />
+                        <WBSub loadItem={initData} mainData={mainData} />
                     </div>
 
                     <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
-                        <WBShipmentDetails initData={initData} />
+                        <WBShipmentDetails initData={initData} mainData={mainData} />
                     </div>
 
                     <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
-                        <WBCharges initData={initData} />
+                        <WBCharges initData={initData} mainData={mainData} />
                     </div>
 
                     <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
-                        <WBShipmentText initData={initData} />
+                        <WBShipmentText initData={initData} mainData={mainData}/>
                     </div>
+
+                    <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
+                        <WBReference loadItem={initData} mainData={mainData}/>
+                    </div>
+
                 </>}
         </TableContext.Provider>
     );

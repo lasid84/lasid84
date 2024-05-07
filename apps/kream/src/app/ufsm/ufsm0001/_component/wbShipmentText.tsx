@@ -31,25 +31,21 @@ export interface returnData {
 }
 
 export interface typeloadItem {
-  data: {} | undefined
+  data: {}
 }
 
 
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
+  mainData: typeloadItem;
 };
 
-const WBShipmentText = memo(({ loadItem }: any) => {
+const WBShipmentText = memo(({ loadItem, mainData }: any) => {
   // const { loadItem } = props;
 
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
-  const [groupcd, setGroupcd] = useState<any>([])
-
-  // //사용자 정보
-  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
-  const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
   const methods = useForm({
     defaultValues: {
@@ -72,30 +68,15 @@ const WBShipmentText = memo(({ loadItem }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
-  const [custcode, setCustcode] = useState<any>();
+  const [shipmentText, setShipmentText] = useState<gridData>({});
   const [data, setData] = useState<any>();
 
-  const { data: mainData } = useGetData({wb_no : objState?.MselectedTab}, SEARCH_MD, SP_GetMasterData, { enabled: true });
-
-
   useEffect(() => {
-    if (loadItem?.length) {
-      // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
+    log("maindata_shipment_text", mainData?.[0]);
+    if (mainData) {
+      setData((mainData?.[0] as gridData).data[0]);
 
-      onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
     }
-  }, [loadItem?.length])
-  useEffect(() => {
-    log("maindata", mainData);
-    if (mainData) setData((mainData as gridData)?.data[0]);
   }, [mainData])
 
   const onSearch = () => {
@@ -110,7 +91,6 @@ const WBShipmentText = memo(({ loadItem }: any) => {
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="flex px-1 py-1 text-blue-500">Shipment Text</span>}>
-
           <div className="col-start-1 col-end-2"><MaskedInputField id="place_of_receipt" value={data?.place_of_receipt} options={{ isReadOnly: true }} /></div>
           <div className="col-start-2 col-end-3"><MaskedInputField id="bol_type" value={data?.bol_type} options={{ isReadOnly: true }} /></div>
           <div className="col-start-3 col-end-4"><MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} /></div>
@@ -122,7 +102,6 @@ const WBShipmentText = memo(({ loadItem }: any) => {
           <div className="col-start-4 row-span-5" ><TextArea id="manifest_description" rows={7} cols={42} value={data?.manifest_description} options={{ isReadOnly: true }} /></div>
           <div className="col-start-1 col-end-2 col-span-2"><TextArea id="accounting_information" rows={5} cols={92} value={data?.accounting_information} options={{ isReadOnly: true }} /></div>
           <div className="col-start-3 col-end-4 col-span-2"><TextArea id="other_charges_info" rows={5} cols={92} value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
-
         </PageSearch>
 
 

@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
-import { SP_GetMasterData, SP_GetWBDetailData } from "./data";
-import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D, SEARCH_MD } from "components/provider/contextObjectProvider";
+import { useEffect, useRef } from "react";
+import { SP_GetMasterData} from "./data";
+import { useAppContext } from "components/provider/contextObjectProvider";
+import {  SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
@@ -21,10 +21,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-    const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
-
 
     const gridOption: GridOption = {
         colVisible: { col: ["waybill_no", "shipment_status", "status", "trans_mode", "trans_type", "mpr_port_origin1", "origin_city_code", "execution_date", "waybill_type", "bol_type", "agent_type", "service_type"], visible: true },
@@ -72,13 +69,6 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
             //log("mSelectedDetail", objState.mSelectedDetail)
         }
     }, [objState?.isMDSearch]);
-
-    useEffect(() => {
-        if (mainDetailData) {
-            log('mainDetailDataaaaaa', mainDetailData)
-            // dispatch({ mSelectedDetail:mainDetailData[1].data[0] })
-        }
-    }, [mainDetailData]);
 
     return (
         <Grid

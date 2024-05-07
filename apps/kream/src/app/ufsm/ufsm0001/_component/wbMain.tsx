@@ -42,13 +42,8 @@ type Props = {
 const WBMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
-  const [groupcd, setGroupcd] = useState<any>([])
-  const [data, setData] = useState<any>();
-
-  // //사용자 정보
-  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
-  const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
-
+  const [data, setData] = useState<any>()
+  
   const methods = useForm({
     defaultValues: {
     }
@@ -64,19 +59,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
-  const [custcode, setCustcode] = useState<any>();
-
-  // const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetMasterData, { enabled: true });
-
   useEffect(() => {
     if (loadItem?.length) {
-      // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
       onSearch();
       // onSubmit();
       // handleSubmit(onSubmit)();
@@ -91,9 +75,9 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
   }
 
   useEffect(() => {
-    if (mainData){
-      log("maindataaaaa22aa", mainData);
-      setData((mainData as gridData)?.data[0])
+    if (mainData) {
+      log('mainData 어디감', mainData)
+      setData((mainData?.[0] as gridData).data[0]);
     }
   }, [mainData])
 
@@ -108,7 +92,6 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           <DatePicker id={"execution_date"} value={data?.execution_date} options={{ isReadOnly: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} />
           <DatePicker id={"ic_dc_consol_date"} value={data?.ic_dc_consol_date} options={{ isReadOnly: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} />
           <MaskedInputField id="freight_terms" value={data?.freight_terms} options={{ isReadOnly: true }} />
-
           <MaskedInputField id="customer_shipment_type" value={data?.customer_shipment_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="movement_type" value={data?.movement_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="cust_shipment_type" value={data?.cust_shipment_type} options={{ isReadOnly: true }} />
@@ -130,7 +113,6 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} width="w-96" />
             </fieldset>
-
             <fieldset className="w-1/2 flex border-solid border-2 p-1 space-y-1 space-x-1 ">
               <legend className="text-sx">DC/TT Consol</legend>
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />

@@ -11,19 +11,20 @@ type Props = {
     loadData: gridData
 };
 
-const GridInvoices: React.FC<Props> = memo(({ loadData }) => {
+const GridCFharges: React.FC<Props> = memo(({ loadData }) => {
 
     const gridRef = useRef<any | null>(null);
 
     const gridOption: GridOption = {
-        colVisible: { col: ["invoice_no", "invoice_type", "apply_to_invoice", "invoice_sts", "acctg_sts","billto_cd","billto_nm","trans_type","govt_invoice_no","invoice_dd","invoice_amt","invoice_curr"], visible: true },
+        colVisible: { col: ["origin_city_code", "dest_city_code", "rate", "amount", "waybill_amt", "prepaid", "collect", "waybill_curr", "exchage_rate", "rate_profile_name"], visible: true },
+        gridHeight: "15vh",
+        maxWidth: { "origin_city_code": 150, "dest_city_code": 150, "trans_type": 60 },
+        minWidth: { "charge_code": 150, "charge_desc": 300, "waybill_amt": 100, "invoice_amt": 100, "actual_cost": 100, "vendor_ref_no": 150 },
         isShowFilter: false,
-        gridHeight: "20vh",
-        maxWidth: { "invoice_curr":100,"invoice_dd":100,"invoice_amt":150 },
-        minWidth: { "invoice_no":150,"apply_to_invoice":200, "billto_cd":150, "billto_nm":300, "govt_invoice_no":200, },
-        dataType: {"invoice_dd":"date" },
         isAutoFitColData: false,
     };
+
+    log('mainData_ufsm0001_gridfcharge____', loadData)
 
     return (
         <Grid
@@ -37,4 +38,4 @@ const GridInvoices: React.FC<Props> = memo(({ loadData }) => {
     );
 });
 
-export default GridInvoices;
+export default GridCFharges;

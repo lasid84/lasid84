@@ -11,19 +11,23 @@ type Props = {
     loadData: gridData
 };
 
-const GridInvoices: React.FC<Props> = memo(({ loadData }) => {
+const GridRoute: React.FC<Props> = memo(({ loadData }) => {
 
     const gridRef = useRef<any | null>(null);
 
     const gridOption: GridOption = {
-        colVisible: { col: ["invoice_no", "invoice_type", "apply_to_invoice", "invoice_sts", "acctg_sts","billto_cd","billto_nm","trans_type","govt_invoice_no","invoice_dd","invoice_amt","invoice_curr"], visible: true },
+        colVisible: { col: ["vad_tz", "etd_tz", "eta_tz", "atd_tz", "ata_tz"], visible: false },
         isShowFilter: false,
-        gridHeight: "20vh",
-        maxWidth: { "invoice_curr":100,"invoice_dd":100,"invoice_amt":150 },
-        minWidth: { "invoice_no":150,"apply_to_invoice":200, "billto_cd":150, "billto_nm":300, "govt_invoice_no":200, },
-        dataType: {"invoice_dd":"date" },
+        gridHeight: "15vh",
+        checkbox: ["cob", "split"],
+        colDisable: ["cob", "split"],
+        maxWidth: { "cob":60, "split":60 },
+        minWidth: { "vad":150,"etd":150, "eta":150, "ata":150, "atd":150},
+        dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
         isAutoFitColData: false,
     };
+
+    log('mainData_ufsm0001_wbSub____',loadData)
 
     return (
         <Grid
@@ -37,4 +41,4 @@ const GridInvoices: React.FC<Props> = memo(({ loadData }) => {
     );
 });
 
-export default GridInvoices;
+export default GridRoute;

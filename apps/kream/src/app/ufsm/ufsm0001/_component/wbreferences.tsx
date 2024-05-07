@@ -1,24 +1,14 @@
 'use client'
 
-import { useTranslation } from "react-i18next";
-import { IoExtensionPuzzleOutline } from "react-icons/io5";
-import { SlMagnifierAdd } from "react-icons/sl";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch from "layouts/search-form/page-search-row";
-import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
-import { MaskedInputField, Input } from 'components/input';
 import MasterGrid from './gridMaster';
-import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { ReactSelect, data } from "@/components/select/react-select2";
-import { DateInput, DatePicker } from 'components/date'
+import { useAppContext } from "components/provider/contextObjectProvider";
 import dayjs from 'dayjs'
-import CustomSelect from "components/select/customSelect";
-import { Button } from 'components/button';
-import { Checkbox } from "@/components/checkbox";
+import { gridData } from "components/grid/ag-grid-enterprise";
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -37,12 +27,11 @@ export interface typeloadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
+  mainData : typeloadItem;
 };
 
-const WBReference = memo(({ loadItem }: any) => {
-  // const { loadItem } = props;
+const WBReference = memo(({ loadItem, mainData }: any) => {
 
-  // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
 
@@ -72,16 +61,14 @@ const WBReference = memo(({ loadItem }: any) => {
   } = methods;
 
   // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
-  const [custcode, setCustcode] = useState<any>();
+  const [data, setData] = useState<any>();
 
   useEffect(() => {
     if (loadItem?.length) {
       // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
+      // setTransmode(loadItem[0])
+      // setTranstype(loadItem[1])
+      // setCustcode(loadItem[8])
 
       onSearch();
       // onSubmit();
@@ -95,6 +82,14 @@ const WBReference = memo(({ loadItem }: any) => {
     log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true });
   }
+
+
+  useEffect(() => {
+    if (mainData) {
+      setData((mainData?.[0] as gridData).data[0]);
+    }
+  }, [mainData])
+
 
   return (
     <FormProvider {...methods}>
@@ -112,26 +107,6 @@ const WBReference = memo(({ loadItem }: any) => {
             <MasterGrid initData={loadItem} />
           </div>
         </PageSearch>
-
-
-        {/* <PageSearch
-          title={<span className="px-1 py-1 text-blue-500">Related ACRs</span>}>
-          <div className="col-span-6">
-            <MasterGrid initData={loadItem} />
-          </div>
-          <div className={"col-span-2"}>
-            <MaskedInputField id="shipper_id" value={objState.searchParams?.shipper_id} options={{ isReadOnly: true }} />
-          </div>  <div className={"col-span-4"}>
-            <MaskedInputField id="shipper_name" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
-          </div>
-          <div className={"col-span-6"}>
-            <MaskedInputField id="shipper_address" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-            <MaskedInputField id="contact" value={objState.searchParams?.shipper_name} options={{ isReadOnly: true }} />
-          </div>
-          <div className={"col-span-4"}>
-          </div>
-        </PageSearch> */}
-
       </form>
     </FormProvider>
   );

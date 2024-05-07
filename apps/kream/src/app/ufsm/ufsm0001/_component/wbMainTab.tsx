@@ -7,14 +7,8 @@ import { PageContent } from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
-import { useGetData } from "components/react-query/useMyQuery";
-import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { ReactSelect, data } from "@/components/select/react-select2";
-import SubMenuTab, { tab } from "components/tab/tab"
-import { DateInput, DatePicker } from 'components/date'
-import dayjs from 'dayjs'
+import { useAppContext } from "components/provider/contextObjectProvider";
 import { gridData } from "components/grid/ag-grid-enterprise";
-import { SP_GetMasterData } from "./data";
 import { Button } from 'components/button';
 
 // import { useGetData } from './test'
@@ -34,9 +28,10 @@ export interface typeloadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
+  mainData : typeloadItem;
 };
 
-const WBMain = memo(({ loadItem }: any) => {
+const WBMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
@@ -62,18 +57,14 @@ const WBMain = memo(({ loadItem }: any) => {
   } = methods;
 
   // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
-  const [custcode, setCustcode] = useState<any>();
 
-  const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetMasterData, { enabled: true });
+
+  //const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetMasterData, { enabled: true });
 
   useEffect(() => {
     if (loadItem?.length) {
       // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
+
       onSearch();
       // onSubmit();
       // handleSubmit(onSubmit)();
@@ -88,9 +79,11 @@ const WBMain = memo(({ loadItem }: any) => {
   }
 
   useEffect(() => {
-    log("maindataaaaaa11a", mainData);
-    if (mainData) setData((mainData as gridData)?.data[0]);
-  }, [mainData])
+    if (mainData) {
+      setData((mainData?.[0] as gridData).data[0]);
+    }
+  }, [mainData]) 
+
 
   return (
     <FormProvider {...methods}>
