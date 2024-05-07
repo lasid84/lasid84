@@ -101,6 +101,10 @@ export default function UFSM0001() {
                         <WBSub loadItem={initData} mainData={mainData} />
                     </div>
 
+                    <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
+                        <WBReference loadItem={initData} mainData={mainData}/>
+                    </div>
+
                     <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
                         <WBShipmentDetails initData={initData} mainData={mainData} />
                     </div>
@@ -113,9 +117,6 @@ export default function UFSM0001() {
                         <WBShipmentText initData={initData} mainData={mainData}/>
                     </div>
 
-                    <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
-                        <WBReference loadItem={initData} mainData={mainData}/>
-                    </div>
 
                 </>}
         </TableContext.Provider>

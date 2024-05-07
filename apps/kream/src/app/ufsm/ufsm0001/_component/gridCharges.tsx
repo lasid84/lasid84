@@ -16,14 +16,15 @@ const GridCharges: React.FC<Props> = memo(({ loadData }) => {
     const gridRef = useRef<any | null>(null);
 
     const gridOption: GridOption = {
-        colVisible: { col: ["record_id", "charge_code", "charge_desc", "sort_id", "trans_type", "terms","waybill_amt","waybill_curr","invoice_amt","invoice_curr","actual_cost","actual_curr","vendor_id","vendor_ref_no","print","vat_cost"], visible: true },
+        colVisible: { col: [ "charge_code", "charge_desc", "sort_id", "trans_type", "terms","waybill_amt","waybill_curr","invoice_amt","invoice_curr","actual_cost","actual_curr","vendor_id","vendor_ref_no","print","vat_cost"], visible: true },
         gridHeight: "40vh",
-        maxWidth: { "record_id":60, "sort_id":60,"trans_type":60 },
+        maxWidth: { "sort_id":60,"trans_type":60 },
         minWidth: { "charge_code":150,"charge_desc":300, "waybill_amt":100, "invoice_amt":100, "actual_cost":100, "vendor_ref_no":150},
-        //dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
+        dataType: {"waybill_amt":"number", "invoice_amt":"number", "actual_cost":"number","vat_cost":"number"},
         isShowFilter: false,
         isAutoFitColData: false,
     };
+    
 
     log('mainData_ufsm0001_gridcharge____',loadData)
 

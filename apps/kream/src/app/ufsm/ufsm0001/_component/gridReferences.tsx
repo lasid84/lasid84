@@ -11,23 +11,18 @@ type Props = {
     loadData: gridData
 };
 
-const GridRoute: React.FC<Props> = memo(({ loadData }) => {
+const GridReferences: React.FC<Props> = memo(({ loadData }) => {
 
     const gridRef = useRef<any | null>(null);
 
     const gridOption: GridOption = {
-        colVisible: { col: ["vad_tz", "etd_tz", "eta_tz", "atd_tz", "ata_tz"], visible: false },
+        colVisible: { col: ["partner_cd", "ref_type", "ref_no", "local_ref_no", "use_yn"], visible: true },
+        gridHeight: "30vh",
+        maxWidth: { "use_yn": 150,},
+        minWidth: { "partner_cd": 300, "ref_type": 300, "ref_no": 300, "local_ref_no": 300, },
         isShowFilter: false,
-        gridHeight: "10vh",
-        checkbox: ["cob", "split"],
-        colDisable: ["cob", "split"],
-        maxWidth: { "cob":60, "split":60 },
-        minWidth: { "vad":150,"etd":150, "eta":150, "ata":150, "atd":150},
-        dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
         isAutoFitColData: false,
     };
-
-    log('mainData_ufsm0001_wbSub____',loadData)
 
     return (
         <Grid
@@ -41,4 +36,4 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
     );
 });
 
-export default GridRoute;
+export default GridReferences;

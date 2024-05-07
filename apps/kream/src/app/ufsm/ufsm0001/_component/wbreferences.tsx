@@ -3,12 +3,10 @@
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageSearch from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
-import { shallow } from "zustand/shallow";
-import MasterGrid from './gridMaster';
 import { useAppContext } from "components/provider/contextObjectProvider";
-import dayjs from 'dayjs'
 import { gridData } from "components/grid/ag-grid-enterprise";
+import GridReferences from "./gridReferences";
+import GridMilestones from "./gridMilestones";
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -32,21 +30,16 @@ type Props = {
 
 const WBReference = memo(({ loadItem, mainData }: any) => {
 
-  const { dispatch, objState } = useAppContext();
-  const [groupcd, setGroupcd] = useState<any>([])
-
-  // //사용자 정보
-  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
-  const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
+  const { dispatch, } = useAppContext();
 
   const methods = useForm({
     defaultValues: {
-      trans_mode: gTransMode || 'ALL',
-      trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      no: '',
-      cust_code: ''
+      // trans_mode: gTransMode || 'ALL',
+      // trans_type: gTransType || 'ALL',
+      // fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
+      // to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
+      // no: '',
+      // cust_code: ''
     }
   });
 
@@ -60,7 +53,8 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  // //Set select box data
+  const [references, setReferences] = useState<gridData>({});
+  const [milestones, setMilestones] = useState<gridData>({});
   const [data, setData] = useState<any>();
 
   useEffect(() => {
@@ -87,6 +81,8 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
   useEffect(() => {
     if (mainData) {
       setData((mainData?.[0] as gridData).data[0]);
+      setReferences((mainData?.[7] as gridData))
+      setMilestones((mainData?.[8] as gridData))
     }
   }, [mainData])
 
@@ -97,14 +93,14 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">References</span>}>
           <div className="col-span-6">
-            <MasterGrid initData={loadItem} />
+            <GridReferences loadData={references} />
           </div>
         </PageSearch>
 
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Milestones</span>}>
           <div className="col-span-6">
-            <MasterGrid initData={loadItem} />
+            <GridMilestones loadData={milestones} />
           </div>
         </PageSearch>
       </form>

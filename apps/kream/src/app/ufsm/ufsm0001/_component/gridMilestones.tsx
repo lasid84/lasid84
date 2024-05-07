@@ -11,23 +11,19 @@ type Props = {
     loadData: gridData
 };
 
-const GridRoute: React.FC<Props> = memo(({ loadData }) => {
+const GridMilestones: React.FC<Props> = memo(({ loadData }) => {
 
     const gridRef = useRef<any | null>(null);
 
     const gridOption: GridOption = {
-        colVisible: { col: ["vad_tz", "etd_tz", "eta_tz", "atd_tz", "ata_tz"], visible: false },
+        colVisible: { col: ["local_dd", "port", "location", "milestone", "description", "remark", "create_dd"], visible: true },
+        gridHeight: "40vh",
+        maxWidth: { "port": 100, "dest_city_code": 150, "trans_type": 60 },
+        minWidth: { "create_dd": 200, "local_dd": 250, "description": 300, },
+        dataType: {"local_dd":"date", "create_dd":"date"},
         isShowFilter: false,
-        gridHeight: "10vh",
-        checkbox: ["cob", "split"],
-        colDisable: ["cob", "split"],
-        maxWidth: { "cob":60, "split":60 },
-        minWidth: { "vad":150,"etd":150, "eta":150, "ata":150, "atd":150},
-        dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
         isAutoFitColData: false,
     };
-
-    log('mainData_ufsm0001_wbSub____',loadData)
 
     return (
         <Grid
@@ -41,4 +37,4 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
     );
 });
 
-export default GridRoute;
+export default GridMilestones;
