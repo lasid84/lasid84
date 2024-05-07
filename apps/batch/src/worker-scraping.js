@@ -138,6 +138,7 @@ async function callElementSelector(script, data) {
                 await Promise.all(
                     [page.waitForNavigation({waitUntil: 'domcontentloaded', timeout: 120000}), page.waitForNetworkIdle(),
                      page.goto(val, {
+                        timeout: 120000,
                         // ❸ 모든 네트워크 연결이 500ms 이상 유휴 상태가 될 때까지 기다림
                         waitUntil: ['networkidle0','domcontentloaded'],
                     })]);
