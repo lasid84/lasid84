@@ -52,7 +52,7 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
           {title}
           {/*contents*/}
           <div className="w-full flex px-4 py-1 space-y-2">
-            <div className="w-full flex gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+            <div className="w-full flex gap-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
           </div>

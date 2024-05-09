@@ -19,10 +19,8 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
         colVisible: { col: ["vad_tz", "etd_tz", "eta_tz", "atd_tz", "ata_tz"], visible: false },
         isShowFilter: false,
         gridHeight: "10vh",
-        checkbox: ["cob", "split"],
-        colDisable: ["cob", "split"],
         maxWidth: { "cob":60, "split":60 },
-        minWidth: { "vad":150,"etd":150, "eta":150, "ata":150, "atd":150},
+        minWidth: { "mwb_no":150, "vad":150,"etd":180, "eta":180, "ata":180, "atd":180},
         dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
         isAutoFitColData: false,
     };

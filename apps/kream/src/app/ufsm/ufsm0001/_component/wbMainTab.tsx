@@ -98,18 +98,15 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           }
         >
           <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-30' height='h-8' value={data?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
-          <MaskedInputField id="job_no" lwidth='w-16' width="w-24" height='h-8' value={data?.bol_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="pipeline_tx_id" lwidth='w-12' width="w-24" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="trans_mode" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_mode} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="trans_type" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="job_no" lwidth='w-16' width="w-24" height='h-8' value={data?.bol_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="orig_terminal_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_terminal_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="orig_department_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_department_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <div className='col-span-2'><MaskedInputField id="shipper_name" label="controlling_party" lwidth="w-30" height='h-8' value={data?.shipper_name} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
+          <div className='col-span-2'><MaskedInputField id="shipper_name" label="controlling_party" lwidth="w-25" height='h-8' value={data?.shipper_name} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
           {/* <MaskedInputField id="dest_city_code" lwidth='w-12' width="w-24" height='h-8' value={data?.dest_city_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />           */}
         </PageContent>
-
-
-
       </form>
     </FormProvider>
   );

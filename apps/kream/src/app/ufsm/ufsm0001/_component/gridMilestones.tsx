@@ -18,8 +18,8 @@ const GridMilestones: React.FC<Props> = memo(({ loadData }) => {
     const gridOption: GridOption = {
         colVisible: { col: ["local_dd", "port", "location", "milestone", "description", "remark", "create_dd"], visible: true },
         gridHeight: "40vh",
-        maxWidth: { "port": 100, "dest_city_code": 150, "trans_type": 60 },
-        minWidth: { "create_dd": 200, "local_dd": 250, "description": 300, },
+        maxWidth: { "create_dd": 200, "local_dd": 200, "port": 100, "dest_city_code": 150, "trans_type": 60, "milestone":150 },
+        minWidth: { "create_dd": 170, "local_dd": 170, "description": 300, },
         dataType: {"local_dd":"date", "create_dd":"date"},
         isShowFilter: false,
         isAutoFitColData: false,

@@ -147,13 +147,13 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               title={<span className="px-1 py-1 text-blue-500">Consignee</span>}>
               <div className={"col-span-2"}>
-                <MaskedInputField id="shipper_id" value={data?.shipper_id} options={{ isReadOnly: true }} />
+                <MaskedInputField id="cnee_id" value={data?.cnee_id} options={{ isReadOnly: true }} />
               </div>  
               <div className={"col-span-4"}>
-                <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
+                <MaskedInputField id="cnee_name" value={data?.cnee_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
-                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
+                <MaskedInputField id="cnee_address" value={data?.cnee_name} options={{ isReadOnly: true, useIcon: true }} />
               </div>
               <div className={"col-span-4"}>
                 <MaskedInputField id="cnee_contact_no" value={data?.cnee_contact_no} options={{ isReadOnly: true, useIcon: true }} />
