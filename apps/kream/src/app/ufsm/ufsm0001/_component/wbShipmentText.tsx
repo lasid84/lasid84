@@ -100,8 +100,8 @@ const WBShipmentText = memo(({ loadItem, mainData }: any) => {
           <div className="col-start-4 col-end-5 "><TextArea id="body_text" rows={6} cols={42}  value={data?.body_text} options={{ isReadOnly: true }} /></div>
           <div className="col-start-1 row-span-1 "><TextArea id="handling_info" rows={7} cols={42}  value={data?.handling_info} options={{ isReadOnly: true }} /></div>
           <div className="col-start-4 row-span-5" ><TextArea id="manifest_description" rows={7} cols={42}  value={data?.manifest_description} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-1 col-end-2 col-span-2"><TextArea id="accounting_information" rows={5} cols={92}  value={data?.accounting_information} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-3 col-end-4 col-span-2"><TextArea id="other_charges_info" rows={5} cols={92}  value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
+          <div className="col-span-2 col-start-1 col-end-2"><TextArea id="accounting_information" rows={5} cols={92}  value={data?.accounting_information} options={{ isReadOnly: true }} /></div>
+          <div className="col-span-2 col-start-3 col-end-4"><TextArea id="other_charges_info" rows={5} cols={92}  value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
         </PageSearch>
       </form>
     </FormProvider>

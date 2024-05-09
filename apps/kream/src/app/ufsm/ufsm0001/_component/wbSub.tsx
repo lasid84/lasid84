@@ -86,7 +86,7 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Terms</span>}>
-          <fieldset className="w-full flex border-solid border-2 p-1 space-y-1 space-x-1 col-span-6">
+          <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid">
             <legend className="text-sx">Insurance</legend>
           <MaskedInputField id="type" value={data?.type} options={{ isReadOnly: true }} />
           <MaskedInputField id="insured_value" value={data?.insured_value} options={{ isReadOnly: true }} />

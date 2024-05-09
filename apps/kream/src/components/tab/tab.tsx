@@ -37,36 +37,36 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
     }, [selectedTab]);
 
     return (
-       
-            <div className="flex flex-row overflow-x-auto justify-center">
-                {tabList?.map(({ cd, cd_nm }, idx) => (
-                    <div key={idx} className="px-1 flex flex-row bg-transparent">
-                        <button
-                            onClick={() => setSelectedTab(cd)}
-                            className={
-                                cd === selectedTab
-                                    ? "px-1 flex font-medium items-center text-xs px-2 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
-                                    : "px-1 flex font-medium items-center text-xs px-2 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
-                            } type="button">
-                            <div className="border-2 w-5 h-5 flex-row text-xs items-center bg-blue-300 rounded-full text-white text-center">{idx + 1}</div>
-                            <div className="flex min-h-full">
-                                <div className="flex items-center self-center place-content-around">{t(cd_nm)}</div>
-                            </div>
-                        </button>
-                    </div>
-                ))}
-            </div>
-       
+
+        <div className="flex flex-row justify-center overflow-x-auto">
+            {tabList?.map(({ cd, cd_nm }, idx) => (
+                <div key={idx} className="flex flex-row bg-transparent w-34 min-w-32">
+                    <button
+                        onClick={() => setSelectedTab(cd)}
+                        className={
+                            cd === selectedTab
+                                ? "flex font-medium items-center text-xs px-1 leading-8 border-b-2 border-blue-500 hover:border-blue-500 text-blue-500"
+                                : "flex font-medium items-center text-xs px-1 leading-8 border-b-1 border-[#f2f2f2] hover:border-blue-500 hover:text-blue-500"
+                        } type="button">
+                        <div className="flex-row items-center w-5 h-5 text-xs text-center text-white bg-blue-300 border-2 rounded-full">{idx + 1}</div>
+                        <div className="flex min-h-full">
+                            <div className="flex items-center self-center place-content-around min-w-20">{t(cd_nm)}</div>
+                        </div>
+                    </button>
+                </div>
+            ))}
+        </div>
+
     );
 }
 
 export function WBMenuTab({ tabList, onClickTab, onClickICON, MselectedTab }: Props) {
     const { t } = useTranslation();
     return (
-        <div className="w-full flex">
+        <div className="flex w-full">
             <div className="flex">
                 {tabList?.map(({ cd, cd_nm }, idx) => (
-                    <div key={idx} className="p-1 flex flex-row bg-transparent">
+                    <div key={idx} className="flex flex-row p-1 bg-transparent">
                         <button
                             id={cd}
                             onClick={onClickTab}

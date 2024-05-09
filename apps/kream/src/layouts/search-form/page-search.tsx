@@ -27,7 +27,7 @@ export type PageSearchProps = {
             </div>
             {/*button*/}
             <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
-              <div className="w-full grid grid-cols-2">
+              <div className="grid w-full grid-cols-2">
                 <div className="flex flex-row gap-2">
                   {left}
                   <span className="ml-auto"></span>

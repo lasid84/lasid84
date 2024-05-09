@@ -11,14 +11,14 @@ export type PageSearchProps = {
 export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      <div className="w-full flex">
+      <div className="flex w-full">
         <div className="w-full rounded-[5px] bg-white mb-2">
           {title}
-          <div className="w-full flex px-4 py-1 space-y-1">
-            <div className="w-10/12 flex gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="flex w-full px-4 py-1 space-y-1">
+            <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
-            <div className="w-2/12 flex flex-row gap-2 place-items-end">
+            <div className="flex flex-row w-2/12 gap-2 place-items-end">
               <span className="ml-auto"></span>
               {right}
             </div>
@@ -47,12 +47,12 @@ export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, chi
 const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      <div className="w-full flex">
+      <div className="flex w-full">
         <div className="w-full rounded-[5px] bg-white border mb-2">
           {title}
           {/*contents*/}
-          <div className="w-full flex px-4 py-1 space-y-2">
-            <div className="w-full flex gap-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="flex w-full px-4 py-1 space-y-2">
+            <div className="flex w-full gap-3 sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
           </div>
@@ -80,15 +80,15 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
 export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      <div className="w-full flex">
+      <div className="flex w-full">
         <div className="w-full rounded-[5px] bg-white border mb-2">
           {title}
           {/*contents*/}
-          <div className="w-full flex px-4 py-1 space-y-2">
-            <div className="w-10/12 flex gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="flex w-full px-4 py-1 space-y-2">
+            <div className="flex w-10/12 gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
-            <div className="w-2/12 flex flex-row gap-2 place-items-end">
+            <div className="flex flex-row w-2/12 gap-2 place-items-end">
               <span className="ml-auto"></span>
               {right}
             </div>
