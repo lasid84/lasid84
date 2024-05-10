@@ -35,6 +35,7 @@ export type ReactSelectProps = {
     dataSrc: data;
     width?: string;
     height?: string;
+    lwidth?: string;
     options?: {
         keyCol?: string;                //dataSrc.data의 키 컬럼, null 일시 0번째를 키 컬럼으로 사용
         displayCol?: string[];          //select의 보여질 컬럼, 여러개 시 col + ' ' + col 로 표현, 없을시 키(daraSrc.data의 0번째 컬럼) + ' ' + daraSrc.data의 1번째 컬럼
@@ -52,7 +53,7 @@ export type ReactSelectProps = {
 
 export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const { control } = useFormContext();
-    const { id, label, dataSrc, width, height, options = {}, events } = props;
+    const { id, label, dataSrc, width, height, lwidth, options = {}, events } = props;
     const { keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true } = options;
     const [list, setList] = useState<{}[] | undefined>([]);
     const [selectedVal, setSelectedVal] = useState<{} | null>(null);
@@ -185,8 +186,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
 
     return (
         <>
-            <InputWrapper outerClassName="" inline={inline}>
-                {!noLabel && <Label id={id} name={label} />}
+            <InputWrapper outerClassName="" inline={inline} >
+                {!noLabel && <Label id={id} name={label} lwidth={lwidth}/>}
                 {/* <div className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                 <Controller
                     control={control}
@@ -194,7 +195,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                     rules={rules}
                     render={({ field: { onChange } }) => {
                         return (
-                            <div className="block w-full flex-grow-1">
+                            <div className={`block ${defWidth} flex-grow-1`}>
                                 {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                                 <ReactSelectComponent
                                     //{...field}

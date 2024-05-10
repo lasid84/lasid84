@@ -7,6 +7,7 @@ export type InputWrapperProps = {
 export const InputWrapper: React.FC<InputWrapperProps> = ({
   inline = false,
   outerClassName,
+
   children,
 }) => {
   if (inline) {

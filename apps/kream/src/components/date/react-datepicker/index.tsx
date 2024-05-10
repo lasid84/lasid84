@@ -22,8 +22,8 @@ type Props = {
   label?:string;
   value?:string;
   width?:string;
+  lwidth?:string;
   height?:string;
-
   options?: {
     dateFormat?:string;
     inline?: boolean;         //라벨명 위치
@@ -55,7 +55,7 @@ const autoCorrectedDatePipe = createAutoCorrectedDatePipe('yyyy-MM-dd');
 export const DatePicker: React.FC<Props> = memo((props:Props) => {
     // registerLocale("ko", ko);
     const { control, setValue } = useFormContext();
-    const { id, label, value, width, height,  options = {}, events } = props;
+    const { id, label, value, width, height, lwidth, options = {}, events } = props;
     const { dateFormat = 'yyyy-MM-dd', myPlaceholder, inline = false, noLabel = false,
             isReadOnly = false,
             textAlign = "left", bgColor, fontSize = "13px", fontWeight = "normal",
@@ -144,7 +144,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
 
     return (
         <InputWrapper outerClassName="" inline={inline}>
-            {!noLabel && <Label id={id} name={label}  />}
+            {!noLabel && <Label id={id} name={label} lwidth={lwidth} />}
             {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                 <Controller
                     control={control}
