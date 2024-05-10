@@ -129,7 +129,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               }}
             />
           </div>
-          
+
           <div className={"col-span-1"}>
             <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
             <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
@@ -149,7 +149,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               style={{ width: '1000px', height: "8px" }}
               inline={true}
             />
-            <MaskedInputField id="wb_no" label="bl no." value={objState.searchParams?.wb_no}  options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="wb_no" label="bl no." value={objState.searchParams?.wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>

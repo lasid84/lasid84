@@ -103,21 +103,21 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Shipment Details & Freight</span>}>
-          <div className="w-full flex col-span-6">
+          <div className="flex w-full col-span-6">
             <ShipmentDetailGrid loadData={shipmentDetail} />
           </div>
-          <fieldset className="w-full flex border-solid border-2 p-1 space-y-1 space-x-1 col-span-6">
+          <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid">
             <legend className="text-sx">Total</legend>
-            <MaskedInputField id="pieces" value={data?.pieces} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="pkg_type" value={data?.pkg_type} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="volume" value={data?.volume} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="gross_wt" value={data?.gross_wt} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="volume_wt" value={data?.volume_wt} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="chargeable_wt" value={data?.chargeable_wt} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="uom" value={data?.uom} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="num_pieces" value={data?.num_pieces} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="packaging_form_code" value={data?.packaging_form_code} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="total_volume" value={data?.total_volume} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="volume_uom_code" value={data?.volume_uom_code} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="total_actual_weight" value={data?.total_actual_weight} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="actual_weight_uom_code" value={data?.actual_weight_uom_code} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="total_volume_weight" value={data?.total_volume_weight} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="volume_weight_uom_code" value={data?.volume_weight_uom_code} options={{ isReadOnly: true }} width="w-12" />
+            <MaskedInputField id="total_chargeable_wt" value={data?.total_chargeable_wt} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="chargeable_weight_uom_code" value={data?.chargeable_weight_uom_code} options={{ isReadOnly: true }} width="w-12" />
           </fieldset>
         </PageSearch>
 
