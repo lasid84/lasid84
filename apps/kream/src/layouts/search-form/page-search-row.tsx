@@ -7,7 +7,7 @@ export type PageSearchProps = {
   addition?: React.ReactNode;
 };
 
-//검색조건 1분할
+//page 2분할(왼: 검색조건 오른: icon)
 export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
@@ -18,7 +18,7 @@ export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, chi
             <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
-            <div className="flex flex-row w-2/12 gap-2 place-items-end">
+            <div className="flex flex-row w-2/12 grid-flow-col-dense gap-2 md:flex-row md:grid md:grid-cols-3 place-items-end">
               <span className="ml-auto"></span>
               {right}
             </div>
@@ -89,7 +89,7 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right
               {children}
             </div>
             <div className="flex flex-row w-2/12 gap-2 place-items-end">
-              <span className="ml-auto"></span>
+              <span className="ml-auto"></span>              
               {right}
             </div>
           </div>

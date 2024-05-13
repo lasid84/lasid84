@@ -14,9 +14,10 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from 'components/date'
 import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
-import { Button } from 'components/button';
+import { Button,ICONButton } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
-
+import { Badge } from "@/components/badge";
+import { GrDownload } from "react-icons/gr";
 
 
 // import { useGetData } from './test'
@@ -38,12 +39,11 @@ type Props = {
   loadItem: typeloadItem;
 };
 
-const SearchForm = memo(({ loadItem }: any) => {
-  // const { loadItem } = props;
+const SearchForm = ({ loadItem }: any) => {
 
-  // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
-  const [groupcd, setGroupcd] = useState<any>([])
+  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code } = objState.searchParams;
+  log("search-form 시작", objState.searchParams)
 
   // //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
@@ -51,12 +51,12 @@ const SearchForm = memo(({ loadItem }: any) => {
 
   const methods = useForm({
     defaultValues: {
-      trans_mode: gTransMode || 'ALL',
-      trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(6, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      wb_no: '',
-      cust_code: ''
+      trans_mode: trans_mode || gTransMode || 'ALL',
+      trans_type: trans_type || gTransType || 'ALL',
+      fr_date: fr_date || dayjs().subtract(6, 'month').startOf('month').format("YYYYMMDD"),
+      to_date: to_date || dayjs().subtract(1, 'month').endOf('month').format("YYYYMMDD"),
+      wb_no: wb_no || '',
+      cust_code: cust_code || ''
     }
   });
 
@@ -76,20 +76,20 @@ const SearchForm = memo(({ loadItem }: any) => {
   const [custcode, setCustcode] = useState<any>();
 
   useEffect(() => {
-    if (loadItem?.length) {
-      // log("=================", loadItem[0].data, loadItem[1].data)
+    if (objState.isFirstRender && loadItem?.length) {
       setTransmode(loadItem[0])
       setTranstype(loadItem[1])
       setCustcode(loadItem[8])
 
-      onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
+      log("useeffect objState", objState)
+      if (objState.isFirstRender) {
+        onSearch();
+        dispatch({ isFirstRender: false });
+      }
     }
-  }, [loadItem?.length])
+  }, [loadItem?.length, objState.isFirstRender])
 
   const onSearch = () => {
-    // log("onSearch")
     const params = getValues();
     log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true });
@@ -101,9 +101,17 @@ const SearchForm = memo(({ loadItem }: any) => {
         <PageSearchButton
           right={
             <>
-              <Button id="search" disabled={false} onClick={onSearch} />
-              <Button id="reset" disabled={false} onClick={onSearch} />
-              <Button id="refresh" disabled={false} onClick={onSearch} />
+              {/* <div className={"col-span-1"}>
+                <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
+              </div> */}
+              <div className={"col-span-1"}>
+                <Button id="search" disabled={false} onClick={onSearch} />
+                {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
+              </div>
+              <div className={"col-span-1"}>
+                <Button id="reset" disabled={false} onClick={onSearch} />
+                {/* <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} /> */}
+              </div>
             </>
           }>
           <div className={"col-span-1"}>
@@ -131,8 +139,8 @@ const SearchForm = memo(({ loadItem }: any) => {
           </div>
 
           <div className={"col-span-1"}>
-            <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
-            <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            <DatePicker id="fr_date" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
           </div>
 
           <div className={"col-span-2"}>
@@ -149,13 +157,13 @@ const SearchForm = memo(({ loadItem }: any) => {
               style={{ width: '1000px', height: "8px" }}
               inline={true}
             />
-            <MaskedInputField id="wb_no" label="bl no." value={objState.searchParams?.wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="wb_no" label="bl no." value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>
     </FormProvider>
   );
-});
+};
 
 
 export default SearchForm

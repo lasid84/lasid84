@@ -45,13 +45,14 @@ export default function UFSM0001() {
             mSelectedDetail: {},
             dSelectedRow: {},
             tab1: [],
-            MselectedTab: 'Main'
+            MselectedTab: 'Main',
+            isFirstRender: true
         }
     });
     const { objState } = state;
-    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab } = objState;
+    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab,isFirstRender } = objState;
 
-    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
+    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail,isFirstRender, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
 
@@ -71,14 +72,6 @@ export default function UFSM0001() {
             }
         }
     }, [initData])
-
-
-    useEffect(() => {
-        if (mainData) {
-            log('ff', mainData)
-        }
-    }, [mainData])
-
 
     return (
         <TableContext.Provider value={val}>

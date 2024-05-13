@@ -24,11 +24,11 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
 
     const gridOption: GridOption = {
-        colVisible: { col: ["waybill_no", "shipment_status", "status", "trans_mode", "trans_type", "mpr_port_origin1", "origin_city_code", "execution_date", "waybill_type", "bol_type", "agent_type", "service_type"], visible: true },
+        colVisible: { col: ["pipeline_tx_id", "mwb_status", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "75vh",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
         dataType :{"execution_date":"date"},
-        isAutoFitColData: false,
+        isAutoFitColData: true,
     };
 
 

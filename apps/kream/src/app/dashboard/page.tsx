@@ -50,12 +50,7 @@ const Home: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <DateInput 
-            id="fr_date"
-            width="w-58"
-            height="h-8"
-            value="20240312"
-          /> */}
+
           <MaskedInputField 
             id="bz_reg_no" 
             value="12444444448"
@@ -99,17 +94,7 @@ const Home: React.FC = () => {
                   })
                  }
                 />
-          <ReactSelect 
-            id="trans_mode" label="trans_mode" dataSrc={{data:[{trans_mode:'A', name : 'Air'},{trans_mode:'O', name : 'Ocean'}], field:[]} as data} 
-            width="10" height="15px"
-            options={{
-              keyCol:"trans_mode",
-              displayCol:['name'],
-              // inline:true,
-              // defaultValue: {label:'A Air', value:'A'}
-              defaultValue : getValues('trans_mode')
-            }}
-          />
+          
           <DatePicker 
             id={"to_date"} value="20240330" 
             options={{
@@ -125,31 +110,7 @@ const Home: React.FC = () => {
             }}
             // height="h-20"
           />
-          {/* <NextDatePicker
-          /> */}
-          <PageContent
-            right={
-              <>
-                <Button 
-                  id="search"
-                  // label={"search"}
-                  // color="white"
-                  disabled={false}
-                  // isHidden={true}
-                  onClick={onClick}
-                />
-                <Button 
-                  id="add"
-                  // label={"add"}
-                  // color="white"
-                  disabled={false}
-                  // isHidden={true}
-                  type="submit"
-                />
-              </>
-            }>  
-            <></>            
-          </PageContent>
+
         </form>
       </FormProvider>
   );

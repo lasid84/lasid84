@@ -4,12 +4,12 @@ import { TiPlus } from "react-icons/ti";
 // import { ChevronDownIcon } from "@heroicons/react";
 import clsx from "clsx";
 import { RiRefreshLine } from "react-icons/ri";
-import { RiSaveLine, RiSaveFill, RiSave2Fill   } from "react-icons/ri";
+import { RiSaveLine, RiSaveFill, RiSave2Fill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { ReactElement, cloneElement } from "react";
 import { GrPowerReset } from "react-icons/gr";
 import { HiOutlineRefresh } from "react-icons/hi";
-
+import { GrDownload } from "react-icons/gr";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -61,7 +61,7 @@ const getColor = (label: string, color: string = '') => {
                 break;
             case "add":
             case "new":
-                c= 'gray-outline';
+                c = 'gray-outline';
                 break;
             case "save":
                 c = 'red-outline';
@@ -71,7 +71,7 @@ const getColor = (label: string, color: string = '') => {
                 c = 'gray';
                 break;
             case "refresh":
-                c= 'gray-outline'
+                c = 'gray-outline'
             default:
                 c = 'black';
                 break;
@@ -82,10 +82,11 @@ const getColor = (label: string, color: string = '') => {
     return btnColor[c];
 }
 
-const getIcon = (label: string, icon: JSX.Element) => {
+const getIcon = (label: string, icon: JSX.Element, size:string) => {
     if (icon === null) return null;
-    var size = 18;
-    if (icon) return cloneElement(icon as ReactElement, { size });;
+    //var size = 14;
+
+    if (icon) return cloneElement(icon as ReactElement, { size });
 
     switch (label.toLowerCase()) {
         case "search":
@@ -105,6 +106,9 @@ const getIcon = (label: string, icon: JSX.Element) => {
             break;
         case "refresh":
             icon = <HiOutlineRefresh size={size} />
+            break;
+        case "download":
+            icon = <GrDownload size={size} />
     }
     return (
         icon
@@ -114,34 +118,45 @@ const getIcon = (label: string, icon: JSX.Element) => {
 export const Button: React.FC<ButtonProps> = (props) => {
 
     const { t } = useTranslation();
-    const { id, label, disabled, color, type, isHidden, icon , onClick
+    const { id, label, disabled, color, type, size, isHidden, icon, onClick
     } = props;
 
     const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
 
     return (
         <button
-            className={`p-1 flex flex-row gap-1 h-[30px] px-2 py-2 text-xs font-bold place-items-center text-center ${getColor(label ? label : id, color)}
+            className={`m-1 flex flex-row gap-0.5 h-8 w-full w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
-            ${disabledCss}
-        `}
+            ${disabledCss}`}
             id={label}
             onClick={onClick}
             type={type ? type : "button"}
-            disabled={disabled ? true : false}
-        >
-            {getIcon(label ? label : id, icon)}
-            {/* {direction && <ChevronDownIcon
-            className={clsx(
-            "w-8 ml-2 duration-300 ease-in-out fill-black",
-            direction === "UP" && "-rotate-180",
-            direction === "DOWN" && "rotate-0",
-            direction === "LEFT" && "rotate-90",
-            direction === "RIGHT" && "-rotate-90"
-            )}
-            aria-hidden="true"
-        />} */}
+            disabled={disabled ? true : false}>
+            {getIcon(label ? label : id, icon,  size? size : '14')}
             {t((label ? label : id).toLowerCase())}
+        </button>
+    );
+};
+
+
+export const ICONButton: React.FC<ButtonProps> = (props) => {
+
+    const { t } = useTranslation();
+    const { id, label, disabled, color, type, size, isHidden, icon, onClick
+    } = props;
+
+    const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
+
+    return (
+        <button
+            className={`m-1 flex flex-row gap-0.5 h-8 w-full w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center text-gray-500 hover:text-sky-500 
+            ${isHidden ? "hidden" : ""}
+            ${disabledCss}`}
+            id={label}
+            onClick={onClick}
+            type={type ? type : "button"}
+            disabled={disabled ? true : false}>
+            {getIcon(label ? label : id, icon, size? size : '14')}
         </button>
     );
 };

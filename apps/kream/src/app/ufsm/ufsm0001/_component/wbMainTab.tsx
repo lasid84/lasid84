@@ -9,8 +9,8 @@ import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { gridData } from "components/grid/ag-grid-enterprise";
-import { Button } from 'components/button';
-
+import { Button, ICONButton } from 'components/button';
+import { Badge } from "@/components/badge";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -28,7 +28,7 @@ export interface typeloadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
-  mainData : typeloadItem;
+  mainData: typeloadItem;
 };
 
 const WBMain = memo(({ loadItem, mainData }: any) => {
@@ -82,7 +82,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
     if (mainData) {
       setData((mainData?.[0] as gridData).data[0]);
     }
-  }, [mainData]) 
+  }, [mainData])
 
 
   return (
@@ -91,14 +91,21 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
         <PageContent
           right={
             <>
-              <Button id="icon" disabled={false} onClick={onSearch} />
-              <Button id="icon" disabled={false} onClick={onSearch} />
-              <Button id="icon" disabled={false} onClick={onSearch} />
+              <div className={"col-span-2"}>
+                <Badge size={"md"} name={data?.status} color="border-sky-500 text-sky-500" rounded outlined />
+                <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
+              </div>
+              <div className={"col-span-1"}>
+                <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
+              </div>
+              <div className={"col-span-1"}>
+                <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
+              </div>
             </>
           }
         >
-          <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-30' height='h-8' value={data?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
-          <MaskedInputField id="pipeline_tx_id" lwidth='w-12' width="w-24" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-24' width="w-36" height='h-8' value={data?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
+          <MaskedInputField id="pipeline_tx_id" lwidth='w-12' width="w-32" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="trans_mode" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_mode} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="trans_type" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="job_no" lwidth='w-16' width="w-24" height='h-8' value={data?.bol_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />

@@ -103,13 +103,15 @@ const SearchForm = ({ loadItem }: any) => {
         <PageSearchButton
           right={
             <>
+            <div className={"col-span-1"}>
               <Button id="search" disabled={false} onClick={onSearch}/>
+              </div>
             </>
           }>
           <div className={"col-span-1"}>
             <ReactSelect
               id="trans_mode" label="trans_mode" dataSrc={transmode as data}
-              width="10" height="8px"
+              width='w-96' lwidth='w-20' height="8px"
               options={{
                 keyCol: "trans_mode",
                 displayCol: ['name'],
@@ -120,7 +122,7 @@ const SearchForm = ({ loadItem }: any) => {
 
             <ReactSelect
               id="trans_type" label="trans_type" dataSrc={transtype as data}
-              width="10" height="8px"
+              width='w-96' lwidth='w-20' height="8px"
               options={{
                 keyCol: "trans_type",
                 displayCol: ['name'],
