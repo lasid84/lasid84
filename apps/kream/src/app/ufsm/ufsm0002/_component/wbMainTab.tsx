@@ -101,7 +101,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
             </>
           }
         >
-          <div className='col-span-2'><MaskedInputField id="mwb_no" lwidth='w-24' width="w-36" height='h-8' value={data?.mwb_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
+          <div className='col-span-2'><MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={data?.mwb_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
           <MaskedInputField id="pipeline_tx_id" lwidth='w-12' width="w-32" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="trans_mode" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_mode} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
           <MaskedInputField id="trans_type" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />

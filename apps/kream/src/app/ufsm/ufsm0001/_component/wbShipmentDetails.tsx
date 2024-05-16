@@ -108,15 +108,15 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
           </div>
           <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid">
             <legend className="text-sx">Total</legend>
-            <MaskedInputField id="num_pieces" value={data?.num_pieces} options={{ isReadOnly: true }} width="w-40" />
-            <MaskedInputField id="packaging_form_code" value={data?.packaging_form_code} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="total_volume" value={data?.total_volume} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="num_pieces" value={data?.num_pieces} options={{ isReadOnly: true }} width="w-36" />
+            <MaskedInputField id="packaging_form_code" value={data?.packaging_form_code} options={{ isReadOnly: true }} width="w-14" />
+            <MaskedInputField id="total_volume" value={data?.total_volume} options={{ isReadOnly: true }} width="w-36" />
             <MaskedInputField id="volume_uom_code" value={data?.volume_uom_code} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="total_actual_weight" value={data?.total_actual_weight} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="total_actual_weight" value={data?.total_actual_weight} options={{ isReadOnly: true }} width="w-36" />
             <MaskedInputField id="actual_weight_uom_code" value={data?.actual_weight_uom_code} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="total_volume_weight" value={data?.total_volume_weight} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="total_volume_weight" value={data?.total_volume_weight} options={{ isReadOnly: true }} width="w-36" />
             <MaskedInputField id="volume_weight_uom_code" value={data?.volume_weight_uom_code} options={{ isReadOnly: true }} width="w-12" />
-            <MaskedInputField id="total_chargeable_wt" value={data?.total_chargeable_wt} options={{ isReadOnly: true }} width="w-40" />
+            <MaskedInputField id="total_chargeable_wt" value={data?.total_chargeable_wt} options={{ isReadOnly: true }} width="w-36" />
             <MaskedInputField id="chargeable_weight_uom_code" value={data?.chargeable_weight_uom_code} options={{ isReadOnly: true }} width="w-12" />
           </fieldset>
         </PageSearch>

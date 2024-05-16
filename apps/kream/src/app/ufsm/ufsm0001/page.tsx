@@ -3,7 +3,7 @@
 
 import { useEffect, useReducer, useMemo, useCallback } from "react";
 import { SP_Load, SP_GetMasterData, SP_GetWBDetailData } from "./_component/data";
-import {  reducer, TableContext } from "components/provider/contextObjectProvider";
+import { reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
 import { useState } from 'react'
@@ -28,8 +28,13 @@ export default function UFSM0001() {
 
     const handleOnClickTab = (code: any) => { setselectedTab(code) }
     const MhandleOnClickTab = (code: any) => {
-        console.log('filtered MhandleOnClickTab', code.target.id)
-        dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } })
+        console.log('search-form 시작 MhandleOnClickTab', code.target.id)
+        if(code.target.id=='Main'){
+            console.log('search-form 시작 하이...')
+            dispatch({ MselectedTab: code.target.id})
+        }else{
+            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } })
+        }
     }
     const MhandleonClickICON = (code: any) => {
         let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
@@ -50,10 +55,10 @@ export default function UFSM0001() {
         }
     });
     const { objState } = state;
-    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab,isFirstRender } = objState;
+    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab, isFirstRender } = objState;
 
-    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail,isFirstRender, dispatch } }, [state]);
-    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, isFirstRender, dispatch } }, [state]);
+    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60, });
     const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
 
     useEffect(() => {
@@ -84,7 +89,7 @@ export default function UFSM0001() {
                     {/* WayBill Detail 화면 상단{Tab} */}
                     <WBMainTab loadItem={initData} mainData={mainData} />
                     <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
-                    
+
                     {/* WayBill Detail 화면 하단(Sub) */}
                     <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                         <WBMain loadItem={initData} mainData={mainData} />
@@ -95,7 +100,7 @@ export default function UFSM0001() {
                     </div>
 
                     <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
-                        <WBReference loadItem={initData} mainData={mainData}/>
+                        <WBReference loadItem={initData} mainData={mainData} />
                     </div>
 
                     <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
@@ -107,7 +112,7 @@ export default function UFSM0001() {
                     </div>
 
                     <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
-                        <WBShipmentText initData={initData} mainData={mainData}/>
+                        <WBShipmentText initData={initData} mainData={mainData} />
                     </div>
 
 

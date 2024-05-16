@@ -37,11 +37,11 @@ type Props = {
   loadItem: typeloadItem;
 };
 
-const SearchForm = ({ loadItem }: any) => {
+const SearchForm = memo(({ loadItem }: any) => {
 
   const { dispatch, objState } = useAppContext();
   const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code } = objState.searchParams;
-  log("search-form 시작", objState.searchParams)
+  log("search-form 시작NNNN", objState.searchParams)
 
   // //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
@@ -79,9 +79,9 @@ const SearchForm = ({ loadItem }: any) => {
       setTranstype(loadItem[1])
       setCustcode(loadItem[8])
 
-      log("useeffect objState", objState)
       if (objState.isFirstRender) {
         onSearch();
+        log("useeffect objState", objState)
         dispatch({ isFirstRender: false });
       }
     }
@@ -137,8 +137,8 @@ const SearchForm = ({ loadItem }: any) => {
           </div>
 
           <div className={"col-span-1"}>
-            <DatePicker id="fr_date" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
-            <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
           </div>
 
           <div className={"col-span-2"}>
@@ -155,13 +155,13 @@ const SearchForm = ({ loadItem }: any) => {
               style={{ width: '1000px', height: "8px" }}
               inline={true}
             />
-            <MaskedInputField id="wb_no" label="hwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="wb_no" label="hwb_no" value={objState.searchParams?.wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>
     </FormProvider>
   );
-};
+});
 
 
 export default SearchForm

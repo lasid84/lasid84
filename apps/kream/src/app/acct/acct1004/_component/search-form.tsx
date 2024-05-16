@@ -100,13 +100,15 @@ const SearchForm = memo(({ loadItem }: any) => {
         <PageSearchButton
           right={
             <>
+              <div className={"col-span-1"}>
               <Button id="search" disabled={false} onClick={onSearch}/>
+              </div>
             </>
           }>
           <div className={"col-span-1"}>
             <ReactSelect
               id="trans_mode" label="trans_mode" dataSrc={transmode as data}
-              width="10" height="8px"
+              width='w-96' lwidth='w-20' height="8px"
               options={{
                 keyCol: "trans_mode",
                 displayCol: ['name'],
@@ -117,7 +119,7 @@ const SearchForm = memo(({ loadItem }: any) => {
 
             <ReactSelect
               id="trans_type" label="trans_type" dataSrc={transtype as data}
-              width="10" height="8px"
+              width='w-96' lwidth='w-20' height="8px"
               options={{
                 keyCol: "trans_type",
                 displayCol: ['name'],
@@ -136,8 +138,8 @@ const SearchForm = memo(({ loadItem }: any) => {
             }}
           /> */}
           <div className={"col-span-1"}>
-            <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }} height="h-8" />
-            <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} height="h-8" />
+            <DatePicker id="fr_date" value={objState.searchParams?.fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 underline border-1 border-slate-300" }}  lwidth='w-20' height="h-8" />
+            <DatePicker id="to_date" value={objState.searchParams?.to_date} options={{ inline: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
           </div>
           <div className={"col-span-2"}>
             <CustomSelect

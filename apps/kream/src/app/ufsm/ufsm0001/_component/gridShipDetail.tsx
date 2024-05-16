@@ -22,7 +22,7 @@ const ShipmentDetailGrid: React.FC<Props> = ({ loadData }) => {
         colVisible: { col: ["piece", "pkg_type", "gross_wt", "gross_uom", "rate_class", "description", "measurement", "measurement_uom", "chargeable_wt", "chargeable_uom", "total"], visible: true },
         gridHeight: "40vh",
         maxWidth: { "piece": 50, "pkg_type": 90, "gross_uom": 70, "mesurement_uom": 70, "chargeable_uom": 70, "rate_class": 70, },
-        minWidth: { "piece": 80, "description": 350, "measurement": 100 },
+        minWidth: { "piece": 80, "description": 350, "measurement": 130 },
         isAutoFitColData: false,
     };
 

@@ -23,7 +23,8 @@ const ShipmentDetailGrid: React.FC<Props> = ({ loadData }) => {
         isShowFilter: false,
         gridHeight: "40vh",
         maxWidth: { "piece": 50, "pkg_type": 90, "gross_uom": 70, "mesurement_uom": 70, "chargeable_uom": 70, "rate_class": 70, },
-        minWidth: { "piece": 80, "description": 350, "measurement": 100 },
+        minWidth: { "piece": 80, "description": 350, "measurement": 130 },
+        dataType: { "total": "number", "chargeable_wt":"number"},
         isAutoFitColData: false,
     };
 

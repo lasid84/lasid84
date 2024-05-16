@@ -20,7 +20,7 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
         isShowFilter: false,
         gridHeight: "10vh",
         maxWidth: { "cob":60, "split":60 },
-        minWidth: { "mwb_no":150, "vad":150,"etd":180, "eta":180, "ata":180, "atd":180},
+        minWidth: { "mwb_no":150, "vad":150,"etd":180, "eta":180, "ata":180, "atd":180,"port_loading":60,"port_unloading":60},
         dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
         isAutoFitColData: false,
     };

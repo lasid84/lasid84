@@ -173,86 +173,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               </div>
               <div className={"col-span-2"}><span className="ml-auto"></span></div>
             </PageSearch>
-          </div>
-
-
-          <div className="flex w-1/2">
-            <PageSearch title={<span className="px-1 py-1 text-blue-500">Export Bill To</span>}>
-              <div className={"col-span-2"}>
-                <MaskedInputField id="billto_id" value={data?.billto_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
-                <MaskedInputField id="billto_name" value={data?.billto_name} options={{ isReadOnly: true }} />
-              </div>
-              <div className={"col-span-6"}>
-                <MaskedInputField id="billto_address_no" value={data?.billto_address_no} options={{ isReadOnly: true, useIcon: true }} />
-              </div>
-              <div className={"col-span-4"}>
-                <MaskedInputField id="billto_contact_no" value={data?.billto_contact_no} options={{ isReadOnly: true, useIcon: true }} />
-              </div>
-              <div className={"col-span-2"}><span className="ml-auto"></span></div>
-            </PageSearch>
-          </div>
+          </div>        
         </div>
-
-        <div className="flex flex-row w-full">
-          <div className="flex w-1/2">
-            <PageSearch title={<span className="px-1 py-1 text-blue-500">Controlling Party</span>}>
-              <div className={"col-span-2"}>
-                <MaskedInputField id="shipper_id" value={data?.shipper_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
-                <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
-              </div>
-              <div className={"col-span-6"}>
-                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-              </div>
-              <div className={"col-span-4"}>
-                <MaskedInputField id="contact" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-              </div>
-              <div className={"col-span-2"}>
-                <MaskedInputField id="sales_person" value={data?.sales_person} options={{ isReadOnly: true, useIcon: true }} />
-              </div>
-            </PageSearch>
-          </div>
-
-          <div className="flex w-1/2">
-            <PageSearch
-              title={<span className="px-1 py-1 text-blue-500">Export Non-Freight Bill To</span>}>
-              <div className={"col-span-2"}>
-                <MaskedInputField id="shipper_id" value={data?.shipper_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
-                <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
-              </div>
-              <div className={"col-span-6"}>
-                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />               
-              </div>
-              <div className={"col-span-4"}><MaskedInputField id="contact" value={data?.shipper_name} options={{ isReadOnly: true }} /></div>
-              <div className={"col-span-2"}><span className="ml-auto"></span></div>
-            </PageSearch>
-          </div>
-        </div>
-
-        <div className="flex flex-row w-full">
-          <div className="flex w-1/2">
-            <PageSearch
-              title={<span className="px-1 py-1 text-blue-500">Party To Contact</span>}>
-              <div className={"col-span-2"}>
-                <MaskedInputField id="dest_terminal_id" value={data?.dest_terminal_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
-                <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
-              </div>
-              <div className={"col-span-6"}>
-                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-              </div>               
-              <div className={"col-span-4"}> <MaskedInputField id="contact" value={data?.shipper_name} options={{ isReadOnly: true }} /></div>
-              <div className={"col-span-2"}><span className="ml-auto"></span></div>
-            </PageSearch>
-          </div>
-        </div>
-
       </form>
     </FormProvider>
   );

@@ -35,17 +35,16 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
         defaultValues: {
         },
     });
-
-
     const [tab, settab] = useState<tab[]>()
     const [selectedTab, setselectedTab] = useState<string>("NM");
 
     useEffect(() => {
         if (loadItem?.length) {
-            log("loadItem", loadItem[14].data)
+            log("loadItem111111", loadItem[14].data)
             settab(loadItem[14].data)
         }
     }, [loadItem?.length])
+    
     const {
         handleSubmit,
         formState: { errors },
@@ -71,14 +70,14 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
             <form onSubmit={handleSubmit(onFormSubmit)}>
                 <div className="flex flex-col w-full gap-2 space-y-2">
                     <PageContent
-                        left={<Tab tabList={tab} onClickTab={handleOnClickTab} />
+                        left={<Tab loadItem={loadItem} onClickTab={handleOnClickTab} />
                         }
                         right={<>
                             <Button id="save" disabled={false} onClick={handleSubmit(onFormSubmit)} />
                         </>
                         }>
                         <div className={`flex flex-col w-full h-[400px] ${selectedTab == "NM" ? "" : "hidden"}`}>
-                            <div className="overflow-y-auto grid md:grid-cols-5">
+                            <div className="grid overflow-y-auto md:grid-cols-5">
                                 <div className={"p-1 col-span-2"}>
                                     <MaskedInputField id="trans_mode" value={objState.mSelectedDetail?.trans_mode} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
                                     <MaskedInputField id="invoice_no" value={objState.mSelectedDetail?.invoice_no} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />
