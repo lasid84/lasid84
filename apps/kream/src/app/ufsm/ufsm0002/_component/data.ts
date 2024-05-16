@@ -30,14 +30,14 @@ export const SP_Load = async (searchParam: any) => {
 //SP_GetInvoiceMasterContent
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { mwb_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr } = Param;
+  const { wb_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr } = Param;
   // log("===param", Param, bl_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr);
 
   const params = {
     inparam: [
-        "in_mwb_no"
+      "in_mwb_no"
       , "in_trans_mode"
-      , "in_trans_type" 
+      , "in_trans_type"
       , "in_fr_dd"
       , "in_to_dd"
       , "in_cust"
@@ -45,7 +45,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-        mwb_no
+      wb_no
       , trans_mode
       , trans_type
       , fr_date
@@ -60,24 +60,26 @@ export const SP_GetMasterData = async (searchParam: any) => {
   const result = await executFunction(params);
   return result![0]
 }
-export const SP_GetWBSubData = async (searchParam: any) => {
+export const SP_GetWBDetailData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { mwb_no, user_id, ipaddr } = Param;
+  const { wb_no, user_id, ipaddr } = Param;
+  log('ufsm0002 wb_no', wb_no)
 
   const params = {
     inparam: [
-        "in_mwb_no"
+      "in_wb_no"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-        mwb_no
+      wb_no
       , user_id
       , ipaddr
     ],
-    inproc: 'ufsm.f_ufsm0002_get_wb_sub',
+    inproc: 'ufsm.f_ufsm0002_get_wb_detail',
     isShowLoading: true
   }
   const result = await executFunction(params);
-  return result as {}[];
+  log('go home,..', result)
+  return result
 }

@@ -12,12 +12,10 @@ import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextO
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
 import { DateInput, DatePicker } from 'components/date'
-import dayjs from 'dayjs'
 import { gridData } from "components/grid/ag-grid-enterprise";
-import { SP_GetMasterData } from "./data";
-import { Button } from 'components/button';
+import { Button, ICONButton } from 'components/button';
+import { Badge } from "@/components/badge";
 
-// import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -36,7 +34,7 @@ type Props = {
   loadItem: typeloadItem;
 };
 
-const WBMain = memo(({ loadItem }: any) => {
+const WBMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
@@ -61,19 +59,10 @@ const WBMain = memo(({ loadItem }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
-  const [custcode, setCustcode] = useState<any>();
-
-  const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetMasterData, { enabled: true });
 
   useEffect(() => {
     if (loadItem?.length) {
       // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
       onSearch();
       // onSubmit();
       // handleSubmit(onSubmit)();
@@ -89,7 +78,8 @@ const WBMain = memo(({ loadItem }: any) => {
 
   useEffect(() => {
     log("maindataaaaaaa", mainData);
-    if (mainData) setData((mainData as gridData)?.data[0]);
+    if (mainData)
+      setData((mainData?.[0] as gridData).data[0]);
   }, [mainData])
 
   return (
@@ -98,25 +88,29 @@ const WBMain = memo(({ loadItem }: any) => {
         <PageContent
           right={
             <>
-              <Button id="icon" disabled={false} onClick={onSearch}/>
-              <Button id="icon" disabled={false} onClick={onSearch}/>
-              <Button id="icon" disabled={false} onClick={onSearch}/>              
+              <div className={"col-span-2"}>
+                <Badge size={"md"} name={data?.status} color="border-sky-500 text-sky-500" rounded outlined />
+                <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
+              </div>
+              <div className={"col-span-1"}>
+                <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
+              </div>
+              <div className={"col-span-1"}>
+                <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
+              </div>
             </>
           }
         >
-          <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-30' height='h-6' value={data?.waybill_type} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} /></div>
-          <MaskedInputField id="job_no" lwidth='w-16' width="w-24" height='h-6' value={data?.bol_type} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />
-          <MaskedInputField id="pipline_no" lwidth='w-12' width="w-24" height='h-6' value={data?.service_type_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />
-          <MaskedInputField id="mode" lwidth='w-12' width="w-24" height='h-6' value={data?.carrier_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />
-          <MaskedInputField id="company" lwidth='w-12' width="w-24" height='h-6' value={data?.freight_ppc_ind} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />
-          <MaskedInputField id="terminal" lwidth='w-12' width="w-24" height='h-6' value={data?.other_ppc_ind} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />
-          <MaskedInputField id="department" lwidth='w-12' width="w-24" height='h-6' value={data?.booking_no} options={{ isReadOnly: true , inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="controlling_party" lwidth='w-12' width="w-24" height='h-6' value={data?.origin_port} options={{ isReadOnly: true , inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="dest_city_code" lwidth='w-12' width="w-24" height='h-6'  value={data?.dest_city_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />          
+          <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-24' width="w-36" height='h-8' value={data?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
+          <MaskedInputField id="pipeline_tx_id" lwidth='w-12' width="w-32" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="trans_mode" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_mode} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="trans_type" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="job_no" lwidth='w-16' width="w-24" height='h-8' value={data?.bol_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="orig_terminal_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_terminal_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="orig_department_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_department_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <div className='col-span-2'><MaskedInputField id="shipper_name" label="controlling_party" lwidth="w-25" height='h-8' value={data?.shipper_name} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
+          {/* <MaskedInputField id="dest_city_code" lwidth='w-12' width="w-24" height='h-8' value={data?.dest_city_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />           */}
         </PageContent>
-
-
-
       </form>
     </FormProvider>
   );

@@ -11,18 +11,21 @@ type Props = {
     loadData: gridData
 };
 
-const GridRoute: React.FC<Props> = memo(({ loadData }) => {
+const GridManifests: React.FC<Props> = memo(({ loadData }) => {
 
     const gridRef = useRef<any | null>(null);
 
     const gridOption: GridOption = {
-        colVisible: { col: ["vad_tz", "etd_tz", "eta_tz", "atd_tz", "ata_tz"], visible: false },
+        colVisible: {
+            col: ["manifest_no","port_origin","port_dest","carrier_code","mwb_no"],
+            visible: true
+        },
         isShowFilter: false,
         gridHeight: "10vh",
-        maxWidth: { "cob":60, "split":60 },
-        minWidth: { "mwb_no":150, "vad":150,"etd":180, "eta":180, "ata":180, "atd":180},
-        dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
-        isAutoFitColData: false,
+        maxWidth: { "manifest_no": 150,},
+        minWidth: { "manifest_no": 200, "port_origin": 200, "port_dest": 150, "carrier_code": 100, },
+        dataType: { "invoice_dd": "date", "invoice_amt": "number", },
+        isAutoFitColData: true,
     };
 
     return (
@@ -37,4 +40,4 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
     );
 });
 
-export default GridRoute;
+export default GridManifests;

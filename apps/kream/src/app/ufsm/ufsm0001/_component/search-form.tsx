@@ -17,8 +17,6 @@ import CustomSelect from "components/select/customSelect";
 import { Button,ICONButton } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Badge } from "@/components/badge";
-import { GrDownload } from "react-icons/gr";
-
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -157,7 +155,7 @@ const SearchForm = ({ loadItem }: any) => {
               style={{ width: '1000px', height: "8px" }}
               inline={true}
             />
-            <MaskedInputField id="wb_no" label="bl no." value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="wb_no" label="hwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>

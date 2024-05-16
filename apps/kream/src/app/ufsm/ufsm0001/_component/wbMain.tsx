@@ -76,7 +76,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (mainData) {
-      log('mainData 어디감', mainData)
+      log('ufsm0001_mainData ', mainData)
       setData((mainData?.[0] as gridData).data[0]);
     }
   }, [mainData])
@@ -108,12 +108,12 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           <MaskedInputField id="dest_city_code" value={data?.dest_city_code} options={{ isReadOnly: true }} />
           <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />
           <div className="flex col-start-1 col-end-6">
-            <fieldset className="w-1/2 flex border-solid border-2 p-1 space-y-1 space-x-1 ">
+            <fieldset className="flex w-1/2 p-1 space-x-1 space-y-1 border-2 border-solid ">
               <legend className="text-sx">IC Consol</legend>
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} width="w-96" />
             </fieldset>
-            <fieldset className="w-1/2 flex border-solid border-2 p-1 space-y-1 space-x-1 ">
+            <fieldset className="flex w-1/2 p-1 space-x-1 space-y-1 border-2 border-solid ">
               <legend className="text-sx">DC/TT Consol</legend>
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} width="w-96" />
@@ -122,8 +122,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
         </PageSearch>
 
 
-        <div className="w-full flex flex-row">
-          <div className="w-1/2 flex">
+        <div className="flex flex-row w-full">
+          <div className="flex w-1/2">
             <PageSearch
               title={<span className="px-1 py-1 text-blue-500">Shipper</span>}>
               <div className={"col-span-2"}>
@@ -143,7 +143,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
             </PageSearch>
           </div>
 
-          <div className="w-1/2 flex">
+          <div className="flex w-1/2">
             <PageSearch
               title={<span className="px-1 py-1 text-blue-500">Consignee</span>}>
               <div className={"col-span-2"}>
@@ -165,8 +165,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           </div>
         </div>
 
-        <div className="w-full flex flex-row">
-          <div className="w-1/2 flex">
+        <div className="flex flex-row w-full">
+          <div className="flex w-1/2">
             <PageSearch title={<span className="px-1 py-1 text-blue-500">Notify</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="notify_id" value={data?.notify_id} options={{ isReadOnly: true }} />
@@ -185,7 +185,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           </div>
 
 
-          <div className="w-1/2 flex">
+          <div className="flex w-1/2">
             <PageSearch title={<span className="px-1 py-1 text-blue-500">Export Bill To</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="billto_id" value={data?.billto_id} options={{ isReadOnly: true }} />
@@ -204,8 +204,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           </div>
         </div>
 
-        <div className="w-full flex flex-row">
-          <div className="w-1/2 flex">
+        <div className="flex flex-row w-full">
+          <div className="flex w-1/2">
             <PageSearch title={<span className="px-1 py-1 text-blue-500">Controlling Party</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="shipper_id" value={data?.shipper_id} options={{ isReadOnly: true }} />
@@ -225,7 +225,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
             </PageSearch>
           </div>
 
-          <div className="w-1/2 flex">
+          <div className="flex w-1/2">
             <PageSearch
               title={<span className="px-1 py-1 text-blue-500">Export Non-Freight Bill To</span>}>
               <div className={"col-span-2"}>
@@ -243,8 +243,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           </div>
         </div>
 
-        <div className="w-full flex flex-row">
-          <div className="w-1/2 flex">
+        <div className="flex flex-row w-full">
+          <div className="flex w-1/2">
             <PageSearch
               title={<span className="px-1 py-1 text-blue-500">Party To Contact</span>}>
               <div className={"col-span-2"}>

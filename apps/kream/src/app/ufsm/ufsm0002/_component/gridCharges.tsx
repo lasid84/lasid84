@@ -27,10 +27,10 @@ const ChargesGrid: React.FC<Props> = ({ initData }) => {
 
 
     const gridOption: GridOption = {
-        colVisible: { col: ["waybill_no", "shipment_status", "status", "trans_mode", "trans_type", "mpr_port_origin1", "origin_city_code", "execution_date", "waybill_type", "bol_type", "agent_type", "service_type"], visible: true },
-        gridHeight: "80vh",
-        minWidth: { "waybill_no": 150, "shipment_status": 40 },
-        isAutoFitColData: false,
+        colVisible: { col: ["mwb_no","charge_code","charge_desc", "sort_id", "trans_type", "terms","waybill_amt","waybill_curr","invoice_amt","invoice_curr","actual_cost","actual_curr","vendor_id","vendor_ref_no","print","vat_cost"], visible: true },
+        gridHeight: "40vh",
+        minWidth: { "charge_code": 40 },
+        isAutoFitColData: true,
     };
 
 
@@ -38,12 +38,12 @@ const ChargesGrid: React.FC<Props> = ({ initData }) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
-                if (element.cd === selectedRow.waybill_no) { return true }
+                if (element.cd === selectedRow.mwb_no) { return true }
             }) !== -1) {
-                dispatch({ MselectedTab: selectedRow.waybill_no })
+                dispatch({ MselectedTab: selectedRow.mwb_no })
             } else {
-                objState.tab1.push({ cd: selectedRow.waybill_no, cd_nm: selectedRow.waybill_no })
-                dispatch({ MselectedTab: selectedRow.waybill_no })
+                objState.tab1.push({ cd: selectedRow.mwb_no, cd_nm: selectedRow.mwb_no })
+                dispatch({ MselectedTab: selectedRow.mwb_no })
             }
         }
         dispatch({ isMDSearch: true, mSelectedRow: selectedRow });

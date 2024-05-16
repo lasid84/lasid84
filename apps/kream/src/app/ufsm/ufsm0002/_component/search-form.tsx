@@ -42,10 +42,10 @@ const SearchForm = ({ loadItem }: any) => {
 
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
-  const { trans_mode, trans_type, fr_date, to_date, mwb_no, cust_code} = objState.searchParams;
+  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code} = objState.searchParams;
   const [groupcd, setGroupcd] = useState<any>([])
 
-  log("searchform", objState, trans_mode, trans_type, fr_date, to_date, mwb_no, cust_code)
+  log("searchform", objState, trans_mode, trans_type, fr_date, to_date, wb_no, cust_code)
   // //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
@@ -56,7 +56,7 @@ const SearchForm = ({ loadItem }: any) => {
       trans_type: trans_type || gTransType || 'ALL',
       fr_date: fr_date || dayjs().subtract(1, 'month').startOf('month').format("YYYYMMDD"),
       to_date: to_date || dayjs().subtract(1, 'month').endOf('month').format("YYYYMMDD"),
-      bl_no: mwb_no || '',
+      wb_no: wb_no || '',
       cust_code: cust_code || ''
     }
   });
@@ -100,11 +100,19 @@ const SearchForm = ({ loadItem }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
-        <PageSearchButton
+      <PageSearchButton
           right={
             <>
-            <div className={"col-span-1"}>
-              <Button id="search" disabled={false} onClick={onSearch}/>
+              {/* <div className={"col-span-1"}>
+                <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
+              </div> */}
+              <div className={"col-span-1"}>
+                <Button id="search" disabled={false} onClick={onSearch} />
+                {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
+              </div>
+              <div className={"col-span-1"}>
+                <Button id="reset" disabled={false} onClick={onSearch} />
+                {/* <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} /> */}
               </div>
             </>
           }>
@@ -132,8 +140,8 @@ const SearchForm = ({ loadItem }: any) => {
             />
           </div>
           <div className={"col-span-1"}>
-            <DatePicker id="fr_date" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} height="h-8" />
-            <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} height="h-8" />
+            <DatePicker id="fr_date" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
           </div>
           <div className={"col-span-2"}>
             <CustomSelect
@@ -149,7 +157,7 @@ const SearchForm = ({ loadItem }: any) => {
               style={{ width: '1000px', height: "8px" }}
               inline={true}
             />
-            <MaskedInputField id="mwb_no" label="mwb_no" value={mwb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>

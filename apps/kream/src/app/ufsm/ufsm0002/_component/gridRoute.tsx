@@ -22,9 +22,9 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
     const gridRef = useRef<any | null>(null);
 
     const gridOption: GridOption = {
-        colVisible: { col: ["vad_tz", "etd_tz", "eta_tz", "atd_tz", "ata_tz"], visible: false },
+        colVisible: { col: ["seq","vad_tz", "etd_tz", "eta_tz", "atd_tz", "ata_tz"], visible: false },
         isShowFilter: false,
-        gridHeight: "150px",
+        gridHeight: "15vh",
         checkbox: ["cob", "split"],
         colDisable: ["cob", "split"],
         maxWidth: { "cob":60, "split":60 },
@@ -32,6 +32,8 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
         dataType: {"etd":"date", "eta":"date", "atd":"date", "ata":"date", "vad":"date"},
         isAutoFitColData: false,
     };
+
+    log('mainData_ufsm0002_wbSub____',loadData)
 
     return (
         <Grid
