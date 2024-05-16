@@ -92,9 +92,11 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
   useEffect(() => {
     if (mainData) {
       setData((mainData?.[0] as gridData).data[0]);
-      setShipmentDetail((mainData?.[3] as gridData))
-      setFreightCharge((mainData?.[4] as gridData))
+      setShipmentDetail(mainData?.[3] as gridData)
+      setFreightCharge(mainData?.[4] as gridData)
+      log('maindataaaaa', mainData)
     }
+    
   }, [mainData])
 
 

@@ -85,13 +85,13 @@ const WBShipmentText = memo(({ loadItem, mainData }: any) => {
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageSearch
           title={<span className="flex px-1 py-1 text-blue-500">Shipment Text</span>}>
-          <div className="col-start-1 col-end-2 "><TextArea id="accounting_info" rows={6} cols={30}  value={data?.accounting_info} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-2 col-end-3 "><TextArea id="body_text" rows={6} cols={30}  value={data?.body_text} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-3 col-end-4 "><TextArea id="nature_of_goods" rows={6} cols={30}  value={data?.nature_of_goods} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-4 col-end-5 "><TextArea id="handling_info" rows={6} cols={30}  value={data?.nature_of_goods} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-1 col-end-2 "><TextArea id="marks_numbers" rows={6} cols={30}  value={data?.marks_numbers} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-2 col-end-3 "><TextArea id="other_charges_info"  rows={6} cols={30} value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
-          <div className="col-start-3 col-end-4 "><TextArea id="other_charges_info" rows={6} cols={30} value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-1 col-end-2 "><TextArea id="accounting_info" rows={6} cols={32}  value={data?.accounting_info} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-2 col-end-3 "><TextArea id="body_text" rows={6} cols={32}  value={data?.body_text} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-3 col-end-4 "><TextArea id="nature_of_goods" rows={6} cols={32}  value={data?.nature_of_goods} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-4 col-end-5 "><TextArea id="handling_info" rows={6} cols={32}  value={data?.nature_of_goods} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-1 col-end-2 "><TextArea id="marks_numbers" rows={6} cols={32}  value={data?.marks_numbers} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-2 col-end-3 "><TextArea id="other_charges_info"  rows={6} cols={32} value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-3 col-end-4 "><TextArea id="other_charges_info" rows={6} cols={32} value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
         </PageSearch>
       </form>
     </FormProvider>

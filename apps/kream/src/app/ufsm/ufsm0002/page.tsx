@@ -18,9 +18,7 @@ import WBCharges from "./_component/wbCharges"
 import WBShipmentDetails from "./_component/wbShipmentDetails"
 import WBShipmentText from "./_component/wbShipmentText";
 import WBReference from "./_component/wbreferences";
-// import ShipmentDetailGrid from "./gridShipDetail";
-// import WBReference from "./_component/waybillReference"
-// import ShipmentDetailGrid from "./_component/gridShipDetail";
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -103,18 +101,18 @@ function UFSM0002() {
                     <WBSub loadItem={initData} mainData={mainData} />
                 </div>
                 <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
-                    <WBShipmentDetails initData={initData} />
+                    <WBShipmentDetails initData={initData} mainData={mainData} />
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
                     <WBCharges initData={initData} mainData={mainData} />
                 </div>
                 <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
-                    <WBShipmentText loadItem={initData} />
+                    <WBShipmentText loadItem={initData} mainData={mainData}/>
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
-                    <WBReference loadItem={initData} />
+                    <WBReference loadItem={initData} mainData={mainData}/>
                 </div>
 
 
