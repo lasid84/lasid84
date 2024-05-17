@@ -68,16 +68,15 @@ const WBCharges = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (loadItem?.length) {
-      onSearch();
+      onSearch()
 
     }
   }, [loadItem?.length])
 
   const onSearch = () => {
-    // log("onSearch")
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    //const params = getValues();
+    //log("onSearch_wbcharges", params);
+    //dispatch({ searchParams: params, isMSearch: true });
   }
 
   useEffect(() => {
@@ -86,8 +85,6 @@ const WBCharges = memo(({ loadItem, mainData }: any) => {
       setInvoiceDetail(mainData?.[6] as gridData)
     }
   }, [mainData])
-
-
 
   return (
     <FormProvider {...methods}>

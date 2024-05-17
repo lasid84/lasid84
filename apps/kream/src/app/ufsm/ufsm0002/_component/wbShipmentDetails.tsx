@@ -71,22 +71,13 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (loadItem?.length) {
-      // log("=================", loadItem[0].data, loadItem[1].data)
-      // setTransmode(loadItem[0])
-      // setTranstype(loadItem[1])
-      // setCustcode(loadItem[8])
-
-      onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
+      onSearch()
     }
   }, [loadItem?.length])
 
   const onSearch = () => {
-    // log("onSearch")
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    //const params = getValues();
+    //log("onSearch", params);
   }
 
   useEffect(() => {
@@ -95,8 +86,7 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
       setShipmentDetail(mainData?.[3] as gridData)
       setFreightCharge(mainData?.[4] as gridData)
       log('maindataaaaa', mainData)
-    }
-    
+    }    
   }, [mainData])
 
 

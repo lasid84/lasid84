@@ -30,9 +30,6 @@ type Props = {
 };
 
 const WBSub = memo(({ loadItem, mainData }: any) => {
-  // const { loadItem } = props;
-
-  // log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
 
   // //사용자 정보
@@ -40,13 +37,7 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
   const methods = useForm({
-    defaultValues: {
-      trans_mode: gTransMode || 'ALL',
-      trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      no: '',
-      cust_code: ''
+    defaultValues: {     
     }
   });
 
@@ -60,8 +51,7 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  // //Set select box data
-
+  //Set select box data
   const [data, setData] = useState<any>();
   const [bookedData, setBookedData] = useState<gridData>({});
   const [actualData, setActualData] = useState<gridData>({});
@@ -76,9 +66,8 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
   }, [mainData])
 
   const onSearch = () => {
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    //const params = getValues();
+    //dispatch({ searchParams: params, isMSearch: true });
   }
 
   return (

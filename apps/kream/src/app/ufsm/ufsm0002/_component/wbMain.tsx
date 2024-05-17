@@ -57,19 +57,9 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
   } = methods;
 
 
-  useEffect(() => {
-    if (loadItem?.length) {
-      onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
-    }
-  }, [loadItem?.length]);
-
   const onSearch = () => {
-    // log("onSearch")
-    const params = getValues();
-    log("onSearch", params, objState?.mSelectedRow);
-    dispatch({ searchParams: params, isMSearch: true });
+    // const params = getValues();
+    // log("onSearch", params, objState?.mSelectedRow);
   }
   
   useEffect(() => {

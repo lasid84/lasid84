@@ -2,9 +2,9 @@
 'use client';
 
 import { useEffect, useRef } from "react";
-import { SP_GetMasterData} from "./data";
+import { SP_GetMasterData } from "./data";
 import { useAppContext } from "components/provider/contextObjectProvider";
-import {  SEARCH_M } from "components/provider/contextObjectProvider";
+import { SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
@@ -27,7 +27,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         colVisible: { col: ["pipeline_tx_id", "mwb_status", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "70vh",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
-        dataType :{"execution_date":"date"},
+        dataType: { "execution_date": "date", "consol_date": "date", "eta_date": "date" },
         isAutoFitColData: true,
     };
 
@@ -38,19 +38,20 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
             if (objState.tab1.findIndex((element: any) => {
                 if (element.cd === selectedRow.waybill_no) { return true }
             }) !== -1) {
-                dispatch({ MselectedTab: selectedRow.waybill_no })
+                dispatch({MselectedTab: selectedRow.waybill_no })
             } else {
                 objState.tab1.push({ cd: selectedRow.waybill_no, cd_nm: selectedRow.waybill_no })
-                dispatch({ MselectedTab: selectedRow.waybill_no })
+                dispatch({MselectedTab: selectedRow.waybill_no })
             }
         }
-        dispatch({ isMDSearch: true, mSelectedRow: selectedRow });
-    };
+
+        dispatch({isMDSearch: true, mSelectedRow: selectedRow })
+    }
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
-        const selectedRow = param.api.getSelectedRows()[0];
+        const selectedRow = param.api.getSelectedRows()[0]
         log("handleSelectionChanged", selectedRow)
-    };
+    }
 
     useEffect(() => {
         if (objState.isMSearch) {

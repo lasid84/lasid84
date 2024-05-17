@@ -33,24 +33,15 @@ type Props = {
 };
 
 const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
-  // const { loadItem } = props;
-
-  // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
 
-  // //사용자 정보
+  //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
   const methods = useForm({
     defaultValues: {
-      trans_mode: gTransMode || 'ALL',
-      trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      no: '',
-      cust_code: ''
     }
   });
 
@@ -85,8 +76,8 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    log("onSearch+wbshipmentdetails", params);
+    // dispatch({ searchParams: params, isMSearch: true });
   }
 
   useEffect(() => {

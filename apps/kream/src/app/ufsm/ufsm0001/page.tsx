@@ -20,27 +20,9 @@ import WBMainTab from "./_component/wbMainTab"
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
-
-
 export default function UFSM0001() {
 
     const [selectedTab, setselectedTab] = useState<string>("NM");
-
-    const handleOnClickTab = (code: any) => { setselectedTab(code) }
-    const MhandleOnClickTab = (code: any) => {
-        console.log('search-form 시작 MhandleOnClickTab', code.target.id)
-        if(code.target.id=='Main'){
-            console.log('search-form 시작 하이...')
-            dispatch({ MselectedTab: code.target.id})
-        }else{
-            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } })
-        }
-    }
-    const MhandleonClickICON = (code: any) => {
-        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
-        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
-    }
-
     const [state, dispatch] = useReducer(reducer, {
         objState: {
             searchParams: {},
@@ -58,8 +40,21 @@ export default function UFSM0001() {
     const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab, isFirstRender } = objState;
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, isFirstRender, dispatch } }, [state]);
-    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60, });
+    const { data: initData } = useGetData(objState?.searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60, });
     const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
+
+    const handleOnClickTab = (code: any) => { setselectedTab(code) }
+    const MhandleOnClickTab = (code: any) => {
+        // console.log('search-form MhandleOnClickTab', code.target.id)
+        if (code.target.id == 'Main') { dispatch({ MselectedTab: code.target.id }) }
+        else { dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } }) }
+    }
+    const MhandleonClickICON = (code: any) => {
+        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
+        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
+    }
+
+
 
     useEffect(() => {
         if (objState.isMSearch) {
@@ -72,9 +67,7 @@ export default function UFSM0001() {
 
     useEffect(() => {
         if (initData) {
-            if (objState.tab1.length < 1) {
-                objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
-            }
+            if (objState.tab1.length < 1) { objState.tab1.push({ cd: 'Main', cd_nm: 'Main' }) }
         }
     }, [initData])
 
@@ -114,8 +107,6 @@ export default function UFSM0001() {
                     <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
                         <WBShipmentText initData={initData} mainData={mainData} />
                     </div>
-
-
                 </>}
         </TableContext.Provider>
     );

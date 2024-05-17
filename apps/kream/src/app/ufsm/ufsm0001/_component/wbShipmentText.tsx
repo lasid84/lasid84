@@ -42,19 +42,10 @@ type Props = {
 };
 
 const WBShipmentText = memo(({ loadItem, mainData }: any) => {
-  // const { loadItem } = props;
-
-  // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
 
   const methods = useForm({
     defaultValues: {
-      // trans_mode: gTransMode || 'ALL',
-      // trans_type: gTransType || 'ALL',
-      // fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      // to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      // no: '',
-      // cust_code: ''
     }
   });
 
@@ -80,10 +71,9 @@ const WBShipmentText = memo(({ loadItem, mainData }: any) => {
   }, [mainData])
 
   const onSearch = () => {
-    // log("onSearch")
     const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    log("onSearch_whipmenttext", params);
+    // dispatch({ searchParams: params, isMSearch: true });
   }
 
   return (

@@ -34,12 +34,6 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
 
   const methods = useForm({
     defaultValues: {
-      // trans_mode: gTransMode || 'ALL',
-      // trans_type: gTransType || 'ALL',
-      // fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      // to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      // no: '',
-      // cust_code: ''
     }
   });
 
@@ -73,8 +67,8 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    log("onSearch_wbreferences", params);
+    //dispatch({ searchParams: params, isMSearch: true });
   }
 
 

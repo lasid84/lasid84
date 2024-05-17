@@ -36,14 +36,14 @@ export interface typeloadItem {
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
-  mainData : typeloadItem;
+  mainData: typeloadItem;
 };
 
 const WBMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
   const [data, setData] = useState<any>()
-  
+
   const methods = useForm({
     defaultValues: {
     }
@@ -59,19 +59,12 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  useEffect(() => {
-    if (loadItem?.length) {
-      onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
-    }
-  }, [loadItem?.length])
-
+  
   const onSearch = () => {
-    // log("onSearch")
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    //   // log("onSearch")
+    //   //const params = getValues();
+    //   //log("onSearch", params);
+    //   //dispatch({ searchParams: params, isMSearch: true });
   }
 
   useEffect(() => {
@@ -84,6 +77,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+
         <PageSearch
           title={<span className="px-1 py-1 text-blue-500">Generals</span>}>
           <MaskedInputField id="waybill_type" value={data?.waybill_type} options={{ isReadOnly: true }} />
@@ -148,7 +142,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               title={<span className="px-1 py-1 text-blue-500">Consignee</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="cnee_id" value={data?.cnee_id} options={{ isReadOnly: true }} />
-              </div>  
+              </div>
               <div className={"col-span-4"}>
                 <MaskedInputField id="cnee_name" value={data?.cnee_name} options={{ isReadOnly: true }} />
               </div>
@@ -189,8 +183,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch title={<span className="px-1 py-1 text-blue-500">Export Bill To</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="billto_id" value={data?.billto_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
+              </div>
+              <div className={"col-span-4"}>
                 <MaskedInputField id="billto_name" value={data?.billto_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
@@ -209,8 +203,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch title={<span className="px-1 py-1 text-blue-500">Controlling Party</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="shipper_id" value={data?.shipper_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
+              </div>
+              <div className={"col-span-4"}>
                 <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
@@ -230,12 +224,12 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               title={<span className="px-1 py-1 text-blue-500">Export Non-Freight Bill To</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="shipper_id" value={data?.shipper_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
+              </div>
+              <div className={"col-span-4"}>
                 <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
-                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />               
+                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
               </div>
               <div className={"col-span-4"}><MaskedInputField id="contact" value={data?.shipper_name} options={{ isReadOnly: true }} /></div>
               <div className={"col-span-2"}><span className="ml-auto"></span></div>
@@ -249,20 +243,18 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               title={<span className="px-1 py-1 text-blue-500">Party To Contact</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="dest_terminal_id" value={data?.dest_terminal_id} options={{ isReadOnly: true }} />
-              </div> 
-               <div className={"col-span-4"}>
+              </div>
+              <div className={"col-span-4"}>
                 <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
                 <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
-              </div>               
+              </div>
               <div className={"col-span-4"}> <MaskedInputField id="contact" value={data?.shipper_name} options={{ isReadOnly: true }} /></div>
               <div className={"col-span-2"}><span className="ml-auto"></span></div>
             </PageSearch>
           </div>
         </div>
-
-
       </form>
     </FormProvider>
   );

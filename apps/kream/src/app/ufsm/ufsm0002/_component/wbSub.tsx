@@ -65,9 +65,8 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
   }, [mainData])
 
   const onSearch = () => {
-    const params = getValues();
-    log("onSearch", params);
-    // dispatch({ searchParams: params, isMSearch: true });
+    //const params = getValues()
+    //log("onSearch", params)
   }
 
   return (

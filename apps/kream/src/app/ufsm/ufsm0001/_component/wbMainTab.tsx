@@ -55,27 +55,12 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
     register,
     formState: { errors, isSubmitSuccessful },
   } = methods;
-
-  // //Set select box data
-
-
-  //const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetMasterData, { enabled: true });
-
-  useEffect(() => {
-    if (loadItem?.length) {
-      // log("=================", loadItem[0].data, loadItem[1].data)
-
-      onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
-    }
-  }, [loadItem?.length])
+  
 
   const onSearch = () => {
-    // log("onSearch")
     const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    log("onSearchwb_maintab", params);
+    //dispatch({ searchParams: params, isMSearch: true });
   }
 
   useEffect(() => {
@@ -83,7 +68,6 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
       setData((mainData?.[0] as gridData).data[0]);
     }
   }, [mainData])
-
 
   return (
     <FormProvider {...methods}>

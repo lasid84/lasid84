@@ -23,25 +23,9 @@ import WBReference from "./_component/wbreferences";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
-function UFSM0002() {
+export default function UFSM0002() {
 
     const [selectedTab, setselectedTab] = useState<string>("NM");
-
-    const handleOnClickTab = (code: any) => { setselectedTab(code) }
-    const MhandleOnClickTab = (code: any) => {
-        if (code.target.id === 'Main') {
-            log("code.target.id if", code.target.id);
-            dispatch({ MselectedTab: code.target.id })
-        }
-        else {
-            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, mwb_no: code.target.id } })
-        }
-    }
-    const MhandleonClickICON = (code: any) => {
-        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
-        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, mwb_no: filtered[filtered.length - 1].cd } })
-    }
-
     const [state, dispatch] = useReducer(reducer, {
         objState: {
             searchParams: {},
@@ -62,6 +46,19 @@ function UFSM0002() {
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60, enabled: true });
     const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
 
+    const handleOnClickTab = (code: any) => { setselectedTab(code) }
+    const MhandleOnClickTab = (code: any) => {
+        if (code.target.id === 'Main') { dispatch({ MselectedTab: code.target.id }) }
+        else {
+            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, mwb_no: code.target.id } })
+        }
+    }
+    const MhandleonClickICON = (code: any) => {
+        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
+        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, mwb_no: filtered[filtered.length - 1].cd } })
+    }
+
+
     useEffect(() => {
         if (objState.isMSearch) {
             // mainRefetch();
@@ -73,9 +70,7 @@ function UFSM0002() {
 
     useEffect(() => {
         if (initData) {
-            if (objState.tab1.length < 1) {
-                objState.tab1.push({ cd: 'Main', cd_nm: 'Main' })
-            }
+            if (objState.tab1.length < 1) { objState.tab1.push({ cd: 'Main', cd_nm: 'Main' }) }
         }
     }, [initData])
 
@@ -108,11 +103,11 @@ function UFSM0002() {
                     <WBCharges initData={initData} mainData={mainData} />
                 </div>
                 <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
-                    <WBShipmentText loadItem={initData} mainData={mainData}/>
+                    <WBShipmentText loadItem={initData} mainData={mainData} />
                 </div>
 
                 <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
-                    <WBReference loadItem={initData} mainData={mainData}/>
+                    <WBReference loadItem={initData} mainData={mainData} />
                 </div>
 
 
@@ -120,5 +115,3 @@ function UFSM0002() {
         </TableContext.Provider>
     );
 }
-
-export default UFSM0002;

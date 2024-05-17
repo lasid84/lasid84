@@ -59,21 +59,9 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-
-  useEffect(() => {
-    if (loadItem?.length) {
-      // log("=================", loadItem[0].data, loadItem[1].data)
-      onSearch();
-      // onSubmit();
-      // handleSubmit(onSubmit)();
-    }
-  }, [loadItem?.length])
-
   const onSearch = () => {
-    // log("onSearch")
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    // const params = getValues();
+    // log("onSearch", params);
   }
 
   useEffect(() => {

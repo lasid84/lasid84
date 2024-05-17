@@ -14,7 +14,7 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from 'components/date'
 import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
-import { Button,ICONButton } from 'components/button';
+import { Button, ICONButton } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Badge } from "@/components/badge";
 
@@ -38,12 +38,10 @@ type Props = {
 };
 
 const SearchForm = memo(({ loadItem }: any) => {
-
   const { dispatch, objState } = useAppContext();
   const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code } = objState.searchParams;
-  log("search-form 시작NNNN", objState.searchParams)
 
-  // //사용자 정보
+  //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
@@ -51,7 +49,7 @@ const SearchForm = memo(({ loadItem }: any) => {
     defaultValues: {
       trans_mode: trans_mode || gTransMode || 'ALL',
       trans_type: trans_type || gTransType || 'ALL',
-      fr_date: fr_date || dayjs().subtract(6, 'month').startOf('month').format("YYYYMMDD"),
+      fr_date: fr_date || dayjs().subtract(5, 'month').startOf('month').format("YYYYMMDD"),
       to_date: to_date || dayjs().subtract(1, 'month').endOf('month').format("YYYYMMDD"),
       wb_no: wb_no || '',
       cust_code: cust_code || ''
@@ -74,23 +72,19 @@ const SearchForm = memo(({ loadItem }: any) => {
   const [custcode, setCustcode] = useState<any>();
 
   useEffect(() => {
-    if (objState.isFirstRender && loadItem?.length) {
+    if (loadItem?.length) {
       setTransmode(loadItem[0])
       setTranstype(loadItem[1])
       setCustcode(loadItem[8])
-
-      if (objState.isFirstRender) {
-        onSearch();
-        log("useeffect objState", objState)
-        dispatch({ isFirstRender: false });
-      }
+      dispatch({ isFirstRender: false });
+      if (objState.isFirstRender){ onSearch()}
     }
-  }, [loadItem?.length, objState.isFirstRender])
+  }, [loadItem?.length])
 
   const onSearch = () => {
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    const params = getValues()
+    log("onSearch_ufsm0001", params);
+    dispatch({ searchParams: params, isMSearch: true })
   }
 
   return (
@@ -99,16 +93,11 @@ const SearchForm = memo(({ loadItem }: any) => {
         <PageSearchButton
           right={
             <>
-              {/* <div className={"col-span-1"}>
-                <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
-              </div> */}
               <div className={"col-span-1"}>
                 <Button id="search" disabled={false} onClick={onSearch} />
-                {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
               </div>
               <div className={"col-span-1"}>
                 <Button id="reset" disabled={false} onClick={onSearch} />
-                {/* <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} /> */}
               </div>
             </>
           }>
@@ -146,7 +135,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               id="cust_code"
               // label="trans_mode"
               listItem={custcode as gridData}
-              valueCol={["cust_nm"]}
+              valueCol={["cust_code","cust_nm"]}
               displayCol="cust_nm"
               gridOption={{
                 colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },

@@ -33,9 +33,7 @@ type Props = {
 };
 
 const WBCharges = memo(({ loadItem, mainData }: any) => {
-  // const { loadItem } = props;
 
-  // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
 
   // //사용자 정보
@@ -44,12 +42,6 @@ const WBCharges = memo(({ loadItem, mainData }: any) => {
 
   const methods = useForm({
     defaultValues: {
-      trans_mode: gTransMode || 'ALL',
-      trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      no: '',
-      cust_code: ''
     }
   });
 
@@ -77,10 +69,8 @@ const WBCharges = memo(({ loadItem, mainData }: any) => {
   }, [loadItem?.length])
 
   const onSearch = () => {
-    // log("onSearch")
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    // const params = getValues()
+    // log("onSearch", params)
   }
 
   useEffect(() => {

@@ -73,16 +73,9 @@ const WBShipmentText = memo(({ loadItem, mainData }: any) => {
     }
   }, [mainData])
 
-  const onSearch = () => {
-    // log("onSearch")
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
-  }
-
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <form className="w-full space-y-1">
         <PageSearch
           title={<span className="flex px-1 py-1 text-blue-500">Shipment Text</span>}>
           <div className="col-start-1 col-end-2 "><TextArea id="accounting_info" rows={6} cols={32}  value={data?.accounting_info} options={{ isReadOnly: true }} /></div>

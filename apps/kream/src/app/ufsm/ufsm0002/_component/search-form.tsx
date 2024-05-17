@@ -83,10 +83,10 @@ const SearchForm = ({ loadItem }: any) => {
       setCustcode(loadItem[8])
 
       log("useeffect objState", objState)
-      if (objState.isFirstRender) {
-        onSearch();
-        dispatch({ isFirstRender: false });
-      }
+      // if (objState.isFirstRender) {
+      //   onSearch();
+      //   dispatch({ isFirstRender: false });
+      // }
     }
   }, [loadItem?.length])
 
