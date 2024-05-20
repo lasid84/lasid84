@@ -143,8 +143,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 options={{
                                     keyCol: "trans_mode",
                                     displayCol: ['trans_mode', 'name'],
-                                    // inline:true,
-                                    // defaultValue: {label:'A Air', value:'A'}
                                     defaultValue: defTransMode,
                                     isAllYn: false
                                 }}
@@ -341,6 +339,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                     ]
                                 } as data}
                                 options={{
+                                    dialog : true,
                                     keyCol: "use_yn",
                                     displayCol: ['use_yn'],
                                     defaultValue: mSelectedRow?.use_yn
@@ -352,6 +351,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <ReactSelect
                                 id="bill_gr1_cd" dataSrc={billGr1Cd as data}
                                 options={{
+                                    dialog : true,
                                     keyCol: "bill_gr1_cd",
                                     displayCol: ['bill_gr1_cd', 'name'],
                                     defaultValue: mSelectedRow?.bill_gr1_cd
@@ -363,6 +363,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <ReactSelect
                                 id="bill_gr2_cd" dataSrc={billGr1Cd as data}
                                 options={{
+                                    dialog : true,
                                     keyCol: "bill_gr2_cd",
                                     displayCol: ['bill_gr2_cd', 'name'],
                                     defaultValue: mSelectedRow?.bill_gr2_cd
@@ -374,6 +375,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <ReactSelect
                                 id="gl_gr1_cd" dataSrc={glGr1Cd as data}
                                 options={{
+                                    dialog : true,
                                     keyCol: "gl_gr1_cd",
                                     displayCol: ['gl_gr1_cd', 'name'],
                                     defaultValue: mSelectedRow?.gl_gr1_cd
@@ -385,6 +387,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             <ReactSelect
                                 id="gl_gr2_cd" dataSrc={glGr2Cd as data}
                                 options={{
+                                    dialog : true,
                                     keyCol: "gl_gr2_cd",
                                     displayCol: ['gl_gr2_cd', 'name'],
                                     defaultValue: mSelectedRow?.gl_gr2_cd

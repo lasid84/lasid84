@@ -1,4 +1,4 @@
-import React, { FocusEventHandler, KeyboardEventHandler, useEffect, useState } from 'react';
+import React, { useRef, FocusEventHandler, KeyboardEventHandler, useEffect, useState } from 'react';
 import { Controller, useFormContext } from "react-hook-form";
 import { InputActionMeta, default as ReactSelectComponent } from "react-select";
 // import { Label, InputWrapper } from "components/react-hook-form"
@@ -31,12 +31,13 @@ export type event = {
 
 export type ReactSelectProps = {
     id: string;
-    label?: string;
     dataSrc: data;
+    label?: string;
     width?: string;
     height?: string;
     lwidth?: string;
     options?: {
+        dialog?: boolean;               // popup listbox 위치 배치 boolean
         keyCol?: string;                //dataSrc.data의 키 컬럼, null 일시 0번째를 키 컬럼으로 사용
         displayCol?: string[];          //select의 보여질 컬럼, 여러개 시 col + ' ' + col 로 표현, 없을시 키(daraSrc.data의 0번째 컬럼) + ' ' + daraSrc.data의 1번째 컬럼
         defaultValue?: string;          //초기 선택 값, 빈칸시 첫번째 row
@@ -54,13 +55,15 @@ export type ReactSelectProps = {
 export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const { control } = useFormContext();
     const { id, label, dataSrc, width, height, lwidth, options = {}, events } = props;
-    const { keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true } = options;
+    const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true } = options;
     const [list, setList] = useState<{}[] | undefined>([]);
     const [selectedVal, setSelectedVal] = useState<{} | null>(null);
     const [firstVal, setFirstVal] = useState('');
     const [firstLab, setFirstLab] = useState('');
     const defWidth = width ? width : "w-full";
     const defHeight = height ? height : "h-6";
+    // const ref = React.useRef(null)
+    const ref = useRef<HTMLDivElement>(null)
 
     const { register, setValue, getValues } = useFormContext();
 
@@ -112,24 +115,38 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         }
     }, [firstLab, firstVal]);
 
-    function handleKeyDown(e: any) {
-        try {
-            if (e.key === "Enter") {
-                const form = e.target.form;
-                log(e.target, form);
-                const index = [...form].indexOf(e.target);
-                // log(index)
-                form[index + 1].focus();
-                e.preventDefault();
-            }
+    // function handleKeyDown(e: any) {
+    //     try {
+    //             const menu = ref.current.select.menuListRef;
+    //             const options = menu.querySelectorAll(".my-select__option");
+    //             console.log('enter', options)
 
-            if (events?.onKeyDown) {
-                events.onKeyDown(e);
-            }
-        } catch (ex) {
+    //             options.forEach((option, index) => {
+    //                 console.log('enter?',options)
+    //               new ClassWatcher(
+    //                 option,
+    //                 "my-select__option--is-focused",
+    //                 () => setFocusedValue(OPTIONS[index].value),
+    //                 () => {}
+    //               );
+    //             });              
 
-        }
-    }
+    //         if (e.key === "Enter") {
+    //             const form = e.target.form;
+    //             log('enter event1', e);
+    //             const index = [...form].indexOf(e.target);
+    //             log('enter event', index)
+    //             form[index + 1].focus();
+    //             e.preventDefault();
+    //         }
+
+    //         if (events?.onKeyDown) {
+    //             events.onKeyDown(e);
+    //         }
+    //     } catch (ex) {
+
+    //     }
+    // }
 
     const handleChange = (e: any) => {
         setValue(id, e.value);
@@ -155,6 +172,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
             "&:hover": {
                 border: "1px solid #e5e7eb",
             },
+            //zIndex : 1
             //   justifycontent : 
             //   border: "0 !important",
             //   boxShadow: "0 !important",
@@ -165,7 +183,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         valueContainer: (base: any) => ({
             ...base,
             height: "30px",
-            justifyContent: "center"
+            justifyContent: "center",
         }),
         indicatorSeparator: (base: any) => ({
             ...base,
@@ -184,36 +202,58 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     };
 
 
+
     return (
         <>
             <InputWrapper outerClassName="" inline={inline} >
-                {!noLabel && <Label id={id} name={label} lwidth={lwidth}/>}
-                {/* <div className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
-                <Controller
-                    control={control}
-                    name={id}
-                    rules={rules}
-                    render={({ field: { onChange } }) => {
-                        return (
-                            <div className={`block ${defWidth} flex-grow-1`}>
-                                {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
-                                <ReactSelectComponent
-                                    //{...field}
-                                    // defaultValue={{value:'A'}}
-                                    value={selectedVal}
-                                    isMulti={isMulti}
-                                    options={list}
-                                    instanceId={id}
-                                    // onChange={(e: any) => { onChange(e.value); /*setSelectedVal({value:e.value, label:e.label})*/ }}
-                                    onChange={(e: any) => { handleChange(e); }}
-                                    onKeyDown={handleKeyDown}
-                                    styles={customStyles}
-                                />
-                            </div>
-                        );
-                    }}
-                />
-                {/* </div> */}
+                {!noLabel && <Label id={id} name={label} lwidth={lwidth} />}
+                {dialog ?
+                    <Controller
+                        control={control}
+                        name={id}
+                        rules={rules}
+                        render={({ field: { onChange, onKeyDown } }) => {
+                            return (
+                                <div className={`block ${defWidth} flex-grow-1`}>
+                                    <ReactSelectComponent
+                                        ref={ref}
+                                        classNamePrefix="my-select"
+                                        value={selectedVal}
+                                        isMulti={isMulti}
+                                        options={list}
+                                        instanceId={id}
+                                        onChange={(e: any) => { handleChange(e); }}
+                                        menuPortalTarget={document.getElementsByClassName('dialog-base')[0] as HTMLElement}
+                                        menuPosition='fixed'
+                                        styles={customStyles}
+                                    />
+                                </div>
+                            );
+                        }}
+                    />
+                    :
+                    <Controller
+                        control={control}
+                        name={id}
+                        rules={rules}
+                        render={({ field: { onChange, onKeyDown } }) => {
+                            return (
+                                <div className={`block ${defWidth} flex-grow-1`}>
+                                    <ReactSelectComponent
+                                        ref={ref}
+                                        classNamePrefix="my-select"
+                                        value={selectedVal}
+                                        isMulti={isMulti}
+                                        options={list}
+                                        instanceId={id}
+                                        onChange={(e: any) => { handleChange(e); }}
+                                        styles={customStyles}
+                                    />
+                                </div>
+                            );
+                        }}
+                    />
+                }
             </InputWrapper>
         </>
     );

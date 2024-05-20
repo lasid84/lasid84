@@ -22,7 +22,7 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={()=>{}}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto dialog-base" onClose={()=>{}}>
           <div className={`flex flex-col items-center justify-center min-h-screen px-4 text-center ${isModal?"pointer-events-none":""}`}>
             {/*Dialog Overlay*/}
             <Transition.Child
