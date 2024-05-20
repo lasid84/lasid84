@@ -5,7 +5,7 @@ import { crudType, useAppContext } from "components/provider/contextObjectProvid
 import { SP_UpdateData, SP_CreateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 
-import {useRouter, usePathname} from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { Button } from "components/button";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
@@ -19,7 +19,7 @@ type Props = {
 const Modal: React.FC<Props> = ({ loadItem }) => {
 
     const { dispatch, objState } = useAppContext();
-    const { mSelectedRow, crudType:popType, isPopUpOpen:isOpen, searchParams } = objState;
+    const { mSelectedRow, crudType: popType, isPopUpOpen: isOpen, searchParams } = objState;
     const router = usePathname()
     const { Update } = useUpdateData2(SP_UpdateData);
     const { Create } = useUpdateData2(SP_CreateData);
@@ -31,9 +31,9 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     const [billGr1Cd, setBillGr1Cd] = useState([]);
     const [glGr1Cd, setGlGr1Cd] = useState([]);
     const [glGr2Cd, setGlGr2Cd] = useState([]);
-    
+
     const closeModal = () => {
-        dispatch({isPopUpOpen:false});
+        dispatch({ isPopUpOpen: false });
         reset();
     }
     const defTransMode = popType === crudType.CREATE ? searchParams.trans_mode : mSelectedRow?.trans_mode;
@@ -58,17 +58,17 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         control,
     } = formZodMethods;
 
-    useEffect(() => { 
-        if(loadItem){
-          setTransmode(loadItem[0]) 
-          setTranstype(loadItem[1])
-          setprodGrCd(loadItem[2])
-          setGlGr1Cd(loadItem[5])
-          setGlGr2Cd(loadItem[6])
-        }    
-      }, [loadItem]);
+    useEffect(() => {
+        if (loadItem) {
+            setTransmode(loadItem[0])
+            setTranstype(loadItem[1])
+            setprodGrCd(loadItem[2])
+            setGlGr1Cd(loadItem[5])
+            setGlGr2Cd(loadItem[6])
+        }
+    }, [loadItem]);
 
-    useEffect(() => {        
+    useEffect(() => {
         // log("=====", loadItem);
         if (loadItem && mSelectedRow && Object.keys(mSelectedRow).length > 0) {
             var modetype = mSelectedRow?.trans_mode + mSelectedRow?.trans_type;
@@ -86,16 +86,16 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         log("onFormSubmit", param)
         if (popType === crudType.UPDATE) {
             Update.mutate(param, {
-                        onSuccess: (res: any) => {
-                            closeModal();
-                            dispatch({ isMSearch:true});
-                        },
+                onSuccess: (res: any) => {
+                    closeModal();
+                    dispatch({ isMSearch: true });
+                },
             });
         } else {
             Create.mutate(param, {
                 onSuccess: (res: any) => {
                     closeModal();
-                    dispatch({ isMSearch:true});
+                    dispatch({ isMSearch: true });
                 },
                 // onError:(res:any) =>{
                 //     toastError("등록에실패했습니다."+res);
@@ -124,52 +124,52 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     return (
 
         <FormProvider{...formZodMethods}>
-                <DialogBasic
-                    isOpen={isOpen!}
-                    onClose={closeModal}
-                    title={"차지코드 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
-                    bottomRight={
-                        <>
-                            <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} />
-                            <Button id={"cancel"} onClick={closeModal} icon={null} />
-                        </>
-                    }
-                >
-                    <form onSubmit={handleSubmit(onFormSubmit)}>
+            <DialogBasic
+                isOpen={isOpen!}
+                onClose={closeModal}
+                title={"차지코드 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
+                bottomRight={
+                    <>
+                        <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} />
+                        <Button id={"cancel"} onClick={closeModal} icon={null} />
+                    </>
+                }
+            >
+                <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-6">
                         <div className="col-span-2">
-                            <ReactSelect 
-                                id="trans_mode" label="trans_mode" dataSrc={transmode as data} 
+                            <ReactSelect
+                                id="trans_mode" label="trans_mode" dataSrc={transmode as data}
                                 options={{
-                                    keyCol:"trans_mode",
-                                    displayCol:['trans_mode', 'name'],
+                                    keyCol: "trans_mode",
+                                    displayCol: ['trans_mode', 'name'],
                                     // inline:true,
                                     // defaultValue: {label:'A Air', value:'A'}
-                                    defaultValue : defTransMode,
+                                    defaultValue: defTransMode,
                                     isAllYn: false
                                 }}
                             />
-                        </div>                            
+                        </div>
 
                         <div className="col-span-2">
-                            <ReactSelect 
-                                id="trans_type" dataSrc={transtype as data} 
+                            <ReactSelect
+                                id="trans_type" dataSrc={transtype as data}
                                 options={{
-                                    keyCol:"trans_type",
-                                    displayCol:['trans_type', 'name'],
+                                    keyCol: "trans_type",
+                                    displayCol: ['trans_type', 'name'],
                                     // inline:true,
                                     // defaultValue: {label:'A Air', value:'A'}
-                                    defaultValue : defTransType,
+                                    defaultValue: defTransType,
                                     isAllYn: false
                                 }}
                             />
                         </div>
                         <div className="col-span-2">
-                            <ReactSelect 
-                                id="prod_gr_cd" dataSrc={prodGrCd as data} 
+                            <ReactSelect
+                                id="prod_gr_cd" dataSrc={prodGrCd as data}
                                 options={{
-                                    keyCol:"prod_gr_cd",
-                                    displayCol:['prod_gr_cd'],
+                                    keyCol: "prod_gr_cd",
+                                    displayCol: ['prod_gr_cd'],
                                     defaultValue: mSelectedRow?.prod_gr_cd
                                 }}
                             />
@@ -182,217 +182,219 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 value={mSelectedRow?.charge_code}
                                 >
                             </TInput> */}
-                            <MaskedInputField 
-                                id="charge_code" 
+                            <MaskedInputField
+                                id="charge_code"
                                 value={mSelectedRow?.charge_code}
-                                options = {{
+                                options={{
                                     isReadOnly: popType === crudType.CREATE ? false : true,
                                 }}
-                                />
+                            />
                         </div>
                         <div className="col-span-4">
-                            <MaskedInputField 
-                                id="charge_desc" 
+                            <MaskedInputField
+                                id="charge_desc"
                                 value={mSelectedRow?.charge_desc}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-3">
-                            <MaskedInputField 
-                                id="ass_transaction" 
-                                value={mSelectedRow?.ass_transaction}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-3">
-                            <MaskedInputField 
-                                id="category" 
-                                value={mSelectedRow?.category}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-3">
-                            <MaskedInputField 
-                                id="major_category" 
-                                value={mSelectedRow?.major_category}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-3">
-                            <MaskedInputField 
-                                id="report_category" 
-                                value={mSelectedRow?.report_category}
-                                options = {{
-                                }}
-                                />
-                        </div>
-                        
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="vat_yn" 
-                                value={mSelectedRow?.vat_yn}
-                                options = {{
-                                }}
-                                />
-                        </div>
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="vat_type" 
-                                value={mSelectedRow?.vat_type}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="vat_rt" 
-                                value={mSelectedRow?.vat_rt}
-                                options = {{
-                                }}
-                                />
-                        </div>
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="fins_yn" 
-                                value={mSelectedRow?.fins_yn}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="fin_category" 
-                                value={mSelectedRow?.fin_category}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="uas_gl_code" 
-                                value={mSelectedRow?.uas_gl_code}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="billing_yn" 
-                                value={mSelectedRow?.billing_yn}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="rem_prt_yn" 
-                                value={mSelectedRow?.rem_prt_yn}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="fe_ref_item" 
-                                value={mSelectedRow?.fe_prt_item}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="fe_ref_item" 
-                                value={mSelectedRow?.fe_ref_item}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField 
-                                id="rem_prt_nm" 
-                                value={mSelectedRow?.rem_prt_nm}
-                                options = {{
-                                }}
-                                />
-                        </div>
-
-                        <div className="col-span-2">
-                            <ReactSelect 
-                                id="use_yn" dataSrc={{data: [
-                                    { use_yn: 'Y'},
-                                    { use_yn: 'N' }
-                                ]} as data} 
                                 options={{
-                                    keyCol:"use_yn",
-                                    displayCol:['use_yn'],
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-3">
+                            <MaskedInputField
+                                id="ass_transaction"
+                                value={mSelectedRow?.ass_transaction}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-3">
+                            <MaskedInputField
+                                id="category"
+                                value={mSelectedRow?.category}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-3">
+                            <MaskedInputField
+                                id="major_category"
+                                value={mSelectedRow?.major_category}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-3">
+                            <MaskedInputField
+                                id="report_category"
+                                value={mSelectedRow?.report_category}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="vat_yn"
+                                value={mSelectedRow?.vat_yn}
+                                options={{
+                                }}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="vat_type"
+                                value={mSelectedRow?.vat_type}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="vat_rt"
+                                value={mSelectedRow?.vat_rt}
+                                options={{
+                                }}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="fins_yn"
+                                value={mSelectedRow?.fins_yn}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="fin_category"
+                                value={mSelectedRow?.fin_category}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="uas_gl_code"
+                                value={mSelectedRow?.uas_gl_code}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="billing_yn"
+                                value={mSelectedRow?.billing_yn}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="rem_prt_yn"
+                                value={mSelectedRow?.rem_prt_yn}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            {/* <MaskedInputField
+                                id="fe_ref_item"
+                                value={mSelectedRow?.fe_prt_item}
+                                options={{
+                                }}
+                            /> */}
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="fe_ref_item"
+                                value={mSelectedRow?.fe_ref_item}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="rem_prt_nm"
+                                value={mSelectedRow?.rem_prt_nm}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <ReactSelect
+                                id="use_yn" dataSrc={{
+                                    data: [
+                                        { use_yn: 'Y' },
+                                        { use_yn: 'N' }
+                                    ]
+                                } as data}
+                                options={{
+                                    keyCol: "use_yn",
+                                    displayCol: ['use_yn'],
                                     defaultValue: mSelectedRow?.use_yn
                                 }}
                             />
                         </div>
 
                         <div className="col-span-3">
-                            <ReactSelect 
-                                id="bill_gr1_cd" dataSrc={billGr1Cd as data} 
+                            <ReactSelect
+                                id="bill_gr1_cd" dataSrc={billGr1Cd as data}
                                 options={{
-                                    keyCol:"bill_gr1_cd",
-                                    displayCol:['bill_gr1_cd', 'name'],
+                                    keyCol: "bill_gr1_cd",
+                                    displayCol: ['bill_gr1_cd', 'name'],
                                     defaultValue: mSelectedRow?.bill_gr1_cd
                                 }}
                             />
-                        </div>  
+                        </div>
 
                         <div className="col-span-3">
-                            <ReactSelect 
-                                id="bill_gr2_cd" dataSrc={billGr1Cd as data} 
+                            <ReactSelect
+                                id="bill_gr2_cd" dataSrc={billGr1Cd as data}
                                 options={{
-                                    keyCol:"bill_gr2_cd",
-                                    displayCol:['bill_gr2_cd', 'name'],
+                                    keyCol: "bill_gr2_cd",
+                                    displayCol: ['bill_gr2_cd', 'name'],
                                     defaultValue: mSelectedRow?.bill_gr2_cd
                                 }}
                             />
-                        </div>  
+                        </div>
 
                         <div className="col-span-3">
-                            <ReactSelect 
-                                id="gl_gr1_cd" dataSrc={glGr1Cd as data} 
+                            <ReactSelect
+                                id="gl_gr1_cd" dataSrc={glGr1Cd as data}
                                 options={{
-                                    keyCol:"gl_gr1_cd",
-                                    displayCol:['gl_gr1_cd', 'name'],
+                                    keyCol: "gl_gr1_cd",
+                                    displayCol: ['gl_gr1_cd', 'name'],
                                     defaultValue: mSelectedRow?.gl_gr1_cd
                                 }}
                             />
-                        </div>  
+                        </div>
 
                         <div className="col-span-3">
-                            <ReactSelect 
-                                id="gl_gr2_cd" dataSrc={glGr2Cd as data} 
+                            <ReactSelect
+                                id="gl_gr2_cd" dataSrc={glGr2Cd as data}
                                 options={{
-                                    keyCol:"gl_gr2_cd",
-                                    displayCol:['gl_gr2_cd', 'name'],
+                                    keyCol: "gl_gr2_cd",
+                                    displayCol: ['gl_gr2_cd', 'name'],
                                     defaultValue: mSelectedRow?.gl_gr2_cd
                                 }}
                             />
-                        </div>  
+                        </div>
 
                     </div>
-                    </form>                                        
-                </DialogBasic>
+                </form>
+            </DialogBasic>
         </FormProvider>
 
     )

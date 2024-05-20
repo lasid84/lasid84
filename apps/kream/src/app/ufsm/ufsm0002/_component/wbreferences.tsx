@@ -52,12 +52,6 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
   const [data, setData] = useState<any>();
 
 
-  const onSearch = () => {
-    // const params = getValues();
-    // log("onSearch", params);
-  }
-
-
   useEffect(() => {
     if (mainData) {
       setData((mainData?.[0] as gridData).data[0]);
@@ -66,10 +60,9 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
     }
   }, [mainData])
 
-
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <form className="w-full space-y-1">
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">References</span>}>
           <div className="col-span-6">

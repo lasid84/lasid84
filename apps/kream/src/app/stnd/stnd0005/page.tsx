@@ -1,21 +1,24 @@
 'use client'
 
-import { useReducer, useMemo } from "react"
-import { SP_Load } from "./_component/data"
-import { reducer, TableContext, LOAD, crudType } from "components/provider/contextObjectProvider";
+import { useReducer, useMemo, useRef } from "react"
+import { SP_Load, SP_GetData } from "./_component/data";
+import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
+import { PageState, reducer } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
+import { TableContext } from "@/components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import MasterGrid from './_component/gridMaster'
+import Grid from './_component/gridMaster'
 
-const Stnd0005: React.FC = () => {
+export default function STND0005() {
 
+    const gridRef = useRef<any | null>(null);
     const [state, dispatch] = useReducer(reducer, {
         objState: {
             searchParams: {},
-            mSelectedRow: {},
             isMSearch: false,
-            isPopupOpen:false,    
-            crudType : {}       
+            mSelectedRow: {},
+            isPopupOpen: false,
+            crudType: {}
         }
     })
     const { objState } = state;
@@ -24,17 +27,11 @@ const Stnd0005: React.FC = () => {
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
-        <TableContext.Provider value={val}>                
-            <SearchForm initData={initData} />
-            <div className="flex flex-col w-full">
-                <div className={`ag-theme-custom w-full`}>
-                    <MasterGrid initData={initData} />
-                </div>
-            </div>
+        <TableContext.Provider value={val}>
+            <SearchForm loadItem={initData} />
+            <Grid initData={initData} />
         </TableContext.Provider>
 
     )
 
 }
-
-export default Stnd0005

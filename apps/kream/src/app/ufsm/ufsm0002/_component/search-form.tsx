@@ -43,10 +43,8 @@ const SearchForm = ({ loadItem }: any) => {
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
   const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code} = objState.searchParams;
-  const [groupcd, setGroupcd] = useState<any>([])
 
-  log("searchform", objState, trans_mode, trans_type, fr_date, to_date, wb_no, cust_code)
-  // //사용자 정보
+  //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
 
@@ -81,17 +79,12 @@ const SearchForm = ({ loadItem }: any) => {
       setTransmode(loadItem[0])
       setTranstype(loadItem[1])
       setCustcode(loadItem[8])
-
-      log("useeffect objState", objState)
-      // if (objState.isFirstRender) {
-      //   onSearch();
-      //   dispatch({ isFirstRender: false });
-      // }
+      dispatch({ isFirstRender: false });
+      if (objState.isFirstRender){ onSearch()}
     }
   }, [loadItem?.length])
 
   const onSearch = () => {
-    // log("onSearch")
     const params = getValues();
     log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true });
@@ -103,16 +96,11 @@ const SearchForm = ({ loadItem }: any) => {
       <PageSearchButton
           right={
             <>
-              {/* <div className={"col-span-1"}>
-                <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
-              </div> */}
               <div className={"col-span-1"}>
-                <Button id="search" disabled={false} onClick={onSearch} />
-                {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
+                <Button id="search" disabled={false} onClick={onSearch} />                
               </div>
               <div className={"col-span-1"}>
-                <Button id="reset" disabled={false} onClick={onSearch} />
-                {/* <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} /> */}
+                <Button id="reset" disabled={false} onClick={onSearch} />                
               </div>
             </>
           }>

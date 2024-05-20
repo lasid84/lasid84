@@ -45,12 +45,6 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
 
   const methods = useForm({
     defaultValues: {
-      trans_mode: gTransMode || 'ALL',
-      trans_type: gTransType || 'ALL',
-      fr_date: dayjs().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
-      to_date: dayjs().subtract(1, 'month').endOf('month').format("YYYY-MM-DD"),
-      no: '',
-      cust_code: ''
     }
   });
 
@@ -69,30 +63,19 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
   const [freightCharge, setFreightCharge] = useState<gridData>({});
   const [data, setData] = useState<any>();
 
-  useEffect(() => {
-    if (loadItem?.length) {
-      onSearch()
-    }
-  }, [loadItem?.length])
-
-  const onSearch = () => {
-    //const params = getValues();
-    //log("onSearch", params);
-  }
 
   useEffect(() => {
     if (mainData) {
       setData((mainData?.[0] as gridData).data[0]);
       setShipmentDetail(mainData?.[3] as gridData)
       setFreightCharge(mainData?.[4] as gridData)
-      log('maindataaaaa', mainData)
     }    
   }, [mainData])
 
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <form className="w-full space-y-1">
         <PageSearch
           title={<span className="w-full px-1 py-1 text-blue-500">Shipment Details & Freight</span>}>
           <div className="flex w-full col-span-6">

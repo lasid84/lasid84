@@ -4,12 +4,13 @@ import { useEffect, useState, useCallback, memo } from "react"
 import { makeZodI18nMap } from "zod-i18n-map";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
+import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import Select from "react-select"
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue, TButtonDarkgray } from "components/form";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
-import { ReactSelect} from "components/select/react-select"
+// import { ReactSelect } from "components/select/react-select"
+import { ReactSelect, data } from "@/components/select/react-select2";
 import { ProgressBarWithText } from "@/components/progress-bars/progressbar";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -22,12 +23,11 @@ export interface returnData {
 type Props = {
     initData: any | undefined;
 }
-
-const SearchForm: React.FC<Props> = (props) => {
-    const { initData } = props;
+const SearchForm = memo(({ loadItem }: any) => {
+    // const { initData } = props;
 
     const { dispatch, objState } = useAppContext()
-    const [groupcd, setGroupcd] = useState<any>([])
+    const [groupcd, setGroupcd] = useState<any>()
     let selectoptions: any[] = []
 
     // 다국어
@@ -49,26 +49,23 @@ const SearchForm: React.FC<Props> = (props) => {
         formState: { errors, isSubmitSuccessful },
     } = methods;
 
+
     useEffect(() => {
-        if (initData) {
-            initData[0].data.map((item: any) => {
-                var key = item[Object.keys(item)[0]];
-                var label = item[Object.keys(item)[1]];
-                selectoptions.push({ value: key, label: key + " " + label });
-            })
-            setGroupcd(selectoptions)
+        if (loadItem?.length) {
+            setGroupcd(loadItem[0])
             onSearch();
         }
-    }, [initData])
+    }, [loadItem?.length])
 
     const onSearch = () => {
         const params = getValues()
+        log("onSearch_0005", params, getValues('grp_cd'));
         dispatch({ searchParams: params, isMSearch: true });
     }
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSearch)}>
+            <form onSubmit={handleSubmit(onSearch)} className="space-y-1">
                 <PageSearchButton
                     right={
                         <>
@@ -79,11 +76,21 @@ const SearchForm: React.FC<Props> = (props) => {
                             }} />
                         </>
                     }>
-                    <ReactSelect id="grp_cd" name="grp" options={groupcd} inline={true}/>
+                    {/* <ReactSelect id="grp_cd" options={groupcd} inline={true}/> */}
+                    <ReactSelect
+                        id="grp_cd" label="grp_cd" dataSrc={groupcd as data}
+                        options={{
+                            keyCol: "grp_cd",
+                            displayCol: ['grp_cd', 'grp_cd_nm'],
+                            // inline:true,
+                            // defaultValue: {label:'A Air', value:'A'}
+                            defaultValue: getValues('grp_cd')
+                        }}
+                    />
                 </PageSearchButton>
             </form>
         </FormProvider >
     )
-}
+})
 
 export default SearchForm

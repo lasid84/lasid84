@@ -35,11 +35,8 @@ type Props = {
 
 const WBMain = memo(({ loadItem, mainData }: any) => {
 
-  //if (!isSelected) return;
-  
   const { dispatch, objState } = useAppContext();
   const [data, setData] = useState<any>();
-
 
   const methods = useForm({
     defaultValues: {

@@ -8,7 +8,6 @@ import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -30,7 +29,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         colVisible: { col: ["pipeline_tx_id", "mwb_status", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "75vh",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
-        dataType: {"executed_on_date":"date", "accounting_date":"date", "imp_actg_intrfc_status_date":"date", "create_date":"date"},
+        dataType: { "executed_on_date": "date", "accounting_date": "date", "imp_actg_intrfc_status_date": "date", "create_date": "date", 
+        "volume":"number","gross_weight":"number","volume_weight":"number","chargeable_weight":"number", },
         isAutoFitColData: true,
     };
 
@@ -63,11 +63,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
     }, [objState?.isMSearch]);
 
-    // useEffect(() => {
-    //     if (mainDetailData) {
-    //         dispatch({ mSelectedDetail:(mainDetailData as gridData[])[1].data[0] })
-    //     }
-    // }, [mainDetailData]);
 
     return (
         <Grid

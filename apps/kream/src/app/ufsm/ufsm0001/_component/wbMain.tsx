@@ -83,8 +83,8 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           <MaskedInputField id="waybill_type" value={data?.waybill_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="bol_type" value={data?.bol_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="service_type_code" value={data?.service_type_code} options={{ isReadOnly: true }} />
-          <DatePicker id={"execution_date"} value={data?.execution_date} options={{ isReadOnly: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} />
-          <DatePicker id={"ic_dc_consol_date"} value={data?.ic_dc_consol_date} options={{ isReadOnly: true, textAlign: 'center', freeStyles: "underline border-1 border-slate-300" }} />
+          <DatePicker id={"execution_date"} value={data?.execution_date} options={{ isReadOnly: true, textAlign: 'left', freeStyles: "underline border-1 border-slate-300" }} />
+          <DatePicker id={"ic_dc_consol_date"} value={data?.ic_dc_consol_date} options={{ isReadOnly: true, textAlign: 'left', freeStyles: "underline border-1 border-slate-300" }} />
           <MaskedInputField id="freight_terms" value={data?.freight_terms} options={{ isReadOnly: true }} />
           <MaskedInputField id="customer_shipment_type" value={data?.customer_shipment_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="movement_type" value={data?.movement_type} options={{ isReadOnly: true }} />

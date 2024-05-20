@@ -1,36 +1,36 @@
 
 'use client';
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import { SP_GetMasterData } from "./data";
-import { useAppContext, SEARCH_M } from "components/provider/contextObjectProvider";
+import { useAppContext, SEARCH_M,crudType } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import Modal from './popup';
-import { TButtonBlue } from "components/form";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community"
-import PageContent from "@/layouts/search-form/page-search-row";
+import Modal from './popup';
+// import { TButtonBlue } from "components/form";
 import { PopType } from "@/utils/modal";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null;
+    initData?: any | null;
 };
 
-const MasterGrid: React.FC<Props> = ({ initData }) => {
+const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-    // const [gridOptions, setGridOptions] = useState<GridOption>();
+    const { searchParams, isMSearch } = objState;
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
+
+    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
         colVisible: { col: ["grp_cd", "grp_cd_nm", "cd", "cd_nm", "cd_desc", "cd_mgcd1", "cd_mgcd2", "use_yn"], visible: true },
-        colDisable: ["grp_cd", "grp_cd_nm", "cd"],
-        checkbox: ["use_yn"],
-        gridHeight: "h-[calc(100vh-60px)]",
+        gridHeight: "80vh",
+        // colDisable: ["grp_cd", "grp_cd_nm", "cd"],
+        // checkbox: ["use_yn"],
         // dataType: { "bz_reg_no":"bizno"},
         // isMultiSelect: false,
         isAutoFitColData: false,
@@ -52,12 +52,12 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     };
 
     useEffect(() => {
-        if (objState.isMSearch) {
-            //mainRefetch();
-            log("mainisSearctqtqwttqh", objState.isMSearch);
+        if (isMSearch) {
+            mainRefetch();
+            log("stnd0005_isMSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
         }
-    }, [objState.isMSearch]);
+    }, [isMSearch]);
 
     const onSave = () => {
         log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
@@ -72,35 +72,33 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     //     log("--------------------", objState.isPopupOpen, objState.crudType)
     //     dispatch({ isPopupOpen: true, crudType: PopType.UPDATE })
     // }
+    // <PageContent
+    //     right={
+    //         <>
+    //             <TButtonBlue label={"add"} onClick={() => rowAdd(gridRef.current)} />
+    //             <TButtonBlue label={"save"} onClick={onSave} />
+    //             <TButtonBlue label={"new"} onClick={onPopup} />
+    //             {/* <TButtonBlue label={"popup2"} onClick={onPopup2} /> */}
+    //         </>
+    //     }>
+    // </PageContent>
 
     return (
         <>
-            <PageContent
-                right={
-                    <>
-                        <TButtonBlue label={"add"} onClick={() => rowAdd(gridRef.current)} />
-                        <TButtonBlue label={"save"} onClick={onSave} />
-                        <TButtonBlue label={"new"} onClick={onPopup} />
-                        {/* <TButtonBlue label={"popup2"} onClick={onPopup2} /> */}
-                    </>
-                }>
-                <></>
-            </PageContent>
             <Grid
                 gridRef={gridRef}
-                loadItem={initData}
+                //loadItem={initData}
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
-                    onRowClicked: handleRowClicked,
-                    onSelectionChanged: handleSelectionChanged,
+                     onRowClicked: handleRowClicked,
+                     onSelectionChanged: handleSelectionChanged,
                 }}
             />
             <Modal initData={initData} />
-
         </>
 
     );
-}
+})
 
 export default MasterGrid;

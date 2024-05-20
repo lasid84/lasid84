@@ -73,8 +73,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
-                    // onRowClicked: handleRowClicked,
-                    // onSelectionChanged: handleSelectionChanged,
+                    onRowClicked: handleRowClicked,
+                    onSelectionChanged: handleSelectionChanged,
                 }}
                 />
             <Modal

@@ -81,6 +81,7 @@ const Modal: React.FC<Props> = (props) => {
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
         if (popType === PopType.UPDATE) {
+            console.log('UpdateLogic')
             Update.mutate(param)
         } else {
             console.log('CreateLogic')
@@ -127,9 +128,6 @@ const Modal: React.FC<Props> = (props) => {
                         </div>
                         <div className="col-span-3">                           
                             <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}}/>
-                        </div>
-                        <div className="col-span-3">                           
-                            <MaskedInputField id="remark" value={mSelectedRow?.remark} options={{}}/>
                         </div>
                         <div className="col-span-3">                           
                             <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}}/>

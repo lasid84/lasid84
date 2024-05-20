@@ -42,9 +42,7 @@ type Props = {
 };
 
 const WBShipmentText = memo(({ loadItem, mainData }: any) => {
-  // const { loadItem } = props;
 
-  // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
 
   const methods = useForm({

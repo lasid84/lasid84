@@ -2,7 +2,7 @@
 'use client';
 
 import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
-import PageTitle from "components/page-title/page-title";
+// import PageTitle from "components/page-title/page-title";
 import { useUserSettings } from "states/useUserSettings";
 import { SP_Load, SP_GetData } from "./_component/data";
 import { PageState, reducer } from "components/provider/contextObjectProvider";

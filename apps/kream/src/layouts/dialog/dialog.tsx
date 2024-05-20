@@ -65,12 +65,12 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
                 </div>
                 {
                   ((bottomLeft) || (bottomRight)) &&
-                    <div className="px-4 py-3 border-t border-gray-200 flex flex-row justify-between">
-                      <div className="flex flex-row gap-1">
+                    <div className="flex flex-row justify-between px-4 py-3 border-t border-gray-200">
+                      <div className="flex flex-row w-1/2 gap-1">
                         {bottomLeft}
                         <div className="ml-auto"></div>
                       </div>
-                      <div className="flex flex-row gap-1">
+                      <div className="flex flex-row w-1/2 gap-1">
                         <div className="ml-auto"></div>
                         {bottomRight}
                       </div>
