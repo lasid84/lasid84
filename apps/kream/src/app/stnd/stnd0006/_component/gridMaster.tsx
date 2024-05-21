@@ -25,7 +25,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:false});
     const gridOption: GridOption = {
-        colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "create_date"], visible:true },
+        colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "vat_yn","vat_type","category","major_category","report_category","create_date"], visible:true },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         gridHeight: "80vh",
         // checkbox: ["no"],

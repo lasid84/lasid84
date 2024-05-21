@@ -2,7 +2,7 @@
 import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import MaskedInput, { Mask, MaskedInputProps, conformToMask} from 'react-text-mask';
+import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
 import { SlMagnifierAdd } from "react-icons/sl";
 import { FcExpand } from "react-icons/fc";
 // import  conformToMask from './conformToMask'
@@ -15,17 +15,17 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
 type Props = {
-  id:string;
-  label?:string;
-  value?:string;
-  width?:string;
-  lwidth?:string;
-  height?:string;
+  id: string;
+  label?: string;
+  value?: string;
+  width?: string;
+  lwidth?: string;
+  height?: string;
   options?: {
     inline?: boolean;         //라벨명 위치
     type?: string;            //number, text,  custom: ipaddr, bz_reg_no
     limit?: number;           //입력 자릿수 제한
-    isAllowDecimal?:boolean,  //소수점 허용 여부
+    isAllowDecimal?: boolean,  //소수점 허용 여부
     decimalLimit?: number     //소수점 자리수
     myPlaceholder?: string;   //
     /* Tailwind Style */
@@ -33,35 +33,35 @@ type Props = {
     fontSize?: string;        //Font Size (xs, sm, base, lg, xl, 2xl......)
     fontWeight?: string;      //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
     textAlign?: string;       //Text Align (left, center, right)
-    textAlignLB?:string;
+    textAlignLB?: string;
     radius?: string;          //Border Radius (none, sm, '', md, lg, xl, 2xl, full, ......)
-    freeStyles?:string;       //freestyle
+    freeStyles?: string;       //freestyle
 
-    isReadOnly?:boolean;      //읽기전용여부
-    noLabel?:boolean;
-    useIcon?:boolean; 
-    outerClassName?:string;    //outerClassName
+    isReadOnly?: boolean;      //읽기전용여부
+    noLabel?: boolean;
+    useIcon?: boolean;
+    outerClassName?: string;    //outerClassName
   };
 
   events?: {
-    onChange?: (e:ChangeEvent<HTMLInputElement>) => void;
-    onKeyDown?: (e:KeyboardEventHandler<HTMLInputElement>) => void;
-    onBlur?: (e:FocusEvent<HTMLInputElement>) => void;
-    onFocus?: (e:FocusEvent<HTMLInputElement>) => void;
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: KeyboardEventHandler<HTMLInputElement>) => void;
+    onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
+    onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
   }
 };
 
-export const MaskedInputField: React.FC<Props> = (props:Props) => {
+export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const { control, setValue } = useFormContext();
   const { t } = useTranslation();
   if (!control) return null;
 
-  const {id, label, value, width, lwidth, height, options = {}, events } = props;
-  const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon= false,
+  const { id, label, value, width, lwidth, height, options = {}, events } = props;
+  const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
-    freeStyles = '', radius = 'none', outerClassName=''
-   } = options;
-  const {mask, pipe, placeholder} = getMask(type, options);
+    freeStyles = '', radius = 'none', outerClassName = ''
+  } = options;
+  const { mask, pipe, placeholder } = getMask(type, options);
 
   const [selectedVal, setSelectedVal] = useState<string | undefined>(value || undefined);
 
@@ -74,26 +74,26 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
     setSelectedVal(value === undefined ? '' : value);
   }, [value])
 
-  function handleKeyDown(e:any){
+  function handleKeyDown(e: any) {
     try {
-        if (e.key === "Enter") {
-            const form = e.target.form;
-            // log(e.target, form);
-            const index = [...form].indexOf(e.target);
-            // log(index)
-            form[index + 1].focus();
-            e.preventDefault();
-        }
-    
-        if (events?.onKeyDown) {
+      if (e.key === "Enter") {
+        const form = e.target.form;
+        // log(e.target, form);
+        const index = [...form].indexOf(e.target);
+        // log(index)
+        form[index + 1].focus();
+        e.preventDefault();
+      }
+
+      if (events?.onKeyDown) {
         events.onKeyDown(e);
-        }
+      }
     } catch (ex) {
 
     }
   }
 
-  function handleBlur(e:FocusEvent<HTMLInputElement>) {
+  function handleBlur(e: FocusEvent<HTMLInputElement>) {
     log("handleBlur", e.target.value);
     // if (type === 'number' && event.target.value) {
     //   const newVal = event.target.value.replace(/,/g, "");
@@ -105,9 +105,9 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
     }
   }
 
-  function handleChange(e:ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     log("handleChange", e?.target?.value)
-    
+
     setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
 
@@ -116,9 +116,9 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
     }
   }
 
-  function handleFocus(e:FocusEvent<HTMLInputElement>) {
+  function handleFocus(e: FocusEvent<HTMLInputElement>) {
     log("handleChange", e.target?.value)
-    
+
     setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
 
@@ -129,56 +129,56 @@ export const MaskedInputField: React.FC<Props> = (props:Props) => {
 
   return (
     <InputWrapper outerClassName={outerClassName} inline={inline}>
-      {!noLabel && <Label id={id} name={label} lwidth={lwidth} textAlignLB={textAlignLB}/>}
+      {!noLabel && <Label id={id} name={label} lwidth={lwidth} textAlignLB={textAlignLB} />}
       <div className={`flex w-full ${outerClassName}`}>
-      <Controller
-          name = {id}
+        <Controller
+          name={id}
           control={control}
           // defaultValue = {val}
-          render={({field}) => (
-              <MaskedInput
-                // {...field} //bg-${bgColor}
-                className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
+          render={({ field }) => (
+            <MaskedInput
+              // {...field} //bg-${bgColor}
+              className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
                  focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
                  ${freeStyles}
                  text-${textAlign}
                  `)}
-                mask={mask!}
-                // pipe={pipe}
-                value={selectedVal}
-                defaultValue={value}
-                readOnly={isReadOnly}
-                placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
-                // onChange={(e) => {
-                //     // log(name, e.target.value)
-                //     // setValue(name, e.target.value);
-                // }}
-                guide={false}
-                
-                // showMask={true}
-                onKeyDown={(e) => handleKeyDown(e)}
-                onBlur={(e) => handleBlur(e)}
-                onChange={(e: any) => { handleChange(e);}}
-                onFocus={(e: any) => { handleFocus(e);}}
-              />
+              mask={mask!}
+              // pipe={pipe}
+              value={selectedVal}
+              defaultValue={value}
+              readOnly={isReadOnly}
+              placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
+              // onChange={(e) => {
+              //     // log(name, e.target.value)
+              //     // setValue(name, e.target.value);
+              // }}
+              guide={false}
+
+              // showMask={true}
+              onKeyDown={(e) => handleKeyDown(e)}
+              onBlur={(e) => handleBlur(e)}
+              onChange={(e: any) => { handleChange(e); }}
+              onFocus={(e: any) => { handleFocus(e); }}
+            />
           )}
         />
-        {useIcon &&<div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
-        </div>
-     </InputWrapper>
+        {useIcon && <div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
+      </div>
+    </InputWrapper>
   );
 };
 
 
 
-function getMask(type:string = "", options:any={}): Partial<MaskedInputProps>  {
+function getMask(type: string = "", options: any = {}): Partial<MaskedInputProps> {
   var maskArray = [];
   switch (type.toLowerCase()) {
     case "ipaddr":
       return (
         {
           placeholder: "",
-          mask: ((value:string) => Array(value.length).fill(/[\d.]/)),
+          mask: ((value: string) => Array(value.length).fill(/[\d.]/)),
           pipe: (value: string) => {
             if (value === '.' || value.endsWith('..')) return false;
 
@@ -229,7 +229,7 @@ function getMask(type:string = "", options:any={}): Partial<MaskedInputProps>  {
         // mask: (value: string) => {
         //   const maskArray: (string | RegExp)[] = [];
         //   var newVal = value.replace(/,/g, "");
-          
+
         //   const length = newVal.length;
         //   for (let i = 0; i < length; i++) {
         //     if (options.limit && options.limit <= i) return maskArray;
@@ -241,18 +241,18 @@ function getMask(type:string = "", options:any={}): Partial<MaskedInputProps>  {
         //         // log(idx, maskArray.slice(idx))
         //         if (idx && maskArray.slice(idx).length >= options.decimalCnt) return maskArray;
         //       }
-              
+
         //       maskArray.push(/\d/);
         //     }
         //   }
-          
+
         //   return maskArray;
         // },
         mask: createNumberMask({
-            allowDecimal: options.isAllowDecimal,
-            decimalLimit: options.decimalLimit,
-            integerLimit: options.limit
-          }),
+          allowDecimal: options.isAllowDecimal,
+          decimalLimit: options.decimalLimit,
+          integerLimit: options.limit
+        }),
         // pipe: (value: string) => {
         //   // return parseFloat(value).toLocaleString('ko-KR').toString();
         //   log(document.activeElement, document.activeElement?.tagName.includes('bz_reg_no'))
@@ -276,6 +276,11 @@ function getMask(type:string = "", options:any={}): Partial<MaskedInputProps>  {
           return maskArray;
         },
       };
+    case "time":
+      return {
+        placeholder: "",
+        mask: [/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/,]
+      }
     default:
       return {
         placeholder: "",

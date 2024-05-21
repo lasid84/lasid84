@@ -134,7 +134,7 @@ const SearchForm = ({ loadItem }: any) => {
           <div className={"col-span-2"}>
             <CustomSelect
               id="cust_code"
-              // label="trans_mode"
+              initText='Select an option'
               listItem={custcode as gridData}
               valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
               displayCol="cust_nm"
