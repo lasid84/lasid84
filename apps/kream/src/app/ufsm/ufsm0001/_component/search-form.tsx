@@ -89,7 +89,7 @@ const SearchForm = memo(({ loadItem }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
+      <form onSubmit={handleSubmit(onSearch)} className="flex pt-10 space-y-1">
         <PageSearchButton
           right={
             <>

@@ -71,7 +71,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <form onSubmit={handleSubmit(onSearch)} className="sticky top-0 w-full pt-10 space-y-1">
         <PageContent
           right={
             <>

@@ -11,11 +11,11 @@ export type PageSearchProps = {
 export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
-      <div className="sticky top-0 flex w-full">
-        <div className="w-full rounded-[5px] bg-white mb-2">
+      <div className="flex w-full bg-white">
+        <div className="w-full rounded-[5px] mb-2">
           {title}
           <div className="flex w-full px-4 py-1 space-y-1">
-            <div className="sticky top-0 flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+            <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
             <div className="flex flex-row w-2/12 grid-flow-col-dense gap-2 md:flex-row md:grid md:grid-cols-3 place-items-end">
