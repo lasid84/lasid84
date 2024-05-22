@@ -73,7 +73,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
   const handleOnClickTab = (code: any) => { dis }
   return (
     //  <div className="absolute">
-    <div className="sticky top-0 z-50 w-full pt-10 space-y-1 bg-white">
+    <div className="sticky top-0 z-20 w-full pt-10 space-y-1">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
           <PageContent
