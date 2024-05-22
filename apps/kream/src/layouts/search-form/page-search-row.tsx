@@ -8,11 +8,11 @@ export type PageSearchProps = {
 };
 
 //page 2분할(왼: 검색조건 오른: icon)
-export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
+export const PageContent: React.FC<PageSearchProps> = ({ title, bottom, right, children, addition }) => {
   return (
     <>
       <div className="flex w-full bg-white">
-        <div className="w-full rounded-[5px] mb-2">
+        <div className="w-full rounded-[5px] mb-1">
           {title}
           <div className="flex w-full px-4 py-1 space-y-1">
             <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
@@ -26,16 +26,8 @@ export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, chi
 
           {/*button*/}
           <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
-            <div className="grid w-full grid-cols-2">
-              <div className="flex flex-row gap-2">
-                {left}
-                <span className="ml-auto"></span>
-              </div>
-              <div className="flex flex-row gap-2">
-                <span className="ml-auto"></span>
-                {/* {right} */}
-              </div>
-            </div>
+            {bottom}
+
           </div>
         </div>
       </div>
@@ -89,7 +81,7 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right
               {children}
             </div>
             <div className="flex flex-row w-2/12 gap-2 place-items-end">
-              <span className="ml-auto"></span>              
+              <span className="ml-auto"></span>
               {right}
             </div>
           </div>

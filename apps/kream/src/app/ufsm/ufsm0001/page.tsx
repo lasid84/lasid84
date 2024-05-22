@@ -22,7 +22,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export default function UFSM0001() {
 
-    const [selectedTab, setselectedTab] = useState<string>("NM");
+    //const [selectedTab, setselectedTab] = useState<string>("NM");
     const [state, dispatch] = useReducer(reducer, {
         objState: {
             searchParams: {},
@@ -33,17 +33,21 @@ export default function UFSM0001() {
             dSelectedRow: {},
             tab1: [],
             MselectedTab: 'Main',
-            isFirstRender: true
+            isFirstRender: true,
+            selectedTab : "NM"
         }
     });
     const { objState } = state;
-    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab, isFirstRender } = objState;
+    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, selectedTab, MselectedTab, isFirstRender } = objState;
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, isFirstRender, dispatch } }, [state]);
     const { data: initData } = useGetData(objState?.searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60, });
     const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
 
-    const handleOnClickTab = (code: any) => { setselectedTab(code) }
+    const handleOnClickTab = (code: any) => { 
+        // setselectedTab(code) 
+        dispatch({selectedTab:code})
+    }
     const MhandleOnClickTab = (code: any) => {
         // console.log('search-form MhandleOnClickTab', code.target.id)
         if (code.target.id == 'Main') { dispatch({ MselectedTab: code.target.id }) }
@@ -80,8 +84,7 @@ export default function UFSM0001() {
                 <MasterGrid initData={initData} /></div>
                 : <>
                     {/* WayBill Detail 화면 상단{Tab} */}
-                    <WBMainTab loadItem={initData} mainData={mainData} />
-                    <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
+                    <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
 
                     {/* WayBill Detail 화면 하단(Sub) */}
                     <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>

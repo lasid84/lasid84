@@ -39,7 +39,7 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
     }, [selectedTab]);
 
     return (
-        <div className="flex flex-row justify-center pt-1 overflow-x-auto">
+        <div className="flex flex-row justify-center overflow-x-auto">
             {tabList?.map(({ cd, cd_nm }, idx) => (
                 <div key={idx} className="flex flex-row bg-transparent w-34 min-w-32">
                     <button

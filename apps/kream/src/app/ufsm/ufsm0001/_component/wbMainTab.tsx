@@ -11,6 +11,7 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
+import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -31,7 +32,7 @@ type Props = {
   mainData: typeloadItem;
 };
 
-const WBMain = memo(({ loadItem, mainData }: any) => {
+const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
 
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
@@ -69,10 +70,12 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
     }
   }, [mainData])
 
+  const handleOnClickTab = (code: any) => { dis }
   return (
-    // <div className="absolute">
+    //  <div className="absolute">
+    <div className="sticky top-0 w-full pt-10 space-y-1 bg-white">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSearch)} className="sticky top-0 w-full pt-10 space-y-1">
+        <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
           <PageContent
             right={
               <>
@@ -88,6 +91,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
                 </div>
               </>
             }
+            bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
           >
             <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={data?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
             <MaskedInputField id="pipeline_tx_id" lwidth='w-12' width="w-32" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
@@ -101,7 +105,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           </PageContent>
         </form>
       </FormProvider>
-    // </div>
+    </div>
   );
 });
 
