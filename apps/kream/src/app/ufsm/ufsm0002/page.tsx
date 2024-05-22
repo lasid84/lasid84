@@ -84,8 +84,8 @@ export default function UFSM0002() {
                 <MasterGrid initData={initData} />
             </div> : <>
                 {/* WayBill Detail 화면 상단{Tab} */}
-                <WBMainTab loadItem={initData} mainData={mainData} />
-                <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} />
+                <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab}/>
+                {/* <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} /> */}
 
                 {/* WayBill Detail 화면 하단(Sub) */}
                 <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>

@@ -34,7 +34,7 @@ export default function UFSM0001() {
             tab1: [],
             MselectedTab: 'Main',
             isFirstRender: true,
-            selectedTab : "NM"
+            selectedTab: "NM"
         }
     });
     const { objState } = state;
@@ -44,10 +44,7 @@ export default function UFSM0001() {
     const { data: initData } = useGetData(objState?.searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60, });
     const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
 
-    const handleOnClickTab = (code: any) => { 
-        // setselectedTab(code) 
-        dispatch({selectedTab:code})
-    }
+    const handleOnClickTab = (code: any) => { dispatch({ selectedTab: code }) }
     const MhandleOnClickTab = (code: any) => {
         // console.log('search-form MhandleOnClickTab', code.target.id)
         if (code.target.id == 'Main') { dispatch({ MselectedTab: code.target.id }) }
@@ -57,8 +54,6 @@ export default function UFSM0001() {
         let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
         dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, waybill_no: filtered[filtered.length - 1].cd } })
     }
-
-
 
     useEffect(() => {
         if (objState.isMSearch) {
