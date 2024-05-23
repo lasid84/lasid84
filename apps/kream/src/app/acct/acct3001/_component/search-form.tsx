@@ -5,7 +5,7 @@ import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch from "layouts/search-form/page-search";
+import  PageSearch  from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
@@ -13,14 +13,14 @@ import { crudType, useAppContext } from "@/components/provider/contextObjectProv
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
-  cursorData : []
-  numericData : number;
-  textData : string;
+  cursorData: []
+  numericData: number;
+  textData: string;
 }
 
 type Props = {
   // onSubmit: SubmitHandler<any>;
-  initData : any | undefined;
+  initData: any | undefined;
 };
 
 // const SearchForm = memo(({initData}:Props) => {
@@ -52,7 +52,7 @@ const SearchForm: React.FC<Props> = (props) => {
     // log("onSearch")
     const params = getValues();
     log("onSearch", params);
-    dispatch({searchParams: params, isMSearch:true, mSelectedRow:null});
+    dispatch({ searchParams: params, isMSearch: true, mSelectedRow: null });
   }
 
   return (
@@ -64,7 +64,7 @@ const SearchForm: React.FC<Props> = (props) => {
               <Button id={"search"} onClick={onSearch} />
             </>
           }>
-            <></>
+          <></>
         </PageSearch>
       </form>
     </FormProvider>

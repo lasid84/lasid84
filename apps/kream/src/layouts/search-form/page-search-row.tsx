@@ -35,32 +35,17 @@ export const PageContent: React.FC<PageSearchProps> = ({ title, bottom, right, c
   );
 };
 
-//검색조건 1분할
+//검색조건 1분할(검색버튼만 존재)
 const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
       <div className="flex w-full">
-        <div className="w-full rounded-[5px] bg-white border mb-2">
-          {title}
-          {/*contents*/}
-          <div className="flex w-full px-4 py-1 space-y-2">
-            <div className="flex w-full gap-3 sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
-              {children}
-            </div>
+        <div className="w-full flex rounded-[5px] border m-1">
+          <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+            {children}
           </div>
-
-          {/*button*/}
-          <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
-            <div className="grid w-full grid-cols-2">
-              <div className="flex flex-row gap-2">
-                {left}
-                <span className="ml-auto"></span>
-              </div>
-              <div className="flex flex-row gap-2">
-                <span className="ml-auto"></span>
-                {right}
-              </div>
-            </div>
+          <div className="flex flex-row-reverse w-2/12 gap-2 md:flex-row-reverse md:grid md:grid-cols-2 ">
+            {right}
           </div>
         </div>
       </div>
@@ -68,7 +53,7 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
   );
 };
 
-//검색조건 2분할(왼: 검색조건 오른: 버튼)
+//검색조건 2분할(왼쪽: 검색조건 오른쪽: 버튼)
 export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
   return (
     <>
