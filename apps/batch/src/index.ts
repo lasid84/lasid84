@@ -1,9 +1,8 @@
-const fs = require('fs');
+import fs from 'fs';
 import { Worker, WorkerOptions } from 'worker_threads';
-// import { path, arp } from '@repo/kwe-lib';
 import { log, error } from '@repo/kwe-lib/components/logHelper';
 import { sleep } from '@repo/kwe-lib/components/sleep';
-const path = require("path");
+import path from "path";
 import { arp }  from '@repo/kwe-lib'
 
 // const root = path.resolve(arp, '../') // the parent of the root path
@@ -11,10 +10,7 @@ import { arp }  from '@repo/kwe-lib'
 let _arrThread:any = [];
 
 function init() {
-
-  // console.log(root);
-  // console.log(arp);
-  // return;
+  
   let filePath = process.cwd() + '/configs/thread.ini';
   // error("filePath", filePath)
   try {
@@ -35,7 +31,7 @@ function init() {
  
     for (const line of lines) {
       const arr = line.split(' ');
-      _arrThread.push({idx: arr[0], pgm : arr[1], type:arr[2], headless:arr[3]})
+      _arrThread.push({idx: arr[0], pgm : arr[1], type:arr[2], headless:arr[3], terminal:arr[4]});
     }
     log(process.platform, _arrThread);
   } catch (error) {
@@ -53,43 +49,23 @@ async function startWorker() {
     switch (thread.pgm) {
       case "SCRAP_UFSP_HBL":
       case "SCRAP_UFSP_MBL":
-      case "SCRAP_UFSP_CONSOL":
       case "SCRAP_TEST":
-      // const workerTs = (file: string, wkOpts: WorkerOptions & any) => {
-      //   wkOpts.eval = true;
-      //     if (!wkOpts.workerData) {
-      //       wkOpts.workerData = {};
-      //     }
-        
-      //     wkOpts.workerData.__filename = file;
-      //     return new Worker(`
-      //             const wk = require('worker_threads');
-      //             require('ts-node').register({
-      //               "compilerOptions": {
-      //                 "target": "es2016",
-      //                 "esModuleInterop": true,
-      //                 "module": "commonjs",
-      //                 "rootDir": ".",
-      //               }
-      //             });
-      //             let file = wk.workerData.__filename;
-      //             delete wk.workerData.__filename;
-      //             require(file);
-      //         `,
-      //       wkOpts
-      //     );
-      //   };
-      
-      const worker = new Worker(arp + '/apps/batch/src/worker-scraping.js'
-            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
-          }});
+        const workerScrap = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
+            }});
 
-        break;
+          break;
+
       //대상데이터 분배 처리 쓰레드
       //DeadLock 발생으로 추가
       case "SCRAP_UFSP":
-        const worker2 = new Worker(arp + '/apps/batch/src/worker-data-distributor.js'
+        const workerDist = new Worker(arp + '/apps/batch/components/worker/worker-data-distributor.js'
             , { workerData: { threadList : _arrThread, idx: thread.idx, pgm:thread.pgm }});
+        break;
+      case "SCRAP_UFSP_CHARGE_UPLOAD":
+        const workerCharge = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-charge-uploader.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
+            }});
         break;
     }
     await sleep(3000);

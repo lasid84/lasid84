@@ -78,31 +78,19 @@ function stringToDate(source) {
 
 function getKoreaTime() {
     // const now = new Date();
-    // const koreaTime = now.toLocaleString("ko-KR", {
-    //     timeZone: "Asia/Seoul",
-    // });
-    // const formattedKoreaTime = koreaTime.replace(/\./g, "-").replace("오후 ", "");
-    // log("koreaTime", koreaTime, formattedKoreaTime, new Date(formattedKoreaTime));
-    const now = new Date();
-    const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
-    const koreaTimeDiff = 9 * 60 * 60 * 1000;
-    const korNow = new Date(utc+koreaTimeDiff);
+    // const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+    // const koreaTimeDiff = 9 * 60 * 60 * 1000;
+    // const korNow = new Date(utc+koreaTimeDiff);
 
-    // 년, 월, 일 정보 얻기
-    // const year = korNow.getFullYear();
-    // const month = korNow.getMonth() + 1;
-    // const day = korNow.getDate();
+    // return korNow;
 
-    // // 시, 분, 초 정보 얻기
-    // const hours = korNow.getHours();
-    // const minutes = korNow.getMinutes();
-    // const seconds = korNow.getSeconds();
+    // 현재 시간을 UTC로 가져옵니다.
+    const currentUTC = new Date();
 
-    // // 현재 날짜와 시간 출력
-    // log(`현재 날짜: ${year}-${month}-${day}`);
-    // log(`현재 시간: ${hours}:${minutes}:${seconds}`);
+    // 한국의 UTC 오프셋은 +9시간이므로 이를 더하여 한국 시간으로 변환합니다.
+    const offset = 9; // 한국의 UTC 오프셋은 +9시간
+    const korNow = new Date(currentUTC.getTime() + (offset * 60 * 60 * 1000));
 
-    // return new Date(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
     return korNow;
 };
 

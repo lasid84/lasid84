@@ -4,6 +4,11 @@ const { ini, objectPath, fs } = require("@repo/kwe-lib");
 const { signJwtAccessToken } = require('@repo/kwe-lib/components/jsonWebToken.js');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
 
+// import { init, dataCall } from '@repo/kwe-lib/components/api.service';
+// import { ini, objectPath, fs } from "@repo/kwe-lib";
+// import { signJwtAccessToken } from '@repo/kwe-lib/components/jsonWebToken';
+// import { log, error } from '@repo/kwe-lib/components/logHelper';
+
 var iniData;
 var url;
 var token;
@@ -25,7 +30,7 @@ async function executFunction(inproc, inparam, invalue) {
     
     const { cursorData, numericData, textData } = await dataCall(client, inproc,inparam, invalue,'');
 
-    log("executFunction", url, inproc,inparam, invalue, numericData, textData, cursorData);
+    // log("executFunction", url, inproc,inparam, invalue, numericData, textData, cursorData);
     if (numericData !== 0)
     {
         let errMsg = numericData + " : " +  textData;

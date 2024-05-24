@@ -1,11 +1,13 @@
+// import { workerData } from 'worker_threads';
+// import { executFunction } from './api.service.ts';
+// import { log, error } from '@repo/kwe-lib/components/logHelper';
+
 const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
-const { pgm, type, idx, isHeadless } = workerData;
-const { executFunction } = require('./api.service.ts');
-
+const { executFunction } = require('../api.service/api.service');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
 
-
+const { pgm, type, idx, isHeadless } = workerData;
 let onExcute = false;
 
 async function setIFDataInit() {

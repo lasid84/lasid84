@@ -8,7 +8,7 @@ const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
 const { pgm, type, idx, isHeadless } = workerData;
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
-const { executFunction } = require('./api.service.ts');
+const { executFunction } = require('../lib/api.service.ts');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 
 
@@ -721,7 +721,7 @@ async function startScraping() {
         if (mainData) {
             await setBLIFData(mainData, 'R', '', ex);
         }    
-        error(idx, ": Parent Ex :", ex, mainData.pgm_code, mainData.bl_no);
+        error(idx, ": Parent Ex :", ex, mainData);
         errCnt++;
     } finally {
         onExcute = false;
