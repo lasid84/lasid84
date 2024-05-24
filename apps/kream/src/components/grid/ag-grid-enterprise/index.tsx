@@ -22,6 +22,9 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 const { stringToFullDateString, stringToFullDate, stringToDateString } = require('@repo/kwe-lib/components/dataFormatter.js')
 const { sleep } = require('@repo/kwe-lib/components/sleep');
 
+const ROW_TYPE = '__ROWTYPE';
+const ROW_TYPE_NEW = 'NEW';
+
 type Props = {
     gridRef: any
     loadItem?: any | null
@@ -64,6 +67,7 @@ export type GridOption = {
     alignLeft?: string[],                 //기본 정렬은 가운데
     alignRight?: string[],                //dataType : number면 자동 우측 정렬
     editable?: string[];
+    isEditableOnlyNewRow?: boolean,
     dataType?: {[key: string]: string};   //date, number, text, bizno
     typeOptions?: {[key:string]:{
       // limit?: number;                     //입력 자릿수 제한
@@ -99,7 +103,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
     const { t } = useTranslation();
 
-    const [colDefs, setColDefs] = useState<cols[]>([]);
+    // const [colDefs, setColDefs] = useState<cols[]>([]);
+    const [colDefs, setColDefs] = useState<any[]>([]);
     const [mainData, setMainData] = useState([{}]);
 
     const [gridStyle, setGridStyle] = useState({height: "100%"});
@@ -112,7 +117,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const { event } = props
     
     // const [defaultColDef, setDefaultColDef] = useState({});
-    // log("ListGrid", listItem);
 
     //Column Defualt 설정
     const defaultColDef = useMemo(() => {
@@ -123,7 +127,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         filter: 'agTextColumnFilter',
         floatingFilter: options?.isShowFilter === undefined || options?.isShowFilter ? true : false,      
         headerClass: "text-center",
-        editable:true,
+        editable: true,
         // suppressMenu: true,
         // floatingFilterComponentParams: {suppressFilterButton:!options?.isShowFilterBtn ? true : false },
         suppressFloatingFilterButton: !options?.isShowFilterBtn ? true : false,
@@ -450,8 +454,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onSelectionChanged = (param:SelectionChangedEvent) => {
     const selectedRow = param.api.getSelectedRows()[0]; 
-    log("onSelectionChanged", selectedRow)
-    // return param.api.getSelectedRows()[0];
+    if (options?.isEditableOnlyNewRow) {
+        var copied = [...colDefs];
+        copied.forEach(obj => {
+          if (options.editable?.includes(obj.field)) obj['editable'] = (selectedRow[ROW_TYPE] === ROW_TYPE_NEW);
+        });
+        setColDefs(copied);
+    }
 
     if (event?.onSelectionChanged) event.onSelectionChanged(param);
 
@@ -596,10 +605,12 @@ export const rowAdd = async (gridRef: {api:any}, initData:{} = {}) => {
   // log("===============", data);
   var col = getFirstColumn(gridRef);
   var rowCount = gridRef.api.getRenderedNodes().length;
-
-  // log("onGridRowAdd", gridRef.api.getAllDisplayedColumns());
-
-  await gridRef.api.applyTransaction({add:[initData]});
+  
+  var data = {
+    ...initData,
+    [ROW_TYPE]: ROW_TYPE_NEW
+  }
+  await gridRef.api.applyTransaction({add:[data]});
   gridRef.api.setFocusedCell(rowCount, col);
   gridRef.api.startEditingCell({
       rowIndex: rowCount,
@@ -617,10 +628,16 @@ const numberFormatter = (params: ValueFormatterParams, options:any= null) => {
     const isDecimal = options.isAllowDecimal;
     const decimalLimit = isDecimal ? (options.decimalLimit ? options.decimalLimit : 2) : 0;
     let val = (+params.value).toFixed(decimalLimit);
+
+    if (!val) return;
+
     let formatted = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return `${formatted}`;
   } else {
     let val = params.value;
+
+    if (!val) return;
+    
     log("numberFormatter", val, !isNaN(val), parseFloat(val), +val);
     if (!isNaN(val) && parseFloat(val) - Math.trunc(val) === 0) val = (+val).toFixed(0);
     else val = (+val).toFixed(2);

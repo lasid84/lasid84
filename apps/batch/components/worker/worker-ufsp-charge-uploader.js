@@ -91,11 +91,11 @@ async function startScraping() {
             for (const dataItem of uploadData) {
                 await ufsp.addJsonResult('t_hbl_charge_if', '', '', dataItem, 'addBulk');
                 await ufsp.startScript(script);
-                // await ufsp.setChargeIFData('O', JSON.stringify(ufsp.resultData), '');    
+                await ufsp.setChargeIFData();
             }
 
             log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
-            await ufsp.setBLIFData('O', JSON.stringify(ufsp.resultData), '');
+            await ufsp.setBLIFData('Y', JSON.stringify(ufsp.resultData), '');
             ufsp.errCnt = 0;
             // lastExcute = new Date();
             ufsp.lastExcute = getKoreaTime();

@@ -332,7 +332,7 @@ class Library {
     
             v_tracking = 'get post result complete';
     
-            await this.updateResult(data, result);
+            await this.updateResult(data, bodyText, result);
 
             v_tracking = 'json data parsing complete';
     
@@ -424,7 +424,7 @@ class Library {
         return result;
     };
 
-    async updateResult(data, result) {
+    async updateResult(data, bodyText, result) {
 
         if (!data.out_tab) return;
 
@@ -1043,7 +1043,24 @@ class Library {
     
             const inparam = ['in_pgm_code', 'in_idx', 'in_blno', 'in_create_date', 'in_if_yn','in_result', 'in_err', 'in_user_id', 'in_ipaddr'];
             const invalue = [this.pgm, this.idx, this.mainData.bl_no, this.mainData.create_date, v_if_yn, result, err_msg, '', ''];
-            const inproc = 'scrap.f_scrp0001_set_if_scrap'; 
+            const inproc = 'scrap.f_scrp0001_set_if_data'; 
+            await executFunction(inproc, inparam, invalue);
+            //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
+            
+        } catch (ex) {
+            throw ex;
+        }
+    }
+
+    async setChargeIFData() {
+        try {
+            var uuid = this.resultData.t_hbl_charge_if.uuid;
+            // var remark = this.resultData.warning ? this.resultData.warning : '';
+            var remark = this.resultData.arrCharge; //안정화 이후 위 코드로 사용(warning 값 적용);
+            var record_id = this.resultData.arrCharge[48];
+            const inparam = ['in_uuid', 'in_record_id', 'in_remark', 'in_user_id', 'in_ipaddr'];
+            const invalue = [uuid, record_id, remark, '', ''];
+            const inproc = 'scrap.f_scrp0002_set_if_charge_data'; 
             await executFunction(inproc, inparam, invalue);
             //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
             

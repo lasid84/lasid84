@@ -53,7 +53,7 @@ function initConfig(isAuth: boolean | undefined, token:any) {
 
 export async function executFunction(params:exeFuncParams) {
 
-    // log("executeFunction", params);
+    log("executeFunction", params);
     const session = await getSession();
     const token = await getToken();
     // log("executeFunction", session, token);
@@ -71,7 +71,7 @@ export async function executFunction(params:exeFuncParams) {
         const config = await initConfig(isAuth, token);
         const client = await init(config);
 
-        // log("isShowLoading", isShowLoading);
+        log("isShowLoading", isShowLoading);
         if (isShowLoading) {
             client.interceptors.request.use(requestUseService, requestHasError);
             client.interceptors.response.use((response: any) => responseUseService(response), responseHasError);
@@ -85,7 +85,7 @@ export async function executFunction(params:exeFuncParams) {
         const returnData:returnData = await dataCall(client, inproc,inparam, invalue, config);
         const { cursorData, numericData, textData } = returnData;
 
-        // log("====================================", cursorData);
+        log("====================================", cursorData);
 
         if (numericData !== 0) {
             toastWaring((numericData + " : " + textData))

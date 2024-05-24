@@ -102,7 +102,7 @@ async function startScraping() {
 const mySetInterval = () => {
     setTimeout(() => {
         if (!onExcute) {
-            log(idx, "=================Restart==================")
+            log(ufsp.idx, "=================Restart==================")
             startScraping();
         }
         log("mySetInterval : ", onExcute);
