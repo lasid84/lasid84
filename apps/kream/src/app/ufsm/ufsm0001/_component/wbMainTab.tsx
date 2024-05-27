@@ -70,7 +70,8 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
     }
   }, [mainData])
 
-  const handleOnClickTab = (code: any) => { dis }
+  // const handleOnClickTab = (code: any) => { dis }
+
   return (
     //  <div className="absolute">
     <div className="sticky top-0 z-20 w-full pt-10 space-y-1">

@@ -212,11 +212,11 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         control={control}
                         name={id}
                         rules={rules}
-                        render={({ field: { onChange, onKeyDown } }) => {
+                        render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
                                 <div className={`block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
-                                        ref={ref}
+                                        // ref={ref}
                                         classNamePrefix="my-select"
                                         value={selectedVal}
                                         isMulti={isMulti}
@@ -236,11 +236,11 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         control={control}
                         name={id}
                         rules={rules}
-                        render={({ field: { onChange, onKeyDown } }) => {
+                        render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
                                 <div className={`block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
-                                        ref={ref}
+                                        // ref={ref}
                                         classNamePrefix="my-select"
                                         value={selectedVal}
                                         isMulti={isMulti}

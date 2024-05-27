@@ -2,6 +2,7 @@
 export type PageSearchProps = {
   title?: React.ReactNode;
   children: React.ReactNode;
+  bottom?: React.ReactNode;
   left?: React.ReactNode;
   right?: React.ReactNode;
   addition?: React.ReactNode;

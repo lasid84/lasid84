@@ -21,6 +21,7 @@ export type ButtonProps = {
     icon?: any;
     disabled?: boolean;
     type?: "submit" | "button";
+    size?:any //타입 수정
     //   direction?: "UP" | "DOWN" | "LEFT" | "RIGHT";
     //   refresh?: boolean;
     isHidden?: boolean;

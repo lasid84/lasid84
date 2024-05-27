@@ -8,7 +8,7 @@ export type BadgeProps = {
     size: BadgeSize;
     color: string;
     name?: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
 };
 
 
@@ -32,7 +32,7 @@ export const Badge: React.FC<BadgeProps> = ({
                     size === "sm" && "text-xs px-2 py-0",
                     size === "lg" && "text-xs px-2 py-2",
                 )}>
-                {t(name)}
+                {name ? t(name) : ''}
             </span>
         </div>
     );

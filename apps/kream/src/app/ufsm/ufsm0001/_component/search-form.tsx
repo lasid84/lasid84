@@ -133,7 +133,8 @@ const SearchForm = memo(({ loadItem }: any) => {
           <div className={"col-span-2"}>
             <CustomSelect
               id="cust_code"
-              initText='Select an option'
+              initText="Select a Customer"
+              // label="trans_mode"
               listItem={custcode as gridData}
               valueCol={["cust_code","cust_nm"]}
               displayCol="cust_nm"

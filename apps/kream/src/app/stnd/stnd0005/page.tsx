@@ -1,7 +1,7 @@
 'use client'
 
 import { useReducer, useMemo, useRef } from "react"
-import { SP_Load, SP_GetData } from "./_component/data";
+import { SP_Load } from "./_component/data";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { PageState, reducer } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"

@@ -60,7 +60,7 @@ const WBCharges = memo(({ loadItem, mainData }: any) => {
   const [charges, setChargesDetail] = useState<gridData>({})
   const [houses, setHousesDetail] = useState<gridData>({})
   const [manifests, setManifestsDetail] = useState<gridData>({})
-  const [invoices, setInvoicesDetail] = useState<girdData>({})
+  const [invoices, setInvoicesDetail] = useState<gridData>({})
 
   useEffect(() => {
     if (loadItem?.length) {

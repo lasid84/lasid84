@@ -10,7 +10,7 @@ import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null;
+    loadData: any | null;
 };
 
 const ChargesGrid: React.FC<Props> = memo(({ loadData }) => {
