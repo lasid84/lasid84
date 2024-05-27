@@ -8,6 +8,7 @@ export type BadgeProps = {
     size: BadgeSize;
     color: string;
     name?: string;
+    outlined? : boolean;
     children?: React.ReactNode;
 };
 
