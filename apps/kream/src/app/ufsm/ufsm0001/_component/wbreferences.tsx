@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import PageSearch from "layouts/search-form/page-search-row";
+import {PageContent} from "layouts/search-form/page-search-row";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import GridReferences from "./gridReferences";
@@ -84,19 +84,19 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-        <PageSearch
+        <PageContent
           title={<span className="w-full px-1 py-1 text-blue-500">References</span>}>
           <div className="col-span-6">
             <GridReferences loadData={references} />
           </div>
-        </PageSearch>
+        </PageContent>
 
-        <PageSearch
+        <PageContent
           title={<span className="w-full px-1 py-1 text-blue-500">Milestones</span>}>
           <div className="col-span-6">
             <GridMilestones loadData={milestones} />
           </div>
-        </PageSearch>
+        </PageContent>
       </form>
     </FormProvider>
   );

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { PageContent } from "layouts/search-form/page-search-row";
+import { PageTabContent } from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
@@ -67,7 +67,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
     <div className="sticky top-0 z-20 w-full pt-10 space-y-1 bg-white">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-          <PageContent
+          <PageTabContent
             right={
               <>
                 <div className={"col-span-2"}>
@@ -94,7 +94,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
             <MaskedInputField id="orig_department_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_department_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <div className='col-span-2'><MaskedInputField id="shipper_name" label="controlling_party" lwidth="w-25" height='h-8' value={data?.shipper_name} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
             {/* <MaskedInputField id="dest_city_code" lwidth='w-12' width="w-24" height='h-8' value={data?.dest_city_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />           */}
-          </PageContent>
+          </PageTabContent>
         </form>
       </FormProvider>
     </div>

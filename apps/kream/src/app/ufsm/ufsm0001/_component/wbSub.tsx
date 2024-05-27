@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import PageSearch from "layouts/search-form/page-search-row";
+import { PageContent } from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField } from 'components/input';
@@ -73,7 +73,7 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-        <PageSearch
+        <PageContent
           title={<span className="px-1 py-1 text-blue-500">Terms</span>}>
           <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid">
             <legend className="text-sx">Insurance</legend>
@@ -94,9 +94,9 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
           <MaskedInputField id="export_confirmation_date" value={data?.export_confirmation_date} options={{ isReadOnly: true }} />
           <MaskedInputField id="import_account_status" value={data?.import_account_status} options={{ isReadOnly: true }} />
           <MaskedInputField id="import_confirmation_date" value={data?.import_confirmation_date} options={{ isReadOnly: true }} />
-        </PageSearch>
+        </PageContent>
 
-        <PageSearch
+        <PageContent
           title={<span className="w-full px-1 py-1 text-blue-500">Routing Summary</span>}>
 
           <div className="col-start-1 col-end-2"><MaskedInputField id="port_of_loading" value={data?.port_of_loading} options={{ isReadOnly: true }} /></div>
@@ -115,7 +115,7 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
             <div>Actual Flight Information</div>
             <GridRoute loadData={actualData} />
           </div>
-        </PageSearch>
+        </PageContent>
       </form>
     </FormProvider>
   );

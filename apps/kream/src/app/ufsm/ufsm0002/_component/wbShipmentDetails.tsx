@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import PageSearch from "layouts/search-form/page-search-row";
+import {PageContent} from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
@@ -76,7 +76,7 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form className="w-full space-y-1">
-        <PageSearch
+        <PageContent
           title={<span className="w-full px-1 py-1 text-blue-500">Shipment Details & Freight</span>}>
           <div className="flex w-full col-span-6">
             <ShipmentDetailGrid loadData={shipmentDetail} />
@@ -94,9 +94,9 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
             <MaskedInputField id="chargeable_weight" value={data?.chargeable_weight} options={{ isReadOnly: true }} width="w-36" />
             <MaskedInputField id="chargeable_weight_uom_code" value={data?.chargeable_weight_uom_code} options={{ isReadOnly: true }} width="w-12" />
           </fieldset>
-        </PageSearch>
+        </PageContent>
 
-        <PageSearch
+        <PageContent
           title={<span className="w-full px-1 py-1 text-blue-500">Freight Charge</span>}>
           <div className="col-span-6">
             <GridFCharges loadData={freightCharge} />
@@ -104,7 +104,7 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
           <div className="flex w-full col-span-1">
 
           </div>
-        </PageSearch>
+        </PageContent>
       </form>
     </FormProvider>
   );

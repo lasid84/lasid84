@@ -6,7 +6,7 @@ import { SlMagnifierAdd } from "react-icons/sl";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch from "layouts/search-form/page-search-row";
+import {PageContent} from "layouts/search-form/page-search-row";
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
@@ -74,7 +74,7 @@ const WBShipmentText = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form className="w-full space-y-1">
-        <PageSearch
+        <PageContent
           title={<span className="flex px-1 py-1 text-blue-500">Shipment Text</span>}>
           <div className="col-start-1 col-end-2 "><TextArea id="accounting_info" rows={6} cols={32}  value={data?.accounting_info} options={{ isReadOnly: true }} /></div>
           <div className="col-start-2 col-end-3 "><TextArea id="body_text" rows={6} cols={32}  value={data?.body_text} options={{ isReadOnly: true }} /></div>
@@ -83,7 +83,7 @@ const WBShipmentText = memo(({ loadItem, mainData }: any) => {
           <div className="col-start-1 col-end-2 "><TextArea id="marks_numbers" rows={6} cols={32}  value={data?.marks_numbers} options={{ isReadOnly: true }} /></div>
           <div className="col-start-2 col-end-3 "><TextArea id="other_charges_info"  rows={6} cols={32} value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
           <div className="col-start-3 col-end-4 "><TextArea id="other_charges_info" rows={6} cols={32} value={data?.other_charges_info} options={{ isReadOnly: true }} /></div>
-        </PageSearch>
+        </PageContent>
       </form>
     </FormProvider>
   );

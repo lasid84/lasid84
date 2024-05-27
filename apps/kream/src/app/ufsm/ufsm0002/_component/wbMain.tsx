@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch from "layouts/search-form/page-search-row";
+import {PageContent} from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
@@ -69,7 +69,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-        <PageSearch
+        <PageContent
           title={<span className="px-1 py-1 text-blue-500">Generals</span>}>
           <MaskedInputField id="mwb_type" value={data?.mwb_type} options={{ isReadOnly: true }} />
           <MaskedInputField id="bol_type" value={data?.bol_type} options={{ isReadOnly: true }} />
@@ -96,13 +96,13 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           <MaskedInputField id="port_dest" value={data?.port_dest} options={{ isReadOnly: true }} />
           <MaskedInputField id="booking_num" value={data?.booking_num} options={{ isReadOnly: true }} />
           
-        </PageSearch>
+        </PageContent>
 
 
         
         <div className="flex flex-row w-full">
           <div className="flex w-1/2">
-            <PageSearch
+            <PageContent
               title={<span className="px-1 py-1 text-blue-500">Shipper</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="shipper_id" value={data?.shipper_id} options={{ isReadOnly: true }} />
@@ -118,11 +118,11 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               <div className={"col-span-2"}>
                 <MaskedInputField id="export_salesman_id" value={data?.export_salesman_id} options={{ isReadOnly: true }} />
               </div>
-            </PageSearch>
+            </PageContent>
           </div>
 
           <div className="flex w-1/2">
-            <PageSearch
+            <PageContent
               title={<span className="px-1 py-1 text-blue-500">Consignee</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="cnee_id" value={data?.cnee_id} options={{ isReadOnly: true }} />
@@ -139,13 +139,13 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
               <div className={"col-span-2"}>
                 <MaskedInputField id="import_salesman_id" value={data?.import_salesman_id} options={{ isReadOnly: true }} />
               </div>
-            </PageSearch>
+            </PageContent>
           </div>
         </div>
 
         <div className="flex flex-row w-full">
           <div className="flex w-1/2">
-            <PageSearch title={<span className="px-1 py-1 text-blue-500">Notify</span>}>
+            <PageContent title={<span className="px-1 py-1 text-blue-500">Notify</span>}>
               <div className={"col-span-2"}>
                 <MaskedInputField id="notify_id" value={data?.notify_id} options={{ isReadOnly: true }} />
               </div>
@@ -159,7 +159,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
                 <MaskedInputField id="notify_contact_no" value={data?.notify_contact_no} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-2"}><span className="ml-auto"></span></div>
-            </PageSearch>
+            </PageContent>
           </div>        
         </div>
       </form>

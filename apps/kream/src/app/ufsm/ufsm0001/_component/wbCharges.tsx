@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import PageSearch from "layouts/search-form/page-search-row";
+import {PageContent} from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { useAppContext } from "components/provider/contextObjectProvider";
@@ -89,19 +89,19 @@ const WBCharges = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-        <PageSearch
+        <PageContent
           title={<span className="w-full px-1 py-1 text-blue-500">Charges</span>}>
           <div className="col-span-6">
           <GridCharges loadData={charges} />
           </div>
-        </PageSearch>
+        </PageContent>
 
-        <PageSearch
+        <PageContent
           title={<span className="w-full px-1 py-1 text-blue-500">Invoices</span>}>
           <div className="col-span-6">
           <GridInvoices loadData={invoices} />
           </div>
-        </PageSearch>
+        </PageContent>
 
       </form>
     </FormProvider>
