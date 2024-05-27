@@ -93,11 +93,11 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
             }
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
           >
-            <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={data?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
-            <MaskedInputField id="pipeline_tx_id" lwidth='w-12' width="w-32" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <div className='col-span-2'><MaskedInputField id="waybill_no" lwidth='w-24' width="w-36" height='h-8' value={data?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
             <MaskedInputField id="trans_mode" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_mode} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="trans_type" lwidth='w-12' width="w-24" height='h-8' value={data?.trans_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-            <MaskedInputField id="last_interfaced" lwidth='w-20' width="w-44" height='h-8' value={data?.last_interfaced} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'time' }} />
+            <MaskedInputField id="pipeline_tx_id" lwidth='w-18' width="w-32" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <MaskedInputField id="last_interfaced" lwidth='w-24' width="w-36" height='h-8' value={data?.last_interfaced} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'time' }} />
             <MaskedInputField id="orig_terminal_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_terminal_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="orig_department_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_department_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <div className='col-span-2'><MaskedInputField id="shipper_name" label="controlling_party" lwidth="w-25" height='h-8' value={data?.shipper_name} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>

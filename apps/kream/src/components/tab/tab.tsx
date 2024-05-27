@@ -29,12 +29,12 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (loadItem?.length) {
             settabList(loadItem[14].data)
-            console.log('tabStatessadafdfas',loadItem[14].data)
+            console.log('tabState',loadItem[14].data)
         }
     }, [loadItem?.length])
 
     useEffect(() => {
-        console.log('tabStatessadafdfas',selectedTab)
+        console.log('tabState_selectedTab',selectedTab)
         selectedTab && onClickTab(selectedTab);
     }, [selectedTab]);
 

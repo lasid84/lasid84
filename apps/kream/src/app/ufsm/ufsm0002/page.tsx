@@ -43,8 +43,8 @@ export default function UFSM0002() {
     const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab, isFirstRender } = objState;
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
-    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60, enabled: true });
-    const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
+    const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const { data: mainData, refetch: mainRefetch } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false });
 
     const handleOnClickTab = (code: any) => { setselectedTab(code) }
     const MhandleOnClickTab = (code: any) => {
@@ -67,6 +67,15 @@ export default function UFSM0002() {
         }
     }, [objState?.isMSearch]);
 
+    useEffect(() => {
+        if (objState.isMDSearch) {
+            mainRefetch();
+            log("main MDSearch", objState.isMDSearch);
+            dispatch({ isMDSearch: false });
+        }
+    }, [objState?.isMDSearch]);
+
+
 
     useEffect(() => {
         if (initData) {
@@ -84,7 +93,7 @@ export default function UFSM0002() {
                 <MasterGrid initData={initData} />
             </div> : <>
                 {/* WayBill Detail 화면 상단{Tab} */}
-                <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab}/>
+                <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
                 {/* <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} /> */}
 
                 {/* WayBill Detail 화면 하단(Sub) */}
