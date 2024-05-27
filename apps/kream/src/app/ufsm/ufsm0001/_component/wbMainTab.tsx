@@ -70,7 +70,8 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
     }
   }, [mainData])
 
-  const handleOnClickTab = (code: any) => { dis }
+  // const handleOnClickTab = (code: any) => { dis }
+
   return (
     //  <div className="absolute">
     <div className="sticky top-0 z-20 w-full pt-10 space-y-1">
@@ -80,7 +81,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
             right={
               <>
                 <div className={"col-span-2"}>
-                  <Badge size={"md"} name={data?.status} color="border-sky-500 text-sky-500" rounded outlined />
+                  <Badge size={"md"} name={data?.status} color="border-sky-500 text-sky-500 rounded outlined" />
                   <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
                 <div className={"col-span-1"}>

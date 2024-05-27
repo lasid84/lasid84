@@ -145,6 +145,7 @@ const SearchForm = memo(({ loadItem }: any) => {
             <CustomSelect
               id="cust_code"
               // label="trans_mode"
+              initText="Select a Customer"
               listItem={custcode as gridData}
               valueCol={["cust_nm"]}
               displayCol="cust_nm"
