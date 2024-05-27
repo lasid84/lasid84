@@ -43,24 +43,20 @@ const GridCharges: React.FC<Props> = memo(({ loadData }) => {
         isEditableOnlyNewRow: true,
     };
 
-    const onSave = () => {        
-        log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
-        const modifiedRows:any = [];
+    const onSave = () => {
+        var hasData = false; 
         gridRef.current.api.forEachNode((node:any) => {
-            var data = {...node.data};
-            // gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
-            if (data.__changed) {
-            //   if (data.cust_code && data.cont_seq) { //수정
-            //     Update.mutate(data);
-            //   } else { //신규
-                // Create.mutate(data);
-            //   }
-                // log("onSave - ", data, objState);
+            var data = node.data;
+            if (data['__changed']) {
+                log("onSave - ", data, objState);
                 Create.mutate(data);
+                // node.setDataValue('__changed', false);
+                data['__changed'] = false;
+                hasData = true;
             }
           });
         // log("onSave", gridRef.current.api, modifiedRows);
-        toastSuccess('Success.');
+        if (hasData) toastSuccess('Success.');
 
     };
 
@@ -69,7 +65,7 @@ const GridCharges: React.FC<Props> = memo(({ loadData }) => {
             <PageSearch
                 right={
                 <>
-                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {'waybill_no': objState.mSelectedRow.waybill_no, 'type': 'I'})} />
+                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {'waybill_no': objState.MselectedTab, 'type': 'I'})} />
                 <Button id={"save"} onClick={onSave} />
                 </>
             }>

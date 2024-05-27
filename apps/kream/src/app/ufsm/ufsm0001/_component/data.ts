@@ -138,7 +138,7 @@ export const SP_InsertCharge = async (param: any) => {
     , user_id
     , ipaddr
     ],
-    inproc: 'ufsm.f_ufsm0002_ins_charge_upload_data',
+    inproc: 'ufsm.f_ufsm0001_ins_charge_upload_data',
     isShowLoading: true,
     isShowComplete:false,
     }

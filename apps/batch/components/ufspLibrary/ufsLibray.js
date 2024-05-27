@@ -1057,7 +1057,7 @@ class Library {
             var uuid = this.resultData.t_hbl_charge_if.uuid;
             // var remark = this.resultData.warning ? this.resultData.warning : '';
             var remark = this.resultData.arrCharge; //안정화 이후 위 코드로 사용(warning 값 적용);
-            var record_id = this.resultData.arrCharge[48];
+            var record_id = this.resultData.arrCharge[25];
             const inparam = ['in_uuid', 'in_record_id', 'in_remark', 'in_user_id', 'in_ipaddr'];
             const invalue = [uuid, record_id, remark, '', ''];
             const inproc = 'scrap.f_scrp0002_set_if_charge_data'; 
