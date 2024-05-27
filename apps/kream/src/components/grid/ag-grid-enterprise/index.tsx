@@ -183,7 +183,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
             return suggestedNextCell;
           },
           onComponentStateChanged: () => {
-              log("onComponentStateChanged", gridRef.current.api.getRowNode(mainData.length - 1), mainData.length);
+              //log("onComponentStateChanged", gridRef.current.api.getRowNode(mainData.length - 1), mainData.length);
               
               if (options?.isSelectRowAfterRender) {
                 if (gridRef.current.api.getSelectedNodes().length > 0) return;
@@ -191,7 +191,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
                   if (i === 0) {
                       node.setSelected(true);
-                      log("onComponentStateChanged selected", node)
+                      //log("onComponentStateChanged selected", node)
                   }
                 });
               };
@@ -483,7 +483,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onRowDataUpdated = (param: RowDataUpdatedEvent) => {
     // updateRowCount('rowDataUpdated');
-    log('onRowDataUpdated', param);
+    //log('onRowDataUpdated', param);
 
     if (event?.onRowDataUpdated) event.onRowDataUpdated(param);
     

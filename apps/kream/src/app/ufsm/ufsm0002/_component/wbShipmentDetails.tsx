@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import {PageContent} from "layouts/search-form/page-search-row";
+import { PageContent } from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
@@ -69,7 +69,7 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
       setData((mainData?.[0] as gridData).data[0]);
       setShipmentDetail(mainData?.[3] as gridData)
       setFreightCharge(mainData?.[4] as gridData)
-    }    
+    }
   }, [mainData])
 
 

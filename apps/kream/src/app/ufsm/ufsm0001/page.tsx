@@ -41,12 +41,12 @@ export default function UFSM0001() {
     const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, selectedTab, MselectedTab, isFirstRender } = objState;
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, isFirstRender, dispatch } }, [state]);
-    const { data: initData } = useGetData(objState?.searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60, });
-    const { data: mainData } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: true });
+    const { data: initData } = useGetData(objState?.searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const { data: mainData, refetch: mainRefetch } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false });
 
     const handleOnClickTab = (code: any) => { dispatch({ selectedTab: code }) }
     const MhandleOnClickTab = (code: any) => {
-        // console.log('search-form MhandleOnClickTab', code.target.id)
+        console.log('MhandleOnClickTab', code.target.id)
         if (code.target.id == 'Main') { dispatch({ MselectedTab: code.target.id }) }
         else { dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } }) }
     }
@@ -62,6 +62,15 @@ export default function UFSM0001() {
             // dispatch({isMSearch:false});
         }
     }, [objState?.isMSearch]);
+
+
+    useEffect(() => {
+        if (objState.isMDSearch) {
+            mainRefetch();
+            log("main MDSearch", objState.isMDSearch);
+            dispatch({ isMDSearch: false });
+        }
+    }, [objState?.isMDSearch]);
 
 
     useEffect(() => {

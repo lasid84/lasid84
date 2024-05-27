@@ -56,7 +56,6 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     useEffect(() => {
         if (objState.isMSearch) {
             mainRefetch();
-            mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
         }
@@ -64,10 +63,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     useEffect(() => {
         if (objState.isMDSearch) {
-            //mainRefetch();
-            //log("maindetailisSearch", objState.isMDSearch);
             dispatch({ isMDSearch: false });
-            //log("mSelectedDetail", objState.mSelectedDetail)
         }
     }, [objState?.isMDSearch]);
 
