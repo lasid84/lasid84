@@ -39,7 +39,7 @@ type Props = {
 
 const SearchForm = memo(({ loadItem }: any) => {
   const { dispatch, objState } = useAppContext();
-  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code } = objState.searchParams;
+  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code, cust_nm } = objState.searchParams;
 
   //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
@@ -52,7 +52,7 @@ const SearchForm = memo(({ loadItem }: any) => {
       fr_date: fr_date || dayjs().subtract(5, 'month').startOf('month').format("YYYYMMDD"),
       to_date: to_date || dayjs().subtract(1, 'month').endOf('month').format("YYYYMMDD"),
       wb_no: wb_no || '',
-      cust_code: cust_code || ''
+      cust_code: cust_code || '',
     }
   });
 
@@ -133,7 +133,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           <div className={"col-span-2"}>
             <CustomSelect
               id="cust_code"
-              // label="trans_mode"
+              initText='Select an option'
               listItem={custcode as gridData}
               valueCol={["cust_code","cust_nm"]}
               displayCol="cust_nm"
@@ -145,6 +145,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               inline={true}
             />
             <MaskedInputField id="wb_no" label="hwb_no" value={objState.searchParams?.wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="cust_nm" value={objState.searchParams?.cust_nm} options={{ textAlign: 'center', inline: true, noLabel: false, outerClassName:'hidden' }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>

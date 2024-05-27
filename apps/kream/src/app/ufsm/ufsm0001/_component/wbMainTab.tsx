@@ -79,14 +79,12 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
           <PageTabContent
             right={
               <>
-                <div className={"col-span-2"}>
+                <div className={"flex col-span-2 "}>
                   <Badge size={"md"} name={data?.status} color="border-sky-500 text-sky-500" rounded outlined />
-                  <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
-                <div className={"col-span-1"}>
+                <div className={"flex col-span-2"}>
                   <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
-                </div>
-                <div className={"col-span-1"}>
+                  <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
                   <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
               </>

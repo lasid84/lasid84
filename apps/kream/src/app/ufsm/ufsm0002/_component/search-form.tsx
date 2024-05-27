@@ -146,6 +146,7 @@ const SearchForm = ({ loadItem }: any) => {
               inline={true}
             />
             <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            <MaskedInputField id="cust_nm" value={objState.searchParams?.cust_nm} options={{ textAlign: 'center', inline: true, noLabel: false, outerClassName:'hidden' }} height='h-8' />
           </div>
         </PageSearchButton>
       </form>

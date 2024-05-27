@@ -54,7 +54,7 @@ function CustomSelect(props: Props) {
     zIndex: 99,
     ...gridStyle
   }
-  console.log('check props',props)
+
   //let initText = 'Select an option';
   const [displayText, setDisplayText] = useState(initText);
   
@@ -90,15 +90,19 @@ function CustomSelect(props: Props) {
     //     }
     //   })
     // }
-    console.log('?test', getValues('cust_code'))
+
     if (isSelectRowAfterRender && listItem?.data) {
       if (displayText === initText) {
         var row = listItem.data[0];
         var val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
-        log("==================", row, val, displayCol, row[0], displayText, initText);
+        log("customSelect==================", row, val, displayCol, row[0], displayText, initText);
         setDisplayText(val);
         setSelectedValue(row)
       };
+    }
+    if(getValues('cust_nm')){
+      console.log('?test?')
+      setDisplayText(getValues('cust_nm'))
     }
   }, [listItem])
 
