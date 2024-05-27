@@ -122,7 +122,7 @@
       @apply truncate;
       > .left-sidebar-item {
         > .title {
-          @apply visible opacity-100 font-bold;
+          @apply visible font-bold opacity-100;
         }
       }
     }
@@ -132,7 +132,7 @@
       @apply truncate;
       > .left-sidebar-item {
         > .title {
-          @apply visible opacity-100 font-bold;
+          @apply visible font-bold opacity-100;
         }
       }
     }
@@ -244,7 +244,7 @@
           }
         }
         > ul {
-          @apply absolute top-0 z-10 invisible w-48 shadow-lg opacity-0 pointer-events-none;
+          @apply absolute top-0 z-40 invisible w-48 shadow-lg opacity-0 pointer-events-none;
           left: 100%;
         }
         &:hover {
