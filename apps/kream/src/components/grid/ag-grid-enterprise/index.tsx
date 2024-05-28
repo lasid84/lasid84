@@ -31,6 +31,7 @@ type Props = {
     listItem?: gridData
     options?: GridOption
     event?: GridEvent
+    refRow ?: any
 }
 
 export type gridData = {
@@ -108,7 +109,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const [mainData, setMainData] = useState([{}]);
 
     const [gridStyle, setGridStyle] = useState({height: "100%"});
-    const { listItem, options } = props;
+    const { listItem, options, refRow } = props;
 
     const containerStyle = useMemo(() => "flex-col w-full", []);
     // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
@@ -196,6 +197,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 });
               };
 
+               if (refRow) {
+               gridRef.current.api.ensureIndexVisible(refRow,'middle');
+               log('refRow__2',refRow)
+               }
               // if () {
               //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
               // }

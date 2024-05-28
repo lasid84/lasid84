@@ -29,8 +29,10 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         colVisible: { col: ["pipeline_tx_id", "mwb_status", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "75vh",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
-        dataType: { "executed_on_date": "date", "accounting_date": "date", "imp_actg_intrfc_status_date": "date", "create_date": "date", 
-        "volume":"number","gross_weight":"number","volume_weight":"number","chargeable_weight":"number", },
+        dataType: {
+            "executed_on_date": "date", "accounting_date": "date", "imp_actg_intrfc_status_date": "date", "create_date": "date",
+            "volume": "number", "gross_weight": "number", "volume_weight": "number", "chargeable_weight": "number",
+        },
         isAutoFitColData: true,
     };
 
@@ -53,6 +55,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
         log("handleSelectionChanged", selectedRow)
+        console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
+        dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     };
 
     useEffect(() => {
@@ -66,6 +70,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     return (
         <Grid
+            refRow={objState.refRow}
             gridRef={gridRef}
             loadItem={initData}
             listItem={mainData as gridData}
