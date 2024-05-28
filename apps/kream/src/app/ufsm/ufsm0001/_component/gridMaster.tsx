@@ -29,6 +29,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
         dataType: { "execution_date": "date", "ic_dc_consol_date": "date", "eta_date": "date", "total_volume":'number',"total_actual_weight":'number',"total_volume_weight":'number','total_chargeable_weight':'number' },
         isAutoFitColData: true,
+        refRow : objState.refRow
     };
 
 
@@ -51,6 +52,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0]
         log("handleSelectionChanged", selectedRow)
+        dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     }
 
     useEffect(() => {

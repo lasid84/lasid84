@@ -71,7 +71,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     return (
         <Grid
-            refRow={objState.refRow}
             gridRef={gridRef}
             loadItem={initData}
             listItem={mainData as gridData}

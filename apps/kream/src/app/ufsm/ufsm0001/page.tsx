@@ -34,7 +34,8 @@ export default function UFSM0001() {
             tab1: [],
             MselectedTab: 'Main',
             isFirstRender: true,
-            selectedTab: "NM"
+            selectedTab: "NM",
+            refRow : 0
         }
     });
     const { objState } = state;
