@@ -34,6 +34,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             "volume": "number", "gross_weight": "number", "volume_weight": "number", "chargeable_weight": "number",
         },
         isAutoFitColData: true,
+        refRow : objState.refRow
     };
 
 

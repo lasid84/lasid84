@@ -31,29 +31,28 @@ type Props = {
     listItem?: gridData
     options?: GridOption
     event?: GridEvent
-    refRow ?: any
-}
-
-export type gridData = {
+  }
+  
+  export type gridData = {
     data? : any | null,
     fields? : any | null
-}
-
-type GridEvent = {
-  onRowClicked?: (params: RowClickedEvent) => void;
-  onSelectionChanged?: (params:SelectionChangedEvent) => void;
-  onCellValueChanged?: (params: CellValueChangedEvent) => void;
-  onCutStart?: (params: CutStartEvent) => void;
-  onCutEnd?: (params: CutEndEvent) => void;
-  onPasteStart?: (params: PasteStartEvent) => void;
-  onPasteEnd?: (params: PasteEndEvent) => void;
-  onColumnResized?: (params: ColumnResizedEvent) => void;
-  onGridReady?: (params: GridReadyEvent) => void;
-  onRowDataUpdated?: (params: RowDataUpdatedEvent) => void;
-  onFirstDataRendered?: (params: FirstDataRenderedEvent) => void
-}
-
-export type GridOption = {
+  }
+  
+  type GridEvent = {
+    onRowClicked?: (params: RowClickedEvent) => void;
+    onSelectionChanged?: (params:SelectionChangedEvent) => void;
+    onCellValueChanged?: (params: CellValueChangedEvent) => void;
+    onCutStart?: (params: CutStartEvent) => void;
+    onCutEnd?: (params: CutEndEvent) => void;
+    onPasteStart?: (params: PasteStartEvent) => void;
+    onPasteEnd?: (params: PasteEndEvent) => void;
+    onColumnResized?: (params: ColumnResizedEvent) => void;
+    onGridReady?: (params: GridReadyEvent) => void;
+    onRowDataUpdated?: (params: RowDataUpdatedEvent) => void;
+    onFirstDataRendered?: (params: FirstDataRenderedEvent) => void
+  }
+  
+  export type GridOption = {
     checkbox?: string[];
     select?: any;
     colVisible?: {
@@ -76,6 +75,7 @@ export type GridOption = {
       decimalLimit?: number               //소수점 자리수
     }}
     
+    refRow ?: boolean                     //scroll ref number
     isShowFilter?: boolean
     isShowFilterBtn?:boolean
     isMultiSelect?: boolean
@@ -109,7 +109,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const [mainData, setMainData] = useState([{}]);
 
     const [gridStyle, setGridStyle] = useState({height: "100%"});
-    const { listItem, options, refRow } = props;
+    const { listItem, options } = props;
 
     const containerStyle = useMemo(() => "flex-col w-full", []);
     // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
@@ -197,9 +197,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 });
               };
 
-               if (refRow) {
-               gridRef.current.api.ensureIndexVisible(refRow,'middle');
-               log('refRow__2',refRow)
+               if (options?.refRow) {
+               gridRef.current.api.ensureIndexVisible(options.refRow,'middle');
+               log('refRow__2',options.refRow)
                }
               // if () {
               //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
