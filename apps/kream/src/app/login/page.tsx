@@ -1,7 +1,30 @@
+'use client'
+
 import LoginForm from "@/app/login/_components/login-form";
 import AuthSession from "@/components/provider/AuthProvider";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { log } from '@repo/kwe-lib/components/logHelper';
 
 export default function Login() {
+
+  const router = useRouter();
+  const [isReady, setReady] = useState(false);
+  var session;
+  useEffect(() => {
+    const sessionCheck = async () => {
+      session = await getSession();
+      if (session) router.replace('/dashboard');
+      setReady(true);
+    };
+    
+    sessionCheck();
+  }, []);
+
+  if (!isReady) return <></>
+
   return (
     <>
       <div className="w-full xl:grid xl:grid-cols-3">

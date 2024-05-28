@@ -3,7 +3,7 @@
 const axios = require("axios");
 const {AxiosResponse} = require("axios");
 const ini = require("ini");
-const { log } = require('./logHelper');
+const { log, error } = require('./logHelper');
 //const serverUrl = 'http://10.33.63.50:5005';
  const serverUrl = 'http://10.33.63.171:5000';
 
@@ -40,11 +40,11 @@ async function dataCall(client, inproc, inparam, invalue, config) {
       cursorData: cursorData
     }
     
-  } catch (error) {
-    console.error('api.service-Error fetching data:', error.message);
+  } catch (ex) {
+    error('api.service-Error fetching data:', ex.message);
     return {
       numericData: -1,
-      textData: error.message,
+      textData: ex.message,
       cursorData: null
     }
   };
@@ -120,8 +120,13 @@ async function executFunction(inproc, inparam, invalue) {
 
     return cursorData;
     
-  } catch (error) {
-    console.error('api.service-Error fetching data:', error);
+  } catch (ex) {
+    error('api.service-Error fetching data:', ex);
+    return {
+      numericData: -1,
+      textData: ex.message,
+      cursorData: null
+    }
   };
 };
 
