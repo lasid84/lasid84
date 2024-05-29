@@ -84,6 +84,7 @@ export const createServer = (): Express => {
       }
     })
     .post('/login', async (req, res) =>  {
+      try {
       log(req.body);
       const { user_id, password } = req.body;
 
@@ -120,7 +121,9 @@ export const createServer = (): Express => {
           res.json({ success:false, message: 'Authentication failed - ' + err, token:'', userData:'' })
         }
       })
-    })
+    } catch (ex) {
+      error("/login", ex.message);
+    }})
     .on('uncaughtException', function (err) {
       error('An error occurred: ', err);
     })

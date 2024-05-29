@@ -38,6 +38,7 @@ async function checkAccount(user_id, password, callback) {
 
       const client = ldap.createClient({
           url: ldapServerUrl, // LDAP 서버 주소와 포트
+          connectTimeout:5000
         });
       
       client.bind(`${user_id}@kwekr.local`, password, (err) => {
@@ -102,9 +103,10 @@ async function checkAccount(user_id, password, callback) {
               }
               });
           }
-        });
+        })
+        ;
       } catch (ex) {
-        error(ex);
+        error("1. ", ex);
       }
 };
 
