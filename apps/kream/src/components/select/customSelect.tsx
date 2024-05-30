@@ -187,9 +187,9 @@ function CustomSelect(props: Props) {
         <div className='close'
             style={{
               position: 'absolute',
-              // top: '50%',
-              // right: '30px',
-              // transform: 'translateY(-50%)',
+              top: '50%',
+              right: '30px',
+              transform: 'translateY(-50%)',
               cursor: 'pointer',
             }}
             onClick={handleonClick}

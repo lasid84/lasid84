@@ -61,7 +61,7 @@ const LogoImg: React.FC = () => {
             <img className={"collapsed"} src={`/logos/kwe_logo_bright_collapsed.png`} alt={""} />
           </div>
           <div className="flex flex-row items-center justify-center hidden dark:block">
-            <img className={"expanded"} src={`/logos/1-gary-900.png`} alt={""} />
+            <img className={"expanded"} src={`/logos/1-gray-900.png`} alt={""} />
             <img className={"collapsed"} src={`/logos/kwe_logo_dark_collapsed.png`} alt={""} />
           </div>
         </Link>
