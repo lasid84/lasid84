@@ -64,6 +64,7 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
           disabled={isCircle}
           className={clsx(`form-input block ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
         focus:border-blue-500 focus:ring-0 text-${fontSize} text-${textAlign} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
+        dark:text-white dark:border-gray-800 dark:bg-gray-900
         ${freeStyles}
         `)}
           onKeyDown={handleKeyDown}
