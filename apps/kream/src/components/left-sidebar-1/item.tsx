@@ -32,7 +32,7 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
         pathname: url,
         query: { ...query }
         }} 
-        className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
+        className={`left-sidebar-item ${active ? "active" : ""} dark:bg-gray-900 dark:text-white dark:border-gray-800`}>
           {icon}
           <span className="w-full title">{t(title)}</span>
           {badge && (

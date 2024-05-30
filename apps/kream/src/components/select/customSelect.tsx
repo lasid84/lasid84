@@ -6,6 +6,8 @@ import { IRowNode, RowClickedEvent } from 'ag-grid-community';
 import { useTranslation } from 'react-i18next';
 import { useFormContext } from 'react-hook-form';
 import { Label } from 'components/label';
+import './custom-select-style.css';
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -153,20 +155,19 @@ function CustomSelect(props: Props) {
     <>
       <div
         {...register(id)}
-        className="py-0.5 flex items-center space-x-2 justify-items-start custom-select-container"
+        className="py-0.5 flex items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700"
         style={{ position: 'relative' }}
       >
         <Label id={id} name={label} />
-        {/* {label? t(label) : t(id)} */}
+
         <div ref={ref}
-          className={`custom-select ${isOpen ? 'active' : ''}`}
+          className={`custom-select-container ${isOpen ? 'active' : ''}`}
           onClick={toggleOptions}
           style={{
             width: defaultStyle.width,
             height: "30px",
             position: 'relative',
             cursor: 'pointer',
-            backgroundColor: '#fff',
             border: '1px solid #ccc'
           }}
         >{displayText}
@@ -186,9 +187,9 @@ function CustomSelect(props: Props) {
         <div className='close'
             style={{
               position: 'absolute',
-              top: '50%',
-              right: '30px',
-              transform: 'translateY(-50%)',
+              // top: '50%',
+              // right: '30px',
+              // transform: 'translateY(-50%)',
               cursor: 'pointer',
             }}
             onClick={handleonClick}

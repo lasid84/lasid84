@@ -5,6 +5,7 @@ import { InputActionMeta, default as ReactSelectComponent } from "react-select";
 import { InputWrapper } from "components/wrapper"
 import { Label } from "components/label"
 import clsx from 'clsx';
+import './custom-select-style.css';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -214,10 +215,10 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         rules={rules}
                         render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
-                                <div className={`block ${defWidth} flex-grow-1`}>
+                                <div className={`my-react-select-container block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
-                                        classNamePrefix="my-select"
+                                        classNamePrefix="my-react-select"
                                         value={selectedVal}
                                         isMulti={isMulti}
                                         options={list}
@@ -238,10 +239,10 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         rules={rules}
                         render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
-                                <div className={`block ${defWidth} flex-grow-1`}>
+                                <div className={`my-react-select-container block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
-                                        classNamePrefix="my-select"
+                                        classNamePrefix="my-react-select"
                                         value={selectedVal}
                                         isMulti={isMulti}
                                         options={list}

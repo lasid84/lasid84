@@ -39,7 +39,7 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
     }, [selectedTab]);
 
     return (
-        <div className="flex flex-row justify-center overflow-x-auto">
+        <div className="flex flex-row justify-center overflow-x-auto dark:bg-gray-900 dark:text-white dark:border-gray-800">
             {tabList?.map(({ cd, cd_nm }, idx) => (
                 <div key={idx} className="flex flex-row bg-transparent w-34 min-w-32">
                     <button
@@ -64,7 +64,7 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
 export function WBMenuTab({ tabList, onClickTab, onClickICON, MselectedTab }: Props) {
     const { t } = useTranslation();
     return (
-        <div className="fixed z-30 flex w-full bg-white">
+        <div className="fixed z-30 flex w-full bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800">
             <div className="flex">
                 {tabList?.map(({ cd, cd_nm }, idx) => (
                     <div key={idx} className="flex flex-row p-1 bg-transparent ">

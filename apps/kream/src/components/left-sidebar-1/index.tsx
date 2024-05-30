@@ -22,18 +22,18 @@ const LeftSidebar: React.FC<Props> = memo(() => {
     }, []);
 
     return (
-        <div className="text-gray-900 h-screen bg-white left-sidebar left-sidebar-1 dark:bg-[#1f2937] dark:border-gray-800 dark:text-black w-[230px]">
+        <div className="text-gray-900 h-screen bg-white left-sidebar left-sidebar-1 dark:bg-gray-900 dark:text-white dark:border-gray-800 w-[230px]">
           <LogoImg />
-          <div className="left-sidebar-body h-[calc(100vh-60px)] dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">
+          <div className="left-sidebar-body h-[calc(100vh-60px)] border-r dark:bg-gray-900 dark:text-white dark:border-gray-800">
             {/*<div className="dark:bg-[#dce2eb] border-r dark:border-[#c7d0dc]">*/}
             {navigation && navigation.map((menu, i) => (
               <Fragment key={i}>
                 {/* <Title>{menu.title}</Title> */}
                 <ul>
                   {menu.items.map((l0, a) => (
-                    <li key={a} className="l0 border-b border-[#F2F2F2] dark:border-[#c7d0dc]">
+                    <li key={a} className="l0 border-b border-[#F2F2F2] dark:bg-gray-900 dark:text-white dark:border-gray-800">
                       <Item {...l0} />
-                      <ul className="bg-[#FAFAFA] dark:bg-[#e9eef5] border-l-4 border-l-[#005EB8] w-[230px]">
+                      <ul className="bg-[#FAFAFA] dark:bg-gray-900 dark:text-white dark:border-gray-800 border-l-4 border-l-[#005EB8] w-[230px]">
                         {l0.items.map((l1, b) => (
                           <li key={b} className="l1">
                             <Item {...l1} />

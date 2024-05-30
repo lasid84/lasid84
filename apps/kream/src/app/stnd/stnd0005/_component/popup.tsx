@@ -10,7 +10,7 @@ import { Button } from "components/button";
 import { useAppContext, SEARCH_M, crudType } from "components/provider/contextObjectProvider"
 import { SP_UpdateData, SP_InsertData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
-import { ReactSelect } from "components/select/react-select"
+import { ReactSelect, data } from "@/components/select/react-select2"
 import { MaskedInputField } from "@/components/input/react-text-mask";
 
 
@@ -23,7 +23,6 @@ const Modal: React.FC<Props> = (props) => {
 
     const { dispatch, objState, } = useAppContext();
     const { mSelectedRow, isPopupOpen: isOpen, crudType: popType } = objState
-    const [groupcd, setGroupcd] = useState<any>([])
     let selectoptions: any[] = []
     const [useYN, setUseYn] = useState<any>(undefined);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M)
@@ -33,7 +32,7 @@ const Modal: React.FC<Props> = (props) => {
     const { t } = useTranslation();
 
     // 선택된 데이터 Select컴포넌트 처리
-    const [grpcd, setGrpCd] = useState([])
+    const [groupcd, setGroupcd] = useState<any>([])
 
     const closeModal = () => {
         dispatch({ isPopupOpen: false });
@@ -59,20 +58,17 @@ const Modal: React.FC<Props> = (props) => {
     } = formZodMethods;
 
 
-    useEffect(() => {
-        if (initData) {
-            setGrpCd(initData[0].data)
-        }
-    }, [initData])
+
 
     useEffect(() => {
         if (initData) {
-            initData[0].data.map((item: any) => {
-                var key = item[Object.keys(item)[0]];
-                var label = item[Object.keys(item)[1]];
-                selectoptions.push({ value: key, label: key + " " + label });
-            })
-            setGroupcd(selectoptions)
+            // initData[0].data.map((item: any) => {
+            //     var key = item[Object.keys(item)[0]];
+            //     var label = item[Object.keys(item)[1]];
+            //     selectoptions.push({ value: key, label: key + " " + label });
+            // })
+            // setGroupcd(selectoptions)
+            setGroupcd(initData[0])
         }
     }, [initData])
 
@@ -120,25 +116,47 @@ const Modal: React.FC<Props> = (props) => {
                     }>
                     <></>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
-
-                        <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} />
-                        <MaskedInputField id="cd" value={mSelectedRow?.cd_nm} options={{isReadOnly:true}}/>
-                        <div className="col-span-2">                  
-                            <MaskedInputField id="cd_nm" value={mSelectedRow?.cd_nm} options={{}}/>
-                        </div>
-                        <div className="col-span-3">                           
-                            <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}}/>
-                        </div>
-                        <div className="col-span-3">                           
-                            <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}}/>
-                        </div>
-                        <div className="col-span-3">                           
-                            <MaskedInputField id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2} options={{}}/>
+                        <ReactSelect
+                            id="grp_cd" label="grp_cd" dataSrc={groupcd as data}
+                            width='w-96' lwidth='w-20' height="8px"
+                            options={{
+                                keyCol: "grp_cd",
+                                displayCol: ['grp_cd'],
+                                inline: false,
+                                defaultValue: getValues('grp_cd')
+                            }}
+                        />
+                        {/* <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} /> */}
+                        <MaskedInputField id="cd" value={mSelectedRow?.cd_nm} options={{ isReadOnly: true }} />
+                        <div className="col-span-2">
+                            <MaskedInputField id="cd_nm" value={mSelectedRow?.cd_nm} options={{}} />
                         </div>
                         <div className="col-span-3">
-                            <TSelect2
+                            <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}} />
+                        </div>
+                        <div className="col-span-3">
+                            <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}} />
+                        </div>
+                        <div className="col-span-3">
+                            <MaskedInputField id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2} options={{}} />
+                        </div>
+                        <div className="col-span-3">
+                            <ReactSelect
+                                id="use_yn" dataSrc={{
+                                    data: [
+                                        { use_yn: 'Y' },
+                                        { use_yn: 'N' }
+                                    ]
+                                } as data }                                
+                                options={{
+                                    dialog : true,
+                                    keyCol: "use_yn",
+                                    displayCol: ['use_yn'],                                    
+                                    defaultValue: mSelectedRow?.use_yn
+                                }}
+                            />
+                            {/* <TSelect2
                                 id="use_yn"
-                                label={t("use_yn")}
                                 options={[
                                     { label: "Y", value: "Y" },
                                     { label: "N", value: "N" },
@@ -146,7 +164,7 @@ const Modal: React.FC<Props> = (props) => {
                                 allYn={true}
                                 isPlaceholder={false}
                                 value={mSelectedRow?.use_yn}
-                            ></TSelect2>
+                            ></TSelect2> */}
                         </div>
 
                     </div>

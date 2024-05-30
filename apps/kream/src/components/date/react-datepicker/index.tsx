@@ -156,6 +156,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
                             // className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
                             className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 ${bgColor} flex-grow-1
                                     focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
+                                    dark:bg-gray-900 dark:text-white dark:border-gray-700
                                     ${freeStyles}
                                     `)}
                             customInput= {

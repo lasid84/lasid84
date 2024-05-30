@@ -16,6 +16,9 @@ import "css/components/steps.css";
 import "css/components/left-sidebar-3.css";
 import "css/ag-grid/ag-grid.css";
 import "css/ag-grid/ag-theme-custom.css";
+import "css/ag-grid/ag-theme-alpine.css";
+import "css/ag-grid/ag-theme-balham.css";
+import "css/ag-grid/ag-theme-material.css";
 import "css/vendors/ReactToastify.css";
 
 import  Layout from 'layouts/page'

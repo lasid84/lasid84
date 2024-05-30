@@ -56,12 +56,13 @@ const LogoImg: React.FC = () => {
     return (
       <div className="truncate logo">
         <Link href="/">
-          <div className="flex flex-row items-center justify-start space-x-2">
-            <img className={''}
-                src={`/logos/limo-sm.png`}
-                alt={''}
-            />
-            <span className="text-cyan-600">{name}</span>
+          <div className="flex flex-row items-center justify-center dark:hidden">
+            <img className={"expanded"} src={`/logos/12-removebg-preview.png`} alt={""} />
+            <img className={"collapsed"} src={`/logos/kwe_logo_bright_collapsed.png`} alt={""} />
+          </div>
+          <div className="flex flex-row items-center justify-center hidden dark:block">
+            <img className={"expanded"} src={`/logos/1-gary-900.png`} alt={""} />
+            <img className={"collapsed"} src={`/logos/kwe_logo_dark_collapsed.png`} alt={""} />
           </div>
         </Link>
         <button

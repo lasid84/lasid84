@@ -17,13 +17,13 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
   bottomLeft = null,
   bottomRight = null
 }) => {
-  const onModal = useUserSettings((state)=> state.data);
-  const isModal = useMemo(() =>onModal.loading === "ON", [onModal]);
+  const onModal = useUserSettings((state) => state.data);
+  const isModal = useMemo(() => onModal.loading === "ON", [onModal]);
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto dialog-base" onClose={()=>{}}>
-          <div className={`flex flex-col items-center justify-center min-h-screen px-4 text-center ${isModal?"pointer-events-none":""}`}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto dialog-base" onClose={() => { }}>
+          <div className={`flex flex-col items-center justify-center min-h-screen px-4 text-center ${isModal ? "pointer-events-none" : ""}`}>
             {/*Dialog Overlay*/}
             <Transition.Child
               as={Fragment}
@@ -46,35 +46,35 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95">
 
-              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:border-black shadow-xl transition-all transform rounded-md space-y-4">
+              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:bg-gray-900 dark:text-white dark:border-gray-200 shadow-xl transition-all transform rounded-md space-y-4">
                 {/*Modal Header*/}
                 <div className="border-b dark:border-black px-4 py-4 bg-[#f2f2f2] dark:bg-[#2b3646] dark:text-white">
                   <Dialog.Title as="h3" className="text-[16px] font-bold">
-                    { title }
+                    {title}
                   </Dialog.Title>
                   <button
-                      className="absolute top-0 right-0 m-4 font-bold uppercase"
-                      onClick={onClose}>
+                    className="absolute top-0 right-0 m-4 font-bold uppercase"
+                    onClick={onClose}>
                     <FiX size={20} className="stroke-current" />
                   </button>
                 </div>
                 {/*Modal Contents*/}
                 {/*Modal Footer*/}
-                <div className="px-4 space-y-2">
-                  { children }
+                <div className="px-4 space-y-2 dark:bg-gray-900 dark:text-white dark:border-gray-800">
+                  {children}
                 </div>
                 {
                   ((bottomLeft) || (bottomRight)) &&
-                    <div className="flex flex-row justify-between px-4 py-3 border-t border-gray-200">
-                      <div className="flex flex-row w-1/2 gap-1">
-                        {bottomLeft}
-                        <div className="ml-auto"></div>
-                      </div>
-                      <div className="flex flex-row w-1/2 gap-1">
-                        <div className="ml-auto"></div>
-                        {bottomRight}
-                      </div>
+                  <div className="flex flex-row justify-between px-4 py-3 border-t border-gray-200 dark:bg-gray-900 dark:text-white dark:border-gray-800">
+                    <div className="flex flex-row w-1/2 gap-1">
+                      {bottomLeft}
+                      <div className="ml-auto"></div>
                     </div>
+                    <div className="flex flex-row w-1/2 gap-1">
+                      <div className="ml-auto"></div>
+                      {bottomRight}
+                    </div>
+                  </div>
                 }
               </div>
             </Transition.Child>

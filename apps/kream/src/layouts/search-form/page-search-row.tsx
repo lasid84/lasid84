@@ -12,8 +12,8 @@ export type PageSearchProps = {
 export const PageTabContent: React.FC<PageSearchProps> = ({ title, bottom, right, children, addition }) => {
   return (
     <>
-      <div className="flex w-full bg-white">
-        <div className="w-full rounded-[5px] mb-1">
+      <div className="flex w-full bg-white dark:bg-gray-900 dark:border-gray-800 dark:text-white">
+        <div className="w-full rounded-[5px] mb-1 ">
           {title}
           <div className="flex w-full px-4 py-1 space-y-1">
             <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
@@ -26,7 +26,7 @@ export const PageTabContent: React.FC<PageSearchProps> = ({ title, bottom, right
           </div>
 
           {/*button*/}
-          <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
+          <div className="px-1 py-1 w-full border-t border-[#f2f2f2] dark:border-gray-800">
             {bottom}
 
           </div>
@@ -41,7 +41,7 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
   return (
     <>
       <div className="flex w-full">
-        <div className="w-full flex rounded-[5px] border m-1">
+        <div className="w-full flex rounded-[5px] border m-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
           <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
             {children}
           </div>
@@ -60,7 +60,7 @@ export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, chi
   return (
     <>
       <div className="flex w-full">
-        <div className="w-full rounded-[5px] bg-white border mb-2">
+        <div className="w-full rounded-[5px] bg-white border mb-2 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
           {title}
           {/*contents*/}
           <div className="flex w-full px-4 py-1 space-y-2">
@@ -70,7 +70,7 @@ export const PageContent: React.FC<PageSearchProps> = ({ title, left, right, chi
           </div>
 
           {/*button*/}
-          <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
+          <div className="px-1 py-1 w-full border-t border-[#f2f2f2] dark:border-gray-800">
             <div className="grid w-full grid-cols-2">
               <div className="flex flex-row gap-2">
                 {left}
@@ -93,7 +93,7 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right
   return (
     <>
       <div className="flex w-full">
-        <div className="w-full rounded-[5px] bg-white border mb-2">
+        <div className="w-full rounded-[5px] bg-white border mb-2 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
           {title}
           {/*contents*/}
           <div className="flex w-full px-4 py-1 space-y-2">
@@ -107,7 +107,7 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({ title, left, right
           </div>
 
           {/*button*/}
-          <div className="px-1 py-1 w-full border-t border-[#f2f2f2]">
+          <div className="px-1 py-1 w-full border-t border-[#f2f2f2] dark:border-gray-700">
             <div className="grid w-full grid-cols-2">
               <div className="flex flex-row gap-2">
                 {left}

@@ -81,7 +81,7 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
           <div className="flex w-full col-span-6">
             <ShipmentDetailGrid loadData={shipmentDetail} />
           </div>
-          <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid">
+          <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
             <legend className="text-sx">Total</legend>
             <MaskedInputField id="num_pieces" value={data?.num_pieces} options={{ isReadOnly: true }} width="w-36" />
             <MaskedInputField id="packaging_form_code" value={data?.packaging_form_code} options={{ isReadOnly: true }} width="w-14" />

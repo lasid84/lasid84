@@ -102,12 +102,12 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
           <MaskedInputField id="dest_city_code" value={data?.dest_city_code} options={{ isReadOnly: true }} />
           <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />
           <div className="flex col-start-1 col-end-6">
-            <fieldset className="flex w-1/2 p-1 space-x-1 space-y-1 border-2 border-solid ">
+            <fieldset className="flex w-1/2 p-1 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
               <legend className="text-sx">IC Consol</legend>
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} width="w-96" />
             </fieldset>
-            <fieldset className="flex w-1/2 p-1 space-x-1 space-y-1 border-2 border-solid ">
+            <fieldset className="flex w-1/2 p-1 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
               <legend className="text-sx">DC/TT Consol</legend>
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} />
               <MaskedInputField id="place_of_delivery" value={data?.place_of_delivery} options={{ isReadOnly: true }} width="w-96" />
