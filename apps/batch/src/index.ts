@@ -77,6 +77,11 @@ async function startWorker() {
               , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'true' ? true : false 
               }});
           break;
+      case "SCRAP_UFSP_PROFILE_PORT":
+        const workerPort = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-profile-port.js'
+            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'true' ? true : false 
+            }});
+        break;          
     }
     await sleep(3000);
     i++;

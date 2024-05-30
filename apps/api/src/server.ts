@@ -85,6 +85,7 @@ export const createServer = (): Express => {
     })
     .post('/login', async (req, res) =>  {
       try {
+      //패스워드 암호처리, 복구 필요
       log(req.body);
       const { user_id, password } = req.body;
 
