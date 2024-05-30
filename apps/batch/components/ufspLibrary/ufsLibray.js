@@ -1016,7 +1016,7 @@ class Library {
           return transformedDateString;
     }
 
-    async getBLIFData() {
+    async getIFData() {
         try {
             
             log("Start Script");

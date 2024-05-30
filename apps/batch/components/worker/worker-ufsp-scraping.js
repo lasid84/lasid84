@@ -21,7 +21,6 @@ const { executFunction } = require('../api.service/api.service.js');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 const Library = require('../ufspLibrary/ufsLibray');
 
-const { pgm, type, idx, isHeadless } = workerData;
 const ufsp = new Library(workerData);
 
 let onExcute = false;
@@ -49,15 +48,15 @@ async function startScraping() {
             }
         }
 
-        const datas = await ufsp.getBLIFData();
+        const datas = await ufsp.getIFData();
         let script;
 
-        log("1 - ", idx, datas.length);
+        log("1 - ", ufsp.idx, datas.length);
         if (datas.length > 0) {
             if (datas[0].needlogin.toLowerCase() == 't') {
                 await ufsp.checkSession();
             }
-            script = await ufsp.getScript(pgm);
+            script = await ufsp.getScript(ufsp.pgm);
         }
 
         for (const data of datas) {
@@ -79,7 +78,7 @@ async function startScraping() {
             });
 
             await ufsp.startScript(script);
-            log(idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
+            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
             await ufsp.setBLIFData('O', JSON.stringify(ufsp.resultData), '');
             ufsp.errCnt = 0;
             // lastExcute = new Date();
@@ -92,7 +91,7 @@ async function startScraping() {
         if (ufsp.mainData) {
             await ufsp.setBLIFData('R', '', ex);
         }    
-        error(idx, ": Parent Ex :", ex, ufsp.mainData);
+        error(ufsp.idx, ": Parent Ex :", ex, ufsp.mainData);
         ufsp.errCnt++;
     } finally {
         onExcute = false;

@@ -67,6 +67,16 @@ async function startWorker() {
               , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
             }});
         break;
+      case "SCRAP_UFSP_PROFILE_CARRIER":
+          const workerCarrier = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-profile-carrier.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'true' ? true : false 
+              }});
+          break;
+      case "SCRAP_UFSP_PROFILE_CUSTOMER":
+          const workerCustomer = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-profile-customer.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'true' ? true : false 
+              }});
+          break;
     }
     await sleep(3000);
     i++;
