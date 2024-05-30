@@ -46,7 +46,7 @@ async function checkAccount(user_id, password, callback) {
             console.error('LDAP authentication failed:', err);
             callback(false, null, err.message)
           } else {
-            // log('LDAP authentication succeeded');
+              log('Trying login', user_id);
         
               // 사용자 정보 조회
               const searchFilter = `(sAMAccountName=${user_id})`;

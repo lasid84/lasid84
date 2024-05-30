@@ -10,12 +10,12 @@ const ufsp = new Library(workerData);
 
 let onExcute = false;
 
-async function setCustomerData() {
+async function setPortData() {
     try {
 
         const inparam = ['in_data', 'in_user_id', 'in_ipaddr'];
         const invalue = [JSON.stringify(ufsp.resultData),'', ''];
-        const inproc = 'scrap.f_scrp0004_set_customer_data'; 
+        const inproc = 'scrap.f_scrp0005_set_port_data'; 
         await executFunction(inproc, inparam, invalue);
         //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
         
@@ -73,12 +73,8 @@ async function startScraping() {
 
             await ufsp.startScript(script);
             log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.keydata, JSON.stringify(ufsp.resultData));
-            await setCustomerData();
-            var v_err = '';
-            if (!ufsp.resultData.t_cust_ufs) {
-                v_err = 'no data';
-            }
-            await ufsp.setBLIFData('Y', '', v_err);
+            await setPortData();
+            await ufsp.setBLIFData('Y', '', '');
             ufsp.errCnt = 0;
             // lastExcute = new Date();
             ufsp.lastExcute = getKoreaTime();
