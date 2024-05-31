@@ -9,7 +9,7 @@ const Loading = () => {
         <div className="absolute z-50 w-full h-screen">
           {/* <LoadingComponent /> */}
           <Suspense>
-            <ProgressBar height="6px" color="#FF5500" shallowRouting />
+            <ProgressBar height="6px" color="#0000FF" shallowRouting />
           </Suspense>
         </div>
     )

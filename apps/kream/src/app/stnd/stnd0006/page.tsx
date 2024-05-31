@@ -1,6 +1,6 @@
 
 'use client';
-
+// import type { InferGetServerSidePropsType, GetServerSideProps } from 'next' 
 import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
 // import PageTitle from "components/page-title/page-title";
 import { useUserSettings } from "states/useUserSettings";
@@ -14,12 +14,24 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import  Modal  from './_component/popup';
 import Grid from './_component/gridMaster';
 
-// import { useSearchParams } from 'next/navigation'
+//  import { useSearchParams } from 'next/navigation'
+ import {useRouter, usePathname, useSearchParams} from 'next/navigation'
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
 export default function STND0006() {
+
+    const pathname = usePathname()
+    const searchParamsr = useSearchParams()
+    const router = useRouter()
+
+    const getItem2 = searchParamsr.get('params')
+    
+    log('router1', pathname),
+    log('router2',router)
+    log('router3', getItem2)
+    log('router4',searchParamsr)
 
     const gridRef = useRef<any | null>(null);
     const [state, dispatch] = useReducer(reducer, {
@@ -45,3 +57,4 @@ export default function STND0006() {
         </TableContext.Provider>
     );
 }
+

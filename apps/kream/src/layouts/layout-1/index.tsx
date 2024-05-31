@@ -82,11 +82,11 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
     sessionCheck();
 
     if (isReady) {
-      if (!checkAuth(menus, url, params)) {
-        log(menus, url, isReady);
-        toastWaring(url + " 권한이 없습니다.");
-        router.replace('/');
-      }
+      // if (!checkAuth(menus, url, params)) {
+      //   log(menus, url, isReady);
+      //   toastWaring(url + " 권한이 없습니다.");
+      //   router.replace('/');
+      // }
     }
   }, [isReady])
 
