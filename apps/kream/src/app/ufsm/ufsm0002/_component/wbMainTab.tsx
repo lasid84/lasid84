@@ -57,6 +57,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
     // const params = getValues();
     // log("onSearch", params);
   }
+  const onRefresh = () => { dispatch({ isMDSearch: true }) }
 
   useEffect(() => {
     if (mainData)
@@ -75,7 +76,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
                 </div>
                 <div className={"flex col-span-2"}>
                   <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
-                  <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
+                  <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
               </>

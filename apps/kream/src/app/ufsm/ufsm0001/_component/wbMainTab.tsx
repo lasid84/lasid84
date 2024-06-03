@@ -64,6 +64,8 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
     //dispatch({ searchParams: params, isMSearch: true });
   }
 
+  const onRefresh = () => { dispatch({ isMDSearch: true }) }
+
   useEffect(() => {
     if (mainData) {
       setData((mainData?.[0] as gridData).data[0]);
@@ -85,7 +87,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
                 </div>
                 <div className={"flex col-span-2"}>
                   <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
-                  <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
+                  <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
               </>
