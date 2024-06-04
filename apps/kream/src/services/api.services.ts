@@ -85,7 +85,7 @@ export async function executFunction(params:exeFuncParams) {
         const returnData:returnData = await dataCall(client, inproc,inparam, invalue, config);
         const { cursorData, numericData, textData } = returnData;
 
-        log("====================================", cursorData);
+        log("====================================returnData : ", inproc, returnData);
 
         if (numericData !== 0) {
             toastWaring((numericData + " : " + textData))

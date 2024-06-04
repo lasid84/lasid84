@@ -44,16 +44,20 @@ export const createServer = (): Express => {
       return res.json({ ok: true });
     })
     .get("/logout", async (req, res) =>  {
-      res.cookie("access_token", "", {
-        httpOnly: true,
-        sameSite: "lax",
-      });
-      res.cookie("refresh_token", "", {
-        httpOnly: true,
-        sameSite: "lax",
-      });
-      //await authService.logout(req.user);
-      return res.send();
+        try {
+          res.cookie("access_token", "", {
+            httpOnly: true,
+            sameSite: "lax",
+          });
+          res.cookie("refresh_token", "", {
+            httpOnly: true,
+            sameSite: "lax",
+          });
+          //await authService.logout(req.user);
+          return res.send();
+        } catch (ex) {
+          
+        }
     })
     .post('/api/data', async (req, res) => {
       try {
@@ -81,6 +85,42 @@ export const createServer = (): Express => {
       } catch (err) {
         log('Error fetching data:', err);
         res.status(500).json({ error: 'Error fetching data : ' + err});
+      }
+    })
+    .post('/api/limo/data', async (req, res) => {
+      //2024.05.31 WMS 연동용 API
+      log("start")
+      try {
+
+        const accessToken = req.headers['authorization'];
+        // log(accessToken, req.body)
+        if (!accessToken) {
+          return res.status(401).json({ error: 'Access token not provided' });
+        }
+        
+        try {
+          const decoded = jwt.verify(accessToken, 'c61dYZS9QNRbJ2LDtGpNQ0I3dcfxpH6Z9orOeyMuZG8=');
+          // log("decode", decoded)
+        } catch (err) {
+          error("Authorize Error : ", err.message);
+          let dc = new dataContainer(); 
+          dc.setNumericData(-1);
+          dc.setTextData("Authorize Error : "+ err.message);
+          return res.json(dc);
+        }
+        
+        const {inproc, inparam, invalue} = req.body;
+        
+        if (inproc.split('.')[0].toLowerCase() !== 'limo') {
+          return res.status(500).json({ error: 'LIMO 스키마 외 권한이 없습니다.'});  
+        }
+
+        const result = await callFunction(inproc, inparam, invalue);
+        // log(result)
+        res.json(result);
+      } catch (err) {
+        log('WMS API Error fetching data:', err);
+        res.status(500).json({ error: 'WMS API Error fetching data : ' + err});
       }
     })
     .post('/login', async (req, res) =>  {
