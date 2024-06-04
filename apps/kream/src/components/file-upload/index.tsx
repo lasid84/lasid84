@@ -1,13 +1,16 @@
 
-import { log } from "@repo/kwe-lib/components/logHelper";
+
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BiUpload } from "react-icons/bi";
 import * as XLSX from 'xlsx';
 import { ParsingOptions, SSF } from "xlsx";
-import { getKoreaTime, DateToString } from "@repo/kwe-lib/components/dataFormatter";
+
 import { toastError } from "components/toast";
 import { useTranslation } from "react-i18next";
+
+const { log } = require("@repo/kwe-lib/components/logHelper");
+const { getKoreaTime, DateToString } = require("@repo/kwe-lib/components/dataFormatter.js");
 
 const validExtensions = [".xlsx", ".xls", ".txt", ".LPN", ".xml", ".json", ".csv", ".XLSX", ".XLS"];
 
