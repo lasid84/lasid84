@@ -130,7 +130,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                 title={"Carrier코드 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
                 bottomRight={
                     <>
-                        <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} />
+                        {/* <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} /> */}
                         <Button id={"cancel"} onClick={closeModal} icon={null} />
                     </>
                 }
@@ -237,7 +237,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 value={mSelectedRow?.remark}
                                 options={{
                                     isReadOnly: popType === crudType.CREATE ? false : true,
-                                }}/>
+                                }} />
                         </div>
 
                         <div className="col-span-3">
@@ -249,8 +249,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 }}
                             />
                         </div>
-
-
+                        
                         <MaskedInputField
                             id="check_digit8_ind"
                             value={mSelectedRow?.check_digit8_ind}
@@ -258,10 +257,9 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 isReadOnly: popType === crudType.CREATE ? false : true,
                             }} />
 
-
                         <MaskedInputField
-                            id="cass_ind"
-                            value={mSelectedRow?.cass_ind}
+                            id="cut_off_hours"
+                            value={mSelectedRow?.cut_off_hours}
                             options={{
                                 isReadOnly: popType === crudType.CREATE ? false : true,
                             }} />
@@ -272,6 +270,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             options={{
                                 isReadOnly: popType === crudType.CREATE ? false : true,
                             }} />
+                            
                         <div className="col-span-2">
                             <MaskedInputField
                                 id="default_contact_no"
@@ -296,13 +295,13 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 isReadOnly: popType === crudType.CREATE ? false : true,
                             }} />
 
+
                         <MaskedInputField
-                            id="cut_off_hours"
-                            value={mSelectedRow?.cut_off_hours}
+                            id="cass_ind"
+                            value={mSelectedRow?.cass_ind}
                             options={{
                                 isReadOnly: popType === crudType.CREATE ? false : true,
                             }} />
-
                         <MaskedInputField
                             id="counter_ind"
                             value={mSelectedRow?.counter_ind}

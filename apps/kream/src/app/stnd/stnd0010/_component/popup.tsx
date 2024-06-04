@@ -127,7 +127,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
             <DialogBasic
                 isOpen={isOpen!}
                 onClose={closeModal}
-                title={"차지코드 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
+                title={"Port코드 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
                 bottomRight={
                     <>
                         <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} />
@@ -137,52 +137,13 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
             >
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-6">
-                        <div className="col-span-2">
-                            <ReactSelect
-                                id="trans_mode" label="trans_mode" dataSrc={transmode as data}
-                                options={{
-                                    keyCol: "trans_mode",
-                                    displayCol: ['trans_mode', 'name'],
-                                    defaultValue: defTransMode,
-                                    isAllYn: false
-                                }}
-                            />
-                        </div>
+                        
 
                         <div className="col-span-2">
-                            <ReactSelect
-                                id="trans_type" dataSrc={transtype as data}
-                                options={{
-                                    keyCol: "trans_type",
-                                    displayCol: ['trans_type', 'name'],
-                                    // inline:true,
-                                    // defaultValue: {label:'A Air', value:'A'}
-                                    defaultValue: defTransType,
-                                    isAllYn: false
-                                }}
-                            />
-                        </div>
-                        <div className="col-span-2">
-                            <ReactSelect
-                                id="prod_gr_cd" dataSrc={prodGrCd as data}
-                                options={{
-                                    keyCol: "prod_gr_cd",
-                                    displayCol: ['prod_gr_cd'],
-                                    defaultValue: mSelectedRow?.prod_gr_cd
-                                }}
-                            />
-                        </div>
 
-                        <div className="col-span-2">
-                            {/* <TInput 
-                                label="charge_code" 
-                                id="charge_code" 
-                                value={mSelectedRow?.charge_code}
-                                >
-                            </TInput> */}
                             <MaskedInputField
-                                id="charge_code"
-                                value={mSelectedRow?.charge_code}
+                                id="port_code"
+                                value={mSelectedRow?.port_code}
                                 options={{
                                     isReadOnly: popType === crudType.CREATE ? false : true,
                                 }}
@@ -190,8 +151,32 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                         </div>
                         <div className="col-span-4">
                             <MaskedInputField
-                                id="charge_desc"
-                                value={mSelectedRow?.charge_desc}
+                                id="port_name"
+                                value={mSelectedRow?.port_name}
+                                options={{                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-3">
+                            <MaskedInputField
+                                id="country_code"
+                                value={mSelectedRow?.country_code}
+                                options={{                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-3">
+                            <MaskedInputField
+                                id="time_zone_code"
+                                value={mSelectedRow?.time_zone_code}
+                                options={{                                }}
+                            />
+                        </div>
+
+                        <div className="col-span-3">
+                            <MaskedInputField
+                                id="region_code"
+                                value={mSelectedRow?.region_code}
                                 options={{
                                 }}
                             />
@@ -199,35 +184,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-3">
                             <MaskedInputField
-                                id="ass_transaction"
-                                value={mSelectedRow?.ass_transaction}
-                                options={{
-                                }}
-                            />
-                        </div>
-
-                        <div className="col-span-3">
-                            <MaskedInputField
-                                id="category"
-                                value={mSelectedRow?.category}
-                                options={{
-                                }}
-                            />
-                        </div>
-
-                        <div className="col-span-3">
-                            <MaskedInputField
-                                id="major_category"
-                                value={mSelectedRow?.major_category}
-                                options={{
-                                }}
-                            />
-                        </div>
-
-                        <div className="col-span-3">
-                            <MaskedInputField
-                                id="report_category"
-                                value={mSelectedRow?.report_category}
+                                id="mdate_tz_code"
+                                value={mSelectedRow?.mdate_tz_code}
                                 options={{
                                 }}
                             />
@@ -235,33 +193,16 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-2">
                             <MaskedInputField
-                                id="vat_yn"
-                                value={mSelectedRow?.vat_yn}
+                                id="cdate_tz_code"
+                                value={mSelectedRow?.cdate_tz_code}
                                 options={{
                                 }}
                             />
                         </div>
-                        <div className="col-span-2">
+                         <div className="col-span-2">
                             <MaskedInputField
-                                id="vat_type"
-                                value={mSelectedRow?.vat_type}
-                                options={{
-                                }}
-                            />
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField
-                                id="vat_rt"
-                                value={mSelectedRow?.vat_rt}
-                                options={{
-                                }}
-                            />
-                        </div>
-                        <div className="col-span-2">
-                            <MaskedInputField
-                                id="fins_yn"
-                                value={mSelectedRow?.fins_yn}
+                                id="port_nm"
+                                value={mSelectedRow?.port_nm}
                                 options={{
                                 }}
                             />
@@ -269,8 +210,18 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-2">
                             <MaskedInputField
-                                id="fin_category"
-                                value={mSelectedRow?.fin_category}
+                                id="use_yn"
+                                value={mSelectedRow?.use_yn}
+                                options={{
+                                }}
+                            />
+                        </div>
+
+                        {/*
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="airport_ind"
+                                value={mSelectedRow?.airport_ind}
                                 options={{
                                 }}
                             />
@@ -278,8 +229,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-2">
                             <MaskedInputField
-                                id="uas_gl_code"
-                                value={mSelectedRow?.uas_gl_code}
+                                id="sea_port_ind"
+                                value={mSelectedRow?.sea_port_ind}
                                 options={{
                                 }}
                             />
@@ -287,8 +238,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-2">
                             <MaskedInputField
-                                id="billing_yn"
-                                value={mSelectedRow?.billing_yn}
+                                id="other_port_ind"
+                                value={mSelectedRow?.other_port_ind}
                                 options={{
                                 }}
                             />
@@ -296,26 +247,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-2">
                             <MaskedInputField
-                                id="rem_prt_yn"
-                                value={mSelectedRow?.rem_prt_yn}
-                                options={{
-                                }}
-                            />
-                        </div>
-
-                        <div className="col-span-2">
-                            {/* <MaskedInputField
-                                id="fe_ref_item"
-                                value={mSelectedRow?.fe_prt_item}
-                                options={{
-                                }}
-                            /> */}
-                        </div>
-
-                        <div className="col-span-2">
-                            <MaskedInputField
-                                id="fe_ref_item"
-                                value={mSelectedRow?.fe_ref_item}
+                                id="hmf_pct"
+                                value={mSelectedRow?.hmf_pct}
                                 options={{
                                 }}
                             />
@@ -323,78 +256,58 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-2">
                             <MaskedInputField
-                                id="rem_prt_nm"
-                                value={mSelectedRow?.rem_prt_nm}
+                                id="city_ind"
+                                value={mSelectedRow?.city_ind}
                                 options={{
                                 }}
                             />
                         </div>
 
                         <div className="col-span-2">
-                            <ReactSelect
-                                id="use_yn" dataSrc={{
-                                    data: [
-                                        { use_yn: 'Y' },
-                                        { use_yn: 'N' }
-                                    ]
-                                } as data}
+                            <MaskedInputField
+                                id="congested_ind"
+                                value={mSelectedRow?.congested_ind}
                                 options={{
-                                    dialog : true,
-                                    keyCol: "use_yn",
-                                    displayCol: ['use_yn'],
-                                    defaultValue: mSelectedRow?.use_yn
                                 }}
                             />
                         </div>
 
-                        <div className="col-span-3">
-                            <ReactSelect
-                                id="bill_gr1_cd" dataSrc={billGr1Cd as data}
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="mlb_ipi_ind"
+                                value={mSelectedRow?.mlb_ipi_ind}
                                 options={{
-                                    dialog : true,
-                                    keyCol: "bill_gr1_cd",
-                                    displayCol: ['bill_gr1_cd', 'name'],
-                                    defaultValue: mSelectedRow?.bill_gr1_cd
                                 }}
                             />
                         </div>
 
-                        <div className="col-span-3">
-                            <ReactSelect
-                                id="bill_gr2_cd" dataSrc={billGr1Cd as data}
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="port_auth_fees_ind"
+                                value={mSelectedRow?.port_auth_fees_ind}
                                 options={{
-                                    dialog : true,
-                                    keyCol: "bill_gr2_cd",
-                                    displayCol: ['bill_gr2_cd', 'name'],
-                                    defaultValue: mSelectedRow?.bill_gr2_cd
                                 }}
                             />
-                        </div>
+                        </div>    
 
-                        <div className="col-span-3">
-                            <ReactSelect
-                                id="gl_gr1_cd" dataSrc={glGr1Cd as data}
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="port_auth_fees_ind"
+                                value={mSelectedRow?.port_auth_fees_ind}
                                 options={{
-                                    dialog : true,
-                                    keyCol: "gl_gr1_cd",
-                                    displayCol: ['gl_gr1_cd', 'name'],
-                                    defaultValue: mSelectedRow?.gl_gr1_cd
                                 }}
                             />
-                        </div>
+                        </div>    
 
-                        <div className="col-span-3">
-                            <ReactSelect
-                                id="gl_gr2_cd" dataSrc={glGr2Cd as data}
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="port_auth_fees_ind"
+                                value={mSelectedRow?.port_auth_fees_ind}
                                 options={{
-                                    dialog : true,
-                                    keyCol: "gl_gr2_cd",
-                                    displayCol: ['gl_gr2_cd', 'name'],
-                                    defaultValue: mSelectedRow?.gl_gr2_cd
                                 }}
                             />
-                        </div>
-
+                        </div>    
+                         */}
                     </div>
                 </form>
             </DialogBasic>

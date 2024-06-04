@@ -1,8 +1,7 @@
 
 'use client';
-// import type { InferGetServerSidePropsType, GetServerSideProps } from 'next' 
+
 import {useEffect, useReducer, useMemo, useCallback, useRef } from "react";
-// import PageTitle from "components/page-title/page-title";
 import { useUserSettings } from "states/useUserSettings";
 import { SP_Load, SP_GetData } from "./_component/data";
 import { PageState, reducer } from "components/provider/contextObjectProvider";
@@ -20,18 +19,7 @@ import Grid from './_component/gridMaster';
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
-export default function STND0006() {
-
-    const pathname = usePathname()
-    const searchParamsr = useSearchParams()
-    const router = useRouter()
-
-    const getItem2 = searchParamsr.get('params')
-    
-    log('router1', pathname),
-    log('router2',router)
-    log('router3', getItem2)
-    log('router4',searchParamsr)
+export default function STND0010() {
 
     const gridRef = useRef<any | null>(null);
     const [state, dispatch] = useReducer(reducer, {
@@ -44,8 +32,7 @@ export default function STND0006() {
         }
     });
     const { objState } = state;
-    const { searchParams, mSelectedRow, crudType, isMSearch
-        , isPopUpOpen } = objState;
+    const { searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen } = objState;
 
     const val = useMemo(() => {return { objState, dispatch }}, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });

@@ -16,12 +16,12 @@ export const SP_Load = async (searchParam:any) => {
   // unstable_noStore();
   const {user_id, ipaddr} = searchParam;
   const params = {
-    inparam: ["in_trans_mode", "in_trans_type", "in_user", "in_ipaddr"],
-    invalue: ['', '', user_id, ipaddr],
-    inproc: 'public.f_stnd0006_load',
+    inparam: [ "in_user", "in_ipaddr"],
+    invalue: [user_id, ipaddr],
+    inproc: 'public.f_stnd0010_load',
     isShowLoading: false
   }
-  // log("Acct2003Load", p);
+
   const result = await executFunction(params);
   return result;
 }
@@ -30,23 +30,20 @@ export const SP_GetData = async (searchParam: any) => {
   console.log('searchParam', searchParam)
   const Param = searchParam.queryKey[1]
 
-  const {trans_mode, trans_type, user_id, ipaddr } = Param;
-  // log("searchData:", trans_mode, trans_type);
-  
+  const { trans_mode, user_id, ipaddr } = Param;
+
   const params = {
     inparam : [
-        "in_user"
+      "in_trans_mode"
+      , "in_user"
       , "in_ipaddr"
-      , "in_trans_mode"
-      , "in_trans_type"
     ],
     invalue: [
-        user_id
+      trans_mode
+      ,  user_id
       , ipaddr
-      , trans_mode
-      , trans_type
     ],
-    inproc: 'public.f_stnd0006_get_chargesetlist',
+    inproc: 'public.f_stnd0010_get_port',
     isShowLoading: true
     }
   

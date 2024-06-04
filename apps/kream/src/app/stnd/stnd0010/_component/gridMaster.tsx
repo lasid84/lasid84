@@ -25,19 +25,16 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:false});
     const gridOption: GridOption = {
-        colVisible: { col : ["trans_mode", "trans_type", "prod_gr_cd", "charge_code", "charge_desc", "vat_yn","vat_type","category","major_category","report_category","create_date"], visible:true },
+        colVisible: { col : ["port_code", "country_code", "time_zone_code", "port_name", "airport_ind", "sea_port_ind","other_port_ind","region_code",
+        "hmf_pct","city_ind","hmf_ind","congested_ind","mlb_ipi_ind","port_auth_fees_ind","free_trade_zone_ind","dock_recpts_reqd_ind","rail_acessible_ind","kwe_agent_ind","target_city_ind","fiata_code","conference_code"
+        ,"remarks","mdate_tz_code","cdate_tz_code","port_nm","use_yn","create_date","create_user","update_date","update_user"], visible:true },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         gridHeight: "80vh",
-        // checkbox: ["no"],
+        checkbox: ["airport_ind", "sea_port_ind","other_port_ind","city_ind","hmf_ind","congested_ind","mlb_ipi_ind","port_auth_fees_ind","free_trade_zone_ind","dock_recpts_reqd_ind","rail_acessible_ind","kwe_agent_ind",],
         // editable: ["trans_mode"],
-        dataType: { "create_date" : "date", "vat_rt":"number"},
+        dataType: { "create_date" : "date", "update_date":"date"},
         // isMultiSelect: false,
         isAutoFitColData: true,
-        alignLeft: ["major_category", "bill_gr1_nm"],
-        // alignRight: [],
-        // rowadd
-        // rowdelete
-
     };
     /*
         handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
