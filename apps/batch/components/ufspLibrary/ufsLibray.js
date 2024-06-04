@@ -252,9 +252,11 @@ class Library {
             if (col == 'mode' && !this.resultData[tab]['servicename']) {
               switch (this.pgm) {
                   case "SCRAP_UFSP_MBL":
+                  case "SCRAP_UFSP_MBL_OP":
                     this.resultData[tab]['servicename'] = 'mwb_' + val.toLowerCase() + 'ctlmgr';
                     break;
                   case "SCRAP_UFSP_HBL":
+                  case "SCRAP_UFSP_HBL_OP":
                     this.resultData[tab]['servicename'] = 'shipment' + val.toLowerCase() + 'ctlmgr';
                     break;
                   default:

@@ -12,10 +12,10 @@ const DEFAULT_SIGN_OPTION = {
 
 const secret_key = "Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=";
 
-const signJwtAccessToken = (payload, options = DEFAULT_SIGN_OPTION) => {
+const signJwtAccessToken = (payload, key = secret_key, options = DEFAULT_SIGN_OPTION) => {
     // console.log("signJwtAccessToken", "1234");
     
-    const token = jwt.sign(payload, secret_key, options);
+    const token = jwt.sign(payload, key, options);
     return token;
 }
   
@@ -31,3 +31,6 @@ function verifyJwt(token)  {
 }
 
 module.exports = {signJwtAccessToken, verifyJwt}
+
+
+// console.log(signJwtAccessToken('c61dYZS9QNRbJ2LDtGpNQ0I3dcfxpH6Z9orOeyMuZG8=', {}, {expiresIn: "1d"}));

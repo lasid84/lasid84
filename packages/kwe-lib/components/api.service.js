@@ -70,7 +70,7 @@ const postCall = async (params) => {
     return {
       data: {
         success: false,
-        message: err.name
+        message: 'Cannot connect to server.. ' + err.name
       }
     }
   }

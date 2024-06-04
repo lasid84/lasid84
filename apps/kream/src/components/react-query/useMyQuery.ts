@@ -72,8 +72,8 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
 
   const Create = useMutation(['key'], mutationFn, {
     onSuccess: (res:any, data:any, context:any) => {
-      // log("onSuccess : ", data)
-      // queryClient.invalidateQueries([queryKey])  
+      log("onSuccess : ", res, context)
+      // queryClient.invalidateQueries([queryKey])
     },
     onMutate: async (data) => {
       data["user_id"] = user_id;

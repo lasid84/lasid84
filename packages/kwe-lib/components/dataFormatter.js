@@ -76,7 +76,7 @@ function stringToDate(source) {
     }
 };
 
-function getKoreaTime() {
+function getKoreaTime(date = new Date()) {
     // const now = new Date();
     // const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
     // const koreaTimeDiff = 9 * 60 * 60 * 1000;
@@ -85,7 +85,7 @@ function getKoreaTime() {
     // return korNow;
 
     // 현재 시간을 UTC로 가져옵니다.
-    const currentUTC = new Date();
+    const currentUTC = date;
 
     // 한국의 UTC 오프셋은 +9시간이므로 이를 더하여 한국 시간으로 변환합니다.
     const offset = 9; // 한국의 UTC 오프셋은 +9시간

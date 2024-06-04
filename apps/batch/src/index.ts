@@ -48,7 +48,9 @@ async function startWorker() {
     // let worker;
     switch (thread.pgm) {
       case "SCRAP_UFSP_HBL":
+      case "SCRAP_UFSP_HBL_OP":
       case "SCRAP_UFSP_MBL":
+      case "SCRAP_UFSP_MBL_OP":
       case "SCRAP_TEST":
         const workerScrap = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping.js'
               , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 

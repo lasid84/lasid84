@@ -52,7 +52,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     const strParam = pParamsList.toString();
     const resultArgument = await getArgument(schema, procName, strParam);
     
-    // log("1.5", resultArgument.getNumericData());
+    log("1.5", schema, procName, strParam, resultArgument);
 
     if (resultArgument.getNumericData() !== 0)
         return resultArgument;
@@ -67,6 +67,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
 
     // Call the function with varying IN parameters and the cursor OUT parameter
     //let query = 'SELECT * FROM public.f_stnd0001_load($1, $2);';
+    log("=====", schema, procName, strParam, pValueList);
     let query = `SELECT * from ${pProcName}(`;
     pValueList.forEach((param, index) => {
         query += `$${index + 1}`;
@@ -176,9 +177,7 @@ async function getArgument(pSchema, pProcName, pParamList) {
       let varyingParams = [catalog, schema, procName, paramList];    
       // Call the function with varying IN parameters and the cursor OUT parameter
       let query = 'SELECT * FROM public.f_admn_get_arguments($1, $2, $3, $4);';
-  
       let { rows } = await client.query(query, varyingParams);
-
       let dc = new dataContainer();
       var cursorName = [];
       // Process the cursor result as if it were a DataTable
