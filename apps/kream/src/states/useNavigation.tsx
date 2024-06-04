@@ -9,7 +9,7 @@ const { executFunction } = require('services/api.services');
 import { MdOutlineWidthNormal } from "react-icons/md"
 
 //기준정보
-import { PiUserListBold  } from "react-icons/pi";
+import { PiUserListBold } from "react-icons/pi";
 import { TbUserPentagon } from "react-icons/tb";
 
 //ACCOUNT
@@ -24,6 +24,14 @@ import {
   PiAirplaneTakeoffBold,
   PiAirplaneLandingBold
 } from "react-icons/pi";
+
+
+//OCEAN EXPORT/IMPORT
+import {
+  RiShip2Line,
+  RiShipLine
+} from "react-icons/ri";
+import { BiSolidShip } from "react-icons/bi";
 
 //계약관리
 import { GrDocumentConfig } from "react-icons/gr";
@@ -46,7 +54,7 @@ export type NavigationState = {
 // Define the initial state using that type
 export type NavigationStore = {
   navigation: NavigationState[];
-  menu_arr: string [];
+  menu_arr: string[];
   isReady?: boolean;
   openMenu: string;
   isOpen: boolean,
@@ -59,13 +67,15 @@ export type NavigationStore = {
 function getIcon(img_index: any) {
   switch (img_index) {
     case "0":
-      return <TbUserPentagon  size={20} />
+      return <TbUserPentagon size={20} />
     case "3":
       return <PiHandCoinsBold size={20} />
     case "11":
-      return <GrDocumentConfig size={20}/>
+      return <GrDocumentConfig size={20} />
     case "13":
       return <PiAirplaneLandingBold size={20} />
+    case "20":
+      return <BiSolidShip size={20} />
     default:
       return <MdOutlineWidthNormal size={20} />
   }
@@ -92,7 +102,7 @@ async function getMenuList(userInfo: any) {
 
   log("menus", menus);
 
-  if (!menus) return{navigationData:undefined, menuArr:undefined};
+  if (!menus) return { navigationData: undefined, menuArr: undefined };
 
   const navigationData: NavigationState[] = [{
     parent_seq: -1,
@@ -102,7 +112,7 @@ async function getMenuList(userInfo: any) {
   }];
 
   const menuMap = new Map<number, NavigationState>();
-  var menuArr:string[] = ['dashboard'];
+  var menuArr: string[] = ['dashboard'];
 
   menus[0]?.data?.forEach((menu: any) => {
     if (menu.use_yn === "Y") {
@@ -154,6 +164,6 @@ export const useNavigation = useNavigationStore;
 export const setNavigationData = async () => {
   const userInfo = useUserSettings.getState().data;
   //log("userInfo : ",userInfo);
-  const {navigationData, menuArr} = await getMenuList(userInfo);
-  useNavigationStore.setState({ navigation: navigationData, menu_arr: menuArr, isReady:true });
+  const { navigationData, menuArr } = await getMenuList(userInfo);
+  useNavigationStore.setState({ navigation: navigationData, menu_arr: menuArr, isReady: true });
 };
