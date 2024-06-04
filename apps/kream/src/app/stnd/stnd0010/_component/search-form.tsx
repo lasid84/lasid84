@@ -82,7 +82,7 @@ const SearchForm = memo(({ loadItem }: any) => {
             options={{
               keyCol: "trans_mode",
               displayCol: ['trans_mode', 'trans_detail'],
-              defaultValue: getValues('country_code')
+              defaultValue: getValues('trans_mode')
             }}
           />
         </PageSearchButton>
