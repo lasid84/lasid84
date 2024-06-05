@@ -7,7 +7,7 @@ import { useEffect, useReducer, useMemo, useCallback, memo } from "react";
 import { SP_CreateIFData, SP_GetIFData } from "./_component/data";
 import SearchForm from "./_component/search-form";
 import MasterGrid from './_component/gridMaster';
-import FileUpload from "components/file-upload";
+import { FileUpload } from "components/file-upload";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');

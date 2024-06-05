@@ -59,3 +59,25 @@ export const SP_CreateIFData = async (param: any) => {
     const result = await executFunction(params);
     return result![0];
 }
+
+export const SP_GetExcelFormData = async (param: any) => {
+  const Param = param;
+  const { user_id, ipaddr } = Param;
+
+  const params = {
+    inparam : [
+      "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      user_id
+    , ipaddr
+    ],
+    inproc: 'ufsm.f_ufsm0003_get_excel_form',
+    isShowLoading: true,
+    isShowComplete: false,
+    }
+  
+    const result = await executFunction(params);
+    return result![0];
+}

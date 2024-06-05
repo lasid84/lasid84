@@ -5,13 +5,17 @@ import React, { useState, memo, useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
-import { useUserSettings } from "states/useUserSettings";
-import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { shallow } from "zustand/shallow";
-import { DatePicker } from "@/components/date";
+import { useAppContext } from "components/provider/contextObjectProvider";
+import { DatePicker } from "components/date";
 import dayjs from 'dayjs'
+import { downloadExcel } from "components/file-upload";
+import { useGetData } from "components/react-query/useMyQuery";
+import { SP_GetExcelFormData } from "./data";
+import { gridData } from "@/components/grid/ag-grid-enterprise";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
+
+const ExcelFormFileName = "Charge Upload Form.xlsx";
 
 export interface returnData {
   cursorData : []
@@ -35,7 +39,8 @@ const SearchForm = memo(({loadItem}:any) => {
   const { dispatch, objState } = useAppContext();
   const { fr_date, to_date } = objState.searchParams;
   
-  log("ufms0003 search", fr_date, to_date, dayjs().subtract(1, 'month').startOf('month').format("YYYYMMDD"));
+  const { data: excelFormData, refetch } = useGetData('', '', SP_GetExcelFormData, {enabled:true});
+
   // const methods = useForm<FormType>({
   const methods = useForm({
     // resolver: zodResolver(formSchema),
@@ -68,8 +73,18 @@ const SearchForm = memo(({loadItem}:any) => {
     dispatch({ searchParams: params, isMSearch:true});
   }
 
-  const onUpload = () => {
-
+  const onFormDown = () => {
+    const reSearch = async () => {
+      await refetch();
+      log("onFormDown", (excelFormData as gridData));
+      // createExcelFile((excelFormData as gridData));
+      downloadExcel(
+        (excelFormData as gridData).data
+      , ExcelFormFileName
+      , [50, 100, 150, 50, 100, 100, 70, 100, 70, 100, 70, 100, 100, 100, 100]
+      );
+    }
+    reSearch();
   }
 
   return (
@@ -79,6 +94,7 @@ const SearchForm = memo(({loadItem}:any) => {
           right={
             <>
               <Button id={"search"} onClick={onSearch} />
+              <Button id={"form_down"} onClick={onFormDown} />
             </>
           }>
           <DatePicker id="fr_date" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} lwidth='w-20' height="h-8" />

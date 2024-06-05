@@ -3,11 +3,13 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BiUpload } from "react-icons/bi";
-import * as XLSX from 'xlsx';
-import { ParsingOptions, SSF } from "xlsx";
+import * as XLSX from 'xlsx-js-style';
+import * as ExcelJS from 'exceljs';
+// import { ParsingOptions, SSF } from "xlsx";
 
 import { toastError } from "components/toast";
 import { useTranslation } from "react-i18next";
+import { gridData } from "../grid/ag-grid-enterprise";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const { getKoreaTime, DateToString } = require("@repo/kwe-lib/components/dataFormatter.js");
@@ -19,7 +21,7 @@ interface FileUploadProps {
     onFileDrop?: (data: string) => void;
 }
 
-const FileUpload: React.FC<FileUploadProps> = (props) => {
+export const FileUpload: React.FC<FileUploadProps> = (props) => {
     const { t } = useTranslation();
     const [selectedFiles, setSelectedFiles] = useState([]);
     // const [data, setData] = useState<any[]>([]);
@@ -120,5 +122,146 @@ const FileUpload: React.FC<FileUploadProps> = (props) => {
     )
 }
 
+// export const downloadExcel = (data: [], filename: string) => {
+//     if (data.length === 0) return;
 
-export default FileUpload;
+//     const allStyle = {
+//         border: {
+//           top: { style: 'thin' },
+//           right: { style: 'thin' },
+//           bottom: { style: 'thin' },
+//           left: { style: 'thin' }
+//         }
+//       };
+
+//     var excelForm:any[] = data;
+//     const worksheet = XLSX.utils.json_to_sheet(excelForm, {skipHeader:true});
+//     const workbook = XLSX.utils.book_new();
+//     worksheet['A1'].s = {font:{s:24}}
+//     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');  
+    
+//     const styles = {
+//         all: {
+//           border: {
+//             top: { style: 'thin' },
+//             right: { style: 'thin' },
+//             bottom: { style: 'thin' },
+//             left: { style: 'thin' }
+//           }
+//         },
+//         header: {
+//           font: {
+//             name: 'Arial',
+//             size: 12,
+//             bold: true
+//           }
+//         },
+//         data: {
+//           font: {
+//             name: 'Arial',
+//             size: 10
+//           }
+//         }
+//     };
+      
+//     XLSX.utils.sheet_add_aoa(worksheet, [['', ''], []], { cellStyle: styles['all'] });
+    
+//     XLSX.writeFile(workbook, filename);
+// };
+
+// export const createExcelFile = async (data: gridData, skipHeader = true) => {
+//   const workbook = new ExcelJS.Workbook();
+//   const worksheet = workbook.addWorksheet('Sheet1');
+
+//   if (skipHeader) {
+//     // 제목 행 설정
+//     const headerRow = data.fields.map((obj:{name:string}) => obj.name);
+//     headerRow.forEach((title:string, colIndex:number) => {
+//         worksheet.getColumn(colIndex + 1).header = title;
+//     });
+//   }
+
+//   const rows = data.data.map((obj:Object) => Object.values(obj))
+//   // 데이터 행 추가
+//   rows.forEach((row:[], rowIndex:number) => {
+//     worksheet.getRow(rowIndex + 2).values = row;
+//   });
+
+//   log("---", rows);
+
+//   // 테두리 설정
+//   worksheet.eachRow((row) => {
+//     row.eachCell((cell) => {
+//       cell.border = {
+//         top: { style: 'thin' },
+//         right: { style: 'thin' },
+//         bottom: { style: 'thin' },
+//         left: { style: 'thin' }
+//       };
+//     });
+//   });
+
+//   // 글자 크기 설정
+//   worksheet.eachRow((row) => {
+//     row.eachCell((cell) => {
+//       cell.font = { size: 10 };
+//     });
+//   });
+
+//   // 특정 열 너비 조정 (선택 사항)
+//   worksheet.getColumn(2).width = 20;
+
+//   // 엑셀 파일 저장
+//   await workbook.xlsx.writeFile('output.xlsx');
+// };
+
+export const downloadExcel = (data: [], filename: string, colWidth:number[], skipHeader = true) => {
+    // JSON 데이터를 엑셀 시트로 변환
+    const excelForm = data;
+    const worksheet = XLSX.utils.json_to_sheet(excelForm, { skipHeader: skipHeader });
+
+    if (colWidth.length) {
+        var width = colWidth.map(w => {
+            var obj = {wpx:w}
+            return obj;
+        });
+        worksheet['!cols'] = width;
+
+        log(width)
+    }
+
+    // 스타일 설정
+    if (worksheet['!ref']) { // 'undefined' 체크
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cell_address = { c: C, r: R };
+            const cell_ref = XLSX.utils.encode_cell(cell_address);
+
+            if (!worksheet[cell_ref]) continue;
+
+            // 셀 스타일 지정
+            worksheet[cell_ref].s = {
+                border: {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } }
+                },
+                font: {
+                sz: 10,
+                bold: true,
+                color: { rgb: "000000" }
+                }
+            };
+            }
+        }
+    }
+
+    // 워크북에 시트 추가
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+    // 파일 쓰기
+    XLSX.writeFile(workbook, filename);
+}
