@@ -34,7 +34,7 @@ const CustomerDetail: React.FC = () => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="flex flex-col gap-2 p-5 md:grid md:grid-cols-6 ">
+                <div className="flex flex-col gap-2 p-5 md:grid md:grid-cols-4">
 
                     <MaskedInputField
                         id="carrier_code"
@@ -74,7 +74,7 @@ const CustomerDetail: React.FC = () => {
                             isReadOnly: true
                         }}
                     />
-                    {/* <MaskedInputField 
+                   <MaskedInputField 
                         id="bz_item" 
                         value={objState.mSelectedRow?.bz_item}
                         options = {{ 
@@ -89,7 +89,7 @@ const CustomerDetail: React.FC = () => {
                             isReadOnly:true
                         }}
                         />
-                    <div className="col-span-2">
+                     <div className="col-span-2">
                         <MaskedInputField 
                             id="addr1" 
                             value={objState.mSelectedRow?.addr1}
@@ -106,7 +106,7 @@ const CustomerDetail: React.FC = () => {
                                 isReadOnly:true
                             }}
                         />
-                    </div> */}
+                    </div> 
                 </div>
             </form>
         </FormProvider>

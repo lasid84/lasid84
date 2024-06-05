@@ -38,9 +38,7 @@ export default function OCEN0001() {
                 <MasterGrid initData={initData}/>
                 <div className="col-span-2">
                     <DetailInfo/>
-                    <DetailGrid initData={initData} cont_type={"task"}/>
-                    <DetailGrid initData={initData} cont_type={"sale"}/>
-                    {/* <SDetailGrid initData={initData} type={"sale"}/> */}
+                    <DetailGrid initData={initData}/>
                 </div>
             </div>
         </TableContext.Provider>

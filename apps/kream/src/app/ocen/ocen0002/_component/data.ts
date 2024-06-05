@@ -52,33 +52,30 @@ export const SP_GetMasterData = async (searchParam: any) => {
 }
 
 export const SP_GetDetailData = async (searchParam: any) => {
+  // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const {carrier_code, cont_type, user_id, ipaddr } = Param;
+  const {cust_code, user_id, ipaddr } = Param;
   log("search Detail Data:", Param);
   
   const params = {
     inparam : [
-        "in_carrier_code"
-      , "in_cont_type"
+        "in_cust_code"
       , "in_user_id"
       , "in_ipaddr"
     ],
     invalue: [
-        carrier_code
-      , cont_type
+        cust_code
       , user_id
       , ipaddr
     ],
-    inproc: 'ocean.f_ocen0001_get_detail',
+    inproc: 'account.f_acct3001_get_detail',
     isShowLoading: false
     }
   
     const result = await executFunction(params);
-    log(`data.ts get_detail`, result)
     return result![0];
 }
-
 
 
 export const SP_UpdateData = async (param: any) => {
@@ -130,35 +127,35 @@ export const SP_InsertData = async (param: any) => {
   // const Param = searchParam.queryKey[1]
   const Param = param;
   log("param : ", param)
-  const {carrier_code, cont_type, pic_nm, email, fax_num, tel_num, remark, use_yn, def, user_id, ipaddr} = Param;
+  const {cust_code, pic_nm, email, cust_office, tel_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr} = Param;
   const params = {
     inparam : [
-      "in_carrier_code"
-    , "in_cont_type"
+      "in_cust_code"
     , "in_pic_nm"
     , "in_email"
+    , "in_cust_office"
     , "in_tel_num"
-    , "in_fax_num"
-    , "in_remark"
+    , "in_user_dept"
+    , "in_bz_plc_cd"
     , "in_use_yn"
     , "in_def"
     , "in_user_id"
     , "in_ipaddr"
     ],
     invalue: [
-      carrier_code
-    , cont_type
+      cust_code
     , pic_nm
     , email
+    , cust_office
     , tel_num
-    , fax_num
-    , remark
+    , user_dept
+    , bz_plc_cd
     , use_yn
     , def
     , user_id
     , ipaddr
     ],
-    inproc: 'ocean.f_ocen0001_ins_cont_detail',
+    inproc: 'account.f_acct3001_ins_cont_detail',
     isShowLoading: true,
     isShowComplete:false,
     }

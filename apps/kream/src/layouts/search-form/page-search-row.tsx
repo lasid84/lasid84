@@ -41,8 +41,8 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
   return (
     <>
       <div className="flex w-full">
-        <div className="w-full flex rounded-[5px] border m-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
-          <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+        <div className={`w-full flex rounded-[5px] ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}>
+          <div className="flex w-10/12 justify-self-start items-end gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
             {children}
           </div>
           <div className="flex flex-row-reverse w-2/12 gap-2 md:flex-row-reverse md:grid md:grid-cols-2 ">

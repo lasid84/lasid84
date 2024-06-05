@@ -22,3 +22,17 @@ export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB }) =
     </label>
   );
 };
+
+export const LabelGrid: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB }) => {
+  const { t } = useTranslation();
+
+  const defWidth = lwidth ? lwidth : "min-w-24"
+
+  return (
+    <label
+      htmlFor={id}
+      className={`gap-1 pb-1 pl-2 md:py-0 font-bold leading-8 text-${textAlignLB} text-gray-700 dark:text-gray-200 whitespace-nowrap ${defWidth}`}>
+      {t(name ? name : id)}
+    </label>
+  );
+};

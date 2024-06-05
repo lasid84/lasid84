@@ -59,6 +59,7 @@ const SearchForm: React.FC<Props> = (props) => {
     <FormProvider {...methods}>
       <form /*onSubmit={handleSubmit(onSubmit)}*/ className="space-y-1">
         <PageSearch
+        // addition={"border m-1"}
           right={
             <>
               <Button id={"search"} onClick={onSearch} />

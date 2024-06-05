@@ -21,30 +21,36 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
+    // const { searchParams, isMSearch, mSelectedRow } = objState;
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-   
     const gridOption: GridOption = {
         colVisible: { col: ["carrier_code", "carrier_type", "carrier_nm"], visible: true },
-        gridHeight: "80vh",
+        gridHeight: "100%",
         minWidth: { "carrier_code": 100, "carrier_type": 50 },
         maxWidth: { "carrier_code": 100, "carrier_type": 50 },
         isAutoFitColData: false,
         isSelectRowAfterRender: true,
+        //alignLeft: ["carrier_code", "carrier_type"],
+        // alignRight: [],
     };
 
     const handleRowClicked = (param: RowClickedEvent) => {
+        // var data = onRowClicked(param);
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         log("handleRowClicked", selectedRow)
+        // dispatch({isDSearch:true});
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
+
+        // const row = onSelectionChanged(param)
         const selectedRow = param.api.getSelectedRows()[0];
-        let selectedRow2 = { ...selectedRow, type:'task'}
-        // let selectedRow3 = { ...selectedRow, type:'sale'}
-        log("handleSelectionChanged", selectedRow2)
-        dispatch({ mSelectedRow: selectedRow, isDSearchT: true });
-        dispatch({ mSelectedRow: selectedRow, isDSearchS: true });
+        log("handleSelectionChanged", selectedRow)
+        dispatch({ mSelectedRow: selectedRow, isDSearch: true });
+
+        // document.querySelector('#selectedRows').innerHTML =
+        //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };
 
     useEffect(() => {

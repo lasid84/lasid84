@@ -23,7 +23,7 @@ export const Badge: React.FC<BadgeProps> = ({
     const { t } = useTranslation();
 
     return (
-        <div className="flex flex-wrap items-center justify-start w-full mb-2 space-x-2">
+        <div className="flex flex-wrap w-full space-x-2">
             <span
                 className={clsx(
                     "uppercase font-bold inline-flex text-center bg-transparent border border-current",
