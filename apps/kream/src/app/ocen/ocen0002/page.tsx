@@ -14,7 +14,7 @@ import DetailInfo from './_component/DetailInfo';
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
-export default function OCEN0001() {
+export default function OCEN0002() {
 
     const [state, dispatch] = useReducer(reducer, {
         objState: {

@@ -36,14 +36,14 @@ export const SP_GetMasterData = async (searchParam: any) => {
   
   const params = {
     inparam : [
-        "in_user"
+        "in_user_id"
       , "in_ipaddr"
     ],
     invalue: [
         user_id
       , ipaddr
     ],
-    inproc: 'ocean.f_ocen0001_get_carrier',
+    inproc: 'account.f_acct2011_get_cust',
     isShowLoading: true
     }
   
@@ -55,21 +55,23 @@ export const SP_GetDetailData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const {cust_code, user_id, ipaddr } = Param;
+  const {cust_code, cont_type, user_id, ipaddr } = Param;
   log("search Detail Data:", Param);
   
   const params = {
     inparam : [
         "in_cust_code"
+      , "in_cont_type"
       , "in_user_id"
       , "in_ipaddr"
     ],
     invalue: [
         cust_code
+      , 'ocen'
       , user_id
       , ipaddr
     ],
-    inproc: 'account.f_acct3001_get_detail',
+    inproc: 'ocean.f_ocen0002_get_detail',
     isShowLoading: false
     }
   
@@ -83,15 +85,17 @@ export const SP_UpdateData = async (param: any) => {
   // const Param = searchParam.queryKey[1]
   const Param = param;
   log("param : ", param)
-  const {cust_code, cont_seq, pic_nm, email, cust_office, tel_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
+  const {cust_code, cont_type, cont_seq, pic_nm, email, cust_office, tel_num,fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
   const params = {
     inparam : [
       "in_cust_code"
     , "in_cont_seq"
+    , "in_cont_type"
     , "in_pic_nm"
     , "in_email"
     , "in_cust_office"
     , "in_tel_num"
+    , "in_fax_num"
     , "in_user_dept"
     , "in_bz_plc_cd"
     , "in_use_yn"
@@ -101,11 +105,12 @@ export const SP_UpdateData = async (param: any) => {
     ],
     invalue: [
       cust_code
-    , cont_seq
+    , cont_type
     , pic_nm
     , email
     , cust_office
     , tel_num
+    , fax_num
     , user_dept
     , bz_plc_cd
     , use_yn
@@ -113,7 +118,7 @@ export const SP_UpdateData = async (param: any) => {
     , user_id
     , ipaddr
     ],
-    inproc: 'account.f_acct3001_upd_cont_detail',
+    inproc: 'ocean.f_ocen0002_upd_cont_detail',
     isShowLoading: true,
     isShowComplete:false,
     }
@@ -127,14 +132,16 @@ export const SP_InsertData = async (param: any) => {
   // const Param = searchParam.queryKey[1]
   const Param = param;
   log("param : ", param)
-  const {cust_code, pic_nm, email, cust_office, tel_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr} = Param;
+  const {cust_code, cont_type, pic_nm, email, cust_office, tel_num, fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr} = Param;
   const params = {
     inparam : [
       "in_cust_code"
+    , "in_cont_type"
     , "in_pic_nm"
     , "in_email"
     , "in_cust_office"
     , "in_tel_num"
+    , "in_fax_num"
     , "in_user_dept"
     , "in_bz_plc_cd"
     , "in_use_yn"
@@ -144,10 +151,12 @@ export const SP_InsertData = async (param: any) => {
     ],
     invalue: [
       cust_code
+    , cont_type
     , pic_nm
     , email
     , cust_office
     , tel_num
+    , fax_num
     , user_dept
     , bz_plc_cd
     , use_yn
@@ -155,7 +164,7 @@ export const SP_InsertData = async (param: any) => {
     , user_id
     , ipaddr
     ],
-    inproc: 'account.f_acct3001_ins_cont_detail',
+    inproc: 'ocean.f_ocen0002_ins_cont_detail',
     isShowLoading: true,
     isShowComplete:false,
     }

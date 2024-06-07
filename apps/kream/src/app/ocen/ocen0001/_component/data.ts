@@ -116,7 +116,7 @@ export const SP_UpdateData = async (param: any) => {
     , user_id
     , ipaddr
     ],
-    inproc: 'account.f_acct3001_upd_cont_detail',
+    inproc: 'ocean.f_ocen0001_upd_cont_detail',
     isShowLoading: true,
     isShowComplete:false,
     }

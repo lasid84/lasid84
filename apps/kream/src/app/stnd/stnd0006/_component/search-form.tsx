@@ -1,22 +1,13 @@
 'use client'
 
 import { useTranslation } from "react-i18next";
-import { z } from "zod";
-import { makeZodI18nMap } from "zod-i18n-map";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-
-import { ErrorMessage } from "components/react-hook-form/error-message";
 import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
-// import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { shallow } from "zustand/shallow";
-
-import CustomSelect from "components/select/customSelect";
-import { GridOption, gridData } from "@/components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -41,9 +32,6 @@ const SearchForm = memo(({loadItem}:any) => {
 
   log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
-
-  // 다국어
-  const { t } = useTranslation();
 
   //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)

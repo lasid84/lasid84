@@ -10,9 +10,8 @@ import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import  SearchForm  from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
 import { TableContext } from "@/components/provider/contextObjectProvider";
-import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import  Modal  from './_component/popup';
 import Grid from './_component/gridMaster';
+
 
 //  import { useSearchParams } from 'next/navigation'
  import {useRouter, usePathname, useSearchParams} from 'next/navigation'
@@ -27,7 +26,6 @@ export default function STND0006() {
     const router = useRouter()
 
     const getItem2 = searchParamsr.get('params')
-    
     log('router1', pathname),
     log('router2',router)
     log('router3', getItem2)

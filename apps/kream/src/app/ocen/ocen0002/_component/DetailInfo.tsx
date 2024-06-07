@@ -34,47 +34,64 @@ const CustomerDetail: React.FC = () => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="flex flex-col gap-2 p-5 md:grid md:grid-cols-4">
-
-                    <MaskedInputField
-                        id="carrier_code"
-                        value={mSelectedRow?.carrier_code}
-                        options={{
-                            isReadOnly: true,
-                            freeStyles: "border-1 border-slate-300"
+                <div className="flex flex-col gap-2 p-5 border rounded md:grid md:grid-cols-2">
+                    {/* <TInput 
+                        label="cust_code" 
+                        id="cust_code" 
+                        value={objState.mSelectedRow?.cust_code}
+                        >
+                    </TInput> */}
+                    <MaskedInputField 
+                        id="cust_code" 
+                        // label="cust_code"
+                        value={mSelectedRow?.cust_code}
+                        // width="w-80"
+                        // height="h-12"
+                        options = {{ 
+                            // type:"number",
+                            // limit:7,
+                            // isAllowDecimal:true,
+                            // decimalCnt:2,
+                            // myPlaceholder:"Enter business number" 
+                            // myPlaceholder:"bz_reg_no"
+                            // inline:{true}
+                            isReadOnly:true,
+                            // bgColor:"blue-100",
+                            // textAlign:"right",
+                            // fontSize:"15px",
+                            // fontBold:"light"
+                            freeStyles:"border-1 border-slate-300"
                         }}
-                    />
-                    <div className="col-span-2">
-                        <MaskedInputField
-                            id="carrier_nm"
-                            value={objState.mSelectedRow?.carrier_nm}
-                            options={{
-                                isReadOnly: true
-                            }}
                         />
-                    </div>
-                    <MaskedInputField
-                        id="carrier_type"
-                        value={mSelectedRow?.carrier_type}
-                        options={{
-                            isReadOnly: true
+                    <MaskedInputField 
+                        id="executive_nm" 
+                        value={mSelectedRow?.executive_nm}
+                        options = {{ 
+                            isReadOnly:true
                         }}
-                    />
-                    <MaskedInputField
-                        id="alternate_carrier_code"
-                        value={objState.mSelectedRow?.alternate_carrier_code}
-                        options={{
-                            isReadOnly: true
+                        />
+                    <MaskedInputField 
+                        id="cust_nm" 
+                        value={objState.mSelectedRow?.cust_nm}
+                        options = {{ 
+                            isReadOnly:true
                         }}
-                    />
-                    <MaskedInputField
-                        id="tel_num"
-                        value={objState.mSelectedRow?.tel_num}
-                        options={{
-                            isReadOnly: true
+                        />
+                    <MaskedInputField 
+                        id="bz_con" 
+                        value={objState.mSelectedRow?.bz_con}
+                        options = {{ 
+                            isReadOnly:true
                         }}
-                    />
-                   <MaskedInputField 
+                        />
+                    <MaskedInputField 
+                        id="cust_nm_eng" 
+                        value={objState.mSelectedRow?.cust_nm_eng}
+                        options = {{ 
+                            isReadOnly:true
+                        }}
+                        />
+                    <MaskedInputField 
                         id="bz_item" 
                         value={objState.mSelectedRow?.bz_item}
                         options = {{ 
@@ -89,7 +106,7 @@ const CustomerDetail: React.FC = () => {
                             isReadOnly:true
                         }}
                         />
-                     <div className="col-span-2">
+                    <div className="col-span-2">
                         <MaskedInputField 
                             id="addr1" 
                             value={objState.mSelectedRow?.addr1}
@@ -106,7 +123,7 @@ const CustomerDetail: React.FC = () => {
                                 isReadOnly:true
                             }}
                         />
-                    </div> 
+                    </div>
                 </div>
             </form>
         </FormProvider>

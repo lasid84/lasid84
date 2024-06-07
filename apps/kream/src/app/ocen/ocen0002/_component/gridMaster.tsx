@@ -25,13 +25,16 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
-        colVisible: { col: ["carrier_code", "carrier_type", "carrier_nm"], visible: true },
+        colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
         gridHeight: "100%",
-        minWidth: { "carrier_code": 100, "carrier_type": 50 },
-        maxWidth: { "carrier_code": 100, "carrier_type": 50 },
+        // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+        // checkbox: ["no"],
+        // editable: ["trans_mode"],
+        dataType: { "bz_reg_no": "bizno" },
+        // isMultiSelect: false,
         isAutoFitColData: false,
-        isSelectRowAfterRender: true,
-        //alignLeft: ["carrier_code", "carrier_type"],
+        isSelectRowAfterRender:true
+        // alignLeft: ["major_category", "bill_gr1_nm"],
         // alignRight: [],
     };
 

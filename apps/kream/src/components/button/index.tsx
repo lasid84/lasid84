@@ -21,7 +21,7 @@ export type ButtonProps = {
     icon?: any;
     disabled?: boolean;
     type?: "submit" | "button";
-    size?:any //타입 수정
+    size?: any //타입 수정
     //   direction?: "UP" | "DOWN" | "LEFT" | "RIGHT";
     //   refresh?: boolean;
     isHidden?: boolean;
@@ -83,7 +83,7 @@ const getColor = (label: string, color: string = '') => {
     return btnColor[c];
 }
 
-const getIcon = (label: string, icon: JSX.Element, size:string) => {
+const getIcon = (label: string, icon: JSX.Element, size: string) => {
     if (icon === null) return null;
     //var size = 14;
 
@@ -133,7 +133,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
             onClick={onClick}
             type={type ? type : "button"}
             disabled={disabled ? true : false}>
-            {getIcon(label ? label : id, icon,  size? size : '14')}
+            {getIcon(label ? label : id, icon, size ? size : '14')}
             {t((label ? label : id).toLowerCase())}
         </button>
     );
@@ -149,15 +149,18 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
     const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
 
     return (
-        <button
-            className={`m-1 flex flex-row gap-0.5 h-8 w-full w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center text-gray-500 hover:text-sky-500 
+        <div className="flex w-10 group">
+            <button
+                className={`m-1 flex flex-row gap-0.5 h-8 w-full w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center text-gray-500 hover:text-sky-500 
             ${isHidden ? "hidden" : ""}
             ${disabledCss}`}
-            id={label}
-            onClick={onClick}
-            type={type ? type : "button"}
-            disabled={disabled ? true : false}>
-            {getIcon(label ? label : id, icon, size? size : '14')}
-        </button>
+                id={label}
+                onClick={onClick}
+                type={type ? type : "button"}
+                disabled={disabled ? true : false}>
+                {getIcon(label ? label : id, icon, size ? size : '14')}
+            </button>
+            <span className="invisible h-8 origin-bottom text-sky-500 w-30 group-hover:visible group-hover:absolute group-hover:-translate-x-8 group-hover:translate-y-10">{t(label ? label : id).toLowerCase()}</span>
+        </div>
     );
 };
