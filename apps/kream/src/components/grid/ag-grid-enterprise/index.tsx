@@ -7,7 +7,7 @@ import "./style.css";
 // import "ag-grid-community/styles/ag-theme-quartz.css" // Optional Theme applied to the grid
 // import 'ag-grid-enterprise';
 import { useConfigs } from "states/useConfigs";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent,
   PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
@@ -18,14 +18,16 @@ import {
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
 
+import { Skeleton } from 'components/skeleton/skeleton';
+
 // import { SELECTED_ROW } from "./model";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { stringToFullDateString, stringToFullDate, stringToDateString } = require('@repo/kwe-lib/components/dataFormatter.js')
 const { sleep } = require('@repo/kwe-lib/components/sleep');
 
-const ROW_TYPE = '__ROWTYPE';
-const ROW_TYPE_NEW = 'NEW';
+export const ROW_TYPE = '__ROWTYPE';
+export const ROW_TYPE_NEW = 'NEW';
 
 
 type Props = {
@@ -103,8 +105,6 @@ type cols = {
 
 const ListGrid: React.FC<Props> = memo((props) => {
   log("ListGrid", props);
-  
-  if (!props.listItem) return <></>;
   
   const { t } = useTranslation();
   
@@ -485,10 +485,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onCellValueChanged = (param: CellValueChangedEvent) => {
-    // log("onCellValueChanged")
+    log("onCellValueChanged1", param.node.data['__changed'])
     param.node.data['__changed'] = true
     // return {"col": param.column.getColId(), "oldValue" : param.oldValue, "newValue": param.newValue};
-
+    log("onCellValueChanged2", param.node.data['__changed'])
     if (event?.onCellValueChanged) event.onCellValueChanged(param);
   };
 
@@ -571,6 +571,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           className={`${config.background === "dark" ? "ag-theme-custom-dark" : "ag-theme-custom"} w-full p-0.5`}
           style={gridStyle}
         >
+          {!props.listItem ?  <Skeleton/> :
           <AgGridReact
             ref={gridRef}
             gridOptions={gridOptions}
@@ -590,7 +591,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
             onColumnResized={onColumnResized}
             onFirstDataRendered={onFirstDataRendered}
 
-          />
+          />}
         </div>
       </div>
     </>
