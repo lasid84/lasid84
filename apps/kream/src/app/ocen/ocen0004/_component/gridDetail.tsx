@@ -88,15 +88,14 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             var data = node.data;
             gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
             if (data.__changed) {
-              if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-                data.place_code = objState.mSelectedRow.place_code;
-                // data.pickup_type = 'OE';
-                Create.mutate(data);
                 hasData = true;
-              } else { //수정
-                Update.mutate(data);
-                hasData = true;
-              }
+                if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
+                    data.place_code = objState.mSelectedRow.place_code;
+                    // data.pickup_type = 'OE';
+                    Create.mutate(data);
+                } else { //수정
+                    Update.mutate(data);
+                }
             }
           });
         // log("onSave", gridRef.current.api, modifiedRows);
