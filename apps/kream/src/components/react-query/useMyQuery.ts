@@ -62,6 +62,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
     onSuccess: (res:any, data:any, context:any) => {
       // log("onSuccess : ", data)
       // queryClient.invalidateQueries([queryKey]);
+      data['__changed'] = false;
     },
     onMutate: async (data) => {
       log("onMutate : ", queryClient, data);
@@ -72,8 +73,9 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
 
   const Create = useMutation(['key'], mutationFn, {
     onSuccess: (res:any, data:any, context:any) => {
-      log("onSuccess : ", res, context)
+      log("onSuccess : ", data, res, context)
       // queryClient.invalidateQueries([queryKey])
+      data['__changed'] = false;
     },
     onMutate: async (data) => {
       data["user_id"] = user_id;

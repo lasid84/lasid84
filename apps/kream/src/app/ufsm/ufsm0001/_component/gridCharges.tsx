@@ -49,9 +49,10 @@ const GridCharges: React.FC<Props> = memo(({ loadData }) => {
             var data = node.data;
             if (data['__changed']) {
                 log("onSave - ", data, objState);
-                Create.mutate(data);
+                Create.mutate(data)
+                ;
                 // node.setDataValue('__changed', false);
-                data['__changed'] = false;
+                // data['__changed'] = false;
                 hasData = true;
             }
           });

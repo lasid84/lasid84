@@ -50,8 +50,8 @@ const Home: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-
-          <MaskedInputField 
+          <h1>Dashboard</h1>
+          {/* <MaskedInputField 
             id="bz_reg_no" 
             value="12444444448"
             width="w-80"
@@ -109,7 +109,7 @@ const Home: React.FC = () => {
               freeStyles:"underline border-1 border-slate-300"
             }}
             // height="h-20"
-          />
+          /> */}
 
         </form>
       </FormProvider>
