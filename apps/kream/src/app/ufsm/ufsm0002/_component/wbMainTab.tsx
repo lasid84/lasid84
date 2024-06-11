@@ -11,7 +11,8 @@ import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { DateInput, DatePicker } from 'components/date'
+import { SP_CreateIFData } from './data';
+import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
@@ -29,11 +30,12 @@ export interface typeloadItem {
 }
 
 const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
-
+  const { Create } = useUpdateData2(SP_CreateIFData);
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
   const [data, setData] = useState<any>();
-
+  const IN_PGM_CODE = '1'
+  
   // //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
@@ -58,7 +60,10 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
     // log("onSearch", params);
   }
   const onRefresh = () => { dispatch({ isMDSearch: true }) }
-
+  const onInterface = () => {
+    const params = getValues();
+    Create.mutate(params)
+  }
   useEffect(() => {
     if (mainData)
       setData((mainData?.[0] as gridData).data[0]);
@@ -75,7 +80,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
                   <Badge size={"md"} name={data?.status} color="border-sky-500 text-sky-500" rounded outlined />
                 </div>
                 <div className={"flex col-span-2"}>
-                  <ICONButton id="download" disabled={false} onClick={onSearch} size={'24'} />
+                  <ICONButton id="interface" disabled={false} onClick={onInterface} size={'24'} />
                   <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
@@ -95,6 +100,7 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
             <MaskedInputField id="orig_department_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_department_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <div className='col-span-2'><MaskedInputField id="shipper_name" label="controlling_party" lwidth="w-25" height='h-8' value={data?.shipper_name} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
             {/* <MaskedInputField id="dest_city_code" lwidth='w-12' width="w-24" height='h-8' value={data?.dest_city_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />           */}
+            <MaskedInputField id="in_pgm_code" value={IN_PGM_CODE} options={{ freeStyles: 'hidden', noLabel: true }} />
           </PageTabContent>
         </form>
       </FormProvider>

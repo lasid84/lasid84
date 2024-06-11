@@ -82,6 +82,36 @@ export const SP_GetWBDetailData = async (searchParam: any) => {
 }
 
 
+export const SP_CreateIFData = async (param: any) => {
+  
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  log('param',Param)
+  const { in_pgm_code, waybill_no, user_id, ipaddr } = Param;
+  const params = {
+    inparam : [
+      "in_pgm_code"
+    , "in_blno"
+    , "in_user_id"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      in_pgm_code
+    , waybill_no
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'scrap.f_scrp0001_ins_if_data',
+    isShowLoading: true,
+    isShowComplete:true,
+    }
+  
+    const result = await executFunction(params);
+    return result![0];
+}
+
+ 
+
 export const SP_InsertCharge = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
