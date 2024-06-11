@@ -24,25 +24,13 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     const { Update } = useUpdateData2(SP_UpdateData);
     const { Create } = useUpdateData2(SP_CreateData);
 
-    // 선택된 데이터 Select컴포넌트 처리
-    const [transmode, setTransmode] = useState([]);
-    const [transtype, setTranstype] = useState([]);
-    const [prodGrCd, setprodGrCd] = useState([]);
-    const [billGr1Cd, setBillGr1Cd] = useState([]);
-    const [glGr1Cd, setGlGr1Cd] = useState([]);
-    const [glGr2Cd, setGlGr2Cd] = useState([]);
-
     const closeModal = () => {
         dispatch({ isPopUpOpen: false });
         reset();
     }
-    const defTransMode = popType === crudType.CREATE ? searchParams.trans_mode : mSelectedRow?.trans_mode;
-    const defTransType = popType === crudType.CREATE ? searchParams.trans_type : mSelectedRow?.trans_type;
+
     const formZodMethods = useForm({
-        // resolver: zodResolver(formZodSchema),
         defaultValues: {
-            trans_mode: defTransMode,
-            trans_type: defTransType,
             use_yn: "Y",
         },
     });
@@ -60,24 +48,13 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => {
         if (loadItem) {
-            setTransmode(loadItem[0])
-            setTranstype(loadItem[1])
-            setprodGrCd(loadItem[2])
-            setGlGr1Cd(loadItem[5])
-            setGlGr2Cd(loadItem[6])
+
         }
     }, [loadItem]);
 
     useEffect(() => {
         // log("=====", loadItem);
         if (loadItem && mSelectedRow && Object.keys(mSelectedRow).length > 0) {
-            var modetype = mSelectedRow?.trans_mode + mSelectedRow?.trans_type;
-            switch (modetype) {
-                case "AE": setBillGr1Cd(loadItem[7]); break;
-                case "AI": setBillGr1Cd(loadItem[8]); break;
-                case "OE": setBillGr1Cd(loadItem[9]); break;
-                case "OI": setBillGr1Cd(loadItem[10]); break;
-            }
         }
     }, [mSelectedRow, loadItem])
 
@@ -109,7 +86,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         reset()
         log("popup mSelectedRow :", mSelectedRow);
         if (popType === crudType.CREATE) {
-            setFocus("trans_mode")
+            setFocus("use_yn")
         }
         // if (popType === PopType.UPDATE) {
         //     setModalValue(selectedData, setValue, getValues)
@@ -130,8 +107,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                 title={"Carrier코드 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
                 bottomRight={
                     <>
-                        {/* <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} /> */}
-                        <Button id={"cancel"} onClick={closeModal} icon={null} />
+                        <Button id={"check"} onClick={closeModal} icon={null} width="w-32" />
                     </>
                 }
             >

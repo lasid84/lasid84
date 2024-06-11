@@ -3,14 +3,9 @@
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
-// import { TInput2, TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
-import { Button,ICONButton } from 'components/button';
-import { useUserSettings } from "states/useUserSettings";
+import { Button, ICONButton } from 'components/button';
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { shallow } from "zustand/shallow";
-
-import CustomSelect from "components/select/customSelect";
-import { GridOption, gridData } from "@/components/grid/ag-grid-enterprise";
+import Modal from "./popupInterface";
 import { ReactSelect, data } from "@/components/select/react-select2";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -59,7 +54,6 @@ const SearchForm = memo(({ loadItem }: any) => {
     if (loadItem?.length) {
       setCarrierType(loadItem[0])
       onSearch();
-
     }
   }, [loadItem?.length])
 
@@ -70,35 +64,32 @@ const SearchForm = memo(({ loadItem }: any) => {
     dispatch({ searchParams: params, isMSearch: true });
   }
 
-  const onNew = () => {
-    const params = getValues();
-    dispatch({ searchParams: params, mSelectedRow: null, crudType: crudType.CREATE, isPopUpOpen: true });
-    log("onNew", params);    
-  }
-
-  const onRefresh = () => { dispatch({ isMSearch: true }) }
+  const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
   return (
-    <FormProvider {...methods}>
-      <form className="space-y-1">
-        <PageSearchButton
-          right={
-            <>
-              <Button id={"search"} onClick={onSearch} />
-              <Button id={"refresh"} onClick={onRefresh} />
-            </>
-          }>
-          <ReactSelect
-            id="carrier_type" label="carrier_type" dataSrc={carriertype as data}
-            options={{
-              keyCol: "carrier_type",
-              displayCol: ['carrier_type', 'type_detail'],
-              defaultValue: getValues('carrier_type')
-            }}
-          />
-        </PageSearchButton>
-      </form>
-    </FormProvider>
+    <>
+      <FormProvider {...methods}>
+        <form className="space-y-1">
+          <PageSearchButton
+            right={
+              <>
+                <Button id={"search"} onClick={onSearch} />
+                <Button id={"interface"} onClick={onInterface} />
+              </>
+            }>
+            <ReactSelect
+              id="carrier_type" label="carrier_type" dataSrc={carriertype as data}
+              options={{
+                keyCol: "carrier_type",
+                displayCol: ['carrier_type', 'type_detail'],
+                defaultValue: getValues('carrier_type')
+              }}
+            />
+          </PageSearchButton>
+        </form>
+      </FormProvider>
+      <Modal loadItem={loadItem} />
+    </>
   );
 });
 

@@ -105,6 +105,7 @@ export const SP_UpdateData = async (param: any) => {
     ],
     invalue: [
       cust_code
+    , cont_seq
     , cont_type
     , pic_nm
     , email

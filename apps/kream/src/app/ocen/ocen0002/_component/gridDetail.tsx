@@ -6,7 +6,7 @@ import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
-import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import PageSearch from "layouts/search-form/page-search-row";
 
@@ -93,17 +93,19 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
 
     const onSave = () => {        
         log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
-        const modifiedRows:any = [];
+        var hasData = false
         gridRef.current.api.forEachNode((node:any) => {
-            var data = {...node.data};
+            var data = node.data;
             gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
-            // console.log(data);
             if (data.__changed) {
-              if (data.cust_code && data.cont_seq) { //수정
-                Update.mutate(data);
-              } else { //신규
+              if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
                 data.cust_code = objState.mSelectedRow.cust_code;
+                data.cont_type="ocen"
                 Create.mutate(data);
+                hasData = true;
+              } else { //수정
+                Update.mutate(data);
+                hasData = true;
               }
             }
           });
@@ -117,7 +119,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             <PageSearch
                 right={
                 <>
-                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {"use_yn": true, "def":false, "cont_type":"ocen"})} />
+                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {"use_yn": true, "def":false})} />
                 <Button id={"save"} onClick={onSave} />
                 </>
             }>

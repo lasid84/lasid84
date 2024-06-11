@@ -5,10 +5,9 @@ import React, { useState, useEffect, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
-import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
-
+import Modal from "./popupInterface";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -64,30 +63,36 @@ const SearchForm = memo(({ loadItem }: any) => {
     dispatch({ searchParams: params, isMSearch: true });
   }
 
+  const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
+
   const onRefresh = () => { dispatch({ isMSearch: true }) }
 
   return (
-    <FormProvider {...methods}>
-      <form className="space-y-1">
-        <PageSearchButton
-          right={
-            <>
-              <Button id={"search"} onClick={onSearch} />
-              <Button id={"refresh"} onClick={onRefresh} />
-            </>
-          }>
+    <>
+      <FormProvider {...methods}>
+        <form className="space-y-1">
+          <PageSearchButton
+            right={
+              <>
+                <Button id={"search"} onClick={onSearch} />
+                {/* <Button id={"refresh"} onClick={onRefresh} /> */}
+                <Button id={"interface"} onClick={onInterface} />
+              </>
+            }>
 
-          <ReactSelect
-            id="trans_mode" label="trans_mode" dataSrc={transmode as data}
-            options={{
-              keyCol: "trans_mode",
-              displayCol: ['trans_mode', 'trans_detail'],
-              defaultValue: getValues('trans_mode')
-            }}
-          />
-        </PageSearchButton>
-      </form>
-    </FormProvider>
+            <ReactSelect
+              id="trans_mode" label="trans_mode" dataSrc={transmode as data}
+              options={{
+                keyCol: "trans_mode",
+                displayCol: ['trans_mode', 'trans_detail'],
+                defaultValue: getValues('trans_mode')
+              }}
+            />
+          </PageSearchButton>
+        </form>
+      </FormProvider>
+      <Modal loadItem={loadItem} />
+    </>
   );
 });
 

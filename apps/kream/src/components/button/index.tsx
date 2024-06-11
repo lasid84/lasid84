@@ -10,6 +10,8 @@ import { ReactElement, cloneElement } from "react";
 import { GrPowerReset } from "react-icons/gr";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { GrDownload } from "react-icons/gr";
+import { VscSymbolInterface } from "react-icons/vsc";
+import { MdOutlineSyncAlt } from "react-icons/md";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -25,6 +27,7 @@ export type ButtonProps = {
     //   direction?: "UP" | "DOWN" | "LEFT" | "RIGHT";
     //   refresh?: boolean;
     isHidden?: boolean;
+    width?: string;
 };
 
 const btnColor: any = {
@@ -46,7 +49,7 @@ const btnColor: any = {
     'gray': 'text-white bg-gray-400 rounded border-gray-400 hover:bg-gray-300',
     'white': 'text-black font-bold bg-white rounded border border-gray-400 hover:bg-gray-100',
     'sky-outline': 'bg-transparent hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-400  hover:border-transparent rounded',
-    'gray-outline': 'bg-transparent hover:bg-gray-900/75 text-gray-700/75 hover:text-white border border-gray-700/75  hover:border-transparent rounded',
+    'gray-outline': 'bg-transparent hover:bg-gray-900/75 text-gray-700/75 hover:text-white border border-gray-700/75  hover:border-transparent rounded dark:text-gray-100 dark:hover:bg-gray-400',
     'green-outline': 'bg-transparent hover:bg-green-600/75 text-green-600/75 hover:text-white border border-green-600/75  hover:border-transparent rounded',
     'orange-outline': 'bg-transparent hover:bg-orange-600/75 text-orange-600/75 hover:text-white border border-orange-600/75  hover:border-transparent rounded',
     'red-outline': 'bg-transparent hover:bg-red-600/75 text-red-600/75 hover:text-white border border-red-600/75  hover:border-transparent rounded',
@@ -58,6 +61,8 @@ const getColor = (label: string, color: string = '') => {
     if (!c) {
         switch (label.toLowerCase()) {
             case "search":
+            case "check":
+            case "request":
                 c = 'sky-fill';
                 break;
             case "add":
@@ -110,6 +115,8 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
             break;
         case "download":
             icon = <GrDownload size={size} />
+        case "interface":
+            icon = <MdOutlineSyncAlt size={size} />
     }
     return (
         icon
@@ -119,14 +126,14 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
 export const Button: React.FC<ButtonProps> = (props) => {
 
     const { t } = useTranslation();
-    const { id, label, disabled, color, type, size, isHidden, icon, onClick
+    const { id, label, disabled, color, type, size, isHidden, icon, onClick, width
     } = props;
 
     const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
 
     return (
         <button
-            className={`m-1 flex flex-row gap-0.5 h-8 w-full w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center ${getColor(label ? label : id, color)}
+            className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : 'w-full'} w-min-24 p-1 text-xs font-medium flex items-center justify-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
             ${disabledCss}`}
             id={label}
@@ -143,7 +150,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 export const ICONButton: React.FC<ButtonProps> = (props) => {
 
     const { t } = useTranslation();
-    const { id, label, disabled, color, type, size, isHidden, icon, onClick
+    const { id, label, disabled, color, type, size, isHidden, icon, onClick, width
     } = props;
 
     const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
@@ -151,7 +158,7 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
     return (
         <div className="flex w-10 group">
             <button
-                className={`m-1 flex flex-row gap-0.5 h-8 w-full w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center text-gray-500 hover:text-sky-500 
+                className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : 'w-full'} w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center text-gray-500 hover:text-sky-500 
             ${isHidden ? "hidden" : ""}
             ${disabledCss}`}
                 id={label}

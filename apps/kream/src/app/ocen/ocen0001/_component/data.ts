@@ -86,31 +86,31 @@ export const SP_UpdateData = async (param: any) => {
   // const Param = searchParam.queryKey[1]
   const Param = param;
   log("param : ", param)
-  const {cust_code, cont_seq, pic_nm, email, cust_office, tel_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
+  const {carrier_code, cont_type, cont_seq, pic_nm, email, cust_office, tel_num,fax_num, tax_num ,remark, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
   const params = {
     inparam : [
-      "in_cust_code"
+      "in_carrier_code"
     , "in_cont_seq"
+    , "in_cont_type"
     , "in_pic_nm"
     , "in_email"
-    , "in_cust_office"
     , "in_tel_num"
-    , "in_user_dept"
-    , "in_bz_plc_cd"
+    , "in_fax_num"
+    , "in_remark"
     , "in_use_yn"
     , "in_def"
     , "in_user_id"
     , "in_ipaddr"
     ],
     invalue: [
-      cust_code
+      carrier_code
     , cont_seq
+    , cont_type
     , pic_nm
     , email
-    , cust_office
     , tel_num
-    , user_dept
-    , bz_plc_cd
+    , fax_num
+    , remark
     , use_yn
     , def
     , user_id
@@ -120,6 +120,7 @@ export const SP_UpdateData = async (param: any) => {
     isShowLoading: true,
     isShowComplete:false,
     }
+  
   
     const result = await executFunction(params);
     return result![0];

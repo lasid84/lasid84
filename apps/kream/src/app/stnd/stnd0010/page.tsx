@@ -28,6 +28,7 @@ export default function STND0010() {
             isMSearch: false,
             mSelectedRow: {},
             isPopUpOpen: false,
+            isIFPopUpOpen : false,
             popType: null
         }
     });

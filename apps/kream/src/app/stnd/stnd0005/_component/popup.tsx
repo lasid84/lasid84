@@ -110,8 +110,8 @@ const Modal: React.FC<Props> = (props) => {
                     title={"종합코드 관리 " + (popType === PopType.CREATE ? "등록" : "수정")}
                     bottomRight={
                         <>
-                            <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} />
-                            <Button id={"cancel"} onClick={closeModal} icon={null} />
+                            <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} width="w-32"/>
+                            <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32"/>
                         </>
                     }>
                     <></>
