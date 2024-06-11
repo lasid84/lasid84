@@ -36,26 +36,27 @@ async function startScraping() {
         const minutes = now.getMinutes();
         
 
-        if (hours === 8 && minutes === 30) {
-            if (!ufsp.lastExcute) {
-                await ufsp.checkSession(true);
-            } else {
-                const diffMSec = now - ufsp.lastExcute.getTime();
-                const diffMin = diffMSec / (60 * 1000);
-                if (diffMin > 10) {
-                    await ufsp.checkSession(true);
-                }
-            }
-        }
+        // if (hours === 8 && minutes === 30) {
+        //     if (!ufsp.lastExcute) {
+        //         await ufsp.checkSession(true);
+        //     } else {
+        //         const diffMSec = now - ufsp.lastExcute.getTime();
+        //         const diffMin = diffMSec / (60 * 1000);
+        //         if (diffMin > 10) {
+        //             await ufsp.checkSession(true);
+        //         }
+        //     }
+        // }
 
+        
         const datas = await ufsp.getIFData();
         let script;
 
         log("1 - ", ufsp.idx, datas.length);
         if (datas.length > 0) {
-            if (datas[0].needlogin.toLowerCase() == 't') {
-                await ufsp.checkSession();
-            }
+            // if (datas[0].needlogin.toLowerCase() == 't') {
+            //     await ufsp.checkSession();
+            // }
             script = await ufsp.getScript(this.pgm);
         }
 
@@ -70,6 +71,8 @@ async function startScraping() {
             ufsp.resultData = {};
             ufsp.mainData = data;
             log("ufsp.mainData", ufsp.mainData);
+
+            await ufsp.loginForUpload(data.id);
             
             // await addJsonResult(data.tab, 'bl_no', data.bl_no, '');
             // await addJsonResult(data.tab, 'trans_type', type, '');
@@ -80,14 +83,6 @@ async function startScraping() {
 
             let uploadData = await ufsp.getChargeUploadData();
 
-            // await uploadData.forEach(async d => {
-            //     await ufsp.addJsonResult('upload_data', '', '', d, 'addBulk')
-
-            //     await ufsp.startScript(script);
-                
-            //     // await ufsp.setChargeIFData('O', JSON.stringify(ufsp.resultData), '');    
-            // });
-
             for (const dataItem of uploadData) {
                 await ufsp.addJsonResult('t_hbl_charge_if', '', '', dataItem, 'addBulk');
                 await ufsp.startScript(script);
@@ -97,9 +92,7 @@ async function startScraping() {
             log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
             await ufsp.setBLIFData('Y', JSON.stringify(ufsp.resultData), '');
             ufsp.errCnt = 0;
-            // lastExcute = new Date();
             ufsp.lastExcute = getKoreaTime();
-            // log(JSON.stringify(resultData));
         }
 
     }

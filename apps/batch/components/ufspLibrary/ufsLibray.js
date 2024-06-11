@@ -9,6 +9,7 @@ const { workerData } = require('worker_threads');
 const { executFunction } = require('../api.service/api.service');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
+const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
 
 
 const UFSP_ERROR = "UFSP ERROR";
@@ -27,6 +28,7 @@ class Library {
     lastExcute;
     resultData = {};
     mainData = null;
+    id = null;
     constructor({ pgm, type, terminal, idx, isHeadless }) {
         this.pgm = pgm;
         this.terminal = terminal;
@@ -135,6 +137,57 @@ class Library {
             let [cookies] = await this.page.cookies();
 
             //await page.setRequestInterception(false);
+
+        } catch (ex) {
+            log("ex_login:", ex)
+            throw ex
+        }
+    }
+
+    async loginForUpload(id, isForce = false) {
+
+        try { 
+            var restart = false;
+
+            if (isForce || this.id !== id) {
+                restart = true;
+            } else {
+                if (this.lastExcute) {
+                    // const diffMSec = now.getTime() - lastExcute.getTime();
+                    const diffMSec = getKoreaTime() - this.lastExcute.getTime();
+                    const diffMin = diffMSec / (60 * 1000);
+                    if (diffMin > 30) {
+                        restart = true;
+                    }
+                }
+                else {
+                    restart = true
+                }
+            }
+
+            if (restart) {
+                await this.startBrowser();
+
+                const inparam = ['in_pgm_code', 'in_user', 'in_ipaddr'];
+                const invalue = [this.pgm, id, ''];
+                const inproc = 'scrap.f_scrp0001_get_login_script_api';
+                const cursorData = await executFunction(inproc, inparam, invalue);
+
+                const acctInfo = cursorData[0].data[0];
+                const scripts = cursorData[1].data;
+
+                for (const [key, val] of Object.entries(acctInfo)) {
+                    if (key === 'pw') {
+                        await this.addJsonResult(acctInfo.tab, key, decrypt(val), '');
+                    } else {
+                        await this.addJsonResult(acctInfo.tab, key, val, '');
+                    }
+                }
+                log("loginForUpload", id, this.resultData)
+                await this.startScript(scripts);
+
+                this.id = id;
+            }
 
         } catch (ex) {
             log("ex_login:", ex)
@@ -280,7 +333,7 @@ class Library {
                 await this.excuteScript(data);
             }
         } catch(ex) {
-            throw  "startScript " + nowData.pgm_code + ',' + nowData.seq + "," + ex;
+            throw  "startScript " + nowData + "," + ex;
         }
     }
 
@@ -297,6 +350,9 @@ class Library {
                     return await this.calculate(data);
                 case "CALCULATECHARGE":
                     return await this.calculateCharge(data);
+                case "GOTO":
+                    return await this.gotoUrl(data);
+
             }
         } catch(ex) {
             throw  "excuteScript " + ex;
@@ -318,7 +374,8 @@ class Library {
             var bodyText = await this.updateBodyText(data);
                         
             v_tracking = 'send post start';
-            const result = await this.executeAPIPost(method, url, bodyText);
+            const header = this.convertJSON(data.header);
+            const result = await this.executeAPIPost(method, url, header, bodyText);
             
             v_tracking = 'send post finish';
     
@@ -350,13 +407,14 @@ class Library {
         //let header = data.header;
         const method = data.method;
         let bodyText = JSON.parse(data.body);
-        
+        // log("bodyText", bodyText)
         if (data.upd_body_col) {
             let i = 0;
             for (let col of data.upd_body_col.split(',')) {
                 v_tracking = 'start3';
                 const val = data.upd_body_val.split(',')[i];
                 v_tracking = 'start4 /' + val + ' / ' + JSON.stringify(this.resultData);
+                // log("1.", val, this.resultData);
                 let newVal = await this.GetJsonNode2(this.resultData, val.split('.'));
                 if (data.upd_convert_date) {
                     if (Array.isArray(newVal)) {
@@ -378,6 +436,7 @@ class Library {
                     }
                 }
                 const cols = col.split('.');
+                // log("=======", cols, newVal)
                 await this.updateNodeByPath2(bodyText, cols, newVal);
                 i++;
             }
@@ -386,44 +445,62 @@ class Library {
         return bodyText
     }
 
-    async executeAPIPost(method, url, bodyText) {
+    async executeAPIPost(method, url, header = {}, bodyText) {
 
-        var result = await this.page.evaluate(async (method, url, bodyText) => {
-            let response = await fetch(url, {
-              method: method,
-              headers: {"Content-Type" : "application/json;charset=UTF-8"},//this.requestHeader,
-              body: JSON.stringify(bodyText),
-            });
+        try {
+            var result = await this.page.evaluate(async (method, url, bodyText) => {
+                let response = await fetch(url, {
+                method: method,
+                headers: {
+                    "Content-Type" : "application/json;charset=UTF-8",
+                    "Host": new URL(url).host
+                    // ...header
+                },//this.requestHeader,
+                body: JSON.stringify(bodyText),
+                });
 
-            const str = response.json();
+                const str = response.json();
 
-            // JSON 응답을 파싱하여 결과를 반환합니다.
-            return str;
-        }, method,  url, bodyText);
+                // JSON 응답을 파싱하여 결과를 반환합니다.
+                return str;
+            }, method,  url, bodyText);
 
-        if (result.bat) {
-            if (result.bat.errors.length) {
-                let isOnlyWarning = true;
-                let message = '';
+            log("result", result, new URL(url).host, JSON.stringify(bodyText));
 
-                message = result.bat.errors.reduce((acc, v) => {
-                    if (v.message.toLowerCase().includes('error')) {
-                        isOnlyWarning = false;
+            //로그인 에러
+            if (result && result.success === false) {
+                this.mainData['error'] = result.error;
+                throw result.error;
+            }
+
+            if (result.bat) {
+                if (result.bat.errors.length) {
+                    let isOnlyWarning = true;
+                    let message = '';
+
+                    message = result.bat.errors.reduce((acc, v) => {
+                        if (v.message.toLowerCase().includes('error')) {
+                            isOnlyWarning = false;
+                        }
+
+                        return !acc ? v.message : acc + ' / ' + v.message;
+                    },'');
+
+                    if (isOnlyWarning) {
+                        this.resultData['warning'] = message;
+                    } else {
+                        this.mainData['error'] = message;
+                        throw message;
                     }
-
-                    return !acc ? v.message : acc + ' / ' + v.message;
-                },'');
-
-                if (isOnlyWarning) {
-                    this.resultData['warning'] = message;
-                } else {
-                    this.mainData['error'] = message;
-                    throw message;
                 }
             }
-        }
 
-        return result;
+            return result;
+        }
+        catch (ex) {
+            log("ex", ex);
+            return null
+        }
     };
 
     async updateResult(data, bodyText, result) {
@@ -765,7 +842,7 @@ class Library {
                 if (!vendor_id) return;
 
                 bodyText.bat.rqst[0].key[8].argValue = vendor_id;
-                const result = await this.executeAPIPost('POST', data.url, bodyText);
+                const result = await this.executeAPIPost('POST', data.url, data.header, bodyText);
 
                 /*
                     result.bat.errors 처리 필요
@@ -823,7 +900,7 @@ class Library {
 
                             this.resultData.arrCharge[idx] = val;
                             bodyText = await updateBodyText(bodyText);
-                            const result = await this.executeAPIPost('POST', data.url, bodyText);
+                            const result = await this.executeAPIPost('POST', data.url, data.header, bodyText);
                             await updateResult(result.bat.methodReturn.arguments);
                             bodyText = await updateBodyText(bodyText);
                             log(lowerKey, ' - ', val, result.bat.methodReturn.arguments);
@@ -834,6 +911,16 @@ class Library {
         } catch (e) {
             throw v_tracking, e
         }
+    }
+
+    async gotoUrl(data) {
+        await Promise.all(
+            [this.page.waitForNavigation({waitUntil: 'domcontentloaded', timeout: 180000}), this.page.waitForNetworkIdle(),
+            this.page.goto(data.url, {
+                timeout: 180000,
+                // ❸ 모든 네트워크 연결이 500ms 이상 유휴 상태가 될 때까지 기다림
+                waitUntil: ['networkidle0','domcontentloaded'],
+            })]);
     }
 
     /* [] 일때 loop 돌리기 */
@@ -963,7 +1050,16 @@ class Library {
           }
         }
         return true; // JSON 객체에 속성이 하나도 없으면 비어 있음
-      }
+    }
+
+    convertJSON (str) {
+        try {
+            const val = JSON.parse(str);
+            return val;
+          } catch (error) {
+            return '';
+          }
+    }
 
     async getScript() {
     
@@ -1040,7 +1136,7 @@ class Library {
             if (err_msg.toString().indexOf("User not authenticated to request the resource") > -1)
             {
                 v_if_yn = 'N';
-                await ufsp.checkSession(true);
+                await this.checkSession(true);
             }
     
             const inparam = ['in_pgm_code', 'in_idx', 'in_blno', 'in_create_date', 'in_if_yn','in_result', 'in_err', 'in_user_id', 'in_ipaddr'];

@@ -76,6 +76,45 @@ const postCall = async (params) => {
   }
 };
 
+// const UFSPpostCall = async () => {
+  
+//   try {
+
+//     const url = 'https://uat.ufsplus.kwe.com/auth/login/submit/';
+//     const data = {
+//       userId: 'ghlim5501',
+//       password: '1q2w#E$R',
+//       APP: 'TED'
+//     };
+//     const headers = {
+//       'Content-Type': 'application/json',
+//       'Host': new URL(url).host
+//     };
+
+//     return axios.post(url, data, { headers })
+//         .then(response => {
+//           // console.log('Status:', response.status);
+//           // console.log('Headers:', response.headers);
+//           // console.log('Data:', response.data);
+//           return response;
+//         })
+//         .catch(error => {
+//           console.error('Error:', error);
+//         });
+
+        
+
+//   } catch (err) {
+//     log("postCall err1 :", JSON.stringify(err));
+//     return {
+//       data: {
+//         success: false,
+//         message: 'Cannot connect to server.. ' + err.name
+//       }
+//     }
+//   }
+// };
+
 const openPopup = (message) => {
   try {
   // alert(message);
@@ -150,6 +189,6 @@ module.exports = {
   executFunction,
   dataCall,
   postCall,
-  postCall2
+  postCall2,
+  // UFSPpostCall
 }
-

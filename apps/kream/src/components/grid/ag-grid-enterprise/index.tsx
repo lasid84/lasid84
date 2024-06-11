@@ -2,10 +2,11 @@
 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+// import "ag-grid-community/styles/ag-theme-quartz.css";
 // import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme applied to the grid
 import "./style.css";
 // import "ag-grid-community/styles/ag-theme-quartz.css" // Optional Theme applied to the grid
-// import 'ag-grid-enterprise';
+import 'ag-grid-enterprise';
 import { useConfigs } from "states/useConfigs";
 import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -14,6 +15,9 @@ import {
   SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent,
   FirstDataRenderedEvent
 } from "ag-grid-community";
+
+import { LicenseManager } from  'ag-grid-enterprise'
+LicenseManager.setLicenseKey('AG-061191');
 
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
@@ -150,9 +154,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
       // groupIncludeTotalFooter: true,
       // rowMultiSelectWithClick: true,
-      // suppressRowClickSelection: false,
+      enableRangeSelection: true,
       stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
-      animateRows: true,
+      // animateRows: true,
       // onGridReady: () => {
       //   log("onGridReady")
       //   setDefaultColDef(
