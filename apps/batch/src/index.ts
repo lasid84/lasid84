@@ -66,24 +66,29 @@ async function startWorker() {
         break;
       case "SCRAP_UFSP_CHARGE_UPLOAD":
         const workerCharge = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-charge-uploader.js'
-              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'false' ? false : true
             }});
         break;
       case "SCRAP_UFSP_PROFILE_CARRIER":
           const workerCarrier = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-profile-carrier.js'
-              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'true' ? true : false 
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
               }});
           break;
       case "SCRAP_UFSP_PROFILE_CUSTOMER":
           const workerCustomer = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-profile-customer.js'
-              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'true' ? true : false 
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
               }});
           break;
       case "SCRAP_UFSP_PROFILE_PORT":
         const workerPort = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-profile-port.js'
-            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'true' ? true : false 
+            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
             }});
         break;          
+      case "SCRAP_UFSP_CODE_MASTER":
+        const workerCodeMaster = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-codemaster.js'
+            , { workerData: { idx: thread.idx, pgm:thread.pgm, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
+            }});
+        break;  
     }
     await sleep(3000);
     i++;

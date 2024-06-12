@@ -144,12 +144,12 @@ class Library {
         }
     }
 
-    async loginForUpload(id, isForce = false) {
+    async loginByApi(id = '', isForce = false) {
 
         try { 
             var restart = false;
 
-            if (isForce || this.id !== id) {
+            if (isForce || (id && this.id !== id)) {
                 restart = true;
             } else {
                 if (this.lastExcute) {
@@ -168,8 +168,8 @@ class Library {
             if (restart) {
                 await this.startBrowser();
 
-                const inparam = ['in_pgm_code', 'in_user', 'in_ipaddr'];
-                const invalue = [this.pgm, id, ''];
+                const inparam = ['in_pgm_code', 'in_idx', 'in_terminal', 'in_user', 'in_ipaddr'];
+                const invalue = [this.pgm, this.idx, this.terminal, id, ''];
                 const inproc = 'scrap.f_scrp0001_get_login_script_api';
                 const cursorData = await executFunction(inproc, inparam, invalue);
 
@@ -183,7 +183,7 @@ class Library {
                         await this.addJsonResult(acctInfo.tab, key, val, '');
                     }
                 }
-                log("loginForUpload", id, this.resultData)
+                // log("loginByApi", id, this.resultData)
                 await this.startScript(scripts);
 
                 this.id = id;
@@ -219,9 +219,9 @@ class Library {
             switch (action) {
                 case "goto":
                     await Promise.all(
-                        [page.waitForNavigation({waitUntil: 'domcontentloaded', timeout: 180000}), page.waitForNetworkIdle(),
+                        [page.waitForNavigation({waitUntil: 'domcontentloaded', timeout: 300000}), page.waitForNetworkIdle(),
                         page.goto(val, {
-                            timeout: 180000,
+                            timeout: 300000,
                             // ❸ 모든 네트워크 연결이 500ms 이상 유휴 상태가 될 때까지 기다림
                             waitUntil: ['networkidle0','domcontentloaded'],
                         })]);
@@ -288,6 +288,7 @@ class Library {
             this.resultData[tab] = row;
             // log("============addBulk", tab, this.resultData[tab]);
             break;
+        
         case "add":
             // log("addJsonResult add", tab, col, val, row);
             if (!this.resultData[tab]) {
@@ -343,6 +344,8 @@ class Library {
             switch(data.method.toUpperCase()) {
                 case "POST":
                     return await this.callAPIPost(data);
+                case "GET":
+                    return await this.callAPIGet(data);
                 case "SLEEP":
                     // sleep(data.header);
                     break;
@@ -356,6 +359,31 @@ class Library {
             }
         } catch(ex) {
             throw  "excuteScript " + ex;
+        }
+    }
+
+    async callAPIGet(data) {
+
+        let msg_result;
+        let v_tracking = 'start';
+        try {
+            
+            const header = this.convertJSON(data.header);
+            const result = await this.executeAPI(data.method, data.url, header, '');
+            
+            v_tracking = 'send post finish';
+        
+            msg_result = result;
+    
+            v_tracking = 'get post result complete';
+    
+            await this.updateResult(data, '', result);
+
+            v_tracking = 'json data parsing complete';
+    
+        } catch(ex) {
+            // if (msg_result.error == "Unauthorized") throw  "tracking : " + v_tracking + " callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
+            throw  "tracking : " + v_tracking + " callAPIGet : " + JSON.stringify(msg_result) + " / " + ex;
         }
     }
 
@@ -375,7 +403,7 @@ class Library {
                         
             v_tracking = 'send post start';
             const header = this.convertJSON(data.header);
-            const result = await this.executeAPIPost(method, url, header, bodyText);
+            const result = await this.executeAPI(method, url, header, bodyText);
             
             v_tracking = 'send post finish';
     
@@ -445,19 +473,28 @@ class Library {
         return bodyText
     }
 
-    async executeAPIPost(method, url, header = {}, bodyText) {
+    async executeAPI(method, url, header = {}, bodyText) {
 
         try {
             var result = await this.page.evaluate(async (method, url, bodyText) => {
-                let response = await fetch(url, {
-                method: method,
-                headers: {
-                    "Content-Type" : "application/json;charset=UTF-8",
-                    "Host": new URL(url).host
-                    // ...header
-                },//this.requestHeader,
-                body: JSON.stringify(bodyText),
-                });
+                let response = method === 'POST' ?
+                    await fetch(url, {
+                        method: method,
+                        headers: {
+                            "Content-Type" : "application/json;charset=UTF-8",
+                            "Host": new URL(url).host
+                            // ...header
+                        },//this.requestHeader,
+                        body: JSON.stringify(bodyText),
+                    }) :
+                    await fetch(url, {
+                        method: method,
+                        headers: {
+                            "Content-Type" : "application/json;charset=UTF-8",
+                            "Host": new URL(url).host
+                            // ...header
+                        },//this.requestHeader,
+                    });
 
                 const str = response.json();
 
@@ -465,7 +502,7 @@ class Library {
                 return str;
             }, method,  url, bodyText);
 
-            log("result", result, new URL(url).host, JSON.stringify(bodyText));
+            // log("result", result, new URL(url).host, JSON.stringify(bodyText));
 
             //로그인 에러
             if (result && result.success === false) {
@@ -530,6 +567,7 @@ class Library {
                 }
             }
             v_tracking = 'json data parsing2';
+            // log('---------------------', rows);
             for (const row of rows) {
                 if (row === null) {
                     continue;
@@ -537,6 +575,8 @@ class Library {
 
                 if (data.out_col === '{}') {
                     await this.addJsonResult(tab, '', '', row, 'addBulk');
+                } else if (data.out_col === '[]') {
+                    await this.addJsonResult(tab, '', '', row, 'add');
                 } else {
                     let i = 0;
                     let inputRow = {};
@@ -664,7 +704,7 @@ class Library {
                     if (this.isValidDate(val)) {
                         val = this.transformDate(val);
                     } 
-                    log('======= ', key, seq, val)
+                    // log('======= ', key, seq, val)
                     this.resultData.arrCharge[seq] = val;
                 }
             }
@@ -842,7 +882,7 @@ class Library {
                 if (!vendor_id) return;
 
                 bodyText.bat.rqst[0].key[8].argValue = vendor_id;
-                const result = await this.executeAPIPost('POST', data.url, data.header, bodyText);
+                const result = await this.executeAPI('POST', data.url, data.header, bodyText);
 
                 /*
                     result.bat.errors 처리 필요
@@ -868,7 +908,7 @@ class Library {
                     let lowerKey = key.toLowerCase();
                     let val = this.resultData.t_hbl_charge_if[lowerKey];
                     let idx = arrCharge.indexOf(lowerKey);
-                    log("calculateCharge", key, this.resultData.t_hbl_charge_if[key], this.resultData.arrCharge[arrCharge.indexOf(lowerKey)], val);
+                    // log("calculateCharge", key, this.resultData.t_hbl_charge_if[key], this.resultData.arrCharge[arrCharge.indexOf(lowerKey)], val);
 
                     if (val === null) continue;
 
@@ -900,10 +940,10 @@ class Library {
 
                             this.resultData.arrCharge[idx] = val;
                             bodyText = await updateBodyText(bodyText);
-                            const result = await this.executeAPIPost('POST', data.url, data.header, bodyText);
+                            const result = await this.executeAPI('POST', data.url, data.header, bodyText);
                             await updateResult(result.bat.methodReturn.arguments);
                             bodyText = await updateBodyText(bodyText);
-                            log(lowerKey, ' - ', val, result.bat.methodReturn.arguments);
+                            // log(lowerKey, ' - ', val, result.bat.methodReturn.arguments);
                             break;
                     }
                 }
@@ -990,18 +1030,23 @@ class Library {
                 // }
             }
         } else {
-            targetJson = targetJson[firstKey];
             let row;
-    
-            if (typeof targetJson[0] === 'object') {
-            //if (typeof targetJson[Symbol.iterator] === 'function') {
-                row = targetJson[0];
-                //log("out firstKey 1", firstKey, row);
-            } else {
+            if (firstKey == '[]') {
                 row = targetJson;
-                //log("out firstKey 2", firstKey, row);
+                result.push(...row);
+            } else {
+                targetJson = targetJson[firstKey];
+                        
+                if (typeof targetJson[0] === 'object') {
+                    row = targetJson[0];
+                    // log("out firstKey 1", firstKey, row);
+                } else {
+                    row = targetJson;
+                    // log("out firstKey 2", firstKey, row);
+                }
+
+                result.push(row);
             }
-            result.push(row);
         }
     
         return result;
@@ -1117,7 +1162,7 @@ class Library {
     async getIFData() {
         try {
             
-            log("Start Script");
+            // log("Start Script");
             const inparam = ['in_pgm_code', 'in_idx', 'in_type', 'in_user_id', 'in_ipaddr'];
             const invalue = [this.pgm, this.idx, this.type, '', ''];
             const inproc = 'scrap.f_scrp0001_get_if_scrap2'; 
@@ -1189,6 +1234,20 @@ class Library {
             const inparam = ['in_pgm_code', 'in_idx', 'in_blno', 'in_seq', 'in_if_yn','in_result', 'in_err', 'in_user_id', 'in_ipaddr'];
             const invalue = [this.pgm, this.idx, this.mainData.bl_no, this.mainData.seq, v_if_yn, result, err_msg, '', ''];
             const inproc = 'scrap.f_scrp0002_set_if_charge_data'; 
+            await executFunction(inproc, inparam, invalue);
+            //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
+            
+        } catch (ex) {
+            throw ex;
+        }
+    }
+
+    async insertIFData(key = '') {
+        try {    
+
+            const inparam = ['in_pgm_code', 'in_blno', 'in_user_id', 'in_ipaddr'];
+            const invalue = [this.pgm, key, '', ''];
+            const inproc = 'scrap.f_scrp0001_ins_if_data'; 
             await executFunction(inproc, inparam, invalue);
             //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
             

@@ -92,6 +92,7 @@ function getKoreaTime(date = new Date()) {
     const korNow = new Date(currentUTC.getTime() + (offset * 60 * 60 * 1000));
 
     return korNow;
+
 };
 
 

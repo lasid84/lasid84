@@ -31,8 +31,8 @@ async function startScraping() {
         ufsp.mainData = null;
 
         const now = getKoreaTime(); 
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
+        const hours = now.getUTCHours();
+        const minutes = now.getUTCMinutes();
         
 
         if (hours === 8 && minutes === 30) {
