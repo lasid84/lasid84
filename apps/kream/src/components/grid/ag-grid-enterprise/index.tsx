@@ -17,7 +17,7 @@ import {
 } from "ag-grid-community";
 
 import { LicenseManager } from  'ag-grid-enterprise'
-LicenseManager.setLicenseKey('AG-061191');
+LicenseManager.setLicenseKey(process.env.AG_GRID_LICENSE + '');
 
 import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
