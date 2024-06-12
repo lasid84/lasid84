@@ -6,6 +6,7 @@ function log(...args) {
     // console.log("LOGGER: ", process.env.NODE_ENV, development);
     // console.log("====", myFunction());
     development && console.log("LOGGER: ", ...args);
+    production && console.log("LOGGER: ", ...args);
   };
 
   function error(...args) {
