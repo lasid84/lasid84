@@ -30,8 +30,6 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 const { stringToFullDateString, stringToFullDate, stringToDateString } = require('@repo/kwe-lib/components/dataFormatter.js')
 const { sleep } = require('@repo/kwe-lib/components/sleep');
 
-log(process.env.NEXT_PUBLIC_AG_GRID_LICENSE);
-
 export const ROW_TYPE = '__ROWTYPE';
 export const ROW_TYPE_NEW = 'NEW';
 

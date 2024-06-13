@@ -85,8 +85,6 @@ function getIcon(img_index: any) {
 
 async function getMenuList(userInfo: any) {
 
-  // console.log("getMenuList :", userInfo.permission_id);
-
   // const inparam = ['in_permission_id','in_menu_type', 'in_user_id', 'in_ipaddr'];
   // const invalue = [userInfo.permission_id, 'UI', userInfo.user_id, '1.2.3.4'];
   // const inproc = 'public.f_admn_get_menulist';
@@ -103,6 +101,7 @@ async function getMenuList(userInfo: any) {
   log("menus", menus);
 
   if (!menus) return { navigationData: undefined, menuArr: undefined };
+  if (!menus[0].data.length) return { navigationData: undefined, menuArr: undefined };
 
   const navigationData: NavigationState[] = [{
     parent_seq: -1,

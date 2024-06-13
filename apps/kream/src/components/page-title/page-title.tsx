@@ -21,7 +21,7 @@ function getMenuTitle(menu: NavigationState[], url:string, menu_param:string|nul
   for (var obj of menu) {
     if (obj.items.length > 0) {
       title = getMenuTitle(obj.items, url, menu_param, false);
-      log('tlte', title)
+      // log('tlte', title)
       if (title) return title;
     } else {
       // log("title", obj, menu, url, menu_param);

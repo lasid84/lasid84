@@ -5,7 +5,7 @@ const ufsp = new Library({workerData: { idx: 11, pgm:'SCRAP_UFSP_HBL', type:'E',
 
 const exe = async () => {
     await ufsp.startBrowser();
-    await ufsp.loginForUpload('stephen.lim');
+    await ufsp.loginByApi('stephen.lim');
 }
 
 exe();

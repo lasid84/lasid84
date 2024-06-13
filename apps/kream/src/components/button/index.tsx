@@ -12,6 +12,9 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { GrDownload } from "react-icons/gr";
 import { VscSymbolInterface } from "react-icons/vsc";
 import { MdOutlineSyncAlt } from "react-icons/md";
+import { SP_InsertLog } from "@/services/clientAction";
+import { useUpdateData2 } from "../react-query/useMyQuery";
+import { usePathname } from "next/navigation";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -129,6 +132,20 @@ export const Button: React.FC<ButtonProps> = (props) => {
     const { id, label, disabled, color, type, size, isHidden, icon, onClick, width
     } = props;
 
+    const { Create } = useUpdateData2(SP_InsertLog, '');
+    const pathName = usePathname()
+
+    const handleClick = () => {
+
+        var data = {
+            menucode : pathName,
+            buttontype : id            
+        }
+        Create.mutate(data);
+
+        if (onClick) onClick();
+    }
+
     const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
 
     return (
@@ -137,7 +154,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
             ${isHidden ? "hidden" : ""}
             ${disabledCss}`}
             id={label}
-            onClick={onClick}
+            onClick={handleClick}
             type={type ? type : "button"}
             disabled={disabled ? true : false}>
             {getIcon(label ? label : id, icon, size ? size : '14')}
@@ -153,6 +170,20 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
     const { id, label, disabled, color, type, size, isHidden, icon, onClick, width
     } = props;
 
+    const { Create } = useUpdateData2(SP_InsertLog, '');
+    const pathName = usePathname()
+
+    const handleClick = () => {
+
+        var data = {
+            menucode : pathName,
+            buttontype : id            
+        }
+        Create.mutate(data);
+
+        if (onClick) onClick();
+    }
+
     const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'"
 
     return (
@@ -162,7 +193,7 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
             ${isHidden ? "hidden" : ""}
             ${disabledCss}`}
                 id={label}
-                onClick={onClick}
+                onClick={handleClick}
                 type={type ? type : "button"}
                 disabled={disabled ? true : false}>
                 {getIcon(label ? label : id, icon, size ? size : '14')}

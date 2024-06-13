@@ -26,6 +26,7 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
   if (items.length === 0) {
     var query;
     if (menu_param) query = {params:menu_param};
+
     return (
       // <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
       <Link href={{
