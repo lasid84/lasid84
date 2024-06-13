@@ -15,7 +15,12 @@ import PageTitle from "components/page-title/page-title";
 import { useNavigation } from "states/useNavigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toastWaring } from "@/components/toast";
-import { getSession } from "@/services/serverAction";
+import { useSelectedLayoutSegment } from 'next/navigation';
+
+import { getSession } from "services/serverAction";
+import { SP_InsertLog  } from "services/clientAction";
+import { useUpdateData2 } from "components/react-query/useMyQuery";
+
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export type Layout1Props = {
@@ -43,10 +48,12 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const [layout, setLayout] = useState<string>(config.layout);
   const [collapsed, setCollapsed] = useState<boolean>(config.collapsed);
   const [menus, isReady] = useNavigation((state) => [state.menu_arr, state.isReady]);
-  const url = usePathname();
+  const pathname = usePathname();
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
   const router = useRouter();
+
+  const { Create } = useUpdateData2(SP_InsertLog, '');
   
   log("app/layouts/layout-1/index.tsx");
 
@@ -73,15 +80,24 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
     const sessionCheck = async () => {
 
       const user = useUserSettings.getState().data;
-      if (!user.user_id) router.replace('/login');
+      if (!user.user_id) {
+        log('sessionCheck', user)
+        router.replace('/login');
+        return;
+      }
 
       const session = await getSession();
       log("layout index session", session);
-      if (!session) router.replace('/login');
+      if (!session) {
+        router.replace('/login');
+        return;
+      }
     };
-    sessionCheck();
+    // 2024.06.13 버그로 인한 주석(세션체크 로직 다시 검토 필요)
+    // sessionCheck();
 
-    if (isReady) {
+    if (!isReady) {
+      return;
       // if (!checkAuth(menus, url, params)) {
       //   log(menus, url, isReady);
       //   toastWaring(url + " 권한이 없습니다.");
@@ -100,7 +116,18 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
     return (userSettings.loading == "ON")
   }, [userSettings.loading])
 
-
+  useEffect(() => {
+    if (pathname === '/') return;
+    const url = `${pathname}?${params}`
+    
+    var data = {
+        menucode : pathname,
+        action: 'Open'
+    }
+    Create.mutate(data);
+    
+  }, [pathname, params])
+   
   return (
     // <AuthProvider>
     <App>
