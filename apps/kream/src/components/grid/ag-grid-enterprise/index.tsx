@@ -123,7 +123,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
   const { listItem, options } = props;
 
-  const containerStyle = useMemo(() => "flex-col w-full", []);
+  const containerStyle = useMemo(() => "flex-col w-full h-full", []);
   // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
   const [isReady, setReady] = useState(false);
   const gridRef = props.gridRef;

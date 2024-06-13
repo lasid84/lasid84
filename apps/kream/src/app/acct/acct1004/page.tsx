@@ -24,28 +24,32 @@ export default function ACCT1004() {
             isMSearch: false,
             isDSearch: false,
             mSelectedRow: {},
-            mSelectedDetail : {},
+            mSelectedDetail: {},
             dSelectedRow: {},
         }
     });
     const { objState } = state;
     const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen } = objState;
-    
+
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
         <TableContext.Provider value={val}>
-            <SearchForm loadItem={initData} />
-            <div className="grid w-full grid-cols-5 space-x-1">
-                <div className="flex col-span-3">
-                    <MasterGrid initData={initData} />
-                </div>
-                <div className="flex col-span-2">
-                    <CustomerDetail loadItem={initData} />
+            <div className={`w-full h-full`}>
+                <SearchForm loadItem={initData} />
+                <div className="grid h-[calc(100vh-150px)] w-full gird-flow-row grid-cols-5 grid-rows-3 space-x-1">
+                    <div className="col-span-3 row-span-2">
+                        <MasterGrid initData={initData} />
+                    </div>
+                    <div className="w-full col-span-2 row-span-2">
+                        <CustomerDetail loadItem={initData} />
+                    </div>
+                    <div className="col-span-5 grid-rows-1 row-start-3">
+                        <DetailGrid initData={initData} />
+                    </div>
                 </div>
             </div>
-            <DetailGrid initData={initData} />
         </TableContext.Provider>
     );
 }

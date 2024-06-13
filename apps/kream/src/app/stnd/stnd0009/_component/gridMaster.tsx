@@ -28,7 +28,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         colVisible: { col : ["carrier_code", "carrier_type", "carrier_prefix", "alternate_carrier_code", "carrier_nm", "tel_num","url","partner_id","remark","default_address_no",
         "default_contact_no","conference_ind","check_digit8_ind","cut_off_hours","cass_ind","counter_ind","csr_ind","iata_ind","csr_type","general_sales_agent","origin_country_code","pre_iata_code","create_date","create_user","update_date","update_user"], visible:true },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-        gridHeight: "80vh",
+        gridHeight: "h-full",
         dataType: { "create_date" : "date", "vat_rt":"number"},
         isAutoFitColData: true,
         alignLeft: ["major_category", "bill_gr1_nm"],

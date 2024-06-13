@@ -47,7 +47,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             const gridOption: GridOption = {
                 colVisible: { col : ["cust_code", "cont_seq", "fax_num"], visible:false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-                gridHeight: "30vh",
+                gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
                 select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: {"email": 200},

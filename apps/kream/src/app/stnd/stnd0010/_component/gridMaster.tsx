@@ -29,7 +29,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         "hmf_pct","city_ind","hmf_ind","congested_ind","mlb_ipi_ind","port_auth_fees_ind","free_trade_zone_ind","dock_recpts_reqd_ind","rail_acessible_ind","kwe_agent_ind","target_city_ind","fiata_code","conference_code"
         ,"remarks","mdate_tz_code","cdate_tz_code","port_nm","use_yn","create_date","create_user","update_date","update_user"], visible:true },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-        gridHeight: "80vh",
+        gridHeight: "h-full",
         checkbox: ["airport_ind", "sea_port_ind","other_port_ind","city_ind","hmf_ind","congested_ind","mlb_ipi_ind","port_auth_fees_ind","free_trade_zone_ind","dock_recpts_reqd_ind","rail_acessible_ind","kwe_agent_ind",],
         // editable: ["trans_mode"],
         dataType: { "create_date" : "date", "update_date":"date"},

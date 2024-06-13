@@ -198,7 +198,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
             ...base,
             padding: `${(30 - 20 - 1 - 1) / 2}px`,
             transition: 'all .2s ease',
-            transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null
+            transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : 'none'
         }),
     };
 
@@ -215,7 +215,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         rules={rules}
                         render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
-                                <div className={`my-react-select-container block ${defWidth} flex-grow-1`}>
+                                <div className={`my-react-select-container flex-row ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
                                         classNamePrefix="my-react-select"
@@ -239,7 +239,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         rules={rules}
                         render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
-                                <div className={`my-react-select-container block ${defWidth} flex-grow-1`}>
+                                <div className={`my-react-select-container w-96 inline-block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
                                         classNamePrefix="my-react-select"

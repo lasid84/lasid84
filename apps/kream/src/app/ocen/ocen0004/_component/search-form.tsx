@@ -5,7 +5,7 @@ import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import  PageSearch  from "layouts/search-form/page-search-row";
+import  {PageSearch2}  from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
@@ -58,14 +58,14 @@ const SearchForm: React.FC<Props> = (props) => {
   return (
     <FormProvider {...methods}>
       <form /*onSubmit={handleSubmit(onSubmit)}*/ className="space-y-1">
-        <PageSearch
+        <PageSearch2
           right={
             <>
-              <Button id={"search"} onClick={onSearch} />
+              <Button id={"search"} onClick={onSearch} width={`w-32`}/>
             </>
           }>
           <></>
-        </PageSearch>
+        </PageSearch2>
       </form>
     </FormProvider>
   );

@@ -49,7 +49,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
                 
-                gridHeight: "30vh",
+                gridHeight: "h-full",
                 // editable: ["trans_mode"],
                 dataType: { "create_date": "date", "bz_reg_no": "bizno", 
                     "invoice_amt":"number", "local_amt":"number" , "vat_rt": "number",
@@ -118,7 +118,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
 
     return (
         <>
-            <div className="space-y-1">
+            <div className="h-full space-y-1">
                 <Grid
                     gridRef={gridRef}
                     loadItem={initData}

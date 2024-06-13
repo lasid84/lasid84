@@ -23,13 +23,17 @@ export default function STND0005() {
     })
     const { objState } = state;
     const { searchParams } = objState;
-    const val = useMemo(() => { return { dispatch, objState }}, [state]);
+    const val = useMemo(() => { return { dispatch, objState } }, [state]);
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
         <TableContext.Provider value={val}>
-            <SearchForm loadItem={initData} />
-            <Grid initData={initData} />
+            <div className={`w-full h-full`}>
+                <SearchForm loadItem={initData} />
+                <div className={`w-full h-[calc(100vh-150px)]`}>
+                    <Grid initData={initData} />
+                </div>
+            </div>
         </TableContext.Provider>
 
     )

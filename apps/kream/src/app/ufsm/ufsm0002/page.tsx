@@ -87,9 +87,10 @@ export default function UFSM0002() {
 
     return (
         <TableContext.Provider value={val}>
+             <div className={`w-full h-full`}>
             <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
             {/* WayBill Main List 화면 */}
-            {objState.MselectedTab == "Main" ? <div className={`w-full flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
+            {objState.MselectedTab == "Main" ? <div className={`w-full h-[calc(100vh-210px)] flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
                 <SearchForm loadItem={initData} />
                 <MasterGrid initData={initData} />
             </div> : <>
@@ -122,6 +123,7 @@ export default function UFSM0002() {
 
 
             </>}
+            </div>
         </TableContext.Provider>
     );
 }

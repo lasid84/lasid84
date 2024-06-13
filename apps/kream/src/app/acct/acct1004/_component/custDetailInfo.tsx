@@ -68,7 +68,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="flex flex-col w-full gap-2 space-y-2">
+                <div className="flex flex-col w-full gap-2 space-y-2 overflow-y-scroll h-[504px] inherit">
                     <PageContent
                         left={<Tab loadItem={loadItem} onClickTab={handleOnClickTab} />
                         }
@@ -76,7 +76,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                             <Button id="save" disabled={false} onClick={handleSubmit(onFormSubmit)} width='w-32'/>
                         </>
                         }>
-                        <div className={`flex flex-col w-full h-[400px] ${selectedTab == "NM" ? "" : "hidden"}`}>
+                        <div className={`flex flex-col w-full ${selectedTab == "NM" ? "" : "hidden"}`}>
                             <div className="grid overflow-y-auto md:grid-cols-5">
                                 <div className={"p-1 col-span-2"}>
                                     <MaskedInputField id="trans_mode" value={objState.mSelectedDetail?.trans_mode} options={{ isReadOnly: true, textAlign: 'center', inline: true }} height='h-6' />

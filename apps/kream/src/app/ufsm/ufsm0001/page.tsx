@@ -35,7 +35,7 @@ export default function UFSM0001() {
             MselectedTab: 'Main',
             isFirstRender: true,
             selectedTab: "NM",
-            refRow : 0
+            refRow: 0
         }
     });
     const { objState } = state;
@@ -82,40 +82,44 @@ export default function UFSM0001() {
 
     return (
         <TableContext.Provider value={val}>
-            <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
-            {/* WayBill Main List 화면 */}
-            {objState.MselectedTab == "Main" ? <div className={`w-full flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
-                <SearchForm loadItem={initData} />
-                <MasterGrid initData={initData} /></div>
-                : <>
-                    {/* WayBill Detail 화면 상단{Tab} */}
-                    <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
-
-                    {/* WayBill Detail 화면 하단(Sub) */}
-                    <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
-                        <WBMain loadItem={initData} mainData={mainData} />
+            <div className={`w-full h-full`}>
+                <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
+                {/* WayBill Main List 화면 */}
+                {objState.MselectedTab == "Main" ?                
+                    <div className={`w-full h-[calc(100vh-210px)] flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
+                        <SearchForm loadItem={initData} />
+                        <MasterGrid initData={initData} />
                     </div>
+                    : <>
+                        {/* WayBill Detail 화면 상단{Tab} */}
+                        <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
 
-                    <div className={`w-full flex ${selectedTab == "WS" ? "" : "hidden"}`}>
-                        <WBSub loadItem={initData} mainData={mainData} />
-                    </div>
+                        {/* WayBill Detail 화면 하단(Sub) */}
+                        <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
+                            <WBMain loadItem={initData} mainData={mainData} />
+                        </div>
 
-                    <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
-                        <WBReference loadItem={initData} mainData={mainData} />
-                    </div>
+                        <div className={`w-full flex ${selectedTab == "WS" ? "" : "hidden"}`}>
+                            <WBSub loadItem={initData} mainData={mainData} />
+                        </div>
 
-                    <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
-                        <WBShipmentDetails initData={initData} mainData={mainData} />
-                    </div>
+                        <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
+                            <WBReference loadItem={initData} mainData={mainData} />
+                        </div>
 
-                    <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
-                        <WBCharges initData={initData} mainData={mainData} />
-                    </div>
+                        <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
+                            <WBShipmentDetails initData={initData} mainData={mainData} />
+                        </div>
 
-                    <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
-                        <WBShipmentText initData={initData} mainData={mainData} />
-                    </div>
-                </>}
+                        <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
+                            <WBCharges initData={initData} mainData={mainData} />
+                        </div>
+
+                        <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
+                            <WBShipmentText initData={initData} mainData={mainData} />
+                        </div>
+                    </>}
+            </div>
         </TableContext.Provider>
     );
 }

@@ -42,11 +42,32 @@ const PageSearch: React.FC<PageSearchProps> = ({ title, left, right, children, a
     <>
       <div className="flex w-full">
         <div className={`w-full flex rounded-[5px] ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}>
+          {title}
           <div className="flex items-end w-10/12 gap-1 justify-self-start md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
             {children}
           </div>
           <div className="flex flex-row-reverse w-2/12 gap-2 md:flex-row-reverse md:grid md:grid-cols-2 ">
             {right}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+//1분할, Search(검색조건없음, only Button) 
+export const PageSearch2: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
+  return (
+    <>
+      <div className="flex-col w-full h-full">
+        <div className='grid flex-col content-end w-full h-1/6 '>
+          <div className={`flex w-full rounded-[5px] justify-between ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}>
+            <div className="flex inline gap-2 justify-self-start">
+              {title}
+            </div>
+            <div className="flex inline gap-2 justify-self-end">
+              {right}
+            </div>
           </div>
         </div>
       </div>

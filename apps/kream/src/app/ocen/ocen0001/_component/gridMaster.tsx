@@ -26,7 +26,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
    
     const gridOption: GridOption = {
         colVisible: { col: ["carrier_code", "carrier_type", "carrier_nm"], visible: true },
-        gridHeight: "80vh",
+        gridHeight: "h-full",
         minWidth: { "carrier_code": 100, "carrier_type": 90 },
         maxWidth: { "carrier_code": 100, "carrier_type": 90 },
         isAutoFitColData: false,

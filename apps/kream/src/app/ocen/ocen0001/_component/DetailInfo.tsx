@@ -34,7 +34,7 @@ const CustomerDetail: React.FC = () => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="flex flex-col gap-2 p-5 md:grid md:grid-cols-6 ">
+                <div className="flex flex-col h-full gap-2 p-5 md:grid md:grid-cols-6 ">
 
                     <MaskedInputField
                         id="carrier_code"

@@ -63,7 +63,6 @@ export const SP_GetMasterData = async (searchParam: any) => {
 
 export const SP_CreateIFData = async (param: any) => {
   const Param = param;
-  log(Param,'파람')
   const { in_pgm_code, mwb_no, user_id, ipaddr } = Param;
   const params = {
     inparam : [

@@ -25,7 +25,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const gridOption: GridOption = {
         colVisible: { col: ["pipeline_tx_id", "mwb_status", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
-        gridHeight: "70vh",
+        gridHeight: "h-[calc(100vh-200px)]",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
         dataType: { "execution_date": "date", "ic_dc_consol_date": "date", "eta_date": "date", "total_volume":'number',"total_actual_weight":'number',"total_volume_weight":'number','total_chargeable_weight':'number' },
         isAutoFitColData: true,

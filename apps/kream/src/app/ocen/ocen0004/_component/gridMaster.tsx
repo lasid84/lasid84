@@ -27,7 +27,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const gridOption: GridOption = {
         colVisible: { col: ["area_code", "remark", "use_yn", "create_date", "create_user", "update_date", "update_user"], visible: false },
         maxWidth: {"place_code":100, "area_nm":100},
-        gridHeight: "100%",
+        gridHeight: "h-full",
         isAutoFitColData: false,
         isSelectRowAfterRender:true
     };

@@ -3,12 +3,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
-import {useAppContext } from "components/provider/contextObjectProvider";
+import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import PageSearch from "layouts/search-form/page-search-row";
+import { PageGrid } from "layouts/grid/grid";
 import { LabelGrid } from "@/components/label"
 import { Button } from 'components/button'
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
@@ -29,17 +29,17 @@ const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({...objState?.mSelectedRow, cont_type:cont_type}, SEARCH_D, SP_GetDetailData);
+    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({ ...objState?.mSelectedRow, cont_type: cont_type }, SEARCH_D, SP_GetDetailData);
 
     useEffect(() => {
         if (initData) {
             // log(initData[0].data)
             const gridOption: GridOption = {
-                colVisible: { col: ["pic_nm", "email", "tel_num","fax_num","remark","use_yn", "def"], visible: true },
-                gridHeight: "30vh",
+                colVisible: { col: ["pic_nm", "email", "tel_num", "fax_num", "remark", "use_yn", "def"], visible: true },
+                gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
                 minWidth: { "email": 200 },
-                editable: ["pic_nm", "email", "tel_num","fax_num","remark", "use_yn", "def"],
+                editable: ["pic_nm", "email", "tel_num", "fax_num", "remark", "use_yn", "def"],
                 dataType: { "create_date": "date" },
                 isAutoFitColData: false,
             };
@@ -69,16 +69,16 @@ const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
         var hasData = false;
         gridRef.current.api.forEachNode((node: any) => {
             var data = node.data;
-            gridOptions?.checkbox?.forEach((col) => data[col] = data[col]? 'Y' : 'N');
+            gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
             if (data.__changed) {
-              if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-                data.carrier_code = objState.mSelectedRow.carrier_code;
-                Create.mutate(data);
-                hasData = true;
-              } else { //수정
-                Update.mutate(data);
-                hasData = true;
-              }
+                if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
+                    data.carrier_code = objState.mSelectedRow.carrier_code;
+                    Create.mutate(data);
+                    hasData = true;
+                } else { //수정
+                    Update.mutate(data);
+                    hasData = true;
+                }
             }
         });
         toastSuccess('Success.');
@@ -87,28 +87,25 @@ const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
 
     return (
         <>
-            <PageSearch
-                // addition={"border m-1"}
+            <PageGrid
+                title={<><LabelGrid id={cont_type} /></>}
                 right={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false, "cont_type":cont_type })} />
+                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false, "cont_type": cont_type })} />
                         <Button id={"save"} onClick={onSave} />
                     </>
                 }>
-                <LabelGrid id={cont_type} />
-            </PageSearch>
-            <Grid
-                gridRef={gridRef}
-                loadItem={initData}
-                listItem={detailData as gridData}
-                options={gridOptions}
-                event={{
-                    onCellValueChanged: handleCellValueChanged,
-                    onSelectionChanged: handleSelectionChanged
-                }}
-            />
+                <Grid
+                    gridRef={gridRef}
+                    loadItem={initData}
+                    listItem={detailData as gridData}
+                    options={gridOptions}
+                    event={{
+                        onCellValueChanged: handleCellValueChanged,
+                        onSelectionChanged: handleSelectionChanged
+                    }}/>
+            </PageGrid>
         </>
-
     );
 }
 
