@@ -1,3 +1,6 @@
+import { FaSpinner } from "react-icons/fa";
+import { ImSpinner4 } from "react-icons/im";
+import { GrInProgress } from "react-icons/gr";
 
 const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
@@ -5,18 +8,9 @@ const shimmer =
 export function Skeleton() {
   return (
     <div
-      className={`${shimmer} flex w-full h-full flex-col md:col-span-4`}
-    >
-      {/* <div className="h-8 mb-4 bg-gray-100 rounded-md w-36" /> */}
-
-      <div className="flex flex-col justify-between h-full p-4 bg-gray-400 rounded-xl ">
-        <div className="px-6 bg-white">
-          <Sample />            {/* 
-            <div className="flex items-center pt-6 pb-2">
-              <div className="w-5 h-5 bg-gray-200 rounded-full" />
-              <div className="w-20 h-4 ml-2 bg-gray-200 rounded-md" />
-            </div> */}
-        </div>
+      className={`${shimmer} flex w-full h-full flex-col md:col-span-4`}    >
+      <div className="flex flex-col items-center justify-center w-full h-full p-4 rounded-lg bg-gray-200/80 dark:bg-gray-800/80">
+        <HourglassLoading />
       </div>
     </div>
   );
@@ -36,22 +30,19 @@ export function InvoiceSkeleton() {
     </div>
   );
 }
-
-export function Sample() {
+// className="animate-bounce"
+export function HourglassLoading() {
   return (
-    <div className="w-full max-w-sm p-4 mx-auto border border-blue-300 rounded-md shadow">
+    <div className="items-center justify-center h-24 max-w-sm p-4 mx-auto rounded-md w-44">
       <div className="flex space-x-4 animate-pulse">
-        <div className="w-10 h-10 rounded-full bg-slate-200"></div>
-        <div className="flex-1 py-1 space-y-6">
-          <div className="h-2 rounded bg-slate-200"></div>
-          <div className="space-y-3">
-            <div className="grid grid-cols-3 gap-4">
-              <div className="h-2 col-span-2 rounded bg-slate-200"></div>
-              <div className="h-2 col-span-1 rounded bg-slate-200"></div>
+        {/* <div className="flex-1 py-1 space-y-12"> */}
+          <div className="flex items-center justify-center w-full h-full bg-opacity-50">
+            <div className="flex items-center">
+              <GrInProgress className="animate-bounce dark:text-white-500" size={30} color="#5d5d5d" />
+              <span className="ml-2 text-gray-700 dark:text-white">Loading...</span>
             </div>
-            <div className="h-2 rounded bg-slate-200"></div>
           </div>
-        </div>
+        {/* </div> */}
       </div>
     </div>
   )

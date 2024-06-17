@@ -154,6 +154,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
       // groupIncludeTotalFooter: true,
       // rowMultiSelectWithClick: true,
+      suppressServerSideFullWidthLoadingRow : true,
       enableRangeSelection: true,
       stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
       // animateRows: true,
