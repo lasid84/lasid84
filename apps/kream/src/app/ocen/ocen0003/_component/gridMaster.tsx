@@ -8,7 +8,9 @@ import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvi
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-
+import { PageMGrid } from "layouts/grid/grid";
+import { Button } from 'components/button'
+import Modal from "../../../ocen/ocen0002/_component/popupInterface";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -33,7 +35,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         dataType: { "bz_reg_no": "bizno" },
         // isMultiSelect: false,
         isAutoFitColData: false,
-        isSelectRowAfterRender:true
+        isSelectRowAfterRender: true
         // alignLeft: ["major_category", "bill_gr1_nm"],
         // alignRight: [],
     };
@@ -65,18 +67,29 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         }
     }, [objState?.isMSearch]);
 
-    return (
-        <Grid
-            gridRef={gridRef}
-            loadItem={initData}
-            listItem={mainData as gridData}
-            options={gridOption}
-            event={{
-                onRowClicked: handleRowClicked,
-                onSelectionChanged: handleSelectionChanged,
-            }}
-        />
+    const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
+    return (
+        <>
+                    <PageMGrid
+                right={
+                    <>
+                        <Button id={"interface"} onClick={onInterface} />
+                    </>
+                }>
+            <Grid
+                gridRef={gridRef}
+                loadItem={initData}
+                listItem={mainData as gridData}
+                options={gridOption}
+                event={{
+                    onRowClicked: handleRowClicked,
+                    onSelectionChanged: handleSelectionChanged,
+                }}
+            />
+            </PageMGrid>
+            <Modal loadItem={initData} />
+        </>
     );
 }
 

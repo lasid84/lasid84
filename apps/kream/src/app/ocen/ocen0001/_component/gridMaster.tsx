@@ -4,12 +4,15 @@
 import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
 import { SP_GetMasterData } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
+import { SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-
+import { PageMGrid } from "layouts/grid/grid";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { Button } from 'components/button'
+import Modal from "../../../stnd/stnd0009/_component/popupInterface"
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -23,7 +26,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const { dispatch, objState } = useAppContext();
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-   
+
     const gridOption: GridOption = {
         colVisible: { col: ["carrier_code", "carrier_type", "carrier_nm"], visible: true },
         gridHeight: "h-full",
@@ -40,7 +43,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
-        let selectedRow2 = { ...selectedRow, type:'task'}
+        let selectedRow2 = { ...selectedRow, type: 'task' }
         // let selectedRow3 = { ...selectedRow, type:'sale'}
         log("handleSelectionChanged", selectedRow2)
         dispatch({ mSelectedRow: selectedRow, isDSearchT: true });
@@ -56,17 +59,29 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         }
     }, [objState?.isMSearch]);
 
+    const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
+
     return (
-        <Grid
-            gridRef={gridRef}
-            loadItem={initData}
-            listItem={mainData as gridData}
-            options={gridOption}
-            event={{
-                onRowClicked: handleRowClicked,
-                onSelectionChanged: handleSelectionChanged,
-            }}
-        />
+        <>
+            <PageMGrid
+                right={
+                    <>
+                        <Button id={"interface"} onClick={onInterface} />
+                    </>
+                }>
+                <Grid
+                    gridRef={gridRef}
+                    loadItem={initData}
+                    listItem={mainData as gridData}
+                    options={gridOption}
+                    event={{
+                        onRowClicked: handleRowClicked,
+                        onSelectionChanged: handleSelectionChanged,
+                    }}
+                />
+            </PageMGrid>
+            <Modal loadItem={initData} />
+        </>
 
     );
 }

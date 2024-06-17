@@ -21,6 +21,7 @@ export default function OCEN0001() {
             searchParams: {},
             isMSearch: false,
             isDSearch: false,
+            isIFPopUpOpen: false,
             mSelectedRow: {},
             dSelectedRow: {},
         }
