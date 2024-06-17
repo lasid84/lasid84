@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useReducer, useMemo, useCallback } from "react";
+import { useEffect, useReducer, useMemo, useCallback, memo } from "react";
 import { SP_Load, SP_GetMasterData, SP_GetDetailData } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
@@ -10,11 +10,19 @@ import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import DetailGrid from './_component/gridDetail';
 import CustomerDetail from './_component/custDetailInfo';
+import { useUserSettings } from "@/states/useUserSettings";
+import { shallow } from "zustand/shallow";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
+const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
 
 
-export default function OCEN0003() {
+type Props = {
+    loadItem: any;
+};
+
+// export default function OCEN0003() {
+const OCEN0003: React.FC = memo(() => {
 
     const [state, dispatch] = useReducer(reducer, {
         objState: {
@@ -24,13 +32,21 @@ export default function OCEN0003() {
             isIFPopUpOpen: false,
             mSelectedRow: {},
             dSelectedRow: {},
+            pickup_type: ''
         }
     });
     const { objState } = state;
     const { searchParams, isMSearch } = objState;
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
 
+    const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+
+    useEffect(() => {
+        const params = getMenuParameters(menu_param);
+        dispatch({ pickup_type: params.pickup_type });
+        log(params);
+    }, [menu_param])
 
     return (
         <TableContext.Provider value={val}>
@@ -46,4 +62,6 @@ export default function OCEN0003() {
             </div>
         </TableContext.Provider>
     );
-}
+});
+
+export default OCEN0003;

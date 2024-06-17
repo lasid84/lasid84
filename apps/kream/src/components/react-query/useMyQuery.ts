@@ -6,6 +6,7 @@ import { useUserSettings } from "states/useUserSettings";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 import { SP_UpdateData } from "@/app/stnd/stnd0005/_component/data";
 import { usePathname } from "next/navigation";
+import { shallow } from "zustand/shallow";
 
 export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?: any) => {
   
@@ -55,6 +56,7 @@ export const useUpdateData = (model?: string) => {
 export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, option?:any) => {
   const user_id = useUserSettings((state) => state.data.user_id);
   const ipaddr = useUserSettings((state) => state.data.ipaddr);
+  const menu_seq = useUserSettings((state) => state.data.currentMenu, shallow);
   const queryClient = useQueryClient();
 
   const Update = useMutation(['key'], mutationFn, {
@@ -78,6 +80,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
       data['__changed'] = false;
     },
     onMutate: async (data) => {
+      data["menu_seq"] = menu_seq;
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;
     },

@@ -4,11 +4,15 @@ import Link from "next/link";
 import { FiChevronRight } from "react-icons/fi";
 import type { NavigationState } from "states/useNavigation";
 import { useTranslation } from "react-i18next";
+import { useStore } from "utils/zustand";
+import { useUserSettings } from "states/useUserSettings";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
-const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_param}) => {
+const Item: React.FC<NavigationState> = ({menu_seq, url, icon, title, badge, items, menu_param}) => {
   const {t} = useTranslation();
+  const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
+  
   const [hidden, setHidden] = useState<boolean>(true);
 
   const pathname = usePathname();
@@ -27,12 +31,17 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
     var query;
     if (menu_param) query = {params:menu_param};
 
+    const handleClick = () => {
+      userSettingsActions?.setData({currentMenu:menu_seq, currentParams:menu_param});
+    }
+
     return (
       // <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
+      <div onClick={handleClick}>
       <Link href={{
         pathname: url,
         query: { ...query }
-        }} 
+        }}
         as= {url}
         className={`left-sidebar-item ${active ? "active" : ""} dark:bg-gray-900 dark:text-white dark:border-gray-800`}>
           {icon}
@@ -42,7 +51,9 @@ const Item: React.FC<NavigationState> = ({url, icon, title, badge, items, menu_p
               {badge.text}
             </span>
           )}
+        {/* onClick={log("item onClick", items)}s */}
       </Link>
+      </div>
     );
   }
   return (

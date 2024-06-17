@@ -3,7 +3,7 @@ import { executFunction } from "./api.services";
 
 export const SP_InsertLog = async (param: any) => {
   
-    const {menucode, buttontype, action, user_id, ipaddr } = param;
+    const {menu_seq, menucode, buttontype, action, user_id, ipaddr } = param;
     const params = {
       inparam : [
         "in_userid"
@@ -15,7 +15,7 @@ export const SP_InsertLog = async (param: any) => {
       invalue: [
         user_id
       , ipaddr
-      , menucode
+      , menu_seq ? menu_seq : menucode
       , buttontype
       , action
       ],

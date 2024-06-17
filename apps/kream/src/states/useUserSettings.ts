@@ -29,6 +29,9 @@ interface UserSettingsState {
   hasError : boolean,
   errMsg : string,
   /* 브라우저용 추가 끝*/
+
+  currentMenu: number,
+  currentParams: string
 }
 
 // Define the initial state using that type
@@ -53,6 +56,9 @@ const initialState: UserSettingsState = {
   hasError : false,
   errMsg : "",
   /* 브라우저용 추가 끝*/
+
+  currentMenu: 0,
+  currentParams: ''
 };
 
 type UserSettingsStore = {
