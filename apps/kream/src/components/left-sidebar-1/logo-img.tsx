@@ -43,6 +43,8 @@ import {FiBox, FiMenu} from "react-icons/fi";
 import {useConfigs} from "states/useConfigs";
 import {useLeftSidebar} from "states/useLeftSidebar";
 import Link from "next/link";
+import { useStore } from "zustand";
+import { useUserSettings } from "@/states/useUserSettings";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -51,10 +53,16 @@ const LogoImg: React.FC = () => {
 
   const {name, collapsed} = useConfigs((state) => state.config);
   const {showLogo} = useLeftSidebar((state) => state.leftSidebar);
+  const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
   log("logo", showLogo)
   if (showLogo) {
+
+    const handleClick = () => {
+      userSettingsActions?.setData({currentMenu:0, currentParams:''});
+    }
+
     return (
-      <div className="truncate logo">
+      <div className="truncate logo" onClick={handleClick}>
         <Link href="/">
           <div className="flex flex-row items-center justify-center dark:hidden">
             <img className={"expanded"} src={`/logos/12-removebg-preview.png`} alt={""} />

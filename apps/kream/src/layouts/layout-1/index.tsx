@@ -11,15 +11,13 @@ import { useUserSettings } from "states/useUserSettings";
 import { memo, useMemo } from "react";
 import { setI18n } from "components/i18n/i18n";
 import LoadingComponent from "../../components/loading/loading"
-import PageTitle from "components/page-title/page-title";
 import { useNavigation } from "states/useNavigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { toastWaring } from "@/components/toast";
-import { useSelectedLayoutSegment } from 'next/navigation';
 
 import { getSession } from "services/serverAction";
 import { SP_InsertLog  } from "services/clientAction";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
+import { shallow } from "zustand/shallow";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -27,23 +25,10 @@ export type Layout1Props = {
   children: React.ReactNode;
 };
 
-function checkAuth(menu: string[], url:string, menu_param:string|null):boolean {
-  const parts = url.split('/');
-  const lastPart = parts[parts.length - 1].toUpperCase().trim();
-
-  if (url === '/' || lastPart === 'DASHBOARD') return true;
-
-  if (menu?.some(m => m === lastPart.trim() + (menu_param ? menu_param : ''))) return true;
-
-  // log("checkAuth", lastPart.trim(), menu_param, lastPart.trim() + (menu_param ? menu_param : ''));
-
-  return false;
-}
-
 const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
   const config = useConfigs((state) => state.config);
-
+  
   const [background, setBackground] = useState<string>(config.background);
   const [layout, setLayout] = useState<string>(config.layout);
   const [collapsed, setCollapsed] = useState<boolean>(config.collapsed);
@@ -52,7 +37,6 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
   const router = useRouter();
-
   const { Create } = useUpdateData2(SP_InsertLog, '');
   
   log("app/layouts/layout-1/index.tsx");
@@ -108,7 +92,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
   const {
     data: userSettings,
-    actions: userSettingsActions
+    // actions: userSettingsActions
   } = useUserSettings((state) => state);
 
   const isLoading = useMemo(() => {
@@ -118,10 +102,9 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
   useEffect(() => {
     if (pathname === '/') return;
-    const url = `${pathname}?${params}`
-    
+
     var data = {
-        menucode : pathname,
+        menucode: pathname,
         action: 'Open'
     }
     Create.mutate(data);

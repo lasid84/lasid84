@@ -90,7 +90,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 hasData = true;
                 if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
                     data.cust_code = objState.mSelectedRow.cust_code;
-                    data.pickup_type = 'OE';
+                    data.pickup_type = objState.pickup_type;
                     Create.mutate(data);
                 } else { //수정
                     Update.mutate(data);

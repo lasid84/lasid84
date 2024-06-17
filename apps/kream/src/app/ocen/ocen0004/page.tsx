@@ -10,8 +10,11 @@ import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import DetailGrid from './_component/gridDetail';
 import DetailInfo from './_component/DetailInfo';
+import { shallow } from "zustand/shallow";
+import { useUserSettings } from "@/states/useUserSettings";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
+const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
 
 
 export default function OCEN0004() {
@@ -23,13 +26,22 @@ export default function OCEN0004() {
             isDSearch: false,
             mSelectedRow: {},
             dSelectedRow: {},
+            trans_type: '',
+            trans_mode: ''
         }
     });
     const { objState } = state;
     const { searchParams, isMSearch } = objState;
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
-
+    
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
+
+    useEffect(() => {
+        const params = getMenuParameters(menu_param);
+        dispatch({ trans_type: params.trans_type, trans_mode: params.trans_mode });
+        log(params);
+    }, [menu_param])
 
     return (
         <TableContext.Provider value={val}>

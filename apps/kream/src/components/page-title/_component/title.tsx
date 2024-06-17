@@ -15,6 +15,8 @@ function getMenuTitle(menu: NavigationState[], url:string, menu_param:string|nul
         if (obj.url === url && obj.menu_param === menu_param) return obj.title;
       }
     }
+
+    return '';
   }
 
 const Title: React.FC = memo(() => {
