@@ -1,41 +1,30 @@
-import { useTranslation } from "react-i18next";
 import DialogBasic from "layouts/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
-import { ErrorMessage } from "@/components/react-hook-form";
-import { PopType, setModalValue } from "@/utils/modal";
 import { useState, useEffect, useCallback } from "react";
-import Select from "react-select"
-import { TSelect2 } from "@/components/form/select-row";
 import { Button } from "components/button";
-import { useAppContext, SEARCH_M, crudType } from "components/provider/contextObjectProvider"
+import { crudType, useAppContext, SEARCH_M } from "components/provider/contextObjectProvider"
 import { SP_UpdateData, SP_InsertData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { ReactSelect, data } from "@/components/select/react-select2"
 import { MaskedInputField } from "@/components/input/react-text-mask";
 
-
 type Props = {
-    initData: any | undefined;
+    loadItem: any | null
 }
 
-const Modal: React.FC<Props> = (props) => {
-    const { initData } = props
+const Modal: React.FC<Props> = ({ loadItem }) => {
 
     const { dispatch, objState, } = useAppContext();
-    const { mSelectedRow, isPopupOpen: isOpen, crudType: popType } = objState
-    let selectoptions: any[] = []
-    const [useYN, setUseYn] = useState<any>(undefined);
+    const { mSelectedRow, isPopUpOpen: isOpen, crudType: popType } = objState
+
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M)
     const { Create } = useUpdateData2(SP_InsertData, SEARCH_M)
-
-    //다국어
-    const { t } = useTranslation();
 
     // 선택된 데이터 Select컴포넌트 처리
     const [groupcd, setGroupcd] = useState<any>([])
 
     const closeModal = () => {
-        dispatch({ isPopupOpen: false });
+        dispatch({ isPopUpOpen: false });
         reset();
     }
 
@@ -57,47 +46,44 @@ const Modal: React.FC<Props> = (props) => {
         control,
     } = formZodMethods;
 
-
-
-
     useEffect(() => {
-        if (initData) {
-            // initData[0].data.map((item: any) => {
-            //     var key = item[Object.keys(item)[0]];
-            //     var label = item[Object.keys(item)[1]];
-            //     selectoptions.push({ value: key, label: key + " " + label });
-            // })
-            // setGroupcd(selectoptions)
-            setGroupcd(initData[0])
+        if (loadItem) {
+            setGroupcd(loadItem[0])
         }
-    }, [initData])
-
-
+    }, [loadItem])
 
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-        if (popType === PopType.UPDATE) {
+        if (popType === crudType.UPDATE) {
             console.log('UpdateLogic')
-            Update.mutate(param)
+            Update.mutate(param, {
+                onSuccess: (res: any) => {
+                    closeModal();
+                    dispatch({ isMSearch: true });
+                },
+            })
         } else {
-            console.log('CreateLogic')
-            Create.mutate(param)
+            Create.mutate(param, {
+                onSuccess: (res: any) => {
+                    closeModal();
+                    dispatch({ isMSearch: true });
+                },
+            })
         }
     }, [popType])
 
 
     useEffect(() => {
         reset()
-        if (popType === PopType.CREATE) {
-            dispatch({ mSelectedRow: {} })
+        if (popType === crudType.CREATE) {
             setFocus("grp_cd")
         }
-        if (popType === PopType.UPDATE) {
-            setModalValue(mSelectedRow, setValue, getValues)
-            //select 컴포넌트 추가설정
-            // setGrpCd(selectedData.grp_cd)
-            setUseYn(mSelectedRow.use_yn)
-        }
+        // if (popType === crudType.UPDATE) {
+        //     setModalValue(mSelectedRow, setValue, getValues)
+        //     //select 컴포넌트 추가설정
+        //     // setGrpCd(selectedData.grp_cd)
+        //     setUseYn(mSelectedRow.use_yn)
+        // }
     }, [popType, isOpen])
 
     return (
@@ -107,11 +93,11 @@ const Modal: React.FC<Props> = (props) => {
                 <DialogBasic
                     isOpen={isOpen!}
                     onClose={closeModal}
-                    title={"종합코드 관리 " + (popType === PopType.CREATE ? "등록" : "수정")}
+                    title={"종합코드 관리 " + (popType === crudType.CREATE ? "등록" : "수정")}
                     bottomRight={
                         <>
-                            <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} width="w-32"/>
-                            <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32"/>
+                            <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} width="w-32" />
+                            <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />
                         </>
                     }>
                     <></>
@@ -126,47 +112,36 @@ const Modal: React.FC<Props> = (props) => {
                                 defaultValue: getValues('grp_cd')
                             }}
                         />
-                        {/* <ReactSelect id="grp_cd" name="grp_cd" options={groupcd} /> */}
-                        <MaskedInputField id="cd" value={mSelectedRow?.cd_nm} options={{ isReadOnly: true }} />
+                        <MaskedInputField id="cd" value={mSelectedRow?.cd} options={crudType.CREATE ? {} : { isReadOnly: true }} />
                         <div className="col-span-2">
                             <MaskedInputField id="cd_nm" value={mSelectedRow?.cd_nm} options={{}} />
                         </div>
-                        <div className="col-span-3">
-                            <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}} />
-                        </div>
-                        <div className="col-span-3">
-                            <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}} />
-                        </div>
-                        <div className="col-span-3">
-                            <MaskedInputField id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2} options={{}} />
-                        </div>
-                        <div className="col-span-3">
+                        <div className="col-span-1">
                             <ReactSelect
                                 id="use_yn" dataSrc={{
                                     data: [
                                         { use_yn: 'Y' },
                                         { use_yn: 'N' }
                                     ]
-                                } as data }                                
+                                } as data}
                                 options={{
-                                    dialog : true,
+                                    dialog: true,
                                     keyCol: "use_yn",
-                                    displayCol: ['use_yn'],                                    
+                                    displayCol: ['use_yn'],
                                     defaultValue: mSelectedRow?.use_yn
                                 }}
                             />
-                            {/* <TSelect2
-                                id="use_yn"
-                                options={[
-                                    { label: "Y", value: "Y" },
-                                    { label: "N", value: "N" },
-                                ]}
-                                allYn={true}
-                                isPlaceholder={false}
-                                value={mSelectedRow?.use_yn}
-                            ></TSelect2> */}
                         </div>
 
+                        <div className="col-span-1">
+                            <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}} />
+                        </div>
+                        <div className="col-span-1">
+                            <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}} />
+                        </div>
+                        <div className="col-span-1">
+                            <MaskedInputField id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2} options={{}} />
+                        </div>
                     </div>
 
                 </DialogBasic>

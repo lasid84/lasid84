@@ -17,12 +17,13 @@ export default function STND0005() {
             searchParams: {},
             isMSearch: false,
             mSelectedRow: {},
-            isPopupOpen: false,
-            crudType: {}
+            isPopUpOpen: false,
+            popType: null,
         }
     })
     const { objState } = state;
     const { searchParams } = objState;
+    
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
