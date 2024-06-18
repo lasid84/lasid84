@@ -13,7 +13,9 @@ import {
   GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent,
   PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
   SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent,
-  FirstDataRenderedEvent
+  FirstDataRenderedEvent,
+  CellKeyDownEvent,
+  FullWidthCellKeyDownEvent
 } from "ag-grid-community";
 
 import { LicenseManager } from  'ag-grid-enterprise'
@@ -59,6 +61,7 @@ type GridEvent = {
   onGridReady?: (params: GridReadyEvent) => void;
   onRowDataUpdated?: (params: RowDataUpdatedEvent) => void;
   onFirstDataRendered?: (params: FirstDataRenderedEvent) => void
+  onCellKeyDown?: (params: CellKeyDownEvent | FullWidthCellKeyDownEvent) => void
 }
 
 export type GridOption = {
@@ -543,6 +546,15 @@ const ListGrid: React.FC<Props> = memo((props) => {
     if (event?.onFirstDataRendered) event.onFirstDataRendered(param);
   }
 
+  const onCellKeyDown = (param: CellKeyDownEvent) => {
+    log("onCellKeyDown", param);
+    if (!param.event) {
+      return;
+    }
+
+    if (event?.onCellKeyDown) event.onCellKeyDown(param);
+  }
+
   const autoSizeAll = (gridApi: any, skipHeader: boolean = false) => {
 
     var rowCount = gridApi?.api?.getRenderedNodes().length;
@@ -595,7 +607,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
             onPasteEnd={onPasteEnd}
             onColumnResized={onColumnResized}
             onFirstDataRendered={onFirstDataRendered}
-
+            onCellKeyDown={onCellKeyDown}
           />}
         </div>
       </div>
