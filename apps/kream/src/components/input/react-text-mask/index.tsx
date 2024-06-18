@@ -1,5 +1,5 @@
 
-import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState } from 'react';
+import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
@@ -45,7 +45,7 @@ type Props = {
 
   events?: {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-    onKeyDown?: (e: KeyboardEventHandler<HTMLInputElement>) => void;
+    onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
     onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
   }
@@ -122,8 +122,8 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
 
-    if (events?.onChange) {
-      events.onChange(e);
+    if (events?.onFocus) {
+      events.onFocus(e);
     }
   }
 

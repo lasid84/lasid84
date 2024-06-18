@@ -140,6 +140,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               displayCol="cust_nm"
               gridOption={{
                 colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
+                dataType: { "bz_reg_no": "bizno" }
               }}
               gridStyle={{ width: '600px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}

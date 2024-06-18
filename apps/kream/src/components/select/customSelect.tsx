@@ -1,12 +1,13 @@
-import React, { memo, useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
+import React, { KeyboardEventHandler, memo, useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
 import Grid, { GridOption, gridData } from '@/components/grid/ag-grid-enterprise';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
-import { IRowNode, RowClickedEvent } from 'ag-grid-community';
+import { CellKeyDownEvent, FullWidthCellKeyDownEvent, IRowNode, RowClickedEvent } from 'ag-grid-community';
 import { useTranslation } from 'react-i18next';
 import { useFormContext } from 'react-hook-form';
 import { Label } from 'components/label';
 import './custom-select-style.css';
+import { MaskedInputField } from 'components/input';
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -43,9 +44,8 @@ function CustomSelect(props: Props) {
   const ref2 = useRef<HTMLDivElement>(null);
   const gridRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
-  
   const { register, setValue, getValues } = useFormContext();
-  const { id, label,initText, listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender } = props;
+  const { id, label,initText = 'Select an Option', listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender } = props;
   const defaultStyle = {
     width: '200px',
     ...style
@@ -59,16 +59,16 @@ function CustomSelect(props: Props) {
 
   //let initText = 'Select an option';
   const [displayText, setDisplayText] = useState(initText);
+  const [filteredData, setFilteredData] = useState(listItem);
+
+  log("customSelect start", listItem, filteredData);
   
   // 옵션을 토글하는 함수
   const toggleOptions = () => {
     setIsOpen(!isOpen);
-  };
 
-  // useLayoutEffect(() => {
-  //   log("useLayoutEffect", isOpen)
-  //   setIsOpen(false);
-  // }, []);
+    if (isOpen) ref2.current?.focus();
+  };
 
   useEffect(() => {
     // if (gridRef.current && !isNoSelect) {
@@ -93,19 +93,20 @@ function CustomSelect(props: Props) {
     //   })
     // }
 
-    if (isSelectRowAfterRender && listItem?.data) {
-      if (displayText === initText) {
-        var row = listItem.data[0];
-        var val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
-        log("customSelect==================", row, val, displayCol, row[0], displayText, initText);
-        setDisplayText(val);
-        setSelectedValue(row)
-      };
-    }
-    if(getValues('cust_nm')){
-      console.log('?test?')
-      setDisplayText(getValues('cust_nm'))
-    }
+  //   if (isSelectRowAfterRender && listItem?.data) {
+  //     if (displayText === initText) {
+  //       var row = listItem.data[0];
+  //       var val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
+  //       log("customSelect==================", row, val, displayCol, row[0], displayText, initText);
+  //       setDisplayText(val);
+  //       setSelectedValue(row)
+  //     };
+  //   }
+  //   if(getValues('cust_nm')){
+  //     console.log('?test?')
+  //     setDisplayText(getValues('cust_nm'))
+  //   }
+    setFilteredData(listItem);
   }, [listItem])
 
   useEffect(() => {
@@ -127,10 +128,8 @@ function CustomSelect(props: Props) {
   const handelRowClicked = (param: RowClickedEvent) => {
     var selectedRow = { "colId": param.node.id, ...param.node.data }
     log("handelRowClicked", param);
-    var val = displayCol ? selectedRow[displayCol] : selectedRow[Object.keys(selectedRow)[0]];
-    setDisplayText(val);
     setSelectedValue(selectedRow);
-    toggleOptions();
+    setDisplayVal(selectedRow);
   }
 
   const handleOnGridReady = (param: any) => {
@@ -140,15 +139,41 @@ function CustomSelect(props: Props) {
   }
 
   const setSelectedValue = (row: any) => {
+    log("setSelectedValue", valueCol, row)
     if (valueCol) valueCol.map(key => setValue(key, row[key]));
     else Object.keys(row).map(key => setValue(key, row[key]));
 
     log("setSelectedValue", valueCol, row, getValues())
+    toggleOptions();
   }
 
-  const handleonClick = (e: any) => {
-    setDisplayText('Select an option');
-    setSelectedValue('')
+  const setDisplayVal = (row:any) => {
+    var val = initText;
+    if (row) {
+      val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
+    }
+    setDisplayText(val);
+  }
+
+  const handleonClick = (e: any) => {    
+    setDisplayText(initText);
+    setSelectedValue('');
+    setFilteredData(listItem);
+  }
+
+  const handleCellKeyDown = (e:CellKeyDownEvent | FullWidthCellKeyDownEvent) => {
+    const keyboardEvent = e.event as unknown as KeyboardEvent;
+    const key = keyboardEvent.key;
+    if (key.length) {
+      switch (key) {
+        case "Enter":
+          let selectedRow = e.data; //gridRef.current.api.getSelectedRows()[0];
+          setSelectedValue(selectedRow);
+          setDisplayVal(selectedRow);
+          log("handleCellKeyDown", selectedRow)
+          break;
+      }
+    }
   }
 
   return (
@@ -166,12 +191,66 @@ function CustomSelect(props: Props) {
           style={{
             width: defaultStyle.width,
             height: "30px",
-            position: 'relative',
+            // position: 'relative',
             cursor: 'pointer',
-            border: '1px solid #ccc'
+            // border: '1px solid #ccc'
           }}
-        >{displayText}
+        >
+          <MaskedInputField id="waybill_no" label="waybill_no" value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8' 
+            events={{
+              onChange(e) {
+                  if (!isOpen) setIsOpen(true);
 
+                  let inputVal = e.target.value;
+                  log("MaskedInputField onChange", inputVal);
+                  if (!inputVal || inputVal === initText) {
+                    setFilteredData(listItem);
+                    return;
+                  } 
+                  let visible = gridOption?.colVisible?.visible;
+                  let filterCols = listItem?.fields.map((obj: { [x: string]: any; }) => obj["name"])
+                                    .filter((val:string) => {
+                                      if (visible) return gridOption?.colVisible?.col.includes(val);
+                                      else return !gridOption?.colVisible?.col.includes(val);
+                                    });
+                  
+                  var filtered = { 
+                    fields: [...listItem?.fields],
+                    data: [...listItem?.data.filter((data:{ [x: string]: any; }) => {
+                      let bool = false;
+                      for (let i = 0; i < filterCols.length; i++) {
+                        let col = filterCols[i];
+  
+                        if (data[col].toUpperCase().includes(inputVal.toUpperCase())) {
+                          bool = true;
+                          break;
+                        }
+                      }
+                      return bool;
+                    })]
+                  };
+
+                  setFilteredData(filtered);                  
+              },
+              onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+                switch (e.key) {
+                  case "ArrowUp":
+                  case "ArrowDown":
+                    // ref2?.current?.focus();
+                    e.preventDefault();
+                    gridRef.current.api.setFocusedCell(0, "cust_code");
+                    // gridRef.current.api.setFocusedCell(-1, "cust_code");
+                    // gridRef.current.api.setFocusedCell(0, "cust_code");
+                    
+                    break;
+                }
+              },
+              onFocus(e) {
+                  e.target.select();
+              },
+            }}
+          />
+          {/* {displayText} */}
           <div className="arrow"
             style={{
               position: 'absolute',
@@ -201,13 +280,14 @@ function CustomSelect(props: Props) {
           >
             <Grid
               gridRef={gridRef}
-              listItem={listItem}
+              listItem={filteredData}
               options={{ ...gridOption, gridHeight: defaultGridStyle.height, isSelectRowAfterRender: isSelectRowAfterRender }}
               event={{
                 //  onCellValueChanged: handleCellValueChanged,
                 //  onSelectionChanged: handleSelectionChanged
                 onRowClicked: handelRowClicked,
-                onGridReady: handleOnGridReady
+                onGridReady: handleOnGridReady,
+                onCellKeyDown: handleCellKeyDown
               }}
             />
           </div>
