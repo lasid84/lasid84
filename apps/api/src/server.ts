@@ -2,19 +2,14 @@ import { json, urlencoded } from "body-parser";
 import express, { type Express } from "express";
 import morgan from "morgan";
 import cors from "cors";
-// const jwt = require('jsonwebtoken');
 import jwt from 'jsonwebtoken';
 import compression from "compression";
-//import {log, callFunction, checkAccount} from "@repo/kwe-lib";
-//import {callFunction} from "@repo/kwe-lib";
-// import {callFunction} from "@repo/kwe-lib/components/dbDTOHelper";
-// const {callFunction} = require("@repo/kwe-lib/components/dbDTOHelper.ts");
 import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
 import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
 import { log, error } from '@repo/kwe-lib/components/logHelper';
 import { dataContainer } from '@repo/kwe-lib/components/dataContainer';
-// import { decode } from '@repo/kwe-lib/components/next-auth/jwt';
-// import {decode} from '@auth/core/jwt';
+
+
 
 export const createServer = (): Express => {
 
@@ -34,7 +29,12 @@ export const createServer = (): Express => {
     }))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors())
+    .use(cors(
+      // {
+      //   origin: 'http://localhost:3000', // 프론트엔드가 실행되는 주소
+      //   credentials: true, // 쿠키 허용
+      // }
+    ))
     .use(compression())
     .set('trust proxy', true)
     .get("/message/:name", (req, res) => {
