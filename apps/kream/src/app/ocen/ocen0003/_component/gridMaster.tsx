@@ -16,10 +16,10 @@ import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null;
+    // initData: any | null;
 };
 
-const MasterGrid: React.FC<Props> = ({ initData }) => {
+const MasterGrid: React.FC<Props> = ({ }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
@@ -53,7 +53,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         const selectedRow = param.api.getSelectedRows()[0];
 
         log("handleSelectionChanged", selectedRow)
-        dispatch({ mSelectedRow: {...selectedRow, pickup_type : objState.pickup_type }, isDSearch: true });
+        dispatch({ mSelectedRow: { ...selectedRow, pickup_type: objState.pickup_type }, isDSearch: true });
 
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
@@ -72,24 +72,23 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     return (
         <>
-                    <PageMGrid
+            <PageMGrid
                 right={
                     <>
                         <Button id={"interface"} onClick={onInterface} />
                     </>
                 }>
-            <Grid
-                gridRef={gridRef}
-                loadItem={initData}
-                listItem={mainData as gridData}
-                options={gridOption}
-                event={{
-                    onRowClicked: handleRowClicked,
-                    onSelectionChanged: handleSelectionChanged,
-                }}
-            />
+                <Grid
+                    gridRef={gridRef}
+                    listItem={mainData as gridData}
+                    options={gridOption}
+                    event={{
+                        onRowClicked: handleRowClicked,
+                        onSelectionChanged: handleSelectionChanged,
+                    }}
+                />
             </PageMGrid>
-            <Modal loadItem={initData} />
+            <Modal />
         </>
     );
 }

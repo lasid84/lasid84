@@ -14,10 +14,10 @@ import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null;
+    // initData: any | null;
 };
 
-const MasterGrid: React.FC<Props> = ({ initData }) => {
+const MasterGrid: React.FC<Props> = ({  }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
@@ -62,7 +62,6 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     return (
         <Grid
             gridRef={gridRef}
-            loadItem={initData}
             listItem={mainData as gridData}
             options={gridOption}
             event={{

@@ -20,11 +20,10 @@ export interface returnData {
 
 type Props = {
   // onSubmit: SubmitHandler<any>;
-  initData: any | undefined;
+  // initData: any | undefined;
 };
 
-// const SearchForm = memo(({initData}:Props) => {
-const SearchForm: React.FC<Props> = (props) => {
+const SearchForm: React.FC<Props> = () => {
   const { dispatch } = useAppContext();
 
   const methods = useForm({
@@ -35,12 +34,7 @@ const SearchForm: React.FC<Props> = (props) => {
   });
 
   const {
-    handleSubmit,
-    reset,
-    setFocus,
-    setValue,
     getValues,
-    register,
     formState: { errors, isSubmitSuccessful },
   } = methods;
 

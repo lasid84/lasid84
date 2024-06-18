@@ -5,7 +5,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
-const CustomerDetail: React.FC = () => {    
+const CustomerDetail: React.FC = () => {
 
     const { dispatch, objState } = useAppContext();
     const { mSelectedRow } = objState;
@@ -28,7 +28,7 @@ const CustomerDetail: React.FC = () => {
     } = formZodMethods;
 
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-        
+
     }, [objState.popType]);
 
     return (
@@ -41,13 +41,13 @@ const CustomerDetail: React.FC = () => {
                         value={objState.mSelectedRow?.cust_code}
                         >
                     </TInput> */}
-                    <MaskedInputField 
-                        id="cust_code" 
+                    <MaskedInputField
+                        id="cust_code"
                         // label="cust_code"
                         value={mSelectedRow?.cust_code}
                         // width="w-80"
                         // height="h-12"
-                        options = {{ 
+                        options={{
                             // type:"number",
                             // limit:7,
                             // isAllowDecimal:true,
@@ -55,72 +55,72 @@ const CustomerDetail: React.FC = () => {
                             // myPlaceholder:"Enter business number" 
                             // myPlaceholder:"bz_reg_no"
                             // inline:{true}
-                            isReadOnly:true,
+                            isReadOnly: true,
                             // bgColor:"blue-100",
                             // textAlign:"right",
                             // fontSize:"15px",
                             // fontBold:"light"
-                            freeStyles:"border-1 border-slate-300"
+                            freeStyles: "border-1 border-slate-300"
                         }}
-                        />
-                    <MaskedInputField 
-                        id="executive_nm" 
+                    />
+                    <MaskedInputField
+                        id="executive_nm"
                         value={mSelectedRow?.executive_nm}
-                        options = {{ 
-                            isReadOnly:true
+                        options={{
+                            isReadOnly: true
                         }}
-                        />
-                    <MaskedInputField 
-                        id="cust_nm" 
+                    />
+                    <MaskedInputField
+                        id="cust_nm"
                         value={objState.mSelectedRow?.cust_nm}
-                        options = {{ 
-                            isReadOnly:true
+                        options={{
+                            isReadOnly: true
                         }}
-                        />
-                    <MaskedInputField 
-                        id="bz_con" 
+                    />
+                    <MaskedInputField
+                        id="bz_con"
                         value={objState.mSelectedRow?.bz_con}
-                        options = {{ 
-                            isReadOnly:true
+                        options={{
+                            isReadOnly: true
                         }}
-                        />
-                    <MaskedInputField 
-                        id="cust_nm_eng" 
+                    />
+                    <MaskedInputField
+                        id="cust_nm_eng"
                         value={objState.mSelectedRow?.cust_nm_eng}
-                        options = {{ 
-                            isReadOnly:true
+                        options={{
+                            isReadOnly: true
                         }}
-                        />
-                    <MaskedInputField 
-                        id="bz_item" 
+                    />
+                    <MaskedInputField
+                        id="bz_item"
                         value={objState.mSelectedRow?.bz_item}
-                        options = {{ 
-                            isReadOnly:true
+                        options={{
+                            isReadOnly: true
                         }}
-                        />
-                    <MaskedInputField 
-                        id="bz_reg_no" 
+                    />
+                    <MaskedInputField
+                        id="bz_reg_no"
                         value={objState.mSelectedRow?.bz_reg_no}
-                        options = {{ 
-                            type:"bz_reg_no",
-                            isReadOnly:true
+                        options={{
+                            type: "bz_reg_no",
+                            isReadOnly: true
                         }}
-                        />
+                    />
                     <div className="col-span-2">
-                        <MaskedInputField 
-                            id="addr1" 
+                        <MaskedInputField
+                            id="addr1"
                             value={objState.mSelectedRow?.addr1}
-                            options = {{ 
-                                isReadOnly:true
+                            options={{
+                                isReadOnly: true
                             }}
                         />
                     </div>
                     <div className="col-span-2">
-                        <MaskedInputField 
-                            id="addr2" 
+                        <MaskedInputField
+                            id="addr2"
                             value={objState.mSelectedRow?.addr2}
-                            options = {{ 
-                                isReadOnly:true
+                            options={{
+                                isReadOnly: true
                             }}
                         />
                     </div>

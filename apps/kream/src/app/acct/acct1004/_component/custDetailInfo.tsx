@@ -136,7 +136,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full flex flex-col w-full h-[400px] ${selectedTab == "DE" ? "" : "hidden"}`}>
+                        <div className={`w-full h-full flex flex-col w-full ${selectedTab == "DE" ? "" : "hidden"}`}>
                             <div className="px-5 py-5 overflow-y-auto md:grid md:grid-cols-5">
                                 <div className={"p-1 col-span-2"}>
                                     <MaskedInputField id="shipper_code" value={objState.mSelectedDetail?.shipper_code} options={{ isReadOnly: true, inline: true }} height='h-6' />
@@ -170,7 +170,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className={`w-full flex flex-col h-[400px] overflow-auto ${selectedTab == "AD" ? "" : "hidden"}`}>
+                        <div className={`w-full flex flex-col overflow-auto ${selectedTab == "AD" ? "" : "hidden"}`}>
                             <div className="w-full overflow-y-auto md:grid md:grid-cols-5">
                                 <div className={"col-span-5"}>
                                     <MaskedInputField id="country_code" value={objState.mSelectedDetail?.country_code} options={{ isReadOnly: true, inline: true }} height='h-6' />

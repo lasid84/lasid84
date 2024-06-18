@@ -35,12 +35,12 @@ export default function OCEN0002() {
     return (
         <TableContext.Provider value={val}>
             <div className={`w-full h-full`}>
-                <SearchForm initData={initData} />
+                <SearchForm  />
                 <div className="grid w-full h-[calc(100vh-100px)] grid-cols-3">
-                    <MasterGrid initData={initData} />
+                    <MasterGrid  />
                     <div className="grid h-full col-span-2 grid-rows-2 ">
                         <div className="row-span-1"><DetailInfo /></div>
-                        <div className="row-span-1"><DetailGrid initData={initData} /></div>
+                        <div className="row-span-1"><DetailGrid initData={initData}/></div>
                     </div>
                 </div>
             </div>

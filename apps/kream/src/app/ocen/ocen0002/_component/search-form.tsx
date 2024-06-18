@@ -17,7 +17,7 @@ export interface returnData {
 
 type Props = {
   // onSubmit: SubmitHandler<any>;
-  initData: any | undefined;
+  // initData: any | undefined;
 };
 
 // const SearchForm = memo(({initData}:Props) => {
@@ -25,10 +25,6 @@ const SearchForm: React.FC<Props> = (props) => {
   const { dispatch } = useAppContext();
 
   const methods = useForm({
-    // resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   ...initSearchValue,
-    // }
   });
 
   const {
