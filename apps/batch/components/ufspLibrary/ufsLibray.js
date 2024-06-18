@@ -27,7 +27,7 @@ class Library {
     errCnt = 0;
     lastExcute;
     resultData = {};
-    mainData = null;
+    mainData = {};
     id = null;
     constructor({ pgm, type, terminal, idx, isHeadless }) {
         this.pgm = pgm;
@@ -190,7 +190,7 @@ class Library {
             }
 
         } catch (ex) {
-            log("ex_login:", ex)
+            error("ex_login:", ex)
             throw ex
         }
     }
@@ -502,7 +502,7 @@ class Library {
                 return str;
             }, method,  url, bodyText);
 
-            // log("result", result, new URL(url).host, JSON.stringify(bodyText));
+            log("result", result, new URL(url).host, JSON.stringify(bodyText));
 
             //로그인 에러
             if (result && result.success === false) {
