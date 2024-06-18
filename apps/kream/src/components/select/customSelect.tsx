@@ -155,10 +155,11 @@ function CustomSelect(props: Props) {
     setDisplayText(val);
   }
 
-  const handleonClick = (e: any) => {    
+  const handleXClick = (e: any) => {    
     setDisplayText(initText);
     setSelectedValue('');
     setFilteredData(listItem);
+    setIsOpen(false);
   }
 
   const handleCellKeyDown = (e:CellKeyDownEvent | FullWidthCellKeyDownEvent) => {
@@ -271,7 +272,7 @@ function CustomSelect(props: Props) {
               transform: 'translateY(-50%)',
               cursor: 'pointer',
             }}
-            onClick={handleonClick}
+            onClick={handleXClick}
           ><IoMdClose /></div>
         {isOpen &&
           <div ref={ref2}

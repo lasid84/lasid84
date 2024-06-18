@@ -16,7 +16,7 @@ importers:
         version: link:packages/typescript-config
       '@turbo/gen':
         specifier: ^1.11.3
-        version: 1.11.3(@types/node@20.14.2)(typescript@5.3.3)
+        version: 1.11.3(@types/node@20.14.4)(typescript@5.3.3)
       prettier:
         specifier: ^3.2.4
         version: 3.2.4
@@ -47,12 +47,18 @@ importers:
       express:
         specifier: ^4.18.2
         version: 4.18.2
+      https:
+        specifier: ^1.0.0
+        version: 1.0.0
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
       morgan:
         specifier: ^1.10.0
         version: 1.10.0
+      path:
+        specifier: ^0.12.7
+        version: 0.12.7
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@20.12.4)(typescript@5.3.3)
@@ -4155,7 +4161,7 @@ packages:
       - typescript
     dev: true
 
-  /@turbo/gen@1.11.3(@types/node@20.14.2)(typescript@5.3.3):
+  /@turbo/gen@1.11.3(@types/node@20.14.4)(typescript@5.3.3):
     resolution: {integrity: sha512-cHGRj7Jn7Hw1cA7NuwWYfYdhEliQX4LuSfEB9L1m8ifGkHalU3bbYXcehzLThmckpGpUQGnXYx0UtVudbQ42HA==}
     hasBin: true
     dependencies:
@@ -4167,7 +4173,7 @@ packages:
       minimatch: 9.0.3
       node-plop: 0.26.3
       proxy-agent: 6.3.1
-      ts-node: 10.9.1(@types/node@20.14.2)(typescript@5.3.3)
+      ts-node: 10.9.1(@types/node@20.14.4)(typescript@5.3.3)
       update-check: 1.5.4
       validate-npm-package-name: 5.0.0
     transitivePeerDependencies:
@@ -4433,8 +4439,8 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/node@20.14.2:
-    resolution: {integrity: sha512-xyu6WAMVwv6AKFLB+e/7ySZVr/0zLCzOa7rSpq6jNwpqOrUbcACDWC+53d4n2QHOnDou0fbIsg8wZu/sxrnI4Q==}
+  /@types/node@20.14.4:
+    resolution: {integrity: sha512-1ChboN+57suCT2t/f8lwtPY/k3qTpuD/qnqQuYoBg6OQOcPyaw7PiZVdGpaZYAvhDDtqrt0oAaM8+oSu1xsUGw==}
     dependencies:
       undici-types: 5.26.5
     dev: true
@@ -7810,7 +7816,7 @@ packages:
     peerDependencies:
       eslint-plugin-import: '>=1.4.0'
     dependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.11.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.11.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.54.0)
     dev: true
 
   /eslint-import-resolver-node@0.3.9(supports-color@9.4.0):
@@ -9639,6 +9645,10 @@ packages:
       debug: 4.3.4(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
+
+  /https@1.0.0:
+    resolution: {integrity: sha512-4EC57ddXrkaF0x83Oj8sM6SLQHAWXw90Skqu2M4AEWENZ3F02dFJE/GARA8igO79tcgYqGrD7ae4f5L3um2lgg==}
+    dev: false
 
   /human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
@@ -12211,7 +12221,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 2.1.0
-      ts-node: 10.9.1(@types/node@20.11.4)(typescript@5.2.2)
+      ts-node: 10.9.1(@types/node@20.12.4)(typescript@5.3.3)
       yaml: 1.10.2
 
   /postcss-load-config@4.0.2(postcss@8.4.33):
@@ -14512,9 +14522,8 @@ packages:
       typescript: 5.3.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: false
 
-  /ts-node@10.9.1(@types/node@20.14.2)(typescript@5.3.3):
+  /ts-node@10.9.1(@types/node@20.14.4)(typescript@5.3.3):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -14533,7 +14542,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.14.2
+      '@types/node': 20.14.4
       acorn: 8.11.3
       acorn-walk: 8.2.0
       arg: 4.1.3

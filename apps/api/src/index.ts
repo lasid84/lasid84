@@ -10,13 +10,27 @@ async function init () {
   var server;
   try {
     var port = 0;
+
     server = createServer();
-    log("process.cwd() : ", process.cwd())
     var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
     port = objectPath.get(iniData, "main.port");
     // port = 5005;
+
+    /****************************************************************/
+    /* 서버 NGINX 에서 인증서 관리로 아래 설정 주석 처리
+    // SSL 인증서 및 비밀 키 파일 경로
+    // const options = {
+    //   key: await fs.readFile(path.resolve(__dirname, 'server.key')),
+    //   cert: await fs.readFile(path.resolve(__dirname, 'server.cert')),
+    // };
+    // // HTTPS 서버 생성 및 실행
+    // https.createServer(options, server).listen(port, () => {
+    //   log(`HTTPS Server running on port ${port}`);
+    // }); 
+    /****************************************************************/
+
     server.listen(port, () => {
-      log(`api running on ${port}`);
+      log(`API Server running on port ${port}`);
     });
   } catch (err) {
     log("index ", err);
