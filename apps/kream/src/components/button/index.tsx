@@ -52,7 +52,7 @@ const btnColor: any = {
     'gray': 'text-white bg-gray-400 rounded border-gray-400 hover:bg-gray-300',
     'white': 'text-black font-bold bg-white rounded border border-gray-400 hover:bg-gray-100',
     'sky-outline': 'bg-transparent hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-400  hover:border-transparent rounded',
-    'gray-outline': 'bg-transparent hover:bg-gray-900/75 text-gray-700/75 hover:text-white border border-gray-700/75  hover:border-transparent rounded dark:text-gray-100 dark:hover:bg-gray-400',
+    'gray-outline': 'bg-transparent hover:bg-gray-900/75 text-gray-700/75 hover:text-white border border-gray-700/75  hover:border-transparent rounded dark:border-gray-200/75 dark:text-gray-100 dark:hover:bg-gray-400',
     'green-outline': 'bg-transparent hover:bg-green-600/75 text-green-600/75 hover:text-white border border-green-600/75  hover:border-transparent rounded',
     'orange-outline': 'bg-transparent hover:bg-orange-600/75 text-orange-600/75 hover:text-white border border-orange-600/75  hover:border-transparent rounded',
     'red-outline': 'bg-transparent hover:bg-red-600/75 text-red-600/75 hover:text-white border border-red-600/75  hover:border-transparent rounded',

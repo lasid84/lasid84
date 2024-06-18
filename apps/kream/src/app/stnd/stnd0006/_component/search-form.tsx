@@ -3,7 +3,7 @@
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
+import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
@@ -13,22 +13,22 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
-  cursorData : []
-  numericData : number;
-  textData : string;
+  cursorData: []
+  numericData: number;
+  textData: string;
 }
 
 export interface typeloadItem {
-  data : {} | undefined
+  data: {} | undefined
 }
 
 type Props = {
   onSubmit: SubmitHandler<any>;
-  loadItem : typeloadItem;
+  loadItem: typeloadItem;
 };
 
 // export function SearchForm({searchParams, dispatch}) {
-const SearchForm = memo(({loadItem}:any) => {
+const SearchForm = memo(({ loadItem }: any) => {
 
   log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
@@ -36,13 +36,13 @@ const SearchForm = memo(({loadItem}:any) => {
   //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
-  
+
   // const methods = useForm<FormType>({
-    const methods = useForm({
+  const methods = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
-      trans_mode : gTransMode || 'ALL',
-      trans_type : gTransType || 'ALL'
+      trans_mode: gTransMode || 'ALL',
+      trans_type: gTransType || 'ALL'
     }
   });
 
@@ -60,16 +60,16 @@ const SearchForm = memo(({loadItem}:any) => {
   const [transmode, setTransmode] = useState<any>();
   const [transtype, setTranstype] = useState<any>();
 
-  useEffect(() => { 
-    if(loadItem?.length){
+  useEffect(() => {
+    if (loadItem?.length) {
       // log("=================", loadItem[0].data, loadItem[1].data)
-      setTransmode(loadItem[0]) 
+      setTransmode(loadItem[0])
       setTranstype(loadItem[1])
 
       onSearch();
       // onSubmit();
       // handleSubmit(onSubmit)();
-    }    
+    }
   }, [loadItem?.length])
 
   // const onSubmit = (data: any, event: React.BaseSyntheticEvent<object, any, any>) => {
@@ -84,12 +84,12 @@ const SearchForm = memo(({loadItem}:any) => {
     // log("onSearch")
     const params = getValues();
     log("onSearch", params, getValues('trans_mode'));
-    dispatch({ searchParams: params, isMSearch:true});
+    dispatch({ searchParams: params, isMSearch: true });
   }
 
   const onNew = () => {
     const params = getValues();
-    dispatch({ searchParams: params, mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
+    dispatch({ searchParams: params, mSelectedRow: null, crudType: crudType.CREATE, isPopUpOpen: true });
     log("onNew", params);
   }
   return (
@@ -99,79 +99,33 @@ const SearchForm = memo(({loadItem}:any) => {
           right={
             <>
               <Button id={"search"} onClick={onSearch} />
-              <Button id={"new"} onClick={onNew}/>
+              <Button id={"new"} onClick={onNew} />
               {/* <Button id={"reset"} onClick={() => {
                 setFocus("trans_mode");
                 reset();
               }} /> */}
             </>
           }>
-          <ReactSelect 
-            id="trans_mode" label="trans_mode" dataSrc={transmode as data} 
+          <ReactSelect
+            id="trans_mode" label="trans_mode" dataSrc={transmode as data}
             options={{
-              keyCol:"trans_mode",
-              displayCol:['trans_mode', 'name'],
+              keyCol: "trans_mode",
+              displayCol: ['trans_mode', 'name'],
               // inline:true,
               // defaultValue: {label:'A Air', value:'A'}
-              defaultValue : getValues('trans_mode')
+              defaultValue: getValues('trans_mode')
             }}
           />
-          <ReactSelect 
+          <ReactSelect
             id="trans_type" label="trans_type" dataSrc={transtype as data}
             options={{
-              keyCol:"trans_type",
-              displayCol:['name'],
+              keyCol: "trans_type",
+              displayCol: ['name'],
               // inline:true,
-              defaultValue:getValues('trans_type')
+              defaultValue: getValues('trans_type')
             }}
           />
           <div>
-            {/* <TSelect2
-              id="trans_mode"
-              label={t("trans_mode")}
-            //   allYn={false}
-              isPlaceholder={false}
-              outerClassName="w-full space-y-1"
-              defaultValue={gTransMode}
-              options={transmode}
-            /> */}
-            {/* {errors?.trans_mode?.message && <ErrorMessage>{errors.trans_mode.message}</ErrorMessage>} */}
-            {/* <CustomSelect
-              id="trans_mode"
-              // label="trans_mode"
-              listItem = {transmode as gridData}
-              valueCol= {["trans_mode"]}
-              displayCol = "name"
-              gridOption = {{
-                colVisible: { col : ["trans_mode", "name"], visible:true },
-              }}
-              // gridStyle={{width:'400px', height:'200px'}}
-              // style={{width:'1000px'}}
-              // isNoSelect={false}
-            /> */}
-            {/* <TSelect2
-              id="trans_type"
-              label={t("trans_type")}
-            //   allYn={false}
-              isPlaceholder={false}
-              outerClassName="w-full space-y-1"
-              defaultValue={gTransType}
-              options={transtype}
-            /> */}
-          {/* {errors?.trans_type?.message && <ErrorMessage>{errors.trans_type.message}</ErrorMessage>} */}
-            {/* <CustomSelect
-              id="trans_type"
-              // label="trans_mode"
-              listItem = {transtype as gridData}
-              valueCol= {["trans_type"]}
-              displayCol = "name"
-              gridOption = {{
-                colVisible: { col : ["trans_type", "name"], visible:true },
-              }}
-              // gridStyle={{width:'400px', height:'200px'}}
-              // style={{width:'1000px'}}
-              // isNoSelect={false}
-            /> */}
           </div>
         </PageSearchButton>
       </form>

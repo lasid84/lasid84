@@ -1,15 +1,10 @@
-import { z } from "zod";
-import { useEffect, useState, useCallback, memo } from "react"
-import { makeZodI18nMap } from "zod-i18n-map";
-import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useEffect, useState, useCallback, memo } from "react"
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
-import Select from "react-select"
 import { Button } from "components/button"
-import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
+import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
-import { ProgressBarWithText } from "@/components/progress-bars/progressbar";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -24,7 +19,7 @@ type Props = {
 const SearchForm = memo(({ loadItem }: any) => {
     // const { initData } = props;
 
-    const { dispatch, objState } = useAppContext()
+    const { dispatch } = useAppContext()
     const [groupcd, setGroupcd] = useState<any>()
     let selectoptions: any[] = []
 
@@ -55,6 +50,11 @@ const SearchForm = memo(({ loadItem }: any) => {
         const params = getValues()
         dispatch({ searchParams: params, isMSearch: true });
     }
+    const onNew = () => {
+        const params = getValues();
+        dispatch({ searchParams: params, mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
+        log("onNew", params);
+      }
 
     return (
         <FormProvider {...methods}>
@@ -63,10 +63,7 @@ const SearchForm = memo(({ loadItem }: any) => {
                     right={
                         <>
                             <Button id={"search"} onClick={onSearch} />
-                            <Button id={"reset"} onClick={() => {
-                                setFocus("grp_cd");
-                                reset();
-                            }} />
+                            <Button id={"new"} onClick={onNew} />
                         </>
                     }>
                     <ReactSelect

@@ -9,7 +9,6 @@ import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community"
 import Modal from './popup';
-// import { TButtonBlue } from "components/form";
 import { PopType } from "@/utils/modal";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -29,10 +28,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const gridOption: GridOption = {
         colVisible: { col: ["grp_cd", "grp_cd_nm", "cd", "cd_nm", "cd_desc", "cd_mgcd1", "cd_mgcd2", "use_yn"], visible: true },
         gridHeight: "h-full",
-        // colDisable: ["grp_cd", "grp_cd_nm", "cd"],
-        // checkbox: ["use_yn"],
-        // dataType: { "bz_reg_no":"bizno"},
-        // isMultiSelect: false,
         isAutoFitColData: false,
     };
 
@@ -41,7 +36,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         // var data = onRowClicked(param);
         var selectedRow = {"colId": param.node.id, ...param.node.data}
         // log("handleRowClicked", selectedRow)
-        dispatch({ mSelectedRow: selectedRow, isPopupOpen: true, crudType: PopType.UPDATE })
+        dispatch({ mSelectedRow: selectedRow, isPopUpOpen: true, crudType: PopType.UPDATE })
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
@@ -54,34 +49,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     useEffect(() => {
         if (isMSearch) {
             mainRefetch();
-            log("stnd0005_isMSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
         }
     }, [isMSearch]);
-
-    const onSave = () => {
-        log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
-
-    }
-    const onPopup = () => {
-        log("--------------------", objState.isPopupOpen, objState.crudType)
-        dispatch({ isPopupOpen: true, crudType: PopType.CREATE })
-    }
-
-    // const onPopup2 = () => {
-    //     log("--------------------", objState.isPopupOpen, objState.crudType)
-    //     dispatch({ isPopupOpen: true, crudType: PopType.UPDATE })
-    // }
-    // <PageContent
-    //     right={
-    //         <>
-    //             <TButtonBlue label={"add"} onClick={() => rowAdd(gridRef.current)} />
-    //             <TButtonBlue label={"save"} onClick={onSave} />
-    //             <TButtonBlue label={"new"} onClick={onPopup} />
-    //             {/* <TButtonBlue label={"popup2"} onClick={onPopup2} /> */}
-    //         </>
-    //     }>
-    // </PageContent>
 
     return (
         <>
@@ -95,7 +65,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                      onSelectionChanged: handleSelectionChanged,
                 }}
             />
-            <Modal initData={initData} />
+            <Modal loadItem={initData} />
         </>
 
     );
