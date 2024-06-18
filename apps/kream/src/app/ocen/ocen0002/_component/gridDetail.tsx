@@ -17,7 +17,7 @@ import { LabelGrid } from "components/label";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    // initData?: any | null;
+    initData?: any | null;
 };
 
 const DetailGrid: React.FC<Props> = ({ initData }) => {

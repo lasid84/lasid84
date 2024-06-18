@@ -88,7 +88,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           </PageSearchButton>
         </form>
       </FormProvider>
-      <Modal loadItem={loadItem} />
+      <Modal />
     </>
   );
 });

@@ -30,7 +30,7 @@ export default function OCEN0002() {
     const { searchParams, isMSearch } = objState;
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
 
-    // const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
         <TableContext.Provider value={val}>
@@ -40,7 +40,7 @@ export default function OCEN0002() {
                     <MasterGrid  />
                     <div className="grid h-full col-span-2 grid-rows-2 ">
                         <div className="row-span-1"><DetailInfo /></div>
-                        <div className="row-span-1"><DetailGrid /></div>
+                        <div className="row-span-1"><DetailGrid initData={initData}/></div>
                     </div>
                 </div>
             </div>
