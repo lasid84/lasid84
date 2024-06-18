@@ -30,22 +30,23 @@ async function startScraping() {
         onExcute = true;
         ufsp.mainData = null;
 
-        const now = getKoreaTime(); 
-        const hours = now.getUTCHours();
-        const minutes = now.getUTCMinutes();
-        
+        // const now = getKoreaTime(); 
+        // const hours = now.getUTCHours();
+        // const minutes = now.getUTCMinutes();       
 
-        if (hours === 8 && minutes === 30) {
-            if (!ufsp.lastExcute) {
-                await ufsp.checkSession(true);
-            } else {
-                const diffMSec = now - ufsp.lastExcute.getTime();
-                const diffMin = diffMSec / (60 * 1000);
-                if (diffMin > 10) {
-                    await ufsp.checkSession(true);
-                }
-            }
-        }
+        // if (hours === 8 && minutes === 30) {
+        //     if (!ufsp.lastExcute) {
+        //         await ufsp.checkSession(true);
+        //     } else {
+        //         const diffMSec = now - ufsp.lastExcute.getTime();
+        //         const diffMin = diffMSec / (60 * 1000);
+        //         if (diffMin > 10) {
+        //             await ufsp.checkSession(true);
+        //         }
+        //     }
+        // }
+
+        await ufsp.loginByApi('', true);
 
         const datas = await ufsp.getIFData();
         let script;

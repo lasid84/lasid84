@@ -18,3 +18,5 @@ module.exports = {
     encrypt,
     decrypt
 }
+
+// console.log(encrypt("1q2w#E$R"));

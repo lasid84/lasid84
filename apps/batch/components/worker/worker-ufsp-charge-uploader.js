@@ -31,10 +31,9 @@ async function startScraping() {
         onExcute = true;
         ufsp.mainData = null;
 
-        const now = getKoreaTime(); 
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        
+        // const now = getKoreaTime(); 
+        // const hours = now.getHours();
+        // const minutes = now.getMinutes();       
 
         // if (hours === 8 && minutes === 30) {
         //     if (!ufsp.lastExcute) {
