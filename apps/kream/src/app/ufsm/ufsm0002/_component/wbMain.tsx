@@ -2,16 +2,10 @@
 
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { ErrorMessage } from "components/react-hook-form/error-message";
 import {PageContent} from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
-import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
-
-import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
+import {  useAppContext } from "components/provider/contextObjectProvider";
 import { DateInput, DatePicker } from 'components/date'
-import { useGetData } from "components/react-query/useMyQuery";
-import { SP_GetMasterData } from "./data";
 import { gridData } from "components/grid/ag-grid-enterprise";
 
 // import { useGetData } from './test'

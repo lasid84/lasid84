@@ -7,9 +7,7 @@ import { PageTabContent } from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
-import { useGetData } from "components/react-query/useMyQuery";
-import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { ReactSelect, data } from "@/components/select/react-select2";
+import {useAppContext } from "components/provider/contextObjectProvider";
 import SubMenuTab, { tab } from "components/tab/tab"
 import { SP_CreateIFData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";

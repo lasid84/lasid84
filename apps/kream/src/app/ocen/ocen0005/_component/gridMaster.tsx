@@ -9,6 +9,9 @@ import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { PageMGrid2, PageGrid } from "layouts/grid/grid";
+import { Button, ICONButton } from 'components/button';
+import { LabelGrid } from "components/label";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -34,7 +37,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             "volume": "number", "gross_weight": "number", "volume_weight": "number", "chargeable_weight": "number",
         },
         isAutoFitColData: true,
-        refRow : objState.refRow
+        refRow: objState.refRow
     };
 
 
@@ -70,17 +73,27 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
 
     return (
-        <Grid
-            gridRef={gridRef}
-            loadItem={initData}
-            listItem={mainData as gridData}
-            options={gridOption}
-            event={{
-                onRowClicked: handleRowClicked,
-                onSelectionChanged: handleSelectionChanged,
-            }}
-        />
-
+        <>
+            <PageMGrid2
+                title={<> </>}
+                right={
+                    <>
+                        <ICONButton id="alarm" disabled={false} size={'24'} />
+                        <Button id={"new"} width="w-40" />
+                    </>
+                }>
+                <Grid
+                    gridRef={gridRef}
+                    loadItem={initData}
+                    listItem={mainData as gridData}
+                    options={gridOption}
+                    event={{
+                        onRowClicked: handleRowClicked,
+                        onSelectionChanged: handleSelectionChanged,
+                    }}
+                />
+            </PageMGrid2>
+        </>
     );
 });
 

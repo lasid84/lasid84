@@ -1,10 +1,7 @@
-import { FiShoppingCart, FiArrowDown as ChevronDownIcon } from "react-icons/fi";
 import { FaSearch } from "react-icons/fa";
 import { TiPlus } from "react-icons/ti";
-// import { ChevronDownIcon } from "@heroicons/react";
-import clsx from "clsx";
-import { RiRefreshLine } from "react-icons/ri";
 import { RiSaveLine, RiSaveFill, RiSave2Fill } from "react-icons/ri";
+import { MdOutlineAlarm } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { ReactElement, cloneElement } from "react";
 import { GrPowerReset } from "react-icons/gr";
@@ -118,8 +115,12 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
             break;
         case "download":
             icon = <GrDownload size={size} />
+            break;
         case "interface":
             icon = <MdOutlineSyncAlt size={size} />
+            break;
+        case "alarm":
+            icon = <MdOutlineAlarm size={size}/>
     }
     return (
         icon
