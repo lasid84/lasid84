@@ -16,10 +16,10 @@ import Modal from "./popupInterface";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null;
+    // initData: any | null;
 };
 
-const MasterGrid: React.FC<Props> = ({ initData }) => {
+const MasterGrid: React.FC<Props> = ({ }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
@@ -79,7 +79,6 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                 }>
                 <Grid
                     gridRef={gridRef}
-                    loadItem={initData}
                     listItem={mainData as gridData}
                     options={gridOption}
                     event={{
@@ -88,7 +87,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                     }}
                 />
             </PageMGrid>
-            <Modal loadItem={initData} />
+            <Modal />
         </>
     );
 }

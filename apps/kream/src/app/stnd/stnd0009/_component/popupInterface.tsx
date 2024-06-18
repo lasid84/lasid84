@@ -10,12 +10,12 @@ import { MaskedInputField } from "@/components/input/react-text-mask";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    loadItem: any | null
+    // loadItem: any | null
 }
 
 const IN_PGM_CODE = '3'
 
-const Modal: React.FC<Props> = ({ loadItem }) => {
+const Modal: React.FC<Props> = () => {
     const { dispatch, objState } = useAppContext();
     const { crudType: popType, isIFPopUpOpen: isOpen } = objState;
     const { Create } = useUpdateData2(SP_CreateIFData);

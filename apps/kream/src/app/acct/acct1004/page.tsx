@@ -38,7 +38,7 @@ export default function ACCT1004() {
         <TableContext.Provider value={val}>
             <div className={`w-full h-full`}>
                 <SearchForm loadItem={initData} />
-                <div className="grid h-[calc(100vh-150px)] w-full gird-flow-row grid-cols-5 grid-rows-3 space-x-1">
+                <div className="grid h-[calc(100vh-180px)] w-full gird-flow-row grid-cols-5 grid-rows-3 space-x-1">
                     <div className="col-span-3 row-span-2">
                         <MasterGrid initData={initData} />
                     </div>

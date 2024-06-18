@@ -40,7 +40,7 @@ const OCEN0003: React.FC = memo(() => {
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
 
     const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
-    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    // const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
@@ -51,12 +51,12 @@ const OCEN0003: React.FC = memo(() => {
     return (
         <TableContext.Provider value={val}>
             <div className={`w-full h-full`}>
-                <SearchForm initData={initData} />
+                <SearchForm />
                 <div className="grid w-full h-[calc(100vh-100px)] grid-cols-3">
-                    <MasterGrid initData={initData} />
+                    <MasterGrid />
                     <div className="grid h-[calc(100vh-100px)] col-span-2 grid-rows-2">
                         <div className="row-span-1"><CustomerDetail /></div>
-                        <div className="row-span-1"><DetailGrid initData={initData} /></div>
+                        <div className="row-span-1"><DetailGrid /></div>
                     </div>
                 </div>
             </div>

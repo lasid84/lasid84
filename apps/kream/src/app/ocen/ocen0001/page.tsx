@@ -30,18 +30,16 @@ export default function OCEN0001() {
     const { searchParams, isMSearch } = objState;
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
 
-    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-
-    return (
+      return (
         <TableContext.Provider value={val}>
             <div className={`w-full h-full`}>
-                <SearchForm initData={initData} />
+                <SearchForm  />
                 <div className="grid w-full h-[calc(100vh-100px)] grid-cols-3">
-                    <MasterGrid initData={initData} />
+                    <MasterGrid  />
                     <div className="grid h-full col-span-2 grid-rows-5">
                         <div className="row-span-1"><DetailInfo /></div>
-                        <div className="row-span-2"><DetailGrid initData={initData} cont_type={"task"} /></div>
-                        <div className="row-span-2"><DetailGrid initData={initData} cont_type={"sale"} /></div>
+                        <div className="row-span-2"><DetailGrid  cont_type={"task"} /></div>
+                        <div className="row-span-2"><DetailGrid  cont_type={"sale"} /></div>
 
                     </div>
                 </div>
