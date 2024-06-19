@@ -54,9 +54,9 @@ async function startScraping() {
 
         log("1 - ", ufsp.idx, datas.length);
         if (datas.length > 0) {
-            if (datas[0].needlogin.toLowerCase() == 't') {
-                await ufsp.checkSession();
-            }
+            // if (datas[0].needlogin.toLowerCase() == 't') {
+            //     await ufsp.checkSession();
+            // }
             script = await ufsp.getScript(ufsp.pgm);
         }
 

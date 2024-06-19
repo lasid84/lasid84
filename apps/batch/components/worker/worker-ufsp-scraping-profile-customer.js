@@ -46,15 +46,15 @@ async function startScraping() {
         //     }
         // }
 
-        await ufsp.loginByApi('', true);
+        await ufsp.loginByApi('', false);
 
         const datas = await ufsp.getIFData();
         let script;
 
         if (datas.length > 0) {
-            if (datas[0].needlogin.toLowerCase() == 't') {
-                await ufsp.checkSession();
-            }
+            // if (datas[0].needlogin.toLowerCase() == 't') {
+            //     await ufsp.checkSession();
+            // }
             script = await ufsp.getScript(ufsp.pgm);
         }
 

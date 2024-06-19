@@ -334,7 +334,7 @@ class Library {
                 await this.excuteScript(data);
             }
         } catch(ex) {
-            throw  "startScript " + nowData + "," + ex;
+            throw  "startScript " + JSON.stringify(nowData) + "," + ex;
         }
     }
 
@@ -430,47 +430,51 @@ class Library {
     }
 
     async updateBodyText(data) {
-        var v_tracking = '';
-        const url = data.url;
-        //let header = data.header;
-        const method = data.method;
-        let bodyText = JSON.parse(data.body);
-        // log("bodyText", bodyText)
-        if (data.upd_body_col) {
-            let i = 0;
-            for (let col of data.upd_body_col.split(',')) {
-                v_tracking = 'start3';
-                const val = data.upd_body_val.split(',')[i];
-                v_tracking = 'start4 /' + val + ' / ' + JSON.stringify(this.resultData);
-                // log("1.", val, this.resultData);
-                let newVal = await this.GetJsonNode2(this.resultData, val.split('.'));
-                if (data.upd_convert_date) {
-                    if (Array.isArray(newVal)) {
-                        newVal = newVal.map(v => {
-                            if (this.isValidDate(v)) {
-                                return this.transformDate(v);
-                            } else return v;
-                        });
-                    } else if (newVal instanceof Object) {
-                        Object.keys(data).forEach(key => {
-                            if (this.isValidDate(newVal[key])) {
-                                newVal[key] = this.transformDate(newVal[key]);
-                            };
-                        });
-                    } else {
-                        if (this.isValidDate(newVal)) {
-                            newVal = this.transformDate(newVal);
+        try {
+            var v_tracking = '';
+            const url = data.url;
+            //let header = data.header;
+            const method = data.method;
+            let bodyText = JSON.parse(data.body);
+            // log("bodyText", bodyText)
+            if (data.upd_body_col) {
+                let i = 0;
+                for (let col of data.upd_body_col.split(',')) {
+                    v_tracking = 'start3';
+                    const val = data.upd_body_val.split(',')[i];
+                    v_tracking = 'start4 /' + val + ' / ' + JSON.stringify(this.resultData);
+                    // log("1.", val, this.resultData);
+                    let newVal = await this.GetJsonNode2(this.resultData, val.split('.'));
+                    if (data.upd_convert_date) {
+                        if (Array.isArray(newVal)) {
+                            newVal = newVal.map(v => {
+                                if (this.isValidDate(v)) {
+                                    return this.transformDate(v);
+                                } else return v;
+                            });
+                        } else if (newVal instanceof Object) {
+                            Object.keys(data).forEach(key => {
+                                if (this.isValidDate(newVal[key])) {
+                                    newVal[key] = this.transformDate(newVal[key]);
+                                };
+                            });
+                        } else {
+                            if (this.isValidDate(newVal)) {
+                                newVal = this.transformDate(newVal);
+                            }
                         }
                     }
+                    const cols = col.split('.');
+                    // log("=======", cols, newVal)
+                    await this.updateNodeByPath2(bodyText, cols, newVal);
+                    i++;
                 }
-                const cols = col.split('.');
-                // log("=======", cols, newVal)
-                await this.updateNodeByPath2(bodyText, cols, newVal);
-                i++;
             }
-        }
 
-        return bodyText
+            return bodyText
+        } catch (ex) {
+            error("updateBodyText", v_tracking, ex);
+        }
     }
 
     async executeAPI(method, url, header = {}, bodyText) {
