@@ -5,5 +5,11 @@ const nextConfig = {
     // experimental: {
     //     missingSuspenseWithCSRBailout: false,
     // },
+    experimental: {
+   	 serverActions: {
+	      allowedOrigins: ["dev-kream.web.kwe.co.kr", "localhost:3000"]
+	    }
+	  }
+
 };
 export default nextConfig;

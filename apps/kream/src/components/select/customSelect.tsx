@@ -40,6 +40,7 @@ type Style = {
 function CustomSelect(props: Props) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isGridReady, setIsGridReady] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const ref2 = useRef<HTMLDivElement>(null);
   const gridRef = useRef<any | null>(null);
@@ -66,8 +67,7 @@ function CustomSelect(props: Props) {
   // 옵션을 토글하는 함수
   const toggleOptions = () => {
     setIsOpen(!isOpen);
-
-    if (isOpen) ref2.current?.focus();
+    if (!isOpen) setIsGridReady(false);
   };
 
   useEffect(() => {
@@ -106,7 +106,9 @@ function CustomSelect(props: Props) {
   //     console.log('?test?')
   //     setDisplayText(getValues('cust_nm'))
   //   }
-    setFilteredData(listItem);
+    if (!filteredData) {
+      setFilteredData(listItem);
+    }
   }, [listItem])
 
   useEffect(() => {
@@ -125,6 +127,18 @@ function CustomSelect(props: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen && isGridReady) {
+      var param = getValues();
+      if (valueCol?.some(v => param[v])) {
+        for (var i = 0; i < filteredData?.data.length; i++) {
+          if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
+        }
+        gridRef.current.api.setFocusedCell(i, id);
+      }
+    }
+  }, [isOpen, isGridReady])
+
   const handelRowClicked = (param: RowClickedEvent) => {
     var selectedRow = { "colId": param.node.id, ...param.node.data }
     log("handelRowClicked", param);
@@ -134,6 +148,14 @@ function CustomSelect(props: Props) {
 
   const handleOnGridReady = (param: any) => {
     log("handleOnGridReady");
+    // setIsGridReady(true);
+    // onGridReady(param);
+    // setIsReady(true);
+  }
+
+  const handleComponentStateChanged = (param: any) => {
+    log("handleComponentStateChanged");
+    setIsGridReady(true);
     // onGridReady(param);
     // setIsReady(true);
   }
@@ -177,6 +199,40 @@ function CustomSelect(props: Props) {
     }
   }
 
+  const handleCustChange = (input: string) => {
+    
+      let inputVal = input.toString().toUpperCase();
+      log("MaskedInputField onChange", inputVal);
+      if (!inputVal || inputVal === initText) {
+        setFilteredData(listItem);
+        return;
+      } 
+      let visible = gridOption?.colVisible?.visible;
+      let filterCols = listItem?.fields.map((obj: { [x: string]: any; }) => obj["name"])
+                        .filter((val:string) => {
+                          if (visible) return gridOption?.colVisible?.col.includes(val);
+                          else return !gridOption?.colVisible?.col.includes(val);
+                        });
+      
+      var filtered = { 
+        fields: [...listItem?.fields],
+        data: [...listItem?.data.filter((d:{ [x: string]: any; }) => {
+          let bool = false;
+          for (let i = 0; i < filterCols.length; i++) {
+            let col = filterCols[i];
+            // log("filtered", col,d,d[col]);
+            if (d[col] && d[col].toUpperCase().includes(inputVal)) {
+              bool = true;
+              break;
+            }
+          }
+          return bool;
+        })]
+      };
+
+      setFilteredData(filtered);       
+  }
+
   return (
     <>
       <div
@@ -200,38 +256,9 @@ function CustomSelect(props: Props) {
           <MaskedInputField id="waybill_no" label="waybill_no" value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8' 
             events={{
               onChange(e) {
+                  e.preventDefault();
                   if (!isOpen) setIsOpen(true);
-
-                  let inputVal = e.target.value;
-                  log("MaskedInputField onChange", inputVal);
-                  if (!inputVal || inputVal === initText) {
-                    setFilteredData(listItem);
-                    return;
-                  } 
-                  let visible = gridOption?.colVisible?.visible;
-                  let filterCols = listItem?.fields.map((obj: { [x: string]: any; }) => obj["name"])
-                                    .filter((val:string) => {
-                                      if (visible) return gridOption?.colVisible?.col.includes(val);
-                                      else return !gridOption?.colVisible?.col.includes(val);
-                                    });
-                  
-                  var filtered = { 
-                    fields: [...listItem?.fields],
-                    data: [...listItem?.data.filter((data:{ [x: string]: any; }) => {
-                      let bool = false;
-                      for (let i = 0; i < filterCols.length; i++) {
-                        let col = filterCols[i];
-  
-                        if (data[col].toUpperCase().includes(inputVal.toUpperCase())) {
-                          bool = true;
-                          break;
-                        }
-                      }
-                      return bool;
-                    })]
-                  };
-
-                  setFilteredData(filtered);                  
+                  handleCustChange(e.target.value);
               },
               onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
                 switch (e.key) {
@@ -239,9 +266,8 @@ function CustomSelect(props: Props) {
                   case "ArrowDown":
                     // ref2?.current?.focus();
                     e.preventDefault();
-                    gridRef.current.api.setFocusedCell(0, "cust_code");
-                    // gridRef.current.api.setFocusedCell(-1, "cust_code");
-                    // gridRef.current.api.setFocusedCell(0, "cust_code");
+                    log("onKeyDown",id, gridRef.current);
+                    gridRef.current.api.setFocusedCell(0, id);
                     
                     break;
                 }
@@ -288,7 +314,8 @@ function CustomSelect(props: Props) {
                 //  onSelectionChanged: handleSelectionChanged
                 onRowClicked: handelRowClicked,
                 onGridReady: handleOnGridReady,
-                onCellKeyDown: handleCellKeyDown
+                onCellKeyDown: handleCellKeyDown,
+                onComponentStateChanged: handleComponentStateChanged
               }}
             />
           </div>

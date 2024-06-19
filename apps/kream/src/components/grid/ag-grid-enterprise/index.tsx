@@ -15,7 +15,8 @@ import {
   SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent,
   FirstDataRenderedEvent,
   CellKeyDownEvent,
-  FullWidthCellKeyDownEvent
+  FullWidthCellKeyDownEvent,
+  ComponentStateChangedEvent
 } from "ag-grid-community";
 
 import { LicenseManager } from  'ag-grid-enterprise'
@@ -62,6 +63,7 @@ type GridEvent = {
   onRowDataUpdated?: (params: RowDataUpdatedEvent) => void;
   onFirstDataRendered?: (params: FirstDataRenderedEvent) => void
   onCellKeyDown?: (params: CellKeyDownEvent | FullWidthCellKeyDownEvent) => void
+  onComponentStateChanged?: (params: ComponentStateChangedEvent) => void
 }
 
 export type GridOption = {
@@ -197,7 +199,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         return suggestedNextCell;
       },
-      onComponentStateChanged: () => {
+      onComponentStateChanged: (e:ComponentStateChangedEvent) => {
         //log("onComponentStateChanged", gridRef.current.api.getRowNode(mainData.length - 1), mainData.length);
 
         if (options?.isSelectRowAfterRender) {
@@ -218,6 +220,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
         // if () {
         //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
         // }
+
+        if (event?.onComponentStateChanged) event.onComponentStateChanged(e);
       },
       // onCellValueChanged: onCellValueChanged,
       // onSelectionChanged: onSelectionChanged,
@@ -469,6 +473,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onGridReady = (param: GridReadyEvent) => {
     log("onGridReady");
+
+    if (event?.onGridReady) event.onGridReady(param);
   }
 
   const onSelectionChanged = (param: SelectionChangedEvent) => {
