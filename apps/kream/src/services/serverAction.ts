@@ -4,6 +4,7 @@ import { cookies, headers } from 'next/headers'
 import { auth, signOut } from '@/app/api/auth/auth';
 import { redirect, RedirectType } from 'next/navigation';
 import { decode } from "next-auth/jwt";
+
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { signJwtAccessToken, verifyJwt } = require('@repo/kwe-lib/components/jsonWebToken');
 
@@ -49,6 +50,10 @@ export async function getToken() {
     const token = signJwtAccessToken({user_id:decoded?.email, user_nm:decoded?.name});
     return token;
 };
+
+export async function getHeaders() {
+    return await headers();
+}
 
 // 안됨
 // export const getIP = () => {

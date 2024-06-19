@@ -13,7 +13,8 @@ const { log, error } = require('./logHelper');
     baseURL: configParam.url,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `${configParam.accessToken}`
+      Authorization: `${configParam.accessToken}`,
+      "X-Forwarded-Host": configParam.host
     },
     withCredentials: configParam.isAuth ? true : false,
   }
@@ -53,11 +54,11 @@ async function dataCall(client, inproc, inparam, invalue, config) {
 const postCall = async (params) => {
   
   try {
-    // log("postCall params1 : ", params);  
+    log("postCall params1 : ", params);  
     const {user_id, password, url, isShowLoading} = params;
     const client = await init(params);
     // const client = params.client;
-    // log("postCall params2 : ", params);
+    log("postCall params2 : ", params);
     const response = isShowLoading ? 
                           await client.post<AxiosResponse>(url, {user_id: user_id,password: password})
                         : await client.post(url, {user_id: user_id,password: password});

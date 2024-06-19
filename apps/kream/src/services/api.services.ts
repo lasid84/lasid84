@@ -2,9 +2,8 @@
 
 // import { NextRequest, NextResponse } from "next/server";
 import { useUserSettings } from "states/useUserSettings"
-import { navigate, getSession, getCookies, getToken } from './serverAction';
+import { navigate, getSession, getCookies, getToken, getHeaders } from './serverAction';
 import { toastSuccess, toastWaring } from "components/toast";
-
 
 const { init, dataCall, postCall } = require('@repo/kwe-lib/components/api.service');
 // import { init, dataCall, postCall } from '@repo/kwe-lib/components/api.service';
@@ -46,7 +45,8 @@ function initConfig(isAuth: boolean | undefined, token:any) {
     const config = {
         isAuth: !isAuth ? false : isAuth,
         url: process.env.NEXT_PUBLIC_API_URL,
-        accessToken: token
+        accessToken: token,
+        host: new URL(process.env.NEXT_PUBLIC_API_URL!).host
     }
     return config;
 }
@@ -106,16 +106,16 @@ export async function executFunction(params:exeFuncParams) {
 };
 
 export async function checkADLogin(params:checkLogin) {
-
-    // log("?")
     const initial = await initConfig(false, "");
     const config = {
         ...initial,
         url: initial.url + params.url,
         user_id: params.user_id,
-        password: params.password
+        password: params.password,
+        // host: headers.get('x-forwarded-host')
     };
-    // log("checkADLogin", config);
+    log("log checkADLogin", config);
+    console.log("console.log checkADLogin", config);
     return await postCall(config);
 }
 
