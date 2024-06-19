@@ -113,7 +113,7 @@ type cols = {
 }
 
 const ListGrid: React.FC<Props> = memo((props) => {
-  log("ListGrid", props);
+  // log("ListGrid", props);
   
   const { t } = useTranslation();
   

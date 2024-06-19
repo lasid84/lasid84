@@ -19,7 +19,7 @@ export const createServer = (): Express => {
   } else {
     type = "dev";
   }
-
+  console.log("process.env.NODE_ENV", process.env.NODE_ENV, type, process.env.NODE_ENV === "production");
   const app = express();  
   app
     .disable("x-powered-by")
@@ -36,6 +36,16 @@ export const createServer = (): Express => {
       // }
     ))
     .use(compression())
+    // // Axios User-Agent를 가진 요청을 걸러내는 미들웨어
+    // .use((req, res, next) => {
+    //   log("Axios User-Agent를 가진 요청을 걸러내는 미들웨어", req.headers)
+    //   if (req.headers['user-agent'] && req.headers['user-agent'].startsWith('axios/')) {
+    //       log("Axios User-Agent를 가진 요청을 걸러내는 미들웨어2", req.headers)
+    //       // Axios User-Agent인 경우, 로그를 기록하지 않음
+    //       return res.status(404).end();
+    //   }
+    //   next();
+    // })
     .set('trust proxy', true)
     .get("/message/:name", (req, res) => {
       return res.json({ message: `hello ${req.params.name}` });
