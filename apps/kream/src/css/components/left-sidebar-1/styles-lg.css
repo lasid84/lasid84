@@ -36,9 +36,9 @@
     }
     .hidden-sibling {
       @apply border-0;
-      + ul {
+      /* + ul {
         @apply block;
-      }
+      } */
     }
   }
 
@@ -244,7 +244,7 @@
           }
         }
         > ul {
-          @apply absolute top-0 z-40 invisible w-48 shadow-lg opacity-0 pointer-events-none;
+          @apply absolute top-0 z-40 visible w-48 shadow-lg opacity-0 pointer-events-none;
           left: 100%;
         }
         &:hover {

@@ -43,7 +43,8 @@ const Item: React.FC<NavigationState> = ({menu_seq, url, icon, title, badge, ite
         query: { ...query }
         }}
         as= {url}
-        className={`left-sidebar-item ${active ? "active" : ""} dark:bg-gray-900 dark:text-white dark:border-gray-800`}>
+        className={`left-sidebar-item ${active ? "active" : ""} ${
+          hidden ? "hidden-sibling " : "open-sibling "      } dark:bg-gray-900 dark:text-white dark:border-gray-800`}>
           {icon}
           <span className="w-full title">{t(title)}</span>
           {badge && (
