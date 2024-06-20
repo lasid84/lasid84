@@ -60,7 +60,7 @@ export const createServer = (): Express => {
     .use(json())
     .use(cors(
       // {
-      //   origin: 'http://localhost:3000', // 프론트엔드가 실행되는 주소
+      //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
       //   credentials: true, // 쿠키 허용
       // }
     ))
