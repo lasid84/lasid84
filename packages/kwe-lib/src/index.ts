@@ -7,6 +7,7 @@ export const objectPath = require("object-path");
 export const fs = require("fs").promises;
 export const path = require("path");
 // import { path as arp } from 'app-root-path'
+export const rfs = require('rotating-file-stream')
 
 export { path as arp } from 'app-root-path';
 
