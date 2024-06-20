@@ -1,29 +1,58 @@
 import { json, urlencoded } from "body-parser";
-import express, { type Express } from "express";
+import express, { type Express, Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import jwt from 'jsonwebtoken';
 import compression from "compression";
+
 import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
 import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
 import { log, error } from '@repo/kwe-lib/components/logHelper';
 import { dataContainer } from '@repo/kwe-lib/components/dataContainer';
+import { path, rfs } from "@repo/kwe-lib";
 
 
 
 export const createServer = (): Express => {
 
   let type;
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV.trim().includes("production")) {
     type = "combined";
   } else {
     type = "dev";
   }
-  console.log("process.env.NODE_ENV", process.env.NODE_ENV, type, process.env.NODE_ENV === "production");
+
   const app = express();  
+
+  // // create a rotating write stream
+  // var accessLogStream = rfs.createStream('access.log', {
+  //   interval: '1d', // rotate daily
+  //   path: path.join(__dirname, 'log')
+  // })
+
+  const loginLogStream = rfs.createStream((time, index) => {
+    if (!time) return 'login.log';
+    const year = time.getFullYear();
+    const month = (`0${time.getMonth() + 1}`).slice(-2);
+    const day = (`0${time.getDate()}`).slice(-2);
+    return `login-${year}-${month}-${day}.log`;
+  }, {
+    interval: '1d', // 일자별 회전
+    path: path.join(__dirname, 'log')
+  });
+
+  // Custom Morgan Token for user_id
+  morgan.token('user_id', (req: Request) => {
+    return req.body.user_id || 'unknown';
+  });
+
+  morgan.token('user_nm', (req: Request & { user_nm?: string }) => {
+    return req.user_nm || '';
+  });
+
   app
     .disable("x-powered-by")
-    .use(morgan(type))
+    // .use(morgan(type))
     .use(express.json({
       limit : "50mb"
     }))
@@ -31,7 +60,7 @@ export const createServer = (): Express => {
     .use(json())
     .use(cors(
       // {
-      //   origin: 'http://localhost:3000', // 프론트엔드가 실행되는 주소
+      //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
       //   credentials: true, // 쿠키 허용
       // }
     ))
@@ -133,10 +162,11 @@ export const createServer = (): Express => {
         res.status(500).json({ error: 'WMS API Error fetching data : ' + err});
       }
     })
-    .post('/login', async (req, res) =>  {
+    // .use('/login', morgan(`${}`))
+    .post('/login', async (req: Request & { user_nm?: string }, res, next) =>  {
       try {
       //패스워드 암호처리, 복구 필요
-      log(req.body);
+      // log("========",req);
       const { user_id, password } = req.body;
 
       if (user_id === '') {
@@ -159,10 +189,12 @@ export const createServer = (): Express => {
           let dc:any = new dataContainer(); 
           dc = await callFunction(params.inproc, params.inparam, params.invalue);  
           if (dc.getNumericData() === 0) {   
+            req.user_nm = userObject;
             // 인증 성공시 처리
             res.json({ success: true, message: 'Authentication successful', user_nm: userObject, userData:dc.getCursorData()[0].data, token : token });
           }
           else {
+            req.user_nm = 'Invalid Credentials';
             res.json({ success:false, message: dc.getNumericData() + ' - ' + dc.getTextData(), token:'', userData: '' });
           }
         } else {
@@ -172,9 +204,13 @@ export const createServer = (): Express => {
           res.json({ success:false, message: 'Authentication failed - ' + err, token:'', userData:'' })
         }
       })
+      next();
     } catch (ex) {
       error("/login", ex.message);
-    }})
+    }}, morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - :response-time ms :user_id :user_nm'
+      , { stream: loginLogStream }), (req, res) => {
+      // res.send('Login endpoint accessed');
+    })
     .on('uncaughtException', function (err) {
       error('An error occurred: ', err);
     })

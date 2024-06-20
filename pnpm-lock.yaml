@@ -16,7 +16,7 @@ importers:
         version: link:packages/typescript-config
       '@turbo/gen':
         specifier: ^1.11.3
-        version: 1.11.3(@types/node@20.14.4)(typescript@5.3.3)
+        version: 1.11.3(@types/node@20.14.6)(typescript@5.3.3)
       prettier:
         specifier: ^3.2.4
         version: 3.2.4
@@ -47,18 +47,12 @@ importers:
       express:
         specifier: ^4.18.2
         version: 4.18.2
-      https:
-        specifier: ^1.0.0
-        version: 1.0.0
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
       morgan:
         specifier: ^1.10.0
         version: 1.10.0
-      path:
-        specifier: ^0.12.7
-        version: 0.12.7
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@20.12.4)(typescript@5.3.3)
@@ -883,6 +877,9 @@ importers:
       pg:
         specifier: ^8.11.3
         version: 8.11.3
+      rotating-file-stream:
+        specifier: ^3.2.3
+        version: 3.2.3
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -4161,7 +4158,7 @@ packages:
       - typescript
     dev: true
 
-  /@turbo/gen@1.11.3(@types/node@20.14.4)(typescript@5.3.3):
+  /@turbo/gen@1.11.3(@types/node@20.14.6)(typescript@5.3.3):
     resolution: {integrity: sha512-cHGRj7Jn7Hw1cA7NuwWYfYdhEliQX4LuSfEB9L1m8ifGkHalU3bbYXcehzLThmckpGpUQGnXYx0UtVudbQ42HA==}
     hasBin: true
     dependencies:
@@ -4173,7 +4170,7 @@ packages:
       minimatch: 9.0.3
       node-plop: 0.26.3
       proxy-agent: 6.3.1
-      ts-node: 10.9.1(@types/node@20.14.4)(typescript@5.3.3)
+      ts-node: 10.9.1(@types/node@20.14.6)(typescript@5.3.3)
       update-check: 1.5.4
       validate-npm-package-name: 5.0.0
     transitivePeerDependencies:
@@ -4439,8 +4436,8 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/node@20.14.4:
-    resolution: {integrity: sha512-1ChboN+57suCT2t/f8lwtPY/k3qTpuD/qnqQuYoBg6OQOcPyaw7PiZVdGpaZYAvhDDtqrt0oAaM8+oSu1xsUGw==}
+  /@types/node@20.14.6:
+    resolution: {integrity: sha512-JbA0XIJPL1IiNnU7PFxDXyfAwcwVVrOoqyzzyQTyMeVhBzkJVMSkC1LlVsRQ2lpqiY4n6Bb9oCS6lzDKVQxbZw==}
     dependencies:
       undici-types: 5.26.5
     dev: true
@@ -9646,10 +9643,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /https@1.0.0:
-    resolution: {integrity: sha512-4EC57ddXrkaF0x83Oj8sM6SLQHAWXw90Skqu2M4AEWENZ3F02dFJE/GARA8igO79tcgYqGrD7ae4f5L3um2lgg==}
-    dev: false
-
   /human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
@@ -13412,6 +13405,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
+  /rotating-file-stream@3.2.3:
+    resolution: {integrity: sha512-cfmm3tqdnbuYw2FBmRTPBDaohYEbMJ3211T35o6eZdr4d7v69+ZeK1Av84Br7FLj2dlzyeZSbN6qTuXXE6dawQ==}
+    engines: {node: '>=14.0'}
+    dev: false
+
   /run-applescript@5.0.0:
     resolution: {integrity: sha512-XcT5rBksx1QdIhlFOCtgZkB99ZEouFZ1E2Kc2LHqNW13U3/74YGdkQRmThTwxy4QIyookibDKYZOPqX//6BlAg==}
     engines: {node: '>=12'}
@@ -14523,7 +14521,7 @@ packages:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
-  /ts-node@10.9.1(@types/node@20.14.4)(typescript@5.3.3):
+  /ts-node@10.9.1(@types/node@20.14.6)(typescript@5.3.3):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -14542,7 +14540,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.14.4
+      '@types/node': 20.14.6
       acorn: 8.11.3
       acorn-walk: 8.2.0
       arg: 4.1.3
