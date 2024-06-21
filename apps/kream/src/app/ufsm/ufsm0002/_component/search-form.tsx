@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, Dispatch, useContext, memo, useMemo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/react-hook-form/error-message";
-import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
+import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { TSelect2, TCancelButton, TSubmitButton, TButtonBlue } from "components/form";
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
@@ -16,7 +16,7 @@ import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
 import { Button } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
-
+import Modal from "./popupInterface";
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -42,7 +42,7 @@ const SearchForm = ({ loadItem }: any) => {
 
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
-  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code} = objState.searchParams;
+  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code } = objState.searchParams;
 
   //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
@@ -80,7 +80,7 @@ const SearchForm = ({ loadItem }: any) => {
       setTranstype(loadItem[1])
       setCustcode(loadItem[8])
       dispatch({ isFirstRender: false });
-      if (objState.isFirstRender){ onSearch()}
+      if (objState.isFirstRender) { onSearch() }
     }
   }, [loadItem?.length])
 
@@ -90,67 +90,73 @@ const SearchForm = ({ loadItem }: any) => {
     dispatch({ searchParams: params, isMSearch: true });
   }
 
-  return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="flex pt-10 space-y-1">
-      <PageSearchButton
-          right={
-            <>
-              <div className={"col-span-1"}>
-                <Button id="search" disabled={false} onClick={onSearch} />                
-              </div>
-              <div className={"col-span-1"}>
-                <Button id="reset" disabled={false} onClick={onSearch} />                
-              </div>
-            </>
-          }>
-          <div className={"col-span-1"}>
-            <ReactSelect
-              id="trans_mode" label="trans_mode" dataSrc={transmode as data}
-              width='w-96' lwidth='w-20' height="8px"
-              options={{
-                keyCol: "trans_mode",
-                displayCol: ['name'],
-                inline: true,
-                defaultValue: getValues('trans_mode')
-              }}
-            />
+  const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
-            <ReactSelect
-              id="trans_type" label="trans_type" dataSrc={transtype as data}
-              width='w-96' lwidth='w-20' height="8px"
-              options={{
-                keyCol: "trans_type",
-                displayCol: ['name'],
-                inline: true,
-                defaultValue: getValues('trans_type')
-              }}
-            />
-          </div>
-          <div className={"col-span-1"}>
-            <DatePicker id="fr_date" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
-            <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
-          </div>
-          <div className={"col-span-2"}>
-            <CustomSelect
-              id="cust_code"
-              initText='Select an option'
-              listItem={custcode as gridData}
-              valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
-              displayCol="cust_nm"
-              gridOption={{
-                colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
-              }}
-              gridStyle={{ width: '600px', height: '300px' }}
-              style={{ width: '1000px', height: "8px" }}
-              inline={true}
-            />
-            <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
-            <MaskedInputField id="cust_nm" value={objState.searchParams?.cust_nm} options={{ textAlign: 'center', inline: true, noLabel: false, outerClassName:'hidden' }} height='h-8' />
-          </div>
-        </PageSearchButton>
-      </form>
-    </FormProvider>
+
+  return (
+    <>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSearch)} className="flex pt-10 space-y-1">
+          <PageSearchButton
+            right={
+              <>
+                <div className={"col-span-1"}>
+                  <Button id="interface" disabled={false} onClick={onInterface} />
+                </div>
+                <div className={"col-span-1"}>
+                  <Button id="search" disabled={false} onClick={onSearch} />
+                </div>
+              </>
+            }>
+            <div className={"col-span-1"}>
+              <ReactSelect
+                id="trans_mode" label="trans_mode" dataSrc={transmode as data}
+                width='w-96' lwidth='w-20' height="8px"
+                options={{
+                  keyCol: "trans_mode",
+                  displayCol: ['name'],
+                  inline: true,
+                  defaultValue: getValues('trans_mode')
+                }}
+              />
+
+              <ReactSelect
+                id="trans_type" label="trans_type" dataSrc={transtype as data}
+                width='w-96' lwidth='w-20' height="8px"
+                options={{
+                  keyCol: "trans_type",
+                  displayCol: ['name'],
+                  inline: true,
+                  defaultValue: getValues('trans_type')
+                }}
+              />
+            </div>
+            <div className={"col-span-1"}>
+              <DatePicker id="fr_date" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+              <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            </div>
+            <div className={"col-span-2"}>
+              <CustomSelect
+                id="cust_code"
+                initText='Select an option'
+                listItem={custcode as gridData}
+                valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
+                displayCol="cust_nm"
+                gridOption={{
+                  colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
+                }}
+                gridStyle={{ width: '600px', height: '300px' }}
+                style={{ width: '1000px', height: "8px" }}
+                inline={true}
+              />
+              <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+              <MaskedInputField id="cust_nm" value={objState.searchParams?.cust_nm} options={{ textAlign: 'center', inline: true, noLabel: false, outerClassName: 'hidden' }} height='h-8' />
+            </div>
+          </PageSearchButton>
+        </form>
+      </FormProvider>
+      <Modal />
+    </>
   );
 };
 

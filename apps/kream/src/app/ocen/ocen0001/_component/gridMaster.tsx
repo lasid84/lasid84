@@ -43,9 +43,9 @@ const MasterGrid: React.FC<Props> = ({  }) => {
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
-        let selectedRow2 = { ...selectedRow, type: 'task' }
+
         // let selectedRow3 = { ...selectedRow, type:'sale'}
-        log("handleSelectionChanged", selectedRow2)
+        // log("handleSelectionChanged", selectedRow2)
         dispatch({ mSelectedRow: selectedRow, isDSearchT: true });
         dispatch({ mSelectedRow: selectedRow, isDSearchS: true });
     };
