@@ -42,14 +42,14 @@ export const createServer = (): Express => {
     path: path.join(__dirname, 'log')
   });
 
-  // Custom Morgan Token for user_id
-  morgan.token('user_id', (req: Request) => {
-    return req.body.user_id || 'unknown';
-  });
+  // // Custom Morgan Token for user_id
+  // morgan.token('user_id', (req: Request) => {
+  //   return req.body.user_id || 'unknown';
+  // });
 
-  morgan.token('user_nm', (req: Request & { user_nm?: string }) => {
-    return req.user_nm || '';
-  });
+  // morgan.token('user_nm', (req: Request & { user_nm?: string }) => {
+  //   return req.user_nm || '';
+  // });
 
   app
     .disable("x-powered-by")
@@ -59,12 +59,12 @@ export const createServer = (): Express => {
     }))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors(
-      // {
-      //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
-      //   credentials: true, // 쿠키 허용
-      // }
-    ))
+    // .use(cors(
+    //   // {
+    //   //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
+    //   //   credentials: true, // 쿠키 허용
+    //   // }
+    // ))
     // .use(cors(corsOptions))
     // .options('*', cors())
     // .use((req, res, next) => {
