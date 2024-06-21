@@ -21,7 +21,7 @@ type Props = {
     initData?: any | null;
 };
 
-const DetailGrid: React.FC<Props> = ({ initData }) => {
+const DetailGrid: React.FC<Props> = () => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
@@ -32,23 +32,18 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData);
 
     useEffect(() => {
-        if (initData) {
             // log(initData[0].data)
             const gridOption: GridOption = {
                 colVisible: { col: ["place_code", "cont_seq", "create_date", "create_user"], visible: false },
-                // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
-                // select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: { "pic_nm": 100, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
                 editable: ["pic_nm", "addr", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
                 dataType: { "create_date": "date" },
                 isAutoFitColData: false,
             };
-
             setGridOptions(gridOption);
-        }
-    }, [initData])
+    }, [])
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
@@ -116,7 +111,6 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 }>
                 <Grid
                     gridRef={gridRef}
-                    loadItem={initData}
                     listItem={detailData as gridData}
                     options={gridOptions}
                     event={{

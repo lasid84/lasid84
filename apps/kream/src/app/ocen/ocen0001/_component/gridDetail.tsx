@@ -6,13 +6,12 @@ import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
-import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageGrid } from "layouts/grid/grid";
 import { LabelGrid } from "@/components/label"
 import { Button } from 'components/button'
-import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-import { toastSuccess } from "components/toast"
+import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";import { toastSuccess } from "components/toast"
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -21,7 +20,7 @@ type Props = {
     cont_type?: any | null;
 }
 
-const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
+const DetailGrid: React.FC<Props> = ({ cont_type }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
@@ -32,7 +31,7 @@ const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
     const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({ ...objState?.mSelectedRow, cont_type: cont_type }, SEARCH_D, SP_GetDetailData);
 
     useEffect(() => {
-        if (initData) {
+        if (true) {
             // log(initData[0].data)
             const gridOption: GridOption = {
                 colVisible: { col: ["pic_nm", "email", "tel_num", "fax_num", "remark", "use_yn", "def"], visible: true },
@@ -45,7 +44,7 @@ const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
             };
             setGridOptions(gridOption);
         }
-    }, [initData])
+    }, [])
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
@@ -66,18 +65,17 @@ const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
     };
 
     const onSave = () => {
-        var hasData = false;
+        log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
+
         gridRef.current.api.forEachNode((node: any) => {
-            var data = node.data;
+            var data = { ...node.data };
             gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
             if (data.__changed) {
-                if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-                    data.carrier_code = objState.mSelectedRow.carrier_code;
-                    Create.mutate(data);
-                    hasData = true;
-                } else { //수정
+                if (data.cust_code && data.cont_seq) { //수정
                     Update.mutate(data);
-                    hasData = true;
+                } else { //신규
+                    data.cust_code = objState.mSelectedRow.cust_code;
+                    Create.mutate(data);
                 }
             }
         });
@@ -97,7 +95,6 @@ const DetailGrid: React.FC<Props> = ({ initData, cont_type }) => {
                 }>
                 <Grid
                     gridRef={gridRef}
-                    loadItem={initData}
                     listItem={detailData as gridData}
                     options={gridOptions}
                     event={{

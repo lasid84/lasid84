@@ -31,6 +31,7 @@ export default function UFSM0002() {
             searchParams: {},
             isMSearch: false,
             isDSearch: false,
+            isIFPopUpOpen: false,
             mSelectedRow: {},
             mSelectedDetail: {},
             dSelectedRow: {},
