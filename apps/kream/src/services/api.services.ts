@@ -113,7 +113,7 @@ export async function checkADLogin(params:checkLogin) {
         user_id: params.user_id,
         password: params.password,
         // host: headers.get('x-forwarded-host')
-        host: new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host//new URL(process.env.NEXT_PUBLIC_API_URL!).host
+        // host: new URL(process.env.NEXT_PUBLIC_API_URL!).host//new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host//new URL(process.env.NEXT_PUBLIC_API_URL!).host
     };
     log("log checkADLogin", config);
     console.log("console.log checkADLogin", config);
