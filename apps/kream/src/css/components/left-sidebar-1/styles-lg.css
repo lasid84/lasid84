@@ -79,9 +79,12 @@
         @apply pl-[10px];
         width: 0;
       }
-      /*+ ul > li > a > .left-sidebar-item {*/
-      /*  width: calc(theme("spacing.1") * 57.5);*/
-      /*}*/
+      + ul > li > button > .left-sidebar-item {
+        width: calc(theme("spacing.1") * 57.5);
+        .arrow {
+          transform: rotate(-90deg) !important;
+        }
+      }
     }
     &.open-sibling {
       @apply text-blue-500;

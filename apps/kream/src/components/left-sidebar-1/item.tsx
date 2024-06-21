@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePathname, useSearchParams  } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { FiChevronRight } from "react-icons/fi";
 import type { NavigationState } from "states/useNavigation";
@@ -9,16 +9,16 @@ import { useUserSettings } from "states/useUserSettings";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 
-const Item: React.FC<NavigationState> = ({menu_seq, url, icon, title, badge, items, menu_param}) => {
-  const {t} = useTranslation();
+const Item: React.FC<NavigationState> = ({ menu_seq, url, icon, title, badge, items, menu_param }) => {
+  const { t } = useTranslation();
   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
-  
+
   const [hidden, setHidden] = useState<boolean>(true);
 
   const pathname = usePathname();
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
-  
+
   let active = pathname === url && (!params || (params == menu_param)) ? true : false;
 
   if (pathname === "/" && url === "/dashboard") {
@@ -29,22 +29,19 @@ const Item: React.FC<NavigationState> = ({menu_seq, url, icon, title, badge, ite
   }
   if (items.length === 0) {
     var query;
-    if (menu_param) query = {params:menu_param};
+    if (menu_param) query = { params: menu_param };
 
     const handleClick = () => {
-      userSettingsActions?.setData({currentMenu:menu_seq, currentParams:menu_param});
+      userSettingsActions?.setData({ currentMenu: menu_seq, currentParams: menu_param });
     }
 
     return (
-      // <Link href={url as string} className={`left-sidebar-item ${active ? "active" : ""} dark:bg-[#e9eef5]`}>
-      <div onClick={handleClick}>
-      <Link href={{
-        pathname: url,
-        query: { ...query }
+      <div className={`left-sidebar-item ${active ? "active" : ""} ${hidden ? "hidden-sibling " : "open-sibling "} dark:bg-gray-800 dark:text-white dark:border-gray-800`} onClick={handleClick}>
+        <Link href={{
+          pathname: url,
+          query: { ...query }
         }}
-        as= {url}
-        className={`left-sidebar-item ${active ? "active" : ""} ${
-          hidden ? "hidden-sibling " : "open-sibling "      } dark:bg-gray-900 dark:text-white dark:border-gray-800`}>
+          as={url}>
           {icon}
           <span className="w-full title">{t(title)}</span>
           {badge && (
@@ -52,16 +49,14 @@ const Item: React.FC<NavigationState> = ({menu_seq, url, icon, title, badge, ite
               {badge.text}
             </span>
           )}
-        {/* onClick={log("item onClick", items)}s */}
-      </Link>
+        </Link>
       </div>
     );
   }
   return (
     <button
       onClick={() => setHidden(!hidden)}
-      className={`left-sidebar-item ${active ? "active" : ""} ${
-        hidden ? "hidden-sibling " : "open-sibling "      }`}>
+      className={`left-sidebar-item ${active ? "active" : ""} ${hidden ? "hidden-sibling " : "open-sibling "}`}>
       {icon}
       <span className="title">{t(title)}</span>
       {badge && (
