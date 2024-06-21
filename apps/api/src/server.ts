@@ -67,6 +67,18 @@ export const createServer = (): Express => {
     ))
     .use(cors(corsOptions))
     .options('*', cors())
+    .use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host'); // 여기에 'X-Forwarded-Host' 추가
+       res.header('Access-Control-Allow-Credentials', 'true');
+    // 프리플라이트 요청에 대한 응답
+      if (req.method === 'OPTIONS') {
+        res.sendStatus(204);
+      } else {
+        next();
+      }
+    })    
     .use(compression())
     // // Axios User-Agent를 가진 요청을 걸러내는 미들웨어
     // .use((req, res, next) => {
