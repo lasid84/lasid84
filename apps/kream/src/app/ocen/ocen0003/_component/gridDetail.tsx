@@ -37,11 +37,10 @@ const DetailGrid: React.FC<Props> = () => {
             // log(initData[0].data)
             const gridOption: GridOption = {
                 colVisible: { col: ["cust_code", "pickup_seq", "fax_num", "create_date", "create_user"], visible: false },
-                // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
-                // select: { "user_dept" : initData[0].data.map((row:any) => row['user_dept'])},
                 minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
+                maxWidth : {"use_yn": 80, "def": 80  },
                 editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
                 dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
                 isAutoFitColData: false,
