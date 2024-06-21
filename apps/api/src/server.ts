@@ -65,8 +65,8 @@ export const createServer = (): Express => {
     //   //   credentials: true, // 쿠키 허용
     //   // }
     // ))
-    // .use(cors(corsOptions))
-    // .options('*', cors())
+    .use(cors(corsOptions))
+    .options('*', cors())
     // .use((req, res, next) => {
     //   res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
     //   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
