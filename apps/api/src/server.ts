@@ -24,11 +24,12 @@ export const createServer = (): Express => {
 
   const app = express();  
 
-  // // create a rotating write stream
-  // var accessLogStream = rfs.createStream('access.log', {
-  //   interval: '1d', // rotate daily
-  //   path: path.join(__dirname, 'log')
-  // })
+  const corsOptions = {
+    origin: 'http://dev-kream.web.kwe.co.kr', // 허용할 출처
+    methods: ['GET','POST','PUT','DELETE','OPTIONS'], // 허용할 HTTP 메서드
+    allowedHeaders: ['Content-Type','Authorization','X-Forwarded-Host'], // 허용할 헤더
+    credentials: true // 인증 정보를 포함할 경우 허용
+  }; 
 
   const loginLogStream = rfs.createStream((time, index) => {
     if (!time) return 'login.log';
@@ -58,12 +59,33 @@ export const createServer = (): Express => {
     }))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors(
-      // {
-      //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
-      //   credentials: true, // 쿠키 허용
-      // }
-    ))
+    // .use(cors(
+    //   // {
+    //   //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
+    //   //   credentials: true, // 쿠키 허용
+    //   // }
+    // ))
+    .use(cors(corsOptions))
+    .options('*', cors())
+    .use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host'); // 여기에 'X-Forwarded-Host' 추가
+       res.header('Access-Control-Allow-Credentials', 'true');
+    // 프리플라이트 요청에 대한 응답
+      if (req.method === 'OPTIONS') {
+        res.sendStatus(204);
+      } else {
+        next();
+      }
+    })    
+    .options('/api/data', (req, res) => {
+      res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      res.sendStatus(204); // No Content
+    })    
     .use(compression())
     // // Axios User-Agent를 가진 요청을 걸러내는 미들웨어
     // .use((req, res, next) => {

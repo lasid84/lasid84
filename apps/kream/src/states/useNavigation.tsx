@@ -3,7 +3,9 @@ import { create } from 'zustand';
 import { useUserSettings } from "states/useUserSettings";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
-const { executFunction } = require('services/api.services');
+// const { executFunction } = require('services/api.services');
+
+import { executFunction } from 'services/api.services';
 
 //DEFAULT
 import { MdOutlineWidthNormal } from "react-icons/md"
@@ -36,6 +38,7 @@ import { BiSolidShip } from "react-icons/bi";
 //계약관리
 import { GrDocumentConfig } from "react-icons/gr";
 import { HiDocumentSearch } from "react-icons/hi";
+import { gridData } from '@/components/grid/ag-grid-enterprise';
 
 export type NavigationState = {
   parent_seq: number;
@@ -96,12 +99,13 @@ async function getMenuList(userInfo: any) {
     isShowLoading: false
   };
   // log('params', params)
-  const menus = await executFunction(params)
+  const result = await executFunction(params);
+  if (!result) return { navigationData: undefined, menuArr: undefined };
+  const menus = (result[0] as gridData);
 
   log("menus", menus);
 
-  if (!menus) return { navigationData: undefined, menuArr: undefined };
-  if (!menus[0].data.length) return { navigationData: undefined, menuArr: undefined };
+  if (!menus.data.length) return { navigationData: undefined, menuArr: undefined };
 
   const navigationData: NavigationState[] = [{
     parent_seq: -1,
@@ -113,7 +117,7 @@ async function getMenuList(userInfo: any) {
   const menuMap = new Map<number, NavigationState>();
   var menuArr: string[] = ['dashboard'];
 
-  menus[0]?.data?.forEach((menu: any) => {
+  menus?.data?.forEach((menu: any) => {
     if (menu.use_yn === "Y") {
       const menuItem: NavigationState = {
         parent_seq: menu.parent_seq,

@@ -7,7 +7,7 @@ const nextConfig = {
     // },
     experimental: {
    	 serverActions: {
-	      allowedOrigins: ["dev-kream.web.kwe.co.kr", "localhost:3000"]
+	      allowedOrigins: ["dev-kream.web.kwe.co.kr", "dev-api-kream.web.kwe.co.kr", "localhost:3000"]
 	    }
 	  }
 
