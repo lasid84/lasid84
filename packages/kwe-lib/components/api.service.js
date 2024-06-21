@@ -17,7 +17,7 @@ const { log, error } = require('./logHelper');
       "X-Forwarded-Host": configParam.host
     },
     // withCredentials: configParam.isAuth ? true : false,
-    withCredentials: true
+    // withCredentials: true
   }
   const client = axios.create(config);
   client.defaults.timeout = 30000;
