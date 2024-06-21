@@ -28,7 +28,7 @@ export const createServer = (): Express => {
     origin: 'http://dev-kream.web.kwe.co.kr', // 허용할 출처
     methods: ['GET','POST','PUT','DELETE','OPTIONS'], // 허용할 HTTP 메서드
     allowedHeaders: ['Content-Type','Authorization','X-Forwarded-Host'], // 허용할 헤더
-    credentials: true // 인증 정보를 포함할 경우 허용
+    //credentials: true // 인증 정보를 포함할 경우 허용
   }; 
 
   const loginLogStream = rfs.createStream((time, index) => {

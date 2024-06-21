@@ -46,7 +46,7 @@ function initConfig(isAuth: boolean | undefined, token:any) {
         isAuth: !isAuth ? false : isAuth,
         url: process.env.NEXT_PUBLIC_API_URL,
         accessToken: token,
-        host: new URL(process.env.NEXT_PUBLIC_API_URL!).host //new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host
+        host: new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host //new URL(process.env.NEXT_PUBLIC_API_URL!).host //
     }
     return config;
 }
