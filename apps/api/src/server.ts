@@ -233,13 +233,15 @@ export const createServer = (): Express => {
           res.json({ success:false, message: 'Authentication failed - ' + err, token:'', userData:'' })
         }
       })
-      next();
+      // next();
     } catch (ex) {
       error("/login", ex.message);
-    }}, morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - :response-time ms :user_id :user_nm'
-      , { stream: loginLogStream }), (req, res) => {
-      // res.send('Login endpoint accessed');
-    })
+    }}
+    // , morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - :response-time ms :user_id :user_nm'
+    //   , { stream: loginLogStream }), (req, res) => {
+    //   // res.send('Login endpoint accessed');
+    // }
+    )
     .on('uncaughtException', function (err) {
       error('An error occurred: ', err);
     })
