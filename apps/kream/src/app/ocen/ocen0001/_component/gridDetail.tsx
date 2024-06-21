@@ -95,7 +95,6 @@ const DetailGrid: React.FC<Props> = ({ cont_type }) => {
                 }>
                 <Grid
                     gridRef={gridRef}
-                    loadItem={initData}
                     listItem={detailData as gridData}
                     options={gridOptions}
                     event={{
