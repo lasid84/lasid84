@@ -27,7 +27,7 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'http://dev-kream.web.kwe.co.kr', 
   'http://dev-kream.web.kwe.co.kr/login', 
-  'http://dev-api-kream.web.kwe.co.kr/api/data'
+  'http://dev-api-kream.web.kwe.co.kr'
 ];
 
 export function middleware(req:NextRequest) {
