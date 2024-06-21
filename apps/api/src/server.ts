@@ -59,12 +59,12 @@ export const createServer = (): Express => {
     }))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors(
-      // {
-      //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
-      //   credentials: true, // 쿠키 허용
-      // }
-    ))
+    // .use(cors(
+    //   // {
+    //   //   origin: 'http://dev-kream.web.kwe.co.kr', // 프론트엔드가 실행되는 주소
+    //   //   credentials: true, // 쿠키 허용
+    //   // }
+    // ))
     .use(cors(corsOptions))
     .options('*', cors())
     .use((req, res, next) => {
