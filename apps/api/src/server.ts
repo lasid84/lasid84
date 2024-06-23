@@ -67,18 +67,18 @@ export const createServer = (): Express => {
     // ))
     .use(cors(corsOptions))
     .options('*', cors(corsOptions))
-    // .use((req, res, next) => {
-    //   res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
-    //   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    //   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host'); // 여기에 'X-Forwarded-Host' 추가
-    //    res.header('Access-Control-Allow-Credentials', 'true');
-    // // 프리플라이트 요청에 대한 응답
-    //   if (req.method === 'OPTIONS') {
-    //     res.sendStatus(204);
-    //   } else {
-    //     next();
-    //   }
-    // })    
+    .use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host'); // 여기에 'X-Forwarded-Host' 추가
+       res.header('Access-Control-Allow-Credentials', 'true');
+    // 프리플라이트 요청에 대한 응답
+      if (req.method === 'OPTIONS') {
+        res.sendStatus(204);
+      } else {
+        next();
+      }
+    })    
     // .options('/login', (req, res) => {
     //   res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
     //   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');

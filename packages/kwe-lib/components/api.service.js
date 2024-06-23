@@ -14,7 +14,7 @@ const { log, error } = require('./logHelper');
     headers: {
       "Content-Type": "application/json",
       Authorization: `${configParam.accessToken}`,
-      "X-Forwarded-Host": configParam.host
+      // "X-Forwarded-Host": configParam.host
     },
     // withCredentials: configParam.isAuth ? true : false,
     // withCredentials: true
