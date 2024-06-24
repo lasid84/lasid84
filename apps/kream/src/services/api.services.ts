@@ -46,7 +46,7 @@ function initConfig(isAuth: boolean | undefined, token:any) {
         isAuth: !isAuth ? false : isAuth,
         url: process.env.NEXT_PUBLIC_API_URL,
         accessToken: token,
-        host: new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host//new URL(process.env.NEXT_PUBLIC_API_URL!).host
+        host: new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host //new URL(process.env.NEXT_PUBLIC_API_URL!).host //
     }
     return config;
 }
@@ -113,6 +113,7 @@ export async function checkADLogin(params:checkLogin) {
         user_id: params.user_id,
         password: params.password,
         // host: headers.get('x-forwarded-host')
+        // host: new URL(process.env.NEXT_PUBLIC_API_URL!).host//new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host//new URL(process.env.NEXT_PUBLIC_API_URL!).host
     };
     log("log checkADLogin", config);
     console.log("console.log checkADLogin", config);
