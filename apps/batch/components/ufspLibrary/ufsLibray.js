@@ -334,7 +334,10 @@ class Library {
                 await this.excuteScript(data);
             }
         } catch(ex) {
-            throw  "startScript " + JSON.stringify(nowData) + "," + ex;
+            // throw  "startScript " + JSON.stringify(nowData) + "," + ex;
+            let seq = nowData? nowData.seq : '';
+            let pgm = nowData? nowData.pgm_code : '';
+            throw  "startScript " + seq + ' / ' + pgm + "," + ex;
         }
     }
 
@@ -509,7 +512,7 @@ class Library {
                 return str;
             }, method,  url, bodyText);
 
-            // log("result", result, new URL(url).host, JSON.stringify(bodyText));
+            // log("=====================================result", result, new URL(url).host, JSON.stringify(result));
 
             //로그인 에러
             if (result && result.success === false) {
@@ -540,8 +543,8 @@ class Library {
             }
 
             if (result.statusElements) {
-                if (result.statusElements.severity === 'ERROR') {
-                    var message = result.statusElements.message;
+                if (result.statusElements[0].severity === 'ERROR') {
+                    var message = result.statusElements[0].message;
                     this.mainData['error'] = message;
                     throw message;
                 }
@@ -551,7 +554,7 @@ class Library {
         }
         catch (ex) {
             log("ex", ex);
-            return null
+            throw ex;
         }
     };
 
