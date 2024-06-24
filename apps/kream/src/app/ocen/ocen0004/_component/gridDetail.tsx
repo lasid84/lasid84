@@ -37,8 +37,9 @@ const DetailGrid: React.FC<Props> = () => {
                 colVisible: { col: ["place_code", "cont_seq", "create_date", "create_user"], visible: false },
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
-                minWidth: { "pic_nm": 100, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
-                editable: ["pic_nm", "addr", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
+                minWidth: { "pic_nm": 100, "email": 80, "use_yn": 30, "def": 30 },
+                maxWidth : {"use_yn": 90, "def":90},
+                editable: ["pic_nm",  "email", "tel_num", "fax_num", "remark", "def", "use_yn"],
                 dataType: { "create_date": "date" },
                 isAutoFitColData: false,
             };
