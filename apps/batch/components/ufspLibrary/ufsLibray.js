@@ -413,7 +413,7 @@ class Library {
                     await this.setBLIFData(if_yn, '', '');
                     throw "check exist";
                 }
-                if (result.errors.length) {
+                if (result.errors && result.errors.length) {
                     msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
                     throw msg_result
                 }
