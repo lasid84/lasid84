@@ -1,37 +1,41 @@
 'use client'
 
-
-import ListGrid from "./_component/list-grid"
+import { useReducer, useMemo, useRef } from "react"
+import { SP_Load } from "./_component/data";
+import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
+import { PageState, reducer } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
-import { useGetData } from "./_component/stnd0001"
+import { TableContext } from "@/components/provider/contextObjectProvider";
+import { useGetData } from "components/react-query/useMyQuery";
+import Grid from './_component/gridMaster'
 
+export default function STND0001() {
 
-const pageProps = {
-    title: "사용자 기준정보",
-    transKey: "nav.stnd.stnd0001",
-    desc: "사용자 기준정보",
-    url: "stnd0001"
-}
+    const [state, dispatch] = useReducer(reducer, {
+        objState: {
+            searchParams: {},
+            isMSearch: false,
+            mSelectedRow: {},
+            isPopUpOpen: false,
+            popType: null,
+        }
+    })
+    const { objState } = state;
+    const { searchParams } = objState;
+    
+    const val = useMemo(() => { return { dispatch, objState } }, [state]);
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
-//탐색경로 설정
-const brcmp = [
-    { title: "Home", url: "/", last: false },
-    { title: "STND", url: "/", last: false },
-    { title: pageProps.title, url: pageProps.url, last: true },
-]
-
-
-const Stnd0001: React.FC = () => {
-
-    //grid data
-    const { data: selectResult, isInitialLoading, isError } = useGetData()
     return (
-        <>
-            {/* <SearchForm /> */}
-            <ListGrid listItem={selectResult || null} isInitialLoading={isInitialLoading} isError={isError} />
-        </>
+        <TableContext.Provider value={val}>
+            <div className={`w-full h-full`}>
+                <SearchForm loadItem={initData} />
+                <div className={`w-full h-[calc(100vh-150px)]`}>
+                    <Grid initData={initData} />
+                </div>
+            </div>
+        </TableContext.Provider>
+
     )
 
 }
-
-export default Stnd0001

@@ -137,6 +137,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
           // defaultValue = {val}
           render={({ field }) => (
             <MaskedInput
+              type={type}
               // {...field} //bg-${bgColor}
               className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
                  focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
