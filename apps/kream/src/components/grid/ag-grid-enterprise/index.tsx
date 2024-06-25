@@ -16,7 +16,8 @@ import {
   FirstDataRenderedEvent,
   CellKeyDownEvent,
   FullWidthCellKeyDownEvent,
-  ComponentStateChangedEvent
+  ComponentStateChangedEvent,
+  ProcessDataFromClipboardParams
 } from "ag-grid-community";
 
 import { LicenseManager } from  'ag-grid-enterprise'
@@ -162,6 +163,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       suppressServerSideFullWidthLoadingRow : true,
       enableRangeSelection: true,
       stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
+      suppressLastEmptyLineOnPaste: true,     //엑셀 복사 후 붙여넣기시 시 다음 row 빈칸 붙여넣기 되는 오류 처리
       // animateRows: true,
       // onGridReady: () => {
       //   log("onGridReady")
@@ -528,13 +530,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
   const onPasteStart = (param: PasteStartEvent) => {
     // updateRowCount('rowDataUpdated');
-    // log('onPasteStart', param);
+    log('onPasteStart', param);
 
     if (event?.onPasteStart) event.onPasteStart(param);
   }
   const onPasteEnd = (param: PasteEndEvent) => {
     // updateRowCount('rowDataUpdated');
-    // log('onPasteEnd', param);
+    log('onPasteEnd', param);
 
     if (event?.onPasteEnd) event.onPasteEnd(param);
   }
@@ -560,6 +562,44 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
     if (event?.onCellKeyDown) event.onCellKeyDown(param);
   }
+
+  //복사붙여넣기시 자동으로 rowAdd
+  const processDataFromClipboard = useCallback(
+    (params: ProcessDataFromClipboardParams): string[][] | null => {
+      const data = [...params.data];
+      const emptyLastRow =
+        data[data.length - 1][0] === "" && data[data.length - 1].length === 1;
+      if (emptyLastRow) {
+        data.splice(data.length - 1, 1);
+      }
+      const lastIndex = params.api!.getDisplayedRowCount() - 1;
+      const focusedCell = params.api!.getFocusedCell();
+      const focusedIndex = focusedCell!.rowIndex;
+      if (focusedIndex + data.length - 1 > lastIndex) {
+        const resultLastIndex = focusedIndex + (data.length - 1);
+        const numRowsToAdd = resultLastIndex - lastIndex;
+        const rowsToAdd: any[] = [];
+        for (let i = 0; i < numRowsToAdd; i++) {
+          const index = data.length - 1;
+          const row = data.slice(index, index + 1)[0];
+          // Create row object
+          const rowObject: any = {};
+          let currentColumn: any = focusedCell!.column;
+          row.forEach((item) => {
+            if (!currentColumn) {
+              return;
+            }
+            rowObject[currentColumn.colDef.field] = item;
+            currentColumn = params.api!.getDisplayedColAfter(currentColumn);
+          });
+          rowsToAdd.push(rowObject);
+        }
+        params.api!.applyTransaction({ add: rowsToAdd });
+      }
+      return data;
+    },
+    [],
+  );
 
   const autoSizeAll = (gridApi: any, skipHeader: boolean = false) => {
 
@@ -614,6 +654,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
             onColumnResized={onColumnResized}
             onFirstDataRendered={onFirstDataRendered}
             onCellKeyDown={onCellKeyDown}
+            processDataFromClipboard={processDataFromClipboard}
           />}
         </div>
       </div>

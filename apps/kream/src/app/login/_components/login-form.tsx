@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, MouseEventHandler, Suspense, useEffect, useState } from "react";
+import { FormEvent, MouseEventHandler, Suspense, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm, UseFormHandleSubmit } from "react-hook-form";
 import { InputWrapper } from "components/react-hook-form/input-wrapper";
@@ -32,7 +32,7 @@ export default function LoginForm() {
   const [isCircle, setIsCircle] = useState<boolean>(false)
   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
   const configActions = useConfigs((state) => state.actions);
-  
+  const refPW = useRef();
   
   const router = useRouter();
 
@@ -52,22 +52,19 @@ export default function LoginForm() {
     handleSubmit,
     reset,
     getValues,
+    register,
     formState: { errors },
   } = methods;
 
-
-  const onSubmit = async (e:React.MouseEvent<HTMLElement>) => {
-  // const onSubmit: SubmitHandler<FormProps> = async (user, e) => {    
-    // log("==================================onSumit", e)
-    e.preventDefault();
-    var user = getValues();
+  const login = async (data:any) => {
+    var user = data;
 
     if (!user.user_id || !user.password) {
-      setErrMessage('입력해');
+      setErrMessage('Please Input ID & Password');
       return;
     }
 
-    try {
+    
       setIsCircle(true)
       const res = await Login({ user_id: user.user_id, password: user.password });
       if (!res!.success) {
@@ -83,6 +80,13 @@ export default function LoginForm() {
     });
       
       router.replace('/dashboard');
+  }
+
+  const onSubmit = async (e:React.MouseEvent<HTMLElement>) => {
+    try {
+      e.preventDefault();
+      var user = getValues();
+      await login(user);
     } catch (err) {
       log("login-form err", err);
       setErrMessage(JSON.stringify(err));
@@ -91,6 +95,30 @@ export default function LoginForm() {
       // reset();
     }
   };
+
+  const handleKeyDown = async (e: any) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      switch (e.currentTarget.id) {
+        case "user_id":
+          log("refPW.current", refPW.current)
+          // if (refPW.current) refPW.current.focus();
+          // if (e.key === "Enter") {
+          //   const form = e.target.form;
+          //   // log(e.target, form);
+          //   const index = [...form].indexOf(e.target);
+          //   // log(index)
+          //   form[index + 1].focus();
+          // }
+          break;
+        case "password":
+          var user = getValues();
+          log("refPW.current", user);
+          await login(user);
+          break;
+      }
+    }
+  }
   
   return (
     <FormProvider {...methods}>
@@ -102,13 +130,15 @@ export default function LoginForm() {
             <InputWrapper outerClassName="sm:col-span-12">
               <Label id="email" name="User ID"/>
               <Input
+                // ref={refID}
                 id="user_id"
                 name="user_id"
                 type="text"
                 height="h-12"
                 isCircle={isCircle}
-                rules={{ required: "사용자ID를 입력하세요" }}
+                rules={{ required: "사용자ID를 입력하세요"}}
               // handleChange={onChangeId}
+                onKeyDown={(e) => handleKeyDown(e)}
               />
               {errors?.user_id?.message && <ErrorMessage>{errors.user_id.message}</ErrorMessage>}
             </InputWrapper>
@@ -116,6 +146,7 @@ export default function LoginForm() {
             <InputWrapper outerClassName="sm:col-span-12 mt-4">
               <Label id="password" name="Password"/>
               <Input
+                // ref={refPW}
                 id="password"
                 name="password"
                 type="password"
@@ -127,12 +158,14 @@ export default function LoginForm() {
                     value: 4,
                     message: "비밀번호는 4자리 이상의 문자열을 사용하세요",
                   },
+                  ref:refPW
                   // maxLength: {
                   //   value: 8,
                   //   message: "Your password should have no more than 8 characters",
                   // },
                 }}
               // handleChange={onChangePassword}
+              onKeyDown={(e) => handleKeyDown(e)}
               />
               {errors?.password?.message && <ErrorMessage>{errors.password.message}</ErrorMessage>}
             </InputWrapper>
