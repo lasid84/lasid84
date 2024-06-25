@@ -24,12 +24,12 @@ export const createServer = (): Express => {
 
   const app = express();  
 
-  const corsOptions = {
-    origin: 'http://dev-kream.web.kwe.co.kr', // 허용할 출처
-    methods: ['GET','POST','PUT','DELETE','OPTIONS'], // 허용할 HTTP 메서드
-    allowedHeaders: ['Content-Type','Authorization','X-Forwarded-Host'], // 허용할 헤더
-    //credentials: true // 인증 정보를 포함할 경우 허용
-  }; 
+  // const corsOptions = {
+  //   origin: 'http://dev-kream.web.kwe.co.kr', // 허용할 출처
+  //   methods: ['GET','POST','PUT','DELETE','OPTIONS'], // 허용할 HTTP 메서드
+  //   allowedHeaders: ['Content-Type','Authorization','X-Forwarded-Host'], // 허용할 헤더
+  //   //credentials: true // 인증 정보를 포함할 경우 허용
+  // }; 
 
   const loginLogStream = rfs.createStream((time, index) => {
     if (!time) return 'login.log';
@@ -42,14 +42,14 @@ export const createServer = (): Express => {
     path: path.join(__dirname, 'log')
   });
 
-  // // Custom Morgan Token for user_id
-  // morgan.token('user_id', (req: Request) => {
-  //   return req.body.user_id || 'unknown';
-  // });
+  // Custom Morgan Token for user_id
+  morgan.token('user_id', (req: Request) => {
+    return req.body.user_id || 'unknown';
+  });
 
-  // morgan.token('user_nm', (req: Request & { user_nm?: string }) => {
-  //   return req.user_nm || '';
-  // });
+  morgan.token('user_nm', (req: Request & { user_nm?: string }) => {
+    return req.user_nm || '';
+  });
 
   app
     .disable("x-powered-by")
@@ -65,34 +65,6 @@ export const createServer = (): Express => {
       //   credentials: true, // 쿠키 허용
       // }
     ))
-    // .use(cors(corsOptions))
-    // .options('*', cors(corsOptions))
-    // .use((req, res, next) => {
-    //   res.header('Access-Control-Allow-Origin', '*');
-    //   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    //   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host'); // 여기에 'X-Forwarded-Host' 추가
-    //    res.header('Access-Control-Allow-Credentials', 'true');
-    // // 프리플라이트 요청에 대한 응답
-    //   if (req.method === 'OPTIONS') {
-    //     res.sendStatus(204);
-    //   } else {
-    //     next();
-    //   }
-    // })    
-    // .options('/login', (req, res) => {
-    //   res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
-    //   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    //   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host');
-    //   res.header('Access-Control-Allow-Credentials', 'true');
-    //   res.sendStatus(204); // No Content
-    // })
-    // .options('/api/data', (req, res) => {
-    //   res.header('Access-Control-Allow-Origin', 'http://dev-kream.web.kwe.co.kr');
-    //   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    //   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Forwarded-Host');
-    //   res.header('Access-Control-Allow-Credentials', 'true');
-    //   res.sendStatus(204); // No Content
-    // })    
     .use(compression())
     // // Axios User-Agent를 가진 요청을 걸러내는 미들웨어
     // .use((req, res, next) => {
@@ -204,10 +176,6 @@ export const createServer = (): Express => {
 
       await checkAccount(user_id, password, async (isAuthenticated:any, userObject:any, err:any) => {
         if (isAuthenticated) {
-          // 세션에 사용자 정보 저장
-          //req.session.user = userObject;
-  
-          // const token = jwt.sign({ userId: user_id }, 'secretKey', { expiresIn: '1d' });
           const token ='';
           
           const params = {
@@ -236,12 +204,10 @@ export const createServer = (): Express => {
       // next();
     } catch (ex) {
       error("/login", ex.message);
-    }}
-    // , morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - :response-time ms :user_id :user_nm'
-    //   , { stream: loginLogStream }), (req, res) => {
-    //   // res.send('Login endpoint accessed');
-    // }
-    )
+    }}, morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" - :response-time ms :user_id :user_nm'
+      , { stream: loginLogStream }), (req, res) => {
+      // res.send('Login endpoint accessed');
+    })
     .on('uncaughtException', function (err) {
       error('An error occurred: ', err);
     })

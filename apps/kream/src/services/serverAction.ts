@@ -19,10 +19,11 @@ export async function getSession() {
 }
 
 export async function logOut() {
-    // await signOut({ redirect: false });
-    await signOut({redirectTo:"/login"});
-    // await signOut();
-    // redirect("/login");
+    await signOut({ redirect: false });
+    //await signOut({redirectTo:process.env.NEXT_PUBLIC_KREAM_URL + "/login"});
+    //await signOut();
+    redirect(process.env.NEXT_PUBLIC_KREAM_URL + "/login");
+
 }
 
 export async function getCookies() {

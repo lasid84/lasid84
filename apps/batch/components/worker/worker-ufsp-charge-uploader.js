@@ -51,7 +51,7 @@ async function startScraping() {
         const datas = await ufsp.getIFData();
         let script;
 
-        log("1 - ", ufsp.idx, datas.length);
+        // log("1 - ", ufsp.idx, datas.length);
         if (datas.length > 0) {
             // if (datas[0].needlogin.toLowerCase() == 't') {
             //     await ufsp.checkSession();

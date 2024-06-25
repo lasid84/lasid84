@@ -334,7 +334,10 @@ class Library {
                 await this.excuteScript(data);
             }
         } catch(ex) {
-            throw  "startScript " + JSON.stringify(nowData) + "," + ex;
+            // throw  "startScript " + JSON.stringify(nowData) + "," + ex;
+            let seq = nowData? nowData.seq : '';
+            let pgm = nowData? nowData.pgm_code : '';
+            throw  "startScript " + seq + ' / ' + pgm + "," + ex;
         }
     }
 
@@ -400,7 +403,7 @@ class Library {
             const method = data.method;
             //bodyText 업데이트
             var bodyText = await this.updateBodyText(data);
-                        
+            // log("===========----------------======", JSON.stringify(bodyText));
             v_tracking = 'send post start';
             const header = this.convertJSON(data.header);
             const result = await this.executeAPI(method, url, header, bodyText);
@@ -413,9 +416,12 @@ class Library {
                     await this.setBLIFData(if_yn, '', '');
                     throw "check exist";
                 }
+                if (result.errors && result.errors.length) {
+                    msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
+                    throw msg_result
+                }
+                
             }
-    
-            msg_result = result;
     
             v_tracking = 'get post result complete';
     
@@ -506,7 +512,7 @@ class Library {
                 return str;
             }, method,  url, bodyText);
 
-            log("result", result, new URL(url).host, JSON.stringify(bodyText));
+            // log("=====================================result", result, new URL(url).host, JSON.stringify(result));
 
             //로그인 에러
             if (result && result.success === false) {
@@ -536,11 +542,19 @@ class Library {
                 }
             }
 
+            if (result.statusElements) {
+                if (result.statusElements[0].severity === 'ERROR') {
+                    var message = result.statusElements[0].message;
+                    this.mainData['error'] = message;
+                    throw message;
+                }
+            }
+
             return result;
         }
         catch (ex) {
             log("ex", ex);
-            return null
+            throw ex;
         }
     };
 
