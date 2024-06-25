@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, ChangeEventHandler, useEffect } from "react";
+import { HTMLInputTypeAttribute, ChangeEventHandler, useEffect, KeyboardEventHandler, useRef, InputHTMLAttributes  } from "react";
 import { useFormContext } from "react-hook-form";
 import clsx from "clsx"
 
@@ -15,8 +15,12 @@ export type InputProps = {
   value?: any;
   isCircle?: boolean;
   notAppliedReadOnlyCss?: boolean;
-  handleChange?:ChangeEventHandler<HTMLInputElement>
+  onChange?:ChangeEventHandler<HTMLInputElement>
+  onKeyDown?: (e:React.KeyboardEvent<HTMLInputElement>) => void
+  ref?: any
 };
+
+interface ChildComponentProps extends InputHTMLAttributes<HTMLInputElement> {}
 
 export const Input: React.FC<InputProps> = ({
   id,
@@ -30,7 +34,9 @@ export const Input: React.FC<InputProps> = ({
   height = "h-8",
   placeholder = "",
   isCircle,
-  value  
+  value, 
+  ref,
+  onKeyDown
 }) => {
   const { register, setValue, getValues } = useFormContext();
   // rules = { valueAsNumber: true };가 정상적으로 동작하지 않아서 수정, 다음 링크 참고
@@ -45,16 +51,33 @@ export const Input: React.FC<InputProps> = ({
   if (type === "number") {
     // rules = { valueAsNumber: true };
     rules = {
+      ...rules,
       onChange: () => {
         stringToNumberFunc(name);
       },
+      // onKeyDown: (e:React.KeyboardEvent<HTMLInputElement>) => {
+      //   if (onKeyDown) onKeyDown(e);
+      // }
     };
   }
   if (type === "date") {
     // valueAsdate = false로 변경 (yyyy/mm/dd format read)
-    rules = { valueAsDate: false };
+    rules = { ...rules, valueAsDate: false };
   }
  
+  const handleKeyDown = (e: any) => {
+
+    if (e.key === "Enter") {
+      const form = e.target.form;
+      // log(e.target, form);
+      const index = [...form].indexOf(e.target);
+      // log(index)
+      form[index + 1].focus();
+      e.preventDefault();
+    }
+
+    if (onKeyDown) onKeyDown(e)
+  }
 
   return (
     <input
@@ -68,8 +91,10 @@ export const Input: React.FC<InputProps> = ({
       id={id}
       width={width}
       disabled={isCircle}
+      onKeyDown={handleKeyDown}
       className={clsx(`form-input block ${width} ${height} disabled:bg-gray-300
         bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded`)}
+      // ref={ref}
     />
   );  
 };
