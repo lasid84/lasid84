@@ -91,8 +91,8 @@ async function startScraping() {
     catch(ex) {
         if (ufsp.mainData) {
             await ufsp.setBLIFData('R', '', ex);
-        }    
-        error(ufsp.idx, ": Parent Ex :", ex, ufsp.mainData);
+        }
+        if (!ex.includes('check exist')) error(ufsp.idx, ": Parent Ex :", ex, ufsp.mainData);
         ufsp.errCnt++;
     } finally {
         onExcute = false;

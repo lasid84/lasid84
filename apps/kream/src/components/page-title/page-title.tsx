@@ -1,7 +1,7 @@
 'use client'
 
 import { NavigationState, useNavigation } from "states/useNavigation";
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import {FiPlus} from "react-icons/fi";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -55,6 +55,8 @@ function getMenuTitle(menu: NavigationState[], menu_seq: number):string|undefine
 const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
 
   const { t } = useTranslation();
+  const [title, setTitle] = useState('');
+
   const navigation = useNavigation((state) => state.navigation);
   const router = usePathname();
   const queryParam = useSearchParams();
@@ -62,7 +64,12 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
   // log("==========PageTitle", queryParam, params, " / ");
   // const title = getMenuTitle(navigation, router, params);
   const menu_seq = useUserSettings((state) => state.data.currentMenu, shallow)
-  const title = getMenuTitle(navigation, menu_seq);
+  // const title = getMenuTitle(navigation, menu_seq);
+
+  useEffect(() => {
+    let title = getMenuTitle(navigation, menu_seq) || '';
+    setTitle(title)
+  }, [navigation, menu_seq])
 
   return (
     // <div className="w-full">

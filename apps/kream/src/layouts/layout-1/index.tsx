@@ -11,13 +11,14 @@ import { useUserSettings } from "states/useUserSettings";
 import { memo, useMemo } from "react";
 import { setI18n } from "components/i18n/i18n";
 import LoadingComponent from "../../components/loading/loading"
-import { useNavigation } from "states/useNavigation";
+import { NavigationState, useNavigation } from "states/useNavigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { getSession } from "services/serverAction";
 import { SP_InsertLog  } from "services/clientAction";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { shallow } from "zustand/shallow";
+import { useStore } from "zustand";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -33,6 +34,8 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const [layout, setLayout] = useState<string>(config.layout);
   const [collapsed, setCollapsed] = useState<boolean>(config.collapsed);
   const [menus, isReady] = useNavigation((state) => [state.menu_arr, state.isReady]);
+  const navigation = useNavigation((state) => state.navigation);
+  const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
   const pathname = usePathname();
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
@@ -103,13 +106,32 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   useEffect(() => {
     if (pathname === '/') return;
 
+    const getMenuSeq = (menu: NavigationState[], url:string, parent = true) : number | undefined => {
+      if (!menu) return;
+      var seq;
+      for (var obj of menu) {
+        if (obj.items.length > 0) {
+          seq = getMenuSeq(obj.items, url, false);
+          if (seq) return seq;
+        } else {
+          // log("title", obj, menu, url, menu_param);
+          if (obj.url === url) return obj.menu_seq;
+        }
+      }
+    }
+
+    let menu_seq = getMenuSeq(navigation, pathname, true);
+    if (menu_seq) {
+      userSettingsActions?.setData({ currentMenu: menu_seq });
+    }
+
     var data = {
         menucode: pathname,
         action: 'Open'
     }
     Create.mutate(data);
     
-  }, [pathname, params])
+  }, [pathname, params, navigation])
    
   return (
     // <AuthProvider>
