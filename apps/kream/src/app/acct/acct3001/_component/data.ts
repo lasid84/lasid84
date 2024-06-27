@@ -55,21 +55,38 @@ export const SP_GetDetailData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const {cust_code, user_id, ipaddr } = Param;
+  const {cust_code, cont_type, user_id, ipaddr } = Param;
   log("search Detail Data:", Param);
   
+  // const params = {
+  //   inparam : [
+  //       "in_cust_code"
+      
+  //     , "in_user_id"
+  //     , "in_ipaddr"
+  //   ],
+  //   invalue: [
+  //       cust_code
+  //     , user_id
+  //     , ipaddr
+  //   ],
+  //   inproc: 'account.f_acct3001_get_detail',
+  //   isShowLoading: false
+  //   }
   const params = {
     inparam : [
         "in_cust_code"
+      , "in_cont_type"
       , "in_user_id"
       , "in_ipaddr"
     ],
     invalue: [
         cust_code
+      , cont_type
       , user_id
       , ipaddr
     ],
-    inproc: 'account.f_acct3001_get_detail',
+    inproc: 'ocean.f_ocen0002_get_detail',
     isShowLoading: false
     }
   

@@ -10,8 +10,11 @@ import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import DetailGrid from './_component/gridDetail';
 import CustomerDetail from './_component/custDetailInfo';
+import { useUserSettings } from "@/states/useUserSettings";
+import { shallow } from "zustand/shallow";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
+const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper')
 
 
 export default function ACCT3001() {
@@ -23,6 +26,7 @@ export default function ACCT3001() {
             isDSearch: false,
             mSelectedRow: {},
             dSelectedRow: {},
+            cont_type: ''
         }
     });
     const { objState } = state;
@@ -30,6 +34,13 @@ export default function ACCT3001() {
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
 
     const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
+
+    useEffect(() => {
+        const params = getMenuParameters(menu_param);
+        dispatch({ cont_type: params.cont_type });
+        log(params);
+    }, [menu_param])
 
     return (
         <TableContext.Provider value={val}>

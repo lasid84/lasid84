@@ -66,10 +66,14 @@ const getColor = (label: string, color: string = '') => {
                 c = 'sky-fill';
                 break;
             case "add":
+            case "add_m":
+            case "add_d":
             case "new":
                 c = 'gray-outline';
                 break;
             case "save":
+            case "save_m":
+            case "save_d":
                 c = 'red-outline';
                 break;
             case "cancel":
@@ -102,9 +106,13 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
             icon = <TiPlus size={size} />;
             break;
         case "add":
+        case "add_m":
+        case "add_d":
             icon = <TiPlus size={size} />;
             break;
         case "save":
+        case "save_m":
+        case "save_d":
             icon = <RiSave2Fill size={size} />;
             break;
         case "reset":

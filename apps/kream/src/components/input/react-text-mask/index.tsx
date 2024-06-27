@@ -62,7 +62,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     freeStyles = '', radius = 'none', outerClassName = ''
   } = options;
   const { mask, pipe, placeholder } = getMask(type, options);
-
+  // log("===MaskedInputField", type, mask);
   const [selectedVal, setSelectedVal] = useState<string | undefined>(value || undefined);
 
   const defWidth = width ? width : "w-full";
@@ -137,7 +137,8 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
           // defaultValue = {val}
           render={({ field }) => (
             <MaskedInput
-              type={type}
+              id={id}
+              type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}
               className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
                  focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
@@ -283,6 +284,14 @@ function getMask(type: string = "", options: any = {}): Partial<MaskedInputProps
         placeholder: "",
         mask: [/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/,]
       }
+    // case "password":
+    //   return {
+    //     mask: (value:string) => {
+    //       let arr = Array(value.length).fill('*');
+    //       log("maskedit password", value, arr);
+    //       return arr;
+    //     }
+    //   }
     default:
       return {
         placeholder: "",

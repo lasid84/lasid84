@@ -30,7 +30,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData);
+    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({...objState?.mSelectedRow, cont_type: objState.cont_type}, SEARCH_D, SP_GetDetailData);
 
     /* state 변경 시 useQuery 등록한 데이터 모두 콜 하는듯... */
     // useEffect(() => {
@@ -45,7 +45,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
         if (initData) {
             // log(initData[0].data)
             const gridOption: GridOption = {
-                colVisible: { col: ["cust_code", "cont_seq", "fax_num"], visible: false },
+                colVisible: { col: ["cust_code", "cont_seq", "cont_type", "fax_num"], visible: false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],

@@ -15,15 +15,15 @@ export type data = {
 } | undefined;
 
 export type event = {
-    onChange: (e: any) => void;
-    onFocust: (e: FocusEventHandler<HTMLInputElement>) => void;
-    onInputChange: (newValue: string, actionMeta: InputActionMeta) => void;
+    onChange?: (e: any) => void;
+    onFocus?: (e: FocusEventHandler<HTMLInputElement>) => void;
+    onInputChange?: (newValue: string, actionMeta: InputActionMeta) => void;
     /** Handle key down events on the select */
     onKeyDown?: KeyboardEventHandler<HTMLDivElement>;
     /** Handle the menu opening */
-    onMenuOpen: () => void;
+    onMenuOpen?: () => void;
     /** Handle the menu closing */
-    onMenuClose: () => void;
+    onMenuClose?: () => void;
     /** Fired when the user scrolls to the top of the menu */
     onMenuScrollToTop?: (event: WheelEvent | TouchEvent) => void;
     /** Fired when the user scrolls to the bottom of the menu */
@@ -103,7 +103,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 return { value: value, label: label };
             }).filter(x => x)
         );
-    }, [dataSrc]);
+    }, [dataSrc, defaultValue]);
 
     useEffect(() => {
         // log(firstLab, firstVal)
@@ -151,10 +151,12 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
 
     const handleChange = (e: any) => {
         setValue(id, e.value);
-        setSelectedVal({ value: e.value, label: e.label });
+        setSelectedVal({ id:id, value: e.value, label: e.label });
+        let dispCol = displayCol?.length 
+                    ? displayCol[displayCol?.length-1] : (dataSrc?.data ? Object.keys(dataSrc?.data[0])[1] : '') ;
 
         if (events?.onChange) {
-            events.onChange(e);
+            events.onChange({[id]:e.value, [dispCol]:e.label});
         }
     }
 
@@ -218,6 +220,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                 <div className={`my-react-select-container flex-row ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
+                                        id={id}
                                         classNamePrefix="my-react-select"
                                         value={selectedVal}
                                         isMulti={isMulti}

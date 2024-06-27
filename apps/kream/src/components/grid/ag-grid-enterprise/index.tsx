@@ -35,7 +35,10 @@ const { stringToFullDateString, stringToFullDate, stringToDateString } = require
 const { sleep } = require('@repo/kwe-lib/components/sleep');
 
 export const ROW_TYPE = '__ROWTYPE';
+export const ROW_INDEX = '__ROWINDEX';
+export const ROW_CHANGED = '__changed'
 export const ROW_TYPE_NEW = 'NEW';
+
 
 
 type Props = {
@@ -98,6 +101,7 @@ export type GridOption = {
   isMultiSelect?: boolean
   isAutoFitColData?: boolean
   isSelectRowAfterRender?: boolean
+  isShowRowNo?:boolean
 };
 
 type cols = {
@@ -205,9 +209,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //log("onComponentStateChanged", gridRef.current.api.getRowNode(mainData.length - 1), mainData.length);
 
         if (options?.isSelectRowAfterRender) {
-          if (gridRef.current.api.getSelectedNodes().length > 0) return;
+          if (gridRef?.current.api.getSelectedNodes().length > 0) return;
 
-          gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
+          gridRef?.current.api.forEachNode((node: IRowNode, i: number) => {
             if (i === 0) {
               node.setSelected(true);
               //log("onComponentStateChanged selected", node)
@@ -216,7 +220,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         };
 
         if (options?.refRow) {
-          gridRef.current.api.ensureIndexVisible(options.refRow, 'middle');
+          gridRef?.current.api.ensureIndexVisible(options.refRow, 'middle');
           // log('refRow__2', options.refRow)
         }
         // if () {
@@ -284,11 +288,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // dataTypeModifier: -1,
       // format: 'text'
       // }
-      const columns = listItem.fields.map((field) => field.name);
+      let columns = listItem.fields.map((field) => field.name);
       const dataType = listItem.fields.map((field) => field.format);
       // log("===================????", columns)
+      columns = [ROW_INDEX].concat(columns)
       columns.map((col: string, i) => {
+        
         var cellOption: any = {};
+
+        if (col === ROW_INDEX) {
+          cellOption = {
+            maxWidth: 45
+          }
+          cols.push({
+            field: col,
+            headerName: t(col),
+            hide: options?.isShowRowNo === false ? true : false,
+            ...cellOption
+          });
+          return;
+        }
 
         if (!options?.isAutoFitColData) {
           cellOption = {
@@ -452,14 +471,15 @@ const ListGrid: React.FC<Props> = memo((props) => {
         });
       });
       setColDefs(cols);
-      setMainData(listItem.data.map((row: any) => {
+      setMainData(listItem.data.map((row: any, i:number) => {
         if (options?.checkbox) {
           options?.checkbox.map((col) => {
             if (row[col]) row[col] = row[col] === 'Y' ? true : false
           })
         }
         return {
-          ...row
+          [ROW_INDEX]:i+1,
+          ...row,
         }
       }));
     }
@@ -480,6 +500,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onSelectionChanged = (param: SelectionChangedEvent) => {
+    // const selectedRow = {...param.api.getSelectedRows()[0], [ROW_INDEX]: param.api.getSelectedNodes()[0].rowIndex};
     const selectedRow = param.api.getSelectedRows()[0];
     if (options?.isEditableOnlyNewRow) {
       var copied = [...colDefs];
@@ -502,7 +523,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onCellValueChanged = (param: CellValueChangedEvent) => {
     // log("onCellValueChanged1", param.node.data['__changed'])
-    param.node.data['__changed'] = true
+    param.node.data[ROW_CHANGED] = true
     // return {"col": param.column.getColId(), "oldValue" : param.oldValue, "newValue": param.newValue};
     // log("onCellValueChanged2", param.node.data['__changed'])
     if (event?.onCellValueChanged) event.onCellValueChanged(param);
@@ -594,7 +615,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
           });
           rowsToAdd.push(rowObject);
         }
-        params.api!.applyTransaction({ add: rowsToAdd });
+        // params.api!.applyTransaction({ add: rowsToAdd });
+        log("processDataFromClipboard", rowsToAdd)
+        for (const row of rowsToAdd) {
+          rowAdd(gridRef.current, row);
+        }
       }
       return data;
     },
@@ -670,7 +695,8 @@ export const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any
 
 export const getFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; } }) => {
   var displayedColumns = params.api.getAllDisplayedColumns();
-  var thisIsFirstColumn = displayedColumns[0];
+  //2024.06.26 첫번째컬럼에 __ROWINDEX 추가로 실제 첫번째 컬럼은 두번째 컬럼임
+  var thisIsFirstColumn = displayedColumns[1];
   return thisIsFirstColumn.colId;
 };
 
@@ -681,15 +707,24 @@ export const rowAdd = async (gridRef: { api: any }, initData: {} = {}) => {
   var rowCount = gridRef.api.getRenderedNodes().length;
 
   var data = {
+    [col]: '',
     ...initData,
-    [ROW_TYPE]: ROW_TYPE_NEW
+    [ROW_INDEX]: rowCount+1,
+    [ROW_TYPE]: ROW_TYPE_NEW,
+    [ROW_CHANGED]: true
   }
+  log('rowAdd', col, data)
   await gridRef.api.applyTransaction({ add: [data] });
-  gridRef.api.setFocusedCell(rowCount, col);
-  gridRef.api.startEditingCell({
+  await gridRef.api.setFocusedCell(rowCount, col);
+  await gridRef.api.startEditingCell({
     rowIndex: rowCount,
     colkey: col
   });
+
+  await gridRef.api.getRowNode(rowCount.toString()).setSelected(true);
+
+  return {rowIndex: rowCount,
+    colkey: col}
 };
 
 const dateFormatter = (params: ValueFormatterParams) => {

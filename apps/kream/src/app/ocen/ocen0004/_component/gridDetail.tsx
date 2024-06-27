@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
-import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
+import { SP_GetDetailData, SP_InsertDetail, SP_UpdateDetail } from "./data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -25,16 +25,15 @@ const DetailGrid: React.FC<Props> = () => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-    const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
-    const [gridOptions, setGridOptions] = useState<GridOption>();
+    const { Create } = useUpdateData2(SP_InsertDetail, SEARCH_D);
+    const { Update } = useUpdateData2(SP_UpdateDetail, SEARCH_D);
+    const [ gridOptions, setGridOptions ] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData);
-
+    const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({...objState?.mSelectedRow, cont_type :objState.cont_type}, SEARCH_D, SP_GetDetailData, { enabled:true });
+    log("objState.cont_type", objState.cont_type);
     useEffect(() => {
-            // log(initData[0].data)
             const gridOption: GridOption = {
-                colVisible: { col: ["place_code", "cont_seq", "create_date", "create_user"], visible: false },
+                colVisible: { col: ["place_code", "cont_seq", "cont_type", "create_date", "create_user"], visible: false },
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
                 minWidth: { "pic_nm": 100, "email": 80, "use_yn": 30, "def": 30 },
@@ -45,6 +44,15 @@ const DetailGrid: React.FC<Props> = () => {
             };
             setGridOptions(gridOption);
     }, [])
+
+    // useEffect(() => {
+    //     if (objState.isDSearch) {
+    //         detailRemove();
+    //         log("refetch");
+    //          detailRefetch();
+    //          dispatch({ isDSearch: false });
+    //     }
+    // }, [objState.isDSearch])
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
@@ -63,15 +71,14 @@ const DetailGrid: React.FC<Props> = () => {
     };
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
-        log("handleCellValueChanged");
+        // log("handleCellValueChanged");
         gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
-            log("handleCellValueChanged2", param.node.data);
+            log("handleCellValueChanged2", param.column.getColId(), node.id, param.node.id, node.id === param.node.id, node.data.def, param.data.def);
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
 
             if (node.data.def === true) {
                 node.setDataValue('def', false);
-                // node.setDataValue('__change', true);
             }
         });
     };
@@ -80,12 +87,18 @@ const DetailGrid: React.FC<Props> = () => {
         var hasData = false;
         gridRef.current.api.forEachNode((node: any) => {
             var data = node.data;
-            gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
+            // gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
+            if (gridOptions?.checkbox) {
+                for (let i = 0; i < gridOptions?.checkbox?.length; i++) {
+                    let col = gridOptions?.checkbox[i];
+                    data[col] = data[col] ? 'Y' : 'N';
+                }
+            }
+            data.cont_type = objState.cont_type;
             if (data.__changed) {
                 hasData = true;
                 if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
                     data.place_code = objState.mSelectedRow.place_code;
-                    // data.pickup_type = 'OE';
                     Create.mutate(data);
                 } else { //수정
                     Update.mutate(data);
@@ -94,8 +107,8 @@ const DetailGrid: React.FC<Props> = () => {
         });
         // log("onSave", gridRef.current.api, modifiedRows);
         if (hasData) {
+            // dispatch({ dSelectedRow: {...objState?.mSelectedRow} });
             toastSuccess('Success.');
-            detailRefetch();
         }
 
     };

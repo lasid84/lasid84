@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useReducer, useMemo, useCallback } from "react";
+import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
 import { SP_Load } from "./_component/data";
 import { reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD } from "components/provider/contextObjectProvider";
@@ -26,21 +26,22 @@ export default function OCEN0004() {
             isDSearch: false,
             mSelectedRow: {},
             dSelectedRow: {},
-            trans_type: '',
-            trans_mode: ''
+            cont_type: '',
+            gridRef_m: useRef<any | null>(null)
         }
     });
+
     const { objState } = state;
     const { searchParams, isMSearch } = objState;
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
     
-    // const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
+    const { data: initData } = useGetData(searchParams, LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
-        dispatch({ trans_type: params.trans_type, trans_mode: params.trans_mode });
-        log(params);
+        dispatch({ cont_type: params.cont_type });
+        log("===============", params);
     }, [menu_param])
 
     return (
@@ -50,7 +51,7 @@ export default function OCEN0004() {
                 <div className="grid w-full h-[calc(100vh-100px)] grid-cols-3">
                     <MasterGrid  />
                     <div className="grid h-[calc(100vh-100px)] col-span-2 grid-rows-4">
-                        <div className="row-span-1"><DetailInfo /></div>
+                        <div className="row-span-1"><DetailInfo initData={initData} /></div>
                         <div className="row-span-3"><DetailGrid /></div>
                     </div>
                 </div>
