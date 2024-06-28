@@ -1,5 +1,5 @@
 
-import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent } from 'react';
+import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
@@ -11,7 +11,7 @@ import { Label } from 'components/label';
 import clsx from 'clsx';
 import createNumberMask from './createNumberMask';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+const { log, error } = require('@repo/kwe-lib/components/logHelper');
 
 
 type Props = {
@@ -78,9 +78,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     try {
       if (e.key === "Enter") {
         const form = e.target.form;
-        // log(e.target, form);
         const index = [...form].indexOf(e.target);
-        // log(index)
         form[index + 1].focus();
         e.preventDefault();
       }
@@ -89,7 +87,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
         events.onKeyDown(e);
       }
     } catch (ex) {
-
+      error(ex)
     }
   }
 
@@ -284,14 +282,15 @@ function getMask(type: string = "", options: any = {}): Partial<MaskedInputProps
         placeholder: "",
         mask: [/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/,]
       }
-    // case "password":
-    //   return {
-    //     mask: (value:string) => {
-    //       let arr = Array(value.length).fill('*');
-    //       log("maskedit password", value, arr);
-    //       return arr;
-    //     }
-    //   }
+    case "password":
+      return {
+        // mask: (value:string) => {
+        //   let arr = Array(value.length).fill('*');
+        //   log("maskedit password", value, arr);
+        //   return arr;
+        // }
+        mask: [/\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/]
+      }
     default:
       return {
         placeholder: "",

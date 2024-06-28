@@ -100,18 +100,18 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     return (
 
         <FormProvider{...formZodMethods}>
-            <form onSubmit={handleSubmit(onFormSubmit)}>
-                <DialogBasic
-                    isOpen={isOpen!}
-                    onClose={closeModal}
-                    title={"사용자 기준정보 " + (popType === crudType.CREATE ? "등록" : "수정")}
-                    bottomRight={
-                        <>
-                            <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} width="w-32" />
-                            <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />
-                        </>
-                    }>
-                    <></>
+            <DialogBasic
+                isOpen={isOpen!}
+                onClose={closeModal}
+                title={"사용자 기준정보 " + (popType === crudType.CREATE ? "등록" : "수정")}
+                bottomRight={
+                    <>
+                        <Button id={"save"} onClick={handleSubmit(onFormSubmit)} icon={null} width="w-32" />
+                        <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />
+                    </>
+                }>
+                <></>
+                <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
                         <MaskedInputField id="user_id2" label="user_id" value={mSelectedRow?.user_id} options={{
                             isReadOnly: popType === crudType.CREATE ? true : true,
@@ -185,7 +185,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
                         <div className="col-span-1"> 
                             <MaskedInputField id="ufs_pw" value={mSelectedRow?.ufs_pw}
-                             options={{
+                            options={{
                                 isReadOnly: popType === crudType.CREATE ? false : false,
                                 type: "password"
                                 }} />
@@ -232,9 +232,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             }} />
                         </div>
                     </div>
-
-                </DialogBasic>
-            </form>
+                </form>
+            </DialogBasic>
         </FormProvider>
 
     )

@@ -298,7 +298,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         if (col === ROW_INDEX) {
           cellOption = {
-            maxWidth: 45
+            // minWidth: 30,
+            cellStyle: { textAlign: "center" },
           }
           cols.push({
             field: col,
