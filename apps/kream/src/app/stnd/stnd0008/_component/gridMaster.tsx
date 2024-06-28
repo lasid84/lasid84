@@ -30,6 +30,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         dataType: { "bz_reg_no" : "bizno"},
         isAutoFitColData: true,
         alignLeft: ["major_category", "bill_gr1_nm"],
+        isMultiSelect : false,
     };
     /*
         handleSelectionChanged보다 handleRowClicked이 먼저 호출됨

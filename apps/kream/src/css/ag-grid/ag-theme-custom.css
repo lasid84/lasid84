@@ -5,6 +5,8 @@
     font-style: normal;
 }
 
+
+
 .ag-theme-custom.ag-theme-custom, .ag-theme-custom-dark {
     --ag-balham-active-color: #0091ea;
     --ag-foreground-color: #000;
@@ -58,6 +60,11 @@
     --ag-card-shadow: none;
     --ag-cell-horizontal-border: solid #ececec;
 }
+
+.ag-theme-custom.ag-theme-custom .ag-row-selected {
+    background-color: rgba(133, 176, 211, 0.3);
+  }
+
 
 .ag-theme-custom-dark.ag-theme-custom-dark, .ag-theme-custom-dark {
     --ag-balham-active-color: #00B0FF;
