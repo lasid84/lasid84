@@ -116,38 +116,38 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         }
     }, [firstLab, firstVal]);
 
-    // function handleKeyDown(e: any) {
-    //     try {
-    //             const menu = ref.current.select.menuListRef;
-    //             const options = menu.querySelectorAll(".my-select__option");
-    //             console.log('enter', options)
+    function handleKeyDown(e: any) {
+        try {
+                // const menu = ref.current.select.menuListRef;
+                // const options = menu.querySelectorAll(".my-select__option");
+                // console.log('enter', options)
 
-    //             options.forEach((option, index) => {
-    //                 console.log('enter?',options)
-    //               new ClassWatcher(
-    //                 option,
-    //                 "my-select__option--is-focused",
-    //                 () => setFocusedValue(OPTIONS[index].value),
-    //                 () => {}
-    //               );
-    //             });              
+                // options.forEach((option, index) => {
+                //     console.log('enter?',options)
+                //   new ClassWatcher(
+                //     option,
+                //     "my-select__option--is-focused",
+                //     () => setFocusedValue(OPTIONS[index].value),
+                //     () => {}
+                //   );
+                // });              
+            log("??????")
+            if (e.key === "Enter") {
+                const form = e.target.form;
+                log('enter event1', e);
+                const index = [...form].indexOf(e.target);
+                log('enter event', index)
+                form[index + 1].focus();
+                e.preventDefault();
+            }
 
-    //         if (e.key === "Enter") {
-    //             const form = e.target.form;
-    //             log('enter event1', e);
-    //             const index = [...form].indexOf(e.target);
-    //             log('enter event', index)
-    //             form[index + 1].focus();
-    //             e.preventDefault();
-    //         }
+            if (events?.onKeyDown) {
+                events.onKeyDown(e);
+            }
+        } catch (ex) {
 
-    //         if (events?.onKeyDown) {
-    //             events.onKeyDown(e);
-    //         }
-    //     } catch (ex) {
-
-    //     }
-    // }
+        }
+    }
 
     const handleChange = (e: any) => {
         setValue(id, e.value);
@@ -227,6 +227,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                         options={list}
                                         instanceId={id}
                                         onChange={(e: any) => { handleChange(e); }}
+                                        onKeyDown={(e:any) => { handleKeyDown(e);}}
                                         menuPortalTarget={document.getElementsByClassName('dialog-base')[0] as HTMLElement}
                                         menuPosition='fixed'
                                         styles={customStyles}
@@ -251,6 +252,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                         options={list}
                                         instanceId={id}
                                         onChange={(e: any) => { handleChange(e); }}
+                                        onKeyDown={(e:any) => { handleKeyDown(e);}}
                                         styles={customStyles}
                                     />
                                 </div>
