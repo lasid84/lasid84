@@ -41,6 +41,7 @@ type Props = {
     noLabel?: boolean;
     useIcon?: boolean;
     outerClassName?: string;    //outerClassName
+    isAutoComplete?: string;
   };
 
   events?: {
@@ -59,7 +60,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const { id, label, value, width, lwidth, height, options = {}, events } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
-    freeStyles = '', radius = 'none', outerClassName = ''
+    freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password'
   } = options;
   const { mask, pipe, placeholder } = getMask(type, options);
   // log("===MaskedInputField", type, mask);
@@ -161,6 +162,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
               onBlur={(e) => handleBlur(e)}
               onChange={(e: any) => { handleChange(e); }}
               onFocus={(e: any) => { handleFocus(e); }}
+              autoComplete={isAutoComplete}
             />
           )}
         />

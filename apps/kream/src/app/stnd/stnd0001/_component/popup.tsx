@@ -53,7 +53,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => {
         if (loadItem) {
-            console.log('updatelogic2',loadItem)
+            console.log('updatelogic2', loadItem)
             setBzplccode(loadItem[0])
             setTerminalcode(loadItem[1])
             setPermissionId(loadItem[2])
@@ -91,11 +91,11 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         // }
     }, [popType, isOpen])
 
-    useEffect(()=>{
-        if(mSelectedRow){
-            log('mSelectedRow?',mSelectedRow)
+    useEffect(() => {
+        if (mSelectedRow) {
+            log('mSelectedRow?', mSelectedRow)
         }
-    },[mSelectedRow])
+    }, [mSelectedRow])
 
     return (
 
@@ -113,6 +113,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                 <></>
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
+                        {/* form의 user_id, react-query의 user_id 파라미터 중복으로 form을 user_id2로 변경  */}
                         <MaskedInputField id="user_id2" label="user_id" value={mSelectedRow?.user_id} options={{
                             isReadOnly: popType === crudType.CREATE ? true : true,
                         }} />
@@ -121,22 +122,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 isReadOnly: popType === crudType.CREATE ? false : true,
                             }} />
                         </div>
-                        <div className="col-span-1">
-                            <ReactSelect
-                                id="use_yn" dataSrc={{
-                                    data: [
-                                        { use_yn: 'Y' },
-                                        { use_yn: 'N' }
-                                    ]
-                                } as data}
-                                options={{
-                                    dialog: true,
-                                    keyCol: "use_yn",
-                                    displayCol: ['use_yn'],
-                                    defaultValue: mSelectedRow?.use_yn
-                                }}
-                            />
-                        </div>
+
 
                         <div className="col-span-1">
                             <ReactSelect
@@ -151,6 +137,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                     defaultValue: mSelectedRow?.perm_id
                                 }} />
                         </div>
+
                         <ReactSelect
                             id="bz_plc_code" label="bz_plc_code" dataSrc={bzplccode as data}
                             width='w-96' lwidth='w-20' height="8px"
@@ -160,17 +147,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 inline: false,
                                 defaultValue: mSelectedRow?.bz_plc_code
                             }} />
-                        <div className="col-span-1">
-                            <MaskedInputField id="emp_no" value={mSelectedRow?.emp_no} options={{
-                                isReadOnly: popType === crudType.CREATE ? false : false,
-                            }} />
-                        </div>
 
-                        <div className="col-span-1">
-                            <MaskedInputField id="ufs_id" value={mSelectedRow?.ufs_id} options={{
-                                isReadOnly: popType === crudType.CREATE ? false : false,
-                            }} />
-                        </div>
                         <div className="col-span-1">
                             <ReactSelect
                                 id="terminal_cd" label="terminal_cd" dataSrc={terminalcd as data}
@@ -180,27 +157,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                     displayCol: ['terminal_cd', 'terminal_nm'],
                                     inline: false,
                                     dialog: true,
-                                }} />
-                        </div>
-
-                        <div className="col-span-1"> 
-                            <MaskedInputField id="ufs_pw" value={mSelectedRow?.ufs_pw}
-                            options={{
-                                isReadOnly: popType === crudType.CREATE ? false : false,
-                                type: "password"
-                                }} />
-                        </div>
-
-                        <div className="col-span-1">
-                            <ReactSelect
-                                id="dept_cd" label="dept_cd" dataSrc={deptcd as data}
-                                width='w-96' lwidth='w-20' height="8px"
-                                options={{
-                                    keyCol: "dept_cd",
-                                    displayCol: ['dept_cd', 'dept_nm'],
-                                    inline: false,
-                                    dialog: true,
-                                    defaultValue: mSelectedRow?.dept_cd
                                 }} />
                         </div>
 
@@ -216,6 +172,37 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                     defaultValue: mSelectedRow?.office_cd
                                 }} />
                         </div>
+
+
+                        <div className="col-span-1">
+                            <ReactSelect
+                                id="dept_cd" label="dept_cd" dataSrc={deptcd as data}
+                                width='w-96' lwidth='w-20' height="8px"
+                                options={{
+                                    keyCol: "dept_cd",
+                                    displayCol: ['dept_cd', 'dept_nm'],
+                                    inline: false,
+                                    dialog: true,
+                                    defaultValue: mSelectedRow?.dept_cd
+                                }} />
+                        </div>
+
+                        <div className="col-span-1">
+                            <MaskedInputField id="ufs_id" value={mSelectedRow?.ufs_id} options={{
+                                isReadOnly: popType === crudType.CREATE ? false : false,
+                            }} />
+                        </div>
+
+                        <div className="col-span-1">
+                            <MaskedInputField id="ufs_pw" value={mSelectedRow?.ufs_pw}
+                                options={{
+                                    isReadOnly: popType === crudType.CREATE ? false : false,
+                                    type: 'password',
+                                    isAutoComplete: 'one-time-code'
+                                }} />
+                        </div>
+
+
                         <div className="col-span-1">
                             <MaskedInputField id="remark" value={mSelectedRow?.remark} options={{
                                 isReadOnly: popType === crudType.CREATE ? false : false,
@@ -226,10 +213,34 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 isReadOnly: popType === crudType.CREATE ? false : false,
                             }} />
                         </div>
-                        <div className="col-span-1">
+
+                        {/* <div className="col-span-1">
+                            <MaskedInputField id="emp_no" value={mSelectedRow?.emp_no} options={{
+                                isReadOnly: popType === crudType.CREATE ? false : false,
+                            }} />
+                        </div> */}
+
+                        {/* <div className="col-span-1">
                             <MaskedInputField id="edi_email" value={mSelectedRow?.edi_email} options={{
                                 isReadOnly: popType === crudType.CREATE ? false : false,
                             }} />
+                        </div> */}
+
+                        <div className="col-span-1">
+                            <ReactSelect
+                                id="use_yn" dataSrc={{
+                                    data: [
+                                        { use_yn: 'Y' },
+                                        { use_yn: 'N' }
+                                    ]
+                                } as data}
+                                options={{
+                                    dialog: true,
+                                    keyCol: "use_yn",
+                                    displayCol: ['use_yn'],
+                                    defaultValue: mSelectedRow?.use_yn
+                                }}
+                            />
                         </div>
                     </div>
                 </form>
