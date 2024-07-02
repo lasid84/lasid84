@@ -2,6 +2,7 @@ import DialogBasic from "layouts/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "components/button";
+import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext, SEARCH_M } from "components/provider/contextObjectProvider"
 import { SP_UpdateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
@@ -21,6 +22,9 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     const { mSelectedRow, isPopUpOpen: isOpen, crudType: popType } = objState
 
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M)
+
+    //사용자 정보
+    const gUserGroupId = useUserSettings((state) => state.data.user_grp_id)
 
     // 선택된 데이터 Select컴포넌트 처리
     const [bzplccode, setBzplccode] = useState<any>([])
@@ -113,13 +117,14 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                 <></>
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
-                        {/* form의 user_id, react-query의 user_id 파라미터 중복으로 form을 user_id2로 변경  */}
+                        {/* form의 user_id, react-query의 user_id 중복으로 form의 파라미터 user_id2로 변경  */}
                         <MaskedInputField id="user_id2" label="user_id" value={mSelectedRow?.user_id} options={{
                             isReadOnly: popType === crudType.CREATE ? true : true,
                         }} />
                         <div className="col-span-1">
                             <MaskedInputField id="user_nm" value={mSelectedRow?.user_nm} options={{
                                 isReadOnly: popType === crudType.CREATE ? false : true,
+                            
                             }} />
                         </div>
 
@@ -134,7 +139,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                     inline: false,
                                     dialog: true,
                                     isMulti: true,
-                                    defaultValue: mSelectedRow?.perm_id
+                                    defaultValue: mSelectedRow?.perm_id,
+                                    isDisplay : gUserGroupId >= 9999 ? true : false,
                                 }} />
                         </div>
 

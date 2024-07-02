@@ -49,6 +49,7 @@ export type ReactSelectProps = {
         rules?: Record<string, any>;
         noLabel?: boolean;
         isAllYn?: boolean;
+        isDisplay?: boolean;      //사용자 권한에 따른 display여부
     }
     events?: event
 };
@@ -56,13 +57,14 @@ export type ReactSelectProps = {
 export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const { control } = useFormContext();
     const { id, label, dataSrc, width, height, lwidth, options = {}, events } = props;
-    const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true } = options;
+    const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true, isDisplay=true } = options;
     const [list, setList] = useState<{}[] | undefined>([]);
     const [selectedVal, setSelectedVal] = useState<{} | null>(null);
     const [firstVal, setFirstVal] = useState('');
     const [firstLab, setFirstLab] = useState('');
     const defWidth = width ? width : "w-full";
     const defHeight = height ? height : "h-6";
+    const display = isDisplay? '':'block hidden ';
     // const ref = React.useRef(null)
     const ref = useRef<HTMLDivElement>(null)
 
@@ -209,7 +211,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     return (
         <>
             <InputWrapper outerClassName="" inline={inline} >
-                {!noLabel && <Label id={id} name={label} lwidth={lwidth} />}
+                {!noLabel && <Label id={id} name={label} lwidth={lwidth} isDisplay={isDisplay}/>}
                 {dialog ?
                     <Controller
                         control={control}
@@ -217,7 +219,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         rules={rules}
                         render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
-                                <div className={`my-react-select-container flex-row ${defWidth} flex-grow-1`}>
+                                <div className={`${display} my-react-select-container flex-row ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
                                         id={id}
@@ -231,6 +233,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                         menuPortalTarget={document.getElementsByClassName('dialog-base')[0] as HTMLElement}
                                         menuPosition='fixed'
                                         styles={customStyles}
+                                        
                                     />
                                 </div>
                             );
@@ -243,7 +246,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         rules={rules}
                         render={({ field: { onChange, /*onKeyDown*/ } }) => {
                             return (
-                                <div className={`my-react-select-container w-96 inline-block ${defWidth} flex-grow-1`}>
+                                <div className={`${display} my-react-select-container w-96 inline-block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
                                         classNamePrefix="my-react-select"
