@@ -28,7 +28,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
         colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
-        gridHeight: "100%",
+        gridHeight: "h-full",
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         // checkbox: ["no"],
         // editable: ["trans_mode"],
@@ -71,12 +71,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
 
     return (
         <>
-            <PageMGrid
-                right={
-                    <>
-                        <Button id={"interface"} onClick={onInterface} />
-                    </>
-                }>
+            <PageMGrid>
                 <Grid
                     gridRef={gridRef}
                     listItem={mainData as gridData}

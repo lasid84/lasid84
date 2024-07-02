@@ -63,12 +63,7 @@ const MasterGrid: React.FC<Props> = ({  }) => {
 
     return (
         <>
-            <PageMGrid
-                right={
-                    <>
-                        <Button id={"interface"} onClick={onInterface} />
-                    </>
-                }>
+            <PageMGrid>
                 <Grid
                     gridRef={gridRef}                   
                     listItem={mainData as gridData}

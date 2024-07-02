@@ -51,6 +51,9 @@ const SearchForm: React.FC<Props> = (props) => {
     dispatch({ searchParams: params, isMSearch: true, mSelectedRow: null });
   }
 
+  const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
+
+
   return (
     <FormProvider {...methods}>
       <form /*onSubmit={handleSubmit(onSubmit)}*/ className="space-y-1">
@@ -58,7 +61,7 @@ const SearchForm: React.FC<Props> = (props) => {
           right={
             <>
               <Button id={"search"} onClick={onSearch} width={`w-32`}/>
-              <Button id={"refresh"} onClick={onRefresh} width={`w-32`}/>
+              <Button id={"interface"} onClick={onInterface} width={`w-32`} />
             </>
           }>
           <></>

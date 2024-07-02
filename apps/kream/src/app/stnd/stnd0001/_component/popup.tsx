@@ -140,7 +140,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                     dialog: true,
                                     isMulti: true,
                                     defaultValue: mSelectedRow?.perm_id,
-                                    isDisplay : gUserGroupId >= 9999 ? true : false,
+                                    isDisplay : (gUserGroupId as unknown as number) >= 9999 ? true : false,
                                 }} />
                         </div>
 

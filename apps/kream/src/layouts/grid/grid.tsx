@@ -34,21 +34,21 @@ export const PageGrid: React.FC<PageSearchProps> = ({ title, left, right, childr
 
 
 
-//Grid (label, button, grid)-- right:md:grid md:grid-cols-2 
+//Grid (label, button, grid)-- right:md:grid md:grid-cols-2 OCEAN기준정보관리
 export const PageMGrid: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
     return (
         <>
             <div className="flex-col w-full h-full">
                 <div className='grid flex-col content-end w-full h-full'>
-                    <div className={`h-10 flex w-full rounded-[5px] justify-between ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}>
+                    {/* <div className={`h-10 flex w-full rounded-[5px] justify-between ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}>
                         <div className="flex inline gap-2 justify-self-start">
                             {title}
                         </div>
                         <div className="flex inline gap-2 justify-self-end">
                             {right}
                         </div>
-                    </div>
-                    <div className="flex w-full h-[calc(100vh-140px)] gap-1 justify-self-start md:flex-col ">
+                    </div> */}
+                    <div className="flex w-full h-[calc(100vh-100px)] gap-1 justify-self-start md:flex-col ">
                         {children}
                     </div>
                 </div>
@@ -57,7 +57,7 @@ export const PageMGrid: React.FC<PageSearchProps> = ({ title, left, right, child
     );
 };
 
-//Grid (label, button, grid)-- right:md:grid md:grid-cols-2 
+//Grid (label, button, grid)-- right:md:grid md:grid-cols-2 , OCEN0005(부킹노트)
 export const PageMGrid2: React.FC<PageSearchProps> = ({ title, left, right, children, addition }) => {
     return (
         <>
