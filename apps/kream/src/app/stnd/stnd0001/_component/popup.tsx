@@ -121,10 +121,10 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                         <MaskedInputField id="user_id2" label="user_id" value={mSelectedRow?.user_id} options={{
                             isReadOnly: popType === crudType.CREATE ? true : true,
                         }} />
+                        
                         <div className="col-span-1">
                             <MaskedInputField id="user_nm" value={mSelectedRow?.user_nm} options={{
                                 isReadOnly: popType === crudType.CREATE ? false : true,
-                            
                             }} />
                         </div>
 

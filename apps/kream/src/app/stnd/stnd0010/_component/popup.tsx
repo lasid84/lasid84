@@ -70,7 +70,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                 title={"Port코드 관리 - " + (popType === crudType.CREATE ? "등록" : "조회")}
                 bottomRight={
                     <>
-                        <Button id={"check"} onClick={closeModal} icon={null} />
+                        <Button id={"check"} onClick={closeModal} icon={null} width="w-32" />
                     </>
                 }
             >

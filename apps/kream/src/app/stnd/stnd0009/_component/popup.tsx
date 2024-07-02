@@ -226,6 +226,23 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             />
                         </div>
                         
+                        <div className="col-span-2">
+                            <MaskedInputField
+                                id="default_contact_no"
+                                value={mSelectedRow?.default_contact_no}
+                                options={{
+                                    isReadOnly: popType === crudType.CREATE ? false : true,
+                                }}
+                            />
+                        </div>
+
+                        <MaskedInputField
+                            id="conference_ind"
+                            value={mSelectedRow?.conference_ind}
+                            options={{
+                                isReadOnly: popType === crudType.CREATE ? false : true,
+                            }} />
+                            
                         <MaskedInputField
                             id="check_digit8_ind"
                             value={mSelectedRow?.check_digit8_ind}
@@ -247,22 +264,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 isReadOnly: popType === crudType.CREATE ? false : true,
                             }} />
                             
-                        <div className="col-span-2">
-                            <MaskedInputField
-                                id="default_contact_no"
-                                value={mSelectedRow?.default_contact_no}
-                                options={{
-                                    isReadOnly: popType === crudType.CREATE ? false : true,
-                                }}
-                            />
-                        </div>
 
-                        <MaskedInputField
-                            id="conference_ind"
-                            value={mSelectedRow?.conference_ind}
-                            options={{
-                                isReadOnly: popType === crudType.CREATE ? false : true,
-                            }} />
 
                         <MaskedInputField
                             id="iata_ind"

@@ -116,6 +116,17 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                         <div className="col-span-2">
                             <MaskedInputField id="cd_nm" value={mSelectedRow?.cd_nm} options={{}} />
                         </div>
+                     
+                        <div className="col-span-1">
+                            <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}} />
+                        </div>
+                        <div className="col-span-1">
+                            <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}} />
+                        </div>
+                        <div className="col-span-1">
+                            <MaskedInputField id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2} options={{}} />
+                        </div>
+
                         <div className="col-span-1">
                             <ReactSelect
                                 id="use_yn" dataSrc={{
@@ -132,18 +143,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 }}
                             />
                         </div>
-
-                        <div className="col-span-1">
-                            <MaskedInputField id="cd_desc" value={mSelectedRow?.cd_desc} options={{}} />
-                        </div>
-                        <div className="col-span-1">
-                            <MaskedInputField id="cd_mgcd1" value={mSelectedRow?.cd_mgcd1} options={{}} />
-                        </div>
-                        <div className="col-span-1">
-                            <MaskedInputField id="cd_mgcd2" value={mSelectedRow?.cd_mgcd2} options={{}} />
-                        </div>
                     </div>
-
                 </DialogBasic>
             </form>
         </FormProvider>
