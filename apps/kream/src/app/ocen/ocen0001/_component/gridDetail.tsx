@@ -74,7 +74,7 @@ const DetailGrid: React.FC<Props> = ({ cont_type }) => {
                 if (data.cust_code && data.cont_seq) { //수정
                     Update.mutate(data);
                 } else { //신규
-                    data.cust_code = objState.mSelectedRow.cust_code;
+                    data.carrier_code = objState.mSelectedRow.carrier_code;
                     Create.mutate(data);
                 }
             }

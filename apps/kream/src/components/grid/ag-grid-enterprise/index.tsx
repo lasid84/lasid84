@@ -47,6 +47,7 @@ type Props = {
   listItem?: gridData
   options?: GridOption
   event?: GridEvent
+  customselect?: any | null
 }
 
 export type gridData = {
@@ -129,13 +130,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const [mainData, setMainData] = useState([{}]);
 
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
-  const { listItem, options } = props;
+  const { listItem, options, customselect = false } = props;
 
   const containerStyle = useMemo(() => "flex-col w-full h-full", []);
   // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
   const [isReady, setReady] = useState(false);
   const gridRef = props.gridRef;
   const { event } = props
+
+  const customselect_style = customselect ? 'select' : ''
+  log('customselect_style',customselect)
 
   // const [defaultColDef, setDefaultColDef] = useState({});
 
@@ -657,7 +661,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     <>
       <div className={containerStyle}>
         <div
-          className={`${config.background === "dark" ? "ag-theme-custom-dark" : "ag-theme-custom"} w-full p-0.5`}
+          className={`${config.background === "dark" ? "ag-theme-custom-dark" : "ag-theme-custom"}${customselect_style} w-full p-0.5`}
           style={gridStyle}
         >
           {!props.listItem ?  <Skeleton/> :

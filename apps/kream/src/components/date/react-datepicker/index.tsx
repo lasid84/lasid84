@@ -40,6 +40,7 @@ type Props = {
     isReadOnly?:boolean;      //읽기전용여부
     rules?: Record<string, any>;
     noLabel?:boolean;
+    isDisplay?: boolean;  //사용자 권한에 따른display 여부
   };
 
   events?: {
@@ -59,7 +60,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
     const { dateFormat = 'yyyy-MM-dd', myPlaceholder, inline = false, noLabel = false,
             isReadOnly = false,
             textAlign = "left", bgColor, fontSize = "13px", fontWeight = "normal",
-            freeStyles = '', radius = 'none'
+            freeStyles = '', radius = 'none', isDisplay=true
     } = options;
     let { rules } = options;
 
@@ -68,6 +69,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
 
     const defWidth = width ? width : "w-full";
     const defHeight = height ? height : "h-8";
+
     rules = {
         // minDate:'',
         maxDate:stringToDateString('9999-12-31'),
@@ -144,7 +146,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
 
     return (
         <InputWrapper outerClassName="" inline={inline}>
-            {!noLabel && <Label id={id} name={label} lwidth={lwidth} />}
+            {!noLabel && <Label id={id} name={label} lwidth={lwidth} isDisplay={isDisplay}/>}
             {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
                 <Controller
                     control={control}

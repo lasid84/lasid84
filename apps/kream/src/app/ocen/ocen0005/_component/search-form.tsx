@@ -42,7 +42,7 @@ const SearchForm = ({ loadItem }: any) => {
 
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
-  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code } = objState.searchParams;
+  const { trans_mode, trans_type, fr_date, to_date, wb_no, cust_code, state, bk_id, doc_fr_dt, doc_to_dt } = objState.searchParams;
 
   //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
@@ -52,10 +52,15 @@ const SearchForm = ({ loadItem }: any) => {
     defaultValues: {
       trans_mode: trans_mode || gTransMode || 'ALL',
       trans_type: trans_type || gTransType || 'ALL',
-      fr_date: fr_date || dayjs().subtract(1, 'month').startOf('month').format("YYYYMMDD"),
+      fr_date: fr_date || dayjs().subtract(10, 'month').startOf('month').format("YYYYMMDD"),
       to_date: to_date || dayjs().subtract(1, 'month').endOf('month').format("YYYYMMDD"),
       wb_no: wb_no || '',
-      cust_code: cust_code || ''
+      cust_code: cust_code || '',
+      state: '',
+      create_user: '',
+      doc_fr_dt: dayjs().subtract(10, 'month').startOf('month').format("YYYYMMDD"),
+      doc_to_dt: dayjs().subtract(1, 'month').endOf('month').format("YYYYMMDD"),
+      bk_id: '',
     }
   });
 
@@ -70,15 +75,17 @@ const SearchForm = ({ loadItem }: any) => {
   } = methods;
 
   // //Set select box data
-  const [transmode, setTransmode] = useState<any>();
-  const [transtype, setTranstype] = useState<any>();
+  // const [transmode, setTransmode] = useState<any>();
+  const [createuser, setCreateuser] = useState<any>();
+  const [status, setStatus] = useState<any>();
   const [custcode, setCustcode] = useState<any>();
 
   useEffect(() => {
     if (loadItem?.length) {
-      setTransmode(loadItem[0])
-      setTranstype(loadItem[1])
-      setCustcode(loadItem[8])
+      setCustcode(loadItem[0])
+      setCreateuser(loadItem[1])
+      setStatus(loadItem[2])
+
       dispatch({ isFirstRender: false });
       if (objState.isFirstRender) { onSearch() }
     }
@@ -110,10 +117,10 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
           </div>
 
-          <div className={"col-span-2"}>
+          <div className={"col-span-1"}>
             <CustomSelect
               id="cust_code"
-              initText='Select an option'
+              initText='Select'
               listItem={custcode as gridData}
               valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
               displayCol="cust_nm"
@@ -123,38 +130,39 @@ const SearchForm = ({ loadItem }: any) => {
               gridStyle={{ width: '600px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
               inline={true}
+              isDisplay={true}
             />
             <MaskedInputField id="wb_no" label="mwb_hwb" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
             <MaskedInputField id="cust_nm" value={objState.searchParams?.cust_nm} options={{ textAlign: 'center', inline: true, noLabel: false, outerClassName: 'hidden' }} height='h-8' />
           </div>
-          {/* <div className={"col-span-1"}>
-            <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
-            <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
-          </div> */}
+          <div className={"col-span-1"}>
+            <MaskedInputField id="bk_id" label="bk_id" value={bk_id} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+            {/* <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' /> */}
+          </div>
           <div className={"col-span-1"}>
             <ReactSelect
-              id="trans_mode" label="create_user" dataSrc={transmode as data}
+              id="create_user" label="create_user" dataSrc={createuser as data}
               width='w-96' lwidth='w-20' height="8px"
               options={{
-                keyCol: "trans_mode",
-                displayCol: ['name'],
+                keyCol: "create_user",
+                displayCol: ['create_user', 'create_user_nm'],
                 inline: true,
-                defaultValue: getValues('trans_mode')
-              }}/>
+                defaultValue: getValues('create_user')
+              }} />
             <ReactSelect
-              id="trans_type" label="status" dataSrc={transtype as data}
+              id="state" label="state" dataSrc={status as data}
               width='w-96' lwidth='w-20' height="8px"
               options={{
-                keyCol: "trans_type",
-                displayCol: ['name'],
+                keyCol: "state",
+                displayCol: ['state','state_nm'],
                 inline: true,
-                defaultValue: getValues('trans_type')
-              }}/>
+                defaultValue: getValues('state')
+              }} />
           </div>
 
           <div className={"col-span-1"}>
-            <DatePicker id="fr_date" label="doc_cut" value={fr_date} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
-            <DatePicker id="to_date" label="doc_cut" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            <DatePicker id="doc_fr_dt" label="doc_cut" value={doc_fr_dt} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
+            <DatePicker id="doc_to_dt" label="doc_cut" value={doc_to_dt} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
           </div>
         </PageSearchButton>
       </form>
