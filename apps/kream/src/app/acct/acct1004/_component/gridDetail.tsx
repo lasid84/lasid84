@@ -56,6 +56,9 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                     "vat_amt":"number", "actual_cost":"number", "cost_exchg_rt":"number", 
                     "waybill_amt":"number", "waybill_exchg_rt":"number", 
                 },
+                total: {
+                    invoice_seq:"count", invoice_amt:"sum", local_amt:"sum", waybill_amt:"sum"
+                },
                 // typeOptions: {
                 //     "invoice_amt" : {isAllowDecimal:true, decimalLimit:2},
                 //     "local_amt" : {isAllowDecimal:true, decimalLimit:2},
@@ -64,6 +67,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 // isAutoFitColData: true,
                 // alignLeft: ["major_category", "bill_gr1_nm"],
                 // alignRight: [],
+                isShowRowNo:false
             };
 
             setGridOptions(gridOption);

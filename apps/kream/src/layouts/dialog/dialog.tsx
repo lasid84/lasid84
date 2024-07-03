@@ -61,7 +61,9 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
                 {/*Modal Contents*/}
                 {/*Modal Footer*/}
                 <div className="px-4 space-y-2 dark:bg-gray-900 dark:text-white dark:border-gray-800">
-                  {children}
+                  <form>
+                    {children}
+                  </form>
                 </div>
                 {
                   ((bottomLeft) || (bottomRight)) &&

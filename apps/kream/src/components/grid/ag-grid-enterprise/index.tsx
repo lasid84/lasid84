@@ -17,7 +17,8 @@ import {
   CellKeyDownEvent,
   FullWidthCellKeyDownEvent,
   ComponentStateChangedEvent,
-  ProcessDataFromClipboardParams
+  ProcessDataFromClipboardParams,
+  RowNode
 } from "ag-grid-community";
 
 import { LicenseManager } from  'ag-grid-enterprise'
@@ -27,6 +28,7 @@ import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
 
 import { Skeleton } from 'components/skeleton/skeleton';
+import { StringValidation } from 'zod';
 
 // import { SELECTED_ROW } from "./model";
 
@@ -82,20 +84,22 @@ export type GridOption = {
   colDisable?: string[],
   minWidth?: { [key: string]: number },
   maxWidth?: { [key: string]: number },
-  alignLeft?: string[],                 //기본 정렬은 가운데
-  alignRight?: string[],                //dataType : number면 자동 우측 정렬
+  alignLeft?: string[],                   //기본 정렬은 가운데
+  alignRight?: string[],                  //dataType : number면 자동 우측 정렬
   editable?: string[];
   isEditableOnlyNewRow?: boolean,
   dataType?: { [key: string]: string };   //date, number, text, bizno
   typeOptions?: {
     [key: string]: {
-      // limit?: number;                     //입력 자릿수 제한
-      isAllowDecimal?: boolean             //소수점 허용 여부
+      // limit?: number;                  //입력 자릿수 제한
+      isAllowDecimal?: boolean            //소수점 허용 여부
       decimalLimit?: number               //소수점 자리수
     }
   }
-
-  refRow?: boolean                     //scroll ref number
+  total?:{
+    [key:string] : string                 //column : 타입(count, sum, avg), prefix 같은 문구를 넣으려면 custom 형식의 옵션 추가 후 개발 필요
+  }
+  refRow?: boolean                        //scroll ref number
   isShowFilter?: boolean
   isShowFilterBtn?: boolean
   isMultiSelect?: boolean
@@ -155,6 +159,45 @@ const ListGrid: React.FC<Props> = memo((props) => {
     };
   }, []);
 
+  const calculatePinnedBottomData = (target: any) => {
+    //**list of columns fo aggregation**
+    if (!options?.total) return;
+    if (!Object.keys(options?.total as Object).length) return;
+    let columnsWithTotal:string[] = [];
+    let totalType:string[] = [];
+    for ( const [key, val] of Object.entries(options?.total as Object)) {
+      columnsWithTotal.push(key);
+      totalType.push(val);
+    }
+    log("calculatePinnedBottomData", columnsWithTotal, totalType)
+    columnsWithTotal.forEach((element,i) => {
+        let type = totalType[i];
+        let rowCnt = 0;
+        gridRef.current.api.forEachNodeAfterFilter((rowNode: RowNode) => {
+            if (rowNode.data[element]) {
+              switch (type) {
+                case "sum":
+                  target[element] += Number(rowNode.data[element]);
+                  break;
+                case "count":
+                  target[element] = Number(target[element] || 0) + 1;
+                  break;
+                case "avg":
+                  target[element] += Number(rowNode.data[element]);
+                  rowCnt++;
+                  break;
+              }
+            }
+        });
+        if (target[element] && type === "count") target[element] = `${target[element].toString()}${t("ea")}`;
+        // else if (target[element] && type === "sum") target[element] = `${numberFormatter(target[element].toString())}`;
+        else if (target[element] && type === "avg" && rowCnt) target[element] = `${target[element] / rowCnt}`;
+        
+    })
+    //console.log(target);
+    return target;
+  }
+
   // let ready = false;
   //Grid Defualt 설정
   const gridOptions: GridOptions = useMemo(() => {
@@ -168,22 +211,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
       enableRangeSelection: true,
       stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
       suppressLastEmptyLineOnPaste: true,     //엑셀 복사 후 붙여넣기시 시 다음 row 빈칸 붙여넣기 되는 오류 처리
-      // animateRows: true,
-      // onGridReady: () => {
-      //   log("onGridReady")
-      //   setDefaultColDef(
-      //     {
-      //       // flex: !!options?.flex ? options.flex : 0,
-      //       flex: options?.isAutoFitColData? 0 : 1,
-      //       // minWidth: 20,
-      //       filter: 'agTextColumnFilter',
-      //       floatingFilter: true,      
-      //       headerClass: "text-center",
-      //       editable:true
-      //     }
-      //   );
-      //   autoSizeAll(props.gridRef)
-      // },
+      animateRows: true,
+      // grandTotalRow:"bottom",
       navigateToNextCell(params) {
         const suggestedNextCell = params.nextCellPosition;
 
@@ -206,7 +235,20 @@ const ListGrid: React.FC<Props> = memo((props) => {
         return suggestedNextCell;
       },
       onComponentStateChanged: (e:ComponentStateChangedEvent) => {
-        //log("onComponentStateChanged", gridRef.current.api.getRowNode(mainData.length - 1), mainData.length);
+        // log("onComponentStateChanged", gridRef.current.api, gridRef.current.columnApi);
+
+        let result:any = {};
+
+        gridRef.current.columnApi.getAllGridColumns().forEach((item:{ [key: string]: string }) => {
+            result[item.colId] = null;
+        });
+
+        let pinnedBottomData = calculatePinnedBottomData(result);
+        log("============onComponentStateChanged", pinnedBottomData)
+
+        if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
+          gridRef.current.api.setPinnedBottomRowData([pinnedBottomData]);
+        }
 
         if (options?.isSelectRowAfterRender) {
           if (gridRef?.current.api.getSelectedNodes().length > 0) return;
@@ -228,6 +270,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
         // }
 
         if (event?.onComponentStateChanged) event.onComponentStateChanged(e);
+
+        // gridRef.current!.api.setGridOption("suppressStickyTotalRow", 'group');
       },
       // onCellValueChanged: onCellValueChanged,
       // onSelectionChanged: onSelectionChanged,
@@ -298,8 +342,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         if (col === ROW_INDEX) {
           cellOption = {
-            // minWidth: 30,
+            minWidth: 30,
+            maxWidth: 70,
             cellStyle: { textAlign: "center" },
+            aggFunc: "count" 
           }
           cols.push({
             field: col,
@@ -681,7 +727,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
             onFirstDataRendered={onFirstDataRendered}
             onCellKeyDown={onCellKeyDown}
             processDataFromClipboard={processDataFromClipboard}
-          />}
+          />
+          }
         </div>
       </div>
     </>
@@ -761,11 +808,13 @@ const numberFormatter = (params: ValueFormatterParams, options: any = null) => {
 
 const checkBoxFormatter = (params: ValueFormatterParams) => {
   // log("checkBoxFormatter", params, params.value === 'Y' ? true : false)
+  if (!params.value) return;
   return params.value === 'Y' ? true : false;
 }
 
 const bizNoFormatter = (params: ValueFormatterParams) => {
   // log("bizNoFormatter", params)
+  if (!params.value) return;
   return params.value.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3');
 }
 
