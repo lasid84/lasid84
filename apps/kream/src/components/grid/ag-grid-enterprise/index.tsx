@@ -237,19 +237,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
       onComponentStateChanged: (e:ComponentStateChangedEvent) => {
         // log("onComponentStateChanged", gridRef.current.api, gridRef.current.columnApi);
 
-        let result:any = {};
-
-        gridRef.current.columnApi.getAllGridColumns().forEach((item:{ [key: string]: string }) => {
-            result[item.colId] = null;
-        });
-
-        let pinnedBottomData = calculatePinnedBottomData(result);
-        log("============onComponentStateChanged", pinnedBottomData)
-
-        if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
-          gridRef.current.api.setPinnedBottomRowData([pinnedBottomData]);
-        }
-
         if (options?.isSelectRowAfterRender) {
           if (gridRef?.current.api.getSelectedNodes().length > 0) return;
 
@@ -542,6 +529,19 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onGridReady = (param: GridReadyEvent) => {
     // log("onGridReady");
+
+    let result:any = {};
+
+    gridRef.current.columnApi.getAllGridColumns().forEach((item:{ [key: string]: string }) => {
+        result[item.colId] = null;
+    });
+
+    let pinnedBottomData = calculatePinnedBottomData(result);
+    log("============onGridReady", pinnedBottomData)
+
+    if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
+      gridRef.current.api.setPinnedBottomRowData([pinnedBottomData]);
+    }
 
     if (event?.onGridReady) event.onGridReady(param);
   }
