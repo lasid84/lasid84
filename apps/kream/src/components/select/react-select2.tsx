@@ -90,7 +90,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 else label = item[Object.keys(item)[1]];
 
                 if (defaultValue) {
-                    // log("defaultValue : ", defaultValue);
+                     log("defaultValue : ", defaultValue);
+                     log("defaultValue1 : ", value);
                     if (value === defaultValue) {
                         setFirstVal(value);
                         setFirstLab(label);
@@ -108,7 +109,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     }, [dataSrc, defaultValue]);
 
     useEffect(() => {
-        // log(firstLab, firstVal)
+         log(firstLab, firstVal)
         if (firstLab && firstVal) {
             setSelectedVal({
                 label: firstLab,
@@ -120,8 +121,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
 
     function handleKeyDown(e: any) {
         try {
-                // const menu = ref.current.select.menuListRef;
-                // const options = menu.querySelectorAll(".my-select__option");
+                //const menu = ref.current.select.menuListRef;
+                //const options = menu.querySelectorAll(".my-select__option");
                 // console.log('enter', options)
 
                 // options.forEach((option, index) => {
@@ -133,7 +134,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 //     () => {}
                 //   );
                 // });              
-            log("??????")
+
             if (e.key === "Enter") {
                 const form = e.target.form;
                 log('enter event1', e);
@@ -221,7 +222,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                             return (
                                 <div className={`${display} my-react-select-container flex-row ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
-                                        // ref={ref}
+                                        //ref={ref}
                                         id={id}
                                         classNamePrefix="my-react-select"
                                         value={selectedVal}

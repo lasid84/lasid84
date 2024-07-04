@@ -19,7 +19,7 @@ export const SP_Load = async (searchParam: any) => {
   const params = {
     inparam: ["in_user_id", "in_ipaddr"],
     invalue: [user_id, ipaddr],
-    inproc: 'ufsm.f_ufsm0002_load',
+    inproc: 'ocean.f_ocen0005_load',
     isShowLoading: false
   }
   // log("Acct1004Load", p);
@@ -30,31 +30,37 @@ export const SP_Load = async (searchParam: any) => {
 //SP_GetInvoiceMasterContent
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { wb_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr } = Param;
+  const { wb_no, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
   // log("===param", Param, bl_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr);
 
   const params = {
     inparam: [
-      "in_mwb_no"
-      , "in_trans_mode"
-      , "in_trans_type"
-      , "in_fr_dd"
-      , "in_to_dd"
-      , "in_cust"
-      , "in_user"
+      "in_fr_date"
+      , "in_to_date"
+      , "in_cust_code"
+      , "in_wb_no"
+      , "in_state"
+      , "in_create_user"
+      , "in_doc_fr_dt"
+      , "in_doc_to_dt"
+      , "in_bk_id"
+      , "in_user_id"
       , "in_ipaddr"
     ],
     invalue: [
-      wb_no
-      , trans_mode
-      , trans_type
-      , fr_date
+      fr_date
       , to_date
       , cust_code
+      , wb_no
+      , state
+      , create_user
+      , doc_fr_dt
+      , doc_to_dt
+      , bk_id
       , user_id
       , ipaddr
     ],
-    inproc: 'ufsm.f_ufsm0002_get_wb_main',
+    inproc: 'ocean.f_ocen0005_get_bk_main',
     isShowLoading: true
   }
   const result = await executFunction(params);
