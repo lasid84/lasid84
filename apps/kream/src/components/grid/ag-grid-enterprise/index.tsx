@@ -21,7 +21,7 @@ import {
   RowNode
 } from "ag-grid-community";
 
-import { LicenseManager } from  'ag-grid-enterprise'
+import { LicenseManager } from 'ag-grid-enterprise'
 LicenseManager.setLicenseKey(process.env.NEXT_PUBLIC_AG_GRID_LICENSE!);
 
 import { crudType, useAppContext } from "components/provider/contextProvider";
@@ -49,6 +49,7 @@ type Props = {
   listItem?: gridData
   options?: GridOption
   event?: GridEvent
+  customselect?: any | null
 }
 
 export type gridData = {
@@ -96,8 +97,8 @@ export type GridOption = {
       decimalLimit?: number               //소수점 자리수
     }
   }
-  total?:{
-    [key:string] : string                 //column : 타입(count, sum, avg), prefix 같은 문구를 넣으려면 custom 형식의 옵션 추가 후 개발 필요
+  total?: {
+    [key: string]: string                 //column : 타입(count, sum, avg), prefix 같은 문구를 넣으려면 custom 형식의 옵션 추가 후 개발 필요
   }
   refRow?: boolean                        //scroll ref number
   isShowFilter?: boolean
@@ -105,7 +106,7 @@ export type GridOption = {
   isMultiSelect?: boolean
   isAutoFitColData?: boolean
   isSelectRowAfterRender?: boolean
-  isShowRowNo?:boolean
+  isShowRowNo?: boolean
 };
 
 type cols = {
@@ -123,9 +124,9 @@ type cols = {
 
 const ListGrid: React.FC<Props> = memo((props) => {
   // log("ListGrid", props);
-  
+
   const { t } = useTranslation();
-  
+
   const config = useConfigs((state) => state.config);
 
   // const [colDefs, setColDefs] = useState<cols[]>([]);
@@ -133,7 +134,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const [mainData, setMainData] = useState([{}]);
 
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
-  const { listItem, options } = props;
+  const { listItem, options, customselect = false } = props;
 
   const containerStyle = useMemo(() => "flex-col w-full h-full", []);
   // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
@@ -142,6 +143,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const { event } = props
 
   // const [defaultColDef, setDefaultColDef] = useState({});
+  const customselect_style = customselect ? 'select' : ''
 
   //Column Defualt 설정
   const defaultColDef = useMemo(() => {
@@ -163,36 +165,36 @@ const ListGrid: React.FC<Props> = memo((props) => {
     //**list of columns fo aggregation**
     if (!options?.total) return;
     if (!Object.keys(options?.total as Object).length) return;
-    let columnsWithTotal:string[] = [];
-    let totalType:string[] = [];
-    for ( const [key, val] of Object.entries(options?.total as Object)) {
+    let columnsWithTotal: string[] = [];
+    let totalType: string[] = [];
+    for (const [key, val] of Object.entries(options?.total as Object)) {
       columnsWithTotal.push(key);
       totalType.push(val);
     }
     log("calculatePinnedBottomData", columnsWithTotal, totalType)
-    columnsWithTotal.forEach((element,i) => {
-        let type = totalType[i];
-        let rowCnt = 0;
-        gridRef.current.api.forEachNodeAfterFilter((rowNode: RowNode) => {
-            if (rowNode.data[element]) {
-              switch (type) {
-                case "sum":
-                  target[element] += Number(rowNode.data[element]);
-                  break;
-                case "count":
-                  target[element] = Number(target[element] || 0) + 1;
-                  break;
-                case "avg":
-                  target[element] += Number(rowNode.data[element]);
-                  rowCnt++;
-                  break;
-              }
-            }
-        });
-        if (target[element] && type === "count") target[element] = `${target[element].toString()}${t("ea")}`;
-        // else if (target[element] && type === "sum") target[element] = `${numberFormatter(target[element].toString())}`;
-        else if (target[element] && type === "avg" && rowCnt) target[element] = `${target[element] / rowCnt}`;
-        
+    columnsWithTotal.forEach((element, i) => {
+      let type = totalType[i];
+      let rowCnt = 0;
+      gridRef.current.api.forEachNodeAfterFilter((rowNode: RowNode) => {
+        if (rowNode.data[element]) {
+          switch (type) {
+            case "sum":
+              target[element] += Number(rowNode.data[element]);
+              break;
+            case "count":
+              target[element] = Number(target[element] || 0) + 1;
+              break;
+            case "avg":
+              target[element] += Number(rowNode.data[element]);
+              rowCnt++;
+              break;
+          }
+        }
+      });
+      if (target[element] && type === "count") target[element] = `${target[element].toString()}${t("ea")}`;
+      // else if (target[element] && type === "sum") target[element] = `${numberFormatter(target[element].toString())}`;
+      else if (target[element] && type === "avg" && rowCnt) target[element] = `${target[element] / rowCnt}`;
+
     })
     //console.log(target);
     return target;
@@ -207,7 +209,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
       // groupIncludeTotalFooter: true,
       // rowMultiSelectWithClick: true,
-      suppressServerSideFullWidthLoadingRow : true,
+      suppressServerSideFullWidthLoadingRow: true,
       enableRangeSelection: true,
       stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
       suppressLastEmptyLineOnPaste: true,     //엑셀 복사 후 붙여넣기시 시 다음 row 빈칸 붙여넣기 되는 오류 처리
@@ -234,7 +236,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         return suggestedNextCell;
       },
-      onComponentStateChanged: (e:ComponentStateChangedEvent) => {
+      onComponentStateChanged: (e: ComponentStateChangedEvent) => {
         // log("onComponentStateChanged", gridRef.current.api, gridRef.current.columnApi);
 
         if (options?.isSelectRowAfterRender) {
@@ -324,7 +326,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // log("===================????", columns)
       columns = [ROW_INDEX].concat(columns)
       columns.map((col: string, i) => {
-        
+
         var cellOption: any = {};
 
         if (col === ROW_INDEX) {
@@ -332,7 +334,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
             minWidth: 30,
             maxWidth: 70,
             cellStyle: { textAlign: "center" },
-            aggFunc: "count" 
+            aggFunc: "count"
           }
           cols.push({
             field: col,
@@ -505,14 +507,14 @@ const ListGrid: React.FC<Props> = memo((props) => {
         });
       });
       setColDefs(cols);
-      setMainData(listItem.data.map((row: any, i:number) => {
+      setMainData(listItem.data.map((row: any, i: number) => {
         if (options?.checkbox) {
           options?.checkbox.map((col) => {
             if (row[col]) row[col] = row[col] === 'Y' ? true : false
           })
         }
         return {
-          [ROW_INDEX]:i+1,
+          [ROW_INDEX]: i + 1,
           ...row,
         }
       }));
@@ -530,10 +532,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const onGridReady = (param: GridReadyEvent) => {
     // log("onGridReady");
 
-    let result:any = {};
+    let result: any = {};
 
-    gridRef.current.columnApi.getAllGridColumns().forEach((item:{ [key: string]: string }) => {
-        result[item.colId] = null;
+    gridRef.current.columnApi.getAllGridColumns().forEach((item: { [key: string]: string }) => {
+      result[item.colId] = null;
     });
 
     let pinnedBottomData = calculatePinnedBottomData(result);
@@ -703,31 +705,31 @@ const ListGrid: React.FC<Props> = memo((props) => {
     <>
       <div className={containerStyle}>
         <div
-          className={`${config.background === "dark" ? "ag-theme-custom-dark" : "ag-theme-custom"} w-full p-0.5`}
+          className={`${config.background === "dark" ? "ag-theme-custom-dark" : "ag-theme-custom"}${customselect_style} w-full p-0.5`}
           style={gridStyle}
         >
-          {!props.listItem ?  <Skeleton/> :
-          <AgGridReact
-            ref={gridRef}
-            gridOptions={gridOptions}
-            rowData={mainData}
-            columnDefs={colDefs}
-            defaultColDef={defaultColDef}
-            // autoSizeStrategy={autoSizeStrategy}
-            onGridReady={onGridReady}
-            onSelectionChanged={onSelectionChanged}
-            onRowClicked={onRowClicked}
-            onCellValueChanged={onCellValueChanged}
-            onRowDataUpdated={onRowDataUpdated}
-            onCutStart={onCutStart}
-            onCutEnd={onCutEnd}
-            onPasteStart={onPasteStart}
-            onPasteEnd={onPasteEnd}
-            onColumnResized={onColumnResized}
-            onFirstDataRendered={onFirstDataRendered}
-            onCellKeyDown={onCellKeyDown}
-            processDataFromClipboard={processDataFromClipboard}
-          />
+          {!props.listItem ? <Skeleton /> :
+            <AgGridReact
+              ref={gridRef}
+              gridOptions={gridOptions}
+              rowData={mainData}
+              columnDefs={colDefs}
+              defaultColDef={defaultColDef}
+              // autoSizeStrategy={autoSizeStrategy}
+              onGridReady={onGridReady}
+              onSelectionChanged={onSelectionChanged}
+              onRowClicked={onRowClicked}
+              onCellValueChanged={onCellValueChanged}
+              onRowDataUpdated={onRowDataUpdated}
+              onCutStart={onCutStart}
+              onCutEnd={onCutEnd}
+              onPasteStart={onPasteStart}
+              onPasteEnd={onPasteEnd}
+              onColumnResized={onColumnResized}
+              onFirstDataRendered={onFirstDataRendered}
+              onCellKeyDown={onCellKeyDown}
+              processDataFromClipboard={processDataFromClipboard}
+            />
           }
         </div>
       </div>
@@ -757,7 +759,7 @@ export const rowAdd = async (gridRef: { api: any }, initData: {} = {}) => {
   var data = {
     [col]: '',
     ...initData,
-    [ROW_INDEX]: rowCount+1,
+    [ROW_INDEX]: rowCount + 1,
     [ROW_TYPE]: ROW_TYPE_NEW,
     [ROW_CHANGED]: true
   }
@@ -771,8 +773,10 @@ export const rowAdd = async (gridRef: { api: any }, initData: {} = {}) => {
 
   await gridRef.api.getRowNode(rowCount.toString()).setSelected(true);
 
-  return {rowIndex: rowCount,
-    colkey: col}
+  return {
+    rowIndex: rowCount,
+    colkey: col
+  }
 };
 
 const dateFormatter = (params: ValueFormatterParams) => {

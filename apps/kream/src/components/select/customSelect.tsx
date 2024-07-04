@@ -14,7 +14,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
   id: string              // 식별값, valueCol 사용시 의미 없음
-  initText:string           //initText..
+  initText: string           //initText..
   label?: string           // 컴포넌트 라벨, null 시 id 값으로 표시
   listItem?: gridData     // 메인 데이터
   displayCol?: string     // row 선택시 select 컴포넌트에 보여줄 컬럼
@@ -25,6 +25,7 @@ type Props = {
   isSelectRowAfterRender?: boolean     // 초기 렌더시 첫번째값 선택 여부
   defaultValue?: string   // 기본값, 설정시 isNoSelect는 무시
   inline?: boolean
+  isDisplay?: boolean
 }
 
 type GridStyle = {
@@ -46,7 +47,8 @@ function CustomSelect(props: Props) {
   const gridRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
-  const { id, label,initText = 'Select an Option', listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender } = props;
+  const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay } = props;
+  const customselect = true
   const defaultStyle = {
     width: '200px',
     ...style
@@ -61,7 +63,7 @@ function CustomSelect(props: Props) {
   //let initText = 'Select an option';
   const [displayText, setDisplayText] = useState(initText);
   const [filteredData, setFilteredData] = useState(listItem);
-  
+
   // 옵션을 토글하는 함수
   const toggleOptions = () => {
     setIsOpen(!isOpen);
@@ -132,7 +134,7 @@ function CustomSelect(props: Props) {
     toggleOptions();
   }
 
-  const setDisplayVal = (row:any) => {
+  const setDisplayVal = (row: any) => {
     var val = initText;
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
@@ -140,14 +142,14 @@ function CustomSelect(props: Props) {
     setDisplayText(val);
   }
 
-  const handleXClick = (e: any) => {    
+  const handleXClick = (e: any) => {
     setDisplayText(initText);
     setSelectedValue('');
     setFilteredData(listItem);
     setIsOpen(false);
   }
 
-  const handleCellKeyDown = (e:CellKeyDownEvent | FullWidthCellKeyDownEvent) => {
+  const handleCellKeyDown = (e: CellKeyDownEvent | FullWidthCellKeyDownEvent) => {
     const keyboardEvent = e.event as unknown as KeyboardEvent;
     const key = keyboardEvent.key;
     if (key.length) {
@@ -163,37 +165,37 @@ function CustomSelect(props: Props) {
   }
 
   const handleCustChange = (input: string) => {
-    
-      let inputVal = input.toString().toUpperCase();
-      log("MaskedInputField onChange", inputVal);
-      if (!inputVal || inputVal === initText) {
-        setFilteredData(listItem);
-        return;
-      } 
-      let visible = gridOption?.colVisible?.visible;
-      let filterCols = listItem?.fields.map((obj: { [x: string]: any; }) => obj["name"])
-                        .filter((val:string) => {
-                          if (visible) return gridOption?.colVisible?.col.includes(val);
-                          else return !gridOption?.colVisible?.col.includes(val);
-                        });
-      
-      var filtered = { 
-        fields: [...listItem?.fields],
-        data: [...listItem?.data.filter((d:{ [x: string]: any; }) => {
-          let bool = false;
-          for (let i = 0; i < filterCols.length; i++) {
-            let col = filterCols[i];
-            // log("filtered", col,d,d[col]);
-            if (d[col] && d[col].toUpperCase().includes(inputVal)) {
-              bool = true;
-              break;
-            }
-          }
-          return bool;
-        })]
-      };
 
-      setFilteredData(filtered);       
+    let inputVal = input.toString().toUpperCase();
+    log("MaskedInputField onChange", inputVal);
+    if (!inputVal || inputVal === initText) {
+      setFilteredData(listItem);
+      return;
+    }
+    let visible = gridOption?.colVisible?.visible;
+    let filterCols = listItem?.fields.map((obj: { [x: string]: any; }) => obj["name"])
+      .filter((val: string) => {
+        if (visible) return gridOption?.colVisible?.col.includes(val);
+        else return !gridOption?.colVisible?.col.includes(val);
+      });
+
+    var filtered = {
+      fields: [...listItem?.fields],
+      data: [...listItem?.data.filter((d: { [x: string]: any; }) => {
+        let bool = false;
+        for (let i = 0; i < filterCols.length; i++) {
+          let col = filterCols[i];
+          // log("filtered", col,d,d[col]);
+          if (d[col] && d[col].toUpperCase().includes(inputVal)) {
+            bool = true;
+            break;
+          }
+        }
+        return bool;
+      })]
+    };
+
+    setFilteredData(filtered);
   }
 
   return (
@@ -203,7 +205,7 @@ function CustomSelect(props: Props) {
         className="py-0.5 flex items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700"
         style={{ position: 'relative' }}
       >
-        <Label id={id} name={label} />
+        <Label id={id} name={label} isDisplay={isDisplay} />
 
         <div ref={ref}
           className={`custom-select-container ${isOpen ? 'active' : ''}`}
@@ -216,12 +218,12 @@ function CustomSelect(props: Props) {
             // border: '1px solid #ccc'
           }}
         >
-          <MaskedInputField id={''} value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8' 
+          <MaskedInputField id={''} value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8'
             events={{
               onChange(e) {
-                  e.preventDefault();
-                  if (!isOpen) setIsOpen(true);
-                  handleCustChange(e.target.value);
+                e.preventDefault();
+                if (!isOpen) setIsOpen(true);
+                handleCustChange(e.target.value);
               },
               onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
                 switch (e.key) {
@@ -229,14 +231,14 @@ function CustomSelect(props: Props) {
                   case "ArrowDown":
                     // ref2?.current?.focus();
                     e.preventDefault();
-                    log("onKeyDown",id, gridRef.current);
+                    log("onKeyDown", id, gridRef.current);
                     gridRef.current.api.setFocusedCell(0, valueCol![0]);
-                    
+
                     break;
                 }
               },
               onFocus(e) {
-                  e.target.select();
+                e.target.select();
               },
             }}
           />
@@ -254,21 +256,22 @@ function CustomSelect(props: Props) {
           </div>
         </div>
         <div className='close'
-            style={{
-              position: 'absolute',
-              top: '50%',
-              right: '30px',
-              transform: 'translateY(-50%)',
-              cursor: 'pointer',
-            }}
-            onClick={handleXClick}
-          ><IoMdClose /></div>
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: '30px',
+            transform: 'translateY(-50%)',
+            cursor: 'pointer',
+          }}
+          onClick={handleXClick}
+        ><IoMdClose /></div>
         {isOpen &&
           <div ref={ref2}
             className="py-0.5 absolute left-0 flex bg-opacity-50 top-10"
             style={{ ...defaultGridStyle }}
           >
             <Grid
+              customselect={customselect}
               gridRef={gridRef}
               listItem={filteredData}
               options={{ ...gridOption, gridHeight: defaultGridStyle.height, isSelectRowAfterRender: isSelectRowAfterRender }}
