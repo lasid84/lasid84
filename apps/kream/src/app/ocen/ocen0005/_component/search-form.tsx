@@ -117,7 +117,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker id="to_date" value={to_date} options={{ inline: true, textAlign: 'center', freeStyles: "border-1 border-slate-300" }} lwidth='w-20' height="h-8" />
           </div>
 
-          <div className={"col-span-1"}>
+          <div className={"col-span-2"}>
             <CustomSelect
               id="cust_code"
               initText='Select'
@@ -135,10 +135,10 @@ const SearchForm = ({ loadItem }: any) => {
             <MaskedInputField id="wb_no" label="mwb_hwb" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
             <MaskedInputField id="cust_nm" value={objState.searchParams?.cust_nm} options={{ textAlign: 'center', inline: true, noLabel: false, outerClassName: 'hidden' }} height='h-8' />
           </div>
-          <div className={"col-span-1"}>
+          {/* <div className={"col-span-1"}>
             <MaskedInputField id="bk_id" label="bk_id" value={bk_id} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
-            {/* <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' /> */}
-          </div>
+            <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+          </div> */}
           <div className={"col-span-1"}>
             <ReactSelect
               id="create_user" label="create_user" dataSrc={createuser as data}

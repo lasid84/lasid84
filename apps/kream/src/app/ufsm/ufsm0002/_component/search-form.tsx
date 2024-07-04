@@ -138,7 +138,7 @@ const SearchForm = ({ loadItem }: any) => {
             <div className={"col-span-2"}>
               <CustomSelect
                 id="cust_code"
-                initText='Select an option'
+                initText='Select an Customer'
                 listItem={custcode as gridData}
                 valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
                 displayCol="cust_nm"
@@ -148,6 +148,7 @@ const SearchForm = ({ loadItem }: any) => {
                 gridStyle={{ width: '600px', height: '300px' }}
                 style={{ width: '1000px', height: "8px" }}
                 inline={true}
+                isDisplay={true}
               />
               <MaskedInputField id="wb_no" label="mwb_no" value={wb_no} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
               <MaskedInputField id="cust_nm" value={objState.searchParams?.cust_nm} options={{ textAlign: 'center', inline: true, noLabel: false, outerClassName: 'hidden' }} height='h-8' />

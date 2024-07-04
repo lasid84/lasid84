@@ -140,6 +140,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 gridStyle={{ width: '600px', height: '300px' }}
                                 style={{ width: '1000px', height: "8px" }}
                                 inline={true}
+                                isDisplay={true}
                             />
                             {/* <ReactSelect
                                 id="main_cust_code" dataSrc={maincustcode as data}
