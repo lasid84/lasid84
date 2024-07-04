@@ -138,7 +138,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                     dataType: { "bz_reg_no": "bizno" }
                                 }}
                                 gridStyle={{ width: '600px', height: '300px' }}
-                                style={{ width: '1000px', height: "8px" }}
+                                style={{ width: '200px', height: "8px" }}
                                 inline={true}
                                 isDisplay={true}
                             />

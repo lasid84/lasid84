@@ -47,7 +47,7 @@ function CustomSelect(props: Props) {
   const gridRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
-  const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay } = props;
+  const { id, label, initText = 'Select an Option', listItem, inline = false, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay } = props;
   const customselect = true
   const defaultStyle = {
     width: '200px',
@@ -59,6 +59,8 @@ function CustomSelect(props: Props) {
     zIndex: 99,
     ...gridStyle
   }
+
+  const inline_style = inline ? 'flex-row' : 'flex' 
 
   //let initText = 'Select an option';
   const [displayText, setDisplayText] = useState(initText);
@@ -202,13 +204,13 @@ function CustomSelect(props: Props) {
     <>
       <div
         {...register(id)}
-        className="py-0.5 flex items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700"
+        className={`w-full py-0.5 ${inline_style} items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700`}
         style={{ position: 'relative' }}
       >
         <Label id={id} name={label} isDisplay={isDisplay} />
 
         <div ref={ref}
-          className={`custom-select-container ${isOpen ? 'active' : ''}`}
+          className={`custom-select-container ${isOpen ? 'active' : ''} w-full`}
           onClick={toggleOptions}
           style={{
             width: defaultStyle.width,
@@ -218,7 +220,7 @@ function CustomSelect(props: Props) {
             // border: '1px solid #ccc'
           }}
         >
-          <MaskedInputField id={''} value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8'
+          <MaskedInputField id={''} value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8' 
             events={{
               onChange(e) {
                 e.preventDefault();
@@ -248,7 +250,7 @@ function CustomSelect(props: Props) {
               position: 'absolute',
               top: '50%',
               right: '10px',
-              transform: 'translateY(-50%)',
+              transform: inline ? 'translateY(-10%)' : 'translateY(-50%)',
               cursor: 'pointer',
             }}
           >
@@ -260,7 +262,7 @@ function CustomSelect(props: Props) {
             position: 'absolute',
             top: '50%',
             right: '30px',
-            transform: 'translateY(-50%)',
+            transform: inline ? 'translateY(-10%)' : 'translateY(-50%)',
             cursor: 'pointer',
           }}
           onClick={handleXClick}
