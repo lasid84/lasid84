@@ -61,8 +61,6 @@ function CustomSelect(props: Props) {
   //let initText = 'Select an option';
   const [displayText, setDisplayText] = useState(initText);
   const [filteredData, setFilteredData] = useState(listItem);
-
-  log("customSelect start", listItem, filteredData);
   
   // 옵션을 토글하는 함수
   const toggleOptions = () => {
@@ -71,41 +69,6 @@ function CustomSelect(props: Props) {
   };
 
   useEffect(() => {
-    // if (gridRef.current && !isNoSelect) {
-    //   gridRef.current.api.forEachNode((node:IRowNode, i:number) => {
-    //     if (i === 0) {
-    //       node.setSelected(true);
-    //       log("customeSelect isReady", gridRef.current, node);
-
-    //       gridRef.current.api.dispatchGridEvent({
-    //         type: 'rowClicked',
-    //         event: null,
-    //         rowIndex: node.rowIndex,
-    //         rowPinned: null,
-    //         context: null,
-    //         api: gridRef.current.api,
-    //         columnApi: gridRef.current.getColumnApi(),
-    //       });
-
-
-
-    //     }
-    //   })
-    // }
-
-  //   if (isSelectRowAfterRender && listItem?.data) {
-  //     if (displayText === initText) {
-  //       var row = listItem.data[0];
-  //       var val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
-  //       log("customSelect==================", row, val, displayCol, row[0], displayText, initText);
-  //       setDisplayText(val);
-  //       setSelectedValue(row)
-  //     };
-  //   }
-  //   if(getValues('cust_nm')){
-  //     console.log('?test?')
-  //     setDisplayText(getValues('cust_nm'))
-  //   }
     if (!filteredData) {
       setFilteredData(listItem);
     }
@@ -253,7 +216,7 @@ function CustomSelect(props: Props) {
             // border: '1px solid #ccc'
           }}
         >
-          <MaskedInputField id="waybill_no" label="waybill_no" value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8' 
+          <MaskedInputField id={''} value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8' 
             events={{
               onChange(e) {
                   e.preventDefault();
@@ -267,7 +230,7 @@ function CustomSelect(props: Props) {
                     // ref2?.current?.focus();
                     e.preventDefault();
                     log("onKeyDown",id, gridRef.current);
-                    gridRef.current.api.setFocusedCell(0, id);
+                    gridRef.current.api.setFocusedCell(0, valueCol![0]);
                     
                     break;
                 }

@@ -17,7 +17,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
 
 
-export default function OCEN0002() {
+export default function OCEN0006() {
 
     const [state, dispatch] = useReducer(reducer, {
         objState: {
@@ -49,9 +49,9 @@ export default function OCEN0002() {
                 <SearchForm  />
                 <div className="grid w-full h-[calc(100vh-100px)] grid-cols-3">
                     <MasterGrid  />
-                    <div className="grid h-full col-span-2 grid-rows-2 ">
-                        <div className="row-span-1"><DetailInfo /></div>
-                        <div className="row-span-1"><DetailGrid initData={initData}/></div>
+                    <div className="grid h-full col-span-2 grid-rows-3 ">
+                        <div className="row-span-2"><DetailInfo /></div>
+                        <DetailGrid initData={initData}/>
                     </div>
                 </div>
             </div>
