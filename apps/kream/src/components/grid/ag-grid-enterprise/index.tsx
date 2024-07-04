@@ -10,7 +10,7 @@ import 'ag-grid-enterprise';
 import { useConfigs } from "states/useConfigs";
 import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent,
+  GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, RowDoubleClickedEvent,
   PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
   SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent,
   FirstDataRenderedEvent,
@@ -59,6 +59,7 @@ export type gridData = {
 
 type GridEvent = {
   onRowClicked?: (params: RowClickedEvent) => void;
+  onRowDoubleClicked ? : (params: RowDoubleClickedEvent) => void;
   onSelectionChanged?: (params: SelectionChangedEvent) => void;
   onCellValueChanged?: (params: CellValueChangedEvent) => void;
   onCutStart?: (params: CutStartEvent) => void;
@@ -570,6 +571,15 @@ const ListGrid: React.FC<Props> = memo((props) => {
     if (event?.onRowClicked) event.onRowClicked(param);
   }
 
+
+  const onRowDoubleClicked = (param: RowDoubleClickedEvent) => {
+    // log("onRowClicked")
+    // return {"colId": param.node.id, ...param.node.data};
+
+    if (event?.onRowDoubleClicked) event.onRowDoubleClicked(param);
+  }
+
+
   const onCellValueChanged = (param: CellValueChangedEvent) => {
     // log("onCellValueChanged1", param.node.data['__changed'])
     param.node.data[ROW_CHANGED] = true
@@ -719,6 +729,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               onGridReady={onGridReady}
               onSelectionChanged={onSelectionChanged}
               onRowClicked={onRowClicked}
+              onRowDoubleClicked={onRowDoubleClicked}
               onCellValueChanged={onCellValueChanged}
               onRowDataUpdated={onRowDataUpdated}
               onCutStart={onCutStart}

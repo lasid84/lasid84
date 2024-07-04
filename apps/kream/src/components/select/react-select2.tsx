@@ -90,8 +90,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 else label = item[Object.keys(item)[1]];
 
                 if (defaultValue) {
-                     log("defaultValue : ", defaultValue);
-                     log("defaultValue1 : ", value);
+                     //log("defaultValue : ", defaultValue);
+                     //log("defaultValue1 : ", value);
                     if (value === defaultValue) {
                         setFirstVal(value);
                         setFirstLab(label);

@@ -128,7 +128,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                         <div className="col-span-1">
                             <CustomSelect
                                 id="main_cust_code"
-                                initText="Select a Customer"
+                                initText={mSelectedRow?.main_cust_code}
                                 // label="trans_mode"
                                 listItem={maincustcode as data}
                                 valueCol={["cust_code", "cust_nm"]}
