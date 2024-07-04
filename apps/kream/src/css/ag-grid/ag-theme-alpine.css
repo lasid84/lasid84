@@ -4,8 +4,13 @@
   font-weight: normal;
   font-style: normal;
 }
+<<<<<<< HEAD
 .ag-theme-customselect.ag-theme-customselect, .ag-theme-customselect-dark {
   --ag-alpine-active-color: #4821f3;
+=======
+.ag-theme-alpine, .ag-theme-alpine-dark {
+  --ag-alpine-active-color: #2196f3;
+>>>>>>> 4e1cd58fe806ddb4fa04a13ad063eee63c440c7c
   --ag-selected-row-background-color: rgba(33, 150, 243, 0.3);
   --ag-row-hover-color: rgba(91, 55, 250, 0.1);
   --ag-column-hover-color: rgba(33, 150, 243, 0.1);

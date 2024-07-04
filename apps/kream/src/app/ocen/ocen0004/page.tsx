@@ -41,7 +41,6 @@ export default function OCEN0004() {
     useEffect(() => {
         const params = getMenuParameters(menu_param);
         dispatch({ cont_type: params.cont_type });
-        log("===============", params);
     }, [menu_param])
 
     return (

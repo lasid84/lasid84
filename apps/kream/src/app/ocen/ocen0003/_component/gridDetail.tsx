@@ -30,7 +30,7 @@ const DetailGrid: React.FC<Props> = () => {
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData(objState?.mSelectedRow, SEARCH_D, SP_GetDetailData);
+    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({...objState?.mSelectedRow,pickup_type: objState.pickup_type}, SEARCH_D, SP_GetDetailData);
 
     useEffect(() => {
         if (true) {

@@ -29,11 +29,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
 
     const gridOption: GridOption = {
-        colVisible: { col: ["trans_mode", "trans_type",  "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
+        colVisible: { col: ["pipeline_tx_id", "mwb_status", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "h-[calc(100vh-200px)]",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
         dataType: {
-            "bk_dd": "date", "etd": "date", "eta": "date", "final_eta": "date","doc_close_dd": "date","cargo_close_dd": "date","pickup_dd": "date",
+            "executed_on_date": "date", "accounting_date": "date", "imp_actg_intrfc_status_date": "date", "create_date": "date",
             "volume": "number", "gross_weight": "number", "volume_weight": "number", "chargeable_weight": "number",
         },
         isAutoFitColData: true,

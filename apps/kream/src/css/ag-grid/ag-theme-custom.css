@@ -61,10 +61,13 @@
     --ag-cell-horizontal-border: solid #ececec;
 }
 
-.ag-theme-custom.ag-theme-custom .ag-row-selected {
+.ag-theme-custom.ag-theme-custom .ag-row-selected, .ag-theme-custom-dark.ag-theme-custom-dark .ag-row-selected {
     background-color: rgba(133, 176, 211, 0.3);
   }
-
+  
+.ag-theme-custom.ag-theme-custom .ag-row-pinned, .ag-theme-custom-dark.ag-theme-custom-dark .ag-row-pinned {
+    background-color: rgba(207, 211, 133, 0.3);
+}
 
 .ag-theme-custom-dark.ag-theme-custom-dark, .ag-theme-custom-dark {
     --ag-balham-active-color: #00B0FF;

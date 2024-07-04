@@ -36,14 +36,14 @@ const Item: React.FC<NavigationState> = ({ menu_seq, url, icon, title, badge, it
     }
 
     return (
-      <div className={`left-sidebar-item ${active ? "active" : ""} ${hidden ? "hidden-sibling " : "open-sibling "} dark:bg-gray-800 dark:text-white dark:border-gray-800`} onClick={handleClick}>
+      <div className={`left-sidebar-item ${active ? "active" : ""} ${hidden ? "hidden-sibling " : "open-sibling "} dark:bg-gray-800 dark:text-white dark:border-gray-800`} >
         <Link href={{
           pathname: url,
           query: { ...query }
         }}
           as={url}>
           {icon}
-          <span className="w-full title">{t(title)}</span>
+          <span className="w-full title" onClick={handleClick}>{t(title)}</span>
           {badge && (
             <span className={`badge badge-circle badge-sm ${badge.color}`}>
               {badge.text}

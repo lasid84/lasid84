@@ -48,7 +48,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                         , "gl_code", "bill_yn"], visible: false
                 },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-                
+                minWidth: {"charge_desc":180},
+                maxWidth: {invoice_seq:80},
                 gridHeight: "h-full",
                 // editable: ["trans_mode"],
                 dataType: { "create_date": "date", "bz_reg_no": "bizno", 
@@ -59,14 +60,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 total: {
                     invoice_seq:"count", invoice_amt:"sum", local_amt:"sum", waybill_amt:"sum"
                 },
-                // typeOptions: {
-                //     "invoice_amt" : {isAllowDecimal:true, decimalLimit:2},
-                //     "local_amt" : {isAllowDecimal:true, decimalLimit:2},
-                // },
-                // isMultiSelect: false,
                 // isAutoFitColData: true,
-                // alignLeft: ["major_category", "bill_gr1_nm"],
-                // alignRight: [],
                 isShowRowNo:false
             };
 

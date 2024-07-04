@@ -10,8 +10,8 @@ import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageMGrid } from "layouts/grid/grid";
 import { Button } from 'components/button'
-import Modal from "../../../ocen/ocen0002/_component/popupInterface";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import Modal from "./popupInterface";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -28,7 +28,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
         colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
-        gridHeight: "100%",
+        gridHeight: "h-full",
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
         // checkbox: ["no"],
         // editable: ["trans_mode"],
@@ -51,7 +51,6 @@ const MasterGrid: React.FC<Props> = ({ }) => {
 
         // const row = onSelectionChanged(param)
         const selectedRow = param.api.getSelectedRows()[0];
-
         log("handleSelectionChanged", selectedRow)
         dispatch({ mSelectedRow: selectedRow, isDSearch: true });
 
@@ -72,12 +71,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
 
     return (
         <>
-            <PageMGrid
-                right={
-                    <>
-                        <Button id={"interface"} onClick={onInterface} />
-                    </>
-                }>
+            <PageMGrid>
                 <Grid
                     gridRef={gridRef}
                     listItem={mainData as gridData}
