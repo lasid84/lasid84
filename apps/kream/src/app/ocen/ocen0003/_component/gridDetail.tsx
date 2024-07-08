@@ -40,7 +40,7 @@ const DetailGrid: React.FC<Props> = () => {
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
                 minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
-                maxWidth : {"use_yn": 80, "def": 80  },
+                // maxWidth : {"use_yn": 80, "def": 80  },
                 editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
                 dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
                 isAutoFitColData: false,
@@ -99,7 +99,6 @@ const DetailGrid: React.FC<Props> = () => {
         // log("onSave", gridRef.current.api, modifiedRows);
         if (hasData) {
             toastSuccess('Success.');
-            detailRefetch();
         }
 
     };
@@ -110,7 +109,7 @@ const DetailGrid: React.FC<Props> = () => {
                 title={<LabelGrid id={'pickup'} />}
                 right={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false })} />
+                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "def": false })} />
                         <Button id={"save"} onClick={onSave} />
                     </>
                 }>

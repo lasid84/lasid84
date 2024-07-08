@@ -20,3 +20,4 @@ module.exports = {
 }
 
 // console.log(encrypt("1q2w#E$R"));
+// console.log(decrypt("U2FsdGVkX19KXrtkdBtzNeYuX16FiOaeNWi9zWSRMoM="));

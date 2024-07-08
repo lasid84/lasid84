@@ -770,6 +770,7 @@ export const rowAdd = async (gridRef: { api: any }, initData: {} = {}) => {
   var data = {
     [col]: '',
     ...initData,
+    use_yn: true,
     [ROW_INDEX]: rowCount + 1,
     [ROW_TYPE]: ROW_TYPE_NEW,
     [ROW_CHANGED]: true

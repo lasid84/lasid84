@@ -6,7 +6,7 @@ import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
-import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageGrid } from "layouts/grid/grid";
 import { LabelGrid } from "@/components/label"
@@ -66,20 +66,23 @@ const DetailGrid: React.FC<Props> = ({ cont_type }) => {
 
     const onSave = () => {
         log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
-
+        var hasData = false
         gridRef.current.api.forEachNode((node: any) => {
-            var data = { ...node.data };
+            var data = node.data;
             gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
+            log("===onSave")
             if (data.__changed) {
-                if (data.cust_code && data.cont_seq) { //수정
-                    Update.mutate(data);
-                } else { //신규
+                hasData = true;
+                if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
                     data.carrier_code = objState.mSelectedRow.carrier_code;
                     Create.mutate(data);
                 }
+                else { //수정
+                    Update.mutate(data);
+                }
             }
         });
-        toastSuccess('Success.');
+        if (hasData) toastSuccess('Success.');
 
     };
 

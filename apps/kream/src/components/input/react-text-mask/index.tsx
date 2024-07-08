@@ -73,7 +73,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     // log("MaskedInputField useEffect", id, value, selectedVal);
-    setValue(id, value);
+    if (id) setValue(id, value);
     setSelectedVal(value === undefined ? '' : value);
   }, [value])
 
@@ -109,7 +109,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     log("handleChange", e?.target?.value)
 
-    setValue(id, e?.target?.value);
+    if (id) setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
 
     if (events?.onChange) {
@@ -120,7 +120,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   function handleFocus(e: FocusEvent<HTMLInputElement>) {
     log("handleChange", e.target?.value)
 
-    setValue(id, e?.target?.value);
+    if (id) setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
 
     if (events?.onFocus) {
