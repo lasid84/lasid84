@@ -38,6 +38,7 @@ module.exports = {
 
   deploy : {
     api_prod : {
+      name : 'api',
       key : './id_rsa-api-prod', 
       user : 'sdd_it',
       host : ['10.33.63.177'],
