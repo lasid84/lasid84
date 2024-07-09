@@ -42,3 +42,8 @@ apps/api/dist/configs/
 apps/web/dist/configs/
 apps/api/configs/
 apps/web/configs/
+
+#Keyfile
+./id_rsa-batch-prod
+./id_rsa-kream-prod
+./id_rsa-api-prod
