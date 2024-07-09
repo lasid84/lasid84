@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useReducer, useMemo, useCallback } from "react";
+import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
 import { SP_Load, SP_GetMasterData, SP_GetDetailData } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
@@ -27,7 +27,8 @@ export default function OCEN0006() {
             isIFPopUpOpen: false,
             mSelectedRow: {},
             dSelectedRow: {},
-            cont_type: ''
+            cont_type: '',
+            gridRef_m: useRef<any | null>(null)
         }
     });
     const { objState } = state;

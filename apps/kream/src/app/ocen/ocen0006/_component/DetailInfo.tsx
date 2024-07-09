@@ -1,3 +1,5 @@
+import { ROW_INDEX } from "@/components/grid/ag-grid-enterprise";
+import { GroupBox } from "@/components/groupBox";
 import { MaskedInputField, TextArea } from "components/input";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { useCallback } from "react";
@@ -8,7 +10,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 const CustomerDetail: React.FC = () => {
 
     const { dispatch, objState } = useAppContext();
-    const { mSelectedRow } = objState;
+    const { mSelectedRow, gridRef_m } = objState;
 
     const formZodMethods = useForm({
         // resolver: zodResolver(formZodSchema),
@@ -30,6 +32,30 @@ const CustomerDetail: React.FC = () => {
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
 
     }, [objState.popType]);
+
+    const handleMaskedInputChange = (e:any) => {
+        // log("=========handleMaskedInputChange", e)
+        const id = e.target.id;
+        const val = getValues(id);
+        if (gridRef_m) {
+            const rowNode = gridRef_m.current.api.getRowNode((mSelectedRow[ROW_INDEX] -1).toString());
+            log("=========handleMaskedInputChange", rowNode, id, val)
+            rowNode.setDataValue(id, val);
+            dispatch({ mSelectedRow: {...rowNode.data}})
+        }
+    }
+
+    const handleTextAreaChange = (e:any) => {
+        // log("=========handleMaskedInputChange", e)
+        const id = e.target.id;
+        const val = getValues(id);
+        if (gridRef_m) {
+            const rowNode = gridRef_m.current.api.getRowNode((mSelectedRow[ROW_INDEX] -1).toString());
+            log("=========handleMaskedInputChange", rowNode, id, val)
+            rowNode.setDataValue(id, val);
+            dispatch({ mSelectedRow: {...rowNode.data}})
+        }
+    }
 
     return (
         <FormProvider{...formZodMethods}>
@@ -88,31 +114,153 @@ const CustomerDetail: React.FC = () => {
                     <div className="col-span-2">
 
                     </div>
-                    <TextArea id="nature_of_goods" rows={7} cols={20}  value="" 
-                        options={{ 
-                            isReadOnly: false, 
-                            inline:true, 
-                            freeStyles:"resize-none"
-                        }} />
 
-<div style={{ position: 'relative', border: '1px solid black', padding: '20px', borderRadius: '5px', marginTop: '20px' }}>
-<div style={{ position: 'absolute', top: '-20px', left: '10px', padding: '0 5px' }}>타이틀
-                        <MaskedInputField 
-                            id="addr1" 
-                            value={objState.mSelectedRow?.addr1}
-                            options = {{ 
-                                isReadOnly:true
+                    <div className="row-span-2">
+                        <TextArea id="cont_add_info" rows={6} cols={0}  
+                            value="사업자번호 : 6478800087
+
+적하보험부보 하기
+
+SIN  0.02255%
+HKG 0.02181"
+                            options={{ 
+                                isReadOnly: false, 
+                                inline:false, 
+                                freeStyles:"resize-none"
+                            }} 
+                            events={{
+                                onChange:handleTextAreaChange
                             }}
-                        />
-                        <MaskedInputField 
-                            id="addr1" 
-                            value={objState.mSelectedRow?.addr1}
-                            options = {{ 
-                                isReadOnly:true
+                            />
+
+                        <GroupBox title="customs_agent_info">
+                            <MaskedInputField 
+                                id="customs_agent" 
+                                value={"kwe/ 넥스트 "}
+                                lwidth="w-12"
+                                options = {{ 
+                                    isReadOnly:false,
+                                    inline:true
+                                }}
+                                events={{
+                                    onChange:handleMaskedInputChange
+                                }}
+                            />
+
+                            <MaskedInputField 
+                                id="customs_agent_pic" 
+                                value={objState.mSelectedRow?.addr1}
+                                lwidth="w-12"
+                                options = {{ 
+                                    isReadOnly:false,
+                                    inline:true
+                                }}
+                                events={{
+                                    onChange:handleMaskedInputChange
+                                }}
+                            />
+                            <MaskedInputField 
+                                id="customs_agent_tel" 
+                                value={objState.mSelectedRow?.addr1}
+                                lwidth="w-12"
+                                options = {{ 
+                                    isReadOnly:false,
+                                    inline:true
+                                }}
+                                events={{
+                                    onChange:handleMaskedInputChange
+                                }}
+                            />
+                        </GroupBox>
+                    </div>
+
+                    <div className="row-span-2">
+                        <GroupBox title="pickup_info">
+                            <MaskedInputField 
+                                id="pickup_gubn" 
+                                value={objState.mSelectedRow?.addr1}
+                                lwidth="w-12"
+                                options = {{ 
+                                    isReadOnly:false,
+                                    inline:true
+                                }}
+                                events={{
+                                    onChange:handleMaskedInputChange
+                                }}
+                            />
+                            <MaskedInputField 
+                                id="pickup_pic" 
+                                value={objState.mSelectedRow?.addr1}
+                                lwidth="w-12"
+                                options = {{ 
+                                    isReadOnly:false,
+                                    inline:true
+                                }}
+                                events={{
+                                    onChange:handleMaskedInputChange
+                                }}
+                            />
+                            <MaskedInputField 
+                                id="pickup_tel" 
+                                value={objState.mSelectedRow?.addr1}
+                                lwidth="w-12"
+                                options = {{ 
+                                    isReadOnly:false,
+                                    inline:true
+                                }}
+                                events={{
+                                    onChange:handleMaskedInputChange
+                                }}
+                            />
+                            <TextArea id="pickup_place" rows={6} cols={0}  
+                                value="통관운송 KWE
+
+입고 : 부산시 기장군 기장읍 대변로 32 ㈜인퓨전프로젝
+입고받을 담당자 : 송지미 사원 (M. 010-4240-3708)"
+                                options={{ 
+                                    isReadOnly: false, 
+                                    inline:false, 
+                                    freeStyles:"resize-none"
+                                }} 
+                                events={{
+                                    onChange:handleTextAreaChange
+                                }}
+                                />
+                        </GroupBox>
+                    </div>
+                    
+                    <div className="col-span-2">
+                        <TextArea id="remark" rows={5} cols={0}  
+                            value="적하보험부보 
+징수형태 11, 거래구분 11
+
+6403.91-9000 신발 13%
+6402.99-9000 고무제슬리퍼 13%"
+                            options={{ 
+                                isReadOnly: false, 
+                                inline:false, 
+                                freeStyles:"resize-none"
+                            }} 
+                            events={{
+                                onChange:handleTextAreaChange
                             }}
-                        />
+                            />
+
+                        <TextArea id="freigh_info" rows={5} cols={1}  
+                            value="CREDIT,  관부가세까지 후불
+
+송부: ifp@ifpkorea.com"
+                            options={{ 
+                                isReadOnly: false, 
+                                inline:false, 
+                                freeStyles:"resize-none"
+                            }} 
+                            events={{
+                                onChange:handleTextAreaChange
+                            }}
+                            />
                     </div>
-                    </div>
+         
                 </div>
             </form>
         </FormProvider>

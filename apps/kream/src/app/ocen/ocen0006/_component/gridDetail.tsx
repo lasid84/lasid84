@@ -120,8 +120,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                     <><LabelGrid id={'pic_nm'} /></>}
                 right={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false })} />
-                        <Button id={"save"} onClick={onSave} />
+                        <Button id={"add"} width="w-15" onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false })} />
+                        <Button id={"save"} width="w-15" onClick={onSave} />
                     </>
                 }>
                 <Grid

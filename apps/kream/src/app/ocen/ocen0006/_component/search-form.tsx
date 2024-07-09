@@ -53,6 +53,10 @@ const SearchForm: React.FC<Props> = (props) => {
 
   const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
+  const onSave = () => {
+    const params = getValues();
+    log("OCEN0006 onSave", params)
+  }
 
   return (
     <FormProvider {...methods}>
@@ -60,8 +64,9 @@ const SearchForm: React.FC<Props> = (props) => {
         <PageSearch2
           right={
             <>
-              <Button id={"search"} onClick={onSearch} width={`w-32`}/>
-              <Button id={"interface"} onClick={onInterface} width={`w-32`} />
+              <Button id={"interface"} onClick={onInterface} width={`w-24`} />
+              <Button id={"search"} onClick={onSearch} width={`w-24`}/>
+              <Button id={"save"} onClick={onSave} width={`w-24`}/>
             </>
           }>
           <></>

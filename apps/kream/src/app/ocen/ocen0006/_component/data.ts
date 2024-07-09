@@ -43,7 +43,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
         user_id
       , ipaddr
     ],
-    inproc: 'account.f_acct2011_get_cust',
+    inproc: 'ocean.f_ocen0006_get_cust',
     isShowLoading: true
     }
   

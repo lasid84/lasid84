@@ -8,10 +8,11 @@ const { log } = require('@repo/kwe-lib/components/logHelper')
 
 export type TextareaProps = {
   id: string;
-  name?: string;
+  label?: string;
   value?: any;
   rows: number;
   cols: number;
+  lwidth?: string;
   rules?: Record<string, any>;
   options?: {
     isReadOnly?: boolean;
@@ -24,9 +25,13 @@ export type TextareaProps = {
     radius?: string;
     fontSize?: string;
     textAlign?: string;
+    noLabel?: boolean;
+    isDisplay ?: boolean;      //사용자 권한에 따른 display여부
+    textAlignLB?: string;
+    outerClassName?:string;
   }
   events?: {
-    handleChange?: ChangeEventHandler<HTMLInputElement>,
+    onChange?: ChangeEventHandler<HTMLInputElement>,
   }
 };
 
@@ -34,9 +39,11 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
   const { register, setValue, getValues } = useFormContext();
 
 
-  const { id, name, value, rows, cols, rules, options = {}, events } = props
+  const { id, label, value, rows, cols, rules, options = {}, events, lwidth } = props
   const { isReadOnly, placeholder, isCircle, inline, fontWeight = "normal",
-    freeStyles = '', radius = 'none', bgColor, fontSize = "[13px]", textAlign } = options
+    freeStyles = '', radius = 'none', bgColor, fontSize = "[13px]", textAlign,
+    noLabel = false, isDisplay=true, textAlignLB, outerClassName = 'h-fit'
+  } = options
   const [text, setText] = useState(value);
 
   useEffect(() => {
@@ -59,13 +66,17 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
   const handleChange = (e:any) => {
     log(e.target.value)
     setText(e.target.value);
+
+    if (events?.onChange) events.onChange(e);
   };
 
 
   return (
-    <InputWrapper outerClassName="" inline={inline}>
-      <div className='w-full row'>
-        <Label id={id} name={name} />
+    <InputWrapper outerClassName={outerClassName} inline={inline}>
+      {/* <div className='w-full row'> */}
+        {/* <Label id={id} name={name} /> */}
+        {!noLabel && <Label id={id} name={label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />}
+        <div className={`w-full py-0.5 ${outerClassName}`}>
         <textarea
           {...register(id, rules)}
           placeholder={placeholder}
@@ -76,7 +87,8 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
           value={text}
           id={id}
           // disabled={isCircle}
-          className={clsx(`form-input block ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
+          spellCheck="false"
+          className={clsx(`form-input block w-full h-full ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
         focus:border-blue-500 focus:ring-0 text-${fontSize} text-${textAlign} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
         dark:text-white dark:border-gray-800 dark:bg-gray-900
         ${freeStyles}
@@ -84,7 +96,8 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
           // onKeyDown={handleKeyDown}
           onChange={handleChange}
         />
-      </div>
+        </div>
+      {/* </div> */}
     </InputWrapper>
 
   )

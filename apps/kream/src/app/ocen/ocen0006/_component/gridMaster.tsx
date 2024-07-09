@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
+import { useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
 import { SP_GetMasterData } from "./data";
 import { PageState, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
@@ -21,9 +21,10 @@ type Props = {
 
 const MasterGrid: React.FC<Props> = ({ }) => {
 
-    const gridRef = useRef<any | null>(null);
+    // const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
     // const { searchParams, isMSearch, mSelectedRow } = objState;
+    const [gridRef, setGridRef] = useState(objState.gridRef_m);
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
@@ -66,6 +67,10 @@ const MasterGrid: React.FC<Props> = ({ }) => {
             dispatch({ isMSearch: false });
         }
     }, [objState?.isMSearch]);
+
+    useEffect(() => {
+        setGridRef(objState.gridRef_m);
+    },[objState.gridRef_m])
 
     const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
