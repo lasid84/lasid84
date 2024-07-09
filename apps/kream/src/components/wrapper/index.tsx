@@ -21,9 +21,12 @@ export const InputWrapper: React.FC<InputWrapperProps> = ({
   }
   return (
     // hidden block
-    // <div className={outerClassName}>
-      <div className={`w-full space-y-1 ${outerClassName}`}>{children}</div>
-    // </div>
+    // // <div className={outerClassName}>
+    //   <div className={`w-full space-y-1 ${outerClassName}`}>{children}</div>
+    // // </div>
+    <div className={outerClassName}>
+      <div className={`w-full space-y-1`}>{children}</div>
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import  {PageSearch2}  from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
+import { ROW_TYPE_NEW } from "@/components/grid/ag-grid-enterprise";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -22,7 +23,8 @@ type Props = {
 
 // const SearchForm = memo(({initData}:Props) => {
 const SearchForm: React.FC<Props> = (props) => {
-  const { dispatch } = useAppContext();
+  const { dispatch, objState } = useAppContext();
+  const [ref, setRef] = useState(objState.gridRef_m);
 
   const methods = useForm({
   });
@@ -41,6 +43,10 @@ const SearchForm: React.FC<Props> = (props) => {
     onSearch();
   }, [])
 
+  useEffect(() => {
+    setRef(objState.gridRef_m);
+  }, [objState.gridRef_m])
+
   const onRefresh = () => { dispatch({ isMSearch: true }) }
 
 
@@ -54,8 +60,21 @@ const SearchForm: React.FC<Props> = (props) => {
   const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
   const onSave = () => {
-    const params = getValues();
-    log("OCEN0006 onSave", params)
+    var hasData = false;
+      ref.current.api.forEachNode((node: any) => {
+          var data = node.data;
+          if (data.__changed) {
+              hasData = true;
+              if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
+                  log("onSaveContainerYard_NEW", data);
+                  // data.place_code = objState.mSelectedRow.place_code;
+                  // Create.mutate(data);
+              } else { //수정
+                  log("onSaveContainerYard_UPD", data);
+                  // Update.mutate(data);
+              }
+          }
+      });
   }
 
   return (

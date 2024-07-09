@@ -30,11 +30,12 @@ const CustomerDetail: React.FC = () => {
     } = formZodMethods;
 
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-
-    }, [objState.popType]);
+        log("onFormSubmit", param)
+    }, []);
 
     const handleMaskedInputChange = (e:any) => {
         // log("=========handleMaskedInputChange", e)
+        e.preventDefault();
         const id = e.target.id;
         const val = getValues(id);
         if (gridRef_m) {
@@ -47,11 +48,12 @@ const CustomerDetail: React.FC = () => {
 
     const handleTextAreaChange = (e:any) => {
         // log("=========handleMaskedInputChange", e)
+        e.preventDefault();
         const id = e.target.id;
         const val = getValues(id);
         if (gridRef_m) {
             const rowNode = gridRef_m.current.api.getRowNode((mSelectedRow[ROW_INDEX] -1).toString());
-            log("=========handleMaskedInputChange", rowNode, id, val)
+            log("=========handleTextAreaChange", rowNode, id, val)
             rowNode.setDataValue(id, val);
             dispatch({ mSelectedRow: {...rowNode.data}})
         }
@@ -117,12 +119,7 @@ const CustomerDetail: React.FC = () => {
 
                     <div className="row-span-2">
                         <TextArea id="cont_add_info" rows={6} cols={0}  
-                            value="사업자번호 : 6478800087
-
-적하보험부보 하기
-
-SIN  0.02255%
-HKG 0.02181"
+                            value={objState.mSelectedRow?.cont_add_info}
                             options={{ 
                                 isReadOnly: false, 
                                 inline:false, 

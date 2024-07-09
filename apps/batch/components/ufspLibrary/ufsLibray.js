@@ -492,7 +492,7 @@ class Library {
                         method: method,
                         headers: {
                             "Content-Type" : "application/json;charset=UTF-8",
-                            "Host": new URL(url).host
+                            // "Host": new URL(url).host
                             // ...header
                         },//this.requestHeader,
                         body: JSON.stringify(bodyText),
@@ -501,7 +501,7 @@ class Library {
                         method: method,
                         headers: {
                             "Content-Type" : "application/json;charset=UTF-8",
-                            "Host": new URL(url).host
+                            // "Host": new URL(url).host
                             // ...header
                         },//this.requestHeader,
                     });

@@ -61,7 +61,6 @@ const MasterGrid: React.FC<Props> = ({ }) => {
 
     useEffect(() => {
         if (objState.isMSearch) {
-            mainRemove();
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });

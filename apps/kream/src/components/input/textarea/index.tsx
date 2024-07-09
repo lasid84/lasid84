@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, ChangeEventHandler, useEffect, useState } from "react";
+import { HTMLInputTypeAttribute, ChangeEventHandler, useEffect, useState, ChangeEvent } from "react";
 import { useFormContext } from "react-hook-form";
 import clsx from "clsx"
 import { InputWrapper } from "components/wrapper";
@@ -31,7 +31,7 @@ export type TextareaProps = {
     outerClassName?:string;
   }
   events?: {
-    onChange?: ChangeEventHandler<HTMLInputElement>,
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   }
 };
 
@@ -60,12 +60,13 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
     // }
     // log(event)
     // event.preventDefault();
-    setText(event.target.value);
+    // setText(event.target.value);
   }
 
   const handleChange = (e:any) => {
-    log(e.target.value)
-    setText(e.target.value);
+    log("TextArea handleChange", e.target?.value)
+    if (id) setValue(id, e?.target?.value);
+    setText(e.target?.value);
 
     if (events?.onChange) events.onChange(e);
   };
