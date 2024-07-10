@@ -82,6 +82,8 @@ async function startScraping() {
 
             let uploadData = await ufsp.getChargeUploadData();
 
+            if (!uploadData.length) continue;
+            
             for (const dataItem of uploadData) {
                 await ufsp.addJsonResult('t_hbl_charge_if', '', '', dataItem, 'addBulk');
                 await ufsp.startScript(script);
