@@ -73,7 +73,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
                         left={<Tab loadItem={loadItem} onClickTab={handleOnClickTab} />
                         }
                         right={<>
-                            <Button id="save" disabled={false} onClick={handleSubmit(onFormSubmit)} width='w-32'/>
+                            <Button id="save" disabled={false} onClick={handleSubmit(onFormSubmit)} width='w-15'/>
                         </>
                         }>
                         <div className={`flex flex-col w-full ${selectedTab == "NM" ? "" : "hidden"}`}>

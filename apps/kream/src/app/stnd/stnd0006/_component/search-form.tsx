@@ -98,8 +98,8 @@ const SearchForm = memo(({ loadItem }: any) => {
         <PageSearchButton
           right={
             <>
-              <Button id={"search"} onClick={onSearch} />
-              <Button id={"new"} onClick={onNew} />
+              <Button id={"search"} onClick={onSearch} width='w-32'/>
+              <Button id={"new"} onClick={onNew} width='w-32'/>
               {/* <Button id={"reset"} onClick={() => {
                 setFocus("trans_mode");
                 reset();

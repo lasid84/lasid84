@@ -7,7 +7,7 @@ import { crudType, useAppContext, SEARCH_M } from "components/provider/contextOb
 import { SP_UpdateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { ReactSelect, data } from "@/components/select/react-select2"
-import { ReactSelect1 } from "@/components/select/react-select3"
+import { ReactMultiSelect } from "@/components/select/react-multi-select"
 import { MaskedInputField } from "@/components/input/react-text-mask";
 const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
 
@@ -131,7 +131,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
 
                         <div className="col-span-1">
-                            <ReactSelect1
+                            <ReactMultiSelect
                                 id="perm_id" label="perm_id" dataSrc={permissionid as data}
                                 width='w-96' lwidth='w-20' height="8px"
                                 options={{

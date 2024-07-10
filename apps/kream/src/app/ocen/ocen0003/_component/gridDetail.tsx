@@ -109,8 +109,8 @@ const DetailGrid: React.FC<Props> = () => {
                 title={<LabelGrid id={'pickup'} />}
                 right={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "def": false })} />
-                        <Button id={"save"} onClick={onSave} />
+                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "def": false })} width='w-15'/>
+                        <Button id={"save"} onClick={onSave} width='w-15'/>
                     </>
                 }>
                 <Grid

@@ -107,7 +107,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                 title={"Carrier코드 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
                 bottomRight={
                     <>
-                        <Button id={"check"} onClick={closeModal} icon={null} width="w-32" />
+                        <Button id={"check"} onClick={closeModal} width="w-32" />
                     </>
                 }
             >

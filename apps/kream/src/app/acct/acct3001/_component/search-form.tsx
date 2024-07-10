@@ -61,7 +61,7 @@ const SearchForm: React.FC<Props> = (props) => {
         <PageSearch2
           right={
             <>
-              <Button id={"search"} onClick={onSearch} width={`w-32`}  />
+              <Button id={"search"} onClick={onSearch} width='w-32' />
             </>
           }>
           <></>
