@@ -26,6 +26,7 @@ type Props = {
   defaultValue?: string   // 기본값, 설정시 isNoSelect는 무시
   inline?: boolean
   isDisplay?: boolean
+  isDisplayX?: boolean    // X 아이콘 표시여부(필수값 여부)
 }
 
 type GridStyle = {
@@ -45,9 +46,10 @@ function CustomSelect(props: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const ref2 = useRef<HTMLDivElement>(null);
   const gridRef = useRef<any | null>(null);
+  const inputRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
-  const { id, label, initText = 'Select an Option', listItem, inline = false, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay } = props;
+  const { id, label, initText = 'Select an Option', listItem, inline = false, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true } = props;
   const customselect = true
   const defaultStyle = {
     width: '200px',
@@ -69,7 +71,11 @@ function CustomSelect(props: Props) {
   // 옵션을 토글하는 함수
   const toggleOptions = () => {
     setIsOpen(!isOpen);
-    if (!isOpen) setIsGridReady(false);
+    if (!isOpen) {
+      setIsGridReady(false);
+      
+    }
+
   };
 
   useEffect(() => {
@@ -101,7 +107,7 @@ function CustomSelect(props: Props) {
         for (var i = 0; i < filteredData?.data.length; i++) {
           if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
         }
-        gridRef.current.api.setFocusedCell(i, id);
+        gridRef.current?.api?.setFocusedCell(i, id);
       }
     }
   }, [isOpen, isGridReady])
@@ -114,10 +120,10 @@ function CustomSelect(props: Props) {
   }
 
   const handleOnGridReady = (param: any) => {
-    log("handleOnGridReady");
-    // setIsGridReady(true);
-    // onGridReady(param);
-    // setIsReady(true);
+    // const gridApi = param.api;
+    // // const gridElement = gridApi.gridCore.eGridDiv; // AG Grid의 최상위 DOM 요소에 접근
+    // const gridCore = gridApi.gridCore;
+    // log("handleOnGridReady", gridApi, gridCore);
   }
 
   const handleComponentStateChanged = (param: any) => {
@@ -132,7 +138,7 @@ function CustomSelect(props: Props) {
     if (valueCol) valueCol.map(key => setValue(key, row[key]));
     else Object.keys(row).map(key => setValue(key, row[key]));
 
-    log("setSelectedValue", valueCol, row, getValues())
+    // log("setSelectedValue", valueCol, row, getValues())
     toggleOptions();
   }
 
@@ -160,7 +166,11 @@ function CustomSelect(props: Props) {
           let selectedRow = e.data; //gridRef.current.api.getSelectedRows()[0];
           setSelectedValue(selectedRow);
           setDisplayVal(selectedRow);
-          log("handleCellKeyDown", selectedRow)
+          moveNextComponent();
+          // const form = document.querySelector('form');
+          // const gridApi = gridRef.current.api;
+          // const gridElement = gridApi.gridCore.eGridDiv;
+          // log("handleCellKeyDown8", selectedRow, gridElement);
           break;
       }
     }
@@ -200,17 +210,34 @@ function CustomSelect(props: Props) {
     setFilteredData(filtered);
   }
 
+  const moveNextComponent = () => {
+
+    const formElement = document.querySelector('form'); // 예시로 폼 요소를 선택합니다.
+    const inputElement = document.querySelector(`#${id}`);
+    if (formElement && inputElement) {
+      const elementsArray = Array.from(formElement.elements).filter(v => !v.className.includes("ag-input-field-input") && !v.className.includes("ag-button"));
+      const gridIndex = elementsArray.indexOf(inputElement);
+      if (gridIndex !== -1 && gridIndex < elementsArray.length - 1) {
+        const nextElement = elementsArray[gridIndex + 1];
+        // 다음 요소에 포커스를 설정하거나 원하는 작업을 수행할 수 있습니다.
+        if (nextElement instanceof HTMLElement) {
+          nextElement.focus();
+        }
+      }
+    }
+  };
+
   return (
     <>
       <div
-        {...register(id)}
+        // {...register(id)}
         className={`w-full py-0.5 ${inline_style} items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700`}
         style={{ position: 'relative' }}
       >
         <Label id={id} name={label} isDisplay={isDisplay} />
 
         <div ref={ref}
-          className={`custom-select-container ${isOpen ? 'active' : ''} w-full`}
+          className={`custom-select ${isOpen ? 'active' : ''} w-full`}
           onClick={toggleOptions}
           style={{
             width: defaultStyle.width,
@@ -220,7 +247,7 @@ function CustomSelect(props: Props) {
             // border: '1px solid #ccc'
           }}
         >
-          <MaskedInputField id={''} value={displayText} options={{ textAlign: 'center', noLabel: true }} height='h-8' 
+          <MaskedInputField id={id} value={displayText} options={{ textAlign: 'center', noLabel: true, isNotManageSetValue:true }} height='h-8' 
             events={{
               onChange(e) {
                 e.preventDefault();
@@ -228,18 +255,20 @@ function CustomSelect(props: Props) {
                 handleCustChange(e.target.value);
               },
               onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+                if (!isOpen) setIsOpen(true);
                 switch (e.key) {
                   case "ArrowUp":
                   case "ArrowDown":
                     // ref2?.current?.focus();
                     e.preventDefault();
-                    log("onKeyDown", id, gridRef.current);
+                    log("onKeyDown", id, gridRef, gridRef.current);
                     gridRef.current.api.setFocusedCell(0, valueCol![0]);
 
                     break;
                 }
               },
               onFocus(e) {
+                log("=====onFocus")
                 e.target.select();
               },
             }}
@@ -253,11 +282,15 @@ function CustomSelect(props: Props) {
               transform: inline ? 'translateY(-10%)' : 'translateY(-50%)',
               cursor: 'pointer',
             }}
+            onClick={() => {
+              const inputElement = document.querySelector(`#${id}`);
+              if (inputElement instanceof HTMLElement) inputElement.focus();
+            }}
           >
             {isOpen ? <FaChevronUp className="arrow-icon" /> : <FaChevronDown className="arrow-icon" />}
           </div>
         </div>
-        <div className='close'
+        {isDisplayX ? <div className='close'
           style={{
             position: 'absolute',
             top: '50%',
@@ -267,6 +300,8 @@ function CustomSelect(props: Props) {
           }}
           onClick={handleXClick}
         ><IoMdClose /></div>
+        : <></>
+        }
         {isOpen &&
           <div ref={ref2}
             className="py-0.5 absolute left-0 flex bg-opacity-50 top-10"

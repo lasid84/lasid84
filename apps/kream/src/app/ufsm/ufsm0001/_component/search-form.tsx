@@ -142,6 +142,7 @@ const SearchForm = memo(({ loadItem }: any) => {
                 listItem={custcode as gridData}
                 valueCol={["cust_code", "cust_nm"]}
                 displayCol="cust_nm"
+                // isDisplayX={false}
                 gridOption={{
                   colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
                   dataType: { "bz_reg_no": "bizno" }

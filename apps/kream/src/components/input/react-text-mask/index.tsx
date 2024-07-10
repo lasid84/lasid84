@@ -43,6 +43,7 @@ type Props = {
     outerClassName?: string;    //outerClassName
     isAutoComplete?: string;
     isDisplay ?: boolean;      //사용자 권한에 따른 display여부
+    isNotManageSetValue? : boolean; //값 변경시 setValue 처리 여부
   };
 
   events?: {
@@ -62,7 +63,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
     freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
-    isDisplay=true
+    isDisplay=true, isNotManageSetValue=false
   } = options;
   const { mask, pipe, placeholder } = getMask(type, options);
   // log("===MaskedInputField", type, mask);
@@ -73,7 +74,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     // log("MaskedInputField useEffect", id, value, selectedVal);
-    if (id) setValue(id, value);
+    if (id && !isNotManageSetValue) setValue(id, value);
     setSelectedVal(value === undefined ? '' : value);
   }, [value])
 
@@ -109,7 +110,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     log("handleChange", e?.target?.value)
 
-    if (id) setValue(id, e?.target?.value);
+    if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
 
     if (events?.onChange) {
@@ -120,7 +121,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   function handleFocus(e: FocusEvent<HTMLInputElement>) {
     log("handleChange", e.target?.value)
 
-    if (id) setValue(id, e?.target?.value);
+    if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
 
     if (events?.onFocus) {

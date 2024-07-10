@@ -374,11 +374,11 @@ class Library {
             const header = this.convertJSON(data.header);
             const result = await this.executeAPI(data.method, data.url, header, '');
             
-            v_tracking = 'send post finish';
+            v_tracking = 'send get finish';
         
             msg_result = result;
     
-            v_tracking = 'get post result complete';
+            v_tracking = 'get get result complete';
     
             await this.updateResult(data, '', result);
 

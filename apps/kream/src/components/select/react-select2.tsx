@@ -1,6 +1,6 @@
 import React, { useRef, FocusEventHandler, KeyboardEventHandler, useEffect, useState } from 'react';
 import { Controller, useFormContext } from "react-hook-form";
-import { InputActionMeta, default as ReactSelectComponent } from "react-select";
+import { InputActionMeta, default as ReactSelectComponent, MenuProps } from "react-select";
 // import { Label, InputWrapper } from "components/react-hook-form"
 import { InputWrapper } from "components/wrapper"
 import { Label } from "components/label"
@@ -66,7 +66,10 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const defHeight = height ? height : "h-6";
     const display = isDisplay? '':'block hidden ';
     // const ref = React.useRef(null)
-    const ref = useRef<HTMLDivElement>(null)
+    const ref = useRef<any>(null)
+    const [menuIsOpen, setMenuIsOpen] = useState(false);
+    const [delayEnter, setDelayEnter] = useState(false);
+    const [target, setTarget] = useState(null);
 
     const { register, setValue, getValues } = useFormContext();
 
@@ -119,6 +122,22 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         }
     }, [firstLab, firstVal]);
 
+    const moveNextComponent = (target: EventTarget | null) => {
+        // log("moveNextComponent", target)
+        if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLTextAreaElement) {
+          const form = target.form;
+          if (form) {
+            // log('enter event1', target);
+            const index = Array.from(form.elements).indexOf(target);
+            // log('enter event', index);
+            if (index > -1 && index + 1 < form.elements.length) {
+              const nextElement = form.elements[index + 1] as HTMLElement;
+              nextElement.focus();
+            }
+          }
+        }
+      };
+
     function handleKeyDown(e: any) {
         try {
                 //const menu = ref.current.select.menuListRef;
@@ -135,13 +154,30 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 //   );
                 // });              
 
-            if (e.key === "Enter") {
-                const form = e.target.form;
-                log('enter event1', e);
-                const index = [...form].indexOf(e.target);
-                log('enter event', index)
-                form[index + 1].focus();
+            // log("handleKEyDonw")
+            if (menuIsOpen) {
+                setDelayEnter(true);
+                setTarget(e.target);
+            }
+            else if (e.key === "Enter" /*&& !menuIsOpen*/) {
+
                 e.preventDefault();
+                
+                //클릭 실행후 함수내로 안돌아옴...ㅠ
+                // if (menuIsOpen) {
+                //     const focusedOption = ref.current?.menuListRef?.current.querySelector('.react-select__option--is-focused');
+                //     log("-0-0-0-0-0", focusedOption);
+                //     if (focusedOption) {
+                //         (focusedOption as HTMLElement).click();
+                //     }
+                // }
+
+                // const form = e.target.form;
+                // log('enter event1', e);
+                // const index = [...form].indexOf(e.target);
+                //log('enter event')
+                // form[index + 1].focus();
+                moveNextComponent(e.target);
             }
 
             if (events?.onKeyDown) {
@@ -153,6 +189,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     }
 
     const handleChange = (e: any) => {
+        // log("=-=-=-handleChange", e)
         setValue(id, e.value);
         setSelectedVal({ id:id, value: e.value, label: e.label });
         let dispCol = displayCol?.length 
@@ -161,8 +198,21 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         if (events?.onChange) {
             events.onChange({[id]:e.value, [dispCol]:e.label});
         }
+
+        if (delayEnter) {
+            // log("handelChange", delayEnter, e);
+            setDelayEnter(false);
+            moveNextComponent(target);
+        }
     }
 
+    const handleMenuOpen = () => {
+        setMenuIsOpen(true);
+      };
+    
+    const handleMenuClose = () => {
+        setMenuIsOpen(false);
+    };
 
 
     const customStyles = {
@@ -222,7 +272,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                             return (
                                 <div className={`${display} my-react-select-container flex-row ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
-                                        //ref={ref}
+                                        ref={ref}
                                         id={id}
                                         classNamePrefix="my-react-select"
                                         value={selectedVal}
@@ -231,6 +281,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                         instanceId={id}
                                         onChange={(e: any) => { handleChange(e); }}
                                         onKeyDown={(e:any) => { handleKeyDown(e);}}
+                                        onMenuOpen={handleMenuOpen}
+                                        onMenuClose={handleMenuClose}       
                                         menuPortalTarget={document.getElementsByClassName('dialog-base')[0] as HTMLElement}
                                         menuPosition='fixed'
                                         styles={customStyles}
