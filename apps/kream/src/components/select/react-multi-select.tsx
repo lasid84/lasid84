@@ -54,7 +54,7 @@ export type ReactSelectProps = {
     events?: event
 };
 
-export const ReactSelect1: React.FC<ReactSelectProps> = (props) => {
+export const ReactMultiSelect: React.FC<ReactSelectProps> = (props) => {
     const { control } = useFormContext();
     const { id, label, dataSrc, width, height, lwidth, options = {}, events } = props;
     const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true, isDisplay = true } = options;

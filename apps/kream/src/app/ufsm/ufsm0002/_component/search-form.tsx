@@ -101,10 +101,10 @@ const SearchForm = ({ loadItem }: any) => {
             right={
               <>
                 <div className={"col-span-1"}>
-                  <Button id="interface" disabled={false} onClick={onInterface} />
+                  <Button id="search" disabled={false} onClick={onSearch} />
                 </div>
                 <div className={"col-span-1"}>
-                  <Button id="search" disabled={false} onClick={onSearch} />
+                  <Button id="interface" disabled={false} onClick={onInterface} />
                 </div>
               </>
             }>

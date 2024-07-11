@@ -100,9 +100,9 @@ const SearchForm: React.FC<Props> = (props) => {
         <PageSearch2
           right={
             <>
-              <Button id={"search"} onClick={onSearch} width={`w-20`}/>
-              <Button id={"add_m"} onClick={onAddContainerYard} width={`w-20`}/>
-              <Button id={"save_m"} onClick={onSaveContainerYard} width={`w-20`}/>
+              <Button id={"search"} onClick={onSearch} width='w-32'/>
+              <Button id={"add_m"} onClick={onAddContainerYard} width='w-32'/>
+              <Button id={"save_m"} onClick={onSaveContainerYard} width='w-32'/>
             </>
           }>
           <></>

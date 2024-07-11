@@ -66,8 +66,8 @@ const GridCharges: React.FC<Props> = memo(({ loadData }) => {
             <PageSearch
                 right={
                 <>
-                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {'waybill_no': objState.MselectedTab, 'type': 'I'})} />
-                <Button id={"save"} onClick={onSave} />
+                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {'waybill_no': objState.MselectedTab, 'type': 'I'})} width="w-15"/>
+                <Button id={"save"} onClick={onSave} width="w-15"/>
                 </>
             }>
                 <></>

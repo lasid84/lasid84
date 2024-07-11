@@ -73,8 +73,8 @@ const SearchForm = memo(({ loadItem }: any) => {
           <PageSearchButton
             right={
               <>
-                <Button id={"search"} onClick={onSearch} width="w-44"/>
-                <Button id={"interface"} onClick={onInterface} width="w-44"/>
+                <Button id={"search"} onClick={onSearch} width="w-32"/>
+                <Button id={"interface"} onClick={onInterface} width="w-32"/>
                 {/* <Button id={"add"} onClick={onInterface} width="w-44" /> */}
               </>
             }>

@@ -75,7 +75,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
             <PageMGrid
                 right={
                     <>
-                        <Button id={"interface"} onClick={onInterface} />
+                        <Button id={"interface"} onClick={onInterface} width='w-32'/>
                     </>
                 }>
                 <Grid
