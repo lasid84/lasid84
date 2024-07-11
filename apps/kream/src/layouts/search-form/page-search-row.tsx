@@ -8,6 +8,32 @@ export type PageSearchProps = {
   addition?: React.ReactNode;
 };
 
+
+export const PageBKTabContent: React.FC<PageSearchProps> = ({ title, bottom, right, children, addition }) => {
+  return (
+    <>
+      <div className="flex w-full bg-white dark:bg-gray-900 dark:border-gray-800 dark:text-white">
+        <div className="w-full rounded-[5px] mb-1 ">
+          <div className="flex w-full px-4 py-1 space-y-1">
+              {addition}
+            <div className="flex-col w-5/12 gap-1 ">
+              {children}
+            </div>
+            <div className="flex w-2/12 grid-flow-row-dense gap-2 md:flex-row md:grid md:grid-rows-2 md:grid-cols-2 place-items-end">
+              {/* <span className="ml-auto"></span>  */}
+              {right}
+            </div>
+          </div>
+          {/*button*/}
+          <div className="px-1 py-1 w-full border-b border-[#f2f2f2] dark:border-gray-800">
+            {bottom}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 //2분할(왼쪽: 검색조건| 오른쪽: icon, -Tab)
 export const PageTabContent: React.FC<PageSearchProps> = ({ title, bottom, right, children, addition }) => {
   return (
