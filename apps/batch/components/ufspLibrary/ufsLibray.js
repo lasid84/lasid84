@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
 const { workerData } = require('worker_threads'); 
 const { executFunction } = require('../api.service/api.service');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
-const { log, error } = require('@repo/kwe-lib/components/logHelper');
+const { log, error, logWithFile } = require('@repo/kwe-lib/components/logHelper');
 const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
 
 
@@ -356,6 +356,8 @@ class Library {
                     return await this.calculate(data);
                 case "CALCULATECHARGE":
                     return await this.calculateCharge(data);
+                case "REMOVESTARTDOT":
+                        return await this.removeStartDot(data);
                 case "GOTO":
                     return await this.gotoUrl(data);
 
@@ -423,7 +425,7 @@ class Library {
                 
             }
     
-            v_tracking = 'get post result complete';
+            v_tracking = 'get post result complete-' /*+ JSON.stringify(result) + " / " + JSON.stringify(bodyText)*/;
     
             await this.updateResult(data, bodyText, result);
 
@@ -486,6 +488,7 @@ class Library {
     async executeAPI(method, url, header = {}, bodyText) {
 
         try {
+
             var result = await this.page.evaluate(async (method, url, bodyText) => {
                 let response = method === 'POST' ?
                     await fetch(url, {
@@ -526,7 +529,7 @@ class Library {
                     let message = '';
 
                     message = result.bat.errors.reduce((acc, v) => {
-                        if (v.message.toLowerCase().includes('error')) {
+                        if (v.message && v.message.toLowerCase().includes('error')) {
                             isOnlyWarning = false;
                         }
 
@@ -549,6 +552,8 @@ class Library {
                     throw message;
                 }
             }
+
+            logWithFile(JSON.stringify(bodyText), JSON.stringify(result));
 
             return result;
         }
@@ -641,7 +646,19 @@ class Library {
                 i++;
             }
 
-            // log("calculator - ",this.resultData);
+            log("calculator - ",this.resultData, this.resultData.arrShipment[404]);
+        }
+    }
+
+    async removeStartDot(data) {
+        if (data.tab) {
+            // logWithFile("1)", this.resultData[data.tab])
+            this.resultData[data.tab] = this.resultData[data.tab].map(v => {
+                if (v.startsWith('.0')) return '0';
+                else return v;
+            })
+
+            // logWithFile("2)", this.resultData[data.tab])
         }
     }
 
@@ -670,7 +687,7 @@ class Library {
                 'invoice_exchange_rate' : 2,
                 // 'oc_charge_amt' : 3,
                 'invoice_currency_code' : 4,
-                // 'exchangerate date' : 5,
+                'exchangerate date' : 5,
                 'actual_cost_amt' : 6,
                 'cost_exchange_rate' : 7,
                 'oc_cost_amt' : 8,
@@ -702,6 +719,10 @@ class Library {
                         key = 'cost_amt';
                     }
                     let val = this.resultData.arrCharge[arrCharge.indexOf(key)];
+                    // if (key === 'oc_cost_amt') logWithFile(key, seq, val, bodyText.bat.rqst[0].methodArgs, this.resultData.arrCharge);
+                    if (this.isValidDateForUFS(val) || this.isValidDate(val)) {
+                        val = this.transformDateForUFS(val, '/');
+                    } 
                     bodyText.bat.rqst[0].methodArgs[seq] = val;
                 }
                 return body
@@ -716,13 +737,14 @@ class Library {
                     if (key === 'actual_cost_amt') {
                         key = 'cost_amt';
                     }
-
                     let seq = arrCharge.indexOf(key);
                     
+                    // if (key === 'oc_cost_amt') logWithFile(key, seq, result);
+
                     if (this.isValidDate(val)) {
                         val = this.transformDate(val);
                     } 
-                    // log('======= ', key, seq, val)
+                    log('======= ', key, seq, val)
                     this.resultData.arrCharge[seq] = val;
                 }
             }
@@ -930,6 +952,8 @@ class Library {
 
                     if (val === null) continue;
 
+                    v_tracking = 'calculateCharge update BodyText2 - ' + lowerKey;
+
                     switch (lowerKey) {
                         case "import_export_ind":
                         case "ppc_ind":
@@ -959,14 +983,15 @@ class Library {
                             this.resultData.arrCharge[idx] = val;
                             bodyText = await updateBodyText(bodyText);
                             const result = await this.executeAPI('POST', data.url, data.header, bodyText);
+                            // if (lowerKey === 'cost_amt') logWithFile(key, JSON.stringify(bodyText), JSON.stringify(result));
                             await updateResult(result.bat.methodReturn.arguments);
                             bodyText = await updateBodyText(bodyText);
-                            // log(lowerKey, ' - ', val, result.bat.methodReturn.arguments);
                             break;
                     }
                 }
             }
         } catch (e) {
+            error("calculateCharge - ", v_tracking, e.message)
             throw v_tracking, e
         }
     }
@@ -1137,7 +1162,56 @@ class Library {
     isValidDate(dateString) {
         if (!dateString) return false;
         // 날짜 형식 검사
-        const regex = /^\d{2}\/\d{2}\/\d{4}\s\d{2}:\d{2}:\d{2}$/;
+        var regex = /^\d{2}\/\d{2}\/\d{4}\s\d{2}:\d{2}:\d{2}$/;
+        // const regex = /^\d{2}[-\/][a-zA-Z]{3}[-\/]\d{4}\s\d{2}:\d{2}:\d{2}$/;
+        if (!regex.test(dateString)) {
+            regex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (!regex.test(dateString)) {
+                return false;
+            }
+        }
+      
+        // 날짜 객체 생성
+        const date = new Date(dateString);
+      
+        // // 유효성 검사 (NaN 체크)
+        // if (isNaN(date.getTime())) {
+        //   return false;
+        // }
+
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+            return false;
+        }
+      
+        // 유효한 날짜 문자열
+        return true;
+      }
+
+    transformDate(dateString, symbol = '-') {
+        if (!this.isValidDate(dateString)) {
+            return null;
+          }
+        
+          // 날짜 객체 생성
+          const date = new Date(dateString);
+        
+          // 월 이름 변환
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          const monthIndex = date.getMonth();
+          const monthName = monthNames[monthIndex];
+        
+          // 변환된 날짜 문자열 생성
+          const transformedDateString = `${date.getDate().toString().padStart(2, '0')}${symbol}${monthName}${symbol}${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+        
+          return transformedDateString;
+    }
+
+    //Body에는 dd/MM/yyyy 형식으로 값을 넣어야함
+    isValidDateForUFS(dateString) {
+        if (!dateString) return false;
+        // 날짜 형식 검사
+        const regex = /^\d{2}[-\/][a-zA-Z]{3}[-\/]\d{4}\s\d{2}:\d{2}:\d{2}$/;
+        // const regex = /^\d{2}[-\/][a-zA-Z]{3}[-\/]\d{4}\s\d{2}:\d{2}:\d{2}$/;
         if (!regex.test(dateString)) {
           return false;
         }
@@ -1158,21 +1232,20 @@ class Library {
         return true;
       }
 
-    transformDate(dateString) {
-        if (!this.isValidDate(dateString)) {
+    transformDateForUFS(dateString, symbol = '/') {
+
+        if (!this.isValidDateForUFS(dateString)) {
             return null;
           }
         
           // 날짜 객체 생성
           const date = new Date(dateString);
         
-          // 월 이름 변환
-          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-          const monthIndex = date.getMonth();
-          const monthName = monthNames[monthIndex];
-        
-          // 변환된 날짜 문자열 생성
-          const transformedDateString = `${date.getDate().toString().padStart(2, '0')}-${monthName}-${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns month from 0 to 11
+          const year = date.getFullYear();
+
+          var transformedDateString = `${day}/${month}/${year}`;
         
           return transformedDateString;
     }
