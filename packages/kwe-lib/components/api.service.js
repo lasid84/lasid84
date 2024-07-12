@@ -34,7 +34,7 @@ async function dataCall(client, inproc, inparam, invalue, config) {
     const url = '/api/data';
     // const client = await init(config);
     const response = await client.post(url, {inproc, inparam, invalue}
-                                    , {timeout:60000}
+                                    // , {timeout:60000}
                     );
     // log("-----------------", response)
     const { numericData, textData, cursorData } = response.data
@@ -62,7 +62,7 @@ async function dataCall(client, inproc, inparam, invalue, config) {
       }
 
       // 잠시 대기 후 재시도
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 200));
   };
 };
 
