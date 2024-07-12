@@ -190,7 +190,7 @@ class Library {
             }
 
         } catch (ex) {
-            error("ex_login:", ex)
+            error("ex_login_api:", ex)
             throw ex
         }
     }
