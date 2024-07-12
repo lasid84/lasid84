@@ -12,7 +12,7 @@ let _arrThread:any = [];
 function init() {
   
   let filePath = process.cwd() + '/configs/thread.ini';
-  // error("filePath", filePath)
+  console.log("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
     //fileContent = fileContent.replaceAll('\r', '');
