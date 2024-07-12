@@ -81,6 +81,7 @@ export const createServer = (): Express => {
       return res.json({ message: `hello ${req.params.name}` });
     })
     .get("/status", (_, res) => {
+      console.log("status");
       return res.json({ ok: true });
     })
     .get("/logout", async (req, res) =>  {
@@ -101,7 +102,7 @@ export const createServer = (): Express => {
     })
     .post('/api/data', async (req, res) => {
       try {
-
+        console.log("api/data");
         const accessToken = req.headers['authorization'];
         // log(accessToken)
         if (!accessToken) {

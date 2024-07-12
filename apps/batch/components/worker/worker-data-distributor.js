@@ -15,7 +15,8 @@ async function setIFDataInit() {
         const inparam = ["in_pgm_code", 'in_idx', 'in_user_id', 'in_ipaddr'];
         const invalue = [pgm, idx, '', ''];
         const inproc = 'scrap.f_scrp0001_set_init_if_data2'; 
-        await executFunction(inproc, inparam, invalue);
+        const result = await executFunction(inproc, inparam, invalue);
+        error(result);
  
     } catch (ex) {
         throw ex;
