@@ -10,6 +10,7 @@ export type PageSearchProps = {
 
 //2분할(왼쪽: 검색조건| 오른쪽: icon, -Tab)
 export const PageTabContent: React.FC<PageSearchProps> = ({ title, bottom, right, children, addition }) => {
+  console.log("PageTabContent",children)
   return (
     <>
       <div className="flex w-full bg-white dark:bg-gray-900 dark:border-gray-800 dark:text-white">
