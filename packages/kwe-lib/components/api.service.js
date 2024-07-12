@@ -26,11 +26,16 @@ const { log, error } = require('./logHelper');
 }
 
 async function dataCall(client, inproc, inparam, invalue, config) {
+  const maxRetries = 3;
+  let retries = 0;
+
   try {
     // log("dataCall");
     const url = '/api/data';
     // const client = await init(config);
-    const response = await client.post(url, {inproc, inparam, invalue});
+    const response = await client.post(url, {inproc, inparam, invalue}
+                                    , {timeout:60000}
+                    );
     // log("-----------------", response)
     const { numericData, textData, cursorData } = response.data
 
@@ -43,12 +48,21 @@ async function dataCall(client, inproc, inparam, invalue, config) {
     }
     
   } catch (ex) {
-    error('api.service-Error fetching data:', ex.message);
-    return {
-      numericData: -1,
-      textData: ex.message,
-      cursorData: null
-    }
+      retries += 1;
+      error('api.service-Error fetching data:', ex.message);
+
+      if (retries >= maxRetries) {
+        error('Max retries reached. Throwing error.');
+        // throw new Error('Failed to fetch data after multiple attempts');
+        return {
+          numericData: -1,
+          textData: ex.message,
+          cursorData: null
+        }
+      }
+
+      // 잠시 대기 후 재시도
+      await new Promise(resolve => setTimeout(resolve, 1000));
   };
 };
 
