@@ -46,12 +46,12 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
-                if (element.cd === selectedRow.mwb_no) { return true }
+                if (element.cd === selectedRow.bk_id) { return true }
             }) !== -1) {
-                dispatch({ MselectedTab: selectedRow.mwb_no })
+                dispatch({ MselectedTab: selectedRow.bk_id })
             } else {
-                objState.tab1.push({ cd: selectedRow.mwb_no, cd_nm: selectedRow.mwb_no })
-                dispatch({ MselectedTab: selectedRow.mwb_no })
+                objState.tab1.push({ cd: selectedRow.bk_id, cd_nm: selectedRow.bk_id })
+                dispatch({ MselectedTab: selectedRow.bk_id })
             }
         }
         dispatch({ isMDSearch: true, mSelectedRow: selectedRow });

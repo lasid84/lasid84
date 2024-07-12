@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, memo } from "react";
-import { SP_Load, SP_GetMasterData, SP_GetWBDetailData } from "./_component/data";
+import { SP_Load, SP_GetWBDetailData } from "./_component/data";
 import { reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
@@ -11,8 +11,10 @@ import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
 import { useSearchParams } from 'next/navigation'
-import WBMain from "./_component/wbMain";
-import WBMainTab from "./_component/wbMainTab"
+import BKMainTab from "./_component/bkMainTab"
+import BKMain from "./_component/bkMain";
+import BKCargo from "./_component/bkCargo";
+import BKSchedule from "./_component/bkSchedule";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -40,18 +42,19 @@ export default function OCEN0005() {
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    const { data: mainData, refetch: mainRefetch } = useGetData({ wb_no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false });
+    const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false });
 
-    const handleOnClickTab = (code: any) => { setselectedTab(code) }
+    const handleOnClickTab = (code: any) => { 
+        setselectedTab(code) }
     const MhandleOnClickTab = (code: any) => {
         if (code.target.id === 'Main') { dispatch({ MselectedTab: code.target.id }) }
         else {
-            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, mwb_no: code.target.id } })
+            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, no: code.target.id } })
         }
     }
     const MhandleonClickICON = (code: any) => {
         let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
-        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, mwb_no: filtered[filtered.length - 1].cd } })
+        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, no: filtered[filtered.length - 1].cd } })
     }
 
 
@@ -91,12 +94,18 @@ export default function OCEN0005() {
                         <div className="w-full"> <MasterGrid initData={initData} /></div>
                     </div></> : <>
                     {/* WayBill Detail 화면 상단{Tab} */}
-                    <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
+                    <BKMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
                     {/* <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} /> */}
 
                     {/* WayBill Detail 화면 하단(Sub) */}
-                    <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
-                        <WBMain loadItem={initData} mainData={mainData} />
+                    <div className={`w-full flex ${selectedTab == "BK" ? "" : "hidden"}`}>
+                        <BKMain loadItem={initData} mainData={mainData} />
+                    </div>
+                    <div className={`w-full flex ${selectedTab == "SK" ? "" : "hidden"}`}>
+                        <BKMain loadItem={initData} mainData={mainData} />
+                    </div>
+                    <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
+                        <BKMain loadItem={initData} mainData={mainData} />
                     </div>
                 </>}
             </div>

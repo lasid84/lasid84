@@ -19,7 +19,7 @@ export const SP_Load = async (searchParam: any) => {
   const params = {
     inparam: ["in_user_id", "in_ipaddr"],
     invalue: [user_id, ipaddr],
-    inproc: 'ocean.f_ocen0005_load',
+    inproc: 'ocean.f_ocen1000_load',
     isShowLoading: false
   }
   // log("Acct1004Load", p);
@@ -60,7 +60,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'ocean.f_ocen0005_get_bk_main',
+    inproc: 'ocean.f_ocen1000_get_bk_main',
     isShowLoading: true
   }
   const result = await executFunction(params);
@@ -95,24 +95,23 @@ export const SP_CreateIFData = async (param: any) => {
 
 export const SP_GetWBDetailData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { wb_no, user_id, ipaddr } = Param;
-  log('ufsm0002 wb_no', wb_no)
+  const { no, user_id, ipaddr } = Param;
+  log('ocen1000 bk_no', no)
 
   const params = {
     inparam: [
-      "in_wb_no"
+      "in_no"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      wb_no
+      no
       , user_id
       , ipaddr
     ],
-    inproc: 'ufsm.f_ufsm0002_get_wb_detail',
+    inproc: 'ocean.f_ocen1000_get_bk_detail',
     isShowLoading: true
   }
   const result = await executFunction(params);
-  log('go home,..', result)
   return result
 }
