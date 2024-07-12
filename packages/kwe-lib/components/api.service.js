@@ -62,7 +62,7 @@ async function dataCall(client, inproc, inparam, invalue, config) {
       }
 
       // 잠시 대기 후 재시도
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 100));
   };
 };
 
