@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
 const { workerData } = require('worker_threads'); 
 const { executFunction } = require('../api.service/api.service');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
-const { log, error, logWithFile } = require('@repo/kwe-lib/components/logHelper');
+const { log, error } = require('@repo/kwe-lib/components/logHelper');
 const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
 
 
@@ -553,7 +553,7 @@ class Library {
                 }
             }
 
-            logWithFile(JSON.stringify(bodyText), JSON.stringify(result));
+            // logWithFile(JSON.stringify(bodyText), JSON.stringify(result));
 
             return result;
         }

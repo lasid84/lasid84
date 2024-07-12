@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 function log(...args) {
     // eslint-disable-next-line no-console -- logger
@@ -11,31 +11,27 @@ function log(...args) {
     development && console.log("LOGGER: ", ...args);
   };
 
-  function error(...args) {
-    console.log("Error LOGGER: ", ...args);
-  };
+  // function logWithFile(...args) {
 
-  function logWithFile(...args) {
+  //   const logFilePath = path.join(__dirname, 'logfile.log');
 
-    const logFilePath = path.join(__dirname, 'logfile.log');
-
-    // eslint-disable-next-line no-console -- logger
-    const production = process.env.NODE_ENV.indexOf('production') > -1;
-    const development = process.env.NODE_ENV.indexOf('development') > -1;
+  //   // eslint-disable-next-line no-console -- logger
+  //   const production = process.env.NODE_ENV.indexOf('production') > -1;
+  //   const development = process.env.NODE_ENV.indexOf('development') > -1;
     
-    const timestamp = new Date().toISOString();
-    var message = args.map(m => m + '\n\n').join('');
-    const logEntry = `${timestamp} - ${message}`;
+  //   const timestamp = new Date().toISOString();
+  //   var message = args.map(m => m + '\n\n').join('');
+  //   const logEntry = `${timestamp} - ${message}`;
 
-    fs.appendFile(logFilePath, logEntry, (err) => {
-        if (err) {
-            console.error('로그 파일에 메시지를 기록할 수 없습니다.', err);
-        } else {
-            console.log('로그 메시지가 기록되었습니다:', logEntry);
-        }
-    });
+  //   fs.appendFile(logFilePath, logEntry, (err) => {
+  //       if (err) {
+  //           console.error('로그 파일에 메시지를 기록할 수 없습니다.', err);
+  //       } else {
+  //           console.log('로그 메시지가 기록되었습니다:', logEntry);
+  //       }
+  //   });
     
-  };
+  // };
 
   function error(...args) {
     console.log("Error LOGGER: ", ...args);
@@ -55,5 +51,5 @@ function log(...args) {
   // }
 
 module.exports = {
-  log, error, logWithFile
+  log, error
 }
