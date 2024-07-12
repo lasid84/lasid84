@@ -1272,7 +1272,8 @@ class Library {
             if (err_msg.toString().indexOf("User not authenticated to request the resource") > -1)
             {
                 v_if_yn = 'N';
-                await this.checkSession(true);
+                // await this.checkSession(true);
+                await this.loginByApi('', true);
             }
     
             const inparam = ['in_pgm_code', 'in_idx', 'in_blno', 'in_create_date', 'in_if_yn','in_result', 'in_err', 'in_user_id', 'in_ipaddr'];
@@ -1319,7 +1320,8 @@ class Library {
             if (err_msg.toString().indexOf("User not authenticated to request the resource") > -1)
             {
                 v_if_yn = 'N';
-                await ufsp.checkSession(true);
+                //await ufsp.checkSession(true);
+                await this.loginByApi('', true);
             }
     
             const inparam = ['in_pgm_code', 'in_idx', 'in_blno', 'in_seq', 'in_if_yn','in_result', 'in_err', 'in_user_id', 'in_ipaddr'];
