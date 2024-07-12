@@ -11,7 +11,7 @@ let _arrThread:any = [];
 
 function init() {
   
-  let filePath = process.cwd() + '/configs/thread.ini';
+  let filePath = process.cwd() + 'dist/configs/thread.ini';
   console.log("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
