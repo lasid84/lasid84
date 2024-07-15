@@ -98,14 +98,14 @@ export default function OCEN0005() {
                     {/* <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} /> */}
 
                     {/* WayBill Detail 화면 하단(Sub) */}
-                    <div className={`w-full flex ${selectedTab == "BK" ? "" : "hidden"}`}>
+                    <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                         <BKMain loadItem={initData} mainData={mainData} />
                     </div>
                     <div className={`w-full flex ${selectedTab == "SK" ? "" : "hidden"}`}>
-                        <BKMain loadItem={initData} mainData={mainData} />
+                        <BKSchedule loadItem={initData} mainData={mainData} />
                     </div>
                     <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
-                        <BKMain loadItem={initData} mainData={mainData} />
+                        <BKCargo loadItem={initData} mainData={mainData} />
                     </div>
                 </>}
             </div>

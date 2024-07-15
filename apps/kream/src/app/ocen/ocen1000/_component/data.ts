@@ -31,7 +31,7 @@ export const SP_Load = async (searchParam: any) => {
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { wb_no, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
-  // log("===param", Param, bl_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr);
+  log("===SP_GetMasterData", Param, fr_date, to_date, cust_code, user_id, ipaddr);
 
   const params = {
     inparam: [
