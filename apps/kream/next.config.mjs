@@ -36,7 +36,7 @@ const nextConfig = {
     }
 }
 
-module.exports = nextConfig
+export default nextConfig;
 
 // const headers = [
 //   "Accept", "Accept-Version", "Content-Length",
