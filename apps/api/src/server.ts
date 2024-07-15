@@ -112,6 +112,7 @@ export const createServer = (): Express => {
         try {
           const decoded = jwt.verify(accessToken, 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=');
         } catch (err) {
+          console.log("err", err)
           error("Authorize Error : ", err.message);
           let dc = new dataContainer(); 
           dc.setNumericData(-1);
