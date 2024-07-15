@@ -33,4 +33,4 @@ function verifyJwt(token)  {
 module.exports = {signJwtAccessToken, verifyJwt}
 
 
-console.log(signJwtAccessToken({}, 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=', DEFAULT_SIGN_OPTION));
+// console.log(signJwtAccessToken({}, 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=', DEFAULT_SIGN_OPTION));

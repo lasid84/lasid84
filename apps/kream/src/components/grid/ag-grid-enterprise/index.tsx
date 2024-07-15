@@ -33,7 +33,7 @@ import { StringValidation } from 'zod';
 // import { SELECTED_ROW } from "./model";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
-const { stringToFullDateString, stringToFullDate, stringToDateString } = require('@repo/kwe-lib/components/dataFormatter.js')
+const { stringToFullDateString, stringToFullDate, stringToDateString, stringToTime } = require('@repo/kwe-lib/components/dataFormatter.js')
 const { sleep } = require('@repo/kwe-lib/components/sleep');
 
 export const ROW_TYPE = '__ROWTYPE';
@@ -405,6 +405,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
               ...cellOption,
               // cellDataType : optCols[col],
               valueFormatter: dateFormatter,
+            }
+          } else if (optCols[col] === 'time') {
+            cellOption = {
+              ...cellOption,
+              // cellDataType : optCols[col],
+              valueFormatter: timeFormatter,
             }
           } else if (optCols[col] === 'number') {
             const typeOpt = options.typeOptions ? options.typeOptions[col] : null;
@@ -793,6 +799,11 @@ export const rowAdd = async (gridRef: { api: any }, initData: {} = {}) => {
 
 const dateFormatter = (params: ValueFormatterParams) => {
   return stringToFullDateString(params.value, '-');
+  // return stringToDateString(params.value, '-');
+}
+
+const timeFormatter = (params: ValueFormatterParams) => {
+  return stringToTime(params.value);
   // return stringToDateString(params.value, '-');
 }
 
