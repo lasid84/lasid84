@@ -102,13 +102,14 @@ export const createServer = (): Express => {
     })
     .post('/api/data', async (req, res) => {
       try {
-        console.log("api/data");
         const accessToken = req.headers['authorization'];
         // log(accessToken)
         if (!accessToken) {
           return res.status(401).json({ error: 'Access token not provided' });
         }
         
+        console.log("api/data", req.body.inproc);
+
         try {
           const decoded = jwt.verify(accessToken, 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=');
         } catch (err) {
