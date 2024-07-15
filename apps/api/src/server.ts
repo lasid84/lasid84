@@ -102,7 +102,7 @@ export const createServer = (): Express => {
     })
     .post('/api/data', async (req, res) => {
       try {
-        // console.log("api/data");
+        console.log("api/data");
         const accessToken = req.headers['authorization'];
         // log(accessToken)
         if (!accessToken) {
