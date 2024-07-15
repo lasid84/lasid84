@@ -8,6 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import { Label } from 'components/label';
 import './custom-select-style.css';
 import { MaskedInputField } from 'components/input';
+import { InputWrapper } from "components/wrapper"
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -27,6 +28,8 @@ type Props = {
   inline?: boolean
   isDisplay?: boolean
   isDisplayX?: boolean    // X 아이콘 표시여부(필수값 여부)
+  noLabel?: boolean       // Label 표시 여부
+  lwidth? : string        // Label 넓이
 }
 
 type GridStyle = {
@@ -49,7 +52,9 @@ function CustomSelect(props: Props) {
   const inputRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
-  const { id, label, initText = 'Select an Option', listItem, inline = false, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true } = props;
+  const { id, label, initText = 'Select an Option', listItem, inline = true, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true 
+    , noLabel = false, lwidth
+  } = props;
   const customselect = true
   const defaultStyle = {
     width: '200px',
@@ -137,22 +142,27 @@ function CustomSelect(props: Props) {
     log("setSelectedValue", valueCol, row)
     if (valueCol) valueCol.map(key => setValue(key, row[key]));
     else Object.keys(row).map(key => setValue(key, row[key]));
+    
 
-    // log("setSelectedValue", valueCol, row, getValues())
+    log("setSelectedValue", valueCol, row, getValues())
     toggleOptions();
   }
 
-  const setDisplayVal = (row: any) => {
+  const setDisplayVal = (row: any | null) => {
+    log("setDisplayVal")
     var val = initText;
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
     }
+    log("setDisplayVal", val, row)
     setDisplayText(val);
   }
 
   const handleXClick = (e: any) => {
-    setDisplayText(initText);
-    setSelectedValue('');
+    log("X2", initText);
+    setSelectedValue({});
+    setDisplayVal(null);
+    // setDisplayText(initText);
     setFilteredData(listItem);
     setIsOpen(false);
   }
@@ -229,13 +239,14 @@ function CustomSelect(props: Props) {
 
   return (
     <>
-      <div
+      {/* <div
         // {...register(id)}
         className={`w-full py-0.5 ${inline_style} items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700`}
         style={{ position: 'relative' }}
       >
-        <Label id={id} name={label} isDisplay={isDisplay} />
-
+        <Label id={id} name={label} isDisplay={isDisplay} /> */}
+      <InputWrapper outerClassName="relative w-full py-0.5 ${inline_style} items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700" inline={inline} >
+        {!noLabel && <Label id={id} name={label} lwidth={lwidth} isDisplay={isDisplay}/>}
         <div ref={ref}
           className={`custom-select ${isOpen ? 'active' : ''} w-full`}
           onClick={toggleOptions}
@@ -247,21 +258,22 @@ function CustomSelect(props: Props) {
             // border: '1px solid #ccc'
           }}
         >
-          <MaskedInputField id={id} value={displayText} options={{ textAlign: 'center', noLabel: true, isNotManageSetValue:true }} height='h-8' 
+          <MaskedInputField id={id} value={displayText} options={{ textAlign: 'center', noLabel: true, isNotManageSetValue:true, isAutoComplete:"off" }} height='h-8' 
             events={{
               onChange(e) {
                 e.preventDefault();
+                log("onChange", e.target.value)
                 if (!isOpen) setIsOpen(true);
                 handleCustChange(e.target.value);
               },
               onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-                if (!isOpen) setIsOpen(true);
                 switch (e.key) {
                   case "ArrowUp":
                   case "ArrowDown":
                     // ref2?.current?.focus();
                     e.preventDefault();
                     log("onKeyDown", id, gridRef, gridRef.current);
+                    if (!isOpen) setIsOpen(true);
                     gridRef.current.api.setFocusedCell(0, valueCol![0]);
 
                     break;
@@ -277,7 +289,7 @@ function CustomSelect(props: Props) {
           <div className="arrow"
             style={{
               position: 'absolute',
-              top: '50%',
+              top: '40%',
               right: '10px',
               transform: inline ? 'translateY(-10%)' : 'translateY(-50%)',
               cursor: 'pointer',
@@ -293,7 +305,7 @@ function CustomSelect(props: Props) {
         {isDisplayX ? <div className='close'
           style={{
             position: 'absolute',
-            top: '50%',
+            top: '40%',
             right: '30px',
             transform: inline ? 'translateY(-10%)' : 'translateY(-50%)',
             cursor: 'pointer',
@@ -323,7 +335,8 @@ function CustomSelect(props: Props) {
             />
           </div>
         }
-      </div>
+      {/* </div> */}
+      </InputWrapper>
     </>
   );
 }

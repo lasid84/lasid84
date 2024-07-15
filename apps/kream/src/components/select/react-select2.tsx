@@ -69,6 +69,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const ref = useRef<any>(null)
     const [menuIsOpen, setMenuIsOpen] = useState(false);
     const [delayEnter, setDelayEnter] = useState(false);
+    const [isChangeFinish, setisChangeFinish] = useState(false);
     const [target, setTarget] = useState(null);
 
     const { register, setValue, getValues } = useFormContext();
@@ -122,6 +123,14 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
         }
     }, [firstLab, firstVal]);
 
+    useEffect(() => {
+        if (delayEnter && isChangeFinish){
+            moveNextComponent(target);
+            setDelayEnter(false);
+            setisChangeFinish(false);
+        } 
+    }, [delayEnter, isChangeFinish]);
+
     const moveNextComponent = (target: EventTarget | null) => {
         // log("moveNextComponent", target)
         if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLTextAreaElement) {
@@ -154,42 +163,23 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 //   );
                 // });              
 
-            // log("handleKEyDonw")
-            if (menuIsOpen) {
+            log("handleKEyDonw", e.key)
+            
+            if (e.key === "Enter" /*&& !menuIsOpen*/) {
                 setDelayEnter(true);
                 setTarget(e.target);
-            }
-            else if (e.key === "Enter" /*&& !menuIsOpen*/) {
-
-                e.preventDefault();
-                
-                //클릭 실행후 함수내로 안돌아옴...ㅠ
-                // if (menuIsOpen) {
-                //     const focusedOption = ref.current?.menuListRef?.current.querySelector('.react-select__option--is-focused');
-                //     log("-0-0-0-0-0", focusedOption);
-                //     if (focusedOption) {
-                //         (focusedOption as HTMLElement).click();
-                //     }
-                // }
-
-                // const form = e.target.form;
-                // log('enter event1', e);
-                // const index = [...form].indexOf(e.target);
-                //log('enter event')
-                // form[index + 1].focus();
-                moveNextComponent(e.target);
             }
 
             if (events?.onKeyDown) {
                 events.onKeyDown(e);
             }
         } catch (ex) {
-
+            log("err", ex)
         }
     }
 
     const handleChange = (e: any) => {
-        // log("=-=-=-handleChange", e)
+        log("=-=-=-handleChange", e)
         setValue(id, e.value);
         setSelectedVal({ id:id, value: e.value, label: e.label });
         let dispCol = displayCol?.length 
@@ -199,18 +189,19 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
             events.onChange({[id]:e.value, [dispCol]:e.label});
         }
 
-        if (delayEnter) {
-            // log("handelChange", delayEnter, e);
-            setDelayEnter(false);
-            moveNextComponent(target);
-        }
+        log("handelChange", delayEnter, e);
+        setisChangeFinish(true);
+        // moveNextComponent(target);
+        
     }
 
     const handleMenuOpen = () => {
+        log("open")
         setMenuIsOpen(true);
       };
     
     const handleMenuClose = () => {
+        log("close")
         setMenuIsOpen(false);
     };
 
@@ -286,7 +277,6 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                                         menuPortalTarget={document.getElementsByClassName('dialog-base')[0] as HTMLElement}
                                         menuPosition='fixed'
                                         styles={customStyles}
-                                        
                                     />
                                 </div>
                             );

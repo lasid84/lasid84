@@ -76,6 +76,20 @@ function stringToDate(source) {
     }
 };
 
+function stringToTime(source, delimiter = ':') {
+    if (source) {
+        const formattedDate = source.replace(/[\:\s]/g, '').toString();
+        const hour = formattedDate.slice(0,2);
+        const min = formattedDate.slice(2,4);
+        const sec = formattedDate.slice(4,6);
+        try {
+            return hour + delimiter + min + (sec ? delimiter + sec : "");
+        } catch (e) {
+            return null;
+        }
+    }
+};
+
 function getKoreaTime(date = new Date()) {
     // const now = new Date();
     // const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
@@ -104,5 +118,6 @@ module.exports = {
     stringToFullDateString,
     stringToFullDate,
     stringToDate,
-    getKoreaTime
+    getKoreaTime,
+    stringToTime
   }
