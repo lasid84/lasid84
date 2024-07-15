@@ -9,7 +9,7 @@ import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import {toastSuccess} from "components/toast"
-import { SP_InsertCharge } from "./data";
+import { SP_InsertCargo } from "./data";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -21,7 +21,7 @@ const GridCargo: React.FC<Props> = memo(({ loadData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-    const { Create } = useUpdateData2(SP_InsertCharge, 'CHARGE');
+    const { Create } = useUpdateData2(SP_InsertCargo, 'CHARGE');
     const [data, setData] = useState<any>();
 
     

@@ -115,3 +115,71 @@ export const SP_GetWBDetailData = async (searchParam: any) => {
   const result = await executFunction(params);
   return result
 }
+
+
+
+export const SP_InsertCargo = async (param: any) => {
+  
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  log("param : ", param)
+  // const {waybill_no, charge_code, charge_desc, sort_id, import_export_ind, ppc_ind, invoice_wb_amt, invoice_wb_currency_code, invoice_charge_amt	
+  //   , invoice_currency_code, actual_cost_amt, cost_currency_code, vendor_id, vendor_ref_no, print_ind, vat_cat_code_ap, type, record_id, remark
+  //   , user_id, ipaddr
+  // } = Param;
+  // const params = {
+  //   inparam : [
+  //     "in_waybill_no"
+  //   , "in_charge_code"
+  //   , "in_charge_desc"
+  //   , "in_sort_id"
+  //   , "in_import_export_ind"
+  //   , "in_ppc_ind"
+  //   , "in_invoice_wb_amt"
+  //   , "in_invoice_wb_currency_code"
+  //   , "in_invoice_charge_amt"
+  //   , "in_invoice_currency_code"
+  //   , "in_actual_cost_amt"
+  //   , "in_cost_currency_code"
+  //   , "in_vendor_id"
+  //   , "in_vendor_ref_no"
+  //   , "in_print_ind"
+  //   , "in_vat_cat_code_ap"
+  //   , "in_type"
+  //   , "in_record_id"
+  //   , "in_remark"
+  //   , "in_user_id"
+  //   , "in_ipaddr"
+  //   ],
+  //   invalue: [
+  //     waybill_no
+  //   , charge_code
+  //   , charge_desc
+  //   , sort_id
+  //   , import_export_ind
+  //   , ppc_ind
+  //   , invoice_wb_amt
+  //   , invoice_wb_currency_code
+  //   , invoice_charge_amt	
+  //   , invoice_currency_code
+  //   , actual_cost_amt
+  //   , cost_currency_code
+  //   , vendor_id
+  //   , vendor_ref_no
+  //   , print_ind
+  //   , vat_cat_code_ap
+  //   , type
+  //   , record_id
+  //   , remark
+  //   , user_id
+  //   , ipaddr
+  //   ],
+  //   inproc: 'ufsm.f_ufsm0001_ins_charge_upload_data',
+  //   isShowLoading: true,
+  //   isShowComplete:false,
+  //   }
+  
+  //   const result = await executFunction(params);
+  //   log("SP_InsertCharge", result);
+  //   return result![0];
+}
