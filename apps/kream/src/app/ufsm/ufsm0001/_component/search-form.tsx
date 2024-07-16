@@ -19,10 +19,10 @@ import { gridData } from "components/grid/ag-grid-enterprise";
 import { Badge } from "@/components/badge";
 // import Modal from "./popupInterface";
 import Modal from "components/ufs-interface/popupInterface";
+import { SCRAP_UFSP_HBL } from "components/ufs-interface/_component/data"
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
-import { SCRAP_UFSP_HBL } from "components/ufs-interface/_component/data"
 
 export interface returnData {
   cursorData: []

@@ -17,7 +17,7 @@ export const SP_CreateIFData = async (param: any) => {
   
   const Param = param;
   log('param',Param)
-  const { in_pgm_code, id, user_id, ipaddr } = Param;
+  const { pgm_code, id, user_id, ipaddr } = Param;
   const params = {
     inparam : [
       "in_pgm_code"
@@ -26,7 +26,7 @@ export const SP_CreateIFData = async (param: any) => {
     , "in_ipaddr"
     ],
     invalue: [
-      in_pgm_code
+      pgm_code
     , id
     , user_id
     , ipaddr

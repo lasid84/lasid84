@@ -5,7 +5,8 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button, ICONButton } from 'components/button';
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import Modal from "./popupInterface";
+import Modal from "components/ufs-interface/popupInterface";
+import { SCRAP_UFSP_PROFILE_CUSTOMER } from "components/ufs-interface/_component/data"
 import { ReactSelect, data } from "@/components/select/react-select2";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -82,7 +83,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           </PageSearchButton>
         </form>
       </FormProvider>
-      <Modal />
+      <Modal pgm_code={SCRAP_UFSP_PROFILE_CUSTOMER}/>
     </>
   );
 });

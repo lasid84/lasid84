@@ -11,7 +11,8 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageMGrid } from "layouts/grid/grid";
 import { Button } from 'components/button'
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-import Modal from "./popupInterface";
+import Modal from "components/ufs-interface/popupInterface";
+import { SCRAP_UFSP_PROFILE_CUSTOMER } from "components/ufs-interface/_component/data"
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -82,7 +83,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
                     }}
                 />
             </PageMGrid>
-            <Modal />
+            <Modal pgm_code={SCRAP_UFSP_PROFILE_CUSTOMER}/>
         </>
     );
 }
