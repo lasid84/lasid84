@@ -28,10 +28,10 @@ async function callFunction(pProcName, pParamsList, pValueList) {
   // log("callFunction");
   // let startTime = performance.now();
 
-  // const connectionString = await initconnectionString();
-  // const client = new Client({ connectionString });
+  const connectionString = await initconnectionString();
+  const client = new Client({ connectionString });
   
-  await initconnectionString();
+  // await initconnectionString();
   // const client = await pool.connect();
 
   // const pool = new Pool({
@@ -39,7 +39,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
   //     statement_timeout: 30000,
   //   });
 
-  const client = await pool.connect();
+  // const client = await pool.connect();
   
   // let endTime = performance.now();
   //   let timeDiff = endTime - startTime; // 실행 시간 (밀리초)
