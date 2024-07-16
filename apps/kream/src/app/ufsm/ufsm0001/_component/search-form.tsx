@@ -22,6 +22,8 @@ import Modal from "components/ufs-interface/popupInterface";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
+import { SCRAP_UFSP_HBL } from "components/ufs-interface/_component/data"
+
 export interface returnData {
   cursorData: []
   numericData: number;
@@ -158,7 +160,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           </PageSearchButton>
         </form>
       </FormProvider>
-      <Modal />
+      <Modal pgm_code={SCRAP_UFSP_HBL} />
     </>
   );
 });

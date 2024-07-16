@@ -16,7 +16,7 @@ const { log, error } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
   id: string;
-  label?: string;
+  label?: string | undefined | null;
   value?: string;
   width?: string;
   lwidth?: string;
@@ -131,7 +131,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
 
   return (
     <InputWrapper outerClassName={outerClassName} inline={inline}>
-      {!noLabel && <Label id={id} name={label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />}
+      {!noLabel && <Label id={id} name={label === null ? '' : label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />}
       <div className={`flex w-full ${outerClassName}`}>
         <Controller
           name={id}
@@ -281,12 +281,18 @@ function getMask(type: string = "", options: any = {}): Partial<MaskedInputProps
           }
           return maskArray;
         },
-      };
-    case "time":
+      };      
+    case "date":
       return {
         placeholder: "",
         mask: [/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/,]
       }
+    case "time":
+        return {
+          //아래는 추가 설정 기능 필요
+          placeholder: "",
+          mask: [/\d/, /\d/, ':', /\d/, /\d/]
+        }
     case "password":
       return {
         // mask: (value:string) => {

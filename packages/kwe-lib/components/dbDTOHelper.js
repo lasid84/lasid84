@@ -155,13 +155,6 @@ async function callFunction(pProcName, pParamsList, pValueList) {
 async function getArgument(client, pSchema, pProcName, pParamList) {
     
     try {
-      // Connect to the PostgreSQL database
-      await client.connect((err) => {
-        if (err) {
-          console.error('error connecting: ' + err.stack);
-          return;
-        }
-      });
   
       // Begin a transaction block
       await client.query('BEGIN');

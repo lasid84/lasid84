@@ -6,18 +6,21 @@ import { SP_CreateIFData } from './_component/data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { Button } from "components/button"
 import { MaskedInputField } from "@/components/input/react-text-mask";
+import { Translation, useTranslation } from "react-i18next";
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    // loadItem: any | null
+    pgm_code: string;
 }
-const IN_PGM_CODE = '0'
 
-const Modal: React.FC<Props> = () => {
+const Modal: React.FC<Props> = (props) => {
     const { dispatch, objState } = useAppContext();
     const { crudType: popType, isIFPopUpOpen: isOpen } = objState;
+    const { pgm_code, } = props;
     const { Create } = useUpdateData2(SP_CreateIFData);
+    const { t } = useTranslation();
 
     const closeModal = () => {
         dispatch({ isIFPopUpOpen: false });
@@ -26,7 +29,6 @@ const Modal: React.FC<Props> = () => {
 
     const methods = useForm({
         defaultValues: {
-            cust_code: "",
         },
     });
 
@@ -49,18 +51,18 @@ const Modal: React.FC<Props> = () => {
 
     }, [popType]);
 
-    useEffect(() => {
-        if (popType === crudType.CREATE) {
-            setFocus("cust_code", { shouldSelect: true })
-        }
-    }, [popType, isOpen])
+    // useEffect(() => {
+    //     if (popType === crudType.CREATE) {
+    //         setFocus("cust_code", { shouldSelect: true })
+    //     }
+    // }, [popType, isOpen])
 
     return (
         <FormProvider{...methods}>
             <DialogBasic
                 isOpen={isOpen!}
                 onClose={closeModal}
-                title={"UFS+ Interface~~~ " + (popType === crudType.CREATE ? "요청" : "요청")}
+                title={t("request_ufsp_interface")}
                 bottomRight={
                     <>
                         <Button id={"request"} onClick={handleSubmit(onFormSubmit)} icon={null} />
@@ -73,6 +75,7 @@ const Modal: React.FC<Props> = () => {
                         <div className="col-span-2">
                             <MaskedInputField
                                 id="id"
+                                label={t(pgm_code)}
                                 options={{
                                     isReadOnly: popType === crudType.CREATE ? false : true,
                                 }}
@@ -81,8 +84,8 @@ const Modal: React.FC<Props> = () => {
 
                         <div className="col-span-1">
                             <MaskedInputField
-                                id="in_pgm_code"
-                                value={IN_PGM_CODE}
+                                id="pgm_code"
+                                value={pgm_code}
                                 options={{
                                     freeStyles: "hidden",
                                     isReadOnly: popType === crudType.CREATE ? false : true,
