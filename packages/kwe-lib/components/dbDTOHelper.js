@@ -3,6 +3,8 @@ const { Client, Pool } = require('pg');
 // import { log, ini, objectPath, fs } from "../src/index";
 const { log } = require('./logHelper');
 
+var pool;
+
 async function initconnectionString() {
   // async () => {
 
@@ -12,23 +14,35 @@ async function initconnectionString() {
   var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
   var connstr = objectPath.get(iniData, "db.connstr");
 
+  if (!pool) {
+    pool = new Pool({
+      connectionString: connstr,
+      statement_timeout: 30000,
+    });
+  }
+
   return connstr
 }
 
 async function callFunction(pProcName, pParamsList, pValueList) {
   // log("callFunction");
-  // let startTime = performance.now();
-  const connectionString = await initconnectionString();
-
-  const pool = new Pool({
-    connectionString: connectionString,
-  });
-  
+  let startTime = performance.now();
+  // const connectionString = await initconnectionString();
   // const client = new Client({ connectionString });
   
+  await initconnectionString();
+  // const client = await pool.connect();
+
+  // const pool = new Pool({
+  //     connectionString: connectionString,
+  //     statement_timeout: 30000,
+  //   });
+
   const client = await pool.connect();
   
-  // log("0.2");
+  let endTime = performance.now();
+    let timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+    console.log(`Code execution time: ${timeDiff} milliseconds`);
 
   try {
     
@@ -49,11 +63,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     const strParam = pParamsList.toString();
     const resultArgument = await getArgument(client, schema, procName, strParam);
 
-    // let endTime = performance.now();
-    // let timeDiff = endTime - startTime; // 실행 시간 (밀리초)
-    // console.log(`Code execution time: ${timeDiff} milliseconds`);
-    
-    log("1.5", schema, procName, strParam, resultArgument);
+    // log("1.5", schema, procName, strParam, resultArgument);
 
     if (resultArgument.getNumericData() !== 0)
         return resultArgument;
@@ -61,7 +71,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
 
     // startTime = performance.now();
 
-    // Connect to the PostgreSQL database
+    // // Connect to the PostgreSQL database
     // await client.connect()
     // .then(() => log('Connected to PostgreSQL database'))
     // .catch((err) => console.error('Error connecting to PostgreSQL database:', err));
@@ -70,13 +80,13 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     // timeDiff = endTime - startTime; // 실행 시간 (밀리초)
     // console.log(`====Connection execution time: ${timeDiff} milliseconds`);
 
-    // startTime = performance.now();
+    startTime = performance.now();
     // Begin a transaction block
     await client.query('BEGIN');
 
     // Call the function with varying IN parameters and the cursor OUT parameter
     //let query = 'SELECT * FROM public.f_stnd0001_load($1, $2);';
-    log("=====", schema, procName, strParam, pValueList);
+    // log("=====", schema, procName, strParam, pValueList);
     let query = `SELECT * from ${pProcName}(`;
     pValueList.forEach((param, index) => {
         query += `$${index + 1}`;
@@ -129,9 +139,9 @@ async function callFunction(pProcName, pParamsList, pValueList) {
 
     await client.query('COMMIT');
 
-    // endTime = performance.now();
-    // timeDiff = endTime - startTime; // 실행 시간 (밀리초)
-    // console.log(`Main Code execution time: ${timeDiff} milliseconds`);
+    endTime = performance.now();
+    timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+    console.log(`Main Code execution time: ${timeDiff} milliseconds`);
     
     dc.setCursorData(resultArray);
     // log("================", JSON.stringify(dc.getCursorData()[0]));
@@ -143,7 +153,8 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     return [];
   } finally {
     // Close the database connection
-    await client.end();
+    // client.end();
+    client.release();
   }
 }
 
@@ -162,6 +173,8 @@ async function getArgument(client, pSchema, pProcName, pParamList) {
       //   }
       // });
   
+      startTime = performance.now();
+
       // Begin a transaction block
       await client.query('BEGIN');
       let catalog = '';
@@ -173,6 +186,13 @@ async function getArgument(client, pSchema, pProcName, pParamList) {
       // Call the function with varying IN parameters and the cursor OUT parameter
       let query = 'SELECT * FROM public.f_admn_get_arguments($1, $2, $3, $4);';
       let { rows } = await client.query(query, varyingParams);
+
+      endTime = performance.now();
+      timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+      console.log(`getArgument Qeury Code execution time: ${timeDiff} milliseconds`);
+
+      startTime = performance.now();
+
       let dc = new dataContainer();
       var cursorName = [];
       // Process the cursor result as if it were a DataTable
@@ -216,6 +236,10 @@ async function getArgument(client, pSchema, pProcName, pParamList) {
       await client.query('COMMIT');
       
       dc.setCursorData(resultArray);
+
+      endTime = performance.now();
+      timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+      console.log(`getArgument finish Code execution time: ${timeDiff} milliseconds`);
   
       return dc;
     } catch (err) {
