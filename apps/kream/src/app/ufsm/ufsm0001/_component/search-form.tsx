@@ -17,7 +17,8 @@ import CustomSelect from "components/select/customSelect";
 import { Button, ICONButton } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Badge } from "@/components/badge";
-import Modal from "./popupInterface";
+// import Modal from "./popupInterface";
+import Modal from "components/ufs-interface/popupInterface";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 

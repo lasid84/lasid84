@@ -1,10 +1,7 @@
 const { dataContainer } = require('./dataContainer');
-const { Client } = require('pg');
+const { Client, Pool } = require('pg');
 // import { log, ini, objectPath, fs } from "../src/index";
 const { log } = require('./logHelper');
-
-//const connectionString = initconnectionString();
-let connstr;
 
 async function initconnectionString() {
   // async () => {
@@ -12,24 +9,24 @@ async function initconnectionString() {
   const ini = require("ini");
   const objectPath = require("object-path");
   const fs = require("fs").promises;
-
   var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
-  // log("process.cwd()", process.cwd())
-  connstr = objectPath.get(iniData, "db.connstr");
+  var connstr = objectPath.get(iniData, "db.connstr");
 
-    // var config = new Config("/configs/server.ini");
-    // await config.load();
-    // connstr = config.get("db.connstr");
-    // log("connstr", connstr);
-    return connstr
+  return connstr
 }
 
 async function callFunction(pProcName, pParamsList, pValueList) {
   // log("callFunction");
+  // let startTime = performance.now();
   const connectionString = await initconnectionString();
-  // log("0.1");
-  // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
-  const client = new Client({ connectionString });
+
+  const pool = new Pool({
+    connectionString: connectionString,
+  });
+  
+  // const client = new Client({ connectionString });
+  
+  const client = await pool.connect();
   
   // log("0.2");
 
@@ -50,18 +47,30 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     // log("1.", pProcName, pParamsList, pValueList);
 
     const strParam = pParamsList.toString();
-    const resultArgument = await getArgument(schema, procName, strParam);
+    const resultArgument = await getArgument(client, schema, procName, strParam);
+
+    // let endTime = performance.now();
+    // let timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+    // console.log(`Code execution time: ${timeDiff} milliseconds`);
     
     log("1.5", schema, procName, strParam, resultArgument);
 
     if (resultArgument.getNumericData() !== 0)
         return resultArgument;
 
-    // Connect to the PostgreSQL database
-    await client.connect()
-    .then(() => log('Connected to PostgreSQL database'))
-    .catch((err) => console.error('Error connecting to PostgreSQL database:', err));
 
+    // startTime = performance.now();
+
+    // Connect to the PostgreSQL database
+    // await client.connect()
+    // .then(() => log('Connected to PostgreSQL database'))
+    // .catch((err) => console.error('Error connecting to PostgreSQL database:', err));
+
+    // endTime = performance.now();
+    // timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+    // console.log(`====Connection execution time: ${timeDiff} milliseconds`);
+
+    // startTime = performance.now();
     // Begin a transaction block
     await client.query('BEGIN');
 
@@ -100,26 +109,6 @@ async function callFunction(pProcName, pParamsList, pValueList) {
       }
     }
 
-    // console.log(dataContainer);
-
-    // Process the cursor result as if it were a DataTable
-    // for (const row of rows) {
-    //     // Access values in each row as needed
-    //     for (const columnName in row) {
-    //     //   // Check if the property exists in the row
-    //       if (Object.prototype.hasOwnProperty.call(row, columnName)) {
-    //     //     // Access the column value dynamically
-    //     //     const columnValue = row[columnName];
-    //     //     //console.log(`${columnName}: ${columnValue}`);
-    //     //     if (columnName.startsWith("c_return"))
-    //     //         cursorName.push(columnValue)
-            
-    //       }
-    //     }
-    //     //console.log('----------');
-    //   }
-    
-
     const resultArray = [];
     const fieldsArray = [];
     for (let val of cursorName)
@@ -139,6 +128,10 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     }
 
     await client.query('COMMIT');
+
+    // endTime = performance.now();
+    // timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+    // console.log(`Main Code execution time: ${timeDiff} milliseconds`);
     
     dc.setCursorData(resultArray);
     // log("================", JSON.stringify(dc.getCursorData()[0]));
@@ -146,7 +139,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
   } catch (err) {
     // Rollback the transaction block in case of an error
     await client.query('ROLLBACK');
-    console.error('Error executing PostgreSQL function:', err);
+    error('Error executing PostgreSQL function:', err);
     return [];
   } finally {
     // Close the database connection
@@ -154,18 +147,20 @@ async function callFunction(pProcName, pParamsList, pValueList) {
   }
 }
 
-async function getArgument(pSchema, pProcName, pParamList) {
-    const connectionString = await initconnectionString();
+async function getArgument(client, pSchema, pProcName, pParamList) {
+    // const connectionString = await initconnectionString();
     // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
-    const client = new Client({ connectionString });
+    // const client = new Client({ connectionString });
+    
+    // const client = await pool.connect();
     try {
       // Connect to the PostgreSQL database
-      await client.connect((err) => {
-        if (err) {
-          console.error('error connecting: ' + err.stack);
-          return;
-        }
-      });
+      // await client.connect((err) => {
+      //   if (err) {
+      //     console.error('error connecting: ' + err.stack);
+      //     return;
+      //   }
+      // });
   
       // Begin a transaction block
       await client.query('BEGIN');
@@ -236,7 +231,7 @@ async function getArgument(pSchema, pProcName, pParamList) {
       return dc;
     } finally {
       // Close the database connection
-      await client.end();
+      // await client.end();
     }
   }
 
