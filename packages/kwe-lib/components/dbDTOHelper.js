@@ -26,7 +26,8 @@ async function initconnectionString() {
 
 async function callFunction(pProcName, pParamsList, pValueList) {
   // log("callFunction");
-  let startTime = performance.now();
+  // let startTime = performance.now();
+
   // const connectionString = await initconnectionString();
   // const client = new Client({ connectionString });
   
@@ -40,9 +41,9 @@ async function callFunction(pProcName, pParamsList, pValueList) {
 
   const client = await pool.connect();
   
-  let endTime = performance.now();
-    let timeDiff = endTime - startTime; // 실행 시간 (밀리초)
-    console.log(`Code execution time: ${timeDiff} milliseconds`);
+  // let endTime = performance.now();
+  //   let timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+  //   console.log(`Code execution time: ${timeDiff} milliseconds`);
 
   try {
     
@@ -80,7 +81,6 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     // timeDiff = endTime - startTime; // 실행 시간 (밀리초)
     // console.log(`====Connection execution time: ${timeDiff} milliseconds`);
 
-    startTime = performance.now();
     // Begin a transaction block
     await client.query('BEGIN');
 
@@ -138,10 +138,6 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     }
 
     await client.query('COMMIT');
-
-    endTime = performance.now();
-    timeDiff = endTime - startTime; // 실행 시간 (밀리초)
-    console.log(`Main Code execution time: ${timeDiff} milliseconds`);
     
     dc.setCursorData(resultArray);
     // log("================", JSON.stringify(dc.getCursorData()[0]));
@@ -159,22 +155,7 @@ async function callFunction(pProcName, pParamsList, pValueList) {
 }
 
 async function getArgument(client, pSchema, pProcName, pParamList) {
-    // const connectionString = await initconnectionString();
-    // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
-    // const client = new Client({ connectionString });
-    
-    // const client = await pool.connect();
-    try {
-      // Connect to the PostgreSQL database
-      // await client.connect((err) => {
-      //   if (err) {
-      //     console.error('error connecting: ' + err.stack);
-      //     return;
-      //   }
-      // });
-  
-      startTime = performance.now();
-
+    try {  
       // Begin a transaction block
       await client.query('BEGIN');
       let catalog = '';
@@ -236,16 +217,12 @@ async function getArgument(client, pSchema, pProcName, pParamList) {
       await client.query('COMMIT');
       
       dc.setCursorData(resultArray);
-
-      endTime = performance.now();
-      timeDiff = endTime - startTime; // 실행 시간 (밀리초)
-      console.log(`getArgument finish Code execution time: ${timeDiff} milliseconds`);
   
       return dc;
     } catch (err) {
       // Rollback the transaction block in case of an error
       await client.query('ROLLBACK');
-      console.error('Error executing PostgreSQL function:', err);
+      error('Error executing PostgreSQL function:', err);
 
       let dc = new dataContainer();
       dc.setNumericData(-1);
