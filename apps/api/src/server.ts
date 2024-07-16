@@ -107,7 +107,7 @@ export const createServer = (): Express => {
           return res.status(401).json({ error: 'Access token not provided' });
         }
         
-        log("api/data", req.body.inproc);
+        // log("api/data", req.body.inproc);
         // let startTime = performance.now();
 
         try {
@@ -120,10 +120,10 @@ export const createServer = (): Express => {
           return res.json(dc);
         }
         
-        log("api/data2");
+        // log("api/data2");
         const {inproc, inparam, invalue} = req.body;
         const result = await callFunction(inproc, inparam, invalue);
-        log("api/data3");
+        // log("api/data3");
         // log(result)
         // let endTime = performance.now();
         // let timeDiff = endTime - startTime; // 실행 시간 (밀리초)

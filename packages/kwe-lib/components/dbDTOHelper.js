@@ -1,10 +1,9 @@
 const { dataContainer } = require('./dataContainer');
-const { Client } = require('pg');
+const { Client, Pool } = require('pg');
 // import { log, ini, objectPath, fs } from "../src/index";
-const { log } = require('./logHelper');
+const { log, error } = require('./logHelper');
 
-//const connectionString = initconnectionString();
-let connstr;
+var pool;
 
 async function initconnectionString() {
   // async () => {
@@ -15,26 +14,29 @@ async function initconnectionString() {
 
   var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
   // log("process.cwd()", process.cwd())
-  connstr = objectPath.get(iniData, "db.connstr");
+  let connstr = objectPath.get(iniData, "db.connstr");
 
-    // var config = new Config("/configs/server.ini");
-    // await config.load();
-    // connstr = config.get("db.connstr");
-    // log("connstr", connstr);
+      if (!pool) {
+        pool = new Pool({
+          connectionString: connstr,
+          statement_timeout: 30000,
+        });
+      }
     return connstr
 }
 
 async function callFunction(pProcName, pParamsList, pValueList) {
   // log("callFunction");
-  const connectionString = await initconnectionString();
-  // log("0.1");
-  // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
-  const client = new Client({ connectionString });
-  
-  // log("0.2");
+  // const connectionString = await initconnectionString();
+  // // log("0.1");
+  // // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
+  // const client = new Client({ connectionString });
 
+  await initconnectionString();
+  const client = await pool.connect();
+  
   try {
-    
+
     let schema;
     let procName;
 
@@ -50,24 +52,19 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     // log("1.", pProcName, pParamsList, pValueList);
 
     const strParam = pParamsList.toString();
-    const resultArgument = await getArgument(schema, procName, strParam);
+    const resultArgument = await getArgument(client, schema, procName, strParam);
     
-    log("1.5", schema, procName, strParam, resultArgument);
+    // log("1.5", schema, procName, strParam, resultArgument);
 
     if (resultArgument.getNumericData() !== 0)
         return resultArgument;
-
-    // Connect to the PostgreSQL database
-    await client.connect()
-    .then(() => log('Connected to PostgreSQL database'))
-    .catch((err) => console.error('Error connecting to PostgreSQL database:', err));
 
     // Begin a transaction block
     await client.query('BEGIN');
 
     // Call the function with varying IN parameters and the cursor OUT parameter
     //let query = 'SELECT * FROM public.f_stnd0001_load($1, $2);';
-    log("=====", schema, procName, strParam, pValueList);
+    // log("=====", schema, procName, strParam, pValueList);
     let query = `SELECT * from ${pProcName}(`;
     pValueList.forEach((param, index) => {
         query += `$${index + 1}`;
@@ -146,26 +143,18 @@ async function callFunction(pProcName, pParamsList, pValueList) {
   } catch (err) {
     // Rollback the transaction block in case of an error
     await client.query('ROLLBACK');
-    console.error('Error executing PostgreSQL function:', err);
+    error('Error executing PostgreSQL function:', err);
     return [];
   } finally {
     // Close the database connection
-    await client.end();
+    // await client.end();
+    client.release();
   }
 }
 
-async function getArgument(pSchema, pProcName, pParamList) {
-    const connectionString = await initconnectionString();
-    // const connectionString = 'postgres://kwe:kwe@10.33.63.51:5432/kwe';
-    const client = new Client({ connectionString });
+async function getArgument(client, pSchema, pProcName, pParamList) {
+    
     try {
-      // Connect to the PostgreSQL database
-      await client.connect((err) => {
-        if (err) {
-          console.error('error connecting: ' + err.stack);
-          return;
-        }
-      });
   
       // Begin a transaction block
       await client.query('BEGIN');
@@ -235,8 +224,6 @@ async function getArgument(pSchema, pProcName, pParamList) {
 
       return dc;
     } finally {
-      // Close the database connection
-      await client.end();
     }
   }
 
