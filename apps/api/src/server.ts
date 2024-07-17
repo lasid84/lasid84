@@ -12,7 +12,6 @@ import { dataContainer } from '@repo/kwe-lib/components/dataContainer';
 import { path, rfs } from "@repo/kwe-lib";
 
 
-
 export const createServer = (): Express => {
 
   let type;
@@ -108,12 +107,12 @@ export const createServer = (): Express => {
           return res.status(401).json({ error: 'Access token not provided' });
         }
         
-        console.log("api/data", req.body.inproc);
+        // log("api/data", req.body.inproc);
+        // let startTime = performance.now();
 
         try {
           const decoded = jwt.verify(accessToken, 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E=');
         } catch (err) {
-          console.log("err", err)
           error("Authorize Error : ", err.message);
           let dc = new dataContainer(); 
           dc.setNumericData(-1);
@@ -121,9 +120,15 @@ export const createServer = (): Express => {
           return res.json(dc);
         }
         
+        // log("api/data2");
         const {inproc, inparam, invalue} = req.body;
         const result = await callFunction(inproc, inparam, invalue);
+        // log("api/data3");
         // log(result)
+        // let endTime = performance.now();
+        // let timeDiff = endTime - startTime; // 실행 시간 (밀리초)
+        // console.log(`Code execution time: ${timeDiff} milliseconds`);
+        
         res.json(result);
       } catch (err) {
         console.log('Error fetching data:', err);

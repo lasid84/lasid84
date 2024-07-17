@@ -39,7 +39,6 @@ export const SP_CreateIFData = async (param: any) => {
   
   const Param = param;
   const { excel_data, user_id, ipaddr } = Param;
-  log("SP_CreateIFData", excel_data, user_id, ipaddr);
   const params = {
     inparam : [
       "in_excel_data"

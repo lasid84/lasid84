@@ -16,7 +16,8 @@ import dayjs from 'dayjs'
 import CustomSelect from "components/select/customSelect";
 import { Button } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
-import Modal from "./popupInterface";
+import Modal from "components/ufs-interface/popupInterface";
+import { SCRAP_UFSP_MBL } from "components/ufs-interface/_component/data"
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -138,7 +139,7 @@ const SearchForm = ({ loadItem }: any) => {
             <div className={"col-span-2"}>
               <CustomSelect
                 id="cust_code"
-                initText='Select an Customer'
+                initText='Select a Customer'
                 listItem={custcode as gridData}
                 valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
                 displayCol="cust_nm"
@@ -155,7 +156,7 @@ const SearchForm = ({ loadItem }: any) => {
           </PageSearchButton>
         </form>
       </FormProvider>
-      <Modal />
+      <Modal pgm_code={SCRAP_UFSP_MBL} />
     </>
   );
 };

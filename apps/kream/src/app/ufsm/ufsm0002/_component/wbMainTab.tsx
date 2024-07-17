@@ -9,13 +9,14 @@ import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
 import {useAppContext } from "components/provider/contextObjectProvider";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateIFData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
+import { SCRAP_UFSP_MBL, SP_CreateIFData } from "components/ufs-interface/_component/data"
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
+
 
 export interface returnData {
   cursorData: []
@@ -59,8 +60,8 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
   }
   const onRefresh = () => { dispatch({ isMDSearch: true }) }
   const onInterface = () => {
-    const params = getValues();
-    Create.mutate(params)
+    const params = getValues();    
+    Create.mutate({...params, id:data?.mwb_no});
   }
   useEffect(() => {
     if (mainData)
@@ -93,12 +94,12 @@ const WBMain = memo(({ loadItem, mainData, onClickTab }: any) => {
             <MaskedInputField id="pipeline_tx_id" lwidth='w-18' width="w-32" height='h-8' value={data?.pipeline_tx_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             {/* <MaskedInputField id="job_no" lwidth='w-16' width="w-24" height='h-8' value={data?.bol_type} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /> */}
             <div className='col-span-2'>
-              <MaskedInputField id="last_interfaced" lwidth='w-24' width="w-44" height='h-8' value={data?.last_interfaced} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'time', fontSize: "xs" }} />
+              <MaskedInputField id="last_interfaced" lwidth='w-24' width="w-44" height='h-8' value={data?.last_interfaced} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date', fontSize: "xs" }} />
             </div>
             <MaskedInputField id="orig_department_id" lwidth='w-12' width="w-24" height='h-8' value={data?.orig_department_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <div className='col-span-2'><MaskedInputField id="shipper_name" label="controlling_party" lwidth="w-25" height='h-8' value={data?.shipper_name} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /></div>
             {/* <MaskedInputField id="dest_city_code" lwidth='w-12' width="w-24" height='h-8' value={data?.dest_city_code} options={{ isReadOnly: true, inline: true, textAlign: 'center',  }} />           */}
-            <MaskedInputField id="in_pgm_code" value={IN_PGM_CODE} options={{ freeStyles: 'hidden', noLabel: true }} />
+            <MaskedInputField id="pgm_code" value={SCRAP_UFSP_MBL} options={{ freeStyles: 'hidden', noLabel: true }} />
           </PageTabContent>
         </form>
       </FormProvider>

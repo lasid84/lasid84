@@ -7,7 +7,8 @@ import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-ro
 import { Button } from 'components/button';
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
-import Modal from "./popupInterface";
+import Modal from "components/ufs-interface/popupInterface";
+import { SCRAP_UFSP_PROFILE_PORT } from "components/ufs-interface/_component/data"
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -90,7 +91,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           </PageSearchButton>
         </form>
       </FormProvider>
-      <Modal loadItem={loadItem} />
+      <Modal pgm_code={SCRAP_UFSP_PROFILE_PORT}/>
     </>
   );
 });

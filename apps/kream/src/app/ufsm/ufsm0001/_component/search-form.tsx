@@ -17,9 +17,12 @@ import CustomSelect from "components/select/customSelect";
 import { Button, ICONButton } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Badge } from "@/components/badge";
-import Modal from "./popupInterface";
+// import Modal from "./popupInterface";
+import Modal from "components/ufs-interface/popupInterface";
+import { SCRAP_UFSP_HBL } from "components/ufs-interface/_component/data"
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
+
 
 export interface returnData {
   cursorData: []
@@ -157,7 +160,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           </PageSearchButton>
         </form>
       </FormProvider>
-      <Modal />
+      <Modal pgm_code={SCRAP_UFSP_HBL} />
     </>
   );
 });
