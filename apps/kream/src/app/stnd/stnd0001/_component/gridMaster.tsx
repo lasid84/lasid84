@@ -27,18 +27,25 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
         colVisible: { col: ["user_id", "user_nm", "permission_id", "bz_plc_code", "emp_no", "ufs_id", "terminal_cd", "dept_cd", "office_cd", "use_yn", "tel_num"], visible: true },
-        minWidth: { "__ROWINDEX": 10, "user_id":180, "user_nm":120, "permission_id": 200 },
+        minWidth: { "__ROWINDEX": 10, "user_id": 180, "user_nm": 120, "permission_id": 200 },
         gridHeight: "h-full",
         isAutoFitColData: false,
     };
 
+    const handleRowDoubleClicked = (param: RowClickedEvent) => {
+        // var data = onRowClicked(param);
+        var selectedRow = { "colId": param.node.id, ...param.node.data }
+        const ufs_pw2 = decrypt(selectedRow?.ufs_pw)
+        var selectedRow2 = { ...selectedRow, ufs_pw: ufs_pw2 }
+        dispatch({ mSelectedRow: selectedRow2, isPopUpOpen: true, crudType: PopType.UPDATE })
+    }    
 
     const handleRowClicked = (param: RowClickedEvent) => {
         // var data = onRowClicked(param);
-        var selectedRow = { "colId": param.node.id, ...param.node.data}
-        const ufs_pw2 = decrypt(selectedRow?.ufs_pw)
-        var selectedRow2 = {...selectedRow, ufs_pw:ufs_pw2 }
-        dispatch({ mSelectedRow: selectedRow2, isPopUpOpen: true, crudType: PopType.UPDATE })
+        // var selectedRow = { "colId": param.node.id, ...param.node.data }
+        // const ufs_pw2 = decrypt(selectedRow?.ufs_pw)
+        // var selectedRow2 = { ...selectedRow, ufs_pw: ufs_pw2 }
+        // dispatch({ mSelectedRow: selectedRow2, isPopUpOpen: true, crudType: PopType.UPDATE })
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
@@ -62,6 +69,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
+                    onRowDoubleClicked : handleRowDoubleClicked,
                     onRowClicked: handleRowClicked,
                     onSelectionChanged: handleSelectionChanged,
                 }}

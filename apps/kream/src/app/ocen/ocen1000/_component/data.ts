@@ -113,6 +113,7 @@ export const SP_GetWBDetailData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
+  log('SP_GetDetailsterData',result)
   return result
 }
 

@@ -104,10 +104,10 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
                 <MaskedInputField id="shipper_name" value={data?.shipper_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
-                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: true }} />
+                <MaskedInputField id="shipper_address" value={data?.shipper_name} options={{ isReadOnly: true, useIcon: false }} />
               </div>
               <div className={"col-span-4"}>
-                <MaskedInputField id="shipper_contact_no" value={data?.shipper_contact_no} options={{ isReadOnly: true, useIcon: true }} />
+                <MaskedInputField id="shipper_contact_no" value={data?.shipper_contact_no} options={{ isReadOnly: true, useIcon: false }} />
               </div>
               <div className={"col-span-2"}>
                 <MaskedInputField id="export_salesman_id" value={data?.export_salesman_id} options={{ isReadOnly: true }} />
@@ -125,10 +125,10 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
                 <MaskedInputField id="cnee_name" value={data?.cnee_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
-                <MaskedInputField id="cnee_address" value={data?.cnee_name} options={{ isReadOnly: true, useIcon: true }} />
+                <MaskedInputField id="cnee_address" value={data?.cnee_name} options={{ isReadOnly: true, useIcon: false }} />
               </div>
               <div className={"col-span-4"}>
-                <MaskedInputField id="cnee_contact_no" value={data?.cnee_contact_no} options={{ isReadOnly: true, useIcon: true }} />
+                <MaskedInputField id="cnee_contact_no" value={data?.cnee_contact_no} options={{ isReadOnly: true, useIcon: false }} />
               </div>
               <div className={"col-span-2"}>
                 <MaskedInputField id="import_salesman_id" value={data?.import_salesman_id} options={{ isReadOnly: true }} />
@@ -147,7 +147,7 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
                 <MaskedInputField id="notify_name" value={data?.notify_name} options={{ isReadOnly: true }} />
               </div>
               <div className={"col-span-6"}>
-                <MaskedInputField id="notify_address_no" value={data?.notify_address_no} options={{ isReadOnly: true, useIcon: true }} />
+                <MaskedInputField id="notify_address_no" value={data?.notify_address_no} options={{ isReadOnly: true, useIcon: false }} />
               </div>
               <div className={"col-span-4"}>
                 <MaskedInputField id="notify_contact_no" value={data?.notify_contact_no} options={{ isReadOnly: true }} />

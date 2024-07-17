@@ -1,10 +1,11 @@
 
-import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef } from 'react';
+import React, { ChangeEvent, MouseEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
 import { SlMagnifierAdd } from "react-icons/sl";
-import { FcExpand } from "react-icons/fc";
+import { FaSearch } from "react-icons/fa";
+
 // import  conformToMask from './conformToMask'
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
@@ -42,8 +43,8 @@ type Props = {
     useIcon?: boolean;
     outerClassName?: string;    //outerClassName
     isAutoComplete?: string;
-    isDisplay ?: boolean;      //사용자 권한에 따른 display여부
-    isNotManageSetValue? : boolean; //값 변경시 setValue 처리 여부
+    isDisplay?: boolean;      //사용자 권한에 따른 display여부
+    isNotManageSetValue?: boolean; //값 변경시 setValue 처리 여부
   };
 
   events?: {
@@ -51,6 +52,7 @@ type Props = {
     onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
     onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
+    onClick?: (e: MouseEvent<HTMLInputElement>) => void;
   }
 };
 
@@ -62,8 +64,8 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const { id, label, value, width, lwidth, height, options = {}, events } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
-    freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
-    isDisplay=true, isNotManageSetValue=false
+    freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete = 'new-password',
+    isDisplay = true, isNotManageSetValue = false
   } = options;
   const { mask, pipe, placeholder } = getMask(type, options);
   // log("===MaskedInputField", type, mask);
@@ -128,6 +130,13 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
       events.onFocus(e);
     }
   }
+  
+  function handleClick(e : MouseEvent<HTMLInputElement>){
+    log('handleClick', e.target)
+
+    
+
+  }
 
   return (
     <InputWrapper outerClassName={outerClassName} inline={inline}>
@@ -135,41 +144,44 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
       <div className={`flex w-full ${outerClassName}`}>
         <Controller
           name={id}
-          control={control}
+          control={control}        
           // defaultValue = {val}
           render={({ field }) => (
-            <MaskedInput
-              id={id}
-              type={type === 'password' ? type : ''}
-              // {...field} //bg-${bgColor}
-              className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
+            <>
+              <MaskedInput
+                id={id}
+                type={type === 'password' ? type : ''}
+                // {...field} //bg-${bgColor}
+                className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
                  focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
                  dark:bg-gray-900 dark:text-white dark:border-gray-700
                  ${freeStyles}
                  text-${textAlign}
                  `)}
-              mask={mask!}
-              // pipe={pipe}
-              value={selectedVal}
-              defaultValue={value}
-              readOnly={isReadOnly}
-              placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
-              // onChange={(e) => {
-              //     // log(name, e.target.value)
-              //     // setValue(name, e.target.value);
-              // }}
-              guide={false}
-
-              // showMask={true}
-              onKeyDown={(e) => handleKeyDown(e)}
-              onBlur={(e) => handleBlur(e)}
-              onChange={(e: any) => { handleChange(e); }}
-              onFocus={(e: any) => { handleFocus(e); }}
-              autoComplete={isAutoComplete}
-            />
+                mask={mask!}
+                // pipe={pipe}
+                value={selectedVal}
+                defaultValue={value}
+                readOnly={isReadOnly}
+                placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
+                // onChange={(e) => {
+                //     // log(name, e.target.value)
+                //     // setValue(name, e.target.value);
+                // }}
+                guide={false}
+                
+                // showMask={true}
+                onKeyDown={(e) => handleKeyDown(e)}
+                onBlur={(e) => handleBlur(e)}
+                onChange={(e: any) => { handleChange(e); }}
+                onFocus={(e: any) => { handleFocus(e); }}
+                onClick={(e:any)=> handleClick(e)}
+                autoComplete={isAutoComplete}
+              />
+             {useIcon && <div className='flex px-1 py-1 item-center'><FaSearch size="20" onClick={(e:any)=> handleClick(e)} /></div>}
+            </>
           )}
-        />
-        {useIcon && <div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
+        />        
       </div>
     </InputWrapper>
   );

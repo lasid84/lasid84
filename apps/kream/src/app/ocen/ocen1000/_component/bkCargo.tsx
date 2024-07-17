@@ -3,11 +3,14 @@
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
-import { MaskedInputField, Input,TextArea } from 'components/input';
+import { MaskedInputField, Input, TextArea } from 'components/input';
+import PageSearch from "layouts/search-form/page-search-row";
+import { Button } from "components/button";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { DateInput, DatePicker } from 'components/date'
 import { gridData } from "components/grid/ag-grid-enterprise";
 import GridCargo from './gridCargo'
+import { ReactSelect, data } from "@/components/select/react-select2";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -47,6 +50,8 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+  const [svcType, setSvcType] = useState([])
+  const [movement, setMovement] = useState([])
 
   //Set select box data
   const [cargo, setCargoDetail] = useState<gridData>({})
@@ -62,27 +67,57 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
       setCargoDetail((mainData?.[0] as gridData).data[0]);
   }, [mainData])
 
+  useEffect(() => {
+    if (loadItem) {
+      log('loadItem',loadItem)
+      setSvcType(loadItem[5])
+      setMovement(loadItem[6])
+    }
+  }, [loadItem])
+
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
 
-
         <PageContent
-          title={<span className="px-1 py-1 text-blue-500">Cargo</span>}>
-          <MaskedInputField id="svc_type" value={data?.svc_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="movement_type" value={data?.movement_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="commodity" value={data?.commodity} options={{ isReadOnly: true }} />
-          <MaskedInputField id="strategic_yn" value={data?.strategic_yn} options={{ isReadOnly: true }} />
-          <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={data?.cargo_remark} options={{ isReadOnly: true }} /></div>
+          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Cargo</span>}>
+          <div className="col-span-6">
+            <PageSearch
+              right={
+                <>
+                  {/* <Button id={"delete"} width="w-15" /> */}
+                </>}>
+              <>
+                <ReactSelect
+                  id="svc_type" dataSrc={svcType as data}
+                  options={{
+                    keyCol: "svc_type",
+                    displayCol: ['svc_type', 'svc_type_nm'],
+                    defaultValue: data?.svc_type,
+                    isAllYn: false
+                  }}/>
+                  <ReactSelect
+                  id="movement_type" dataSrc={movement as data}
+                  options={{
+                    keyCol: "movement",
+                    displayCol: ['movement', 'movement_nm'],
+                    defaultValue: data?.movement_type,
+                    isAllYn: false
+                  }}/>
 
-
+                <MaskedInputField id="commodity" value={data?.commodity} options={{ isReadOnly: true }} />
+                <MaskedInputField id="strategic_yn" value={data?.strategic_yn} options={{ isReadOnly: true }} />
+              </>
+            </PageSearch>
+                <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={data?.cargo_remark} options={{ isReadOnly: true }} /></div>
+          </div>
         </PageContent>
 
         <div className="flex flex-row w-full">
           <div className="flex w-full">
             <PageContent
-              title={<span className="w-full px-1 py-1 text-blue-500">Cargo Detail</span>}>
+              title={<span className="w-full px-1 py-1 text-lg font-bold text-blue-500">Cargo Detail</span>}>
               <div className="col-span-6">
                 <GridCargo loadData={cargo} />
               </div>
