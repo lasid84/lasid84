@@ -11,18 +11,18 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { PageMGrid2, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from 'components/button';
-import { LabelGrid } from "components/label";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null;
-};
+    initData: any | null
+}
 
 const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
+
 
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     // const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetDetailData, { enabled: true });
@@ -79,6 +79,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     };
 
+    const handleonClick = () => {
+        // var selectedRow = { "colId": param.node.id, ...param.node.data }
+        if (objState.tab1) {
+            objState.tab1.push({ cd: 'NEW', cd_nm: 'NEW' })
+            dispatch({ MselectedTab: 'NEW', isMDSearch: true })
+        }
+    }
+
     useEffect(() => {
         if (objState.isMSearch) {
             mainRefetch();
@@ -87,7 +95,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
     }, [objState?.isMSearch]);
 
-
     return (
         <>
             <PageMGrid2
@@ -95,7 +102,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 right={
                     <>
                         <ICONButton id="alarm" disabled={false} size={'24'} />
-                        <Button id={"new"} width="w-40" />
+                        <Button id={"new"} onClick={handleonClick} width="w-40" />
                     </>
                 }>
                 <Grid

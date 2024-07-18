@@ -32,7 +32,7 @@ const GridCargo: React.FC<Props> = memo(({ loadData }) => {
     //   }, [loadData])
 
     const gridOption: GridOption = {
-        colVisible: { col: ["charge_code", "charge_desc", "sort_id", "import_export_ind", "ppc_ind", "invoice_wb_amt", "invoice_wb_currency_code", "invoice_charge_amt", "actual_cost_amt", "cost_currency_code", "vendor_id", "vendor_ref_no",  "print_ind", "vat_cat_code_ap"], visible: true },
+        colVisible: { col: ["waybill_no","piece","pkg_type","slac_stc","stc_uom","container_refno","container_type","seal_no","description","measurement","measurement_uom","gross_wt","gross_uom","volume_factor","volume_wt","charable_wt","chargeable_uom","commodity_cd","dg_yn"], visible: true },
         gridHeight: "40vh",
         maxWidth: { "print":40, "sort_id": 60, "trans_type": 60 },
         minWidth: { "charge_code": 150, "charge_desc": 300, "invoice_wb_amt": 110, "invoice_charge_amt": 110, "actual_cost_amt": 110, "vendor_id":110, "vendor_ref_no": 150 },
@@ -66,7 +66,7 @@ const GridCargo: React.FC<Props> = memo(({ loadData }) => {
             <PageSearch
                 right={
                 <>
-                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {'waybill_no': objState.MselectedTab, 'type': 'I'})} width="w-15"/>
+                <Button id={"add"} onClick={() => rowAdd(gridRef.current, {'bk_id': objState.MselectedTab, })} width="w-15"/>
                 <Button id={"save"} onClick={onSave} width="w-15"/>
                 </>
             }>

@@ -64,7 +64,7 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
   useEffect(() => {
     log("maindata", mainData);
     if (mainData)
-      setCargoDetail((mainData?.[0] as gridData).data[0]);
+      setCargoDetail((mainData?.[1] as gridData));
   }, [mainData])
 
   useEffect(() => {
@@ -106,11 +106,11 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
                     isAllYn: false
                   }}/>
 
-                <MaskedInputField id="commodity" value={data?.commodity} options={{ isReadOnly: true }} />
-                <MaskedInputField id="strategic_yn" value={data?.strategic_yn} options={{ isReadOnly: true }} />
+                <MaskedInputField id="commodity" value={data?.commodity} options={{ isReadOnly: false }} />
+                <MaskedInputField id="strategic_yn" value={data?.strategic_yn} options={{ isReadOnly: false }} />
               </>
             </PageSearch>
-                <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={data?.cargo_remark} options={{ isReadOnly: true }} /></div>
+                <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={data?.cargo_remark} options={{ isReadOnly: false }} /></div>
           </div>
         </PageContent>
 

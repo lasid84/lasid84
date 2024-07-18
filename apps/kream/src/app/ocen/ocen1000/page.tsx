@@ -14,10 +14,13 @@ import { useSearchParams } from 'next/navigation'
 import BKMainTab from "./_component/bkMainTab"
 import BKMain from "./_component/bkMain";
 import BKCargo from "./_component/bkCargo";
+import { useUserSettings } from "states/useUserSettings";
 import BKSchedule from "./_component/bkSchedule";
-
+import { shallow } from "zustand/shallow";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
+const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
+
 
 
 export default function OCEN0005() {
@@ -34,7 +37,9 @@ export default function OCEN0005() {
             tab1: [],
             MselectedTab: 'Main',
             isFirstRender: true,
-            rowRef: 0
+            rowRef: 0,
+            isPopUpOpen : false,
+            cont_type: ''
         }
     });
     const { objState } = state;
@@ -42,7 +47,13 @@ export default function OCEN0005() {
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false });
+    const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false }); //1건 Detail조회
+    const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
+
+    useEffect(() => {
+        const params = getMenuParameters(menu_param);
+        dispatch({ cont_type: params.cont_type });
+    }, [menu_param])
 
     const handleOnClickTab = (code: any) => { 
         setselectedTab(code) }
@@ -66,6 +77,7 @@ export default function OCEN0005() {
         }
     }, [objState?.isMSearch]);
 
+    
     useEffect(() => {
         if (objState.isMDSearch) {
             mainRefetch();

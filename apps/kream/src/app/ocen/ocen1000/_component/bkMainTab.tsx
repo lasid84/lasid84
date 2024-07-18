@@ -16,7 +16,6 @@ import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
-
 import Stepper from "components/stepper/index";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -32,15 +31,17 @@ export interface typeloadItem {
 
 const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
   const { Create } = useUpdateData2(SP_CreateIFData);
+
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
   const [data, setData] = useState<any>();
-  const IN_PGM_CODE = '1'
-  
+
+  const { MselectedTab,mSelectedRow } = objState
+
   // //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
-
+  const gUserName = useUserSettings((state) => state.data.user_nm, shallow)
   const methods = useForm({
     defaultValues: {
     }
@@ -61,14 +62,22 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
     // log("onSearch", params);
   }
   const onRefresh = () => { dispatch({ isMDSearch: true }) }
-  const onInterface = () => {
+
+  const onBKSave = () => {
     const params = getValues();
+    console.log('loggggg',params)
+    console.log('logggggk',objState.mSelectedRow)
     Create.mutate(params)
   }
+
   useEffect(() => {
-    if (mainData){
+    if (mainData) {
+      if ((mainData?.[0] as gridData).data[0]) {
         setData((mainData?.[0] as gridData).data[0]);
-    }    
+      } else { //New
+        setData({ create_user: gUserName })
+      }
+    }
   }, [mainData])
 
   return (
@@ -78,11 +87,9 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
           <PageBKTabContent
             right={
               <>
-                <div className={"flex col-span-2 "}>
-                  <Badge size={"md"} name={data?.bk_id} color="border-sky-500 text-sky-500" rounded outlined />
-                </div>
+                <div className={"flex col-span-2 "}><Button id={"save"} onClick={onBKSave} width="w-32" /></div>
                 <div className={"flex col-span-2"}>
-                  <ICONButton id="interface" disabled={false} onClick={onInterface} size={'24'} />
+                  {/* <ICONButton id="interface" disabled={false} onClick={onInterface} size={'24'} /> */}
                   <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
@@ -90,12 +97,12 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
             }
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
             addition={<Stepper title={"tello"} ><></></Stepper>}
-          >      
+          >
             <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={data?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={data?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             {/* <MaskedInputField id="create_date" lwidth='w-24' width="w-36" height='h-8' value={data?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /> */}
-             <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={data?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'time' }} />
-           </PageBKTabContent>
+            <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={data?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+          </PageBKTabContent>
         </form>
       </FormProvider>
     </div>

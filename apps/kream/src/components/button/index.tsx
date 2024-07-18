@@ -146,6 +146,9 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
 
 export const Button: React.FC<ButtonProps> = (props) => {
 
+    // BUTTON 순서
+    // SEARCH - INTERFACE - ADD - DELETE - SAVE - DOWNLIAD - MANAGE 
+
     const { t } = useTranslation();
     const { id, label, disabled, color, type, size, isHidden, icon, onClick, width
     } = props;

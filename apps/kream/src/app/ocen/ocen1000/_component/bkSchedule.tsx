@@ -9,7 +9,7 @@ import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { DateInput, DatePicker } from 'components/date'
 import { gridData } from "components/grid/ag-grid-enterprise";
-
+import CustomSelect from "components/select/customSelect";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -49,11 +49,19 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+  const [cyplace, setCyPlace] = useState<any>()
 
   const onSearch = () => {
     // const params = getValues();
     // log("onSearch", params, objState?.mSelectedRow);
   }
+
+  useEffect(()=>{
+    if(loadItem){
+      //log('loadItem',loadItem)
+      setCyPlace(loadItem[10])
+    }
+  })
 
   useEffect(() => {
     log("maindata", mainData);
@@ -110,7 +118,23 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                 <div className="col-start-1 col-end-2">
                 <MaskedInputField id="cy_place_code" value={data?.cy_place_code} options={{ isReadOnly: false ,useIcon:true}} />
                 </div>
-                <MaskedInputField id="cy_place_code_nm" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} />
+                <div className={"col-span-2"}>
+                  <CustomSelect
+                    id="cy_place_code"
+                    initText='Select an Container Yard'
+                    listItem={cyplace as gridData}
+                    valueCol={["place_code", "place_nm,"]}
+                    displayCol="place_code"
+                    gridOption={{
+                      colVisible: { col: ["place_code", "place_nm"], visible: true },
+                    }}
+                    gridStyle={{ width: '600px', height: '300px' }}
+                    style={{ width: '1000px', height: "8px" }}
+                    isDisplay={true}
+                    inline={true}
+                  />
+                </div>
+                {/* <MaskedInputField id="cy_place_code_nm" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} /> */}
                 <MaskedInputField id="cy_place_area" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} />
                 <div className="col-start-1 col-end-2">
                 <MaskedInputField id="cy_cont_nm" value={data?.cy_cont_nm} options={{ isReadOnly: false }} />

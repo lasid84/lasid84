@@ -10,6 +10,7 @@ export type BadgeProps = {
     name?: string;
     outlined? : boolean;
     children?: React.ReactNode;
+    onClick?: any;
 };
 
 
@@ -19,11 +20,19 @@ export const Badge: React.FC<BadgeProps> = ({
     color,
     name,
     children,
+    onClick,
 }) => {
     const { t } = useTranslation();
 
+    const handleonClick = () => {
+        if (onClick){
+            console.log('hgandleonclick,')
+            onClick();
+        } 
+    }
+
     return (
-        <div className="flex flex-wrap w-full space-x-2">
+        <div className="flex flex-wrap w-full space-x-2" onClick={handleonClick}>
             <span
                 className={clsx(
                     "uppercase font-bold inline-flex text-center bg-transparent border border-current",
