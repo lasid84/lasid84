@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, memo } from "react";
 import { SP_GetMasterData } from "./data";
-import { useAppContext, SEARCH_M,crudType } from "components/provider/contextObjectProvider";
+import { useAppContext, SEARCH_M, crudType } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
@@ -32,11 +32,17 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     };
 
 
-    const handleRowClicked = (param: RowClickedEvent) => {
+
+    const handleRowDoubleClicked = (param: RowClickedEvent) => {
         // var data = onRowClicked(param);
-        var selectedRow = {"colId": param.node.id, ...param.node.data}
+        var selectedRow = { "colId": param.node.id, ...param.node.data }
         // log("handleRowClicked", selectedRow)
         dispatch({ mSelectedRow: selectedRow, isPopUpOpen: true, crudType: PopType.UPDATE })
+    };
+
+    const handleRowClicked = (param: RowClickedEvent) => {
+        // var selectedRow = {"colId": param.node.id, ...param.node.data}
+        // dispatch({ mSelectedRow: selectedRow, isPopUpOpen: true, crudType: PopType.UPDATE })
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
@@ -61,8 +67,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
-                     onRowClicked: handleRowClicked,
-                     onSelectionChanged: handleSelectionChanged,
+                    onRowDoubleClicked: handleRowDoubleClicked,
+                    onRowClicked: handleRowClicked,
+                    onSelectionChanged: handleSelectionChanged,
                 }}
             />
             <Modal loadItem={initData} />

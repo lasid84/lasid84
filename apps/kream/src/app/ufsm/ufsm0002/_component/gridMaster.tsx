@@ -39,6 +39,21 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
 
     const handleRowClicked = async (param: RowClickedEvent) => {
+        // var selectedRow = { "colId": param.node.id, ...param.node.data }
+        // if (objState.tab1) {
+        //     if (objState.tab1.findIndex((element: any) => {
+        //         if (element.cd === selectedRow.mwb_no) { return true }
+        //     }) !== -1) {
+        //         dispatch({ MselectedTab: selectedRow.mwb_no })
+        //     } else {
+        //         objState.tab1.push({ cd: selectedRow.mwb_no, cd_nm: selectedRow.mwb_no })
+        //         dispatch({ MselectedTab: selectedRow.mwb_no })
+        //     }
+        // }
+        // dispatch({ isMDSearch: true, mSelectedRow: selectedRow });
+    };
+
+    const handleRowDoubleClicked = (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
@@ -51,8 +66,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             }
         }
         dispatch({ isMDSearch: true, mSelectedRow: selectedRow });
-    };
-
+    }
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
         log("handleSelectionChanged", selectedRow)
@@ -76,6 +90,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             listItem={mainData as gridData}
             options={gridOption}
             event={{
+                onRowDoubleClicked : handleRowDoubleClicked,
                 onRowClicked: handleRowClicked,
                 onSelectionChanged: handleSelectionChanged,
             }}

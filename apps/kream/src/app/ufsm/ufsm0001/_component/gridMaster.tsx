@@ -27,26 +27,41 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         colVisible: { col: ["pipeline_tx_id", "mwb_status", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "h-[calc(100vh-200px)]",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
-        dataType: { "execution_date": "date", "ic_dc_consol_date": "date", "eta_date": "date", "total_volume":'number',"total_actual_weight":'number',"total_volume_weight":'number','total_chargeable_weight':'number' },
+        dataType: { "execution_date": "date", "ic_dc_consol_date": "date", "eta_date": "date", "total_volume": 'number', "total_actual_weight": 'number', "total_volume_weight": 'number', 'total_chargeable_weight': 'number' },
         isAutoFitColData: true,
-        refRow : objState.refRow
+        refRow: objState.refRow
     };
 
 
     const handleRowClicked = async (param: RowClickedEvent) => {
+        // var selectedRow = { "colId": param.node.id, ...param.node.data }
+        // if (objState.tab1) {
+        //     if (objState.tab1.findIndex((element: any) => {
+        //         if (element.cd === selectedRow.waybill_no) { return true }
+        //     }) !== -1) {
+        //         dispatch({MselectedTab: selectedRow.waybill_no })
+        //     } else {
+        //         objState.tab1.push({ cd: selectedRow.waybill_no, cd_nm: selectedRow.waybill_no })
+        //         dispatch({MselectedTab: selectedRow.waybill_no })
+        //     }
+        // }
+        // dispatch({isMDSearch: true, mSelectedRow: selectedRow })
+    }
+
+    const handleRowDoubleClicked = (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
                 if (element.cd === selectedRow.waybill_no) { return true }
             }) !== -1) {
-                dispatch({MselectedTab: selectedRow.waybill_no })
+                dispatch({ MselectedTab: selectedRow.waybill_no })
             } else {
                 objState.tab1.push({ cd: selectedRow.waybill_no, cd_nm: selectedRow.waybill_no })
-                dispatch({MselectedTab: selectedRow.waybill_no })
+                dispatch({ MselectedTab: selectedRow.waybill_no })
             }
         }
 
-        dispatch({isMDSearch: true, mSelectedRow: selectedRow })
+        dispatch({ isMDSearch: true, mSelectedRow: selectedRow })
     }
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
@@ -76,6 +91,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
             listItem={mainData as gridData}
             options={gridOption}
             event={{
+                onRowDoubleClicked: handleRowDoubleClicked,
                 onRowClicked: handleRowClicked,
                 onSelectionChanged: handleSelectionChanged,
             }}
