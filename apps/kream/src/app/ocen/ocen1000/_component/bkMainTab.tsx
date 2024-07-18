@@ -97,12 +97,12 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
             }
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
             addition={<Stepper title={"tello"} ><></></Stepper>}
-          >
+          >      
             <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={data?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={data?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             {/* <MaskedInputField id="create_date" lwidth='w-24' width="w-36" height='h-8' value={data?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /> */}
-            <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={data?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
-          </PageBKTabContent>
+             <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={data?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'time' }} />
+           </PageBKTabContent>
         </form>
       </FormProvider>
     </div>

@@ -4,12 +4,12 @@ import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input } from 'components/input';
-import PageSearch from "layouts/search-form/page-search-row";
-import { Button } from "components/button";
-import { useAppContext } from "components/provider/contextObjectProvider";
+import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { DateInput, DatePicker } from 'components/date'
 import { gridData } from "components/grid/ag-grid-enterprise";
 import CustomSelect from "components/select/customSelect";
+import PageSearch from "layouts/search-form/page-search-row";
+import { Button } from "components/button";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -74,26 +74,26 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageContent
-          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">SKD</span>}>
-          <div className="col-start-1 col-end-2"><MaskedInputField id="ts_port" value={data?.ts_port} options={{ isReadOnly: false }} /></div>
-          <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={data?.vessel} options={{ isReadOnly: false }} /></div>
+          title={<span className="px-1 py-1 text-blue-500">SKD</span>}>
+          <div className="col-start-1 col-end-2"><MaskedInputField id="ts_port" value={data?.ts_port} options={{ isReadOnly: true }} /></div>
+          <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={data?.vessel} options={{ isReadOnly: true }} /></div>
           <div className="col-start-1 col-end-6"><hr></hr>  </div>
-          <div className="col-start-1 col-end-2"><MaskedInputField id="port_of_loading" value={data?.port_of_loading} options={{ isReadOnly: false }} /></div>
+          <div className="col-start-1 col-end-2"><MaskedInputField id="port_of_loading" value={data?.port_of_loading} options={{ isReadOnly: true }} /></div>
 
-          <MaskedInputField id="port_of_unloading" value={data?.port_of_unloading} options={{ isReadOnly: false }} />
-          <MaskedInputField id="final_dest_port" value={data?.final_dest_port} options={{ isReadOnly: false }} />
+          <MaskedInputField id="port_of_unloading" value={data?.port_of_unloading} options={{ isReadOnly: true }} />
+          <MaskedInputField id="final_dest_port" value={data?.final_dest_port} options={{ isReadOnly: true }} />
 
-          <div className="col-start-1 col-end-2"><DatePicker id="etd" value={data?.etd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} /></div>
-          <DatePicker id="eta" value={data?.eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
-          <DatePicker id="final_eta" value={data?.final_eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+          <div className="col-start-1 col-end-2"><DatePicker id="etd" value={data?.etd} options={{ isReadOnly: true, freeStyles: "border-1 border-slate-300" }} /></div>
+          <DatePicker id="eta" value={data?.eta} options={{ isReadOnly: true, freeStyles: "border-1 border-slate-300" }} />
+          <DatePicker id="final_eta" value={data?.final_eta} options={{ isReadOnly: true, freeStyles: "border-1 border-slate-300" }} />
           <div className="col-start-1 col-end-6"><hr></hr> </div>
 
           <div className="col-start-1 col-end-2">
-            <DatePicker id="doc_close_dd" value={data?.doc_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+            <DatePicker id="doc_close_dd" value={data?.doc_close_dd} options={{ isReadOnly: true, freeStyles: "border-1 border-slate-300" }} />
           </div>
-          <MaskedInputField id="doc_close_tm" value={data?.doc_close_tm} options={{ isReadOnly: false, type: 'time' }} width="w-28" />
-          <DatePicker id="cargo_close_dd" value={data?.cargo_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
-          <MaskedInputField id="cargo_close_tm" value={data?.cargo_close_tm} options={{ isReadOnly: false, type: 'time' }} width="w-28" />
+          <MaskedInputField id="doc_close_tm" value={data?.doc_close_tm} options={{ isReadOnly: true }} />
+          <DatePicker id="cargo_close_dd" value={data?.cargo_close_dd} options={{ isReadOnly: true, freeStyles: "border-1 border-slate-300" }} />
+          <MaskedInputField id="cargo_close_tm" value={data?.cargo_close_tm} options={{ isReadOnly: true }} />
 
         </PageContent>
 

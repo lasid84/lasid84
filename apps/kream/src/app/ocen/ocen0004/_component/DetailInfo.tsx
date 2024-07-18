@@ -150,7 +150,7 @@ const CustomerDetail: React.FC<Props> = ({initData}) => {
                             value={mSelectedRow?.create_date}
                             options={{
                                 isReadOnly: true,
-                                type:"time"
+                                type:"date"
                             }}
                         />
                     </div>
@@ -160,7 +160,7 @@ const CustomerDetail: React.FC<Props> = ({initData}) => {
                             value={mSelectedRow?.update_date}
                             options={{
                                 isReadOnly: true,
-                                type:"time"
+                                type:"date"
                             }}
                         />
                     </div>

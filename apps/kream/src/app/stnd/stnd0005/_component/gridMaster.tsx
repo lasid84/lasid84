@@ -31,16 +31,12 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         isAutoFitColData: false,
     };
 
-    
-    const handleRowDoubleClicked = (param: RowClickedEvent) => {
-        var selectedRow = {"colId": param.node.id, ...param.node.data}
-        dispatch({ mSelectedRow: selectedRow, isPopUpOpen: true, crudType: PopType.UPDATE })
-   
-    }
 
     const handleRowClicked = (param: RowClickedEvent) => {
-        // var selectedRow = {"colId": param.node.id, ...param.node.data}
-        // dispatch({ mSelectedRow: selectedRow, isPopUpOpen: true, crudType: PopType.UPDATE })
+        // var data = onRowClicked(param);
+        var selectedRow = {"colId": param.node.id, ...param.node.data}
+        // log("handleRowClicked", selectedRow)
+        dispatch({ mSelectedRow: selectedRow, isPopUpOpen: true, crudType: PopType.UPDATE })
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
@@ -65,7 +61,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
-                     onRowDoubleClicked : handleRowDoubleClicked,
                      onRowClicked: handleRowClicked,
                      onSelectionChanged: handleSelectionChanged,
                 }}
