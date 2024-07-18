@@ -70,11 +70,11 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
 
         <PageContent
           title={<span className="px-1 py-1 text-blue-500">Cargo</span>}>
-          <MaskedInputField id="svc_type" value={data?.svc_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="movement_type" value={data?.movement_type} options={{ isReadOnly: true }} />
-          <MaskedInputField id="commodity" value={data?.commodity} options={{ isReadOnly: true }} />
-          <MaskedInputField id="strategic_yn" value={data?.strategic_yn} options={{ isReadOnly: true }} />
-          <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={data?.cargo_remark} options={{ isReadOnly: true }} /></div>
+          <MaskedInputField id="svc_type" value={data?.svc_type} options={{ isReadOnly: false }} />
+          <MaskedInputField id="movement_type" value={data?.movement_type} options={{ isReadOnly: false }} />
+          <MaskedInputField id="commodity" value={data?.commodity} options={{ isReadOnly: false }} />
+          <MaskedInputField id="strategic_yn" value={data?.strategic_yn} options={{ isReadOnly: false }} />
+          <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={data?.cargo_remark} options={{ isReadOnly: false }} /></div>
 
 
         </PageContent>
