@@ -11,7 +11,7 @@ import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateIFData } from './data';
+import { SP_CreateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
@@ -30,7 +30,7 @@ export interface typeloadItem {
 }
 
 const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
-  const { Create } = useUpdateData2(SP_CreateIFData);
+  const { Create } = useUpdateData2(SP_CreateData);
 
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
