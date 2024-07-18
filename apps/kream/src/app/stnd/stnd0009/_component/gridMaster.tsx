@@ -38,19 +38,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     */
     const handleRowClicked = useCallback((param: RowClickedEvent) => {
         // var data = onRowClicked(param);
-        // var selectedRow = {"colId": param.node.id, ...param.node.data}
-        // log("handleRowClicked", selectedRow);
-        // dispatch({mSelectedRow:selectedRow, isPopUpOpen:true, crudType:crudType.UPDATE});
+        var selectedRow = {"colId": param.node.id, ...param.node.data}
+        log("handleRowClicked", selectedRow);
+        dispatch({mSelectedRow:selectedRow, isPopUpOpen:true, crudType:crudType.UPDATE});
       }, []);
 
     const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
     }, []);
-
-    const handleRowDoubleClicked = (param: RowClickedEvent) => {
-        var selectedRow = {"colId": param.node.id, ...param.node.data}
-        log("handleRowClicked", selectedRow);
-        dispatch({mSelectedRow:selectedRow, isPopUpOpen:true, crudType:crudType.UPDATE});
-    }
 
     useEffect(() => {
         if (isMSearch) {
@@ -67,7 +61,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
-                    onRowDoubleClicked : handleRowDoubleClicked,
                     onRowClicked: handleRowClicked,
                     onSelectionChanged: handleSelectionChanged,
                 }}

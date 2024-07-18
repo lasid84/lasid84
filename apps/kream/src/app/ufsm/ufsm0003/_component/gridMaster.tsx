@@ -38,17 +38,14 @@ const MasterGrid: React.FC<Props> = memo(() => {
         handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
     */
     const handleRowClicked = useCallback((param: RowClickedEvent) => {
-        // var selectedRow = {"colId": param.node.id, ...param.node.data}
-        // log("handleRowClicked", selectedRow);
+        // var data = onRowClicked(param);
+        var selectedRow = {"colId": param.node.id, ...param.node.data}
+        log("handleRowClicked", selectedRow);
+        // dispatch({mSelectedRow:selectedRow });
       }, []);
 
     const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
     }, []);
-
-    const handleRowDoubleClicked = (param : RowClickedEvent) => {
-        var selectedRow = {"colId": param.node.id, ...param.node.data}
-        log("handleRowClicked", selectedRow);
-    }
 
     useEffect(() => {
         if (isMSearch) {
@@ -64,7 +61,6 @@ const MasterGrid: React.FC<Props> = memo(() => {
             listItem={mainData as gridData}
             options={gridOption}
             event={{
-                onRowDoubleClicked : handleRowDoubleClicked,
                 onRowClicked: handleRowClicked,
                 onSelectionChanged: handleSelectionChanged,
             }}

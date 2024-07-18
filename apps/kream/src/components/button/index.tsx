@@ -9,11 +9,10 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { GrDownload } from "react-icons/gr";
 import { VscSymbolInterface } from "react-icons/vsc";
 import { MdOutlineSyncAlt } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
 import { SP_InsertLog } from "@/services/clientAction";
 import { useUpdateData2 } from "../react-query/useMyQuery";
 import { usePathname } from "next/navigation";
-import { MdManageSearch } from "react-icons/md";
+
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export type ButtonProps = {
@@ -81,7 +80,6 @@ const getColor = (label: string, color: string = '') => {
             case "reset":
                 c = 'gray';
                 break;
-            case "delete":
             case "refresh":
                 c = 'gray-outline'
             default:
@@ -131,13 +129,6 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
             break;
         case "alarm":
             icon = <MdOutlineAlarm size={size}/>
-            break;
-        case "manage":
-            icon = <MdManageSearch size={size} />
-            break;
-        case "delete":
-            icon = <MdDelete size={size}/>     
-            break;   
     }
     return (
         icon
