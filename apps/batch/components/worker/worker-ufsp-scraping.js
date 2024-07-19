@@ -123,30 +123,30 @@ try {
     // 프로세스 종료 시 브라우저 닫기
     process.on('SIGINT', async () => {
         log('SIGINT signal received.');
-        await library.close();
+        await ufsp.close();
         process.exit();
     });
 
     process.on('SIGTERM', async () => {
         log('SIGTERM signal received.');
-        await library.close();
+        await ufsp.close();
         process.exit();
     });
 
     process.on('exit', async () => {
         log('Process exit event received.');
-        await library.close();
+        await ufsp.close();
     });
 
     // 예기치 않은 오류 처리
     process.on('uncaughtException', async (err) => {
         error('Uncaught Exception:', err);
-        await library.close();
+        await ufsp.close();
     });
 
     process.on('unhandledRejection', async (reason, promise) => {
         error('Unhandled Rejection:', reason);
-        await library.close();
+        await ufsp.close();
     });
 } catch (ex) {
     //log처리 추가
