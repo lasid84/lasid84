@@ -12,9 +12,9 @@ let _arrThread:any = [];
 function init() {
   //개발서버에서는 /dist까지 나와서 임시로 아래와 같이 설정 - stephen
   let root = process.cwd();
-  if (process.cwd().endsWith("/dist")) root = root.replace("/dist", "");
+  if (root.endsWith("/dist")) root = root.replace("/dist", "");
 
-  let filePath = process.cwd() + '/dist/configs/thread.ini';
+  let filePath = root + '/dist/configs/thread.ini';
   console.log("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
