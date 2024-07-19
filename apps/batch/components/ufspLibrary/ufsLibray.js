@@ -45,7 +45,7 @@ class Library {
                 { headless:this.isHeadless, 
                     args:[ '--start-maximized'], // you can also use '--start-fullscreen'
                 });
-        } else page.reload();
+        } else await page.reload();
 
         const pages = await this.browser.pages();
         this.page = pages[0];
