@@ -45,7 +45,7 @@ const mySetInterval = () => {
         try {
             if (!onExcute) {
                 log(ufsp.idx, "=================Restart==================")
-                startScraping();
+                setIFDataDistribute();
             }
             log("mySetInterval : ", onExcute);
             mySetInterval();
@@ -53,13 +53,13 @@ const mySetInterval = () => {
             console.log("mySetInterval", ex)
             onExcute = false;
         }
-    }, 10000)};
+    }, 5000)};
 
 
 try {
     log("worker.js시작");
     // setInitBLIFData(); //데이터 분배 스레드 추가로 사용 안함(worker-data-distributor.js)
-    startScraping();
+    setIFDataInit();
     mySetInterval();
 
     // 프로세스 종료 시 브라우저 닫기
