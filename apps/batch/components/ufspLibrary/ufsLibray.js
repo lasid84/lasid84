@@ -166,6 +166,7 @@ class Library {
             }
 
             if (restart) {
+                await this.browser.close();
                 await this.startBrowser();
 
                 const inparam = ['in_pgm_code', 'in_idx', 'in_terminal', 'in_user', 'in_ipaddr'];
@@ -632,6 +633,10 @@ class Library {
             out_tab_cnt++;
             
         }
+    }
+
+    async getValueFromJson(jsonText, path) {
+
     }
 
     async calculate(data) {
