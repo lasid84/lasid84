@@ -44,7 +44,6 @@ const mySetInterval = () => {
     setTimeout(() => {
         try {
             if (!onExcute) {
-                log(ufsp.idx, "=================Restart==================")
                 setIFDataDistribute();
             }
             log("mySetInterval : ", onExcute);

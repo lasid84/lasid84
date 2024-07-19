@@ -90,7 +90,7 @@ async function startWorker() {
             }});
         break;  
     }
-    await sleep(3000);
+    await sleep(5000);
     i++;
   }
 }
