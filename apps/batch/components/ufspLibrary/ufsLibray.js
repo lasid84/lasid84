@@ -45,10 +45,13 @@ class Library {
                 { headless:this.isHeadless, 
                     args:[ '--start-maximized'], // you can also use '--start-fullscreen'
                 });
-        } else await page.reload();
+        } 
 
         const pages = await this.browser.pages();
         this.page = pages[0];
+        for (let i = 1; i < pages.length; i++) {
+            await pages[i].close();
+        }
         await this.page.setViewport({width: 0, height: 0});
 
         // page.on('dialog', async dialog => {
