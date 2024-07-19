@@ -91,14 +91,17 @@ async function startScraping() {
 
 const mySetInterval = () => {
     setTimeout(() => {
-        if (!onExcute) {
-            // log(this.idx, "=================Restart==================")
-            startScraping();
+        try {
+            if (!onExcute) {
+                log(ufsp.idx, "=================Restart==================")
+                startScraping();
+            }
+            log("mySetInterval : ", onExcute);
+            mySetInterval();
+        } catch (ex) {
+            log("mySetInterval", ex)
         }
-        // log("mySetInterval : ", onExcute);
-        mySetInterval();
-        }, 5000);
-    };
+    }, 10000)};
 
 
 try {
@@ -106,6 +109,33 @@ try {
     // setInitBLIFData(); //데이터 분배 스레드 추가로 사용 안함(worker-data-distributor.js)
     startScraping();
     mySetInterval();
+
+    // 프로세스 종료 시 브라우저 닫기
+    process.on('SIGINT', async () => {
+        log('SIGINT signal received.');
+        await library.close();
+    });
+
+    process.on('SIGTERM', async () => {
+        log('SIGTERM signal received.');
+        await library.close();
+    });
+
+    process.on('exit', async () => {
+        log('Process exit event received.');
+        await library.close();
+    });
+
+    // 예기치 않은 오류 처리
+    process.on('uncaughtException', async (err) => {
+        error('Uncaught Exception:', err);
+        await library.close();
+    });
+
+    process.on('unhandledRejection', async (reason, promise) => {
+        error('Unhandled Rejection:', reason);
+        await library.close();
+    });
 } catch (ex) {
     //log처리 추가
     error(ex);

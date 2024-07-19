@@ -63,6 +63,12 @@ class Library {
         log("lastExcute", this.lastExcute);
     };
 
+    async close() {
+        if (this.browser) {
+            await this.browser.close();
+        }
+    }
+
     // async checkSession(isForce = false) {
     //     let restart = false;
     
