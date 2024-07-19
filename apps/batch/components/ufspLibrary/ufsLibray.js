@@ -38,24 +38,14 @@ class Library {
     }
 
     async startBrowser() {
-        log(this.idx, "start Brower headless: ", this.isHeadless);
-        if (this.errCnt > 4) {
-            if (this.browser) {
-                await this.browser.close();
-                this.browser = null;
-                this.errCnt = 0;
-            } else {
-                log("brower null 아님");
-            }
-        }
-
+        
         if (!this.browser) {
             log("brower restart")
             this.browser = await puppeteer.launch(
                 { headless:this.isHeadless, 
                     args:[ '--start-maximized'], // you can also use '--start-fullscreen'
                 });
-        }
+        } else page.reload();
 
         const pages = await this.browser.pages();
         this.page = pages[0];
@@ -70,32 +60,32 @@ class Library {
         log("lastExcute", this.lastExcute);
     };
 
-    async checkSession(isForce = false) {
-        let restart = false;
+    // async checkSession(isForce = false) {
+    //     let restart = false;
     
-        if (isForce) {
-            restart = true;
-        }
-        else {
-            if (this.lastExcute) {
-                // const diffMSec = now.getTime() - lastExcute.getTime();
-                const diffMSec = getKoreaTime() - this.lastExcute.getTime();
-                const diffMin = diffMSec / (60 * 1000);
-                if (diffMin > 30) {
-                    restart = true;
-                }
-            }
-            else {
-                restart = true
-            }
-        }
+    //     if (isForce) {
+    //         restart = true;
+    //     }
+    //     else {
+    //         if (this.lastExcute) {
+    //             // const diffMSec = now.getTime() - lastExcute.getTime();
+    //             const diffMSec = getKoreaTime() - this.lastExcute.getTime();
+    //             const diffMin = diffMSec / (60 * 1000);
+    //             if (diffMin > 30) {
+    //                 restart = true;
+    //             }
+    //         }
+    //         else {
+    //             restart = true
+    //         }
+    //     }
     
-        if (restart) {
-            this.errCnt = 5; //재시작
-            await this.startBrowser();
-            await this.login();
-        }
-    };
+    //     if (restart) {
+    //         this.errCnt = 5; //재시작
+    //         await this.startBrowser();
+    //         await this.login();
+    //     }
+    // };
 
     async login() {
 
@@ -166,7 +156,6 @@ class Library {
             }
 
             if (restart) {
-                await this.browser.close();
                 await this.startBrowser();
 
                 const inparam = ['in_pgm_code', 'in_idx', 'in_terminal', 'in_user', 'in_ipaddr'];
