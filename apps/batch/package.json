@@ -1,6 +1,6 @@
 {
   "name": "batch",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "dev": "set NODE_ENV=\"development\" && tsup --watch --onSuccess \"node dist/index.js\"",
