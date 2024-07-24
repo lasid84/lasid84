@@ -21,24 +21,25 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
     initData?: any | null;
+    detailData?: any | null;
 }
 
-const Modal: React.FC<Props> = ({ initData }) => {
+const Modal: React.FC<Props> = ({ initData, detailData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-    const { crudType: popType, isPopUpOpen: isOpen } = objState;
+    const { crudType: popType, isShpPopUpOpen: isOpen } = objState;
 
     const { Create } = useUpdateData2(SP_InsertData);
     const { t } = useTranslation();
     // const { Update } = useUpdateData2(SP_UpdateDetail, SEARCH_D);
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ ...objState?.mSelectedRow, cont_type: objState.cont_type }, SEARCH_D, SP_GetContData, { enabled: true });
+    // const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ ...objState?.mSelectedRow, cont_type: objState.cont_type }, SEARCH_D, SP_GetContData, { enabled: true });
 
     const closeModal = () => {
-        dispatch({ isPopUpOpen: false });
-        log('ffffff', objState.isPopUpOpen)
+        dispatch({ isShpPopUpOpen: false });
+        log('ffffff', objState.isShpPopUpOpen)
         reset();
     }
 

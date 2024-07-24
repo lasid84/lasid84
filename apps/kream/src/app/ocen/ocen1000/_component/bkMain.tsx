@@ -10,9 +10,11 @@ import { gridData } from "components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
 import Modal from "./popShpcont";
+import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
+import { SP_GetContData, SP_InsertData } from "./data";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -34,7 +36,7 @@ type Props = {
 const BKMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
-  const { mSelectedRow } = objState
+  const { mSelectedRow, selectedobj } = objState
   //const [data, setData] = useState<any>();
 
   const methods = useForm({
@@ -48,12 +50,16 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+  //get shipper cont data
+  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: 'ocen' }, SEARCH_D, SP_GetContData, {enable:false});
 
   const [custcode, setCustcode] = useState<any>()
   const [incoterms, setIncoterms] = useState<any>()
   const [billtype, setBillType] = useState<any>()
   const [carriercode, setCarrierCode] = useState<any>()
   const [shp_cont, setShp_cont] = useState<any>()
+  const [salesperson, setSalesPerson] = useState<any>()
+  const [terminal, setTerminal] = useState<any>()
 
   const onSearch = () => {
     // const params = getValues();
@@ -61,26 +67,60 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   }
 
   useEffect(() => {
+    if (objState.isDSearch) {
+      log("mSelectedRow?.shipper_id useEffect", objState.isDSearch)
+      detailRefetch();
+      dispatch({ isDSearch: false });
+    }
+  }, [objState.mSelectedRow, objState.isDSearch]);
+
+  useEffect(() => {
+    if (mSelectedRow?.shipper_id) {
+      log('mSelectedRow?.shipper_id', mSelectedRow?.shipper_id)
+      dispatch({ isDSearch: true })
+      // log('mSelectedRow?.shipper_id2', detailData)
+      //setShp_cont(detailData)
+    }
+  }, [mSelectedRow?.shipper_id])
+
+  useEffect(() => {
+    if (selectedobj) {
+      log('mSelectedRow?.selectedobj', selectedobj)
+      dispatch({ isDSearch: true, mSelectedRow:{...mSelectedRow}, })
+      // setShp_cont(detailData)
+    }
+  }, [selectedobj])
+
+  useEffect(() => {
     if (loadItem) {
-      log('loadItem', loadItem[0])
+      log('detailData loadItem check',loadItem)
       setCustcode(loadItem[0])
       setIncoterms(loadItem[7])
       setBillType(loadItem[8])
       setCarrierCode(loadItem[9])
+      setSalesPerson(loadItem[11])
+      setTerminal(loadItem[12])
     }
   }, [loadItem])
 
   useEffect(() => {
+    if (detailData) {
+      log('detailData....', detailData)
+      log('detailData....2', (detailData as gridData).data)
+      setShp_cont((detailData as gridData))
+    }
+  }, [detailData])
+
+  useEffect(() => {
     log("maindata", mainData);
     if (mainData)
-      dispatch({ mSelectedRow: (mainData[0] as gridData).data[0] })
-    //setData((mainmSelectedRow.[0] as gridData).data[0]);
+      dispatch({ mSelectedRow: (mainData[0] as gridData).data })
   }, [mainData])
 
   const onClick = () => {
     //const selectedShipper = mSelectedRow.shipper_id
     //mSelectedRow: data 삭제
-    dispatch({ crudType: crudType.CREATE, isPopUpOpen: true, isDSearch: true })
+    dispatch({ crudType: crudType.CREATE, isShpPopUpOpen: true, isDSearch: true })
   }
 
   const handleMaskedInputChange = (e: any) => {
@@ -100,6 +140,16 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     log('====================handleMaskedInputChange, MselectedRow', objState.mSelectedRow)
   }
 
+
+  //custom select event props(Shipper)
+  const handleCustomSelectChange = (e: any) => {
+    log('====================handelRowClicked',e.cust_code)
+    dispatch({mSelectedRow: {...objState.mSelectedRow, shipper_id:e.cust_code}})
+    log('mSelectedRow check', mSelectedRow)
+
+  }
+
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
@@ -113,61 +163,92 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                   <Button id={"manage"} label={"manage_con"} onClick={onClick} width="w-32" />
                 </>}>
               <>
-                <Modal initData={loadItem} />
+                <Modal initData={loadItem} detailData={detailData} />
                 <div className={"col-span-2"}>
                   <CustomSelect
                     id="shipper_id"
                     initText="Select an Shipper"
                     listItem={custcode as gridData}
-                    valueCol={["cust_code", "cust_nm"]}
+                    valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
                     displayCol="cust_nm"
                     gridOption={{
-                      colVisible: { col: ["cust_code", "cust_nm"], visible: true },
+                      colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
                     }}
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
                     isDisplay={true}
                     defaultValue={mSelectedRow?.shipper_id}
                     inline={true}
+                    events={{ onRowClicked: handleCustomSelectChange }} 
+                    obj={selectedobj}
                   />
                 </div>
+                <div className={"col-span-2"}>
+                  <CustomSelect
+                    id="sales_person"
+                    initText="Select an Salesperson"
+                    listItem={salesperson as gridData}
+                    valueCol={["sales_person", "name"]}
+                    displayCol="name"
+                    gridOption={{
+                      colVisible: { col: ["sales_person", "name"], visible: true },
+                    }}
+                    gridStyle={{ width: '600px', height: '300px' }}
+                    style={{ width: '500px', height: "8px" }}
+                    isDisplay={true}
+                    defaultValue={mSelectedRow?.sales_person}
+                    inline={true}
+                    obj={selectedobj}
+                  />
+                </div>
+                {/* <MaskedInputField id="sales_person" value={mSelectedRow?.sales_person} options={{ isReadOnly: false }} /> */}
               </>
             </PageSearch>
           </div>
-          {/* <MaskedInputField id="sales_person" value={mSelectedRow.sales_person} options={{ isReadOnly: false }} /> */}
-          <ReactSelect
-            id="svc_type" dataSrc={shp_cont as data}
-            options={{
-              keyCol: "svc_type",
-              displayCol: ['svc_type', 'svc_type_nm'],
-              defaultValue: mSelectedRow?.svc_type,
-              isAllYn: false
-            }} />
-          <MaskedInputField id="shp_cont_pic_nm" value={mSelectedRow?.shp_cont_pic_nm} options={{ isReadOnly: false }} />
-          <MaskedInputField id="shp_cont_email" value={mSelectedRow?.shp_cont_email} options={{ isReadOnly: false }} />
-          <MaskedInputField id="shp_tel_num" value={mSelectedRow?.shp_tel_num} options={{ isReadOnly: false }} />
-          <MaskedInputField id="shp_fax_num" value={mSelectedRow?.shp_fax_num} options={{ isReadOnly: false }} />
 
-          <div className="col-start-1 col-end-6 "><TextArea id="ship_remark" rows={6} cols={32} value={mSelectedRow?.ship_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
-
-          {/* <MaskedInputField id="terminal_id" value={mSelectedRow.terminal_id} options={{ isReadOnly: false, useIcon: true }} /> */}
-          <div className={"col-span-2"}>
+          {/* Shipper 담당자 */}
+          <div className={"col-span-1"}>
             <CustomSelect
-              id="terminal_id"
-              initText='Select an terminal'
-              listItem={custcode as gridData}
-              valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
-              displayCol="cust_nm"
+              id="shp_cont_pic_nm"
+              initText="Select..."
+              listItem={shp_cont as gridData}
+              valueCol={["cust_code", "pic_nm", "email"]}
+              displayCol="pic_nm"
               gridOption={{
-                colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
+                colVisible: { col: ["cust_code", "pic_nm", 'email'], visible: true },
               }}
               gridStyle={{ width: '600px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
               isDisplay={true}
+              defaultValue={mSelectedRow?.shp_cont_pic_nm}
               inline={true}
+            // onChange={handleCustomSelectChange}
             />
           </div>
-          {/* <div className={"col-span-2"}><MaskedInputField id="terminal_nm" value={mSelectedRow.terminal_nm} options={{ isReadOnly: false }} /></div> */}
+          <MaskedInputField id="shp_cont_email" value={mSelectedRow?.shp_cont_email} options={{ isReadOnly: false }} />
+          <MaskedInputField id="shp_tel_num" value={mSelectedRow?.shp_tel_num} options={{ isReadOnly: false }} />
+          <MaskedInputField id="shp_fax_num" value={mSelectedRow?.shp_fax_num} options={{ isReadOnly: false }} />
+
+          <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={6} cols={32} value={mSelectedRow?.shp_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
+          <div className={"col-span-2"}>
+            <CustomSelect
+              id="terminal_id"
+              initText='Select an terminal'
+              listItem={terminal as gridData}
+              valueCol={["partner_id", "partner_name", "cust_nm"]}
+              displayCol="partner_name"
+              gridOption={{
+                colVisible: { col: ["partner_id", "partner_name", "cust_nm"], visible: true },
+              }}
+              gridStyle={{ width: '600px', height: '300px' }}
+              style={{ width: '1000px', height: "8px" }}
+              defaultValue={mSelectedRow?.terminal_id}
+              isDisplay={true}
+              inline={true}
+            // onChange={handleCustomSelectChange}
+            />
+          </div>
+          {/* <div className={"col-span-1"}><MaskedInputField id="terminal_nm" value={mSelectedRow.terminal_nm} options={{ isReadOnly: false }} /></div> */}
         </PageContent>
 
         <PageContent
@@ -192,20 +273,15 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     }}
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
+                    defaultValue={mSelectedRow?.carrier_code}
                     isDisplay={true}
                     inline={true}
                   />
                 </div>
-                {/* <div className={"col-span-4"}>
-                  <MaskedInputField id="carrier_nm" value={mSelectedRow.carrier_nm} options={{ isReadOnly: false }} />
-                </div> */}
+                {/* <div className={"col-span-2"}><MaskedInputField id="carrier_nm" value={mSelectedRow.carrier_nm} options={{ isReadOnly: false }} /></div> */}
               </>
             </PageSearch>
           </div>
-          {/* <MaskedInputField id="carrier_code" value={mSelectedRow.carrier_code} options={{ isReadOnly: false, useIcon:true }} />
-          <div className={"col-span-4"}>
-            <MaskedInputField id="carrier_nm" value={mSelectedRow.carrier_nm} options={{ isReadOnly: false }} />
-          </div> */}
 
           <div className="flex col-start-1 col-end-6">
             <fieldset className="flex w-1/2 p-3 pb-3 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">

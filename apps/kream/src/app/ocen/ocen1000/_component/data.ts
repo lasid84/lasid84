@@ -64,6 +64,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_get_bk_main',
     isShowLoading: true
   }
+  log(params,'@@@@@@@@@@@@@@@@@@@@')
   const result = await executFunction(params);
   return result![0]
 }
@@ -71,14 +72,73 @@ export const SP_GetMasterData = async (searchParam: any) => {
 //Create BookingNote
 export const SP_CreateData = async (param: any) => {
   const Param = param;
-  const { in_pgm_code, mwb_no, user_id, ipaddr } = Param;
-  log('Param', Param)
+  log('=========onBKSave  Create BookingNote..', Param)
+  const {  bk_dd
+    , origin_terminal_id
+    , dest_terminal_id
+    , trans_mode
+    , trans_type
+    , vocc_id
+    , customs_declation
+    , state
+    , milestone
+    , bk_remark
+    , shipper_id
+    , shipper_cont_seq
+    , sales_person
+    , shp_remark
+    , cnee_id
+    , ts_port
+    , vessel
+    , port_of_loading
+    , port_of_unloading
+    , etd
+    , eta
+    , final_dest_port
+    , final_eta
+    , doc_close_dd
+    , doc_close_tm
+    , cargo_close_dd
+    , cargo_close_tm
+    , svc_type
+    , movement_type
+    , commodity
+    , strategic_yn
+    , cargo_remark
+    , pickup_dd
+    , pickup_tm
+    , pickup_seq
+    , pickup_loc
+    , transport_company
+    , cy_place_code
+    , cy_cont_seq
+    , carrier_code
+    , cr_t_cont_seq
+    , cr_s_cont_seq
+    , cr_fak
+    , cr_nac
+    , bl_type
+    , bill_type
+    , incoterms
+    , incoterms_remark
+    , ams_yn
+    , ams
+    , aci_yn
+    , aci
+    , afr_yn
+    , edi_yn
+    , isf_yn
+    , e_manifest_yn
+    , use_yn
+    , remark, user_id, ipaddr } = Param;
   const params = {
     inparam: [
       "in_bk_dd"
-      , "in_terminal_id"
+      , "in_origin_terminal_id"
+      , "in_dest_terminal_id"
       , "in_trans_mode"
       , "in_trans_type"
+      , "in_vocc_id"
       , "in_customs_declation"
       , "in_state"
       , "in_milestone"
@@ -96,14 +156,13 @@ export const SP_CreateData = async (param: any) => {
       , "in_eta"
       , "in_final_dest_port"
       , "in_final_eta"
-      , "in_doc_close_dd "
+      , "in_doc_close_dd"
       , "in_doc_close_tm"
       , "in_cargo_close_dd"
       , "in_cargo_close_tm"
       , "in_svc_type"
       , "in_movement_type"
       , "in_commodity"
-      , "in_sales_person"
       , "in_strategic_yn"
       , "in_cargo_remark"
       , "in_pickup_dd"
@@ -131,13 +190,69 @@ export const SP_CreateData = async (param: any) => {
       , "in_isf_yn"
       , "in_e_manifest_yn"
       , "in_use_yn"
-      , ",in_remark"
+      , "in_remark"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      in_pgm_code
-      , mwb_no
+      '20240719'//bk_dd
+      , origin_terminal_id
+      , dest_terminal_id
+      , 'O' //trans_mode
+      , 'E' //trans_type
+      , vocc_id
+      , customs_declation
+      , state
+      , milestone
+      , bk_remark
+      , '1' //shipper_id
+      , shipper_cont_seq
+      , sales_person
+      , shp_remark
+      , cnee_id
+      , ts_port
+      , vessel
+      , 'KRPUS'	 //port_of_loading
+      , 'HKHKG' //port_of_unloading
+      , etd 
+      , eta
+      , final_dest_port
+      , final_eta
+      , doc_close_dd
+      , doc_close_tm
+      , cargo_close_dd
+      , cargo_close_tm
+      , svc_type
+      , movement_type
+      , commodity
+      , strategic_yn
+      , cargo_remark
+      , pickup_dd
+      , pickup_tm
+      , pickup_seq
+      , pickup_loc
+      , transport_company
+      , cy_place_code
+      , cy_cont_seq
+      , carrier_code
+      , cr_t_cont_seq
+      , cr_s_cont_seq
+      , cr_fak
+      , cr_nac
+      , bl_type
+      , bill_type
+      , incoterms
+      , incoterms_remark
+      , ams_yn
+      , ams
+      , aci_yn
+      , aci
+      , afr_yn
+      , edi_yn
+      , isf_yn
+      , e_manifest_yn
+      , use_yn
+      , remark
       , user_id
       , ipaddr
     ],
@@ -145,8 +260,8 @@ export const SP_CreateData = async (param: any) => {
     isShowLoading: true,
     isShowComplete: true,
   }
-
   const result = await executFunction(params);
+  log(result,'success return 데이터2')
   return result![0];
 }
 
@@ -159,18 +274,18 @@ export const SP_InsertData = async (param: any) => {
   const params = {
     inparam: [
       "in_cust_code"
-      , "in_cont_type"
-      , "in_pic_nm"
-      , "in_email"
-      , "in_cust_office"
-      , "in_tel_num"
-      , "in_fax_num"
-      , "in_user_dept"
-      , "in_bz_plc_cd"
-      , "in_use_yn"
-      , "in_def"
-      , "in_user_id"
-      , "in_ipaddr"
+      ,"in_cont_type"
+      ,"in_pic_nm"
+      ,"in_email"
+      ,"in_cust_office"
+      ,"in_tel_num"
+      ,"in_fax_num"
+      ,"in_user_dept"
+      ,"in_bz_plc_cd"
+      ,"in_use_yn"
+      ,"in_def"
+      ,"in_user_id"
+      ,"in_ipaddr"
     ],
     invalue: [
       cust_code
@@ -205,8 +320,8 @@ export const SP_GetWBDetailData = async (searchParam: any) => {
   const params = {
     inparam: [
       "in_no"
-      , "in_user"
-      , "in_ipaddr"
+      ,"in_user"
+      ,"in_ipaddr"
     ],
     invalue: [
       no
@@ -222,24 +337,23 @@ export const SP_GetWBDetailData = async (searchParam: any) => {
 }
 
 
-export const SP_GetContData = async (param: any) => {
-  const Param = param;
+//shipper 담당자 data get
+export const SP_GetContData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
   const { shipper_id, cont_type, user_id, ipaddr } = Param;
-  log("param_sp_getconData : ", param, cont_type, shipper_id)
-
-  if (shipper_id == undefined || cont_type == undefined) {
-    log('param_sp_getconData undefined')
+  log("mSelectedRow?.shipper_id param sp data: ", Param, cont_type, shipper_id)
+  if (shipper_id === undefined) {
+    log('mSelectedRow?.shipper_id undefined')
   } else {
-
     const params = {
       inparam: [
         "in_cust_code"
-        , "in_cont_type"
-        , "in_user_id"
-        , "in_ipaddr"
+        ,"in_cont_type"
+        ,"in_user_id"
+        ,"in_ipaddr"
       ],
       invalue: [
-        shipper_id,  //  ' KR1058619'
+        shipper_id  //  ' KR1058619'
         , cont_type   // 'ocen'
         , user_id
         , ipaddr
@@ -247,8 +361,8 @@ export const SP_GetContData = async (param: any) => {
       inproc: 'ocean.f_ocen0002_get_detail',
       isShowLoading: false
     }
+    
     const result = await executFunction(params);
-    log('SP_GetDetailsterData111111111', result)
     return result![0]
   }
 
@@ -266,16 +380,16 @@ export const SP_InsertCargo = async (param: any) => {
   // } = Param;
   // const params = {
   //   inparam : [
-  //     "in_waybill_no"
-  //   , "in_charge_code"
-  //   , "in_charge_desc"
-  //   , "in_sort_id"
-  //   , "in_import_export_ind"
-  //   , "in_ppc_ind"
-  //   , "in_invoice_wb_amt"
-  //   , "in_invoice_wb_currency_code"
-  //   , "in_invoice_charge_amt"
-  //   , "in_invoice_currency_code"
+  //    waybill_no"
+  //   ,charge_code"
+  //   ,charge_desc"
+  //   ,sort_id"
+  //   ,import_export_ind"
+  //   ,ppc_ind"
+  //   ,invoice_wb_amt"
+  //   ,invoice_wb_currency_code"
+  //   ,invoice_charge_amt"
+  //   ,invoice_currency_code"
   //   , "in_actual_cost_amt"
   //   , "in_cost_currency_code"
   //   , "in_vendor_id"

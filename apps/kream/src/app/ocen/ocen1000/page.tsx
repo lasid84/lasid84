@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useReducer, useMemo, useCallback, memo } from "react";
+import { useEffect, useReducer, useMemo, useRef } from "react";
 import { SP_Load, SP_GetWBDetailData } from "./_component/data";
 import { reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_MD } from "components/provider/contextObjectProvider";
@@ -9,8 +9,7 @@ import SearchForm from "./_component/search-form"
 import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
-import { useSearchParams } from 'next/navigation'
+import { WBMenuTab } from "components/tab/tab"
 import BKMainTab from "./_component/bkMainTab"
 import BKMain from "./_component/bkMain";
 import BKCargo from "./_component/bkCargo";
@@ -21,9 +20,7 @@ import { shallow } from "zustand/shallow";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
 
-
-
-export default function OCEN0005() {
+export default function OCEN1000() {
 
     const [selectedTab, setselectedTab] = useState<string>("NM");
     const [state, dispatch] = useReducer(reducer, {
@@ -37,26 +34,37 @@ export default function OCEN0005() {
             tab1: [],
             MselectedTab: 'Main',
             isFirstRender: true,
-            rowRef: 0,
-            isPopUpOpen : false,
-            cont_type: ''
+            cont_type: '',
+            gridRef_m: useRef<any | null>(null),
+            refRow : '',
+            isShpPopUpOpen: false,
+            selectedobj: {}
         }
     });
     const { objState } = state;
-    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab, isFirstRender } = objState;
+    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isShpPopUpOpen, MselectedTab, isFirstRender } = objState;
+    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isShpPopUpOpen, mSelectedDetail, dispatch } }, [state]);
 
-    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false }); //1건 Detail조회
+
+    //사용자 정보
     const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
+    const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
+    const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
+
+
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
         dispatch({ cont_type: params.cont_type });
+        // dispatch({ mselectedRow : mSelectedRow, menu_seq : '', user_id:'', idappr:''})
     }, [menu_param])
 
-    const handleOnClickTab = (code: any) => { 
-        setselectedTab(code) }
+    const handleOnClickTab = (code: any) => {
+        //tab click event , 작성중인경우, update 한 경우 팝업알림(저장)
+        setselectedTab(code)
+    }
     const MhandleOnClickTab = (code: any) => {
         if (code.target.id === 'Main') { dispatch({ MselectedTab: code.target.id }) }
         else {
@@ -77,7 +85,7 @@ export default function OCEN0005() {
         }
     }, [objState?.isMSearch]);
 
-    
+
     useEffect(() => {
         if (objState.isMDSearch) {
             mainRefetch();
@@ -103,13 +111,14 @@ export default function OCEN0005() {
                 {objState.MselectedTab == "Main" ? <>
                     <SearchForm loadItem={initData} />
                     <div className={`w-full h-[calc(100vh-210px)] flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
-                        <div className="w-full"> <MasterGrid initData={initData} /></div>
+                        <div className="w-full">
+                            <MasterGrid initData={initData} /></div>
                     </div></> : <>
-                    {/* WayBill Detail 화면 상단{Tab} */}
-                    <BKMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
-                    {/* <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} /> */}
 
-                    {/* WayBill Detail 화면 하단(Sub) */}
+                    {/* Booking Note Detail 화면 상단{Tab} */}
+                    <BKMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
+
+                    {/* Booking Note Detail 화면 하단(Sub) */}
                     <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
                         <BKMain loadItem={initData} mainData={mainData} />
                     </div>

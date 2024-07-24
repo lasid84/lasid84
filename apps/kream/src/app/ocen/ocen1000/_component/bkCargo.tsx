@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
-import { MaskedInputField, Input,TextArea } from 'components/input';
+import { MaskedInputField, Input, TextArea } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { DateInput, DatePicker } from 'components/date'
 import { gridData } from "components/grid/ag-grid-enterprise";
@@ -30,6 +30,8 @@ type Props = {
 const BKCargo = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
+  const { MselectedTab, mSelectedRow, popType } = objState
+
   const [data, setData] = useState<any>();
 
   const methods = useForm({
@@ -59,7 +61,8 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
   useEffect(() => {
     log("maindata", mainData);
     if (mainData)
-      setCargoDetail((mainData?.[1] as gridData));
+      //setCargoDetail((mainData?.[1] as gridData));
+      dispatch({ mSelectedRow: (mainData?.[0] as gridData).data[0] })
   }, [mainData])
 
 
@@ -70,11 +73,11 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
 
         <PageContent
           title={<span className="px-1 py-1 text-blue-500">Cargo</span>}>
-          <MaskedInputField id="svc_type" value={data?.svc_type} options={{ isReadOnly: false }} />
-          <MaskedInputField id="movement_type" value={data?.movement_type} options={{ isReadOnly: false }} />
-          <MaskedInputField id="commodity" value={data?.commodity} options={{ isReadOnly: false }} />
-          <MaskedInputField id="strategic_yn" value={data?.strategic_yn} options={{ isReadOnly: false }} />
-          <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={data?.cargo_remark} options={{ isReadOnly: false }} /></div>
+          <MaskedInputField id="svc_type" value={mSelectedRow?.svc_type} options={{ isReadOnly: false, textAlign: 'center', }} />
+          <MaskedInputField id="movement_type" value={mSelectedRow?.movement_type} options={{ isReadOnly: false, textAlign: 'center', }} />
+          <MaskedInputField id="commodity" value={mSelectedRow?.commodity} options={{ isReadOnly: false, textAlign: 'center', }} />
+          <MaskedInputField id="strategic_yn" value={mSelectedRow?.strategic_yn} options={{ isReadOnly: false, textAlign: 'center', }} />
+          <div className="col-start-1 col-end-6 "><TextArea id="cargo_remark" rows={1} cols={32} value={mSelectedRow?.cargo_remark} options={{ isReadOnly: false }} /></div>
 
 
         </PageContent>

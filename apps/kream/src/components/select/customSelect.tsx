@@ -1,14 +1,16 @@
-import React, { KeyboardEventHandler, memo, useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
+import React, {ChangeEvent, KeyboardEventHandler, memo, useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
 import Grid, { GridOption, gridData } from '@/components/grid/ag-grid-enterprise';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
 import { CellKeyDownEvent, FullWidthCellKeyDownEvent, IRowNode, RowClickedEvent } from 'ag-grid-community';
 import { useTranslation } from 'react-i18next';
 import { useFormContext } from 'react-hook-form';
+import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { Label } from 'components/label';
 import './custom-select-style.css';
 import { MaskedInputField } from 'components/input';
 import { InputWrapper } from "components/wrapper"
+import { AnyPtrRecord } from 'dns';
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -30,6 +32,10 @@ type Props = {
   isDisplayX?: boolean    // X 아이콘 표시여부(필수값 여부)
   noLabel?: boolean       // Label 표시 여부
   lwidth?: string        // Label 넓이
+  events?:{               //customselect event전달용
+    onRowClicked?:  (e: ChangeEvent<HTMLInputElement>) => void;
+  }
+  obj ?: {}
 }
 
 type GridStyle = {
@@ -43,6 +49,9 @@ type Style = {
 }
 
 function CustomSelect(props: Props) {
+
+  const { dispatch, objState } = useAppContext();
+  const { mSelectedRow, selectedobj } = objState
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isGridReady, setIsGridReady] = useState(false);
@@ -53,7 +62,7 @@ function CustomSelect(props: Props) {
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
   const { id, label, initText = 'Select an Option', listItem, inline = true, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true
-    , noLabel = false, lwidth, defaultValue
+    , noLabel = false, lwidth, defaultValue, events
   } = props;
   const customselect = true
   const defaultStyle = {
@@ -84,9 +93,12 @@ function CustomSelect(props: Props) {
   };
 
   useEffect(() => {
-    if (!filteredData) {
+    log('detailData, listItem', listItem)
+    if (!filteredData || listItem) {
       setFilteredData(listItem);
     }
+    // if(listItem)
+    //   setFilteredData(listItem)
   }, [listItem])
 
   useEffect(() => {
@@ -108,9 +120,9 @@ function CustomSelect(props: Props) {
   useEffect(() => {
     if (isOpen && isGridReady) {
       var param = getValues();
-      log('param', param)
+      log('===================custom select param', param)
       if (valueCol?.some(v => param[v])) {
-        log('??', valueCol)
+        log('??', valueCol, filteredData)
         for (var i = 0; i < filteredData?.data.length; i++) {
           if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
         }
@@ -128,11 +140,16 @@ function CustomSelect(props: Props) {
     }
   }, [defaultValue, listItem, valueCol]);
 
-  const handelRowClicked = (param: RowClickedEvent) => {
+  const handelRowClicked = (param: any) => {
     var selectedRow = { "colId": param.node.id, ...param.node.data }
     log("handelRowClicked", param);
     setSelectedValue(selectedRow);
+    dispatch({selectedobj : selectedRow})
     setDisplayVal(selectedRow);
+    if(events?.onRowClicked){      
+      log('events?onRowClicked?')
+      events?.onRowClicked(selectedRow);
+    }
   }
 
   const handleOnGridReady = (param: any) => {
@@ -166,7 +183,7 @@ function CustomSelect(props: Props) {
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
     }
-    log("setDisplayVal", val, row)
+    log("setDisplayVal row?", val, row)
     setDisplayText(val);
   }
 

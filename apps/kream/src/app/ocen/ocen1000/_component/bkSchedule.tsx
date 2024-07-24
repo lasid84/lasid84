@@ -31,8 +31,10 @@ type Props = {
 
 const BKSchedule = memo(({ loadItem, mainData }: any) => {
 
-  const { dispatch, objState } = useAppContext();
-  const [data, setData] = useState<any>();
+  const { dispatch, objState } = useAppContext()
+  const [data, setData] = useState<any>()
+  const { MselectedTab, mSelectedRow, popType } = objState
+
 
   const methods = useForm({
     defaultValues: {
@@ -66,7 +68,8 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
   useEffect(() => {
     log("maindata", mainData);
     if (mainData)
-      setData((mainData?.[0] as gridData).data[0]);
+      //setData((mainData?.[0] as gridData).data[0]);
+    dispatch({mSelectedRow : (mainData?.[0] as gridData).data[0]})
   }, [mainData])
 
 
@@ -75,25 +78,25 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageContent
           title={<span className="px-1 py-1 text-blue-500">SKD</span>}>
-          <div className="col-start-1 col-end-2"><MaskedInputField id="ts_port" value={data?.ts_port} options={{ isReadOnly: false }} /></div>
-          <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={data?.vessel} options={{ isReadOnly: false }} /></div>
+          <div className="col-start-1 col-end-2"><MaskedInputField id="ts_port" value={mSelectedRow?.ts_port} options={{ isReadOnly: false }} /></div>
+          <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={mSelectedRow?.vessel} options={{ isReadOnly: false }} /></div>
           <div className="col-start-1 col-end-6"><hr></hr>  </div>
-          <div className="col-start-1 col-end-2"><MaskedInputField id="port_of_loading" value={data?.port_of_loading} options={{ isReadOnly: false }} /></div>
+          <div className="col-start-1 col-end-2"><MaskedInputField id="port_of_loading" value={mSelectedRow?.port_of_loading} options={{ isReadOnly: false }} /></div>
 
-          <MaskedInputField id="port_of_unloading" value={data?.port_of_unloading} options={{ isReadOnly: false }} />
-          <MaskedInputField id="final_dest_port" value={data?.final_dest_port} options={{ isReadOnly: false }} />
+          <MaskedInputField id="port_of_unloading" value={mSelectedRow?.port_of_unloading} options={{ isReadOnly: false }} />
+          <MaskedInputField id="final_dest_port" value={mSelectedRow?.final_dest_port} options={{ isReadOnly: false }} />
 
-          <div className="col-start-1 col-end-2"><DatePicker id="etd" value={data?.etd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} /></div>
-          <DatePicker id="eta" value={data?.eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
-          <DatePicker id="final_eta" value={data?.final_eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+          <div className="col-start-1 col-end-2"><DatePicker id="etd" value={mSelectedRow?.etd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} /></div>
+          <DatePicker id="eta" value={mSelectedRow?.eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+          <DatePicker id="final_eta" value={mSelectedRow?.final_eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
           <div className="col-start-1 col-end-6"><hr></hr> </div>
 
           <div className="col-start-1 col-end-2">
-            <DatePicker id="doc_close_dd" value={data?.doc_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+            <DatePicker id="doc_close_dd" value={mSelectedRow?.doc_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
           </div>
-          <MaskedInputField id="doc_close_tm" value={data?.doc_close_tm} options={{ isReadOnly: false }} />
-          <DatePicker id="cargo_close_dd" value={data?.cargo_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
-          <MaskedInputField id="cargo_close_tm" value={data?.cargo_close_tm} options={{ isReadOnly: false }} />
+          <MaskedInputField id="doc_close_tm" value={mSelectedRow?.doc_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40'/>
+          <DatePicker id="cargo_close_dd" value={mSelectedRow?.cargo_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+          <MaskedInputField id="cargo_close_tm" value={mSelectedRow?.cargo_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40'/>
 
         </PageContent>
 
@@ -109,15 +112,12 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                 </>}>
               <>
                 <div className="col-start-1 col-end-2">
-                  <DatePicker id="pickup_dd" value={data?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+                  <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
                 </div>
-                <MaskedInputField id="pickup_tm" value={data?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
+                <MaskedInputField id="pickup_tm" value={mSelectedRow?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />                
+                <MaskedInputField id="pickup_seq" value={mSelectedRow?.pickup_seq} options={{ isReadOnly: false }} />
+                <MaskedInputField id="pickup_loc" value={mSelectedRow?.pickup_loc} options={{ isReadOnly: false }} />
                 
-                <MaskedInputField id="pickup_seq" value={data?.pickup_seq} options={{ isReadOnly: false }} />
-                <MaskedInputField id="pickup_loc" value={data?.pickup_loc} options={{ isReadOnly: false }} />
-                <div className="col-start-1 col-end-2">
-                <MaskedInputField id="cy_place_code" value={data?.cy_place_code} options={{ isReadOnly: false ,useIcon:true}} />
-                </div>
                 <div className={"col-span-2"}>
                   <CustomSelect
                     id="cy_place_code"
@@ -130,17 +130,18 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                     }}
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
+                    defaultValue={mSelectedRow?.cy_place_code}
                     isDisplay={true}
                     inline={true}
                   />
                 </div>
                 {/* <MaskedInputField id="cy_place_code_nm" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} /> */}
-                <MaskedInputField id="cy_place_area" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} />
+                <MaskedInputField id="cy_place_area" value={mSelectedRow?.cy_place_code_nm} options={{ isReadOnly: false }} />
                 <div className="col-start-1 col-end-2">
-                <MaskedInputField id="cy_cont_nm" value={data?.cy_cont_nm} options={{ isReadOnly: false }} />
+                <MaskedInputField id="cy_cont_nm" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
                 </div>
-                <MaskedInputField id="cy_cont_tel" value={data?.cy_cont_nm} options={{ isReadOnly: false }} />
-                <MaskedInputField id="cy_cont_email" value={data?.cy_cont_nm} options={{ isReadOnly: false }} />
+                <MaskedInputField id="cy_cont_tel" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
+                <MaskedInputField id="cy_cont_email" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
               </>
             </PageSearch>
           </div>

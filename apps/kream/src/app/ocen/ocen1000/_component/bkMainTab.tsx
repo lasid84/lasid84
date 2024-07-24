@@ -1,7 +1,7 @@
 'use client'
 
 
-import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
+import React, { useCallback, useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageBKTabContent } from "layouts/search-form/page-search-row";
 import { useUserSettings } from "states/useUserSettings";
@@ -11,7 +11,8 @@ import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData } from './data';
+import { SP_CreateData } from './data'; //SP_UpdateData
+import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
@@ -30,13 +31,14 @@ export interface typeloadItem {
 }
 
 const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
-  const { Create } = useUpdateData2(SP_CreateData);
+  const { Create } = useUpdateData2(SP_CreateData, SEARCH_D);
+  // const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
 
   const { dispatch, objState } = useAppContext();
   const [groupcd, setGroupcd] = useState<any>([])
   const [data, setData] = useState<any>();
 
-  const { MselectedTab,mSelectedRow } = objState
+  const { MselectedTab, mSelectedRow, popType } = objState
 
   // //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
@@ -63,19 +65,37 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
   }
   const onRefresh = () => { dispatch({ isMDSearch: true }) }
 
-  const onBKSave = () => {
-    const params = getValues();
-    console.log('loggggg',params)
-    console.log('logggggk',objState.mSelectedRow)
-    Create.mutate(params)
-  }
+  const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
+    //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
+    log('=========onBKSave', popType, param)
+    if (popType === crudType.UPDATE) {
+      log('=============Update')
+      // Update.mutate(objState.mSelectedRow, {
+      //   onSuccess: (res: any) => {
+      //     dispatch({ isMDSearch: true });
+      //   },
+      // })
+    } else {
+      // dispatch({mSelectedRow: ...mSelectedRow, })
+      log('=============create', objState.mSelectedRow)
+      Create.mutate(objState.mSelectedRow, {
+        onSuccess: (res: any) => {
+          objState.tab1.push({ cd: res.data[0].bk_id, cd_nm: res.data[0].bk_id }) //발급된 bk_id로 tab update
+          var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
+          dispatch({ popType: crudType.UPDATE, mSelectedRow: res.data[0], tab1: filtered, MselectedTab: res.data[0].bk_id, })
+        },
+      })
+    }
+
+  }, [popType]);
 
   useEffect(() => {
     if (mainData) {
       if ((mainData?.[0] as gridData).data[0]) {
-        setData((mainData?.[0] as gridData).data[0]);
+        //setData((mainData?.[0] as gridData).data[0]);
+        dispatch({ mSelectedRow: (mainData?.[0] as gridData).data[0] })
       } else { //New
-        setData({ create_user: gUserName })
+        //setData({ create_user: gUserName })
       }
     }
   }, [mainData])
@@ -87,9 +107,8 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
           <PageBKTabContent
             right={
               <>
-                <div className={"flex col-span-2 "}><Button id={"save"} onClick={onBKSave} width="w-32" /></div>
+                <div className={"flex col-span-2 "}><Button id={"save"} onClick={handleSubmit(onFormSubmit)} width="w-32" /></div>
                 <div className={"flex col-span-2"}>
-                  {/* <ICONButton id="interface" disabled={false} onClick={onInterface} size={'24'} /> */}
                   <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
                 </div>
@@ -97,12 +116,12 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
             }
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
             addition={<Stepper title={"tello"} ><></></Stepper>}
-          >      
-            <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={data?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={data?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-            {/* <MaskedInputField id="create_date" lwidth='w-24' width="w-36" height='h-8' value={data?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} /> */}
-             <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={data?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'time' }} />
-           </PageBKTabContent>
+          >
+            <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+            <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+          </PageBKTabContent>
         </form>
       </FormProvider>
     </div>
