@@ -28,14 +28,14 @@ async function executFunction(inproc, inparam, invalue) {
     token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
     const client = await init({url:url, isAuth:false, accessToken:token});
     
-    log("executFunction1", iniData, url, token);
+    // log("executFunction1", iniData, url, token);
     const { cursorData, numericData, textData } = await dataCall(client, inproc,inparam, invalue,'');
 
-    log("============executFunction2", url, inproc,inparam, invalue, numericData, textData, cursorData);
+    // log("============executFunction2", url, inproc,inparam, invalue, numericData, textData, cursorData);
     if (numericData !== 0)
     {
         let errMsg = numericData + " : " +  textData;
-      log(errMsg);
+    //   log(errMsg);
       throw new Error(errMsg);
     }
 

@@ -38,27 +38,20 @@ class Library {
     }
 
     async startBrowser() {
-        log(this.idx, "start Brower headless: ", this.isHeadless);
-        if (this.errCnt > 4) {
-            if (this.browser) {
-                await this.browser.close();
-                this.browser = null;
-                this.errCnt = 0;
-            } else {
-                log("brower null 아님");
-            }
-        }
-
+        
         if (!this.browser) {
             log("brower restart")
             this.browser = await puppeteer.launch(
                 { headless:this.isHeadless, 
                     args:[ '--start-maximized'], // you can also use '--start-fullscreen'
                 });
-        }
+        } 
 
         const pages = await this.browser.pages();
         this.page = pages[0];
+        for (let i = 1; i < pages.length; i++) {
+            await pages[i].close();
+        }
         await this.page.setViewport({width: 0, height: 0});
 
         // page.on('dialog', async dialog => {
@@ -70,32 +63,38 @@ class Library {
         log("lastExcute", this.lastExcute);
     };
 
-    async checkSession(isForce = false) {
-        let restart = false;
+    async close() {
+        if (this.browser) {
+            await this.browser.close();
+        }
+    }
+
+    // async checkSession(isForce = false) {
+    //     let restart = false;
     
-        if (isForce) {
-            restart = true;
-        }
-        else {
-            if (this.lastExcute) {
-                // const diffMSec = now.getTime() - lastExcute.getTime();
-                const diffMSec = getKoreaTime() - this.lastExcute.getTime();
-                const diffMin = diffMSec / (60 * 1000);
-                if (diffMin > 30) {
-                    restart = true;
-                }
-            }
-            else {
-                restart = true
-            }
-        }
+    //     if (isForce) {
+    //         restart = true;
+    //     }
+    //     else {
+    //         if (this.lastExcute) {
+    //             // const diffMSec = now.getTime() - lastExcute.getTime();
+    //             const diffMSec = getKoreaTime() - this.lastExcute.getTime();
+    //             const diffMin = diffMSec / (60 * 1000);
+    //             if (diffMin > 30) {
+    //                 restart = true;
+    //             }
+    //         }
+    //         else {
+    //             restart = true
+    //         }
+    //     }
     
-        if (restart) {
-            this.errCnt = 5; //재시작
-            await this.startBrowser();
-            await this.login();
-        }
-    };
+    //     if (restart) {
+    //         this.errCnt = 5; //재시작
+    //         await this.startBrowser();
+    //         await this.login();
+    //     }
+    // };
 
     async login() {
 
@@ -632,6 +631,10 @@ class Library {
             out_tab_cnt++;
             
         }
+    }
+
+    async getValueFromJson(jsonText, path) {
+
     }
 
     async calculate(data) {

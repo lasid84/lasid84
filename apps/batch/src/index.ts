@@ -10,8 +10,11 @@ import { arp }  from '@repo/kwe-lib'
 let _arrThread:any = [];
 
 function init() {
-  
-  let filePath = process.cwd() + '/dist/configs/thread.ini';
+  //개발서버에서는 /dist까지 나와서 임시로 아래와 같이 설정 - stephen
+  let root = process.cwd();
+  if (root.endsWith("/dist")) root = root.replace("/dist", "");
+
+  let filePath = root + '/dist/configs/thread.ini';
   console.log("filePath", filePath)
   try {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -90,7 +93,7 @@ async function startWorker() {
             }});
         break;  
     }
-    await sleep(3000);
+    await sleep(5000);
     i++;
   }
 }

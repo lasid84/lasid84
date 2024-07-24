@@ -64,22 +64,21 @@ export default function LoginForm() {
       return;
     }
 
-    
-      setIsCircle(true)
-      const res = await Login({ user_id: user.user_id, password: user.password });
-      if (!res!.success) {
-        setErrMessage(res?.message);
-        setIsCircle(false)
-        return;
-      };
-      setErrMessage('');
+    setIsCircle(true)
+    const res = await Login({ user_id: user.user_id.toLowerCase().replace('@kwe.com', ''), password: user.password });
+    if (!res!.success) {
+      setErrMessage(res?.message);
+      setIsCircle(false)
+      return;
+    };
+    setErrMessage('');
 
-      userSettingsActions!.setData({ ...res?.data });
-      configActions.setConfig({ 
-        lang: res?.data.lang ? res?.data.lang : 'KOR'
+    userSettingsActions!.setData({ ...res?.data });
+    configActions.setConfig({ 
+      lang: res?.data.lang ? res?.data.lang : 'KOR'
     });
       
-      router.replace('/dashboard');
+    router.replace('/dashboard');
   }
 
   const onSubmit = async (e:React.MouseEvent<HTMLElement>) => {
