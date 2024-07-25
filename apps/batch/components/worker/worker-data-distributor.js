@@ -31,7 +31,8 @@ async function setIFDataDistribute() {
         const inparam = ['in_threads', 'in_user_id', 'in_ipaddr'];
         const invalue = [JSON.stringify(workerData), '', ''];
         const inproc = 'scrap.f_scrp0001_set_if_data_dist'; 
-        await executFunction(inproc, inparam, invalue);
+        const result = await executFunction(inproc, inparam, invalue);
+        // log("setIFDataDistribute", result, JSON.stringify(workerData))
  
     } catch (ex) {
         throw ex;
@@ -46,10 +47,9 @@ const mySetInterval = () => {
             if (!onExcute) {
                 setIFDataDistribute();
             }
-            log("mySetInterval : ", onExcute);
             mySetInterval();
         } catch (ex) {
-            console.log("mySetInterval", ex)
+            error("distributor", ex)
             onExcute = false;
         }
     }, 5000)};
@@ -61,32 +61,6 @@ try {
     setIFDataInit();
     mySetInterval();
 
-    // 프로세스 종료 시 브라우저 닫기
-    process.on('SIGINT', async () => {
-        console.log('SIGINT signal received.');
-        await ufsp.close();
-    });
-
-    process.on('SIGTERM', async () => {
-        console.log('SIGTERM signal received.');
-        await ufsp.close();
-    });
-
-    process.on('exit', async () => {
-        console.log('Process exit event received.');
-        await ufsp.close();
-    });
-
-    // 예기치 않은 오류 처리
-    process.on('uncaughtException', async (err) => {
-        error('Uncaught Exception:', err);
-        await ufsp.close();
-    });
-
-    process.on('unhandledRejection', async (reason, promise) => {
-        error('Unhandled Rejection:', reason);
-        await ufsp.close();
-    });
 } catch (ex) {
     //log처리 추가
     error(ex);

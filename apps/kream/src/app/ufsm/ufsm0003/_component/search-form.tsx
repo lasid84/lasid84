@@ -9,8 +9,8 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { DatePicker } from "components/date";
 import dayjs from 'dayjs'
 import { downloadExcel } from "components/file-upload";
-import { useGetData } from "components/react-query/useMyQuery";
-import { SP_GetExcelFormData } from "./data";
+import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
+import { SP_CreateIFData, SP_GetExcelFormData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -38,9 +38,11 @@ const SearchForm = memo(({loadItem}:any) => {
   log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
   const { fr_date, to_date } = objState.searchParams;
+  const { excel_data } = objState;
   
   const { data: excelFormData, refetch } = useGetData('', '', SP_GetExcelFormData, {enabled:true});
-
+  const { Create } = useUpdateData2(SP_CreateIFData);
+  
   // const methods = useForm<FormType>({
   const methods = useForm({
     // resolver: zodResolver(formSchema),
@@ -69,14 +71,14 @@ const SearchForm = memo(({loadItem}:any) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params, getValues());
-    dispatch({ searchParams: params, isMSearch:true});
+    // log("onSearch", params, getValues());
+    dispatch({ searchParams: params, isMSearch:true, uploadFile_init:true, excel_data:{}});
   }
 
   const onFormDown = () => {
     const reSearch = async () => {
       await refetch();
-      log("onFormDown", (excelFormData as gridData));
+      // log("onFormDown", (excelFormData as gridData));
       // createExcelFile((excelFormData as gridData));
       downloadExcel(
         (excelFormData as gridData).data
@@ -87,6 +89,16 @@ const SearchForm = memo(({loadItem}:any) => {
     reSearch();
   }
 
+  const onSave = () => {
+      log("onSave", !!Object.keys(excel_data).length)
+      Create.mutate({excel_data:JSON.stringify(excel_data.data)}, {
+          onSuccess: (res: any) => {
+              dispatch({ isMSearch: true });
+          }
+      });
+      dispatch({excel_data: {}});
+  }
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(() => {})} className="space-y-1">
@@ -94,6 +106,7 @@ const SearchForm = memo(({loadItem}:any) => {
           right={
             <>
               <Button id={"search"} onClick={onSearch} />
+              <Button id={"save"} onClick={onSave} disabled={Object.keys(excel_data).length === 0 ? true : false} />
               <Button id={"form_down"} onClick={onFormDown} />
             </>
           }>

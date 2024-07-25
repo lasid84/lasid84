@@ -8,6 +8,7 @@ import { SP_CreateIFData, SP_GetIFData } from "./_component/data";
 import SearchForm from "./_component/search-form";
 import MasterGrid from './_component/gridMaster';
 import { FileUpload } from "components/file-upload";
+import { gridData, JsonToGridData, ROW_TYPE, ROW_TYPE_NEW } from "@/components/grid/ag-grid-enterprise";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -17,13 +18,15 @@ export default function UFSM0003() {
 
     const [state, dispatch] = useReducer(reducer, {
         objState: {
-            searchParams : {}
+            searchParams : {},
+            excel_data : {},
+            uploadFile_init: false,
         }
     });
     const { objState } = state;
 
     const val = useMemo(() => { return { objState, dispatch } }, [state]);
-    const { Create } = useUpdateData2(SP_CreateIFData);
+    
     
     useEffect(() => {
         if (objState.isMSearch) {
@@ -33,20 +36,32 @@ export default function UFSM0003() {
         }
     }, [objState?.isMSearch]);
 
-    const handleFileDrop = (data : string) => {
-        log("handleFileDrop data", data)
-        Create.mutate({excel_data:data}, {
-            onSuccess: (res: any) => {
-                dispatch({ isMSearch: true });
+    useEffect(()=>{
+        log("objState.uploadFile_init", objState.uploadFile_init)
+    }, [objState.uploadFile_init])
+
+    const handleFileDrop = (data : any[], header:string[]) => {
+        
+        data = data.map(obj => {
+            return {
+                [ROW_TYPE]:ROW_TYPE_NEW,
+                ...obj
             }
-        });
+        })
+        var gridData = JsonToGridData(data, header, 2);
+        dispatch({excel_data: gridData});
+        // Create.mutate({excel_data:data}, {
+        //     onSuccess: (res: any) => {
+        //         dispatch({ isMSearch: true });
+        //     }
+        // });
     };
 
 
     return (
         <TableContext.Provider value={val}>
             <SearchForm loadItem={null} />
-            <FileUpload onFileDrop={handleFileDrop}/>
+            <FileUpload onFileDrop={handleFileDrop} isInit={objState.uploadFile_init}/>
             <MasterGrid />
         </TableContext.Provider>
     );

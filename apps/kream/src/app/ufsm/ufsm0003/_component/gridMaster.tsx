@@ -1,7 +1,7 @@
 
 'use client';
 
-import {useEffect, useCallback, useRef, memo, } from "react";
+import {useEffect, useCallback, useRef, memo, useState, } from "react";
 import { SP_GetIFData } from "./data";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_M } from "components/provider/contextObjectProvider";
@@ -20,13 +20,14 @@ const MasterGrid: React.FC<Props> = memo(() => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState = {} } = useAppContext();
-    const { searchParams, isMSearch } = objState;
+    const { searchParams, isMSearch, excel_data } = objState;
+    const [ mData, setMData] = useState<gridData>();
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetIFData, {enabled:false});
     const gridOption: GridOption = {
         colVisible: { col : ["uuid", "record_id", "sort_id", "print_ind", "type"], visible:false },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-        gridHeight: "70vh",
+        gridHeight: "80%",
         // checkbox: ["no"],
         // editable: ["trans_mode"],
         dataType: { "create_date" : "date", "complete_date" : "date", "invoice_wb_amt": "number", "invoice_charge_amt" : "number", "actual_cost_amt" : "number"},
@@ -50,15 +51,26 @@ const MasterGrid: React.FC<Props> = memo(() => {
     useEffect(() => {
         if (isMSearch) {
             mainRefetch();
-            dispatch({isMSearch:false});
+            dispatch({isMSearch:false, uploadFile_init:false});
+            setMData(mainData as gridData);
+            // log("MasterGrid", mainData)
         }
     }, [isMSearch]);
+
+    useEffect(() => {
+        setMData(mainData as gridData);
+    }, [mainData])
+
+    useEffect(() => {
+        // log("excel_data", excel_data);
+        if (Object.keys(excel_data).length) setMData(excel_data);
+    }, [excel_data]);
 
     return (
         <Grid
             gridRef={gridRef}
             // loadItem={initData}
-            listItem={mainData as gridData}
+            listItem={mData}
             options={gridOption}
             event={{
                 onRowClicked: handleRowClicked,

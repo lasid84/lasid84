@@ -206,7 +206,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const gridOptions: GridOptions = useMemo(() => {
     return {
       rowHeight: 25,
-      headerHeight: 25,
+      // headerHeight: 25,
+      autoHeaderHeight:true,
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
       // groupIncludeTotalFooter: true,
       // rowMultiSelectWithClick: true,
@@ -767,16 +768,11 @@ export const getFirstColumn = (params: { api: { getAllDisplayedColumns: () => an
   return thisIsFirstColumn.colId;
 };
 
-export const rowAdd = async (gridRef: {
-  props: any; api: any 
-}, initData: {} = {}) => {
+export const rowAdd = async (gridRef: { api: any }, initData: {} = {}) => {
   // var data = gridRef.api.getRenderedNodes();
   // log("===============", data);
   var col = getFirstColumn(gridRef);
-  //var rowCount = gridRef.api.getRenderedNodes().length;
-  //2024-07-23 rowCount 변경 Retrieve rendered nodes. Due to virtualisation this will contain only the current visible rows and those in the buffer.
-  var rowCount = gridRef.props.rowData.length
-  log('rowCount check', rowCount)
+  var rowCount = gridRef.api.getRenderedNodes().length;
 
   var data = {
     [col]: '',
@@ -855,7 +851,30 @@ function checkBoxParser(params: ValueParserParams) {
   return params.newValue === 'Y' ? true : false;
 }
 
+export const JsonToGridData = (arrDataJson:any[], header:string[],headerLine=1) => {
+  const data: gridData = {
+    "data":[],
+    "fields":[]
+  };
 
+  for (let i = 1; i < headerLine; i++) {
+    let objData = arrDataJson.splice(0,1);
+    
+    Object.entries(objData[0]).forEach(([key,val],j) => {
+      let idx = header.indexOf(key);
+      header[idx] = header[idx] + "\n" + val;
+      log("JsonToGridData", key, val, header);
+    });
+  }
+
+  data.data = arrDataJson;
+  data.fields = header.map(v => {
+    let obj = {"name":v};
+    return obj
+  });
+
+  return data;
+}
 
 
 

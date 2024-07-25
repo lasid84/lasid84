@@ -60,16 +60,17 @@ function stringToFullDate(source) {
     }
 };
 
-function stringToDate(source) {
-    log("stringToDate", source);
+function stringToDate(source, separator = '-') {
+    // log("stringToDate", source);
     if (source) {
         const formattedDate = source.replace(/[\/\-\s]/g, '');
         const year = formattedDate.substring(0,4);
         const month = formattedDate.substring(4,6);
         const day = formattedDate.substring(6,8);
-        log("dataFormatter", year, month, day);
+        // log("dataFormatter", year, month, day);
         try {
-            return new Date([year, month, day].join("-"));
+            return new Date([year, month, day].join(separator));
+            // return new Date(year, month - 1, day);
         } catch (e) {
             return null;
         }

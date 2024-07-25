@@ -1,6 +1,6 @@
 
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BiUpload } from "react-icons/bi";
 import * as XLSX from 'xlsx-js-style';
@@ -14,17 +14,22 @@ import { gridData } from "../grid/ag-grid-enterprise";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const { getKoreaTime, DateToString } = require("@repo/kwe-lib/components/dataFormatter.js");
 
-const validExtensions = [".xlsx", ".xls", ".txt", ".LPN", ".xml", ".json", ".csv", ".XLSX", ".XLS"];
+const validExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS"];
 
 // FileUpload 컴포넌트
 interface FileUploadProps {
-    onFileDrop?: (data: string) => void;
+    onFileDrop?: (data: any[], header:string[]) => void;
+    isInit?: boolean;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = (props) => {
     const { t } = useTranslation();
     const [selectedFiles, setSelectedFiles] = useState([]);
     // const [data, setData] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (props.isInit) setSelectedFiles([]);
+    }, [props.isInit])
     
     // 파일을 Dropzone에 드랍했을 때 처리
     const handleFileDrop = useCallback((files: any) => {
@@ -45,6 +50,16 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+                // 모든 셀의 주소 가져오기
+                const cellAddresses = Object.keys(worksheet);
+
+                // 첫 번째 행의 셀 주소만 필터링
+                const firstRowAddresses = cellAddresses.filter(address => address.match(/^[A-Z]+1$/));
+
+                // 첫 번째 행의 셀 주소를 순회하면서 컬럼명 추출
+                const columnNames = firstRowAddresses.map(address => worksheet[address].v);
+
                 jsonData.forEach((row:any) => {
                     Object.keys(row).forEach((key) => {
                     // if (XLSX.SSF.is_date(row[key])) {
@@ -55,9 +70,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                         }
                     });
                 });
-                // setData(jsonData);
-                // log("jsonData", JSON.stringify(jsonData));
-                if (props.onFileDrop) props.onFileDrop(JSON.stringify(jsonData));
+                if (props.onFileDrop) props.onFileDrop(jsonData, columnNames);
             };
             reader.readAsArrayBuffer(file);
 
