@@ -89,6 +89,7 @@ export const SP_InsertCharge = async (param: any) => {
   log("param : ", param)
   const {waybill_no, charge_code, charge_desc, sort_id, import_export_ind, ppc_ind, invoice_wb_amt, invoice_wb_currency_code, invoice_charge_amt	
     , invoice_currency_code, actual_cost_amt, cost_currency_code, vendor_id, vendor_ref_no, print_ind, vat_cat_code_ap, type, record_id, remark
+    , invoice_dd, billto_id, inv_remark, amount, exchange_rate, waybill_cer, inv_group, confirm_yn
     , user_id, ipaddr
   } = Param;
   const params = {
@@ -112,6 +113,14 @@ export const SP_InsertCharge = async (param: any) => {
     , "in_type"
     , "in_record_id"
     , "in_remark"
+    , "in_invoice_dd"
+    , "in_billto_id"
+    , "in_inv_remark"
+    , "in_amount"
+    , "in_exchange_rate"
+    , "in_waybill_cer"
+    , "in_inv_group"
+    , "in_confirm_yn"
     , "in_user_id"
     , "in_ipaddr"
     ],
@@ -135,6 +144,7 @@ export const SP_InsertCharge = async (param: any) => {
     , type
     , record_id
     , remark
+    , invoice_dd, billto_id, inv_remark, amount, exchange_rate, waybill_cer, inv_group, confirm_yn
     , user_id
     , ipaddr
     ],
@@ -144,6 +154,5 @@ export const SP_InsertCharge = async (param: any) => {
     }
   
     const result = await executFunction(params);
-    log("SP_InsertCharge", result);
     return result![0];
 }

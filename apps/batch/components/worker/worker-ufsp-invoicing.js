@@ -1,21 +1,6 @@
-/*
- * To Do
-   1) 계정 비번 만료 시 처리 기능(유저별 메일 발송 or 등등등)
-   2) 리팩토링
-*/ 
-
-// import { workerData } from 'worker_threads'; 
-// import  puppeteer from 'puppeteer';
-// import { log, error } from '@repo/kwe-lib/components/logHelper.js';
-// import { executFunction } from './api.service.ts';
-// import { getKoreaTime } from '@repo/kwe-lib/components/dataFormatter.js';
-// // import Library from '../lib/ufsLibray.ts';
-// import Library from './lib/ufsLibray.ts';
-
 
 
 const { workerData } = require('worker_threads'); 
-const  puppeteer = require('puppeteer');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
 const { executFunction } = require('../api.service/api.service.js');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
@@ -25,21 +10,38 @@ const ufsp = new Library(workerData);
 
 let onExcute = false;
 
+const getInvoicingData = async (inv_group, createtype) => {
+    
+    const inparam = ['in_inv_group', 'in_createtype', 'in_user', 'in_ipaddr'];
+    const invalue = [inv_group, createtype, '',''];
+    const inproc = 'scrap.f_scrp0008_get_invoicing_data'; 
+    const cursorData = await executFunction(inproc, inparam, invalue);
+
+    return cursorData[0].data;
+}
+
+const setInvoicingIFData = async () => {
+    try {
+            var remark = ufsp.resultData.warning ? this.resultData.warning : '';
+        let inv_group = ufsp.resultData.t_hbl_charge_if.inv_group;
+        let invoice_no = ufsp.resultData.invoice[1];
+        const inparam = ['in_inv_group', 'in_invoice_no', 'in_user', 'in_ipaddr'];
+        const invalue = [inv_group, invoice_no, '', ''];
+        const inproc = 'scrap.f_scrp0008_set_if_invoiced_data'; 
+        await executFunction(inproc, inparam, invalue);
+        log("setInvoicingIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", invalue) ;
+        
+    } catch (ex) {
+        throw ex;
+    }
+}
+
 async function startScraping() {
 
     try {
         onExcute = true;
         ufsp.mainData = null;
         const datas = await ufsp.getIFData();
-        let script;
-
-        // log("1 - ", ufsp.idx, datas.length);
-        if (datas.length > 0) {
-            // if (datas[0].needlogin.toLowerCase() == 't') {
-            //     await ufsp.checkSession();
-            // }
-            script = await ufsp.getScript();
-        }
 
         for (const data of datas) {
             /***************
@@ -51,29 +53,29 @@ async function startScraping() {
              */
             ufsp.resultData = {};
             ufsp.mainData = data;
-            log("ufsp.mainData", ufsp.mainData);
 
             await ufsp.loginByApi(data.id);
             
-            // await addJsonResult(data.tab, 'bl_no', data.bl_no, '');
-            // await addJsonResult(data.tab, 'trans_type', type, '');
-
             await Object.keys(data).forEach(async function(key) {
                 await ufsp.addJsonResult(data.tab, key, data[key], '');
             });
 
-            let uploadData = await ufsp.getChargeUploadData();
+            let uploadData = await getInvoicingData(ufsp.mainData.keydata, '');
 
             if (!uploadData.length) continue;
             
             for (const dataItem of uploadData) {
+                //미처리된 차지코드 존재 시 대기(업무부와 협의 필요)
+                if (dataItem.delay_cnt > 0) continue;
+
                 await ufsp.addJsonResult('t_hbl_charge_if', '', '', dataItem, 'addBulk');
+                let script = await ufsp.getScript();
                 await ufsp.startScript(script);
-                await ufsp.setChargeIFData();
+                await setInvoicingIFData();
+                await ufsp.setBLIFData('Y', '', '');
+                log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, JSON.stringify(ufsp.resultData));
             }
 
-            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
-            await ufsp.setBLIFData('Y', '', '');
             ufsp.errCnt = 0;
             ufsp.lastExcute = getKoreaTime();
         }
@@ -98,7 +100,6 @@ const mySetInterval = () => {
                 log(ufsp.idx, "=================Restart==================")
                 startScraping();
             }
-            log("mySetInterval : ", onExcute);
             mySetInterval();
         } catch (ex) {
             log("mySetInterval", ex)

@@ -11,7 +11,7 @@ interface cursorData {
 //SP_GetInvoiceMasterContent
 export const SP_GetIFData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { wb_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr } = Param;
+  const { fr_date, to_date, user_id, ipaddr } = Param;
   // log("===param", Param, bl_no, trans_mode, trans_type, fr_date, to_date, cust_code, user_id, ipaddr);
 
   const params = {

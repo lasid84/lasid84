@@ -10,6 +10,7 @@ const { executFunction } = require('../api.service/api.service');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
 const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
+const { stringToDateString } = require('@repo/kwe-lib/components/dataFormatter');
 
 
 const UFSP_ERROR = "UFSP ERROR";
@@ -40,7 +41,7 @@ class Library {
     async startBrowser() {
         
         if (!this.browser) {
-            log("brower restart")
+            log(this.pgm, " / ", this.idx, " / brower restart")
             this.browser = await puppeteer.launch(
                 { headless:this.isHeadless, 
                     args:[ '--start-maximized'], // you can also use '--start-fullscreen'
@@ -189,7 +190,7 @@ class Library {
             }
 
         } catch (ex) {
-            error("ex_login_api:", ex)
+            error("ex_login_api:", this.pgm, this.idx, this.terminal, id, ex)
             throw ex
         }
     }
@@ -351,12 +352,14 @@ class Library {
                 case "SLEEP":
                     // sleep(data.header);
                     break;
-                case "CALCULATE":
-                    return await this.calculate(data);
+                case "SETROWNUM":
+                    return await this.setRowNum(data);
                 case "CALCULATECHARGE":
                     return await this.calculateCharge(data);
                 case "REMOVESTARTDOT":
                         return await this.removeStartDot(data);
+                case "INVOICING":
+                    return await this.invoicing(data);
                 case "GOTO":
                     return await this.gotoUrl(data);
 
@@ -407,9 +410,12 @@ class Library {
             // log("===========----------------======", JSON.stringify(bodyText));
             v_tracking = 'send post start';
             const header = this.convertJSON(data.header);
+
+            if (data.seq === '60' ) log("=========", data.seq, JSON.stringify(bodyText))
+
             const result = await this.executeAPI(method, url, header, bodyText);
             
-            v_tracking = 'send post finish';
+            v_tracking = 'send post finish' - + JSON.stringify(result);
     
             if (result) {
                 if (result.count == 0) {
@@ -417,14 +423,20 @@ class Library {
                     await this.setBLIFData(if_yn, '', '');
                     throw "check exist";
                 }
+
                 if (result.errors && result.errors.length) {
                     msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
                     throw msg_result
                 }
                 
+                if (result.bat && result.bat.errors.length) {
+                    msg_result = result.bat.errors.reduce((acc,obj) => acc += obj.message, '');
+                    this.mainData.error = msg_result;
+                    throw msg_result
+                }
             }
     
-            v_tracking = 'get post result complete-' /*+ JSON.stringify(result) + " / " + JSON.stringify(bodyText)*/;
+            v_tracking = 'get post result complete-' + JSON.stringify(result) /*+ " / " + JSON.stringify(bodyText)*/;
     
             await this.updateResult(data, bodyText, result);
 
@@ -432,7 +444,10 @@ class Library {
     
         } catch(ex) {
             // if (msg_result.error == "Unauthorized") throw  "tracking : " + v_tracking + " callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
-            throw  "tracking : " + v_tracking + " callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
+            log("=========", data.seq, JSON.stringify(bodyText))
+            if (msg_result) throw msg_result;
+
+            throw  "tracking : " + v_tracking + " callAPIPost : " + ex;
         }
     }
 
@@ -455,7 +470,14 @@ class Library {
                     if (data.upd_convert_date) {
                         if (Array.isArray(newVal)) {
                             newVal = newVal.map(v => {
-                                if (this.isValidDate(v)) {
+                                if (Array.isArray(v)) {
+                                    var tempArr = v.map(v2 => {
+                                        if (this.isValidDate(v2)) {
+                                            return this.transformDate(v2);
+                                        } else return v2;  
+                                    });
+                                    return tempArr;
+                                } else if (this.isValidDate(v)) {
                                     return this.transformDate(v);
                                 } else return v;
                             });
@@ -472,15 +494,16 @@ class Library {
                         }
                     }
                     const cols = col.split('.');
-                    // log("=======", cols, newVal)
                     await this.updateNodeByPath2(bodyText, cols, newVal);
                     i++;
+
+                    // if (data.seq === '30') log("=======", JSON.stringify(bodyText))
                 }
             }
 
             return bodyText
         } catch (ex) {
-            error("updateBodyText", v_tracking, ex);
+            error("updateBodyText", data.seq, v_tracking, ex);
         }
     }
 
@@ -576,7 +599,7 @@ class Library {
         v_tracking = 'json data parsing0';
         for (const out_tab of out_tabs) {            
             let rows = await this.GetJsonResult2(result, out_tab.split('.'));
-            // log("json data parsing0 rows - ", rows);
+            // log("json data parsing0 rows - ", result, out_tab);
             const tab = tabs[out_tab_cnt];
             const ismultirow = ismultirows[out_tab_cnt];
             v_tracking = 'json data parsing1';
@@ -589,15 +612,15 @@ class Library {
                 }
             }
             v_tracking = 'json data parsing2';
-            // log('---------------------', rows);
+            // log('---------------------', tab, rows);
             for (const row of rows) {
                 if (row === null) {
                     continue;
                 };
 
-                if (data.out_col === '{}') {
+                if (arrCol[out_tab_cnt] === '{}') {
                     await this.addJsonResult(tab, '', '', row, 'addBulk');
-                } else if (data.out_col === '[]') {
+                } else if (arrCol[out_tab_cnt] === '[]') {
                     await this.addJsonResult(tab, '', '', row, 'add');
                 } else {
                     let i = 0;
@@ -637,7 +660,7 @@ class Library {
 
     }
 
-    async calculate(data) {
+    async setRowNum(data) {
         if (data.upd_body_col) {
             let i = 0;
             for (let col of data.upd_body_col.split(',')) {
@@ -649,7 +672,7 @@ class Library {
                 i++;
             }
 
-            log("calculator - ",this.resultData, this.resultData.arrShipment[404]);
+            // log("calculator - ",this.resultData, this.resultData.arrShipment[404]);
         }
     }
 
@@ -665,6 +688,9 @@ class Library {
         }
     }
 
+    /* ※ 차지 저장 함수
+        - api 스크립트만으로 처리하기 복잡하여 별로 함수로 처리
+    */
     async calculateCharge(data) {
         var v_tracking = 'calculateCharge start';
 
@@ -688,14 +714,14 @@ class Library {
                 'fieldchange' : 0,
                 'invoice_charge_amt' : 1,
                 'invoice_exchange_rate' : 2,
-                // 'oc_charge_amt' : 3,
+                'oc_invoice_charge_amt' : 3,
                 'invoice_currency_code' : 4,
-                'exchangerate date' : 5,
+                'created_date' : 5,
                 'actual_cost_amt' : 6,
                 'cost_exchange_rate' : 7,
                 'oc_cost_amt' : 8,
                 'cost_currency_code' : 9,
-                'created_date' : 10,
+                // 'created_date' : 10, -> 5번에 입력
                 'last_modified_date' : 10,
                 'partner_charge_profile.rate_on_code': 16,
                 'charge_codes.charge_type' : 18,
@@ -973,7 +999,7 @@ class Library {
                             break;
                         case "invoice_wb_amt":
                         case "invoice_wb_currency_code":
-                        case "invoice_charge_amt":
+                        // case "invoice_charge_amt":  --UFS+에서 invoice_wb_amt 입력하면 자동으로 따라오게 되어 있음
                         case "invoice_currency_code":
                         case "actual_cost_amt":
                         case "cost_currency_code":
@@ -989,12 +1015,82 @@ class Library {
                             // if (lowerKey === 'cost_amt') logWithFile(key, JSON.stringify(bodyText), JSON.stringify(result));
                             await updateResult(result.bat.methodReturn.arguments);
                             bodyText = await updateBodyText(bodyText);
+
+                            if (lowerKey ==='invoice_wb_amt') log("============================invoice_wb_amt", JSON.stringify(bodyText), JSON.stringify(result.bat.methodReturn.arguments));
                             break;
                     }
                 }
             }
         } catch (e) {
             error("calculateCharge - ", v_tracking, e.message)
+            throw v_tracking, e
+        }
+    }
+
+    /* ※ 인보이스 저장 함수
+         - api 스크립트만으로 처리하기 복잡하여 별로 함수로 처리
+         - 인보이스 디테일에 여러건을 넣어야 하기때문에 스크립트로 처리 어려움
+    */ 
+    async invoicing(data) {
+
+        try {
+
+            var v_tracking = 'calculateCharge get bodyText';
+            var bodyText = JSON.parse(data.body);
+            const bodyCols = data.upd_body_col.split(',');
+            const bodyVals = data.upd_body_val.split(',');
+
+            v_tracking = 'update Input value in resultData';
+            this.resultData.invoice[4] = this.transformDate(stringToDateString(this.resultData.t_hbl_charge_if.invoice_dd,'-'));
+            this.resultData.invoice[6] = this.resultData.t_hbl_charge_if.govt_invoice_no;
+            this.resultData.invoice[18] = this.resultData.t_hbl_charge_if.billto_id;
+            this.resultData.invoice[33] = this.resultData.t_hbl_charge_if.inv_remark;
+            this.resultData.invoice[126] = this.resultData.t_hbl_charge_if.invoice_edi_date;
+
+            v_tracking = 'calculateCharge update BodyText';
+            for (let i = 0; i < bodyCols.length; i++) {
+                let col = bodyCols[i];
+                let val = bodyVals[i];
+                
+                var input = await this.GetJsonNode2(this.resultData, val.split('.'));
+                await this.updateNodeByPath2(bodyText, col.split('.'), '');   
+                if (val === 'INVOICE_DETAIL') {
+                    var arrVal = [];
+                    input.forEach(async (arr, idx) => {
+                        var objInput = {
+                            "actionFilter" : "I",
+                            "rownum" : idx+1,
+                            "orgAttrData" : arr.map(v => {
+                                if (data.upd_convert_date && this.isValidDate(v)) {
+                                    return this.transformDate(v);
+                                } else  return v;
+                            })
+                        }                   
+                        await arrVal.push(objInput);
+                    });
+                    await this.updateNodeByPath2(bodyText, col.split('.'), arrVal);
+                    
+                } else {
+                    if (data.upd_convert_date && Array.isArray(input)) {
+                        input = input.map(v => {
+                            if (this.isValidDate(v)) {
+                                log("this.transformDate(v);", this.transformDate(v));
+                                return this.transformDate(v);
+                            } else  return v;
+                        })
+                    }
+                    await this.updateNodeByPath2(bodyText, col.split('.'), input);
+                }
+            }
+            
+            v_tracking = 'start executeAPI';
+            const result = await this.executeAPI('POST', data.url, data.header, bodyText);
+            v_tracking = 'end executeAPI' + JSON.stringify(result);
+            await this.updateResult(data, '', result);
+            v_tracking = 'end updateResult';
+
+        } catch (e) {
+            error("invoicing - ", v_tracking, e.message, JSON.stringify(bodyText));
             throw v_tracking, e
         }
     }
@@ -1018,41 +1114,31 @@ class Library {
         if (arrPath.length > 0) { 
             if (firstKey == '[]') {
                 for (const targetjson of jsons) {
+                    // log("====updateNodeByPath2", targetjson, arrPath, val, ismultirow);
                     await this.updateNodeByPath2(targetjson, arrPath, newValue);
                 }
             } else {
-                // if (typeof json[firstKey][Symbol.iterator] === 'function') {
-                //     json = json[firstKey][0];
-                // } else {
-                    jsons = jsons[firstKey];
-                // }
+                jsons = jsons[firstKey];
                 await this.updateNodeByPath2(jsons, arrPath, newValue);
             }
 
         } else {
             if (Array.isArray(newValue)) {
-                // jsons[firstKey] = [...newValue];
-                
                 if (!jsons[firstKey]) jsons[firstKey] = [];
+                // jsons[firstKey] = [];
                 for (const v of newValue) {
-                    let val;
-
-                    // if (this.isValidDate(v)) {
-                    //     val = this.transformDate(v);
-                    // } else {
-                    //     val = v;
-                    // }
-                    val = v;
-                    jsons[firstKey].push(val);
+                    jsons[firstKey].push(v);
                 }
             } else {
-                jsons[firstKey] = newValue;
+                jsons[firstKey] = newValue;                
             }
         }
     }
 
     async GetJsonResult2(json, path, result = []) {
     
+        // log("=========", json, path, result);
+
         let firstKey = path[0];
         let arrPath = path.slice(1);
         //let result = isParent ? [] : null;
@@ -1060,12 +1146,8 @@ class Library {
         if (arrPath.length > 0) {    
             if (firstKey == '[]') {
                 for (const row of targetJson) {                
-                    // 수정: 각 하위 결과를 배열에 추가
-                    // if (isParent) {
-                    //     result.push(await GetJsonResult2(row, arrPath));
-                    // } else {
-                        await this.GetJsonResult2(row, arrPath, result);
-                    // }
+                    //2024.07.22 이건 타지는게 없을듯, 확인 후 삭제 필요
+                    await this.GetJsonResult2(row, arrPath, result);
                 } 
             } else {
                 targetJson = targetJson[firstKey];
@@ -1078,11 +1160,12 @@ class Library {
         } else {
             let row;
             if (firstKey == '[]') {
+                //2024.07.22 이건 타지는게 없을듯, 확인 후 삭제 필요
                 row = targetJson;
                 result.push(...row);
             } else {
                 targetJson = targetJson[firstKey];
-                        
+
                 if (typeof targetJson[0] === 'object') {
                     row = targetJson[0];
                     // log("out firstKey 1", firstKey, row);
@@ -1191,9 +1274,9 @@ class Library {
       }
 
     transformDate(dateString, symbol = '-') {
-        if (!this.isValidDate(dateString)) {
-            return null;
-          }
+        // if (!this.isValidDate(dateString)) {
+        //     return null;
+        //   }
         
           // 날짜 객체 생성
           const date = new Date(dateString);
@@ -1293,6 +1376,24 @@ class Library {
     async setChargeIFData() {
         try {
             var uuid = this.resultData.t_hbl_charge_if.uuid;
+            var remark = this.resultData.warning ? this.resultData.warning : '';
+            // var remark = this.resultData.arrCharge; //안정화 이후 위 코드로 사용(warning 값 적용);
+            var record_id = this.resultData.arrCharge[25];
+            const inparam = ['in_uuid', 'in_record_id', 'in_remark', 'in_user_id', 'in_ipaddr'];
+            const invalue = [uuid, record_id, remark, '', ''];
+            const inproc = 'scrap.f_scrp0002_set_if_charge_data'; 
+            await executFunction(inproc, inparam, invalue);
+            //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
+            
+        } catch (ex) {
+            throw ex;
+        }
+    }
+
+    async setInvoicingIFData() {
+        try {
+            var inv_group = this.resultData.t_hbl_charge_if.inv_group;
+
             var remark = this.resultData.warning ? this.resultData.warning : '';
             // var remark = this.resultData.arrCharge; //안정화 이후 위 코드로 사용(warning 값 적용);
             var record_id = this.resultData.arrCharge[25];

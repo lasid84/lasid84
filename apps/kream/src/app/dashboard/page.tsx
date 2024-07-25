@@ -21,6 +21,21 @@ import createNumberMask from "@/components/input/react-text-mask/createNumberMas
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
+// 개발 이력 데이터
+const developmentHistory = [
+  {
+    date: '2024-07-25',
+    title: 'Version 0.1.0 Released',
+    description: '1. Charge Upload <br>' 
+     + '&nbsp;1) 엑셀 업로드 후 저장 클릭하도록 변경<br>'
+     + '&nbsp;2) 인보이스 발행 기능 적용<br>'
+     + '&nbsp;&nbsp;- invoice date 가 없을 경우 발행 안됨<br>'
+     + '&nbsp;3) UFS+ 사이트<br>'
+     + '&nbsp;&nbsp;- https://uat-jp.ufsplus.kwe.com/web/'
+  },
+];
+
+
 const Home: React.FC = () => {
   const { t } = useTranslation();
   const methods = useForm();
@@ -35,82 +50,33 @@ const Home: React.FC = () => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  useEffect(() => {
-    setFocus("fr_date");
-  }, [])
-
-  const onClick = (e:any) => {
-    log("onClick~~~~~~~~~~~~~~~~~~~~~~~~~", e);
-  }
-
   const onSubmit = (data: any) => {
     console.log(data);
   };
   
+  
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-          <h1>Dashboard</h1>
-          {/* <MaskedInputField 
-            id="bz_reg_no" 
-            value="12444444448"
-            width="w-80"
-            // height="h-20"
-            options = {{ 
-              type:"number",
-              limit:7,
-              isAllowDecimal:true,
-              decimalLimit:2,
-              textAlign:"right"
-              // myPlaceholder:"Enter business number" 
-            // myPlaceholder:"bz_reg_no"
-            // inline:{true}
-              // isReadOnly:true
-            }}
-            />
-            <MaskedInputField 
-            id="num" 
-            value="12444444448"
-            width="w-80"
-            // height="h-20"
-            options = {{ 
-              type:"number",
-              fontSize:"[13px]",
-              textAlign:"right"
-            }}
-            />
-          <MaskedInput
-                // {...field} //bg-${bgColor}
-                className={`form-input block border-gray-200 disabled:bg-gray-300 flex-grow-1
-                 focus:border-blue-500 focus:ring-0 text-${'[13px]'} font-${'normal'} read-only:bg-gray-100 
-                 text-right
-                 `}
-                 value={'12444444448'}
-                 mask={
-                  createNumberMask({
-                    allowDecimal: true,
-                    decimalLimit: undefined,
-                    integerLimit: null
-                  })
-                 }
-                />
-          
-          <DatePicker 
-            id={"to_date"} value="20240330" 
-            options={{
-              inline:true,
-              textAlign:'center',
-              // fontSize:''
-              // bgColor:"blue-100",
-              // textAlign:"right",
-              // fontSize:"15px",
-              // fontBold:"light"
-              // radius:"full",
-              freeStyles:"underline border-1 border-slate-300"
-            }}
-            // height="h-20"
-          /> */}
-
+          <div className="flex flex-col items-center min-h-screen bg-gray-100">
+            <header className="w-full p-4 text-center text-white bg-blue-600">
+              <h1 className="text-2xl font-bold">Development History</h1>
+            </header>
+            <main className="flex-grow w-full max-w-4xl p-6">
+              <div className="space-y-6">
+                {developmentHistory.map((entry, index) => (
+                  <div key={index} className="p-6 bg-white rounded-lg shadow-md">
+                    <h2 className="text-xl font-semibold text-gray-800">{entry.title}</h2>
+                    <p className="text-sm text-gray-500">{entry.date}</p>
+                    <p 
+                      className="mt-2 text-gray-700"
+                      dangerouslySetInnerHTML={{ __html: entry.description }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </main>
+          </div>
         </form>
       </FormProvider>
   );
