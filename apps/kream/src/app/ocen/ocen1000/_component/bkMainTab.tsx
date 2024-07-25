@@ -11,7 +11,7 @@ import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData } from "components/grid/ag-grid-enterprise";
@@ -32,12 +32,9 @@ export interface typeloadItem {
 
 const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
   const { Create } = useUpdateData2(SP_CreateData, SEARCH_D);
-  // const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
+  const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
 
   const { dispatch, objState } = useAppContext();
-  const [groupcd, setGroupcd] = useState<any>([])
-  const [data, setData] = useState<any>();
-
   const { MselectedTab, mSelectedRow, popType } = objState
 
   // //사용자 정보
@@ -69,12 +66,13 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
     //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
     log('=========onBKSave', popType, param)
     if (popType === crudType.UPDATE) {
-      log('=============Update')
-      // Update.mutate(objState.mSelectedRow, {
-      //   onSuccess: (res: any) => {
-      //     dispatch({ isMDSearch: true });
-      //   },
-      // })
+      log('=============Update', popType)
+      Update.mutate(objState.mSelectedRow, {
+        onSuccess: (res: any) => {
+          log('============Update success')
+          dispatch({ isMDSearch: true });
+        },
+      })
     } else {
       // dispatch({mSelectedRow: ...mSelectedRow, })
       log('=============create', objState.mSelectedRow)

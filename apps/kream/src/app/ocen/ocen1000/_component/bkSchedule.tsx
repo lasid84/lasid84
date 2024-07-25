@@ -9,6 +9,10 @@ import { DateInput, DatePicker } from 'components/date'
 import { gridData } from "components/grid/ag-grid-enterprise";
 import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
+import { useGetData } from "components/react-query/useMyQuery";
+import { SEARCH_D } from "components/provider/contextArrayProvider";
+import { SP_GetPickupContData } from "./data";
+import Modal from "./popPickupcont"
 import { Button } from "components/button";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -43,14 +47,19 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
 
   const {
     handleSubmit,
-    reset,
-    setFocus,
-    setValue,
-    getValues,
-    register,
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+  useEffect(() => {
+    if (objState.isDSearch) {
+      log("mSelectedRow?.shipper_id useEffect", objState.isDSearch)
+      detailRefetch();
+      dispatch({ isDSearch: false });
+    }
+  }, [objState.mSelectedRow, objState.isDSearch]);
+
+  //get Pickup cont data
+  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: 'ocen' }, SEARCH_D, SP_GetPickupContData, { enable: false });
   const [cyplace, setCyPlace] = useState<any>()
 
   const onSearch = () => {
@@ -58,8 +67,8 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
     // log("onSearch", params, objState?.mSelectedRow);
   }
 
-  useEffect(()=>{
-    if(loadItem){
+  useEffect(() => {
+    if (loadItem) {
       //log('loadItem',loadItem)
       setCyPlace(loadItem[10])
     }
@@ -69,8 +78,12 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
     log("maindata", mainData);
     if (mainData)
       //setData((mainData?.[0] as gridData).data[0]);
-    dispatch({mSelectedRow : (mainData?.[0] as gridData).data[0]})
+      dispatch({ mSelectedRow: (mainData?.[0] as gridData).data[0] })
   }, [mainData])
+
+  const onClick = () => {
+    dispatch({ crudType: crudType.CREATE, isPickupPopupOpen: true, isDSearch: true })
+  }
 
 
   return (
@@ -94,9 +107,9 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
           <div className="col-start-1 col-end-2">
             <DatePicker id="doc_close_dd" value={mSelectedRow?.doc_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
           </div>
-          <MaskedInputField id="doc_close_tm" value={mSelectedRow?.doc_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40'/>
+          <MaskedInputField id="doc_close_tm" value={mSelectedRow?.doc_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40' />
           <DatePicker id="cargo_close_dd" value={mSelectedRow?.cargo_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
-          <MaskedInputField id="cargo_close_tm" value={mSelectedRow?.cargo_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40'/>
+          <MaskedInputField id="cargo_close_tm" value={mSelectedRow?.cargo_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40' />
 
         </PageContent>
 
@@ -106,18 +119,19 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"manage"} label={"manage_pickup"} width="w-15" />
+                  <Button id={"manage"} label={"manage_pickup"} onClick={onClick} width="w-15" />
                   <Button id={"manage"} label={"manage_cy"} width="w-15" />
                   <Button id={"delete"} width="w-15" />
                 </>}>
               <>
+                <Modal initData={loadItem} detailData={detailData} />
                 <div className="col-start-1 col-end-2">
                   <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
                 </div>
-                <MaskedInputField id="pickup_tm" value={mSelectedRow?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />                
+                <MaskedInputField id="pickup_tm" value={mSelectedRow?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
                 <MaskedInputField id="pickup_seq" value={mSelectedRow?.pickup_seq} options={{ isReadOnly: false }} />
                 <MaskedInputField id="pickup_loc" value={mSelectedRow?.pickup_loc} options={{ isReadOnly: false }} />
-                
+
                 <div className={"col-span-2"}>
                   <CustomSelect
                     id="cy_place_code"
@@ -138,7 +152,7 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                 {/* <MaskedInputField id="cy_place_code_nm" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} /> */}
                 <MaskedInputField id="cy_place_area" value={mSelectedRow?.cy_place_code_nm} options={{ isReadOnly: false }} />
                 <div className="col-start-1 col-end-2">
-                <MaskedInputField id="cy_cont_nm" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
+                  <MaskedInputField id="cy_cont_nm" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
                 </div>
                 <MaskedInputField id="cy_cont_tel" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
                 <MaskedInputField id="cy_cont_email" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />

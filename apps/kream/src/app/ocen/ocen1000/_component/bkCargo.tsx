@@ -30,7 +30,7 @@ type Props = {
 const BKCargo = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
-  const { MselectedTab, mSelectedRow, popType } = objState
+  const { MselectedTab, mSelectedRow, popType, mSelectedCargo } = objState
 
   const [data, setData] = useState<any>();
 
@@ -59,10 +59,11 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
   }
 
   useEffect(() => {
-    log("maindata", mainData);
+    log("bkcargo maindata", mainData);
     if (mainData)
       //setCargoDetail((mainData?.[1] as gridData));
       dispatch({ mSelectedRow: (mainData?.[0] as gridData).data[0] })
+      //dispatch({ mSelectedCargo: (mainData?.[1] as gridData).data[0] })
   }, [mainData])
 
 
@@ -87,7 +88,7 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
             <PageContent
               title={<span className="w-full px-1 py-1 text-blue-500">Cargo Detail</span>}>
               <div className="col-span-6">
-                <GridCargo loadData={cargo} />
+                <GridCargo mainData={mainData} />
               </div>
             </PageContent>
           </div>

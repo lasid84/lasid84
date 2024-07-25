@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useRef } from "react";
-import { SP_Load, SP_GetWBDetailData } from "./_component/data";
+import { SP_Load, SP_GetBKDetailData } from "./_component/data";
 import { reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
@@ -29,7 +29,7 @@ export default function OCEN1000() {
             isMSearch: false,
             isDSearch: false,
             mSelectedRow: {},
-            mSelectedDetail: {},
+            mSelectedCargo: {},
             dSelectedRow: {},
             tab1: [],
             MselectedTab: 'Main',
@@ -38,15 +38,18 @@ export default function OCEN1000() {
             gridRef_m: useRef<any | null>(null),
             refRow : '',
             isShpPopUpOpen: false,
+            isCarrierPopupOpen : false,
+            isCYPopupOpen : false,
+            isPickupPopupOpen : false,
             selectedobj: {}
         }
     });
     const { objState } = state;
-    const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isShpPopUpOpen, MselectedTab, isFirstRender } = objState;
-    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isShpPopUpOpen, mSelectedDetail, dispatch } }, [state]);
+    const { searchParams, mSelectedRow, mSelectedCargo, crudType, isMSearch, isShpPopUpOpen, MselectedTab, isFirstRender } = objState;
+    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isShpPopUpOpen, mSelectedCargo, dispatch } }, [state]);
 
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetWBDetailData, { enabled: false }); //1건 Detail조회
+    const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetBKDetailData, { enabled: false }); //1건 Detail조회
 
     //사용자 정보
     const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
@@ -58,7 +61,7 @@ export default function OCEN1000() {
     useEffect(() => {
         const params = getMenuParameters(menu_param);
         dispatch({ cont_type: params.cont_type });
-        // dispatch({ mselectedRow : mSelectedRow, menu_seq : '', user_id:'', idappr:''})
+        log('cont_type? OCEN1000', objState?.cont_type)
     }, [menu_param])
 
     const handleOnClickTab = (code: any) => {

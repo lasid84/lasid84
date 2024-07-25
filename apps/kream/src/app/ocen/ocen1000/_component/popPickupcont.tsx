@@ -24,7 +24,7 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-    const { crudType: popType, isShpPopUpOpen: isOpen } = objState;
+    const { crudType: popType, isPickupPopupOpen: isOpen } = objState;
 
     const { Create } = useUpdateData2(SP_InsertShipContData)
     const { Update } = useUpdateData2(SP_UpdateShipContData)
@@ -33,8 +33,8 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
     const closeModal = () => {
-        dispatch({ isShpPopUpOpen: false });
-        log(' objState.isShpPopUpOpen', objState.isShpPopUpOpen)
+        dispatch({ isPickupPopupOpen: false });
+        log(' objState.isPickupPopupOpen', objState.isPickupPopupOpen)
         reset();
     }
 
@@ -63,17 +63,14 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
     useEffect(() => {
         if (detailData) {
             const gridOption: GridOption = {
-                colVisible: { col: ["cust_code", "cont_seq", "cont_type"], visible: false },
-                // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+                colVisible: { col: ["cust_code", "pickup_type", "pickup_seq"], visible: false },
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
                 select: { "user_dept": initData[15]?.data.map((row: any) => row['user_dept']) },
                 minWidth: { "email": 200 },
-                editable: ["pic_nm", "email", "cust_office", "tel_num", "fax_num", "user_dept", "bz_plc_cd", "use_yn", "def"],
-                dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
+                editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "remark", "use_yn", "def"],
+                dataType: { "create_date": "date"},
                 isAutoFitColData: false,
-                // alignLeft: ["major_category", "bill_gr1_nm"],
-                // alignRight: [],
             };
             setGridOptions(gridOption);
         }
@@ -126,7 +123,7 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
             <DialogBasic
                 isOpen={isOpen}
                 onClose={closeModal}
-                title={t("shipper 담당자 관리")}
+                title={t("Pickup 담당자 관리")}
                 bottomRight={
                     <>
                         <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />

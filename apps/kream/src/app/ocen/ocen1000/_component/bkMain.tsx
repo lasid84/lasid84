@@ -14,7 +14,7 @@ import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvid
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
-import { SP_GetContData, SP_InsertData } from "./data";
+import { SP_GetContData } from "./data";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -148,6 +148,8 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     log('mSelectedRow check', mSelectedRow)
 
   }
+
+  //custom select value 변경 시 return object 항목 별 mselectedRow value 업데이트... 이벤트필요
 
 
   return (

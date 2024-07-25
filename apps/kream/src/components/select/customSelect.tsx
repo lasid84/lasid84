@@ -97,8 +97,6 @@ function CustomSelect(props: Props) {
     if (!filteredData || listItem) {
       setFilteredData(listItem);
     }
-    // if(listItem)
-    //   setFilteredData(listItem)
   }, [listItem])
 
   useEffect(() => {
