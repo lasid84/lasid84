@@ -1,4 +1,4 @@
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from "http-status-codes";
 
 /**
  * @dev
@@ -6,5 +6,5 @@ import { StatusCodes } from 'http-status-codes';
  */
 
 export const healthCheck = (req, res) => {
-    return res.status(StatusCodes.OK).json("health");
-}
+  return res.status(StatusCodes.OK).json("health");
+};

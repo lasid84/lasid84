@@ -1,8 +1,8 @@
-import express, { Express } from 'express';
-import serverConfig from './config/server';
-import setupRoutes from './router';
+import express from "express";
+import serverConfig from "./config/server";
+import setupRoutes from "./router";
 
-const app : Express = express();
+const app: express.Express = express();
 
 /**
  * @dev
@@ -11,35 +11,35 @@ const app : Express = express();
 serverConfig(app);
 
 /**
- * @dev
+ * TODOa
  * env 설정 추가 예정
  * Directory : helpers/dev
  */
 
 /**
- * @dev
+ * TODO
  * log 설정 추가 예정
  * Directory : helpers/log
  */
 
 /**
- * @dev
+ * TODO
  * DB 설정 추가 예정
  * Directory : helpers/database
  */
 
 /**
  * @dev
- * Setting routes of API 
+ * Setting routes of API
  */
 setupRoutes(app);
 
 /**
- * @dev
+ * TODO
  * Port env 설정으로 이관 예정
  */
 const port = 9000;
 
 app.listen(port, () => {
-    console.log("server start");
+  console.log("server start");
 });

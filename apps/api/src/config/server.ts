@@ -1,8 +1,8 @@
-import { Express, json } from 'express';
+import { Express, json } from "express";
 import compression from "compression";
 import bodyParser from "body-parser";
-import helmet from 'helmet';
-import cors from 'cors';
+import helmet from "helmet";
+import cors from "cors";
 
 /**
  * @dev
@@ -22,13 +22,13 @@ import cors from 'cors';
  * 7.trust proxy
  * : setting of proxy server
  */
-export default function serverConfig(app : Express) {
-    app
+export default function serverConfig(app: Express) {
+  app
     .use(compression())
 
     .use(bodyParser.urlencoded({ extended: true }))
 
-    .use(bodyParser.json({ limit: '50mb' }))
+    .use(bodyParser.json({ limit: "50mb" }))
 
     .use(helmet())
 
@@ -36,7 +36,7 @@ export default function serverConfig(app : Express) {
 
     .use(cors())
 
-    .set('trust proxy', true)
+    .set("trust proxy", true)
 
-    .disable("x-powered-by")
+    .disable("x-powered-by");
 }
