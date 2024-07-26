@@ -62,6 +62,7 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
 
     useEffect(() => {
         if (detailData) {
+            log('result??!!', detailData)
             const gridOption: GridOption = {
                 colVisible: { col: ["cust_code", "cont_seq", "cont_type"], visible: false },
                 // colDisable: ["trans_mode", "trans_type", "ass_transaction"],

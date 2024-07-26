@@ -461,7 +461,7 @@ export const SP_UpdateData = async (param: any) => {
   return result![0];
 }
 
-//Shipper 담당자 관리(INSERT)
+//Shipper 담당자관리(INSERT)
 export const SP_InsertShipContData = async (param: any) => {
 
   // const Param = searchParam.queryKey[1]
@@ -509,7 +509,7 @@ export const SP_InsertShipContData = async (param: any) => {
   return result![0];
 }
 
-//Shipper 담당자 관리(UPDATE)
+//Shipper 담당자관리(UPDATE)
 export const SP_UpdateShipContData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
@@ -612,6 +612,101 @@ export const SP_GetPickupContData = async (searchParam: any) => {
     return result![0];
 }
 
+//Pickup 담당자관리(INSERT)
+export const SP_InsertPickupContData = async (param: any) => {
+
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  log("param  SP_InsertPickupContData: ", param)
+  const {cust_code,pickup_seq,pickup_type,pickup_nm,addr,pic_nm,email,tel_num,fax_num,def,remark,use_yn, user_id, ipaddr} = Param;
+  const params = {
+    inparam : [
+      "in_cust_code"
+    , "in_pickup_seq"
+    , "in_pickup_type"
+    , "in_pickup_nm"
+    , "in_addr"
+    , "in_pic_nm"
+    , "in_email"
+    , "in_tel_num"
+    , "in_fax_num"
+    , "in_def"
+    , "in_remark"
+    , "in_use_yn"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      cust_code
+    , pickup_seq
+    , pickup_type
+    , pickup_nm
+    , addr
+    , pic_nm
+    , email
+    , tel_num
+    , fax_num
+    , def
+    , remark
+    , use_yn
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'ocean.f_ocen0003_ins_pickup_detail',
+    isShowLoading: true,
+    isShowComplete:false,
+    }
+  
+    const result = await executFunction(params);
+    return result![0];
+}
+
+//Pickup 담당자관리(UPDATE)
+export const SP_UpdatePickupContData = async (param: any) => {
+   // const Param = searchParam.queryKey[1]
+   const Param = param;
+   log("param : ", param)
+   const {cust_code,pickup_seq,pickup_type,pickup_nm,addr,pic_nm,email,tel_num,fax_num,def,remark,use_yn, user_id, ipaddr } = Param;
+   const params = {
+     inparam : [
+       "in_cust_code"
+     , "in_pickup_seq"
+     , "in_pickup_nm"
+     , "in_addr"
+     , "in_pic_nm"
+     , "in_email"
+     , "in_tel_num"
+     , "in_fax_num"
+     , "in_def"
+     , "in_remark"
+     , "in_use_yn"
+     , "in_user"
+     , "in_ipaddr"
+     ],
+     invalue: [
+       cust_code
+     , pickup_seq
+     , pickup_nm
+     , addr
+     , pic_nm
+     , email
+     , tel_num
+     , fax_num
+     , def
+     , remark
+     , use_yn
+     , user_id
+     , ipaddr
+     ],
+     inproc: 'ocean.f_ocen0003_upd_pickup_detail',
+     isShowLoading: true,
+     isShowComplete:false,
+     }
+   
+     const result = await executFunction(params);
+     return result![0];
+}
+
 
 //shipper 담당자data get
 export const SP_GetContData = async (searchParam: any) => {
@@ -639,6 +734,7 @@ export const SP_GetContData = async (searchParam: any) => {
     }
 
     const result = await executFunction(params);
+    log('result??',result)
     return result![0]
   }
 }

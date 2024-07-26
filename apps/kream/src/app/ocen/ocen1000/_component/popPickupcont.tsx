@@ -1,7 +1,7 @@
 import DialogBasic from "layouts/dialog/dialog"
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { useEffect, useCallback, useRef, memo, useState } from "react";
-import {  SP_InsertShipContData, SP_UpdateShipContData } from "./data";
+import {  SP_InsertPickupContData, SP_UpdatePickupContData } from "./data";
 import { useAppContext } from "components/provider/contextObjectProvider"
 import { Button } from "components/button"
 import { useTranslation } from "react-i18next";
@@ -26,8 +26,8 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
     const { dispatch, objState } = useAppContext();
     const { crudType: popType, isPickupPopupOpen: isOpen } = objState;
 
-    const { Create } = useUpdateData2(SP_InsertShipContData)
-    const { Update } = useUpdateData2(SP_UpdateShipContData)
+    const { Create } = useUpdateData2(SP_InsertPickupContData)
+    const { Update } = useUpdateData2(SP_UpdatePickupContData)
 
     const { t } = useTranslation();
     const [gridOptions, setGridOptions] = useState<GridOption>();
@@ -62,14 +62,15 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
 
     useEffect(() => {
         if (detailData) {
+            log("result popPickupcont", detailData)
             const gridOption: GridOption = {
                 colVisible: { col: ["cust_code", "pickup_type", "pickup_seq"], visible: false },
                 gridHeight: "h-full",
                 checkbox: ["use_yn", "def"],
                 select: { "user_dept": initData[15]?.data.map((row: any) => row['user_dept']) },
-                minWidth: { "email": 200 },
-                editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "remark", "use_yn", "def"],
-                dataType: { "create_date": "date"},
+                minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
+                editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
+                dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
                 isAutoFitColData: false,
             };
             setGridOptions(gridOption);
@@ -86,7 +87,7 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
                 hasData = true;
                 if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
                     data.cust_code = objState.mSelectedRow.shipper_id;
-                    data.cont_type = objState.cont_type
+                    data.pickup_type = objState.cont_type
                     Create.mutate(data);
                 } else { //수정
                     Update.mutate(data);
@@ -130,7 +131,7 @@ const Modal: React.FC<Props> = ({ initData, detailData }) => {
                     </>
                 }>
 
-                <div className="flex flex-col w-[98rem] h-[28rem] gap-4 w-96 ">
+                <div className="flex flex-col w-[98rem] h-[28rem] gap-4 ">
                     <PageGrid
                         title={<LabelGrid id={'contact_nm'} />}
                         right={

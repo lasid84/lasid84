@@ -28,13 +28,14 @@ export default function OCEN1000() {
             searchParams: {},
             isMSearch: false,
             isDSearch: false,
+            isPKCSearch : false,
             mSelectedRow: {},
             mSelectedCargo: {},
             dSelectedRow: {},
             tab1: [],
             MselectedTab: 'Main',
             isFirstRender: true,
-            cont_type: '',
+            cont_type: '',  //
             gridRef_m: useRef<any | null>(null),
             refRow : '',
             isShpPopUpOpen: false,
@@ -45,8 +46,8 @@ export default function OCEN1000() {
         }
     });
     const { objState } = state;
-    const { searchParams, mSelectedRow, mSelectedCargo, crudType, isMSearch, isShpPopUpOpen, MselectedTab, isFirstRender } = objState;
-    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isShpPopUpOpen, mSelectedCargo, dispatch } }, [state]);
+    const { searchParams, mSelectedRow, mSelectedCargo, crudType, isMSearch, isShpPopUpOpen, MselectedTab, isPKCSearch, isFirstRender } = objState;
+    const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPKCSearch, isShpPopUpOpen, mSelectedCargo, dispatch } }, [state]);
 
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
     const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetBKDetailData, { enabled: false }); //1건 Detail조회

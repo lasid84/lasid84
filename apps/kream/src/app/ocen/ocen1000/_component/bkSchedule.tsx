@@ -10,7 +10,7 @@ import { gridData } from "components/grid/ag-grid-enterprise";
 import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
 import { useGetData } from "components/react-query/useMyQuery";
-import { SEARCH_D } from "components/provider/contextArrayProvider";
+import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
 import { SP_GetPickupContData } from "./data";
 import Modal from "./popPickupcont"
 import { Button } from "components/button";
@@ -51,15 +51,15 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
   } = methods;
 
   useEffect(() => {
-    if (objState.isDSearch) {
-      log("mSelectedRow?.shipper_id useEffect", objState.isDSearch)
+    if (objState.isPKCSearch) {
+      log("mSelectedRow?.shipper_id useEffect", objState.isPKCSearch)
       detailRefetch();
-      dispatch({ isDSearch: false });
+      dispatch({ isPKCSearch: false });
     }
-  }, [objState.mSelectedRow, objState.isDSearch]);
+  }, [objState.mSelectedRow, objState.isPKCSearch]);
 
-  //get Pickup cont data
-  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: 'ocen' }, SEARCH_D, SP_GetPickupContData, { enable: false });
+  //SEARCH_PKC | get Pickup cont data detailData
+  const { data: pickupContData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: 'ocen' }, SEARCH_PKC, SP_GetPickupContData, { enable: false });
   const [cyplace, setCyPlace] = useState<any>()
 
   const onSearch = () => {
@@ -82,7 +82,7 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
   }, [mainData])
 
   const onClick = () => {
-    dispatch({ crudType: crudType.CREATE, isPickupPopupOpen: true, isDSearch: true })
+    dispatch({ crudType: crudType.CREATE, isPickupPopupOpen: true, isPKCSearch: true })
   }
 
 
@@ -124,12 +124,28 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                   <Button id={"delete"} width="w-15" />
                 </>}>
               <>
-                <Modal initData={loadItem} detailData={detailData} />
-                <div className="col-start-1 col-end-2">
-                  <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
-                </div>
+                <Modal initData={loadItem} detailData={pickupContData} />
+                <div className="col-start-1 col-end-2">                  <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                </div>
                 <MaskedInputField id="pickup_tm" value={mSelectedRow?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
-                <MaskedInputField id="pickup_seq" value={mSelectedRow?.pickup_seq} options={{ isReadOnly: false }} />
+                <div className="col-start-1 col-end-6"><hr></hr> </div>
+                <div className={"col-span-2"}>
+                  <CustomSelect
+                    id="pickup_seq"
+                    initText='Select an Pickup Boundary'
+                    listItem={cyplace as gridData}
+                    valueCol={["pickup_seq", "place_nm,"]}
+                    displayCol="pickup_seq"
+                    gridOption={{
+                      colVisible: { col: ["place_code", "place_nm"], visible: true },
+                    }}
+                    gridStyle={{ width: '600px', height: '300px' }}
+                    style={{ width: '1000px', height: "8px" }}
+                    defaultValue={mSelectedRow?.cy_place_code}
+                    isDisplay={true}
+                    inline={true}
+                  />
+                </div>
+                {/* <MaskedInputField id="pickup_seq" value={mSelectedRow?.pickup_seq} options={{ isReadOnly: false }} /> */}
                 <MaskedInputField id="pickup_loc" value={mSelectedRow?.pickup_loc} options={{ isReadOnly: false }} />
 
                 <div className={"col-span-2"}>
