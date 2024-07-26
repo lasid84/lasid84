@@ -26,7 +26,7 @@ export type ItemProps = {
                 console.log(item);
               }}>
               <span
-                className={`h-8 w-8 bg-blue-500 text-white flex items-center justify-center rounded-full text-lg font-display font-bold z-10`}>
+                className={`h-8 w-8 bg-blue-500 text-gray-200 flex items-center justify-center rounded-full text-lg font-display font-extrabold z-10`}>
                 {key + 1}
               </span>
             </div>
@@ -83,8 +83,8 @@ export type ItemProps = {
                 className={`h-8 w-8 ${
                   item.active
                     ? "bg-white text-gray-900"
-                    : "bg-blue-500 text-white"
-                } flex items-center justify-center rounded-full text-lg font-display font-bold`}>
+                    : "bg-blue-700 text-white"
+                } flex items-center justify-center rounded-full text-lg font-display font-extrabold`}>
                 {key + 1}
               </span>
             </div>
@@ -199,52 +199,52 @@ export type ItemProps = {
               1
           </span>
           <span>
-              <h3 className="font-medium leading-tight">작성중</h3>
+              <h3 className="font-medium leading-tight text-blue-600">작성중</h3>
               <p className="text-sm"></p>
           </span>
       </li>
-      <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+      <li className="flex items-center text-gray-700 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
           <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
               2
           </span>
           <span>
-              <h3 className="font-medium leading-tight">선사부킹완료</h3>
+              <h3 className="font-medium leading-tight text-gray-700">선사부킹완료</h3>
               <p className="text-sm">Step details here</p>
           </span>
       </li>
-      <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+      <li className="flex items-center text-gray-700 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
           <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
               3
           </span>
           <span>
-              <h3 className="font-medium leading-tight">배차통관완료</h3>
+              <h3 className="font-medium leading-tight text-gray-700">배차통관완료</h3>
               <p className="text-sm"></p>
           </span>
       </li>
-      <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+      <li className="flex items-center text-gray-700 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
           <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
               4
           </span>
           <span>
-              <h3 className="font-medium leading-tight">BL작성중</h3>
+              <h3 className="font-medium leading-tight text-gray-700">BL작성중</h3>
               <p className="text-sm">Step details here</p>
           </span>
       </li>
-      <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+      <li className="flex items-center text-gray-700 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
           <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
               5
           </span>
           <span>
-              <h3 className="font-medium leading-tight">신고여부</h3>
+              <h3 className="font-medium leading-tight text-gray-700">신고여부</h3>
               <p className="text-sm"></p>
           </span>
       </li>
-      <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+      <li className="flex items-center text-gray-700 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
           <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
               5
           </span>
           <span>
-              <h3 className="font-medium leading-tight">선적완료</h3>
+              <h3 className="font-medium leading-tight text-gray-700">선적완료</h3>
               <p className="text-sm"></p>
           </span>
       </li>

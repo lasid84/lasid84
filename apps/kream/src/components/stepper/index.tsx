@@ -14,7 +14,7 @@ const Stepper: React.FC<WidgetProps> = ({
 }) => {
     return (
         <>
-            <div className="w-full bg-white border border-gray-100 rounded-lg dark:bg-gray-900 dark:border-gray-800">
+            <div className="w-full bg-white border border-white rounded-lg dark:bg-gray-900 dark:border-gray-800">
                 {(title || right) && (
                     <div className="flex flex-row items-center justify-between mb-6">
                         <div className="flex flex-col">
