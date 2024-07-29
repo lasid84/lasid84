@@ -119,7 +119,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   }
 
   function handleFocus(e: FocusEvent<HTMLInputElement>) {
-    log("handleChange", e.target?.value)
+    log("handleFocus", e.target?.value)
 
     if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);

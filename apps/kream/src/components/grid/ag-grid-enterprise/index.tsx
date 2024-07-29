@@ -206,8 +206,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const gridOptions: GridOptions = useMemo(() => {
     return {
       rowHeight: 25,
-      // headerHeight: 25,
-      autoHeaderHeight:true,
+      headerHeight: 25,
+      // autoHeaderHeight:true,
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
       // groupIncludeTotalFooter: true,
       // rowMultiSelectWithClick: true,
@@ -557,6 +557,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onSelectionChanged = (param: SelectionChangedEvent) => {
+    log("onSelectionChanged")
     // const selectedRow = {...param.api.getSelectedRows()[0], [ROW_INDEX]: param.api.getSelectedNodes()[0].rowIndex};
     const selectedRow = param.api.getSelectedRows()[0];
     if (options?.isEditableOnlyNewRow) {
@@ -572,7 +573,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onRowClicked = (param: RowClickedEvent) => {
-    // log("onRowClicked")
+    log("onRowClicked")
     // return {"colId": param.node.id, ...param.node.data};
 
     if (event?.onRowClicked) event.onRowClicked(param);

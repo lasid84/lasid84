@@ -16,7 +16,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
   id: string              // 식별값, valueCol 사용시 의미 없음
-  initText: string           //initText..
+  initText?: string           //initText..
   label?: string           // 컴포넌트 라벨, null 시 id 값으로 표시
   listItem?: gridData     // 메인 데이터
   displayCol?: string     // row 선택시 select 컴포넌트에 보여줄 컬럼
@@ -75,12 +75,11 @@ function CustomSelect(props: Props) {
     zIndex: 99,
     ...gridStyle
   }
-
-  const inline_style = inline ? 'flex-row' : 'flex'
-
   //let initText = 'Select an option';
   const [displayText, setDisplayText] = useState(initText);
   const [filteredData, setFilteredData] = useState(listItem);
+  const [selectedRow, setSelectedRow] = useState<any>();
+  const [openDirection, setOpenDirection] = useState('down');
 
   // 옵션을 토글하는 함수
   const toggleOptions = () => {
@@ -115,47 +114,72 @@ function CustomSelect(props: Props) {
   }, []);
 
   useEffect(() => {
-    if (isOpen && isGridReady) {
-      var param = getValues();
-      log('param', param)
+    // log("useEffect isOpen, isGridReady, selectedRow", selectedRow)
+    if (isOpen && isGridReady && selectedRow ) {
+      var param = selectedRow;
       if (valueCol?.some(v => param[v])) {
-        log('??', valueCol)
         for (var i = 0; i < filteredData?.data.length; i++) {
           if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
         }
-        gridRef.current?.api?.setFocusedCell(i, id);
+        log('??', valueCol, displayCol, selectedRow, i, filteredData?.data[i]);
+        if (!gridRef.current.api) return;
+        if (i < 0) return;
+        gridRef.current.api.ensureIndexVisible(i, 'top');
+        // 약간의 딜레이 후에 포커스 설정 (렌더링이 완료될 시간을 줌)
+        setTimeout(() => {
+          gridRef.current?.api?.setFocusedCell(i, valueCol[0]);
+        }, 100);
       }
     }
-  }, [isOpen, isGridReady])
+  }, [isOpen, isGridReady, selectedRow])
 
   useEffect(() => {
+    log("useEffect defaultValue, listItem, valueCol")
     if (defaultValue && listItem?.data) {
-      const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
+      // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
+      const initialData = listItem.data.find((item: any) => item[valueCol![0]] === defaultValue);
+      log("======", initialData);
       if (initialData) {
+        setSelectedValue(initialData, false);
         setDisplayVal(initialData);
       }
     }
   }, [defaultValue, listItem, valueCol]);
 
+  useEffect(() => {
+    log("useEffect isOpen")
+    if (isOpen) {
+      const inputElement = ref.current;
+      const inputRect = inputElement?.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      if (inputRect?.bottom && inputRect.bottom + 180 > viewportHeight) {
+        setOpenDirection('up');
+      } else {
+        setOpenDirection('down');
+      }
+    }
+  }, [isOpen]);
+
   const handelRowClicked = (param: any) => {
+    log("==selectedRow", selectedRow)
     var selectedRow = { "colId": param.node.id, ...param.node.data }
-    log("handelRowClicked", param);
     setSelectedValue(selectedRow);
     setDisplayVal(selectedRow);
-    dispatch({selectedobj : selectedRow})
-    if(events?.onRowClicked){      
-      log('events?onRowClicked?')
+    if(events?.onRowClicked){    
       events?.onRowClicked(selectedRow);
     }
+  }
 
-
+  const handleSelectionChanged = (param: any) => {
+    log("handleSelectionChanged", param)
   }
 
   const handleOnGridReady = (param: any) => {
     // const gridApi = param.api;
     // // const gridElement = gridApi.gridCore.eGridDiv; // AG Grid의 최상위 DOM 요소에 접근
     // const gridCore = gridApi.gridCore;
-    // log("handleOnGridReady", gridApi, gridCore);
+    log("handleOnGridReady", /*gridApi, gridCore*/);
   }
 
   const handleComponentStateChanged = (param: any) => {
@@ -165,39 +189,35 @@ function CustomSelect(props: Props) {
     // setIsReady(true);
   }
 
-  const setSelectedValue = (row: any) => {
-    log("setSelectedValue", valueCol, row)
+  const setSelectedValue = (row: any, toggle = true) => {
+    log("setSelectedValue");
     if (valueCol) valueCol.map(key => setValue(key, row[key]));
     else Object.keys(row).map(key => setValue(key, row[key]));
-
-
-    log("setSelectedValue", valueCol, row, getValues())
-    toggleOptions();
+    setSelectedRow(row);
+    if (toggle) toggleOptions();
   }
 
   const setDisplayVal = (row: any | null) => {
-    log("setDisplayVal")
+    log("setDisplayVal");
     var val = initText;
-    log('setDisplayVal', val)
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
     }
-    log("setDisplayVal", val, row)
+    // log("setDisplayVal", val, row)
     setDisplayText(val);
   }
 
   const handleXClick = (e: any) => {
-    log("X2", initText);
     setSelectedValue({});
     setDisplayVal(null);
-    // setDisplayText(initText);
     setFilteredData(listItem);
     setIsOpen(false);
   }
 
   const handleCellKeyDown = (e: CellKeyDownEvent | FullWidthCellKeyDownEvent) => {
+    log("handleCellKeyDown")
     const keyboardEvent = e.event as unknown as KeyboardEvent;
-    const key = keyboardEvent.key;
+    const key = keyboardEvent.key;    
     if (key.length) {
       switch (key) {
         case "Enter":
@@ -212,6 +232,10 @@ function CustomSelect(props: Props) {
           break;
       }
     }
+  }
+
+  const handleCellValueChanged = () => {
+    log("handleCellValueChanged")
   }
 
   const handleCustChange = (input: string) => {
@@ -249,7 +273,7 @@ function CustomSelect(props: Props) {
   }
 
   const moveNextComponent = () => {
-
+    log("moveNextComponent")
     const formElement = document.querySelector('form'); // 예시로 폼 요소를 선택합니다.
     const inputElement = document.querySelector(`#${id}`);
     if (formElement && inputElement) {
@@ -273,15 +297,16 @@ function CustomSelect(props: Props) {
         style={{ position: 'relative' }}
       >
         <Label id={id} name={label} isDisplay={isDisplay} /> */}
-      <InputWrapper outerClassName="relative w-full py-0.5 ${inline_style} items-center space-x-2 justify-items-start custom-select-container dark:bg-gray-900 dark:text-white dark:border-gray-700" inline={inline} >
+      <InputWrapper outerClassName="w-full relative" inline={inline} >
+      {/* <div className="relative w-full"> */}
         {!noLabel && <Label id={id} name={label} lwidth={lwidth} isDisplay={isDisplay} />}
         <div ref={ref}
           className={`custom-select ${isOpen ? 'active' : ''} w-full`}
-          onClick={toggleOptions}
+          // onClick={toggleOptions}
           style={{
-            width: defaultStyle.width,
+            // width: defaultStyle.width,
             height: "30px",
-            // position: 'relative',
+            position: 'relative',
             cursor: 'pointer',
             // border: '1px solid #ccc'
           }}
@@ -314,38 +339,43 @@ function CustomSelect(props: Props) {
             }}
           />
           {/* {displayText} */}
-          <div className="arrow"
+          <div className="select-arrow"
             style={{
               position: 'absolute',
-              top: '40%',
-              right: '10px',
-              transform: inline ? 'translateY(-10%)' : 'translateY(-50%)',
+              top: '50%',
+              right: '5px',
+              transform: 'translateY(-50%)',
               cursor: 'pointer',
             }}
             onClick={() => {
               const inputElement = document.querySelector(`#${id}`);
               if (inputElement instanceof HTMLElement) inputElement.focus();
+              toggleOptions();
             }}
           >
             {isOpen ? <FaChevronUp className="arrow-icon" /> : <FaChevronDown className="arrow-icon" />}
           </div>
-        </div>
         {isDisplayX ? <div className='close'
           style={{
             position: 'absolute',
-            top: '40%',
-            right: '30px',
-            transform: inline ? 'translateY(-10%)' : 'translateY(-50%)',
+            top: '50%',
+            right: '25px',
+            transform: 'translateY(-50%)',
             cursor: 'pointer',
           }}
           onClick={handleXClick}
         ><IoMdClose /></div>
           : <></>
         }
+        </div>
         {isOpen &&
           <div ref={ref2}
-            className="py-0.5 absolute left-0 flex bg-opacity-50 top-10"
-            style={{ ...defaultGridStyle }}
+            className="py-0.5 absolute left-0 flex bg-opacity-50 top-8"
+            style={{
+               ...defaultGridStyle,
+                top: openDirection === 'down' ? 'calc(100% + 5px)' : 'auto',
+                bottom: openDirection === 'up' ? 'calc(100% + 5px)' : 'auto',
+              }}
           >
             <Grid
               customselect={customselect}
@@ -353,8 +383,8 @@ function CustomSelect(props: Props) {
               listItem={filteredData}
               options={{ ...gridOption, gridHeight: defaultGridStyle.height, isSelectRowAfterRender: isSelectRowAfterRender }}
               event={{
-                //  onCellValueChanged: handleCellValueChanged,
-                //  onSelectionChanged: handleSelectionChanged
+                // onCellValueChanged: handleCellValueChanged,
+                onSelectionChanged: handleSelectionChanged,
                 onRowClicked: handelRowClicked,
                 onGridReady: handleOnGridReady,
                 onCellKeyDown: handleCellKeyDown,
@@ -369,4 +399,5 @@ function CustomSelect(props: Props) {
   );
 }
 
-export default memo(CustomSelect);
+// export default memo(CustomSelect);
+export default CustomSelect;

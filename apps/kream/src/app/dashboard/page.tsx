@@ -17,6 +17,7 @@ import { ReactSelect, data } from "components/select/react-select2";
 import NextDatePicker from "components/date/next-tui-date-picker";
 import MaskedInput from "react-text-mask";
 import createNumberMask from "@/components/input/react-text-mask/createNumberMask";
+import { Checkbox } from 'components/checkbox'
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -30,7 +31,7 @@ const developmentHistory = [
      + '&nbsp;1) 엑셀 업로드 후 저장 클릭하도록 변경<br>'
      + '&nbsp;2) 인보이스 발행 기능 적용<br>'
      + '&nbsp;&nbsp;- invoice date 가 없을 경우 발행 안됨<br>'
-     + '&nbsp;3) UFS+ 사이트<br>'
+     + '&nbsp;3) 연동되는 개발UFS+ 사이트<br>'
      + '&nbsp;&nbsp;- https://uat-jp.ufsplus.kwe.com/web/'
   },
 ];
@@ -54,6 +55,10 @@ const Home: React.FC = () => {
     console.log(data);
   };
   
+  const onClick = (data: any) => {
+    console.log("onClick", data);
+    
+  }
   
   return (
     <FormProvider {...methods}>
@@ -62,6 +67,9 @@ const Home: React.FC = () => {
             <header className="w-full p-4 text-center text-white bg-blue-600">
               <h1 className="text-2xl font-bold">Development History</h1>
             </header>
+            <div>
+              <Checkbox id="ck" onClick={onClick}/>
+            </div>
             <main className="flex-grow w-full max-w-4xl p-6">
               <div className="space-y-6">
                 {developmentHistory.map((entry, index) => (

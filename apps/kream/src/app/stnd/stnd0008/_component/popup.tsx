@@ -128,8 +128,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                         <div className="col-span-1">
                             <CustomSelect
                                 id="main_cust_code"
-                                initText={mSelectedRow?.main_cust_code}
-                                // label="trans_mode"
+                                defaultValue={mSelectedRow?.main_cust_code}
                                 listItem={maincustcode as data}
                                 valueCol={["cust_code", "cust_nm"]}
                                 displayCol="cust_nm"
@@ -139,7 +138,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 }}
                                 gridStyle={{ width: '600px', height: '300px' }}
                                 style={{ width: '200px', height: "8px" }}
-                                inline={true}
+                                inline={false}
                                 isDisplay={true}
                             />
                             {/* <ReactSelect
