@@ -144,34 +144,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const [currentState, setCurrentState] = useState<GridState>();
 
 
-  const [gridState, setGridState] = useState<GridState>();
-
-  // // 스크롤 위치를 저장하는 함수
-  // const saveGridState = () => {
-  //   if (gridRef.current && gridRef.current.api) {
-  //     const state = gridRef.current.api.getState();
-  //     setGridState(state);
-  //   }
-  // };
-
-  // 컴포넌트가 언마운트될 때 스크롤 위치를 저장
-  useEffect(() => {
-    return () => {
-      log("currentState", currentState)
-      setGridState(currentState);
-    };
-  }, []);
-
-  // 그리드가 렌더링될 때 스크롤 위치를 복원
-  useEffect(() => {
-    if (gridRef.current && gridRef.current.api && gridState) {
-      log("gridState", gridState)
-      setInitialState(gridState);
-    }
-  }, [gridState]);
-
-
-
 
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
   const { listItem, options, customselect = false } = props;
@@ -764,21 +736,18 @@ const ListGrid: React.FC<Props> = memo((props) => {
     (params: GridPreDestroyedEvent) => {
       const { state } = params;
       
-      if (state.scroll) {
-        console.log("Grid state on destroy (can be persisted)", state);
-        // setInitialState(state);
-        setCurrentState(state);
-      }
+      console.log("Grid state on destroy (can be persisted)", state);
+      // setInitialState(state);
+      setInitialState(state);
+      
     },
     [],
   );
 
   const onStateUpdated = useCallback(
     (params: StateUpdatedEvent) => {
-      if (params.state.scroll) {
-        log("State updated3", params.state, params.state.scroll);
-        setCurrentState(params.state);
-      }
+      log("State updated3", params.state, params.state.scroll);
+      setCurrentState(params.state);
     },
     [],
   );
@@ -816,7 +785,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               processDataFromClipboard={processDataFromClipboard}
               initialState={initialState}
               onGridPreDestroyed={onGridPreDestroyed}
-              // onStateUpdated={onStateUpdated}
+              onStateUpdated={onStateUpdated}
             />
           }
         </div>
