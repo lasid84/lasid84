@@ -6,7 +6,7 @@ import { Request, Response } from "express";
  */
 
 export const getMessageName = (req: Request, res: Response) => {
-  return res.json({ meesage: `hello ${req.params.name}` });
+  return res.status(500).json({ meesage: `hello ${req.params.name}` });
 };
 
 export const getStatus = (_, res: Response) => {

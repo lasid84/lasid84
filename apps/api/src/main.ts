@@ -2,6 +2,8 @@ import express from "express";
 import serverConfig from "./config/server";
 import setupRoutes from "./router";
 
+import loggerMiddleware from "./helpers/log/logger";
+
 const app: express.Express = express();
 
 /**
@@ -11,16 +13,17 @@ const app: express.Express = express();
 serverConfig(app);
 
 /**
- * TODOa
+ * TODO
  * env 설정 추가 예정
  * Directory : helpers/dev
  */
 
 /**
- * TODO
- * log 설정 추가 예정
- * Directory : helpers/log
+ * @dev
+ * Setting Logger Middleware
+ * (Request, Response Logging)
  */
+app.use(loggerMiddleware);
 
 /**
  * TODO

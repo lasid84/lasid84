@@ -27,17 +27,15 @@ const dataRoutes: Router = Router();
  * 2. Components Routing
  */
 export default function setupRoutes(app: Express) {
-  app.use("/v1", v1);
-
-  v1.use("/auth", authRoutes);
-  v1.use("/check", checkRoutes);
-  v1.use("/api", dataRoutes);
+  app.use("/auth", authRoutes);
+  app.use("/check", checkRoutes);
+  app.use("/api", dataRoutes);
 
   /**
    * @dev
    * Health Check API for Load Balancer
    */
-  v1.get("/health", healthCheck);
+  app.get("/health", healthCheck);
 
   /** Auth API */
   setUpAuthRoutes(authRoutes);
