@@ -61,7 +61,7 @@ function CustomSelect(props: Props) {
   const inputRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
-  const { id, label, initText = 'Select an Option', listItem, inline = true, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true
+  const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true
     , noLabel = false, lwidth, defaultValue, events
   } = props;
   const customselect = true
@@ -121,7 +121,7 @@ function CustomSelect(props: Props) {
         for (var i = 0; i < filteredData?.data.length; i++) {
           if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
         }
-        log('??', valueCol, displayCol, selectedRow, i, filteredData?.data[i]);
+        // log('??', valueCol, displayCol, selectedRow, i, filteredData?.data[i]);
         if (!gridRef.current.api) return;
         if (i < 0) return;
         gridRef.current.api.ensureIndexVisible(i, 'top');
@@ -134,11 +134,11 @@ function CustomSelect(props: Props) {
   }, [isOpen, isGridReady, selectedRow])
 
   useEffect(() => {
-    log("useEffect defaultValue, listItem, valueCol")
+    // log("useEffect defaultValue, listItem, valueCol")
     if (defaultValue && listItem?.data) {
       // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
       const initialData = listItem.data.find((item: any) => item[valueCol![0]] === defaultValue);
-      log("======", initialData);
+      // log("======", initialData);
       if (initialData) {
         setSelectedValue(initialData, false);
         setDisplayVal(initialData);
@@ -147,7 +147,7 @@ function CustomSelect(props: Props) {
   }, [defaultValue, listItem, valueCol]);
 
   useEffect(() => {
-    log("useEffect isOpen")
+    // log("useEffect isOpen")
     if (isOpen) {
       const inputElement = ref.current;
       const inputRect = inputElement?.getBoundingClientRect();
@@ -162,7 +162,7 @@ function CustomSelect(props: Props) {
   }, [isOpen]);
 
   const handelRowClicked = (param: any) => {
-    log("==selectedRow", selectedRow)
+    // log("==selectedRow", selectedRow)
     var selectedRow = { "colId": param.node.id, ...param.node.data }
     setSelectedValue(selectedRow);
     setDisplayVal(selectedRow);
@@ -172,7 +172,7 @@ function CustomSelect(props: Props) {
   }
 
   const handleSelectionChanged = (param: any) => {
-    log("handleSelectionChanged", param)
+    // log("handleSelectionChanged", param)
   }
 
   const handleOnGridReady = (param: any) => {
@@ -241,7 +241,7 @@ function CustomSelect(props: Props) {
   const handleCustChange = (input: string) => {
 
     let inputVal = input.toString().toUpperCase();
-    log("MaskedInputField onChange", inputVal);
+    // log("MaskedInputField onChange", inputVal);
     if (!inputVal || inputVal === initText) {
       setFilteredData(listItem);
       return;
@@ -315,7 +315,7 @@ function CustomSelect(props: Props) {
             events={{
               onChange(e) {
                 e.preventDefault();
-                log("onChange", e.target.value)
+                // log("onChange", e.target.value)
                 if (!isOpen) setIsOpen(true);
                 handleCustChange(e.target.value);
               },
@@ -325,7 +325,7 @@ function CustomSelect(props: Props) {
                   case "ArrowDown":
                     // ref2?.current?.focus();
                     e.preventDefault();
-                    log("onKeyDown", id, gridRef, gridRef.current);
+                    // log("onKeyDown", id, gridRef, gridRef.current);
                     if (!isOpen) setIsOpen(true);
                     gridRef.current.api.setFocusedCell(0, valueCol![0]);
 

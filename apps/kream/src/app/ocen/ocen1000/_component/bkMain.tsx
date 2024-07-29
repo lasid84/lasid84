@@ -180,7 +180,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     style={{ width: '1000px', height: "8px" }}
                     isDisplay={true}
                     defaultValue={mSelectedRow?.shipper_id}
-                    inline={true}
+                    // inline={true}
                     events={{ onRowClicked: handleCustomSelectChange }} 
                     obj={selectedobj}
                   />
@@ -199,7 +199,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     style={{ width: '500px', height: "8px" }}
                     isDisplay={true}
                     defaultValue={mSelectedRow?.sales_person}
-                    inline={true}
+                    // inline={true}
                     obj={selectedobj}
                   />
                 </div>
@@ -223,11 +223,11 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
               style={{ width: '1000px', height: "8px" }}
               isDisplay={true}
               defaultValue={mSelectedRow?.shp_cont_pic_nm}
-              inline={true}
+              // inline={true}
             // onChange={handleCustomSelectChange}
             />
           </div>
-          <MaskedInputField id="shp_cont_email" value={mSelectedRow?.shp_cont_email} options={{ isReadOnly: false }} />
+          <MaskedInputField id="shp_cont_email" value={mSelectedRow?.shp_cont_email} options={{ isReadOnly: false}} />
           <MaskedInputField id="shp_tel_num" value={mSelectedRow?.shp_tel_num} options={{ isReadOnly: false }} />
           <MaskedInputField id="shp_fax_num" value={mSelectedRow?.shp_fax_num} options={{ isReadOnly: false }} />
 
