@@ -156,6 +156,7 @@ const SearchForm = memo(({ loadItem }: any) => {
               gridStyle={{ width: '600px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
               isDisplay={true}
+              inline={true}
             />
             <MaskedInputField id="no" value={objState.searchParams?.no} label="bl/inv no." options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
           </div>

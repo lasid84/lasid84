@@ -205,6 +205,7 @@ const SearchForm = ({ loadItem }: any) => {
               gridStyle={{ width: "600px", height: "300px" }}
               style={{ width: "1000px", height: "8px" }}
               isDisplay={true}
+              inline={true}
             />
             <MaskedInputField
               id="wb_no"

@@ -18,7 +18,10 @@ import {
   FullWidthCellKeyDownEvent,
   ComponentStateChangedEvent,
   ProcessDataFromClipboardParams,
-  RowNode
+  RowNode,
+  GridState,
+  GridPreDestroyedEvent,
+  StateUpdatedEvent
 } from "ag-grid-community";
 
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -101,7 +104,7 @@ export type GridOption = {
   total?: {
     [key: string]: string                 //column : 타입(count, sum, avg), prefix 같은 문구를 넣으려면 custom 형식의 옵션 추가 후 개발 필요
   }
-  refRow?: boolean                        //scroll ref number
+  refRow?: number                        //scroll ref number
   isShowFilter?: boolean
   isShowFilterBtn?: boolean
   isMultiSelect?: boolean
@@ -123,6 +126,9 @@ type cols = {
   // floatingFilter?: boolean
 }
 
+var rowCount = 0;
+var currentRow = 0;
+
 const ListGrid: React.FC<Props> = memo((props) => {
   // log("ListGrid", props);
 
@@ -133,6 +139,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
   // const [colDefs, setColDefs] = useState<cols[]>([]);
   const [colDefs, setColDefs] = useState<any[]>([]);
   const [mainData, setMainData] = useState([{}]);
+
+  const [initialState, setInitialState] = useState<GridState>();
+  const [currentState, setCurrentState] = useState<GridState>();
+
+
 
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
   const { listItem, options, customselect = false } = props;
@@ -206,8 +217,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const gridOptions: GridOptions = useMemo(() => {
     return {
       rowHeight: 25,
-      // headerHeight: 25,
-      autoHeaderHeight:true,
+      headerHeight: 25,
+      // autoHeaderHeight:true,
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
       // groupIncludeTotalFooter: true,
       // rowMultiSelectWithClick: true,
@@ -217,6 +228,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       suppressLastEmptyLineOnPaste: true,     //엑셀 복사 후 붙여넣기시 시 다음 row 빈칸 붙여넣기 되는 오류 처리
       animateRows: true,
       // grandTotalRow:"bottom",
+      suppressScrollOnNewData:true,
       navigateToNextCell(params) {
         const suggestedNextCell = params.nextCellPosition;
 
@@ -238,8 +250,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         return suggestedNextCell;
       },
-      onComponentStateChanged: (e: ComponentStateChangedEvent) => {
-        // log("onComponentStateChanged", gridRef.current.api, gridRef.current.columnApi);
+      onComponentStateChanged: async (e: ComponentStateChangedEvent) => {
+        log("onComponentStateChanged", initialState, currentState);
 
         if (options?.isSelectRowAfterRender) {
           if (gridRef?.current.api.getSelectedNodes().length > 0) return;
@@ -252,10 +264,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
           });
         };
 
-        if (options?.refRow) {
-          gridRef?.current.api.ensureIndexVisible(options.refRow, 'middle');
-          // log('refRow__2', options.refRow)
-        }
+        // if (options?.refRow) {
+          // await gridRef?.current.api.ensureIndexVisible(currentRow, 'middle');
+          // await gridRef.api.getRowNode(currentRow).setSelected(true);
+          // log('currentRow', currentRow)
+        // }
         // if () {
         //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
         // }
@@ -323,6 +336,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // dataTypeModifier: -1,
       // format: 'text'
       // }
+      rowCount = listItem.data.length;
       let columns = listItem.fields.map((field) => field.name);
       const dataType = listItem.fields.map((field) => field.format);
       // log("===================????", columns)
@@ -547,7 +561,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     });
 
     let pinnedBottomData = calculatePinnedBottomData(result);
-    log("============onGridReady", pinnedBottomData)
+    // log("============onGridReady", pinnedBottomData)
 
     if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
       gridRef.current.api.setPinnedBottomRowData([pinnedBottomData]);
@@ -557,6 +571,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onSelectionChanged = (param: SelectionChangedEvent) => {
+    log("onSelectionChanged")
     // const selectedRow = {...param.api.getSelectedRows()[0], [ROW_INDEX]: param.api.getSelectedNodes()[0].rowIndex};
     const selectedRow = param.api.getSelectedRows()[0];
     if (options?.isEditableOnlyNewRow) {
@@ -566,13 +581,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
       });
       setColDefs(copied);
     }
-
+    // currentRow = selectedRow[ROW_INDEX];
     if (event?.onSelectionChanged) event.onSelectionChanged(param);
 
   }
 
   const onRowClicked = (param: RowClickedEvent) => {
-    // log("onRowClicked")
+    log("onRowClicked")
     // return {"colId": param.node.id, ...param.node.data};
 
     if (event?.onRowClicked) event.onRowClicked(param);
@@ -582,7 +597,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const onRowDoubleClicked = (param: RowDoubleClickedEvent) => {
     // log("onRowClicked")
     // return {"colId": param.node.id, ...param.node.data};
-
+    currentRow = Number(param.node.id);
     if (event?.onRowDoubleClicked) event.onRowDoubleClicked(param);
   }
 
@@ -682,7 +697,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           rowsToAdd.push(rowObject);
         }
         // params.api!.applyTransaction({ add: rowsToAdd });
-        log("processDataFromClipboard", rowsToAdd)
+        // log("processDataFromClipboard", rowsToAdd)
         for (const row of rowsToAdd) {
           rowAdd(gridRef.current, row);
         }
@@ -717,6 +732,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   };
 
+  const onGridPreDestroyed = useCallback(
+    (params: GridPreDestroyedEvent) => {
+      const { state } = params;
+      
+      console.log("Grid state on destroy (can be persisted)", state);
+      // setInitialState(state);
+      setInitialState(state);
+      
+    },
+    [],
+  );
+
+  const onStateUpdated = useCallback(
+    (params: StateUpdatedEvent) => {
+      log("State updated3", params.state, params.state.scroll);
+      setCurrentState(params.state);
+    },
+    [],
+  );
+
 
   return (
     <>
@@ -746,7 +781,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
               onColumnResized={onColumnResized}
               onFirstDataRendered={onFirstDataRendered}
               onCellKeyDown={onCellKeyDown}
+              suppressRowClickSelection={true}
               processDataFromClipboard={processDataFromClipboard}
+              initialState={initialState}
+              onGridPreDestroyed={onGridPreDestroyed}
+              onStateUpdated={onStateUpdated}
             />
           }
         </div>
@@ -772,13 +811,12 @@ export const rowAdd = async (gridRef: {
   props: any; api: any 
 }, initData: {} = {}) => {
 
-  // var data = gridRef.api.getRenderedNodes();
-  // log("===============", data);
+  await gridRef.api.setFilterModel(null);
   var col = getFirstColumn(gridRef);
-  //var rowCount = gridRef.api.getRenderedNodes().length;
-  //2024-07-23 rowCount 변경 Retrieve rendered nodes. Due to virtualisation this will contain only the current visible rows and those in the buffer.
-  var rowCount = gridRef.props.rowData.length
-  log('rowCount check', rowCount)
+  // var renderedRow = gridRef.api.getRenderedNodes().length;
+  // log('rowCount check', rowCount, renderedRow)
+
+  await gridRef.api.ensureIndexVisible(rowCount - 1, 'bottom');
 
   var data = {
     [col]: '',
@@ -788,7 +826,7 @@ export const rowAdd = async (gridRef: {
     [ROW_TYPE]: ROW_TYPE_NEW,
     [ROW_CHANGED]: true
   }
-  log('rowAdd', col, data)
+  // log('rowAdd', col, data)
   await gridRef.api.applyTransaction({ add: [data] });
   await gridRef.api.setFocusedCell(rowCount, col);
   await gridRef.api.startEditingCell({
@@ -799,7 +837,7 @@ export const rowAdd = async (gridRef: {
   await gridRef.api.getRowNode(rowCount.toString()).setSelected(true);
 
   return {
-    rowIndex: rowCount,
+    rowIndex: rowCount++,
     colkey: col
   }
 };
@@ -829,7 +867,7 @@ const numberFormatter = (params: ValueFormatterParams, options: any = null) => {
 
     if (!val) return;
 
-    log("numberFormatter", val, !isNaN(val), parseFloat(val), +val);
+    // log("numberFormatter", val, !isNaN(val), parseFloat(val), +val);
     if (!isNaN(val) && parseFloat(val) - Math.trunc(val) === 0) val = (+val).toFixed(0);
     else val = (+val).toFixed(2);
     let formatted = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
