@@ -2,7 +2,7 @@ import React, { ChangeEvent, KeyboardEventHandler, memo, useEffect, useLayoutEff
 import Grid, { GridOption, gridData } from '@/components/grid/ag-grid-enterprise';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
-import { CellKeyDownEvent, FullWidthCellKeyDownEvent, IRowNode, RowClickedEvent } from 'ag-grid-community';
+import { CellKeyDownEvent, FullWidthCellKeyDownEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { useTranslation } from 'react-i18next';
 import {  useAppContext } from "components/provider/contextObjectProvider";
 import { useFormContext } from 'react-hook-form';
@@ -33,9 +33,8 @@ type Props = {
   lwidth?: string        // Label 넓이
   events?:{               //customselect event전달용
     onRowClicked?:  (e: ChangeEvent<HTMLInputElement>) => void;
+    onSelectionChanged?: (e: SelectionChangedEvent<HTMLInputElement>, id:string, value:string) => void;
   }
-  obj ?: {}
-
 }
 
 type GridStyle = {
@@ -171,8 +170,13 @@ function CustomSelect(props: Props) {
     }
   }
 
-  const handleSelectionChanged = (param: any) => {
-    // log("handleSelectionChanged", param)
+  const handleSelectionChanged = (param: SelectionChangedEvent) => {
+    var selectedRow = param.api.getSelectedRows()[0];
+    if(events?.onSelectionChanged){    
+      let val = selectedRow ? selectedRow[valueCol![0]] : null;
+      log("handleSelectionChanged", selectedRow, valueCol![0], val)
+      events?.onSelectionChanged(param, id, val);
+    }
   }
 
   const handleOnGridReady = (param: any) => {
@@ -208,6 +212,8 @@ function CustomSelect(props: Props) {
   }
 
   const handleXClick = (e: any) => {
+    log("handleXClick", gridRef, gridRef.current)
+    if (gridRef.current) gridRef.current.api.deselectAll();
     setSelectedValue({});
     setDisplayVal(null);
     setFilteredData(listItem);
@@ -368,31 +374,31 @@ function CustomSelect(props: Props) {
           : <></>
         }
         </div>
-        {isOpen &&
-          <div ref={ref2}
-            className="py-0.5 absolute left-0 flex bg-opacity-50 top-8"
-            style={{
-               ...defaultGridStyle,
-                top: openDirection === 'down' ? 'calc(100% + 5px)' : 'auto',
-                bottom: openDirection === 'up' ? 'calc(100% + 5px)' : 'auto',
-              }}
-          >
-            <Grid
-              customselect={customselect}
-              gridRef={gridRef}
-              listItem={filteredData}
-              options={{ ...gridOption, gridHeight: defaultGridStyle.height, isSelectRowAfterRender: isSelectRowAfterRender }}
-              event={{
-                // onCellValueChanged: handleCellValueChanged,
-                onSelectionChanged: handleSelectionChanged,
-                onRowClicked: handelRowClicked,
-                onGridReady: handleOnGridReady,
-                onCellKeyDown: handleCellKeyDown,
-                onComponentStateChanged: handleComponentStateChanged
-              }}
-            />
-          </div>
-        }
+        
+        <div ref={ref2}
+          className={`py-0.5 absolute left-0 flex bg-opacity-50 top-8 ${isOpen ? '' : 'hidden'}`}
+          style={{
+              ...defaultGridStyle,
+              top: openDirection === 'down' ? 'calc(100% + 5px)' : 'auto',
+              bottom: openDirection === 'up' ? 'calc(100% + 5px)' : 'auto',
+            }}
+        >
+          <Grid
+            customselect={customselect}
+            gridRef={gridRef}
+            listItem={filteredData}
+            options={{ ...gridOption, gridHeight: defaultGridStyle.height, isSelectRowAfterRender: isSelectRowAfterRender }}
+            event={{
+              // onCellValueChanged: handleCellValueChanged,
+              onSelectionChanged: handleSelectionChanged,
+              onRowClicked: handelRowClicked,
+              onGridReady: handleOnGridReady,
+              onCellKeyDown: handleCellKeyDown,
+              onComponentStateChanged: handleComponentStateChanged
+            }}
+          />
+        </div>
+        
         {/* </div> */}
       </InputWrapper>
     </>

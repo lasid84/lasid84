@@ -6,11 +6,12 @@ import { SP_GetMasterData } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid, { getGridState, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { getGridState, gotoFirstRow, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import { GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent, StateUpdatedEvent } from "ag-grid-community";
 import { PageMGrid2, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from 'components/button';
+import GridReferences from "@/app/ufsm/ufsm0001/_component/gridReferences";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -66,39 +67,54 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const handleRowClicked = async (param: RowClickedEvent) => { };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
-        // const selectedRow = param.api.getSelectedRows()[0];
-        // log("handleSelectionChanged", selectedRow)
+        const selectedRow = param.api.getSelectedRows()[0];
+        log("handleSelectionChanged", selectedRow)
         // console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
         // dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     };
 
-    const handleonClick = () => {
+    const handleonClick = async () => {
         // var selectedRow = { "colId": param.node.id, ...param.node.data }
-        rowAdd(objState.gridRef_m.current, { use_yn: true })
         if (objState.tab1) {
-            objState.tab1.push({ cd: 'NEW', cd_nm: 'NEW' })
-            dispatch({ MselectedTab: 'NEW', isMDSearch: true, popType: crudType.CREATE, })
-            //dispatch({mSelectedRow: ...mSelectedRow, })
+            // var tabName = "NEW" + (objState.tab1.reduce((acc:number,v:{cd:string}) => v.cd.includes("NEW") && acc + 1,0)+1);
+            var temp = objState.tab1
+                            .filter((v:{cd:string}) => v.cd.includes("NEW"))
+                            .sort()
+                            .reverse();
+                            
+            var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
+            var tabName = `NEW${tabSeq}`;
+
+            var initData = await rowAdd(objState.gridRef_m.current, {bk_id: tabName, use_yn: true});
+            await (mainData as gridData).data.push(initData);
+        
+            setTimeout(() => {
+                log("setTimeout")
+                
+                objState.tab1.push({ cd: tabName, cd_nm: tabName })
+                dispatch({ MselectedTab: tabName, isMDSearch: true, popType: crudType.CREATE, });
+                //dispatch({mSelectedRow: ...mSelectedRow, })
+            }, 200);
         }
+        
     }
 
     const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
         // let gridState = getGridState(gridRef.current);
-        log('handleGridPreDestroyed', param.state)
+        // log('handleGridPreDestroyed', param.state);
         dispatch({ mGridState:param.state });
     }
 
-    // useEffect(() => {
-    //     log('objState.gridRef_m', objState.gridRef_m)
-    //     setGridRef(objState.gridRef_m);
-    // }, [objState.gridRef_m])
-
+    const handleStateUpdated = (param:StateUpdatedEvent) => {
+        if (!objState.mGridStateInit) dispatch({ mGridStateInit:param.state });
+    }
 
     useEffect(() => {
         if (objState.isMSearch) {
             mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
+            if (objState.gridRef_m.current) gotoFirstRow(objState.gridRef_m.current)
         }
     }, [objState?.isMSearch]);
 
@@ -122,6 +138,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                         onRowClicked: handleRowClicked,
                         onSelectionChanged: handleSelectionChanged,
                         onGridPreDestroyed: handleGridPreDestroyed,
+                        // onStateUpdated: handleStateUpdated
                     }}
                     gridState={objState.mGridState}
                 />

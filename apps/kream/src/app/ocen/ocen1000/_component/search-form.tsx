@@ -35,6 +35,7 @@ import { Button } from "components/button";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
+import { GridState } from "ag-grid-community";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -125,7 +126,7 @@ const SearchForm = ({ loadItem }: any) => {
   const onSearch = () => {
     const params = getValues();
     log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true, mGridState:null });
+    dispatch({ searchParams: params, isMSearch: true});
   };
   
   const onChange = (e: any) => {

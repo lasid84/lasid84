@@ -77,6 +77,7 @@ type GridEvent = {
   onCellKeyDown?: (params: CellKeyDownEvent | FullWidthCellKeyDownEvent) => void
   onComponentStateChanged?: (params: ComponentStateChangedEvent) => void
   onGridPreDestroyed?: (params: GridPreDestroyedEvent) => void
+  onStateUpdated?: (params: StateUpdatedEvent) => void
 }
 
 export type GridOption = {
@@ -185,7 +186,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       columnsWithTotal.push(key);
       totalType.push(val);
     }
-    log("calculatePinnedBottomData", columnsWithTotal, totalType)
+    // log("calculatePinnedBottomData", columnsWithTotal, totalType)
     columnsWithTotal.forEach((element, i) => {
       let type = totalType[i];
       let rowCnt = 0;
@@ -253,7 +254,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         return suggestedNextCell;
       },
       onComponentStateChanged: async (e: ComponentStateChangedEvent) => {
-        log("onComponentStateChanged", initialState, currentState);
+        // log("onComponentStateChanged", props.gridState, gridRef?.current, initialState);
 
         if (options?.isSelectRowAfterRender) {
           if (gridRef?.current.api.getSelectedNodes().length > 0) return;
@@ -274,6 +275,14 @@ const ListGrid: React.FC<Props> = memo((props) => {
         // if () {
         //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
         // }
+
+        if (props.gridState) {
+          if (props.gridState?.rowSelection && props.gridState?.rowSelection[0]) {
+            if (gridRef?.current && gridRef.current.api?.getRowNode(props.gridState.rowSelection[0])) gridRef.current.api?.getRowNode(props.gridState.rowSelection[0]).setSelected(true);
+          }
+        } else {
+          // if (gridRef?.current && gridRef.current?.api.getRowNode) gridRef.current?.api?.getRowNode(0).setSelected(true);
+        }
 
         if (event?.onComponentStateChanged) event.onComponentStateChanged(e);
 
@@ -469,7 +478,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //체크박스 셋팅
         if (options?.checkbox) {
           if (options.checkbox.indexOf(col) > -1) {
-            log("checkbox:", col)
+            // log("checkbox:", col)
             cellOption = {
               ...cellOption,
               // editable:true,
@@ -555,10 +564,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   useEffect(() => {
     setInitialState(props.gridState);
+
+    // if (props.gridState) setInitialState(props.gridState);
+    // else gridRef.current ? gridRef.current.api.ensureIndexVisible(0, 'top') : null;
   }, [props.gridState])
 
   const onGridReady = (param: GridReadyEvent) => {
-    // log("onGridReady");
+    log("onGridReady");
 
     let result: any = {};
 
@@ -574,6 +586,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
 
     if (event?.onGridReady) event.onGridReady(param);
+
   }
 
   const onSelectionChanged = (param: SelectionChangedEvent) => {
@@ -742,7 +755,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     (params: GridPreDestroyedEvent) => {
       const { state } = params;
       
-      console.log("Grid state on destroy (can be persisted)", state);
+      // log("Grid state on destroy (can be persisted)", state);
       // setInitialState(state);
       setInitialState(state);
 
@@ -752,8 +765,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onStateUpdated = useCallback(
     (params: StateUpdatedEvent) => {
-      log("State updated3", params.state, params.state.scroll);
-      setCurrentState(params.state);
+      // log("State updated3", params.state, params.state.scroll);
+      // setCurrentState(params.state);
+      // setInitialState(params.state);
+      if (event?.onStateUpdated) event.onStateUpdated(params);
   },[]);
 
 
@@ -785,11 +800,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
               onColumnResized={onColumnResized}
               onFirstDataRendered={onFirstDataRendered}
               onCellKeyDown={onCellKeyDown}
-              suppressRowClickSelection={true}
+              // suppressRowClickSelection={true}
               processDataFromClipboard={processDataFromClipboard}
               initialState={initialState}
               onGridPreDestroyed={onGridPreDestroyed}
-              // onStateUpdated={onStateUpdated}
+              onStateUpdated={onStateUpdated}
             />
           }
         </div>
@@ -811,9 +826,11 @@ export const getFirstColumn = (params: { api: { getAllDisplayedColumns: () => an
   return thisIsFirstColumn.colId;
 };
 
-export const rowAdd = async (gridRef: {
-  props: any; api: any 
-}, initData: {} = {}) => {
+export const rowAdd = async (
+  gridRef: {props: any; api: any },
+  initData: {} = {},
+
+) => {
 
   await gridRef.api.setFilterModel(null);
   var col = getFirstColumn(gridRef);
@@ -829,8 +846,8 @@ export const rowAdd = async (gridRef: {
     [ROW_INDEX]: rowCount + 1,
     [ROW_TYPE]: ROW_TYPE_NEW,
     [ROW_CHANGED]: true
-  }
-  // log('rowAdd', col, data)
+  };
+
   await gridRef.api.applyTransaction({ add: [data] });
   await gridRef.api.setFocusedCell(rowCount, col);
   await gridRef.api.startEditingCell({
@@ -838,12 +855,12 @@ export const rowAdd = async (gridRef: {
     colkey: col
   });
 
-  await gridRef.api.getRowNode(rowCount.toString()).setSelected(true);
+  if (gridRef.api) await gridRef.api.getRowNode(rowCount.toString()).setSelected(true);
 
-  return {
-    rowIndex: rowCount++,
-    colkey: col
-  }
+  // log('rowAdd', col, data);
+  rowCount++;
+
+  return data
 };
 
 const dateFormatter = (params: ValueFormatterParams) => {
@@ -929,6 +946,10 @@ export const getGridState = (gridRef: {props: any; api: any }) => {
     return gridRef.api.getState();
   }
   return null;
+}
+
+export const gotoFirstRow = (gridRef: {props: any; api: any }) => {
+  if (gridRef?.api) gridRef.api.ensureIndexVisible(0,'top');
 }
 
 

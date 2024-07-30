@@ -42,7 +42,8 @@ export default function OCEN1000() {
             isCYPopupOpen : false,
             isPickupPopupOpen : false,
             selectedobj: {},
-            mGridState: {}
+            mGridState: {},
+            mGridStateInit:null
         }
     });
     const { objState } = state;
@@ -54,32 +55,12 @@ export default function OCEN1000() {
 
     //사용자 정보
     const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
-    const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
-    const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
-
-
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
         dispatch({ cont_type: params.cont_type });
-        log('cont_type? OCEN1000', objState?.cont_type)
+        log('cont_type? OCEN1000', params)
     }, [menu_param])
-
-    const handleOnClickTab = (code: any) => {
-        //tab click event , 작성중인경우, update 한 경우 팝업알림(저장)
-        setselectedTab(code)
-    }
-    const MhandleOnClickTab = (code: any) => {
-        if (code.target.id === 'Main') { dispatch({ MselectedTab: code.target.id }) }
-        else {
-            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, no: code.target.id } })
-        }
-    }
-    const MhandleonClickICON = (code: any) => {
-        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
-        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, no: filtered[filtered.length - 1].cd } })
-    }
-
 
     useEffect(() => {
         if (objState.isMSearch) {
@@ -105,7 +86,22 @@ export default function OCEN1000() {
             if (objState.tab1.length < 1) { objState.tab1.push({ cd: 'Main', cd_nm: 'Main' }) }
         }
     }, [initData])
+    
 
+    const handleOnClickTab = (code: any) => {
+        //tab click event , 작성중인경우, update 한 경우 팝업알림(저장)
+        setselectedTab(code)
+    }
+    const MhandleOnClickTab = (code: any) => {
+        if (code.target.id === 'Main') { dispatch({ MselectedTab: code.target.id }) }
+        else {
+            dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, no: code.target.id } })
+        }
+    }
+    const MhandleonClickICON = (code: any) => {
+        let filtered = objState.tab1.filter((element: any) => { return element.cd != code.target.id })
+        dispatch({ tab1: filtered, MselectedTab: filtered[filtered.length - 1].cd, mSelectedRow: { ...mSelectedRow, no: filtered[filtered.length - 1].cd } })
+    }
 
     return (
         <TableContext.Provider value={val}>

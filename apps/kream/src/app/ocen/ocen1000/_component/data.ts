@@ -710,7 +710,8 @@ export const SP_GetContData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { shipper_id, cont_type, user_id, ipaddr } = Param;
   log("mSelectedRow?.shipper_id param sp data: ", Param, cont_type, shipper_id)
-  if (shipper_id === undefined) {
+  if (shipper_id + "" === "") {
+    return;
     toastError('Shipper Code를 선택해주세요')
   } else {
     const params = {

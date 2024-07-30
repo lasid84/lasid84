@@ -36,7 +36,7 @@ type Props = {
 const BKMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
-  const { mSelectedRow, selectedobj } = objState
+  const { mSelectedRow, selectedobj, cont_type } = objState
   //const [data, setData] = useState<any>();
 
   const methods = useForm({
@@ -51,7 +51,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   } = methods;
 
   //get shipper cont data
-  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: 'ocen' }, SEARCH_D, SP_GetContData, {enable:false});
+  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: cont_type }, "dfsdfasdf", SP_GetContData, {enable:false});
 
   const [custcode, setCustcode] = useState<any>()
   const [incoterms, setIncoterms] = useState<any>()
@@ -142,11 +142,10 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
 
 
   //custom select event props(Shipper)
-  const handleCustomSelectChange = (e: any) => {
-    log('====================handelRowClicked',e.cust_code)
-    dispatch({mSelectedRow: {...objState.mSelectedRow, shipper_id:e.cust_code}})
-    log('mSelectedRow check', mSelectedRow)
-
+  const handleCustomSelectChange = (e: any, id:string, val:string) => {
+    var selectedRow = e.api.getSelectedRows()[0];
+    log('mSelectedRow check', selectedRow, id, val);
+    dispatch({mSelectedRow: {...objState.mSelectedRow, [id]: val}});
   }
 
   //custom select value 변경 시 return object 항목 별 mselectedRow value 업데이트... 이벤트필요
@@ -162,7 +161,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"manage"} label={"manage_con"} onClick={onClick} width="w-32" />
+                  <Button id={"shipper_manage"} label={"manage_con"} onClick={onClick} width="w-32" disabled={mSelectedRow?.shipper_id ? false : true} />
                 </>}>
               <>
                 <Modal initData={loadItem} detailData={detailData} />
@@ -181,8 +180,8 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     isDisplay={true}
                     defaultValue={mSelectedRow?.shipper_id}
                     // inline={true}
-                    events={{ onRowClicked: handleCustomSelectChange }} 
-                    obj={selectedobj}
+                    events={{ onSelectionChanged: handleCustomSelectChange }} 
+                    // obj={selectedobj}
                   />
                 </div>
                 <div className={"col-span-2"}>
@@ -200,7 +199,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     isDisplay={true}
                     defaultValue={mSelectedRow?.sales_person}
                     // inline={true}
-                    obj={selectedobj}
+                    // obj={selectedobj}
                   />
                 </div>
                 {/* <MaskedInputField id="sales_person" value={mSelectedRow?.sales_person} options={{ isReadOnly: false }} /> */}
