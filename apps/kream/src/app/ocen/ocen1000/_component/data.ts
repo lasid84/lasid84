@@ -742,64 +742,189 @@ export const SP_InsertCargo = async (param: any) => {
 
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("param : ", param)
-  // const {waybill_no, charge_code, charge_desc, sort_id, import_export_ind, ppc_ind, invoice_wb_amt, invoice_wb_currency_code, invoice_charge_amt	
-  //   , invoice_currency_code, actual_cost_amt, cost_currency_code, vendor_id, vendor_ref_no, print_ind, vat_cat_code_ap, type, record_id, remark
-  //   , user_id, ipaddr
-  // } = Param;
-  // const params = {
-  //   inparam : [
-  //    waybill_no"
-  //   ,charge_code"
-  //   ,charge_desc"
-  //   ,sort_id"
-  //   ,import_export_ind"
-  //   ,ppc_ind"
-  //   ,invoice_wb_amt"
-  //   ,invoice_wb_currency_code"
-  //   ,invoice_charge_amt"
-  //   ,invoice_currency_code"
-  //   , "in_actual_cost_amt"
-  //   , "in_cost_currency_code"
-  //   , "in_vendor_id"
-  //   , "in_vendor_ref_no"
-  //   , "in_print_ind"
-  //   , "in_vat_cat_code_ap"
-  //   , "in_type"
-  //   , "in_record_id"
-  //   , "in_remark"
-  //   , "in_user_id"
-  //   , "in_ipaddr"
-  //   ],
-  //   invalue: [
-  //     waybill_no
-  //   , charge_code
-  //   , charge_desc
-  //   , sort_id
-  //   , import_export_ind
-  //   , ppc_ind
-  //   , invoice_wb_amt
-  //   , invoice_wb_currency_code
-  //   , invoice_charge_amt	
-  //   , invoice_currency_code
-  //   , actual_cost_amt
-  //   , cost_currency_code
-  //   , vendor_id
-  //   , vendor_ref_no
-  //   , print_ind
-  //   , vat_cat_code_ap
-  //   , type
-  //   , record_id
-  //   , remark
-  //   , user_id
-  //   , ipaddr
-  //   ],
-  //   inproc: 'ufsm.f_ufsm0001_ins_charge_upload_data',
-  //   isShowLoading: true,
-  //   isShowComplete:false,
-  //   }
+  log("param : SP_InsertCargo - ", Param)
+  
+  const {  bk_id					   , waybill_no 		, piece				        , pkg_type 
+          , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
+          , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
+          , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
+          , hs_cd 			     , rate 					, total 						  , no_plt_gross_wt     , no_plt_gross_uom 
+          , no_plt_measurement , no_plt_measurement_uom , rate_class , rate_as_amt	      , use_yn 
+          , user_id            , ipaddr
+  } = Param;
 
-  //   const result = await executFunction(params);
-  //   log("SP_InsertCharge", result);
-  //   return result![0];
+  const params = {
+    inparam : [
+      "in_bk_id"
+    , "in_waybill_no"
+    , "in_piece"
+    , "in_pkg_type"
+    , "in_slac_stc"
+    , "in_stc_uom"
+    , "in_container_refno"
+    , "in_container_type"
+    , "in_seal_no"
+    , "in_description"
+    , "in_measurement"
+    , "in_measurement_uom"
+    , "in_gross_wt"
+    , "in_gross_uom"
+    , "in_volume_factor"
+    , "in_volume_wt"
+    , "in_volume_uom"
+    , "in_chargeable_wt"
+    , "in_chargeable_uom"
+    , "in_commodity_cd"
+    , "in_dg_yn" 
+    , "in_hs_cd"
+    , "in_rate"
+    , "in_total"
+    , "in_no_plt_gross_wt"
+    , "in_no_plt_gross_uom" 
+    , "in_no_plt_measurement"
+    , "in_no_plt_measurement_uom"
+    , "in_rate_class"
+    , "in_rate_as_amt"
+    , "in_use_yn"
+    , "in_user_id"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      bk_id				
+      , waybill_no 				
+      , piece				
+      , pkg_type 
+      , slac_stc 			
+      , stc_uom 			
+      , container_refno 		
+      , container_type 
+      , seal_no 
+      , description		
+      , measurement		
+      , measurement_uom	 
+      , gross_wt		
+      , gross_uom
+      , volume_factor  
+      , volume_wt 			
+      , volume_uom 			
+      , chargeable_wt
+      , chargeable_uom
+      , commodity_cd 
+      , dg_yn 
+      , hs_cd 			
+      , rate 					
+      , total 						
+      , no_plt_gross_wt   
+      , no_plt_gross_uom 
+      , no_plt_measurement 
+      , no_plt_measurement_uom 
+      , rate_class 
+      , rate_as_amt	
+      , use_yn 
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_ins_cargo_detail',
+    isShowLoading: true,
+    isShowComplete:false,
+    }
+
+    const result = await executFunction(params);
+    log("result : SP_InsertCargo -", result);
+    return result![0];
+}
+
+export const SP_UpdateCargo = async (param: any) => {
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  log("param : SP_UpdateCargo - ", Param)
+  
+  const {  bk_id					   , waybill_no 		, piece				        , pkg_type 
+          , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
+          , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
+          , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
+          , hs_cd 			     , rate 					, total 						  , no_plt_gross_wt     , no_plt_gross_uom 
+          , no_plt_measurement , no_plt_measurement_uom , rate_class , rate_as_amt	      , use_yn 
+          , user_id            , ipaddr
+  } = Param;
+
+  const params = {
+    inparam : [
+      "in_bk_id"
+    , "in_waybill_no"
+    , "in_piece"
+    , "in_pkg_type"
+    , "in_slac_stc"
+    , "in_stc_uom"
+    , "in_container_refno"
+    , "in_container_type"
+    , "in_seal_no"
+    , "in_description"
+    , "in_measurement"
+    , "in_measurement_uom"
+    , "in_gross_wt"
+    , "in_gross_uom"
+    , "in_volume_factor"
+    , "in_volume_wt"
+    , "in_volume_uom"
+    , "in_chargeable_wt"
+    , "in_chargeable_uom"
+    , "in_commodity_cd"
+    , "in_dg_yn" 
+    , "in_hs_cd"
+    , "in_rate"
+    , "in_total"
+    , "in_no_plt_gross_wt"
+    , "in_no_plt_gross_uom" 
+    , "in_no_plt_measurement"
+    , "in_no_plt_measurement_uom"
+    , "in_rate_class"
+    , "in_rate_as_amt"
+    , "in_use_yn"
+    , "in_user_id"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      bk_id				
+      , waybill_no 				
+      , piece				
+      , pkg_type 
+      , slac_stc 			
+      , stc_uom 			
+      , container_refno 		
+      , container_type 
+      , seal_no 
+      , description		
+      , measurement		
+      , measurement_uom	 
+      , gross_wt		
+      , gross_uom
+      , volume_factor  
+      , volume_wt 			
+      , volume_uom 			
+      , chargeable_wt
+      , chargeable_uom
+      , commodity_cd 
+      , dg_yn 
+      , hs_cd 			
+      , rate 					
+      , total 						
+      , no_plt_gross_wt   
+      , no_plt_gross_uom 
+      , no_plt_measurement 
+      , no_plt_measurement_uom 
+      , rate_class 
+      , rate_as_amt	
+      , use_yn 
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_upd_cargo_detail',
+    isShowLoading: true,
+    isShowComplete:false,
+    }
+
+    const result = await executFunction(params);
+    log("result : SP_UpdateCargo -", result);
+    return result![0];
 }
