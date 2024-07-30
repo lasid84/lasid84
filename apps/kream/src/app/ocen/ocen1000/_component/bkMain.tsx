@@ -310,7 +310,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             id="bill_type" dataSrc={billtype as data}
             options={{
               keyCol: "billtype",
-              displayCol: ['billtype', 'billtype_nm'],
+              displayCol: ['billtype_nm'],
               defaultValue: mSelectedRow?.bill_type,
               isAllYn: false
             }} />
@@ -318,7 +318,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             id="incoterms" dataSrc={incoterms as data}
             options={{
               keyCol: "incoterms",
-              displayCol: ['incoterms', 'incoterms_nm'],
+              displayCol: ['incoterms_nm'],
               defaultValue: mSelectedRow?.incoterms,
               isAllYn: false
             }} />

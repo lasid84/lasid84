@@ -31,20 +31,17 @@ export const SP_Load = async (searchParam: any) => {
 //SP_GetInvoiceMasterContent
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { wb_no, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
-  log("===SP_GetMasterData", Param, fr_date, to_date, cust_code, user_id, ipaddr);
+  const { wb_no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
 
   const params = {
     inparam: [
       "in_fr_date"
       , "in_to_date"
       , "in_cust_code"
-      , "in_wb_no"
+      , "in_no"
+      , "in_search_gubn"
       , "in_state"
       , "in_create_user"
-      , "in_doc_fr_dt"
-      , "in_doc_to_dt"
-      , "in_bk_id"
       , "in_user_id"
       , "in_ipaddr"
     ],
@@ -53,18 +50,18 @@ export const SP_GetMasterData = async (searchParam: any) => {
       , to_date
       , cust_code
       , wb_no
+      , search_gubn
       , state
       , create_user
-      , doc_fr_dt
-      , doc_to_dt
-      , bk_id
       , user_id
       , ipaddr
     ],
-    inproc: 'ocean.f_ocen1000_get_bk_main',
+    inproc: 'ocean.f_ocen1000_get_bk_main2',
     isShowLoading: true
   }
+  log('SP_GetMaster_parmas',params)
   const result = await executFunction(params);
+  log('SP_GetMaster_result', result)
   return result![0]
 }
 
@@ -194,7 +191,7 @@ export const SP_CreateData = async (param: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-      '20240719'//bk_dd
+      '20240719'//wb_no
       , origin_terminal_id
       , dest_terminal_id
       , 'O' //trans_mode

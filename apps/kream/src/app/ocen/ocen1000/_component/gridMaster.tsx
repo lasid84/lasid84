@@ -30,12 +30,16 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
 
     const gridOption: GridOption = {
-        colVisible: { col: ["trans_mode", "trans_type", "orig_department_id", "orig_agent_id", "b_agent_id", "create_user", "update_date", "update_user"], visible: false },
+        colVisible: { col: ["trans_mode", "trans_type", "orig_department_id","shipper_cont_seq","pickup_seq","cy_cont_seq",
+                            "cr_t_cont_seq","cr_s_cont_seq", "orig_agent_id", "b_agent_id", "ams_yn","ams","cr_fak","cr_nac",
+                            "aci_yn","aci","afr_yn","edi_yn","isf_yn","e_manifest_yn","use_yn",
+                            "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "h-[calc(100vh-200px)]",
         minWidth: { "bk_id": 100, "waybill_no": 150, "shipment_status": 40 },
         dataType: {
-            "executed_on_date": "date", "accounting_date": "date", "imp_actg_intrfc_status_date": "date", "create_date": "date",
-            "bk_dd": "date", "etd": "date", "eta": "date", "final_eta": "date", "doc_close_dd": "date", "cargo_close_dd": "date", "pickup_dd": "date",
+            "executed_on_date": "date", "accounting_date": "date",  "create_date": "date", "bk_dd": "date", "etd": "date", 
+            "eta": "date", "final_eta": "date", "doc_close_dd": "date", "cargo_close_dd": "date", "pickup_dd": "date",
+            "doc_close_tm" : "time", "cargo_close_tm" : "time", "pickup_tm" : "time",
             "volume": "number", "gross_weight": "number", "volume_weight": "number", "chargeable_weight": "number",
         },
         isAutoFitColData: true,
