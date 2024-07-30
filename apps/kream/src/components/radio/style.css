@@ -1,0 +1,40 @@
+[class*=radio-input]{
+  --main-color : 	#808080;
+  --main-color-radio : #333333
+}
+
+/* Add this to your global CSS file */
+.radio-input {
+    @apply relative w-4 h-4 transition duration-75 ease-in-out border rounded-full cursor-pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    border-color: var(--main-color); /* Replace with your main color variable */
+  }
+  
+  .radio-input::after {
+    content: "";
+    display: block;
+    border-radius: 50%;
+    width: 1rem; 
+    height: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .radio-input:checked {
+    border-color: var(--main-color-radio); /* Replace with your main color variable */
+  }
+  
+  .radio-input:checked::after {
+    background-color: var(--main-color); /* Replace with your main color variable */
+  }
+  
+  .radio-input:focus {
+    outline: 3px solid var(--blue-200); /* Replace with your blue[200] color variable */
+  }
+  
+  .radio-input:hover::after {
+    background-color: var(--blue-200); /* Replace with your blue[200] color variable */
+  }
