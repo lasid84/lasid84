@@ -113,7 +113,7 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
               </>
             }
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
-            addition={<Stepper title={"tello"} ><></></Stepper>}
+            addition={<Stepper value={mSelectedRow?.state} ><></></Stepper>}
           >
             <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
