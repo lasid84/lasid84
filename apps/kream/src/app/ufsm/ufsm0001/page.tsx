@@ -36,7 +36,7 @@ export default function UFSM0001() {
             MselectedTab: 'Main',
             isFirstRender: true,
             selectedTab: "NM",
-            refRow: 0
+            mGridState: {}
         }
     });
     const { objState } = state;

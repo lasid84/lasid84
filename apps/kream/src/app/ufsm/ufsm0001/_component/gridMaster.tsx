@@ -9,7 +9,7 @@ import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -28,8 +28,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
         gridHeight: "h-[calc(100vh-200px)]",
         minWidth: { "waybill_no": 150, "shipment_status": 40 },
         dataType: { "execution_date": "date", "ic_dc_consol_date": "date", "eta_date": "date", "total_volume": 'number', "total_actual_weight": 'number', "total_volume_weight": 'number', 'total_chargeable_weight': 'number' },
-        isAutoFitColData: true,
-        refRow: objState.refRow
+        isAutoFitColData: true
     };
 
 
@@ -65,9 +64,15 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     }
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
-        const selectedRow = param.api.getSelectedRows()[0]
-        log("handleSelectionChanged", selectedRow)
-        dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
+        // const selectedRow = param.api.getSelectedRows()[0]
+        // log("handleSelectionChanged", selectedRow)
+        // dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
+    }
+
+    const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
+        // let gridState = getGridState(gridRef.current);
+        log('handleGridPreDestroyed', param.state)
+        dispatch({ mGridState:param.state });
     }
 
     useEffect(() => {
@@ -94,7 +99,9 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
                 onRowDoubleClicked: handleRowDoubleClicked,
                 onRowClicked: handleRowClicked,
                 onSelectionChanged: handleSelectionChanged,
+                onGridPreDestroyed: handleGridPreDestroyed
             }}
+            gridState={objState.mGridState}
         />
     );
 }

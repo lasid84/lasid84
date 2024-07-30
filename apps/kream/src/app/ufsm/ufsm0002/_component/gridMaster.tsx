@@ -8,7 +8,7 @@ import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -33,8 +33,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             "executed_on_date": "date", "accounting_date": "date", "imp_actg_intrfc_status_date": "date", "create_date": "date",
             "volume": "number", "gross_weight": "number", "volume_weight": "number", "chargeable_weight": "number",
         },
-        isAutoFitColData: true,
-        refRow : objState.refRow
+        isAutoFitColData: true
     };
 
 
@@ -68,11 +67,17 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         dispatch({ isMDSearch: true, mSelectedRow: selectedRow });
     }
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
-        const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow)
-        console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
-        dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
+        // const selectedRow = param.api.getSelectedRows()[0];
+        // log("handleSelectionChanged", selectedRow)
+        // console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
+        // dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     };
+
+    const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
+        // let gridState = getGridState(gridRef.current);
+        log('handleGridPreDestroyed', param.state)
+        dispatch({ mGridState:param.state });
+    }
 
     useEffect(() => {
         if (objState.isMSearch) {
@@ -93,7 +98,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 onRowDoubleClicked : handleRowDoubleClicked,
                 onRowClicked: handleRowClicked,
                 onSelectionChanged: handleSelectionChanged,
+                onGridPreDestroyed: handleGridPreDestroyed
             }}
+            gridState={objState.mGridState}
         />
 
     );
