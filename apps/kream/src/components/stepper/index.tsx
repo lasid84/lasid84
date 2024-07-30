@@ -13,6 +13,7 @@ export type WidgetProps = {
 
 const Stepper: React.FC<WidgetProps> = ({ value, right, children }) => {
   console.log('value?????????', value)
+  
   return (
     <>
       <div className="w-full bg-white border border-white rounded-lg dark:bg-gray-900 dark:border-gray-800">
