@@ -6,11 +6,12 @@ import { SP_GetMasterData } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { getGridState, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { PageMGrid2, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from 'components/button';
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -23,7 +24,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     // const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
 
-    const [gridRef, setGridRef] = useState(objState.gridRef_m)
+    // const [gridRef, setGridRef] = useState(objState.gridRef_m)
 
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     // const { data: mainDetailData } = useGetData(objState?.mSelectedRow, SEARCH_MD, SP_GetDetailData, { enabled: true });
@@ -54,21 +55,22 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 dispatch({ MselectedTab: selectedRow.bk_id,  })
             }
         }
-        dispatch({ isMDSearch: true, mSelectedRow: selectedRow, popType:crudType.UPDATE });
+        dispatch({ isMDSearch: true, mSelectedRow: selectedRow, popType:crudType.UPDATE});
+        
     }
 
     const handleRowClicked = async (param: RowClickedEvent) => { };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
-        const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow)
-        console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
-        dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
+        // const selectedRow = param.api.getSelectedRows()[0];
+        // log("handleSelectionChanged", selectedRow)
+        // console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
+        // dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     };
 
     const handleonClick = () => {
         // var selectedRow = { "colId": param.node.id, ...param.node.data }
-        rowAdd(gridRef.current, { use_yn: false })
+        rowAdd(objState.gridRef_m.current, { use_yn: true })
         if (objState.tab1) {
             objState.tab1.push({ cd: 'NEW', cd_nm: 'NEW' })
             dispatch({ MselectedTab: 'NEW', isMDSearch: true, popType: crudType.CREATE, })
@@ -76,10 +78,16 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
     }
 
-    useEffect(() => {
-        log('objState.gridRef_m', objState.gridRef_m)
-        setGridRef(objState.gridRef_m);
-    }, [objState.gridRef_m])
+    const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
+        // let gridState = getGridState(gridRef.current);
+        log('handleGridPreDestroyed', param.state)
+        dispatch({ mGridState:param.state });
+    }
+
+    // useEffect(() => {
+    //     log('objState.gridRef_m', objState.gridRef_m)
+    //     setGridRef(objState.gridRef_m);
+    // }, [objState.gridRef_m])
 
 
     useEffect(() => {
@@ -101,7 +109,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     </>
                 }>
                 <Grid
-                    gridRef={gridRef}
+                    gridRef={objState.gridRef_m}
                     loadItem={initData}
                     listItem={mainData as gridData}
                     options={gridOption}
@@ -109,7 +117,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                         onRowDoubleClicked: handleRowDoubleClicked,
                         onRowClicked: handleRowClicked,
                         onSelectionChanged: handleSelectionChanged,
+                        onGridPreDestroyed: handleGridPreDestroyed,
                     }}
+                    gridState={objState.mGridState}
                 />
             </PageMGrid2>
         </>

@@ -37,12 +37,12 @@ export default function OCEN1000() {
             isFirstRender: true,
             cont_type: '',  //
             gridRef_m: useRef<any | null>(null),
-            refRow : '',
             isShpPopUpOpen: false,
             isCarrierPopupOpen : false,
             isCYPopupOpen : false,
             isPickupPopupOpen : false,
-            selectedobj: {}
+            selectedobj: {},
+            mGridState: {}
         }
     });
     const { objState } = state;

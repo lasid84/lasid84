@@ -92,7 +92,7 @@ const SearchForm = ({ loadItem }: any) => {
   const onSearch = () => {
     const params = getValues();
     log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true });
+    dispatch({ searchParams: params, isMSearch: true, mGridState:null });
   }
 
   return (

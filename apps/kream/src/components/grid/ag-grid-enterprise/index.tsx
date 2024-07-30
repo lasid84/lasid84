@@ -53,6 +53,7 @@ type Props = {
   options?: GridOption
   event?: GridEvent
   customselect?: any | null
+  gridState?: any
 }
 
 export type gridData = {
@@ -75,6 +76,7 @@ type GridEvent = {
   onFirstDataRendered?: (params: FirstDataRenderedEvent) => void
   onCellKeyDown?: (params: CellKeyDownEvent | FullWidthCellKeyDownEvent) => void
   onComponentStateChanged?: (params: ComponentStateChangedEvent) => void
+  onGridPreDestroyed?: (params: GridPreDestroyedEvent) => void
 }
 
 export type GridOption = {
@@ -551,6 +553,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
   }, [options?.gridHeight]);
 
+  useEffect(() => {
+    setInitialState(props.gridState);
+  }, [props.gridState])
+
   const onGridReady = (param: GridReadyEvent) => {
     // log("onGridReady");
 
@@ -739,18 +745,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
       console.log("Grid state on destroy (can be persisted)", state);
       // setInitialState(state);
       setInitialState(state);
+
+      if (event?.onGridPreDestroyed) event.onGridPreDestroyed(params);
       
-    },
-    [],
-  );
+  },[]);
 
   const onStateUpdated = useCallback(
     (params: StateUpdatedEvent) => {
       log("State updated3", params.state, params.state.scroll);
       setCurrentState(params.state);
-    },
-    [],
-  );
+  },[]);
 
 
   return (
@@ -785,7 +789,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               processDataFromClipboard={processDataFromClipboard}
               initialState={initialState}
               onGridPreDestroyed={onGridPreDestroyed}
-              onStateUpdated={onStateUpdated}
+              // onStateUpdated={onStateUpdated}
             />
           }
         </div>
@@ -918,6 +922,13 @@ export const JsonToGridData = (arrDataJson:any[], header:string[],headerLine=1) 
   });
 
   return data;
+}
+
+export const getGridState = (gridRef: {props: any; api: any }) => {
+  if (gridRef?.api) {
+    return gridRef.api.getState();
+  }
+  return null;
 }
 
 
