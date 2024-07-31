@@ -115,10 +115,16 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
             addition={<Stepper value={mSelectedRow?.state} ><></></Stepper>}
           >
+            <div className={"flex col-span-2"}>
+
             <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+            </div>
+            <div className={"flex col-span-2"}>
+
+            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+            </div>
           </PageBKTabContent>
         </form>
       </FormProvider>

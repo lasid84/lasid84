@@ -5,6 +5,8 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 export const SEARCH_M = 'SEARCH_M'
 export const SEARCH_D = 'SEARCH_D'
 export const SEARCH_PKC = 'SEARCH_PKC'
+export const SEARCH_CGD = 'SEARCH_CGD'
+export const SEARCH_CST = 'SEARCH_CST'
 export const LOAD = 'LOAD';
 
 export const crudType = {
@@ -20,7 +22,6 @@ export type State = {
     dispatch?: any    
     selectedRow?: any[]
     crudType?: 'C' | 'R' | 'U' | 'D'
-
     isSearch?: any[]
     isPopUpOpen?: any[]
   };

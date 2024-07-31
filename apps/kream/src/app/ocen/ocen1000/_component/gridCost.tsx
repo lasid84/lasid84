@@ -16,12 +16,10 @@ const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
   initData?: any | null;
-  mainData:  any | null;
 };
 
-const GridCargo: React.FC<Props> = memo(({ initData}) => {
+const GridCost: React.FC<Props> = memo(({ initData}) => {
   const gridRef = useRef<any | null>(null);
-  const gridRefD = useRef<any | null>(null);
   const { dispatch, objState } = useAppContext();
   const { Create } = useUpdateData2(SP_InsertCargo);
   const { Update } = useUpdateData2(SP_UpdateCargo);
@@ -29,15 +27,6 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
 
 
   const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab }, SEARCH_CGD, SP_GetCargoData, { enabled: true });
-
-
-  // useEffect(() => {
-  //   log("bkcargo maindata", mainData);
-  //   if (mainData)
-  //     dispatch({ mSelectedCargo: (mainData?.[1] as gridData).data[0] });
-  // }, [mainData]);
-
-
 
   const gridOption: GridOption = {
     colVisible: {
@@ -59,7 +48,6 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
         (row: any) => row["container_refno"]
       ),
     },
-
     maxWidth: { piece: 70, slac_stc: 70, container_ref_no: 100 },
     minWidth: {
       piece: 80,
@@ -111,12 +99,6 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
                   use_yn: true,
                   piece: 1,
                 })
-                //detail grid ?
-                // rowAdd(gridRefD.current, {
-                //   bk_id: objState.MselectedTab,                  
-                //   use_yn: true,
-                //   piece: 1,
-                // })
   }
 
   return (
@@ -139,17 +121,11 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
             listItem={detailData as gridData}//{mainData?.[1] as gridData}
             options={gridOption}
             event={{}}
-          />
-          <Grid
-            gridRef={gridRefD}
-            listItem={detailData as gridData}
-            options={gridOption}
-            event={{}}
-          />
+          />        
         </>
       </PageBKCargo>
     </>
   );
 });
 
-export default GridCargo;
+export default GridCost;

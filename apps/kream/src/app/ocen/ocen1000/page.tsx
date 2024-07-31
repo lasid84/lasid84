@@ -13,6 +13,7 @@ import { WBMenuTab } from "components/tab/tab"
 import BKMainTab from "./_component/bkMainTab"
 import BKMain from "./_component/bkMain";
 import BKCargo from "./_component/bkCargo";
+import BKCost from "./_component/bkCost"
 import { useUserSettings } from "states/useUserSettings";
 import BKSchedule from "./_component/bkSchedule";
 import { shallow } from "zustand/shallow";
@@ -29,6 +30,7 @@ export default function OCEN1000() {
             isMSearch: false,
             isDSearch: false,
             isPKCSearch : false,
+            isCGDSearch : false,
             mSelectedRow: {},
             mSelectedCargo: {},
             dSelectedRow: {},
@@ -51,7 +53,7 @@ export default function OCEN1000() {
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPKCSearch, isShpPopUpOpen, mSelectedCargo, dispatch } }, [state]);
 
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
-    const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, SEARCH_MD, SP_GetBKDetailData, { enabled: false }); //1건 Detail조회
+    const { data: mainData, refetch: mainRefetch } = useGetData({ no : objState?.MselectedTab }, SEARCH_MD, SP_GetBKDetailData, { enabled: false }); //1건 Detail조회
 
     //사용자 정보
     const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
@@ -64,9 +66,9 @@ export default function OCEN1000() {
 
     useEffect(() => {
         if (objState.isMSearch) {
-            // mainRefetch();
+            mainRefetch();
             log("mainisSearch", objState.isMSearch);
-            // dispatch({isMSearch:false});
+            dispatch({isMSearch:false});
         }
     }, [objState?.isMSearch]);
 
@@ -78,6 +80,13 @@ export default function OCEN1000() {
             dispatch({ isMDSearch: false });
         }
     }, [objState?.isMDSearch]);
+
+    // useEffect(() => {
+    //     if (objState.isCGDSearch) {
+    //         mainRefetch();
+    //         dispatch({ isCGDSearch: false });
+    //     }
+    // }, [objState?.isCGDSearch]);
 
 
 
@@ -127,6 +136,9 @@ export default function OCEN1000() {
                     </div>
                     <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
                         <BKCargo loadItem={initData} mainData={mainData} />
+                    </div>
+                    <div className={`w-full flex ${selectedTab == "CT" ? "" : "hidden"}`}>
+                        <BKCost loadItem={initData} mainData={mainData} />
                     </div>
                 </>}
             </div>

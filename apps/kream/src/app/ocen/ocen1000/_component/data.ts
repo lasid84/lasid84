@@ -580,6 +580,32 @@ export const SP_GetBKDetailData = async (searchParam: any) => {
 }
 
 
+export const SP_GetCargoData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { no, user_id, ipaddr } = Param;
+  log('ocen10001 bk_no', no, Param)
+
+  const params = {
+    inparam: [
+      "in_bk_id"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      no
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_cargo',
+    isShowLoading: true
+  }
+  log('ocen1000 bk_no', params)
+  const result = await executFunction(params);
+  log('SP_get_cargo', result)
+  return result![0];
+}
+
+
 //pickup 담당자data get
 export const SP_GetPickupContData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
