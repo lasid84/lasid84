@@ -129,9 +129,6 @@ type cols = {
   // floatingFilter?: boolean
 }
 
-var rowCount = 0;
-var currentRow = 0;
-
 const ListGrid: React.FC<Props> = memo((props) => {
   // log("ListGrid", props);
 
@@ -335,7 +332,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   //컬럼 세팅
   useEffect(() => {
-    rowCount = listItem ? listItem.data.length : 0;
     if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0) {
       let cols: cols[] = [];
 
@@ -614,9 +610,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
 
   const onRowDoubleClicked = (param: RowDoubleClickedEvent) => {
-    // log("onRowClicked")
-    // return {"colId": param.node.id, ...param.node.data};
-    currentRow = Number(param.node.id);
     if (event?.onRowDoubleClicked) event.onRowDoubleClicked(param);
   }
 
@@ -837,7 +830,10 @@ export const rowAdd = async (
   // var renderedRow = gridRef.api.getRenderedNodes().length;
   // log('rowCount check', rowCount, renderedRow)
 
+  let rowCount = await gridRef.api.getDisplayedRowCount();
   await gridRef.api.ensureIndexVisible(rowCount - 1, 'bottom');
+  // let renderedRow = await gridRef.api.getRenderedNodes().length;
+  
 
   var data = {
     [col]: '',
@@ -855,7 +851,7 @@ export const rowAdd = async (
     colkey: col
   });
 
-  if (gridRef.api) await gridRef.api.getRowNode(rowCount.toString()).setSelected(true);
+  if (gridRef.api) await gridRef.api.getRowNode(rowCount).setSelected(true);
 
   log('rowAdd', rowCount, col, data);
   rowCount++;
