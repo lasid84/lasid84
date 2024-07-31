@@ -251,4 +251,54 @@ export type ItemProps = {
   </ol>
     );
   };
+
+  import React from 'react';
+
+  const initialSteps = [
+    { number: 1, title: '작성중', description: '' },
+    { number: 2, title: '선사부킹완료', description: '' },
+    { number: 3, title: '배차통관완료', description: '' },
+    { number: 4, title: 'BL작성중', description: '' },
+    { number: 5, title: '신고여부', description: '' },
+    { number: 6, title: '선적완료', description: '' },
+  ];
   
+  const StepList = ({ state } : any) => {
+    const steps = initialSteps.map(step => ({
+      ...step,
+      active: step.title === state,
+    }));
+  
+    return (
+      <ol className="items-center w-full space-y-4 sm:flex sm:space-x-6 sm:space-y-0 rtl:space-x-reverse">
+        {steps.map((step, index) => (
+            <li
+            key={index}
+            className={`flex items-center ${
+              step.active ? 'text-blue-600 dark:text-blue-500' : 'text-gray-700 dark:text-gray-400'
+            } space-x-2.5 rtl:space-x-reverse ${step.active ? 'animate-pulse' : ''}`}
+          >
+            <span
+              className={`flex items-center  justify-center w-8 h-8 border ${
+                step.active ? 'border-blue-600 dark:border-blue-500' : 'border-gray-500 dark:border-gray-400'
+              } rounded-full shrink-0`}
+            >
+              {step.number}
+            </span>
+            <span>
+              <h3
+                className={`font-medium  leading-tight ${
+                  step.active ? 'text-blue-600' : 'text-gray-700'
+                }`}
+              >
+                {step.title}
+              </h3>
+              <p className="text-sm">{step.description}</p>
+            </span>
+          </li>
+        ))}
+      </ol>
+    );
+  };
+  
+  export default StepList;
