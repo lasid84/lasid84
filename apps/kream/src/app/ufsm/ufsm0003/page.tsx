@@ -31,13 +31,13 @@ export default function UFSM0003() {
     useEffect(() => {
         if (objState.isMSearch) {
             // mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             // dispatch({isMSearch:false});
         }
     }, [objState?.isMSearch]);
 
     useEffect(()=>{
-        log("objState.uploadFile_init", objState.uploadFile_init)
+        // log("objState.uploadFile_init", objState.uploadFile_init)
     }, [objState.uploadFile_init])
 
     const handleFileDrop = (data : any[], header:string[]) => {

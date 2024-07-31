@@ -75,14 +75,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
         // let gridState = getGridState(gridRef.current);
-        log('handleGridPreDestroyed', param.state)
+        // log('handleGridPreDestroyed', param.state)
         dispatch({ mGridState:param.state });
     }
 
     useEffect(() => {
         if (objState.isMSearch) {
             mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
         }
     }, [objState?.isMSearch]);

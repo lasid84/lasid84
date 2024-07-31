@@ -29,7 +29,7 @@ const App: React.FC<LayoutProps> = ({ children }) => {
       i18n.changeLanguage(lang);
   }, [i18n,lang]);
 
-  log("app/layouts/App.tsx", lang);
+  // log("app/layouts/App.tsx", lang);
 
   return (
     <>

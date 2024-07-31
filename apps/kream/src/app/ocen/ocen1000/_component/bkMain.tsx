@@ -36,7 +36,7 @@ type Props = {
 const BKMain = memo(({ loadItem, mainData }: any) => {
 
   const { dispatch, objState } = useAppContext();
-  const { mSelectedRow, selectedobj, cont_type } = objState
+  const { mSelectedRow, selectedobj, trans_mode, trans_type } = objState
   //const [data, setData] = useState<any>();
 
   const methods = useForm({
@@ -51,7 +51,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   } = methods;
 
   //get shipper cont data
-  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: cont_type }, "dfsdfasdf", SP_GetContData, {enable:false});
+  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: trans_mode + trans_type }, "dfsdfasdf", SP_GetContData, {enable:false});
 
   const [custcode, setCustcode] = useState<any>()
   const [incoterms, setIncoterms] = useState<any>()
@@ -93,7 +93,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (loadItem) {
-      log('detailData loadItem check',loadItem)
+      // log('detailData loadItem check',loadItem)
       setCustcode(loadItem[0])
       setIncoterms(loadItem[7])
       setBillType(loadItem[8])

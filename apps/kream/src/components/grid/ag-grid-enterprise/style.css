@@ -2,3 +2,7 @@
     /* bright green, 10% opacity */
     --ag-selected-row-background-color: rgb(0, 255, 0, 0.1);
 }
+
+.changed-row {
+    background-color: lightyellow !important;
+  }

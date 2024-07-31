@@ -10,7 +10,7 @@ const Logo: React.FC = () => {
 
   const {name, collapsed} = useConfigs((state) => state.config);
   const {showLogo} = useLeftSidebar((state) => state.leftSidebar);
-  log("logo", showLogo)
+  // log("logo", showLogo)
   if (showLogo) {
     return (
       <div className="truncate logo">

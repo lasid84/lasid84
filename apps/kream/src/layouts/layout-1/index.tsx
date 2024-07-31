@@ -42,7 +42,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const router = useRouter();
   const { Create } = useUpdateData2(SP_InsertLog, '');
   
-  log("app/layouts/layout-1/index.tsx");
+  // log("app/layouts/layout-1/index.tsx");
 
   useEffect(() => {
     setBackground(config.background)

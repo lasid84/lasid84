@@ -38,6 +38,8 @@ export default function OCEN1000() {
             MselectedTab: 'Main',
             isFirstRender: true,
             cont_type: '',  //
+            trans_mode: '',
+            trans_type: '',
             gridRef_m: useRef<any | null>(null),
             isShpPopUpOpen: false,
             isCarrierPopupOpen : false,
@@ -60,18 +62,22 @@ export default function OCEN1000() {
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
-        dispatch({ cont_type: params.cont_type });
-        log('cont_type? OCEN1000', params)
+        dispatch({ cont_type: params.cont_type, trans_mode: params.trans_mode, trans_type: params.trans_type });
+        // log('cont_type? OCEN1000', params)
     }, [menu_param])
 
     useEffect(() => {
+<<<<<<< HEAD
         if (objState.isMSearch) {
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({isMSearch:false});
+=======
+        if (initData) {
+            if (objState.tab1.length < 1) { objState.tab1.push({ cd: 'Main', cd_nm: 'Main' }) }
+>>>>>>> 68e241854dc563549784b588d2d644b7d57a9161
         }
-    }, [objState?.isMSearch]);
-
+    }, [initData])
 
     useEffect(() => {
         if (objState.isMDSearch) {
@@ -80,6 +86,7 @@ export default function OCEN1000() {
             dispatch({ isMDSearch: false });
         }
     }, [objState?.isMDSearch]);
+<<<<<<< HEAD
 
     // useEffect(() => {
     //     if (objState.isCGDSearch) {
@@ -95,6 +102,8 @@ export default function OCEN1000() {
             if (objState.tab1.length < 1) { objState.tab1.push({ cd: 'Main', cd_nm: 'Main' }) }
         }
     }, [initData])
+=======
+>>>>>>> 68e241854dc563549784b588d2d644b7d57a9161
     
 
     const handleOnClickTab = (code: any) => {

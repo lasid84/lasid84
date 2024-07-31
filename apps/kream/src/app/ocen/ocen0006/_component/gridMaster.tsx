@@ -44,7 +44,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
     const handleRowClicked = (param: RowClickedEvent) => {
         // var data = onRowClicked(param);
         var selectedRow = { "colId": param.node.id, ...param.node.data }
-        log("handleRowClicked", selectedRow)
+        // log("handleRowClicked", selectedRow)
         // dispatch({isDSearch:true});
     };
 
@@ -52,7 +52,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
 
         // const row = onSelectionChanged(param)
         const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow)
+        // log("handleSelectionChanged", selectedRow)
         dispatch({ mSelectedRow: selectedRow, isDSearch: true });
 
         // document.querySelector('#selectedRows').innerHTML =
@@ -62,7 +62,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
     useEffect(() => {
         if (objState.isMSearch) {
             mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
         }
     }, [objState?.isMSearch]);

@@ -64,7 +64,7 @@ export default function UFSM0002() {
     useEffect(() => {
         if (objState.isMSearch) {
             // mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             // dispatch({isMSearch:false});
         }
     }, [objState?.isMSearch]);
@@ -72,7 +72,7 @@ export default function UFSM0002() {
     useEffect(() => {
         if (objState.isMDSearch) {
             mainRefetch();
-            log("main MDSearch", objState.isMDSearch);
+            // log("main MDSearch", objState.isMDSearch);
             dispatch({ isMDSearch: false });
         }
     }, [objState?.isMDSearch]);

@@ -36,6 +36,7 @@ function DateToString(source, delimiter = '') {
 
 function stringToFullDateString(source, delimiter = '-') {
     if (source) {
+        source = source.replace(/[-\/]/g, '');
         const year = source.substring(0,4);
         const month = source.substring(4,6);
         const day = source.substring(6,8);
@@ -49,6 +50,7 @@ function stringToFullDateString(source, delimiter = '-') {
 
 function stringToFullDate(source) {
     if (source) {
+        source = source.replace(/[-\/]/g, '');
         const year = source.substring(0,4);
         const month = source.substring(4,6);
         const day = source.substring(6,8);
