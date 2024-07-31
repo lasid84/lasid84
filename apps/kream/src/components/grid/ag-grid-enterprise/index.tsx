@@ -276,13 +276,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
         // }
 
-        if (props.gridState) {
-          if (props.gridState?.rowSelection && props.gridState?.rowSelection[0]) {
-            if (gridRef?.current && gridRef.current.api?.getRowNode(props.gridState.rowSelection[0])) gridRef.current.api?.getRowNode(props.gridState.rowSelection[0]).setSelected(true);
-          }
-        } else {
-          // if (gridRef?.current && gridRef.current?.api.getRowNode) gridRef.current?.api?.getRowNode(0).setSelected(true);
-        }
+        // if (props.gridState) {
+        //   if (props.gridState?.rowSelection && props.gridState?.rowSelection[0]) {
+        //     if (gridRef?.current && gridRef.current.api?.getRowNode(props.gridState.rowSelection[0])) gridRef.current.api?.getRowNode(props.gridState.rowSelection[0]).setSelected(true);
+        //   }
+        // } else {
+        //   // if (gridRef?.current && gridRef.current?.api.getRowNode) gridRef.current?.api?.getRowNode(0).setSelected(true);
+        // }
 
         if (event?.onComponentStateChanged) event.onComponentStateChanged(e);
 
@@ -335,6 +335,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   //컬럼 세팅
   useEffect(() => {
+    rowCount = listItem ? listItem.data.length : 0;
     if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0) {
       let cols: cols[] = [];
 
@@ -347,7 +348,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // dataTypeModifier: -1,
       // format: 'text'
       // }
-      rowCount = listItem.data.length;
       let columns = listItem.fields.map((field) => field.name);
       const dataType = listItem.fields.map((field) => field.format);
       // log("===================????", columns)
@@ -804,7 +804,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               processDataFromClipboard={processDataFromClipboard}
               initialState={initialState}
               onGridPreDestroyed={onGridPreDestroyed}
-              onStateUpdated={onStateUpdated}
+              // onStateUpdated={onStateUpdated}
             />
           }
         </div>
@@ -857,7 +857,7 @@ export const rowAdd = async (
 
   if (gridRef.api) await gridRef.api.getRowNode(rowCount.toString()).setSelected(true);
 
-  // log('rowAdd', col, data);
+  log('rowAdd', rowCount, col, data);
   rowCount++;
 
   return data
