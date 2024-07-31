@@ -38,7 +38,7 @@ const MasterGrid: React.FC<Props> = ({  }) => {
 
     const handleRowClicked = (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
-        log("handleRowClicked", selectedRow)
+        // log("handleRowClicked", selectedRow)
     };
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
@@ -54,7 +54,7 @@ const MasterGrid: React.FC<Props> = ({  }) => {
         if (objState.isMSearch) {
             mainRemove();
             mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
         }
     }, [objState?.isMSearch]);

@@ -38,7 +38,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
 
     const handleRowClicked = async (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
-        log("handleRowClicked", selectedRow)
+        // log("handleRowClicked", selectedRow)
         // var data = onRowClicked(param);
         // log("handleRowClicked", data)
 
@@ -47,7 +47,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
         // const row = onSelectionChanged(param)
-        log("handleSelectionChanged", selectedRow)
+        // log("handleSelectionChanged", selectedRow)
         // dispatch({})
 
         // log("Master handleSelectionChanged", row);
@@ -57,7 +57,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     useEffect(() => {
         if (objState.isMSearch) {
             mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
         }
     }, [objState?.isMSearch]);
@@ -65,9 +65,9 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     useEffect(() => {
         if (objState.isMDSearch) {
             //mainRefetch();
-            log("maindetailisSearch", objState.isMDSearch);
+            // log("maindetailisSearch", objState.isMDSearch);
             dispatch({ isMDSearch: false });
-            log("mSelectedDetail", objState.mSelectedDetail)
+            // log("mSelectedDetail", objState.mSelectedDetail)
         }
     }, [objState?.isMDSearch]);
 

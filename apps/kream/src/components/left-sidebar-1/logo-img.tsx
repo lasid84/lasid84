@@ -54,7 +54,7 @@ const LogoImg: React.FC = () => {
   const {name, collapsed} = useConfigs((state) => state.config);
   const {showLogo} = useLeftSidebar((state) => state.leftSidebar);
   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
-  log("logo", showLogo)
+  // log("logo", showLogo)
   if (showLogo) {
 
     const handleClick = () => {

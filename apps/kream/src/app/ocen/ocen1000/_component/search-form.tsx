@@ -122,25 +122,36 @@ const SearchForm = ({ loadItem }: any) => {
     }
   }, [loadItem?.length]);
 
-
-  const onSearch = () => {
-    const params = getValues();
-    log("onSearch", params);
-    dispatch({ searchParams: params, isMSearch: true});
-  };
-  
-  const onChange = (e: any) => {
-    const value = parseInt(e.target.value, 10);
-     setValue(e.target.name, value)
-     if (value === 0) {
-       setValue("fr_date", dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"));
-       setValue("to_date", dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"));
-    } else if (value === 1) {
-      setValue("fr_date", dayjs().subtract(4, "month").startOf("month").format("YYYYMMDD"));
+  const resetComponent = (search_gubn : number) => {
+    if (search_gubn === 0) {
+      setValue("fr_date", dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"));
+      setValue("to_date", dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"));
+    } else if (search_gubn === 1) {
+      setValue("fr_date", dayjs().subtract(1, "month").startOf("month").format("YYYYMMDD"));
       setValue("to_date", dayjs().subtract(0, "month").endOf("month").format("YYYYMMDD"));
     }
     trigger()
   }
+
+
+  const onSearch = () => {
+    const params = getValues();
+    // log("onSearch", params);
+    dispatch({ searchParams: params, isMSearch: true});
+  };
+
+  const onReset = () => {
+    resetComponent(0);
+  }
+  
+  const onChange = (e: any) => {
+    const value = parseInt(e.target.value, 10);
+    setValue(e.target.name, value)
+     
+    resetComponent(value);
+  }
+
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="flex pt-10 space-y-1">
@@ -151,7 +162,7 @@ const SearchForm = ({ loadItem }: any) => {
                 <Button id="search" disabled={false} onClick={onSearch} />
               </div>
               <div className={"col-span-1"}>
-                <Button id="reset" disabled={false} onClick={onSearch} />
+                <Button id="reset" disabled={false} onClick={onReset} />
               </div>
             </>
           }

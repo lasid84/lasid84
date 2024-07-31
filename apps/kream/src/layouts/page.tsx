@@ -71,7 +71,7 @@ const Layouts: React.FC<LayoutProps> = ({ children }) => {
   // );
 
   const pathname = usePathname()
-  log("app/layouts/page.tsx", pathname);
+  // log("app/layouts/page.tsx", pathname);
   
   // let relativeURL = "";
   // if (query?.slug) {

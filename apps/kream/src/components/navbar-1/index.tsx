@@ -36,7 +36,7 @@ function Navbar() {
   }, [user_nm])
 
 
-  log("navbar", !user_nm, user_nm);
+  // log("navbar", !user_nm, user_nm);
 
 
   return (

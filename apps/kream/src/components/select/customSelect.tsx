@@ -174,7 +174,7 @@ function CustomSelect(props: Props) {
     var selectedRow = param.api.getSelectedRows()[0];
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
-      log("handleSelectionChanged", selectedRow, valueCol![0], val)
+      // log("handleSelectionChanged", selectedRow, valueCol![0], val)
       events?.onSelectionChanged(param, id, val);
     }
   }
@@ -183,11 +183,11 @@ function CustomSelect(props: Props) {
     // const gridApi = param.api;
     // // const gridElement = gridApi.gridCore.eGridDiv; // AG Grid의 최상위 DOM 요소에 접근
     // const gridCore = gridApi.gridCore;
-    log("handleOnGridReady", /*gridApi, gridCore*/);
+    // log("handleOnGridReady", /*gridApi, gridCore*/);
   }
 
   const handleComponentStateChanged = (param: any) => {
-    log("handleComponentStateChanged");
+    // log("handleComponentStateChanged");
     setIsGridReady(true);
     // onGridReady(param);
     // setIsReady(true);

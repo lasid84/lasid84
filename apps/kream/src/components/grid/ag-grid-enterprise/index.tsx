@@ -21,7 +21,9 @@ import {
   RowNode,
   GridState,
   GridPreDestroyedEvent,
-  StateUpdatedEvent
+  StateUpdatedEvent,
+  RowClassParams,
+  RowStyle
 } from "ag-grid-community";
 
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -107,7 +109,6 @@ export type GridOption = {
   total?: {
     [key: string]: string                 //column : 타입(count, sum, avg), prefix 같은 문구를 넣으려면 custom 형식의 옵션 추가 후 개발 필요
   }
-  refRow?: number                        //scroll ref number
   isShowFilter?: boolean
   isShowFilterBtn?: boolean
   isMultiSelect?: boolean
@@ -156,6 +157,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   // const [defaultColDef, setDefaultColDef] = useState({});
   const customselect_style = customselect ? 'select' : ''
+
+  const cellClassRules = {
+    'changed-row': (params:any) => params.data[ROW_CHANGED],
+  };
 
   //Column Defualt 설정
   const defaultColDef = useMemo(() => {
@@ -212,6 +217,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
     return target;
   }
 
+  const delay = (ms:any) => new Promise(resolve => setTimeout(resolve, ms));
+
   // let ready = false;
   //Grid Defualt 설정
   const gridOptions: GridOptions = useMemo(() => {
@@ -264,30 +271,25 @@ const ListGrid: React.FC<Props> = memo((props) => {
           });
         };
 
-        // if (options?.refRow) {
-          // await gridRef?.current.api.ensureIndexVisible(currentRow, 'middle');
-          // await gridRef.api.getRowNode(currentRow).setSelected(true);
-          // log('currentRow', currentRow)
-        // }
-        // if () {
-        //   gridRef.ensureIndexVisible(gridRef.getSelectedNodes()[0].rowIndex,null);
-        // }
-
-        // if (props.gridState) {
-        //   if (props.gridState?.rowSelection && props.gridState?.rowSelection[0]) {
-        //     if (gridRef?.current && gridRef.current.api?.getRowNode(props.gridState.rowSelection[0])) gridRef.current.api?.getRowNode(props.gridState.rowSelection[0]).setSelected(true);
-        //   }
-        // } else {
-        //   // if (gridRef?.current && gridRef.current?.api.getRowNode) gridRef.current?.api?.getRowNode(0).setSelected(true);
-        // }
-
         if (event?.onComponentStateChanged) event.onComponentStateChanged(e);
 
-        // gridRef.current!.api.setGridOption("suppressStickyTotalRow", 'group');
       },
-      // onCellValueChanged: onCellValueChanged,
-      // onSelectionChanged: onSelectionChanged,
-      // ...props.event
+      // getRowClass(params) {
+      //     log("getRowClass", params, params.data, params.data.__changed);
+      //     for (const [key, val] of Object.entries(params.data)) {
+      //       log(key, val)
+      //       if (key === ROW_CHANGED) log("!!!", val);
+      //     }
+
+      //     return params.data[ROW_CHANGED] ? 'changed-row' : '';
+      // },
+      rowClassRules: {
+        "changed-row" : (params) => {
+          // await delay(100);
+          // log("rowClassRules", params, params.data, params.data[ROW_CHANGED]);
+          return params.data[ROW_CHANGED];
+        }
+      }
     };
   }, []);
 
@@ -296,39 +298,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
     | SizeColumnsToFitProvidedWidthStrategy
     | SizeColumnsToContentStrategy
   >(() => {
-    // log("=====options?.isAutoFitColData", options?.isAutoFitColData);
-    // if (!options?.isAutoFitColData) {
-    //   return {
-    //     type: 'fitGridWidth',
-    //   };
-    // }
     return {
       type: 'fitCellContents',
     };
   }, []);
-
-  // const onGridReady = useCallback((params: GridReadyEvent) => {
-  //   log("onGridReady", listItem?.data);
-  //   setMainData(
-  //       listItem?.data.map((rowData: any) => {
-  //           // const dateParts = rowData.date.split('/');
-  //           log("rowData", rowData.use_yn);
-  //           return {
-  //             ...rowData,
-  //             create_date: stringToFullDate(rowData.date),
-  //             // dateObject: new Date(
-  //             //   parseInt(dateParts[2]),
-  //             //   parseInt(dateParts[1]) - 1,
-  //             //   parseInt(dateParts[0])
-  //             // ),
-  //             // countryObject: {
-  //             //   name: rowData.country,
-  //             // },
-  //             // hasGold: rowData.gold > 0,
-  //           };
-  //         })
-  //       )
-  // }, [listItem?.data]);
 
   //컬럼 세팅
   useEffect(() => {
@@ -357,7 +330,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
             minWidth: 30,
             maxWidth: 70,
             cellStyle: { textAlign: "center" },
-            aggFunc: "count"
+            aggFunc: "count",
+            editable: false
           }
           cols.push({
             field: col,
@@ -610,16 +584,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
 
   const onRowDoubleClicked = (param: RowDoubleClickedEvent) => {
+    log("onRowDoubleClicked")
     if (event?.onRowDoubleClicked) event.onRowDoubleClicked(param);
   }
 
 
   const onCellValueChanged = (param: CellValueChangedEvent) => {
-    // log("onCellValueChanged1", param.node.data['__changed'])
-    param.node.data[ROW_CHANGED] = true
-    // return {"col": param.column.getColId(), "oldValue" : param.oldValue, "newValue": param.newValue};
-    // log("onCellValueChanged2", param.node.data['__changed'])
+    log("onCellValueChanged")
+    var rowNode = param.node;
+    // rowNode.data[ROW_CHANGED] = true;
+    rowNode.setData({...rowNode.data, [ROW_CHANGED]:true});
+    // setRowChange(param.node);
+
+    // const rowElement = document.querySelector(`[row-index="${rowNode.rowIndex}"]`) as HTMLElement;
+    // log("setRowChange", rowElement, rowNode.rowIndex)
+    // if (rowElement) {
+    //   rowElement.classList.add('changed-row');
+    // }
+
     if (event?.onCellValueChanged) event.onCellValueChanged(param);
+
   };
 
   const onRowDataUpdated = (param: RowDataUpdatedEvent) => {
@@ -679,10 +663,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   //복사붙여넣기시 자동으로 rowAdd
   const processDataFromClipboard = useCallback(
-    (params: ProcessDataFromClipboardParams): string[][] | null => {
+    (params: ProcessDataFromClipboardParams):string[][] | null => {
+      log("processDataFromClipboard", params);
       const data = [...params.data];
-      const emptyLastRow =
-        data[data.length - 1][0] === "" && data[data.length - 1].length === 1;
+      const emptyLastRow = data[data.length - 1][0] === "" && data[data.length - 1].length === 1;
       if (emptyLastRow) {
         data.splice(data.length - 1, 1);
       }
@@ -710,9 +694,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
         }
         // params.api!.applyTransaction({ add: rowsToAdd });
         // log("processDataFromClipboard", rowsToAdd)
-        for (const row of rowsToAdd) {
-          rowAdd(gridRef.current, row);
-        }
+        // for (const row of rowsToAdd) {
+        //   rowAdd(gridRef.current, row);
+        // }
+
+        rowAdd(gridRef.current, rowsToAdd);
       }
       return data;
     },
@@ -744,6 +730,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   };
 
+  const onCellDoubleClicked = (param:any) => {
+    log("onCellDoubleClicked", param)
+  }
+
   const onGridPreDestroyed = useCallback(
     (params: GridPreDestroyedEvent) => {
       const { state } = params;
@@ -764,6 +754,21 @@ const ListGrid: React.FC<Props> = memo((props) => {
       if (event?.onStateUpdated) event.onStateUpdated(params);
   },[]);
 
+  function getRowStyle(params: RowClassParams<any, any>): RowStyle | undefined {
+    // log("getRowStyle")
+    if (params.data[ROW_CHANGED]) {
+      return { backgroundColor: 'lightyellow' };
+    }
+    // return undefined;
+  }
+
+  const getRowClass = (param:any) => {
+    return param.data[ROW_CHANGED] ? 'changed-row' : '';
+  }
+
+  const rowClassRules = {
+    'changed-row': (params:any) => params.data[ROW_CHANGED] === true
+  };
 
   return (
     <>
@@ -798,6 +803,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
               initialState={initialState}
               onGridPreDestroyed={onGridPreDestroyed}
               // onStateUpdated={onStateUpdated}
+
+              //↓ 이것들 적용하면 클릭,더블클릭등 이벤트가 발생 안함 - stephen
+              // getRowStyle={getRowStyle}
+              // getRowClass={getRowClass}
+              // rowClassRules={rowClassRules}
             />
           }
         </div>
@@ -821,42 +831,50 @@ export const getFirstColumn = (params: { api: { getAllDisplayedColumns: () => an
 
 export const rowAdd = async (
   gridRef: {props: any; api: any },
-  initData: {} = {},
+  initData: [] | {},
 
 ) => {
 
   await gridRef.api.setFilterModel(null);
   var col = getFirstColumn(gridRef);
-  // var renderedRow = gridRef.api.getRenderedNodes().length;
-  // log('rowCount check', rowCount, renderedRow)
+  var datas = [];
 
-  let rowCount = await gridRef.api.getDisplayedRowCount();
-  await gridRef.api.ensureIndexVisible(rowCount - 1, 'bottom');
-  // let renderedRow = await gridRef.api.getRenderedNodes().length;
-  
+  let rows = Array.isArray(initData) ? initData : [initData];
 
-  var data = {
-    [col]: '',
-    ...initData,
-    use_yn: true,
-    [ROW_INDEX]: rowCount + 1,
-    [ROW_TYPE]: ROW_TYPE_NEW,
-    [ROW_CHANGED]: true
-  };
+  for (const row of rows) {
+    let rowCount = await gridRef.api.getDisplayedRowCount();
+    // let renderedRow = await gridRef.api.getRenderedNodes().length;
+    
 
-  await gridRef.api.applyTransaction({ add: [data] });
-  await gridRef.api.setFocusedCell(rowCount, col);
-  await gridRef.api.startEditingCell({
-    rowIndex: rowCount,
-    colkey: col
-  });
+    var data = {
+      [col]: '',
+      ...row,
+      use_yn: true,
+      [ROW_INDEX]: rowCount + 1,
+      [ROW_TYPE]: ROW_TYPE_NEW,
+      [ROW_CHANGED]: true
+    };
 
-  if (gridRef.api) await gridRef.api.getRowNode(rowCount).setSelected(true);
+    await gridRef.api.applyTransaction({ add: [data] });
+    await gridRef.api.setFocusedCell(rowCount, col);
+    await gridRef.api.startEditingCell({
+      rowIndex: rowCount,
+      colkey: col
+    });
 
-  log('rowAdd', rowCount, col, data);
-  rowCount++;
+    if (gridRef.api) {
+      var rowNode = gridRef.api.getRowNode(rowCount);
+      await rowNode.setSelected(true);
+      // setRowChange(rowNode);
+    }
 
-  return data
+
+    log('rowAdd', rowCount, col, data);
+    datas.push(data);
+    await gridRef.api.ensureIndexVisible(rowCount, 'bottom');
+  }
+
+  return datas
 };
 
 const dateFormatter = (params: ValueFormatterParams) => {
@@ -948,6 +966,15 @@ export const gotoFirstRow = (gridRef: {props: any; api: any }) => {
   if (gridRef?.api) gridRef.api.ensureIndexVisible(0,'top');
 }
 
-
+const setRowChange = async (rowNode: IRowNode) => {
+    // 특정 행에 클래스 추가
+    if (rowNode) {
+      const rowElement = document.querySelector(`[row-index="${rowNode.rowIndex}"]`) as HTMLElement;
+      log("setRowChange", rowElement, rowNode.rowIndex)
+      if (rowElement) {
+        rowElement.classList.add('changed-row');
+      }
+    }
+}
 
 export default ListGrid;

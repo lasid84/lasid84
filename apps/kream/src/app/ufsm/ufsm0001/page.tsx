@@ -48,7 +48,6 @@ export default function UFSM0001() {
 
     const handleOnClickTab = (code: any) => { dispatch({ selectedTab: code }) }
     const MhandleOnClickTab = (code: any) => {
-        console.log('MhandleOnClickTab', code.target.id)
         if (code.target.id == 'Main') { dispatch({ MselectedTab: code.target.id }) }
         else { dispatch({ isMDSearch: true, MselectedTab: code.target.id, mSelectedRow: { ...mSelectedRow, waybill_no: code.target.id } }) }
     }
@@ -60,7 +59,7 @@ export default function UFSM0001() {
     useEffect(() => {
         if (objState.isMSearch) {
             //mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             // dispatch({isMSearch:false});
         }
     }, [objState?.isMSearch]);
@@ -69,7 +68,7 @@ export default function UFSM0001() {
     useEffect(() => {
         if (objState.isMDSearch) {
             mainRefetch();
-            log("main MDSearch", objState.isMDSearch);
+            // log("main MDSearch", objState.isMDSearch);
             dispatch({ isMDSearch: false });
         }
     }, [objState?.isMDSearch]);

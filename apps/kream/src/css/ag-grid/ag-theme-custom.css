@@ -250,6 +250,10 @@
     border-right: none;
 }
 
+.ag-theme-custom .changed-row {
+    background-color: lightyellow !important;
+  }
+
 .ag-theme-custom-dark {
     color-scheme: dark;
 }

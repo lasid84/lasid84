@@ -87,7 +87,11 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                     label = '';
                     displayCol.forEach((col) => {
                         if (!label) label = item[col];
-                        else label += ' ' + item[col];
+                        else {
+                            if (label !== 'ALL') {
+                                label += ' ' + item[col];
+                            }
+                        }
                     })
 
                 }

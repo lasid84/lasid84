@@ -6,7 +6,7 @@ const getMenuParameters = (params) => {
         const [key, val] = param.split('=');
         objParam[key] = val;
     }
-    log("getMenuParameters", objParam);
+    // log("getMenuParameters", objParam);
 
     return objParam;
 }
