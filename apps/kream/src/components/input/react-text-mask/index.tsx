@@ -82,7 +82,12 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     try {
       if (e.key === "Enter") {
         const form = e.target.form;
-        const index = [...form].indexOf(e.target);
+        let index = [...form].indexOf(e.target);
+        log("form[index + 1]", form[index + 1])
+
+        //필드셋과 버튼은 포커스 제외 - stephen
+        while ((form[index + 1] instanceof HTMLButtonElement) || (form[index + 1] instanceof HTMLFieldSetElement)) index++;
+        
         form[index + 1].focus();
         e.preventDefault();
       }

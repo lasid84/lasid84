@@ -14,7 +14,7 @@ import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvid
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
-import { SP_GetContData } from "./data";
+import { SP_GetShipperContData, SP_GetCarrierContData } from "./data";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -51,7 +51,9 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   } = methods;
 
   //get shipper cont data
-  const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: trans_mode + trans_type }, "dfsdfasdf", SP_GetContData, {enable:false});
+  const { data: shipperContData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enable:false});
+  const { data: crTaskContData } = useGetData({ carrier_code: mSelectedRow?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
+  const { data: crSalesContData} = useGetData({ carrier_code: mSelectedRow?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
 
   const [custcode, setCustcode] = useState<any>()
   const [incoterms, setIncoterms] = useState<any>()
@@ -104,12 +106,10 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   }, [loadItem])
 
   useEffect(() => {
-    if (detailData) {
-      log('detailData....', detailData)
-      log('detailData....2', (detailData as gridData).data)
-      setShp_cont((detailData as gridData))
-    }
-  }, [detailData])
+    // if (shipperContData) {
+      setShp_cont((shipperContData as gridData))
+    // }
+  }, [shipperContData])
 
   useEffect(() => {
     log("maindata", mainData);
@@ -164,7 +164,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                   <Button id={"shipper_manage"} label={"manage_con"} onClick={onClick} width="w-32" disabled={mSelectedRow?.shipper_id ? false : true} />
                 </>}>
               <>
-                <Modal initData={loadItem} detailData={detailData} />
+                <Modal initData={loadItem} detailData={shipperContData} />
                 <div className={"col-span-2"}>
                   <CustomSelect
                     id="shipper_id"
@@ -259,10 +259,10 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"manage"} label={"manage_con"} width="w-15" />
+                  <Button id={"carrier_manage"} label={"manage_con"} width="w-15" />
                 </>}>
               <>
-                <div className={"col-span-2"}>
+                <div className={"col-span-3"}>
                   <CustomSelect
                     id="carrier_code"
                     initText='Select an Carrier Code'
@@ -277,6 +277,11 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     defaultValue={mSelectedRow?.carrier_code}
                     isDisplay={true}
                     inline={true}
+                    events={{
+                      onSelectionChanged(e, id, value) {
+                        handleCustomSelectChange(e,id,value);
+                      },
+                    }}
                   />
                 </div>
                 {/* <div className={"col-span-2"}><MaskedInputField id="carrier_nm" value={mSelectedRow.carrier_nm} options={{ isReadOnly: false }} /></div> */}
@@ -285,21 +290,46 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
           </div>
 
           <div className="flex col-start-1 col-end-6">
-            <fieldset className="flex w-1/2 p-3 pb-3 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
-              <legend className="text-base font-bold text-blue-800 ">업무 담당자</legend>
-
-              <MaskedInputField id="cr_t_pic_nm" value={mSelectedRow?.cr_t_pic_nm} options={{ isReadOnly: false, }} events={{ onChange: handleMaskedInputChange }} />
-              <MaskedInputField id="cr_t_email" value={mSelectedRow?.cr_t_email} options={{ isReadOnly: false }} width="w-96" />
-              <MaskedInputField id="cr_t_tel_num" value={mSelectedRow?.cr_t_tel_num} options={{ isReadOnly: false }} />
-            </fieldset>
-          </div>
-          <div className="col-start-1 col-end-6 ">
-            <fieldset className="flex w-1/2 p-3 pb-3 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
-              <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
-              <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} />
-              <MaskedInputField id="cr_s_email" value={mSelectedRow?.cr_s_email} options={{ isReadOnly: false }} width="w-96" />
-              <MaskedInputField id="cr_s_tel_num" value={mSelectedRow?.cr_s_tel_num} options={{ isReadOnly: false }} />
-            </fieldset>
+              <fieldset className="flex w-1/2 p-3 pb-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+                <legend className="text-base font-bold text-blue-800 ">업무 담당자</legend>
+                {/* <MaskedInputField id="cr_t_pic_nm" value={mSelectedRow?.cr_t_pic_nm} options={{ isReadOnly: false, }} events={{ onChange: handleMaskedInputChange }} /> */}
+                <CustomSelect
+                    id="cr_t_cont_seq"
+                    // initText='Select an '
+                    listItem={crTaskContData as gridData}
+                    valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
+                    displayCol="pic_nm"
+                    gridOption={{
+                      colVisible: { col: ["cont_seq", "pic_nm", "email", "tel_num"], visible: true },
+                    }}
+                    gridStyle={{ width: '600px', height: '300px' }}
+                    style={{ width: '1000px', height: "8px" }}
+                    defaultValue={mSelectedRow?.cr_t_cont_seq}
+                    isDisplay={true}
+                    events={{
+                      onSelectionChanged(e, id, value) {
+                          var selectedRow = e.api.getSelectedRows()[0] as any;
+                          mSelectedRow.cr_t_email = selectedRow?.email as string;
+                          dispatch({mSelectedRow: {...objState.mSelectedRow, cr_t_email:selectedRow?.email, cr_t_tel_num:selectedRow?.tel_num}});    
+                          handleCustomSelectChange(e, id, value);
+                      },
+                      // onSelectionChanged(e, id, val) {
+                      //   var selectedRow = e.api.getSelectedRows()[0];
+                      //   mSelectedRow.cr_t_email = selectedRow.email;
+                      //   dispatch(mSelectedRow: {...objState.mSelectedRow, cr_t_email:selectedRow.email});
+                      //   handleCustomSelectChange(e, id, val);
+                      // } 
+                    }}
+                  />
+                <MaskedInputField id="cr_t_email" value={mSelectedRow?.cr_t_email} options={{ isReadOnly: false }} width="w-40" />
+                <MaskedInputField id="cr_t_tel_num" value={mSelectedRow?.cr_t_tel_num} options={{ isReadOnly: false }} />
+              </fieldset>
+              <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+                <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
+                <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} />
+                <MaskedInputField id="cr_s_email" value={mSelectedRow?.cr_s_email} options={{ isReadOnly: false }} width="w-40" />
+                <MaskedInputField id="cr_s_tel_num" value={mSelectedRow?.cr_s_tel_num} options={{ isReadOnly: false }} />
+              </fieldset>
           </div>
         </PageContent>
         <PageContent

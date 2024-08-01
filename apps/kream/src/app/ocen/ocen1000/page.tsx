@@ -27,6 +27,7 @@ export default function OCEN1000() {
         objState: {
             searchParams: {},
             isMSearch: false,
+            isMDSearch: false,
             isDSearch: false,
             isPKCSearch : false,
             mSelectedRow: {},

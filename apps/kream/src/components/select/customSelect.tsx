@@ -114,7 +114,7 @@ function CustomSelect(props: Props) {
 
   useEffect(() => {
     // log("useEffect isOpen, isGridReady, selectedRow", selectedRow)
-    if (isOpen && isGridReady && selectedRow ) {
+    if (isGridReady && selectedRow ) {
       var param = selectedRow;
       if (valueCol?.some(v => param[v])) {
         for (var i = 0; i < filteredData?.data.length; i++) {
@@ -130,7 +130,7 @@ function CustomSelect(props: Props) {
         }, 100);
       }
     }
-  }, [isOpen, isGridReady, selectedRow])
+  }, [isGridReady, selectedRow])
 
   useEffect(() => {
     // log("useEffect defaultValue, listItem, valueCol")
@@ -228,9 +228,10 @@ function CustomSelect(props: Props) {
       switch (key) {
         case "Enter":
           let selectedRow = e.data; //gridRef.current.api.getSelectedRows()[0];
+          log(selectedRow);
           setSelectedValue(selectedRow);
           setDisplayVal(selectedRow);
-          moveNextComponent();
+          // moveNextComponent();
           // const form = document.querySelector('form');
           // const gridApi = gridRef.current.api;
           // const gridElement = gridApi.gridCore.eGridDiv;
@@ -279,14 +280,20 @@ function CustomSelect(props: Props) {
   }
 
   const moveNextComponent = () => {
-    log("moveNextComponent")
-    const formElement = document.querySelector('form'); // 예시로 폼 요소를 선택합니다.
+    // const formElement = document.querySelector('form'); // 예시로 폼 요소를 선택합니다.
     const inputElement = document.querySelector(`#${id}`);
+    const formElement = inputElement?.closest('form'); 
+    // log("moveNextComponent", formElement, inputElement, inputElement?.closest('form'));
     if (formElement && inputElement) {
-      const elementsArray = Array.from(formElement.elements).filter(v => !v.className.includes("ag-input-field-input") && !v.className.includes("ag-button"));
-      const gridIndex = elementsArray.indexOf(inputElement);
-      if (gridIndex !== -1 && gridIndex < elementsArray.length - 1) {
-        const nextElement = elementsArray[gridIndex + 1];
+      const elementsArray = Array.from(formElement.elements)
+                              .filter(v => !v.className.includes("ag-input-field-input") 
+                                        && !v.className.includes("ag-button") 
+                                        && !(v instanceof HTMLButtonElement) 
+                                        && !(v instanceof HTMLFieldSetElement));
+      const currIndex = elementsArray.indexOf(inputElement);
+      // log("moveNextComponent",elementsArray, currIndex)
+      if (currIndex !== -1 && currIndex < elementsArray.length - 1) {
+        const nextElement = elementsArray[currIndex + 1];
         // 다음 요소에 포커스를 설정하거나 원하는 작업을 수행할 수 있습니다.
         if (nextElement instanceof HTMLElement) {
           nextElement.focus();
@@ -334,7 +341,11 @@ function CustomSelect(props: Props) {
                     // log("onKeyDown", id, gridRef, gridRef.current);
                     if (!isOpen) setIsOpen(true);
                     gridRef.current.api.setFocusedCell(0, valueCol![0]);
+                    gridRef.current.api.getRowNode(0).setSelected(true);
 
+                    break;
+                  case "Enter":
+                    moveNextComponent();
                     break;
                 }
               },
@@ -376,7 +387,7 @@ function CustomSelect(props: Props) {
         </div>
         
         <div ref={ref2}
-          className={`py-0.5 absolute left-0 flex bg-opacity-50 top-8 ${isOpen ? '' : 'hidden'}`}
+          className={`py-0.2 absolute left-0 flex bg-opacity-30 top-5 ${isOpen ? '' : 'hidden'}`}
           style={{
               ...defaultGridStyle,
               top: openDirection === 'down' ? 'calc(100% + 5px)' : 'auto',

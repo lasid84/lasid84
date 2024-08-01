@@ -120,6 +120,7 @@ const SearchForm = ({ loadItem }: any) => {
         onSearch();
       }
     }
+    resetComponent(0);
   }, [loadItem?.length]);
 
   const resetComponent = (search_gubn : number) => {

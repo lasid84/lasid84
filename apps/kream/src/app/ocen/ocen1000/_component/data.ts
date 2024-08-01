@@ -706,7 +706,7 @@ export const SP_UpdatePickupContData = async (param: any) => {
 
 
 //shipper 담당자data get
-export const SP_GetContData = async (searchParam: any) => {
+export const SP_GetShipperContData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { shipper_id, cont_type, user_id, ipaddr } = Param;
   log("mSelectedRow?.shipper_id param sp data: ", Param, cont_type, shipper_id)
@@ -737,6 +737,35 @@ export const SP_GetContData = async (searchParam: any) => {
   }
 }
 
+//shipper 담당자data get
+export const SP_GetCarrierContData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { carrier_code, cont_type, user_id, ipaddr } = Param;
+
+  if (carrier_code + "" === "") {
+    return;
+  } else {
+    const params = {
+      inparam: [
+          "in_carrier_code"
+        , "in_cont_type"
+        , "in_user_id"
+        , "in_ipaddr"
+      ],
+      invalue: [
+          carrier_code
+        , cont_type
+        , user_id
+        , ipaddr
+      ],
+      inproc: 'ocean.f_ocen0001_get_detail',
+      isShowLoading: false
+    }
+
+    const result = await executFunction(params);
+    return result![0]
+  }
+}
 
 export const SP_InsertCargo = async (param: any) => {
 

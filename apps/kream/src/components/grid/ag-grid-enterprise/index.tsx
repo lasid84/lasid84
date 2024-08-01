@@ -664,25 +664,33 @@ const ListGrid: React.FC<Props> = memo((props) => {
   //복사붙여넣기시 자동으로 rowAdd
   const processDataFromClipboard = useCallback(
     (params: ProcessDataFromClipboardParams):string[][] | null => {
-      log("processDataFromClipboard", params);
-      const data = [...params.data];
+      log("processDataFromClipboard1", params);
+      // const data = [...params.data];
+
+      const lastIndex = params.api!.getDisplayedRowCount() - 1;
+      const focusedCell = params.api!.getFocusedCell();
+      const focusedCellIndex = params.api.getColumnDefs()?.findIndex((row:any)=> row.field === focusedCell?.column.getColId())
+      const focusedIndex = focusedCell!.rowIndex;
+
+      const numberCols = params.api.getColumnDefs()?.filter((row:any, i) => i >= focusedCellIndex! && !row.hide)
+                              .map((row:any) => row.cellDataType === 'number');
+      
+      const data = params.data.map((row) => row.map((col,i) => numberCols![i] ? col.replace(/,/g,'') : col));
       const emptyLastRow = data[data.length - 1][0] === "" && data[data.length - 1].length === 1;
       if (emptyLastRow) {
         data.splice(data.length - 1, 1);
       }
-      const lastIndex = params.api!.getDisplayedRowCount() - 1;
-      const focusedCell = params.api!.getFocusedCell();
-      const focusedIndex = focusedCell!.rowIndex;
+      
       if (focusedIndex + data.length - 1 > lastIndex) {
         const resultLastIndex = focusedIndex + (data.length - 1);
         const numRowsToAdd = resultLastIndex - lastIndex;
         const rowsToAdd: any[] = [];
-        for (let i = 0; i < numRowsToAdd; i++) {
-          const index = data.length - 1;
-          const row = data.slice(index, index + 1)[0];
+        for (let i = 1; i <= numRowsToAdd; i++) {
+          const row = data.slice(i, i + 1)[0];
           // Create row object
           const rowObject: any = {};
           let currentColumn: any = focusedCell!.column;
+
           row.forEach((item) => {
             if (!currentColumn) {
               return;
@@ -836,11 +844,13 @@ export const rowAdd = async (
 ) => {
 
   await gridRef.api.setFilterModel(null);
+  await gridRef.api.clearRangeSelection();
   var col = getFirstColumn(gridRef);
   var datas = [];
 
   let rows = Array.isArray(initData) ? initData : [initData];
 
+  log("rowAdd rows : ", rows)
   for (const row of rows) {
     let rowCount = await gridRef.api.getDisplayedRowCount();
     // let renderedRow = await gridRef.api.getRenderedNodes().length;

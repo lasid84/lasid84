@@ -125,7 +125,9 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                 </>}>
               <>
                 <Modal initData={loadItem} detailData={pickupContData} />
-                <div className="col-start-1 col-end-2">                  <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                </div>
+                <div className="col-start-1 col-end-2">                  
+                  <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
+                </div>
                 <MaskedInputField id="pickup_tm" value={mSelectedRow?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
                 <div className="col-start-1 col-end-6"><hr></hr> </div>
                 <div className={"col-span-2"}>
@@ -142,7 +144,7 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                     style={{ width: '1000px', height: "8px" }}
                     defaultValue={mSelectedRow?.cy_place_code}
                     isDisplay={true}
-                    inline={true}
+                    // inline={true}
                   />
                 </div>
                 {/* <MaskedInputField id="pickup_seq" value={mSelectedRow?.pickup_seq} options={{ isReadOnly: false }} /> */}
@@ -154,7 +156,7 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                     initText='Select an Container Yard'
                     listItem={cyplace as gridData}
                     valueCol={["place_code", "place_nm,"]}
-                    displayCol="place_code"
+                    displayCol="place_nm"
                     gridOption={{
                       colVisible: { col: ["place_code", "place_nm"], visible: true },
                     }}
@@ -162,7 +164,7 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                     style={{ width: '1000px', height: "8px" }}
                     defaultValue={mSelectedRow?.cy_place_code}
                     isDisplay={true}
-                    inline={true}
+                    // inline={true}
                   />
                 </div>
                 {/* <MaskedInputField id="cy_place_code_nm" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} /> */}
