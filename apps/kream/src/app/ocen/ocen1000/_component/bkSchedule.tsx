@@ -90,7 +90,7 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageContent
-          title={<span className="px-1 py-1 text-blue-500">SKD</span>}>
+          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">SKD</span>}>
           <div className="col-start-1 col-end-2"><MaskedInputField id="ts_port" value={mSelectedRow?.ts_port} options={{ isReadOnly: false }} /></div>
           <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={mSelectedRow?.vessel} options={{ isReadOnly: false }} /></div>
           <div className="col-start-1 col-end-6"><hr></hr>  </div>
@@ -119,16 +119,16 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"manage"} label={"manage_pickup"} onClick={onClick} width="w-15" />
-                  <Button id={"manage"} label={"manage_cy"} width="w-15" />
-                  <Button id={"delete"} width="w-15" />
+                  <Button id={"manage"} label={"manage_pickup"} onClick={onClick} width="w-24"   />
+                  <Button id={"manage"} label={"manage_cy"} width="w-24"   />
+                  <Button id={"delete"} width="w-24"   />
                 </>}>
               <>
                 <Modal initData={loadItem} detailData={pickupContData} />
-                <div className="col-start-1 col-end-2">                  <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                </div>
+                <div className="col-start-1 col-end-2"> <DatePicker id="pickup_dd" value={mSelectedRow?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                </div>
                 <MaskedInputField id="pickup_tm" value={mSelectedRow?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
-                <div className="col-start-1 col-end-6"><hr></hr> </div>
-                <div className={"col-span-2"}>
+                <div className="col-start-1 col-end-6"><br></br></div>
+                <div className={"col-start-1 col-span-2"}>
                   <CustomSelect
                     id="pickup_seq"
                     initText='Select an Pickup Boundary'
@@ -145,10 +145,13 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                     inline={true}
                   />
                 </div>
-                {/* <MaskedInputField id="pickup_seq" value={mSelectedRow?.pickup_seq} options={{ isReadOnly: false }} /> */}
+                <MaskedInputField id="pickup_addr" value={mSelectedRow?.pickup_seq} options={{ isReadOnly: false }} /> 
                 <MaskedInputField id="pickup_loc" value={mSelectedRow?.pickup_loc} options={{ isReadOnly: false }} />
-
-                <div className={"col-span-2"}>
+                <div className={"col-start-1"}><MaskedInputField id="pickup_pic_nm" value={mSelectedRow?.pickup_loc} options={{ isReadOnly: false }} /></div>
+                <MaskedInputField id="pickup_email" value={mSelectedRow?.pickup_loc} options={{ isReadOnly: false }} />
+                <MaskedInputField id="pickup_tel_num" value={mSelectedRow?.pickup_loc} options={{ isReadOnly: false }} />
+                <div className="col-start-1 col-end-6"><br></br>  </div>
+                <div className={"col-start-1 col-span-2"}>
                   <CustomSelect
                     id="cy_place_code"
                     initText='Select an Container Yard'
@@ -170,6 +173,7 @@ const BKSchedule = memo(({ loadItem, mainData }: any) => {
                 <div className="col-start-1 col-end-2">
                   <MaskedInputField id="cy_cont_nm" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
                 </div>
+                <MaskedInputField id="cy_cont_addr" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
                 <MaskedInputField id="cy_cont_tel" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
                 <MaskedInputField id="cy_cont_email" value={mSelectedRow?.cy_cont_nm} options={{ isReadOnly: false }} />
               </>

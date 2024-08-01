@@ -161,7 +161,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"shipper_manage"} label={"manage_con"} onClick={onClick} width="w-32" disabled={mSelectedRow?.shipper_id ? false : true} />
+                  <Button id={"shipper_manage"} label={"manage_con"} onClick={onClick} width="w-24" disabled={mSelectedRow?.shipper_id ? false : true} />
                 </>}>
               <>
                 <Modal initData={loadItem} detailData={detailData} />
@@ -184,7 +184,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     // obj={selectedobj}
                   />
                 </div>
-                <div className={"col-span-2"}>
+                <div className={"col-span-1"}>
                   <CustomSelect
                     id="sales_person"
                     initText="Select an Salesperson"
@@ -259,7 +259,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"manage"} label={"manage_con"} width="w-15" />
+                  <Button id={"manage"} label={"manage_con"} width="w-24" />
                 </>}>
               <>
                 <div className={"col-span-2"}>
@@ -284,23 +284,22 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             </PageSearch>
           </div>
 
-          <div className="flex col-start-1 col-end-6">
-            <fieldset className="flex w-1/2 p-3 pb-3 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+          <div className="flex w-full col-start-1 col-end-4 space-x-3">
+            <fieldset className="flex w-1/2 p-3 pb-3 space-x-1 space-y-1 border-2 border-solid rounded-lg dark:border-gray-800">
               <legend className="text-base font-bold text-blue-800 ">업무 담당자</legend>
-
-              <MaskedInputField id="cr_t_pic_nm" value={mSelectedRow?.cr_t_pic_nm} options={{ isReadOnly: false, }} events={{ onChange: handleMaskedInputChange }} />
-              <MaskedInputField id="cr_t_email" value={mSelectedRow?.cr_t_email} options={{ isReadOnly: false }} width="w-96" />
-              <MaskedInputField id="cr_t_tel_num" value={mSelectedRow?.cr_t_tel_num} options={{ isReadOnly: false }} />
+              <MaskedInputField id="cr_t_pic_nm" value={mSelectedRow?.cr_t_pic_nm} options={{ isReadOnly: false, }} width="w-56" events={{ onChange: handleMaskedInputChange }} />
+              <MaskedInputField id="cr_t_email" value={mSelectedRow?.cr_t_email} options={{ isReadOnly: false }} width="w-72" />
+              <MaskedInputField id="cr_t_tel_num" value={mSelectedRow?.cr_t_tel_num} options={{ isReadOnly: false }} width="w-56"/>
             </fieldset>
-          </div>
-          <div className="col-start-1 col-end-6 ">
-            <fieldset className="flex w-1/2 p-3 pb-3 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+          {/* <div className="col-start-4 col-end-6 "> */}
+            <fieldset className="flex w-1/2 p-3 pb-3 space-x-1 space-y-1 border-2 border-solid rounded-lg dark:border-gray-800">
               <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
-              <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} />
-              <MaskedInputField id="cr_s_email" value={mSelectedRow?.cr_s_email} options={{ isReadOnly: false }} width="w-96" />
-              <MaskedInputField id="cr_s_tel_num" value={mSelectedRow?.cr_s_tel_num} options={{ isReadOnly: false }} />
+              <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} width="w-56"/>
+              <MaskedInputField id="cr_s_email" value={mSelectedRow?.cr_s_email} options={{ isReadOnly: false }} width="w-72" />
+              <MaskedInputField id="cr_s_tel_num" value={mSelectedRow?.cr_s_tel_num} options={{ isReadOnly: false }} width="w-56"/>
             </fieldset>
           </div>
+          {/* </div> */}
         </PageContent>
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">ETC</span>}>

@@ -105,10 +105,15 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
           <PageBKTabContent
             right={
               <>
-                <div className={"flex col-span-2 "}><Button id={"save"} onClick={handleSubmit(onFormSubmit)} width="w-32" /></div>
+                <div className={"flex col-span-2 "}>
+                  <Button id={"download"} onClick={handleSubmit(onFormSubmit)} width="w-24" />
+                  <Button id={"save"} onClick={handleSubmit(onFormSubmit)} width="w-24" />
+                </div>                
                 <div className={"flex col-span-2"}>
-                  <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
-                  <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} />
+                  <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
+                  <ICONButton id="bkcopy" disabled={false} onClick={onRefresh} size={'24'} />
+                  <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
+                  {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
                 </div>
               </>
             }

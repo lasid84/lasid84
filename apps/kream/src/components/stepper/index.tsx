@@ -13,6 +13,7 @@ export type WidgetProps = {
 const Stepper: React.FC<WidgetProps> = ({ value, right, children }) => {
   return (
     <>
+    <div className="w-8/12">
       <div className="w-full bg-white border border-white rounded-lg dark:bg-gray-900 dark:border-gray-800">
         {(value || right) && (
           <div className="flex flex-row items-center justify-between mb-6">
@@ -23,6 +24,7 @@ const Stepper: React.FC<WidgetProps> = ({ value, right, children }) => {
           </div>
         )}
         <StepList state = {value}/>
+      </div>
       </div>
     </>
   );

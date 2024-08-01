@@ -181,7 +181,7 @@ const StepList = ({ state }: any) => {
   }));
 
   return (
-    <ol className="items-center w-full space-y-4 sm:flex sm:space-x-6 sm:space-y-0 rtl:space-x-reverse">
+    <ol className="items-center w-full space-y-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
       {steps.map((step, index) => (
         <li
           key={index}

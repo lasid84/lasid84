@@ -89,7 +89,7 @@ const PageSearch: React.FC<PageSearchProps> = ({
           <div className="flex items-end w-10/12 gap-1 justify-self-start md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
             {children}
           </div>
-          <div className="flex flex-row-reverse w-2/12 gap-2 md:flex-row-reverse md:grid md:grid-cols-2 ">
+          <div className="flex flex-row-reverse w-2/12 gap-2 ">
             {right}
           </div>
         </div>
