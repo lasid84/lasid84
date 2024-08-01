@@ -161,7 +161,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"shipper_manage"} label={"manage_con"} onClick={onClick} width="w-32" disabled={mSelectedRow?.shipper_id ? false : true} />
+                  <Button id={"shipper_manage"} label={"manage_con"} onClick={onClick} width="w-24" disabled={mSelectedRow?.shipper_id ? false : true} />
                 </>}>
               <>
                 <Modal initData={loadItem} detailData={shipperContData} />
@@ -184,7 +184,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     // obj={selectedobj}
                   />
                 </div>
-                <div className={"col-span-2"}>
+                <div className={"col-span-1"}>
                   <CustomSelect
                     id="sales_person"
                     initText="Select an Salesperson"
@@ -331,6 +331,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                 <MaskedInputField id="cr_s_tel_num" value={mSelectedRow?.cr_s_tel_num} options={{ isReadOnly: false }} />
               </fieldset>
           </div>
+          {/* </div> */}
         </PageContent>
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">ETC</span>}>

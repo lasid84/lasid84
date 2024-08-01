@@ -21,7 +21,7 @@ export const PageBKTabContent: React.FC<PageSearchProps> = ({
         <div className="w-full rounded-[5px] mb-1 ">
           <div className="flex w-full px-4 py-1 space-y-1">
             {addition}
-            <div className="flex-col w-5/12 gap-1 ">{children}</div>
+            <div className="flex-col w-8/12 gap-1 ">{children}</div>
             <div className="flex w-2/12 grid-flow-row-dense gap-2 md:flex-row md:grid md:grid-rows-2 md:grid-cols-2 place-items-end">
               {/* <span className="ml-auto"></span>  */}
               {right}
@@ -89,7 +89,7 @@ const PageSearch: React.FC<PageSearchProps> = ({
           <div className="flex items-end w-10/12 gap-1 justify-self-start md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
             {children}
           </div>
-          <div className="flex flex-row-reverse w-2/12 gap-2 md:flex-row-reverse md:grid md:grid-cols-2 ">
+          <div className="flex flex-row-reverse w-2/12 gap-2 ">
             {right}
           </div>
         </div>

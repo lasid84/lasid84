@@ -1,8 +1,7 @@
 import StepList, {
   Steps1,
   Steps2,
-  Steps3,
-  Steps4,  
+  Steps3,  
 } from "components/stepper/steps";
 
 export type WidgetProps = {
@@ -12,10 +11,9 @@ export type WidgetProps = {
 };
 
 const Stepper: React.FC<WidgetProps> = ({ value, right, children }) => {
-  console.log('value?????????', value)
-  
   return (
     <>
+    <div className="w-8/12">
       <div className="w-full bg-white border border-white rounded-lg dark:bg-gray-900 dark:border-gray-800">
         {(value || right) && (
           <div className="flex flex-row items-center justify-between mb-6">
@@ -26,6 +24,7 @@ const Stepper: React.FC<WidgetProps> = ({ value, right, children }) => {
           </div>
         )}
         <StepList state = {value}/>
+      </div>
       </div>
     </>
   );

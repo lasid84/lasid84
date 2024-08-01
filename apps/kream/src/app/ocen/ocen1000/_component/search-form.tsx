@@ -82,10 +82,10 @@ const SearchForm = ({ loadItem }: any) => {
       trans_type: trans_type || gTransType || "ALL",
       fr_date:
         fr_date ||
-        dayjs().subtract(4, "month").startOf("month").format("YYYYMMDD"),
+        dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),
       to_date:
         to_date ||
-        dayjs().subtract(0, "month").endOf("month").format("YYYYMMDD"),
+        dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
       wb_no: wb_no || "", // HWB, MWB, BK_NO
       cust_code: cust_code || "",
       state: "",
@@ -129,7 +129,7 @@ const SearchForm = ({ loadItem }: any) => {
       setValue("to_date", dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"));
     } else if (search_gubn === 1) {
       setValue("fr_date", dayjs().subtract(1, "month").startOf("month").format("YYYYMMDD"));
-      setValue("to_date", dayjs().subtract(0, "month").endOf("month").format("YYYYMMDD"));
+      setValue("to_date", dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"));
     }
     trigger()
   }

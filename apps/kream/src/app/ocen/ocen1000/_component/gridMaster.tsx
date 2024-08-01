@@ -108,7 +108,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         
             setTimeout(() => {                
                 objState.tab1.push({ cd: tabName, cd_nm: tabName })
-                dispatch({ MselectedTab: tabName, isMDSearch: true, popType: crudType.CREATE, });
+                dispatch({ MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE, });
                 //dispatch({mSelectedRow: ...mSelectedRow, })
             }, 200);
         }
