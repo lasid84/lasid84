@@ -4,13 +4,13 @@ import { useRef, memo, useEffect, useState } from "react";
 import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import PageSearch, { PageBKCargo } from "layouts/search-form/page-search-row";
-import { SP_GetCargoData } from "./data";
-import { LOAD, SEARCH_M, SEARCH_CGD } from "components/provider/contextArrayProvider";
+import { SP_GetCostData } from "./data";
+import { LOAD, SEARCH_M, SEARCH_CST } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
-import { SP_InsertCargo, SP_UpdateCargo } from "./data";
+import { SP_InsertCost, SP_UpdateCost } from "./data";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -21,48 +21,38 @@ type Props = {
 const GridCost: React.FC<Props> = memo(({ initData}) => {
   const gridRef = useRef<any | null>(null);
   const { dispatch, objState } = useAppContext();
-  const { Create } = useUpdateData2(SP_InsertCargo);
-  const { Update } = useUpdateData2(SP_UpdateCargo);
+  const { Create } = useUpdateData2(SP_InsertCost);
+  const { Update } = useUpdateData2(SP_UpdateCost);
   const [gridOptions, setGridOptions] = useState<GridOption>();
 
 
-  const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab }, SEARCH_CGD, SP_GetCargoData, { enabled: true });
+  const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab },SEARCH_CST, SP_GetCostData, { enabled: true });
 
   const gridOption: GridOption = {
     colVisible: {
       col: [
-        "container_refno",
-        "piece",
-        "container_type",
-        "seal_no",
-        "slac_stc",
-        "gross_wt",
-        "volume_wt",
+        "waybill_no",
+        "remark",
+        "use_yn",
       ],
       visible: true,
     },
-    gridHeight: "30vh",
+    gridHeight: "60vh",
     checkbox: ["use_yn", "def"],
     select: {
       container_refno: initData[16]?.data.map(
         (row: any) => row["container_refno"]
       ),
     },
-    maxWidth: { piece: 70, slac_stc: 70, container_ref_no: 100 },
+    maxWidth: { use_yn: 120 },
     minWidth: {
-      piece: 80,
-      slac_stc: 80,
-      container_ref_no: 100,
+      use_yn: 70
     },
-    dataType: {"piece":"number","slac_stc":"number","gross_wt":"number","volume_wt":"number"},
+    dataType: {},
     editable: [
-      "piece",
-      "slac_stc",
-      "container_refno",
-      "container_type",
-      "seal_no",
-      "gross_wt",
-      "volume_wt",
+      "waybill_no",
+      "remark",
+      "use_yn",
     ],
     isShowFilter: false,
     isAutoFitColData: false,
@@ -81,7 +71,7 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
         hasData = true;
         if (data.__ROWTYPE === ROW_TYPE_NEW) {
           //신규 추가
-          data.container_refno = objState.mSelectedRow.container_refno;
+          data.bk_id = objState.mSelectedRow.bk_id;
           Create.mutate(data);
         } else {
           //수정

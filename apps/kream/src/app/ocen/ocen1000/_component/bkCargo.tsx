@@ -72,9 +72,23 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <div className="flex flex-row w-full">
+          <div className="flex w-full">
+            <PageContent
+              title={
+                <span className="px-1 py-1 text-lg font-bold text-blue-500">
+                  Cargo Detail
+                </span>
+              }
+            >
+              <div className="col-span-6">
+                <GridCargo initData={loadItem} mainData={mainData} />
+              </div>
+            </PageContent>
+          </div>
+        </div>
         <PageContent
-          title={<span className="px-1 py-1 text-blue-500">Cargo</span>}
-        >
+          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Cargo</span>}        >
           <ReactSelect
             id="svc_type"
             dataSrc={svctype as gridData}
@@ -118,11 +132,11 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
           </div>
         </PageContent>
 
-        <div className="flex flex-row w-full">
+        {/* <div className="flex flex-row w-full">
           <div className="flex w-full">
             <PageContent
               title={
-                <span className="w-full px-1 py-1 text-blue-500">
+                <span className="px-1 py-1 text-lg font-bold text-blue-500">
                   Cargo Detail
                 </span>
               }
@@ -132,7 +146,7 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
               </div>
             </PageContent>
           </div>
-        </div>
+        </div> */}
       </form>
     </FormProvider>
   );

@@ -16,7 +16,6 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
-
 export interface typeloadItem {
   data: {} | undefined;
 }
@@ -64,18 +63,19 @@ const BKCost = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-       
-
         <div className="flex flex-row w-full">
           <div className="flex w-full">
             <PageContent
               title={
-                <span className="w-full px-1 py-1 text-blue-500">
-                 Cost
+                <span className="px-1 py-1 text-lg font-bold text-blue-500">
+                  Cost
                 </span>
               }
             >
-              <div className="col-span-6">
+              <div className="col-span-1">
+                <GridCost initData={loadItem} />
+              </div>
+              <div className="col-span-4">
                 <GridCost initData={loadItem} />
               </div>
             </PageContent>
