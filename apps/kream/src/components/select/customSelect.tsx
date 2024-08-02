@@ -2,7 +2,7 @@ import React, { ChangeEvent, KeyboardEventHandler, memo, useEffect, useLayoutEff
 import Grid, { GridOption, gridData } from '@/components/grid/ag-grid-enterprise';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
-import { CellKeyDownEvent, FullWidthCellKeyDownEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { CellKeyDownEvent, ComponentStateChangedEvent, FullWidthCellKeyDownEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { useTranslation } from 'react-i18next';
 import {  useAppContext } from "components/provider/contextObjectProvider";
 import { useFormContext } from 'react-hook-form';
@@ -34,6 +34,7 @@ type Props = {
   events?:{               //customselect event전달용
     onRowClicked?:  (e: ChangeEvent<HTMLInputElement>) => void;
     onSelectionChanged?: (e: SelectionChangedEvent<HTMLInputElement>, id:string, value:string) => void;
+    onComponentStateChanged? : (e: ComponentStateChangedEvent<HTMLInputElement>) => void
   }
 }
 
@@ -174,7 +175,7 @@ function CustomSelect(props: Props) {
     var selectedRow = param.api.getSelectedRows()[0];
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
-      // log("handleSelectionChanged", selectedRow, valueCol![0], val)
+      log("custom select - handleSelectionChanged", selectedRow, valueCol![0], val)
       events?.onSelectionChanged(param, id, val);
     }
   }
@@ -191,6 +192,7 @@ function CustomSelect(props: Props) {
     setIsGridReady(true);
     // onGridReady(param);
     // setIsReady(true);
+    if (events?.onComponentStateChanged) events.onComponentStateChanged(param);
   }
 
   const setSelectedValue = (row: any, toggle = true) => {

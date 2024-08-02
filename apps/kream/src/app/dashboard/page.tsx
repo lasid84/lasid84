@@ -31,8 +31,9 @@ const developmentHistory = [
      + '&nbsp;1) 엑셀 업로드 후 저장 클릭하도록 변경<br>'
      + '&nbsp;2) 인보이스 발행 기능 적용<br>'
      + '&nbsp;&nbsp;- invoice date 가 없을 경우 발행 안됨<br>'
-     + '&nbsp;3) 연동되는 개발UFS+ 사이트<br>'
-     + '&nbsp;&nbsp;- https://uat-jp.ufsplus.kwe.com/web/'
+     + '&nbsp;3) 연동되는 UFS+ 사이트(테스트 사이트)<br>'
+     + '&nbsp;&nbsp;- https://uat-jp.ufsplus.kwe.com/web/<br>'
+     + '&nbsp;4) 인보이스 컨펌 기능 개발 중<br>'
   },
 ];
 
@@ -67,9 +68,9 @@ const Home: React.FC = () => {
             <header className="w-full p-4 text-center text-white bg-blue-600">
               <h1 className="text-2xl font-bold">Development History</h1>
             </header>
-            <div>
+            {/* <div>
               <Checkbox id="ck" onClick={onClick}/>
-            </div>
+            </div> */}
             <main className="flex-grow w-full max-w-4xl p-6">
               <div className="space-y-6">
                 {developmentHistory.map((entry, index) => (
