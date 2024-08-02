@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, memo, useEffect, useState } from "react";
-import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
+import Grid, { ROW_INDEX, ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import PageSearch, { PageBKCargo } from "layouts/search-form/page-search-row";
 import { SP_GetCargoData } from "./data";
@@ -114,8 +114,8 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
   const onSave = () => {
     var hasData = false;
     gridRef.current.api.forEachNode((node: any) => {
-      var data = node.data;
-      log('node.data', data)
+      var data = gridRef.current.api.getRowNode(node.data[ROW_INDEX]-1)
+      log('node.data', (cargoData as gridData).data[node.data[ROW_INDEX]-1])
       gridOptions?.checkbox?.forEach(
         (col) => (data[col] = data[col] ? "Y" : "N")
       );
@@ -176,7 +176,11 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
             gridRef={gridRefD}
             listItem={cargoData as gridData}
             options={gridOptionDetail}
-            event={{}}
+            event={{
+              onCellValueChanged(param) {
+                var data = param.node.data;
+                (cargoData as gridData).data[param.node.data[ROW_INDEX]-1] = {...data};
+            },}}
           />
         </>
       </PageBKCargo>
