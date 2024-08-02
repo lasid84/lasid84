@@ -72,10 +72,7 @@ const BKCost = memo(({ loadItem, mainData }: any) => {
                 </span>
               }
             >
-              <div className="col-span-1">
-                <GridCost initData={loadItem} />
-              </div>
-              <div className="col-span-4">
+              <div className="col-span-6">
                 <GridCost initData={loadItem} />
               </div>
             </PageContent>

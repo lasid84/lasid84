@@ -16,7 +16,6 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
-
 export interface typeloadItem {
   data: {} | undefined;
 }
@@ -72,23 +71,13 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
-      <div className="flex flex-row w-full">
-          <div className="flex w-full">
-            <PageContent
-              title={
-                <span className="px-1 py-1 text-lg font-bold text-blue-500">
-                  Cargo Detail
-                </span>
-              }
-            >
-              <div className="col-span-6">
-                <GridCargo initData={loadItem} mainData={mainData} />
-              </div>
-            </PageContent>
-          </div>
-        </div>
         <PageContent
-          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Cargo</span>}        >
+          title={
+            <span className="px-1 py-1 text-lg font-bold text-blue-500">
+              Cargo
+            </span>
+          }
+        >
           <ReactSelect
             id="svc_type"
             dataSrc={svctype as gridData}
@@ -99,7 +88,7 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
               isAllYn: false,
             }}
           />
-          
+
           <ReactSelect
             id="movement_type"
             dataSrc={movementtype as gridData}
@@ -121,6 +110,25 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
             value={mSelectedRow?.strategic_yn}
             options={{ isReadOnly: false, textAlign: "center" }}
           />
+
+        </PageContent>
+
+        <div className="flex flex-row w-full">
+          <div className="flex w-full">
+            <PageContent
+              title={
+                <span className="px-1 py-1 text-lg font-bold text-blue-500">Cargo Detail</span>
+              }
+            >
+              <div className="col-span-6">
+                <GridCargo initData={loadItem} mainData={mainData} />
+              </div>
+            </PageContent>
+          </div>
+        </div>
+        <PageContent
+          title={<></>}
+        >
           <div className="col-start-1 col-end-6 ">
             <TextArea
               id="cargo_remark"
@@ -131,22 +139,6 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
             />
           </div>
         </PageContent>
-
-        {/* <div className="flex flex-row w-full">
-          <div className="flex w-full">
-            <PageContent
-              title={
-                <span className="px-1 py-1 text-lg font-bold text-blue-500">
-                  Cargo Detail
-                </span>
-              }
-            >
-              <div className="col-span-6">
-                <GridCargo initData={loadItem} mainData={mainData} />
-              </div>
-            </PageContent>
-          </div>
-        </div> */}
       </form>
     </FormProvider>
   );

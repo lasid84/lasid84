@@ -28,15 +28,7 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
   const [gridOptions, setGridOptions] = useState<GridOption>();
 
 
-  const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab }, SEARCH_CGD, SP_GetCargoData, { enabled: true });
-
-
-  // useEffect(() => {
-  //   log("bkcargo maindata", mainData);
-  //   if (mainData)
-  //     dispatch({ mSelectedCargo: (mainData?.[1] as gridData).data[0] });
-  // }, [mainData]);
-
+  const { data: cargoData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab }, SEARCH_CGD, SP_GetCargoData, { enabled: true });
 
 
   const gridOption: GridOption = {
@@ -44,47 +36,86 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
       col: [
         "container_refno",
         "piece",
-        "container_type",
-        "seal_no",
+        "pkg_type",
         "slac_stc",
+        "stc_uom",
+        "seal_no",
+        "container_type",
         "gross_wt",
         "volume_wt",
+        "dg_yn",
       ],
       visible: true,
     },
-    gridHeight: "30vh",
-    checkbox: ["use_yn", "def"],
+    gridHeight: "25vh",
+    checkbox: ["use_yn","dg_yn","def"],
     select: {
+      pkg_type: initData[17]?.data.map(
+        (row: any) => row["type_cd"]
+      ),
       container_refno: initData[16]?.data.map(
         (row: any) => row["container_refno"]
       ),
+      stc_uom: initData[17]?.data.map(
+        (row: any) => row["type_cd"]
+      ),
     },
 
-    maxWidth: { piece: 70, slac_stc: 70, container_ref_no: 100 },
+    maxWidth: { piece: 120, slac_stc: 120, container_refno: 120 ,dg_yn : 80},
     minWidth: {
       piece: 80,
       slac_stc: 80,
-      container_ref_no: 100,
+      container_refno: 80,
+      dg_yn : 80,
     },
     dataType: {"piece":"number","slac_stc":"number","gross_wt":"number","volume_wt":"number"},
     editable: [
       "piece",
+      "pkg_type",
       "slac_stc",
+      "stc_uom",
       "container_refno",
       "container_type",
       "seal_no",
       "gross_wt",
       "volume_wt",
+      "dg_yn",
     ],
     isShowFilter: false,
     isAutoFitColData: false,
-    isEditableOnlyNewRow: true,
+    // isEditableOnlyNewRow: true,
   };
+
+
+  const gridOptionDetail: GridOption = {
+    colVisible: {
+      col: [
+      "description",
+      "hs_cd",
+      ],
+      visible: true,
+    },
+    gridHeight: "25vh",
+    checkbox: [],
+    select: {    },
+    maxWidth: {  },
+    minWidth: {  },
+    dataType: {},
+    editable: [
+      "description",
+      "hs_cd",
+    ],
+    isShowFilter: false,
+    isAutoFitColData: false,
+    // isEditableOnlyNewRow: true,
+  };
+
 
   const onSave = () => {
     var hasData = false;
     gridRef.current.api.forEachNode((node: any) => {
       var data = node.data;
+      log('node.data', data)
       gridOptions?.checkbox?.forEach(
         (col) => (data[col] = data[col] ? "Y" : "N")
       );
@@ -109,14 +140,15 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
                 rowAdd(gridRef.current, {
                   bk_id: objState.MselectedTab,                  
                   use_yn: true,
+                  dg_yn : false,
                   piece: 1,
                 })
-                //detail grid ?
-                // rowAdd(gridRefD.current, {
-                //   bk_id: objState.MselectedTab,                  
-                //   use_yn: true,
-                //   piece: 1,
-                // })
+                rowAdd(gridRefD.current, {
+                  bk_id: objState.MselectedTab,                  
+                  use_yn: true,
+                  dg_yn : false,
+                  piece: 1,
+                })
   }
 
   return (
@@ -136,14 +168,14 @@ const GridCargo: React.FC<Props> = memo(({ initData}) => {
         <>
           <Grid
             gridRef={gridRef}
-            listItem={detailData as gridData}//{mainData?.[1] as gridData}
+            listItem={cargoData as gridData}//{mainData?.[1] as gridData}
             options={gridOption}
             event={{}}
           />
           <Grid
             gridRef={gridRefD}
-            listItem={detailData as gridData}
-            options={gridOption}
+            listItem={cargoData as gridData}
+            options={gridOptionDetail}
             event={{}}
           />
         </>

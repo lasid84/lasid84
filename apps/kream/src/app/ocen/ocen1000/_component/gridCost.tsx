@@ -5,12 +5,12 @@ import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import PageSearch, { PageBKCargo } from "layouts/search-form/page-search-row";
 import { SP_GetCostData } from "./data";
-import { LOAD, SEARCH_M, SEARCH_CST } from "components/provider/contextArrayProvider";
+import { LOAD, SEARCH_M, SEARCH_CST, SEARCH_HBL } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
-import { SP_InsertCost, SP_UpdateCost } from "./data";
+import { SP_InsertCost, SP_UpdateCost, SP_GetHouseData } from "./data";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -26,7 +26,7 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
   const [gridOptions, setGridOptions] = useState<GridOption>();
 
 
-  const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab },SEARCH_CST, SP_GetCostData, { enabled: true });
+  const { data: costData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab },SEARCH_HBL, SP_GetHouseData, { enabled: true });
 
   const gridOption: GridOption = {
     colVisible: {
@@ -39,10 +39,7 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
     },
     gridHeight: "60vh",
     checkbox: ["use_yn", "def"],
-    select: {
-      container_refno: initData[16]?.data.map(
-        (row: any) => row["container_refno"]
-      ),
+    select: {    
     },
     maxWidth: { use_yn: 120 },
     minWidth: {
@@ -87,7 +84,6 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
                 rowAdd(gridRef.current, {
                   bk_id: objState.MselectedTab,                  
                   use_yn: true,
-                  piece: 1,
                 })
   }
 
@@ -108,7 +104,7 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
         <>
           <Grid
             gridRef={gridRef}
-            listItem={detailData as gridData}//{mainData?.[1] as gridData}
+            listItem={costData as gridData}
             options={gridOption}
             event={{}}
           />        

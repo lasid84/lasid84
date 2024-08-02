@@ -7,6 +7,7 @@ export const SEARCH_D = 'SEARCH_D'
 export const SEARCH_PKC = 'SEARCH_PKC'
 export const SEARCH_CGD = 'SEARCH_CGD'
 export const SEARCH_CST = 'SEARCH_CST'
+export const SEARCH_HBL = 'SEARCH_HBL'
 export const LOAD = 'LOAD';
 
 export const crudType = {
