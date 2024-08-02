@@ -15,6 +15,7 @@ import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
 import { SP_GetShipperContData, SP_GetCarrierContData } from "./data";
+import { ComponentStateChangedEvent } from "ag-grid-community";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -59,7 +60,6 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   const [incoterms, setIncoterms] = useState<any>()
   const [billtype, setBillType] = useState<any>()
   const [carriercode, setCarrierCode] = useState<any>()
-  const [shp_cont, setShp_cont] = useState<any>()
   const [salesperson, setSalesPerson] = useState<any>()
   const [terminal, setTerminal] = useState<any>()
 
@@ -70,7 +70,6 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (objState.isDSearch) {
-      log("mSelectedRow?.shipper_id useEffect", objState.isDSearch)
       detailRefetch();
       dispatch({ isDSearch: false });
     }
@@ -106,12 +105,6 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   }, [loadItem])
 
   useEffect(() => {
-    // if (shipperContData) {
-      setShp_cont((shipperContData as gridData))
-    // }
-  }, [shipperContData])
-
-  useEffect(() => {
     log("maindata", mainData);
     if (mainData)
       dispatch({ mSelectedRow: (mainData[0] as gridData).data })
@@ -145,7 +138,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   const handleCustomSelectChange = (e: any, id:string, val:string) => {
     var selectedRow = e.api.getSelectedRows()[0];
     log('mSelectedRow check', selectedRow, id, val);
-    dispatch({mSelectedRow: {...objState.mSelectedRow, [id]: val}});
+    dispatch({mSelectedRow: {...mSelectedRow, [id]: val}});
   }
 
   //custom select value 변경 시 return object 항목 별 mselectedRow value 업데이트... 이벤트필요
@@ -180,7 +173,12 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     isDisplay={true}
                     defaultValue={mSelectedRow?.shipper_id}
                     // inline={true}
-                    events={{ onSelectionChanged: handleCustomSelectChange }} 
+                    events={{
+                      onSelectionChanged: (e, id, value) => {
+                        mSelectedRow.shp_cont_seq = null;
+                        handleCustomSelectChange(e,id,value);
+                      },
+                     }} 
                     // obj={selectedobj}
                   />
                 </div>
@@ -210,25 +208,33 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
           {/* Shipper 담당자 */}
           <div className={"col-span-1"}>
             <CustomSelect
-              id="shp_cont_pic_nm"
+              id="shp_cont_seq"
               initText="Select..."
-              listItem={shp_cont as gridData}
-              valueCol={["cust_code", "pic_nm", "email"]}
+              label="shp_cont_pic_nm"
+              listItem={shipperContData as gridData}
+              valueCol={["cont_seq", "pic_nm", "email", "tel_num", "fax_num"]}
               displayCol="pic_nm"
               gridOption={{
-                colVisible: { col: ["cust_code", "pic_nm", 'email'], visible: true },
+                colVisible: { col: ["cont_seq", "pic_nm", "email", "tel_num", "fax_num"], visible: true },
               }}
               gridStyle={{ width: '600px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
               isDisplay={true}
-              defaultValue={mSelectedRow?.shp_cont_pic_nm}
-              // inline={true}
-            // onChange={handleCustomSelectChange}
+              defaultValue={mSelectedRow?.shp_cont_seq}
+              events={{
+                onSelectionChanged: async (e,id,value) => {
+                  var selectedRow = await (shipperContData as gridData).data.filter((row:any) => row["cont_seq"] === value)[0];
+                  mSelectedRow.shp_cont_email = selectedRow?.email;
+                  mSelectedRow.shp_tel_num = selectedRow?.tel_num;
+                  mSelectedRow.shp_fax_num = selectedRow?.fax_num;
+                  handleCustomSelectChange(e, id, value);
+                }
+              }}
             />
           </div>
-          <MaskedInputField id="shp_cont_email" value={mSelectedRow?.shp_cont_email} options={{ isReadOnly: false}} />
-          <MaskedInputField id="shp_tel_num" value={mSelectedRow?.shp_tel_num} options={{ isReadOnly: false }} />
-          <MaskedInputField id="shp_fax_num" value={mSelectedRow?.shp_fax_num} options={{ isReadOnly: false }} />
+          <MaskedInputField id="shp_cont_email" value={mSelectedRow?.shp_cont_email} options={{ isReadOnly: true}} />
+          <MaskedInputField id="shp_tel_num" value={mSelectedRow?.shp_tel_num} options={{ isReadOnly: true }} />
+          <MaskedInputField id="shp_fax_num" value={mSelectedRow?.shp_fax_num} options={{ isReadOnly: true }} />
 
           <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={6} cols={32} value={mSelectedRow?.shp_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
           <div className={"col-span-2"}>
@@ -309,7 +315,6 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     events={{
                       onSelectionChanged(e, id, value) {
                           var selectedRow = e.api.getSelectedRows()[0] as any;
-                          mSelectedRow.cr_t_email = selectedRow?.email as string;
                           dispatch({mSelectedRow: {...objState.mSelectedRow, cr_t_email:selectedRow?.email, cr_t_tel_num:selectedRow?.tel_num}});    
                           handleCustomSelectChange(e, id, value);
                       },

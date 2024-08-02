@@ -79,6 +79,8 @@ function getIcon(img_index: any) {
       return <PiAirplaneLandingBold size={20} />
     case "20":
       return <BiSolidShip size={20} />
+    case "21":
+      return <RiShip2Line size={20} />
     default:
       return <MdOutlineWidthNormal size={20} />
   }
