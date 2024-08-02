@@ -587,7 +587,7 @@ class Library {
 
     async updateResult(data, bodyText, result) {
 
-        if (!data.out_tab) return;
+        if (!data.out_tab) return result;
 
         var v_tracking = '';
         let arrCol = data.out_col.split(',');
