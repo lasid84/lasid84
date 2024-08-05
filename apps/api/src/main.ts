@@ -4,6 +4,8 @@ import setupRoutes from "./router";
 
 import loggerMiddleware from "./helpers/log/logger";
 
+const { log } = require('@repo/kwe-lib/components/logHelper');
+
 const app: express.Express = express();
 
 /**
@@ -41,8 +43,8 @@ setupRoutes(app);
  * TODO
  * Port env 설정으로 이관 예정
  */
-const port = 9000;
+const port = 5000;
 
 app.listen(port, () => {
-  console.log("server start");
+  log("server start port : ", port);
 });

@@ -47,7 +47,7 @@ export const getData = async (req: Request, res: Response) => {
 
     res.json(result);
   } catch (err) {
-    console.log("Error fetching data:", err);
+    error("Error fetching data:", err);
     res.status(500).json({ error: "Error fetching data : " + err });
   }
 };

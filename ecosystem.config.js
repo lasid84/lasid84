@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
       name: 'api',
-      script: './dist/index.js',
+      script: './dist/main.js',
       cwd: "./apps/api",
       out_file: '/dev/null',
       autorestart: true,

@@ -27,6 +27,7 @@ const dataRoutes: Router = Router();
  * 2. Components Routing
  */
 export default function setupRoutes(app: Express) {
+  app.use("/", authRoutes); //기존 front login을 위한 추가, front 수정 후 삭제
   app.use("/auth", authRoutes);
   app.use("/check", checkRoutes);
   app.use("/api", dataRoutes);
