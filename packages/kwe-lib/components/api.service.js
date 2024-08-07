@@ -74,9 +74,13 @@ const postCall = async (params) => {
     const client = await init(params);
     // const client = params.client;
     // log("postCall params2 : ", params);
+    // const response = isShowLoading ? 
+    //                       await client.post<AxiosResponse>(url, {user_id: user_id,password: password})
+    //                     : await client.post(url, {user_id: user_id,password: password});
+
     const response = isShowLoading ? 
-                          await client.post<AxiosResponse>(url, {user_id: user_id,password: password})
-                        : await client.post(url, {user_id: user_id,password: password});
+                          await client.post<AxiosResponse>(url, params)
+                        : await client.post(url, params);
 
     // log("postCall params1 : ", response.data);
 
@@ -89,6 +93,22 @@ const postCall = async (params) => {
         message: 'Cannot connect to server.. ' + err.name
       }
     }
+  }
+};
+
+const getCall = async (params) => {
+  
+  try {
+    const client = axios.create();
+    client.defaults.timeout = 10000;
+    const response = await client.get(params.url);
+
+    // log("postCall params1 : ", response.data);
+
+    return response;
+  } catch (err) {
+    log("getCall err1 :", JSON.stringify(err));
+    return err;
   }
 };
 
@@ -207,4 +227,5 @@ module.exports = {
   postCall,
   postCall2,
   // UFSPpostCall
+  getCall,
 }

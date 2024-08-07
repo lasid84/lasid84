@@ -6,7 +6,7 @@ class dataContainer {
       // Properties for numeric, text, and cursor data
       this.numericData = 0; // Default value for numeric data is 0 (you can change it as needed)
       this.textData = ''; // Default value for text data is an empty string
-      this.cursorData = {}; // Default value for cursor data is null (no data initially)
+      this.cursorData = []; // Default value for cursor data is null (no data initially)
     }
   
     // Methods to set values for numeric, text, and cursor data

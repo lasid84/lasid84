@@ -38,6 +38,14 @@ import { BiSolidShip } from "react-icons/bi";
 //계약관리
 import { GrDocumentConfig } from "react-icons/gr";
 import { HiDocumentSearch } from "react-icons/hi";
+
+//관세청 유니패스
+import { MdLocalShipping } from 'react-icons/md';
+import { FaRegFileAlt } from 'react-icons/fa';
+import { GiCargoShip } from 'react-icons/gi';
+import { AiOutlineFileSearch } from 'react-icons/ai';
+import { RiGovernmentLine } from 'react-icons/ri';
+
 import { gridData } from '@/components/grid/ag-grid-enterprise';
 
 export type NavigationState = {
@@ -81,12 +89,20 @@ function getIcon(img_index: any) {
       return <BiSolidShip size={20} />
     case "21":
       return <RiShip2Line size={20} />
+    case "30":
+      return <MdLocalShipping size={20} />
+    case "31":
+      return <FaRegFileAlt size={20} />
+    case "32":
+      return <GiCargoShip size={20} />
+    case "33":
+      return <AiOutlineFileSearch size={20} />
+    case "34":
+      return <RiGovernmentLine size={20} />
     default:
       return <MdOutlineWidthNormal size={20} />
   }
 }
-
-
 
 async function getMenuList(userInfo: any) {
 
@@ -121,10 +137,11 @@ async function getMenuList(userInfo: any) {
 
   menus?.data?.forEach((menu: any) => {
     if (menu.use_yn === "Y") {
+      // log("menus:", menu);
       const menuItem: NavigationState = {
         parent_seq: menu.parent_seq,
         menu_seq: menu.menu_seq,
-        url: menu.menu_code === '' ? "/" : `/${menu.menu_code.substring(0, 4).toLowerCase()}/${menu.menu_code.toLowerCase()}`,
+        url: (menu.menu_code || '' ) === '' ? "/" : `/${menu.menu_code.substring(0, 4).toLowerCase()}/${menu.menu_code.toLowerCase()}`,
         icon: menu.parent_seq === '0' ? getIcon(menu.image_index) : undefined,
         title: menu.menu_name,
         items: [],

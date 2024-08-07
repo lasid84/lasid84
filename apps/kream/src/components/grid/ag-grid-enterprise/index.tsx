@@ -23,7 +23,8 @@ import {
   GridPreDestroyedEvent,
   StateUpdatedEvent,
   RowClassParams,
-  RowStyle
+  RowStyle,
+  RowSpanParams
 } from "ag-grid-community";
 
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -36,6 +37,15 @@ import { Skeleton } from 'components/skeleton/skeleton';
 import { StringValidation } from 'zod';
 
 // import { SELECTED_ROW } from "./model";
+
+
+
+
+import { CustomCellRendererProps } from 'ag-grid-react';
+import React from 'react';
+
+
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { stringToFullDateString, stringToFullDate, stringToDateString, stringToTime } = require('@repo/kwe-lib/components/dataFormatter.js')
@@ -115,6 +125,7 @@ export type GridOption = {
   isAutoFitColData?: boolean
   isSelectRowAfterRender?: boolean
   isShowRowNo?: boolean
+  rowSpan?: string[]
 };
 
 type cols = {
@@ -139,7 +150,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   // const [colDefs, setColDefs] = useState<cols[]>([]);
   const [colDefs, setColDefs] = useState<any[]>([]);
-  const [mainData, setMainData] = useState([{}]);
+  const [mainData, setMainData] = useState<any[]>();
 
   const [initialState, setInitialState] = useState<GridState>();
   const [currentState, setCurrentState] = useState<GridState>();
@@ -233,6 +244,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       enableRangeSelection: true,
       stopEditingWhenCellsLoseFocus: true,    //cell focus 이동시 cellvalueChanged 호출 되도록
       suppressLastEmptyLineOnPaste: true,     //엑셀 복사 후 붙여넣기시 시 다음 row 빈칸 붙여넣기 되는 오류 처리
+      suppressRowTransform:true,
       animateRows: true,
       // grandTotalRow:"bottom",
       suppressScrollOnNewData:true,
@@ -497,10 +509,33 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
-        // cellOption = {
-        //   ...cellOption,
-        //   aggFunc: 'count'
-        // }
+        //rowSpan
+        if (options?.rowSpan?.length) {
+          var arrCols = options.rowSpan;
+          if (arrCols.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              cellRenderer: test,
+              rowSpan: getRowSpan,
+              cellClassRules: {
+                "show-cell": "value !== undefined",
+              },
+              cellDataType: false
+              // cellClassRules: {
+              //   'cell-span': "value !== ''"
+              // },
+              // cellRenderer: (params: any) => {
+              //   if (params.node.rowSpan === 1) {
+              //     return params.value;
+              //   }
+              //   if (params.node.rowIndex > 0 && params.value === params.data.field1 && gridRef.current.api.getRowNode(params.node.rowIndex - 1).data[col] === params.value) {
+              //     return '';
+              //   }
+              //   return params.value;
+              // }
+            };
+          }          
+        }
 
         cols.push({
           field: col,
@@ -538,6 +573,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // if (props.gridState) setInitialState(props.gridState);
     // else gridRef.current ? gridRef.current.api.ensureIndexVisible(0, 'top') : null;
   }, [props.gridState])
+
+  useEffect(() => {
+    log("mainData", mainData)
+  }, [mainData])
 
   const onGridReady = (param: GridReadyEvent) => {
     log("onGridReady");
@@ -770,13 +809,52 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // return undefined;
   }
 
-  const getRowClass = (param:any) => {
-    return param.data[ROW_CHANGED] ? 'changed-row' : '';
-  }
+  const getRowSpan = (param: RowSpanParams): number => {
+    
+    const rowIndex = param.node?.rowIndex || 0;
+    const colId = param.column.getId();
+    const currentValue = param.data[colId];
+    let span = 1;
+    
+    var totalRow = gridRef.current.api.getDisplayedRowCount()
+    
+    if(!totalRow) return 1;
 
-  const rowClassRules = {
-    'changed-row': (params:any) => params.data[ROW_CHANGED] === true
+    // 다음 행의 셀 값이 현재 셀 값과 같다면 span을 증가시킴
+    for (let i = rowIndex + 1; i < totalRow; i++) {
+      let rowNode = gridRef.current.api.getRowNode(i);
+      if (rowNode.data[colId] === currentValue) span++;
+      else break;
+    }
+
+    // let rowNode = gridRef.current.api.getRowNode(rowIndex - 1);
+    // // 이전 행의 셀 값이 현재 셀 값과 같다면 0으로 설정
+    // if (rowIndex > 0 && rowNode.data[colId] === currentValue) {
+    //   return 0;
+    // }
+    log("getRowSpan", param, rowIndex, colId, currentValue, totalRow, span)
+    return span;
   };
+
+  const test = (params: CustomCellRendererProps) => {
+
+    if (params.node.rowIndex === null || params.node.rowIndex === undefined || params.node.rowIndex < 0 || !params.column) return;
+
+    if (params.node.rowIndex !== 0) {
+      let rowNode = gridRef.current.api.getRowNode(params.node.rowIndex - 1);
+
+      if (params.value === rowNode.data[params.column.getId()]) {
+          return;
+      }
+    }
+    return (
+        <div>
+            <div className="show-name">{params.value}</div>
+            {/* <div className="presenter-name">{params.value.presenter}</div> */}
+        </div>
+    );
+  };
+  
 
   return (
     <>
@@ -850,7 +928,7 @@ export const rowAdd = async (
 
   let rows = Array.isArray(initData) ? initData : [initData];
 
-  log("rowAdd rows : ", rows)
+  // log("rowAdd rows : ", rows)
   for (const row of rows) {
     let rowCount = await gridRef.api.getDisplayedRowCount();
     // let renderedRow = await gridRef.api.getRenderedNodes().length;

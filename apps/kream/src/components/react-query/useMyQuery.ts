@@ -7,6 +7,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 import { SP_UpdateData } from "@/app/stnd/stnd0005/_component/data";
 import { usePathname } from "next/navigation";
 import { shallow } from "zustand/shallow";
+import { ROW_CHANGED, ROW_TYPE_NEW } from "../grid/ag-grid-enterprise";
 
 export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?: any) => {
   
@@ -64,7 +65,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
     onSuccess: (res:any, data:any, context:any) => {
       // log("onSuccess : ", data)
       // queryClient.invalidateQueries([queryKey]);
-      data['__changed'] = false;
+      data[ROW_CHANGED] = false;
     },
     onMutate: async (data) => {
       log("onMutate : ", queryClient, data);
@@ -77,7 +78,8 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
     onSuccess: (res:any, data:any, context:any) => {
       // log("onSuccess : ", data, res, context)
       // queryClient.invalidateQueries([queryKey])
-      data['__changed'] = false;
+      data[ROW_CHANGED] = false;
+      data[ROW_TYPE_NEW] = null;
     },
     onMutate: async (data) => {
       data["menu_seq"] = menu_seq;

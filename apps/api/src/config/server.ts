@@ -30,6 +30,8 @@ export default function serverConfig(app: Express) {
 
     .use(bodyParser.json({ limit: "50mb" }))
 
+    .use(bodyParser.text({ type: 'application/xml' }))
+
     .use(helmet())
 
     .use(json())

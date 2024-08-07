@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import * as data from "../components/data/data";
+import * as unipass from "../components/data/k-customs"
 
 /**
  * @dev
@@ -9,5 +10,6 @@ import * as data from "../components/data/data";
 
 export default function setUpDataRoutes(routes: Router) {
   routes.post("/data", data.getData);
-  routes.get("/limo/data", data.getLimoData);
+  routes.post("/limo/data", data.getLimoData);
+  routes.post("/external/k-customs/getCargCsclPrgsInfoQry", unipass.getCargCsclPrgsInfoQry);
 }

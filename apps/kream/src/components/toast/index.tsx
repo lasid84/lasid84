@@ -1,3 +1,4 @@
+// import { useTranslation } from "react-i18next";
 import {toast} from "react-toastify";
 
 export const toastDefault = (message: any) => {
@@ -40,6 +41,7 @@ export const toastInfo = (message: any) => {
 };
 
 export const toastWaring = (message: any) => {
+  // const { t } = useTranslation();
     toast.warning(message, {
       position: "top-center",
       autoClose: 5000,
@@ -53,6 +55,7 @@ export const toastWaring = (message: any) => {
   };
 
 export const toastError = (message: any) => {
+  // const { t } = useTranslation();
   toast.error(message, {
     position: "top-center",
     autoClose: 5000,

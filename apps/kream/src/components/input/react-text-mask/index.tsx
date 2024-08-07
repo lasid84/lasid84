@@ -83,12 +83,13 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
       if (e.key === "Enter") {
         const form = e.target.form;
         let index = [...form].indexOf(e.target);
-        log("form[index + 1]", form[index + 1])
+        // log("form[index + 1]", form[index + 1])
 
         //필드셋과 버튼은 포커스 제외 - stephen
         while ((form[index + 1] instanceof HTMLButtonElement) || (form[index + 1] instanceof HTMLFieldSetElement)) index++;
         
-        form[index + 1].focus();
+        // log(form.length, index)
+        if (form.length > index + 1) form[index + 1].focus();
         e.preventDefault();
       }
 
@@ -137,13 +138,14 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   return (
     <InputWrapper outerClassName={outerClassName} inline={inline}>
       {!noLabel && <Label id={id} name={label === null ? '' : label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />}
-      <div className={`flex w-full ${outerClassName}`}>
+      <div className={`flex w-full ${outerClassName} ${defWidth}`}>
         <Controller
           name={id}
           control={control}
           // defaultValue = {val}
           render={({ field }) => (
             <MaskedInput
+              // {...field}
               id={id}
               type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}

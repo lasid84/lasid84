@@ -144,7 +144,11 @@ async function callFunction(pProcName, pParamsList, pValueList) {
     // Rollback the transaction block in case of an error
     await client.query('ROLLBACK');
     error('Error executing PostgreSQL function:', err);
-    return [];
+    return {
+      numericData: -1,
+      textData: err.message,
+      cursorData: null
+    };
   } finally {
     // Close the database connection
     // await client.end();

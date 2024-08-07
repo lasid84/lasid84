@@ -5,12 +5,15 @@ import { useUserSettings } from "states/useUserSettings"
 import { navigate, getSession, getCookies, getToken, getHeaders } from './serverAction';
 import { toastSuccess, toastWaring } from "components/toast";
 
-const { init, dataCall, postCall } = require('@repo/kwe-lib/components/api.service');
+const { init, dataCall, postCall, getCall } = require('@repo/kwe-lib/components/api.service');
 // import { init, dataCall, postCall } from '@repo/kwe-lib/components/api.service';
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { sleep } = require('@repo/kwe-lib/components/sleep');
 
 const productionEnv = process.env.NODE_ENV === 'production';
+
+const unipassUrl = "/api/external/k-customs";
+export const unipassAPI001 = "getCargCsclPrgsInfoQry";
 
 type exeFuncParams = {
     inproc: string
@@ -40,7 +43,7 @@ export interface returnData {
     textData: string;
   }
 
-function initConfig(isAuth: boolean | undefined, token:any) {
+function initConfig(isAuth: boolean | undefined | null, token:any) {
 
     const config = {
         isAuth: !isAuth ? false : isAuth,
@@ -104,6 +107,22 @@ export async function executFunction(params:exeFuncParams) {
     }
 
 };
+
+export async function callUnipass(apiType:string, params:any) {
+    /*
+    1. getCargCsclPrgsInfoQry : 화물통관 진행 정보
+    */ 
+    const token = await getToken();
+    let config = await initConfig(null, token);
+
+    const urlParams = new URLSearchParams(params);
+    const url = `${config.url}${unipassUrl}/${apiType}?${urlParams.toString()}`;
+    config = {
+        ...config,
+        url:url
+    };
+    return await postCall(config);
+}
 
 export async function checkADLogin(params:checkLogin) {
     const initial = await initConfig(false, "");
