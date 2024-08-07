@@ -137,12 +137,21 @@ function CustomSelect(props: Props) {
     // log("useEffect defaultValue, listItem, valueCol")
     if (defaultValue && listItem?.data) {
       // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
-      const initialData = listItem.data.find((item: any) => item[valueCol![0]] === defaultValue);
+      let index = -1;
+      const initialData = listItem.data.find((item: any, i:number) => {
+        index = i;
+        return item[valueCol![0]] === defaultValue
+      });
       log("======", id, initialData);
       if (initialData) {
+        // if (index > -1) gridRef.current?.api.getRowNode(index).setSelected(true);
         setSelectedValue(initialData, false);
         setDisplayVal(initialData);
+      } else {
+        if (selectedRow) handleXClick(null);
       }
+    } else if (!defaultValue) {
+      if (selectedRow) handleXClick(null);
     }
   }, [defaultValue, listItem, valueCol]);
 
@@ -164,8 +173,10 @@ function CustomSelect(props: Props) {
   const handelRowClicked = (param: any) => {
     // log("==selectedRow", selectedRow)
     var selectedRow = { "colId": param.node.id, ...param.node.data }
-    setSelectedValue(selectedRow);
-    setDisplayVal(selectedRow);
+    gridRef.current.api.getRowNode(param.node.id).setSelected(true);
+    toggleOptions();
+    // setSelectedValue(selectedRow);
+    // setDisplayVal(selectedRow);
     if(events?.onRowClicked){    
       events?.onRowClicked(selectedRow);
     }
@@ -173,15 +184,20 @@ function CustomSelect(props: Props) {
 
   const handleSelectionChanged = (param: SelectionChangedEvent) => {
     var selectedRow = param.api.getSelectedRows()[0];
+
+    log("custom select - handleSelectionChanged", selectedRow, filteredData?.data.length)
+
+    //이걸하면 x 버튼 클릭시 page에서 설정한 이벤트를 안탐
+    // if (selectedRow === undefined) return;
+
+    setSelectedValue(selectedRow, false);
+    setDisplayVal(selectedRow);
+
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
-      log("custom select - handleSelectionChanged", selectedRow, valueCol![0], val)
-      if (!selectedRow) {
-        setSelectedValue({}, false); 
-        setDisplayVal(null);
-      }
       events?.onSelectionChanged(param, id, val);
     }
+
   }
 
   const handleOnGridReady = (param: any) => {
@@ -200,15 +216,20 @@ function CustomSelect(props: Props) {
   }
 
   const setSelectedValue = (row: any, toggle = true) => {
-    log("setSelectedValue");
-    if (valueCol) valueCol.map(key => setValue(key, row[key] ? row[key] : null));
-    else Object.keys(row).map(key => setValue(key, row[key] ? row[key] : null));
+    log("setSelectedValue", row);
+    // if (row === undefined) return;
+    
+    if (valueCol) valueCol.map(key => setValue(key, (row && row[key]) ? row[key] : null));
+    else Object.keys(row || {}).map(key => setValue(key, row[key] ? row[key] : null));
     setSelectedRow(row);
     if (toggle) toggleOptions();
   }
 
   const setDisplayVal = (row: any | null) => {
     log("setDisplayVal");
+
+    if (row === undefined) return;
+
     var val = initText;
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
@@ -254,7 +275,7 @@ function CustomSelect(props: Props) {
   const handleCustChange = (input: string) => {
 
     let inputVal = input.toString().toUpperCase();
-    // log("MaskedInputField onChange", inputVal);
+    log("MaskedInputField onChange", inputVal);
     if (!inputVal || inputVal === initText) {
       setFilteredData(listItem);
       return;
@@ -281,7 +302,7 @@ function CustomSelect(props: Props) {
         return bool;
       })]
     };
-
+    log("MaskedInputField onChange2", inputVal, filtered);
     setFilteredData(filtered);
   }
 
@@ -334,7 +355,7 @@ function CustomSelect(props: Props) {
             events={{
               onChange(e) {
                 e.preventDefault();
-                // log("onChange", e.target.value)
+                log("onChange", e.target.value)
                 if (!isOpen) setIsOpen(true);
                 handleCustChange(e.target.value);
               },

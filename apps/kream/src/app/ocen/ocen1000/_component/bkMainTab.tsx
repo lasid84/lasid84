@@ -65,7 +65,7 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
   const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
     //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
     let val = getValues();
-    log('=========onBKSave', popType, param, val);
+    // log('=========onBKSave', popType, param, val);
     // if (popType === crudType.UPDATE) {
     //   log('=============Update', popType)
     //   Update.mutate(objState.mSelectedRow, {

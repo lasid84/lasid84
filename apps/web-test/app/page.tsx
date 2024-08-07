@@ -85,11 +85,11 @@ export default function LoginPage() {
   const isLogin = !!session && status === "authenticated";
   // const accesstoken = isLogin ? session.Authorization : "";
   // const refreshToken = isLogin ? session.RefreshToken : "";
-  log("0==============login page", isLogin, status, session);
+  // log("0==============login page", isLogin, status, session);
   useEffect(() => {
     // setCookie("Authroization", accesstoken);
     // setCookie("RefreshToken", refreshToken);
-    log("==============login page", isLogin, status, session);
+    // log("==============login page", isLogin, status, session);
   }, [session]);
 
   return (

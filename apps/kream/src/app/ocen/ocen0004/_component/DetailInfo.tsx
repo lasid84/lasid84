@@ -45,7 +45,7 @@ const CustomerDetail: React.FC<Props> = ({initData}) => {
     }, [initData]);
 
     const handleMaskedInputChange = (e:any) => {
-        log("=========handleMaskedInputChange", e)
+        // log("=========handleMaskedInputChange", e)
         const id = e.target.id;
         const val = getValues(id);
         if (gridRef_m) {

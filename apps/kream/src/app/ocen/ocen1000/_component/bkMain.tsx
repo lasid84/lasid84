@@ -56,6 +56,13 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   const { data: crTaskContData } = useGetData({ carrier_code: mSelectedRow?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
   const { data: crSalesContData} = useGetData({ carrier_code: mSelectedRow?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
 
+  const [shpContRowData, setShpContRowData] = useState<any>();
+  const [crTaskContRowData, setCrTaskContRowData] = useState<any>();
+  const [crSalesContRowData, setCrSalesContRowData] = useState<any>();
+
+  const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
+  const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
+
   const [custcode, setCustcode] = useState<any>()
   const [incoterms, setIncoterms] = useState<any>()
   const [billtype, setBillType] = useState<any>()
@@ -99,6 +106,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
       setCarrierCode(loadItem[9])
       setSalesPerson(loadItem[11])
       setTerminal(loadItem[12])
+
     }
   }, [loadItem])
 
@@ -108,12 +116,34 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   }, [mainData])
 
   useEffect(()=> {
-    if (!mSelectedRow?.shp_cont_seq && shipperContData) {
-      let cont_seq = (shipperContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0].cont_seq;
-      if (cont_seq) dispatch({mSelectedRow :{ ...mSelectedRow, shp_cont_seq:cont_seq}});
-      log("shipperContData", cont_seq, mSelectedRow.shp_cont_seq)
+    if (isRefreshShpCont && mSelectedRow?.shipper_id && shipperContData) {
+      setRefreshShpCont(false);
+
+      let def = (shipperContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      let cont_seq = def ? def.cont_seq : null;
+      // if (cont_seq) {
+        dispatch({ mSelectedRow : { ...mSelectedRow, shp_cont_seq: cont_seq}});
+        setShpContRowData(def);
+      // }
+      log("shipperContData", cont_seq, def)
     }
-  }, [shipperContData])
+  }, [isRefreshShpCont, shipperContData])
+
+  useEffect(()=> {
+    if (isRefreshCrCont && mSelectedRow?.carrier_code && crTaskContData && crSalesContData) {
+      setRefreshCrCont(false);
+
+      let defTask = (crTaskContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      let t_cont_seq = defTask ? defTask.cont_seq : null;
+      let defSales = (crSalesContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      let s_cont_seq = defSales ? defSales.cont_seq : null;
+      // if (t_cont_seq) {
+        dispatch({ mSelectedRow : { ...mSelectedRow, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
+        setCrTaskContRowData(defTask);
+        setCrSalesContRowData(defSales);
+      // };
+    }
+  }, [isRefreshShpCont, crTaskContData, crSalesContData])
 
   const onClick = () => {
     //const selectedShipper = mSelectedRow.shipper_id
@@ -177,9 +207,10 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     // inline={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        log("shipper_id onSelectionChanged")
-                        mSelectedRow.shp_cont_seq = null;
+                        dispatch({mSelectedRow: {shp_cont_seq: null}});
+                        setShpContRowData(null);
                         handleCustomSelectChange(e,id,value);
+                        setRefreshShpCont(true);
                       },
                      }} 
                     // obj={selectedobj}
@@ -226,33 +257,32 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
               defaultValue={mSelectedRow?.shp_cont_seq}
               events={{
                 onSelectionChanged: async (e,id,value) => {
-                  var selectedRow = (await (shipperContData as gridData).data.filter((row:any) => row["cont_seq"] === value)[0]) || {};
-                  mSelectedRow.shp_cont_email = selectedRow?.email;
-                  mSelectedRow.shp_tel_num = selectedRow?.tel_num;
-                  mSelectedRow.shp_fax_num = selectedRow?.fax_num;
+                  // var selectedRow = (await (shipperContData as gridData).data.filter((row:any) => row["cont_seq"] === value)[0]) || {};
+                  var selectedRow = e.api.getSelectedRows()[0];
+                  setShpContRowData(selectedRow);
                   handleCustomSelectChange(e, id, value);
                 }
               }}
             />
           </div>
-          <MaskedInputField id="shp_cont_email" value={mSelectedRow?.shp_cont_email} options={{ isReadOnly: true}} />
-          <MaskedInputField id="shp_tel_num" value={mSelectedRow?.shp_tel_num} options={{ isReadOnly: true }} />
-          <MaskedInputField id="shp_fax_num" value={mSelectedRow?.shp_fax_num} options={{ isReadOnly: true }} />
+          <MaskedInputField id="shp_cont_email" value={shpContRowData?.email} options={{ isReadOnly: true}} />
+          <MaskedInputField id="shp_tel_num" value={shpContRowData?.tel_num} options={{ isReadOnly: true }} />
+          <MaskedInputField id="shp_fax_num" value={shpContRowData?.fax_num} options={{ isReadOnly: true }} />
 
           <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={6} cols={32} value={mSelectedRow?.shp_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
           <div className={"col-span-2"}>
             <CustomSelect
-              id="terminal_id"
-              initText='Select an terminal'
+              id="cnee_id"
+              initText='Select an consinee'
               listItem={terminal as gridData}
-              valueCol={["partner_id", "partner_name", "cust_nm"]}
-              displayCol="partner_name"
+              valueCol={["cust_code", "cust_nm"]}
+              displayCol="cust_nm"
               gridOption={{
-                colVisible: { col: ["partner_id", "partner_name", "cust_nm"], visible: true },
+                colVisible: { col: ["cust_code", "cust_nm"], visible: true },
               }}
               gridStyle={{ width: '600px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
-              defaultValue={mSelectedRow?.terminal_id}
+              defaultValue={mSelectedRow?.cnee_id}
               isDisplay={true}
               inline={true}
             // onChange={handleCustomSelectChange}
@@ -288,7 +318,16 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     inline={true}
                     events={{
                       onSelectionChanged(e, id, value) {
+                        dispatch({
+                          mSelectedRow: 
+                          { ...mSelectedRow,
+                            cr_t_cont_seq: null, 
+                            cr_s_cont_seq:null
+                          }});
                         handleCustomSelectChange(e,id,value);
+                        setCrSalesContRowData(null);
+                        setCrTaskContRowData(null);
+                        setRefreshCrCont(true);
                       },
                     }}
                   />
@@ -309,34 +348,49 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
                     displayCol="pic_nm"
                     gridOption={{
-                      colVisible: { col: ["cont_seq", "pic_nm", "email", "tel_num"], visible: true },
+                      colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
                     }}
                     gridStyle={{ width: '600px', height: '300px' }}
-                    style={{ width: '1000px', height: "8px" }}
+                    style={{ width: '500px', height: "8px" }}
                     defaultValue={mSelectedRow?.cr_t_cont_seq}
                     isDisplay={true}
                     events={{
                       onSelectionChanged(e, id, value) {
-                          var selectedRow = e.api.getSelectedRows()[0] as any;
-                          dispatch({mSelectedRow: {...objState.mSelectedRow, cr_t_email:selectedRow?.email, cr_t_tel_num:selectedRow?.tel_num}});    
-                          handleCustomSelectChange(e, id, value);
-                      },
-                      // onSelectionChanged(e, id, val) {
-                      //   var selectedRow = e.api.getSelectedRows()[0];
-                      //   mSelectedRow.cr_t_email = selectedRow.email;
-                      //   dispatch(mSelectedRow: {...objState.mSelectedRow, cr_t_email:selectedRow.email});
-                      //   handleCustomSelectChange(e, id, val);
-                      // } 
+                        var selectedRow = e.api.getSelectedRows()[0];
+                        setCrTaskContRowData(selectedRow);
+                        handleCustomSelectChange(e, id, value);
+                      }
                     }}
                   />
-                <MaskedInputField id="cr_t_email" value={mSelectedRow?.cr_t_email} options={{ isReadOnly: false }} width="w-40" />
-                <MaskedInputField id="cr_t_tel_num" value={mSelectedRow?.cr_t_tel_num} options={{ isReadOnly: false }} />
+                <MaskedInputField id="cr_t_email" value={crTaskContRowData?.email} options={{ isReadOnly: true }} width="w-40" />
+                <MaskedInputField id="cr_t_tel_num" value={crTaskContRowData?.tel_num} options={{ isReadOnly: true }} />
               </fieldset>
               <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
                 <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
-                <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} />
-                <MaskedInputField id="cr_s_email" value={mSelectedRow?.cr_s_email} options={{ isReadOnly: false }} width="w-40" />
-                <MaskedInputField id="cr_s_tel_num" value={mSelectedRow?.cr_s_tel_num} options={{ isReadOnly: false }} />
+                {/* <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} /> */}
+                <CustomSelect
+                    id="cr_s_cont_seq"
+                    // initText='Select an '
+                    listItem={crSalesContData as gridData}
+                    valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
+                    displayCol="pic_nm"
+                    gridOption={{
+                      colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
+                    }}
+                    gridStyle={{ width: '600px', height: '300px' }}
+                    style={{ width: '500px', height: "8px" }}
+                    defaultValue={mSelectedRow?.cr_s_cont_seq}
+                    isDisplay={true}
+                    events={{
+                      onSelectionChanged(e, id, value) {
+                        var selectedRow = e.api.getSelectedRows()[0];
+                        setCrSalesContRowData(selectedRow);
+                        handleCustomSelectChange(e, id, value);
+                      }
+                    }}
+                  />
+                <MaskedInputField id="cr_s_email" value={crSalesContRowData?.email} options={{ isReadOnly: true }} width="w-40" />
+                <MaskedInputField id="cr_s_tel_num" value={crSalesContRowData?.tel_num} options={{ isReadOnly: true }} />
               </fieldset>
           </div>
           {/* </div> */}

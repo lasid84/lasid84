@@ -90,7 +90,7 @@ const CustCont: React.FC<Props> = ({ ref, initData, params }) => {
     };
 
     const onSave = () => {
-        log("===================params", params);
+        // log("===================params", params);
         var hasData = false
         gridRef.current.api.forEachNode((node: any) => {
             var data = node.data;

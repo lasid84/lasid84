@@ -68,7 +68,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
 //Create BookingNote
 export const SP_CreateData = async (param: any) => {
   const Param = param;
-  log('=========onBKSave  Create BookingNote..', Param)
+  // log('=========onBKSave  Create BookingNote..', Param)
   const { bk_dd
     , origin_terminal_id
     , dest_terminal_id

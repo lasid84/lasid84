@@ -50,23 +50,6 @@ export default function UNIP1001() {
     staleTime: 1000 * 60 * 60,
   });
 
-  // //사용자 정보
-  // const menu_param = useUserSettings(
-  //   (state) => state.data.currentParams,
-  //   shallow
-  // );
-
-  // useEffect(() => {
-  //   const params = getMenuParameters(menu_param);
-  //   dispatch({
-  //     cont_type: params.cont_type,
-  //     trans_mode: params.trans_mode,
-  //     trans_type: params.trans_type,
-  //   });
-  //   // log('cont_type? OCEN1000', params)
-  // }, [menu_param]);
-
-
   return (
     <TableContext.Provider value={val}>
       <div className={`w-full h-full`}>

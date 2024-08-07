@@ -92,7 +92,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     };
 
     const onSave = () => {
-        log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
+        // log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
         const modifiedRows: any = [];
         gridRef.current.api.forEachNode((node: any) => {
             var data = { ...node.data };

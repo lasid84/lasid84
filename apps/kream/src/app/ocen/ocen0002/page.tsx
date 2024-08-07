@@ -8,7 +8,8 @@ import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvi
 import SearchForm from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import DetailGrid from './_component/gridDetail';
+// import DetailGrid from './_component/gridDetail';
+import CustCont from 'components/commonForm/customerContact';
 import DetailInfo from './_component/DetailInfo';
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
@@ -51,7 +52,11 @@ export default function OCEN0002() {
                     <MasterGrid  />
                     <div className="grid h-full col-span-2 grid-rows-2 ">
                         <div className="row-span-1"><DetailInfo /></div>
-                        <div className="row-span-1"><DetailGrid initData={initData}/></div>
+                        <div className="row-span-1">
+                            <CustCont 
+                            initData={initData} 
+                            params={{ cust_code: objState.mSelectedRow?.cust_code, cont_type: objState.cont_type}} />
+                        </div>
                     </div>
                 </div>
             </div>
