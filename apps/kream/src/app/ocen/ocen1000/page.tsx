@@ -45,7 +45,6 @@ export default function OCEN1000() {
       tab1: [],
       MselectedTab: "Main",
       isFirstRender: true,
-      cont_type: "", //
       trans_mode: "",
       trans_type: "",
       gridRef_m: useRef<any | null>(null),
@@ -103,7 +102,6 @@ export default function OCEN1000() {
   useEffect(() => {
     const params = getMenuParameters(menu_param);
     dispatch({
-      cont_type: params.cont_type,
       trans_mode: params.trans_mode,
       trans_type: params.trans_type,
     });

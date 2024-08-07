@@ -64,26 +64,27 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
 
   const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
     //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
-    log('=========onBKSave', popType, param)
-    if (popType === crudType.UPDATE) {
-      log('=============Update', popType)
-      Update.mutate(objState.mSelectedRow, {
-        onSuccess: (res: any) => {
-          log('============Update success')
-          dispatch({ isMDSearch: true });
-        },
-      })
-    } else {
-      // dispatch({mSelectedRow: ...mSelectedRow, })
-      log('=============create', objState.mSelectedRow)
-      Create.mutate(objState.mSelectedRow, {
-        onSuccess: (res: any) => {
-          objState.tab1.push({ cd: res.data[0].bk_id, cd_nm: res.data[0].bk_id }) //발급된 bk_id로 tab update
-          var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
-          dispatch({ popType: crudType.UPDATE, mSelectedRow: res.data[0], tab1: filtered, MselectedTab: res.data[0].bk_id, })
-        },
-      })
-    }
+    let val = getValues();
+    log('=========onBKSave', popType, param, val);
+    // if (popType === crudType.UPDATE) {
+    //   log('=============Update', popType)
+    //   Update.mutate(objState.mSelectedRow, {
+    //     onSuccess: (res: any) => {
+    //       log('============Update success')
+    //       dispatch({ isMDSearch: true });
+    //     },
+    //   })
+    // } else {
+    //   // dispatch({mSelectedRow: ...mSelectedRow, })
+    //   log('=============create', objState.mSelectedRow)
+    //   Create.mutate(objState.mSelectedRow, {
+    //     onSuccess: (res: any) => {
+    //       objState.tab1.push({ cd: res.data[0].bk_id, cd_nm: res.data[0].bk_id }) //발급된 bk_id로 tab update
+    //       var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
+    //       dispatch({ popType: crudType.UPDATE, mSelectedRow: res.data[0], tab1: filtered, MselectedTab: res.data[0].bk_id, })
+    //     },
+    //   })
+    // }
 
   }, [popType]);
 

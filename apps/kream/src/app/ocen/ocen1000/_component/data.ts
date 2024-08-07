@@ -758,7 +758,7 @@ export const SP_GetShipperContData = async (searchParam: any) => {
     }
 
     const result = await executFunction(params);
-    log('result??',result)
+    // log('result??',result)
     return result![0]
   }
 }

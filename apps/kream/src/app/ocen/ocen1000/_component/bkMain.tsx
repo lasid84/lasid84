@@ -77,7 +77,6 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (mSelectedRow?.shipper_id) {
-      log('mSelectedRow?.shipper_id', mSelectedRow?.shipper_id)
       dispatch({ isDSearch: true })
       // log('mSelectedRow?.shipper_id2', detailData)
       //setShp_cont(detailData)
@@ -86,7 +85,6 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (selectedobj) {
-      log('mSelectedRow?.selectedobj', selectedobj)
       dispatch({ isDSearch: true, mSelectedRow:{...mSelectedRow}, })
       // setShp_cont(detailData)
     }
@@ -105,10 +103,17 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
   }, [loadItem])
 
   useEffect(() => {
-    log("maindata", mainData);
     if (mainData)
       dispatch({ mSelectedRow: (mainData[0] as gridData).data })
   }, [mainData])
+
+  useEffect(()=> {
+    if (!mSelectedRow?.shp_cont_seq && shipperContData) {
+      let cont_seq = (shipperContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0].cont_seq;
+      if (cont_seq) dispatch({mSelectedRow :{ ...mSelectedRow, shp_cont_seq:cont_seq}});
+      log("shipperContData", cont_seq, mSelectedRow.shp_cont_seq)
+    }
+  }, [shipperContData])
 
   const onClick = () => {
     //const selectedShipper = mSelectedRow.shipper_id
@@ -121,7 +126,6 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     const id = e.target.id;
     const val = getValues(id);
     dispatch({ mSelectedRow: { ...objState.mSelectedRow, [id]: val } })
-    log('====================handleMaskedInputChange, MselectedRow', objState.mSelectedRow)
 
   }
 
@@ -130,14 +134,12 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     const id = e.target.id;
     const val = getValues(id);
     dispatch({ mSelectedRow: { ...objState.mSelectedRow, [id]: val } })
-    log('====================handleMaskedInputChange, MselectedRow', objState.mSelectedRow)
   }
 
 
   //custom select event props(Shipper)
   const handleCustomSelectChange = (e: any, id:string, val:string) => {
     var selectedRow = e.api.getSelectedRows()[0];
-    log('mSelectedRow check', selectedRow, id, val);
     dispatch({mSelectedRow: {...mSelectedRow, [id]: val}});
   }
 
@@ -175,6 +177,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     // inline={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
+                        log("shipper_id onSelectionChanged")
                         mSelectedRow.shp_cont_seq = null;
                         handleCustomSelectChange(e,id,value);
                       },
@@ -215,15 +218,15 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
               valueCol={["cont_seq", "pic_nm", "email", "tel_num", "fax_num"]}
               displayCol="pic_nm"
               gridOption={{
-                colVisible: { col: ["cont_seq", "pic_nm", "email", "tel_num", "fax_num"], visible: true },
+                colVisible: { col: ["pic_nm", "email", "tel_num", "fax_num"], visible: true },
               }}
-              gridStyle={{ width: '600px', height: '300px' }}
+              gridStyle={{ width: '800px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
               isDisplay={true}
               defaultValue={mSelectedRow?.shp_cont_seq}
               events={{
                 onSelectionChanged: async (e,id,value) => {
-                  var selectedRow = await (shipperContData as gridData).data.filter((row:any) => row["cont_seq"] === value)[0];
+                  var selectedRow = (await (shipperContData as gridData).data.filter((row:any) => row["cont_seq"] === value)[0]) || {};
                   mSelectedRow.shp_cont_email = selectedRow?.email;
                   mSelectedRow.shp_tel_num = selectedRow?.tel_num;
                   mSelectedRow.shp_fax_num = selectedRow?.fax_num;

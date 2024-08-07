@@ -108,18 +108,19 @@ export async function executFunction(params:exeFuncParams) {
 
 };
 
-export async function callUnipass(apiType:string, params:any) {
+export async function callUnipass(apiType:string, body:any) {
     /*
     1. getCargCsclPrgsInfoQry : 화물통관 진행 정보
     */ 
     const token = await getToken();
     let config = await initConfig(null, token);
 
-    const urlParams = new URLSearchParams(params);
-    const url = `${config.url}${unipassUrl}/${apiType}?${urlParams.toString()}`;
+    // const urlParams = new URLSearchParams(params);
+    const url = `${config.url}${unipassUrl}/${apiType}`;
     config = {
         ...config,
-        url:url
+        ...body,
+        url:url        
     };
     return await postCall(config);
 }

@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
-import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
+import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./_component/data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -13,35 +13,27 @@ import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "components/toast"
 import { LabelGrid } from "components/label";
-import CustCont from "@/components/commonForm/customerContact";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData?: any | null;
+    ref?: any
+    initData?: any | null
+    params: {
+        cust_code: string
+        cont_type: string
+    }
 };
 
-const DetailGrid: React.FC<Props> = ({ initData }) => {
+const CustCont: React.FC<Props> = ({ ref, initData, params }) => {
 
-    const gridRef = useRef<any | null>(null);
+    const gridRef = useRef<any | null>(ref);
     const { dispatch, objState } = useAppContext();
     const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({...objState?.mSelectedRow, cont_type :objState.cont_type}, SEARCH_D, SP_GetDetailData);
-
-    useEffect(() => {
-        log("DetailGrid detailData", detailData, objState)
-    }, [detailData])
-    /* state 변경 시 useQuery 등록한 데이터 모두 콜 하는듯... */
-    // useEffect(() => {
-    //     if (objState.isDSearch) {
-    //         console.log("Detail useEffect", objState.isDSearch)
-    //         detailRefetch();
-    //         dispatch({isDSearch:false});
-    //     }
-    // }, [objState.mSelectedRow, objState.isDSearch]);
+    const { data, refetch, remove } = useGetData({...params}, SEARCH_D, SP_GetDetailData);
 
     useEffect(() => {
         let arrDept = [];
@@ -68,6 +60,11 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
         
     }, [initData])
 
+    useEffect(() => {
+        remove();
+        refetch();
+    }, []);
+
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
@@ -78,10 +75,6 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     };
 
     const handleRowClicked = (param: RowClickedEvent) => {
-        log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
-        // const row = onRowClicked(param);
-        // var selectedRow = {"colId": param.node.id, ...param.node.data}
-        // dispatch({dSelectedRow:selectedRow});
     };
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
@@ -97,7 +90,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     };
 
     const onSave = () => {
-        log("===================", objState.mSelectedRow, objState.isMSearch, objState.dSelectedRow);
+        log("===================params", params);
         var hasData = false
         gridRef.current.api.forEachNode((node: any) => {
             var data = node.data;
@@ -105,8 +98,8 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
             if (data.__changed) {
                 hasData = true;
                 if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-                    data.cust_code = objState.mSelectedRow.cust_code;
-                    data.cont_type = objState.cont_type
+                    data.cust_code = params.cust_code;
+                    data.cont_type = params.cont_type
                     Create.mutate(data);
                 } else { //수정
                     Update.mutate(data);
@@ -121,7 +114,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     return (
         <>
 
-            {/* <PageGrid
+            <PageGrid
                 title={
                     <><LabelGrid id={'pic_nm'} /></>}
                 right={
@@ -132,27 +125,18 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                 }>
                 <Grid
                     gridRef={gridRef}
-                    listItem={detailData as gridData}
+                    listItem={data as gridData}
                     options={gridOptions}
                     event={{
                         onCellValueChanged: handleCellValueChanged,
                         onSelectionChanged: handleSelectionChanged
                     }}
                 />
-            </PageGrid> */}
-            <CustCont 
-                ref={gridRef}
-                initData={[initData[15]]} 
-                params={
-                    {
-                        cust_code:objState.mSelectedRow.shipper_id, 
-                        cont_type:objState.trans_mode + objState.trans_type
-                    }}
-            />
+            </PageGrid>
 
         </>
 
     );
 }
 
-export default DetailGrid;
+export default CustCont;

@@ -31,13 +31,13 @@ export const SP_GetCustomsData = async (searchParam: any) => {
   
   var {blyy, blno, user_id, ipaddr } = searchParam.queryKey[1];
   
-  const query = {
+  const body = {
     blYy:blyy,
     hblNo:blno,
     user_id:user_id
   }
 
-  let result = await callUnipass(unipassAPI001, query);
+  let result = await callUnipass(unipassAPI001, body);
   
   if (result.status !== 200) {
     blno = null;

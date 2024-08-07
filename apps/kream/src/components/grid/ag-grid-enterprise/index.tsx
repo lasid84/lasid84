@@ -575,7 +575,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }, [props.gridState])
 
   useEffect(() => {
-    log("mainData", mainData)
+    // log("mainData", mainData)
   }, [mainData])
 
   const onGridReady = (param: GridReadyEvent) => {

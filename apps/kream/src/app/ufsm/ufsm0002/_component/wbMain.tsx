@@ -54,7 +54,6 @@ const WBMain = memo(({ loadItem, mainData }: any) => {
   }
   
   useEffect(() => {
-    log("maindata", mainData);
     if (mainData)
     setData((mainData?.[0] as gridData).data[0]);
   }, [mainData])

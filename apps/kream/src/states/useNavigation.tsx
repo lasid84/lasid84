@@ -121,7 +121,7 @@ async function getMenuList(userInfo: any) {
   if (!result) return { navigationData: undefined, menuArr: undefined };
   const menus = (result[0] as gridData);
 
-  log("menus", menus);
+  // log("menus", menus);
 
   if (!menus.data.length) return { navigationData: undefined, menuArr: undefined };
 

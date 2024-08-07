@@ -138,7 +138,7 @@ function CustomSelect(props: Props) {
     if (defaultValue && listItem?.data) {
       // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
       const initialData = listItem.data.find((item: any) => item[valueCol![0]] === defaultValue);
-      // log("======", initialData);
+      log("======", id, initialData);
       if (initialData) {
         setSelectedValue(initialData, false);
         setDisplayVal(initialData);
@@ -176,6 +176,10 @@ function CustomSelect(props: Props) {
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
       log("custom select - handleSelectionChanged", selectedRow, valueCol![0], val)
+      if (!selectedRow) {
+        setSelectedValue({}, false); 
+        setDisplayVal(null);
+      }
       events?.onSelectionChanged(param, id, val);
     }
   }
@@ -197,8 +201,8 @@ function CustomSelect(props: Props) {
 
   const setSelectedValue = (row: any, toggle = true) => {
     log("setSelectedValue");
-    if (valueCol) valueCol.map(key => setValue(key, row[key]));
-    else Object.keys(row).map(key => setValue(key, row[key]));
+    if (valueCol) valueCol.map(key => setValue(key, row[key] ? row[key] : null));
+    else Object.keys(row).map(key => setValue(key, row[key] ? row[key] : null));
     setSelectedRow(row);
     if (toggle) toggleOptions();
   }
@@ -352,7 +356,7 @@ function CustomSelect(props: Props) {
                 }
               },
               onFocus(e) {
-                log("=====onFocus")
+                // log("=====onFocus")
                 e.target.select();
               },
             }}
