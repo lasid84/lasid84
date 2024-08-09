@@ -8,7 +8,8 @@ import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvi
 import SearchForm from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import DetailGrid from './_component/gridDetail';
+// import DetailGrid from './_component/gridDetail';
+import ContactGrid from 'components/commonForm/carrierContact';
 import DetailInfo from './_component/DetailInfo';
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -38,8 +39,8 @@ export default function OCEN0001() {
                     <MasterGrid  />
                     <div className="grid h-full col-span-2 grid-rows-5">
                         <div className="row-span-1"><DetailInfo /></div>
-                        <div className="row-span-2"><DetailGrid  cont_type={"task"} /></div>
-                        <div className="row-span-2"><DetailGrid  cont_type={"sale"} /></div>
+                        <div className="row-span-2"><ContactGrid params={{carrier_code: objState.mSelectedRow?.carrier_code, cont_type:"task"}} /></div>
+                        <div className="row-span-2"><ContactGrid params={{carrier_code: objState.mSelectedRow?.carrier_code, cont_type:"sale"}} /></div>
 
                     </div>
                 </div>

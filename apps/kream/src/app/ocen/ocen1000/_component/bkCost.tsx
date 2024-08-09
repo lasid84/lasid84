@@ -57,7 +57,7 @@ const BKCost = memo(({ loadItem, mainData }: any) => {
   useEffect(() => {
     log("bkcargo maindata", mainData);
     if (mainData)
-      dispatch({ mSelectedRow: (mainData?.[0] as gridData).data[0] });
+      dispatch({ mSelectedRow: (mainData[0] as gridData)?.data[0] });
   }, [mainData]);
 
   return (

@@ -102,7 +102,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   }
 
   function handleBlur(e: FocusEvent<HTMLInputElement>) {
-    log("handleBlur", e.target.value);
+    // log("handleBlur", e.target.value);
     // if (type === 'number' && event.target.value) {
     //   const newVal = event.target.value.replace(/,/g, "");
     //   event.target.value = parseFloat(newVal).toLocaleString('ko-KR').toString();
@@ -114,7 +114,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    log("handleChange", e?.target?.value)
+    // log("handleChange", e?.target?.value)
 
     if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);
@@ -125,7 +125,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   }
 
   function handleFocus(e: FocusEvent<HTMLInputElement>) {
-    log("handleFocus", e.target?.value)
+    // log("handleFocus", e.target?.value)
 
     if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
     setSelectedVal(e?.target?.value);

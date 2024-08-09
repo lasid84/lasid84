@@ -15,7 +15,7 @@ export type data = {
 } | undefined;
 
 export type event = {
-    onChange?: (e: any) => void;
+    onChange?: (e: any, id:string, value:string) => void;
     onFocus?: (e: FocusEventHandler<HTMLInputElement>) => void;
     onInputChange?: (newValue: string, actionMeta: InputActionMeta) => void;
     /** Handle key down events on the select */
@@ -194,7 +194,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                     ? displayCol[displayCol?.length-1] : (dataSrc?.data ? Object.keys(dataSrc?.data[0])[1] : '') ;
 
         if (events?.onChange) {
-            events.onChange({[id]:e.value, [dispCol]:e.label});
+            events.onChange(e,id,e.value);
         }
 
         log("handelChange", delayEnter, e);

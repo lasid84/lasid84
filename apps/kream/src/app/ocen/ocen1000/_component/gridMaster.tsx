@@ -68,15 +68,18 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
-                if (element.cd === selectedRow.bk_id) { return true }
-            }) !== -1) {
-                dispatch({ MselectedTab: selectedRow.bk_id })
-            } else {
+                return element.cd === selectedRow.bk_id;
+            }) === -1) {
                 objState.tab1.push({ cd: selectedRow.bk_id, cd_nm: selectedRow.bk_id })
-                dispatch({ MselectedTab: selectedRow.bk_id,  })
             }
         }
-        dispatch({ isMDSearch: true, mSelectedRow: selectedRow, popType:crudType.UPDATE});
+        dispatch({ 
+            isMDSearch: true, 
+            MselectedTab: selectedRow.bk_id,
+            mSelectedRow: selectedRow,
+            // [selectedRow.bk_id]: selectedRow,
+            popType:crudType.UPDATE
+        });
         
     }
 
@@ -108,7 +111,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         
             setTimeout(() => {                
                 objState.tab1.push({ cd: tabName, cd_nm: tabName })
-                dispatch({ MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE, });
+                dispatch({ [tabName] : rows[0] ,MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
                 //dispatch({mSelectedRow: ...mSelectedRow, })
             }, 200);
         }

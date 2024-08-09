@@ -31,11 +31,11 @@ export const SP_Load = async (searchParam: any) => {
 //SP_GetInvoiceMasterContent
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { wb_no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
+  const { no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
 
   const params = {
     inparam: [
-      "in_fr_date"
+        "in_fr_date"
       , "in_to_date"
       , "in_cust_code"
       , "in_no"
@@ -46,10 +46,10 @@ export const SP_GetMasterData = async (searchParam: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-      fr_date
+        fr_date
       , to_date
       , cust_code
-      , wb_no
+      , no
       , search_gubn
       , state
       , create_user
@@ -59,9 +59,9 @@ export const SP_GetMasterData = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_get_bk_main2',
     isShowLoading: true
   }
-  log('SP_GetMaster_parmas',params)
+  // log('SP_GetMaster_parmas',params)
   const result = await executFunction(params);
-  log('SP_GetMaster_result', result)
+  // log('SP_GetMaster_result', result)
   return result![0]
 }
 
@@ -735,7 +735,7 @@ export const SP_UpdatePickupContData = async (param: any) => {
 export const SP_GetShipperContData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { shipper_id, cont_type, user_id, ipaddr } = Param;
-  log("mSelectedRow?.shipper_id param sp data: ", Param, cont_type, shipper_id)
+  log("SP_GetShipperContData param: ", Param, cont_type, shipper_id)
   if (shipper_id + "" === "") {
     return;
     toastError('Shipper Code를 선택해주세요')

@@ -64,7 +64,7 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
   }
 
   const handleChange = (e:any) => {
-    log("TextArea handleChange", e.target?.value)
+    // log("TextArea handleChange", e.target?.value)
     if (id) setValue(id, e?.target?.value);
     setText(e.target?.value);
 

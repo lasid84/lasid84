@@ -67,9 +67,9 @@ const CustCont: React.FC<Props> = ({ ref, initData, params }) => {
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
-        const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow)
-        dispatch({ dSelectedRow: selectedRow });
+        // const selectedRow = param.api.getSelectedRows()[0];
+        // log("handleSelectionChanged", selectedRow)
+        // dispatch({ dSelectedRow: selectedRow });
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };
@@ -113,13 +113,12 @@ const CustCont: React.FC<Props> = ({ ref, initData, params }) => {
 
     return (
         <>
-
             <PageGrid
                 title={
                     <><LabelGrid id={'pic_nm'} /></>}
                 right={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false })} width='w-15'/>
+                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false, cont_type: params.cont_type })} width='w-15'/>
                         <Button id={"save"} onClick={onSave} width='w-15'/>
                     </>
                 }>
@@ -133,7 +132,6 @@ const CustCont: React.FC<Props> = ({ ref, initData, params }) => {
                     }}
                 />
             </PageGrid>
-
         </>
 
     );

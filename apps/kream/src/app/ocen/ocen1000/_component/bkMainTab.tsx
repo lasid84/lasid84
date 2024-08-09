@@ -14,7 +14,7 @@ import SubMenuTab, { tab } from "components/tab/tab"
 import { SP_CreateData, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
-import { gridData } from "components/grid/ag-grid-enterprise";
+import { gridData, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
 import Stepper from "components/stepper/index";
@@ -30,17 +30,13 @@ export interface typeloadItem {
   data: {} | undefined
 }
 
-const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
+const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { Create } = useUpdateData2(SP_CreateData, SEARCH_D);
   const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
 
   const { dispatch, objState } = useAppContext();
-  const { MselectedTab, mSelectedRow, popType } = objState
+  const { MselectedTab, popType } = objState;
 
-  // //사용자 정보
-  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
-  const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
-  const gUserName = useUserSettings((state) => state.data.user_nm, shallow)
   const methods = useForm({
     defaultValues: {
     }
@@ -65,39 +61,33 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
   const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
     //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
     let val = getValues();
-    // log('=========onBKSave', popType, param, val);
-    // if (popType === crudType.UPDATE) {
-    //   log('=============Update', popType)
-    //   Update.mutate(objState.mSelectedRow, {
-    //     onSuccess: (res: any) => {
-    //       log('============Update success')
-    //       dispatch({ isMDSearch: true });
-    //     },
-    //   })
-    // } else {
-    //   // dispatch({mSelectedRow: ...mSelectedRow, })
-    //   log('=============create', objState.mSelectedRow)
-    //   Create.mutate(objState.mSelectedRow, {
-    //     onSuccess: (res: any) => {
-    //       objState.tab1.push({ cd: res.data[0].bk_id, cd_nm: res.data[0].bk_id }) //발급된 bk_id로 tab update
-    //       var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
-    //       dispatch({ popType: crudType.UPDATE, mSelectedRow: res.data[0], tab1: filtered, MselectedTab: res.data[0].bk_id, })
-    //     },
-    //   })
-    // }
+    if (bkData[ROW_CHANGED]) {
+      log('=============', bkData[ROW_CHANGED], bkData[ROW_TYPE], bkData);
+      
+      if (bkData[ROW_TYPE] === ROW_TYPE_NEW) {
+        Create.mutate(bkData, {
+          onSuccess: (res: any) => {
+            let bk_id = res.data[0].bk_id;
+            let updatedTab = objState.tab1.map((tab:any) => {
+              if (tab.cd === MselectedTab) {
+                tab.cd = bk_id;
+                tab.cd_nm = bk_id;
 
-  }, [popType]);
+                return tab;
+              } else return tab;
+            });
+            dispatch({ [MselectedTab]:null, [bk_id]: res.data[0], tab1: updatedTab, MselectedTab: bk_id, })
 
-  useEffect(() => {
-    if (mainData) {
-      if ((mainData?.[0] as gridData).data[0]) {
-        //setData((mainData?.[0] as gridData).data[0]);
-        dispatch({ mSelectedRow: (mainData?.[0] as gridData).data[0] })
-      } else { //New
-        //setData({ create_user: gUserName })
+            // objState.tab1.push({ cd: bk_id, cd_nm: bk_id }) //발급된 bk_id로 tab update
+            // var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
+            // dispatch({ popType: crudType.UPDATE, mSelectedRow: res.data[0], tab1: filtered, MselectedTab: res.data[0].bk_id, })
+          },
+        })
+      } else {
+        Update.mutate(bkData);
       }
     }
-  }, [mainData])
+  }, [bkData]);
 
   return (
     <div className="sticky top-0 z-20 w-full pt-10 space-y-1 bg-white">
@@ -119,17 +109,17 @@ const BKMainTab = memo(({ loadItem, mainData, onClickTab }: any) => {
               </>
             }
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
-            addition={<Stepper value={mSelectedRow?.state} ><></></Stepper>}
+            addition={<Stepper value={bkData?.state} ><></></Stepper>}
           >
             <div className={"flex col-span-2"}>
 
-            <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-            <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+            <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
             </div>
             <div className={"flex col-span-2"}>
 
-            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-            <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={mSelectedRow?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
             </div>
           </PageBKTabContent>
         </form>
