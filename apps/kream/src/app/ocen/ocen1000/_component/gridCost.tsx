@@ -4,13 +4,12 @@ import { useRef, memo, useEffect, useState } from "react";
 import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import PageSearch, { PageBKCargo } from "layouts/search-form/page-search-row";
-import { SP_GetCostData } from "./data";
 import { LOAD, SEARCH_M, SEARCH_CST, SEARCH_HBL } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
-import { SP_InsertCost, SP_UpdateCost, SP_GetHouseData } from "./data";
+import { SP_InsertCost, SP_UpdateCost, SP_GetCostData } from "./data";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -26,12 +25,17 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
   const [gridOptions, setGridOptions] = useState<GridOption>();
 
 
-  const { data: costData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab },SEARCH_HBL, SP_GetHouseData, { enabled: true });
+  const { data: costData, refetch: detailRefetch, remove: mainRemove } = useGetData({ no : objState?.MselectedTab },SEARCH_HBL, SP_GetCostData, { enabled: true });
 
   const gridOption: GridOption = {
     colVisible: {
       col: [
         "waybill_no",
+        "charge_code",
+        "charge_desc",
+        "invoice_wb_amt",
+        "vendor_id",
+        "vendor_ref_no",        
         "remark",
         "use_yn",
       ],
@@ -48,6 +52,11 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
     dataType: {},
     editable: [
       "waybill_no",
+      "charge_code",
+      "charge_desc",
+      "invoice_wb_amt",
+      "vendor_id",
+      "vendor_ref_no",        
       "remark",
       "use_yn",
     ],
@@ -63,7 +72,7 @@ const GridCost: React.FC<Props> = memo(({ initData}) => {
       gridOptions?.checkbox?.forEach(
         (col) => (data[col] = data[col] ? "Y" : "N")
       );
-      log("===onSave");
+      log("===onSave", data);
       if (data.__changed) {
         hasData = true;
         if (data.__ROWTYPE === ROW_TYPE_NEW) {
