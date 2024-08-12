@@ -515,7 +515,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           if (arrCols.indexOf(col) > -1) {
             cellOption = {
               ...cellOption,
-              cellRenderer: test,
+              cellRenderer: cellRenderer,
               rowSpan: getRowSpan,
               cellClassRules: {
                 "show-cell": "value !== undefined",
@@ -583,7 +583,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
     let result: any = {};
 
-    gridRef.current.columnApi.getAllGridColumns().forEach((item: { [key: string]: string }) => {
+    gridRef.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
       result[item.colId] = null;
     });
 
@@ -832,11 +832,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // if (rowIndex > 0 && rowNode.data[colId] === currentValue) {
     //   return 0;
     // }
-    log("getRowSpan", param, rowIndex, colId, currentValue, totalRow, span)
+    // log("getRowSpan", param, rowIndex, colId, currentValue, totalRow, span)
     return span;
   };
 
-  const test = (params: CustomCellRendererProps) => {
+  const cellRenderer = (params: CustomCellRendererProps) => {
 
     if (params.node.rowIndex === null || params.node.rowIndex === undefined || params.node.rowIndex < 0 || !params.column) return;
 

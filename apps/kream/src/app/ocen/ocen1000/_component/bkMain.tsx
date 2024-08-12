@@ -5,40 +5,47 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input, TextArea } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { DateInput, DatePicker } from 'components/date'
-import { gridData } from "components/grid/ag-grid-enterprise";
+import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
-import Modal from "./popShpcont";
+import ShpContPopUp from "./popShippercont";
+import CarrierContPopUp from "./popCarriercont";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
 import { SP_GetShipperContData, SP_GetCarrierContData } from "./data";
 import { ComponentStateChangedEvent } from "ag-grid-community";
+import { Checkbox } from "@/components/checkbox";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
-export interface returnData {
-  cursorData: []
-  numericData: number;
-  textData: string;
-}
-
-export interface typeloadItem {
-  data: {} | undefined
-}
-
-
 type Props = {
-  onSubmit: SubmitHandler<any>;
-  loadItem: typeloadItem;
+  // onSubmit: SubmitHandler<any>;
+  loadItem: any[]
+  bkData: any
 };
 
-const BKMain = memo(({ loadItem, mainData }: any) => {
+const BKMain = ({ loadItem, bkData }: Props) => {
 
   const { dispatch, objState } = useAppContext();
-  const { mSelectedRow, selectedobj, trans_mode, trans_type } = objState
-  //const [data, setData] = useState<any>();
+  const { trans_mode, trans_type, MselectedTab } = objState;
+  
+  //get shipper cont data
+  const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enable:true});
+  const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
+  const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
+
+  const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
+  const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
+
+  const [custcode, setCustcode] = useState<any>()
+  const [blType, setBLType] = useState<any>()
+  const [incoterms, setIncoterms] = useState<any>()
+  const [billtype, setBillType] = useState<any>()
+  
+  const [carriercode, setCarrierCode] = useState<any>()
+  const [salesperson, setSalesPerson] = useState<any>()
+  const [terminal, setTerminal] = useState<any>()
 
   const methods = useForm({
     defaultValues: {
@@ -51,56 +58,16 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  //get shipper cont data
-  const { data: shipperContData, refetch: detailRefetch, remove: detailRemove } = useGetData({ shipper_id: mSelectedRow?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enable:false});
-  const { data: crTaskContData } = useGetData({ carrier_code: mSelectedRow?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
-  const { data: crSalesContData} = useGetData({ carrier_code: mSelectedRow?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
-
-  const [shpContRowData, setShpContRowData] = useState<any>();
-  const [crTaskContRowData, setCrTaskContRowData] = useState<any>();
-  const [crSalesContRowData, setCrSalesContRowData] = useState<any>();
-
-  const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
-  const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
-
-  const [custcode, setCustcode] = useState<any>()
-  const [incoterms, setIncoterms] = useState<any>()
-  const [billtype, setBillType] = useState<any>()
-  const [carriercode, setCarrierCode] = useState<any>()
-  const [salesperson, setSalesPerson] = useState<any>()
-  const [terminal, setTerminal] = useState<any>()
-
   const onSearch = () => {
     // const params = getValues();
     // log("onSearch", params, objState?.mSelectedRow);
   }
 
   useEffect(() => {
-    if (objState.isDSearch) {
-      detailRefetch();
-      dispatch({ isDSearch: false });
-    }
-  }, [objState.mSelectedRow, objState.isDSearch]);
-
-  useEffect(() => {
-    if (mSelectedRow?.shipper_id) {
-      dispatch({ isDSearch: true })
-      // log('mSelectedRow?.shipper_id2', detailData)
-      //setShp_cont(detailData)
-    }
-  }, [mSelectedRow?.shipper_id])
-
-  useEffect(() => {
-    if (selectedobj) {
-      dispatch({ isDSearch: true, mSelectedRow:{...mSelectedRow}, })
-      // setShp_cont(detailData)
-    }
-  }, [selectedobj])
-
-  useEffect(() => {
     if (loadItem) {
-      // log('detailData loadItem check',loadItem)
-      setCustcode(loadItem[0])
+      log('detailData loadItem check', bkData);
+      setCustcode(loadItem[0]);
+      setBLType(loadItem[4]);
       setIncoterms(loadItem[7])
       setBillType(loadItem[8])
       setCarrierCode(loadItem[9])
@@ -110,27 +77,20 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     }
   }, [loadItem])
 
-  useEffect(() => {
-    if (mainData)
-      dispatch({ mSelectedRow: (mainData[0] as gridData).data })
-  }, [mainData])
-
   useEffect(()=> {
-    if (isRefreshShpCont && mSelectedRow?.shipper_id && shipperContData) {
+    if (isRefreshShpCont && bkData?.shipper_id && shipperContData) {
       setRefreshShpCont(false);
 
       let def = (shipperContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
       let cont_seq = def ? def.cont_seq : null;
-      // if (cont_seq) {
-        dispatch({ mSelectedRow : { ...mSelectedRow, shp_cont_seq: cont_seq}});
-        setShpContRowData(def);
-      // }
-      log("shipperContData", cont_seq, def)
-    }
-  }, [isRefreshShpCont, shipperContData])
+      dispatch({ [MselectedTab]: {...bkData, shipper_cont_seq:cont_seq, shp_cont_email:def?.email, shp_cont_tel_num:def?.tel_num, shp_cont_fax_num:def?.fax_num}})
+      // setShpContRowData(def);
+      // log("shipperContData", cont_seq, def)
+    } 
+  }, [isRefreshShpCont, bkData?.shipper_id, shipperContData])
 
   useEffect(()=> {
-    if (isRefreshCrCont && mSelectedRow?.carrier_code && crTaskContData && crSalesContData) {
+    if (isRefreshCrCont && bkData?.carrier_code && crTaskContData && crSalesContData) {
       setRefreshCrCont(false);
 
       let defTask = (crTaskContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
@@ -138,24 +98,40 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
       let defSales = (crSalesContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
       let s_cont_seq = defSales ? defSales.cont_seq : null;
       // if (t_cont_seq) {
-        dispatch({ mSelectedRow : { ...mSelectedRow, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
-        setCrTaskContRowData(defTask);
-        setCrSalesContRowData(defSales);
+        // dispatch({ bkData : { ...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
+        dispatch({ 
+          [MselectedTab]: {...bkData, 
+            cr_t_cont_seq: t_cont_seq, 
+            cr_t_cont_email: defTask?.email,
+            cr_t_cont_tel_num: defTask?.tel_num,
+            cr_s_cont_seq: s_cont_seq, 
+            cr_s_cont_email: defSales?.email,
+            cr_s_cont_tel_num: defSales?.tel_num,
+            [ROW_CHANGED]: true}})
+        // setCrTaskContRowData(defTask);
+        // setCrSalesContRowData(defSales);
       // };
-    }
-  }, [isRefreshShpCont, crTaskContData, crSalesContData])
+    } 
+  }, [isRefreshShpCont, bkData, crTaskContData, crSalesContData])
 
-  const onClick = () => {
-    //const selectedShipper = mSelectedRow.shipper_id
-    //mSelectedRow: data 삭제
-    dispatch({ crudType: crudType.CREATE, isShpPopUpOpen: true, isDSearch: true })
+  const handleButtonClick = (e:any) => {
+    log("handleButtonClick", e.target.id)
+    switch (e.target.id) {
+      case "shipper_manage":
+        dispatch({ isShpContPopUpOpen: true });
+        break;
+      case "carrier_manage":
+        dispatch({ isCarrierContPopupOpen: true });
+        break;
+    }
   }
 
   const handleMaskedInputChange = (e: any) => {
     e.preventDefault();
     const id = e.target.id;
     const val = getValues(id);
-    dispatch({ mSelectedRow: { ...objState.mSelectedRow, [id]: val } })
+    // dispatch({ bkData: { ...bkData, [id]: val } })
+    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}})
 
   }
 
@@ -163,14 +139,23 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
     e.preventDefault();
     const id = e.target.id;
     const val = getValues(id);
-    dispatch({ mSelectedRow: { ...objState.mSelectedRow, [id]: val } })
+    // dispatch({ bkData: { ...bkData, [id]: val } })
+    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}})
   }
 
 
   //custom select event props(Shipper)
   const handleCustomSelectChange = (e: any, id:string, val:string) => {
-    var selectedRow = e.api.getSelectedRows()[0];
-    dispatch({mSelectedRow: {...mSelectedRow, [id]: val}});
+    var selectedRow;
+    if (e.api) selectedRow = e.api.getSelectedRows()[0]; //react-select와 같이사용하여 if 처리
+    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}});    
+    // log("handleCustomSelectChange", bkData)
+  }
+
+  const handleCheckBoxClick = (id:string, val:any) => {
+    log("handleCheckBoxClick", id, val);
+    // bkData[id] = val;
+    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}});    
   }
 
   //custom select value 변경 시 return object 항목 별 mselectedRow value 업데이트... 이벤트필요
@@ -186,10 +171,10 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"shipper_manage"} label={"manage_con"} onClick={onClick} width="w-24" disabled={mSelectedRow?.shipper_id ? false : true} />
+                  <Button id={"shipper_manage"} label={"manage_con"} onClick={handleButtonClick} width="w-20" disabled={bkData?.shipper_id ? false : true} />
                 </>}>
               <>
-                <Modal initData={loadItem} detailData={shipperContData} />
+                <ShpContPopUp initData={loadItem} callbacks={[shipperContRefetch]} />
                 <div className={"col-span-2"}>
                   <CustomSelect
                     id="shipper_id"
@@ -203,12 +188,18 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
                     isDisplay={true}
-                    defaultValue={mSelectedRow?.shipper_id}
+                    defaultValue={bkData?.shipper_id}
                     // inline={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        dispatch({mSelectedRow: {shp_cont_seq: null}});
-                        setShpContRowData(null);
+                        // dispatch({bkData: {...bkData, shp_cont_seq: null}});
+                        // dispatch({ [MselectedTab]: {...bkData, shp_cont_seq:null}})
+                        // log("shipper_id", id)
+                        bkData.shipper_cont_seq = null;
+                        bkData.shp_cont_email = null;
+                        bkData.shp_cont_tel_num = null;
+                        bkData.shp_cont_fax_num = null;
+                        // setShpContRowData(null);
                         handleCustomSelectChange(e,id,value);
                         setRefreshShpCont(true);
                       },
@@ -229,9 +220,10 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '500px', height: "8px" }}
                     isDisplay={true}
-                    defaultValue={mSelectedRow?.sales_person}
-                    // inline={true}
-                    // obj={selectedobj}
+                    defaultValue={bkData?.sales_person}
+                    events={{
+                      onSelectionChanged: handleCustomSelectChange
+                    }}
                   />
                 </div>
                 {/* <MaskedInputField id="sales_person" value={mSelectedRow?.sales_person} options={{ isReadOnly: false }} /> */}
@@ -242,7 +234,7 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
           {/* Shipper 담당자 */}
           <div className={"col-span-1"}>
             <CustomSelect
-              id="shp_cont_seq"
+              id="shipper_cont_seq"
               initText="Select..."
               label="shp_cont_pic_nm"
               listItem={shipperContData as gridData}
@@ -254,38 +246,47 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
               gridStyle={{ width: '800px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
               isDisplay={true}
-              defaultValue={mSelectedRow?.shp_cont_seq}
+              defaultValue={bkData?.shipper_cont_seq}
               events={{
-                onSelectionChanged: async (e,id,value) => {
-                  // var selectedRow = (await (shipperContData as gridData).data.filter((row:any) => row["cont_seq"] === value)[0]) || {};
-                  var selectedRow = e.api.getSelectedRows()[0];
-                  setShpContRowData(selectedRow);
+                onSelectionChanged: (e,id,value) => {
+                  var selectedRow = e.api.getSelectedRows()[0] as any;
+                  // log("shipper_cont_seq", selectedRow);
+                  // setShpContRowData(selectedRow);
+                  // dispatch({bkData: {...bkData}})
+                  bkData.shp_cont_email = selectedRow?.email;
+                  bkData.shp_cont_tel_num = selectedRow?.tel_num;
+                  bkData.shp_cont_fax_num = selectedRow?.fax_num;
                   handleCustomSelectChange(e, id, value);
                 }
               }}
             />
           </div>
-          <MaskedInputField id="shp_cont_email" value={shpContRowData?.email} options={{ isReadOnly: true}} />
+          {/* <MaskedInputField id="shp_cont_email" value={shpContRowData?.email} options={{ isReadOnly: true}} />
           <MaskedInputField id="shp_tel_num" value={shpContRowData?.tel_num} options={{ isReadOnly: true }} />
-          <MaskedInputField id="shp_fax_num" value={shpContRowData?.fax_num} options={{ isReadOnly: true }} />
+          <MaskedInputField id="shp_fax_num" value={shpContRowData?.fax_num} options={{ isReadOnly: true }} /> */}
+          <MaskedInputField id="shp_cont_email" value={bkData?.shp_cont_email} options={{ isReadOnly: true}} />
+          <MaskedInputField id="shp_tel_num" value={bkData?.shp_cont_tel_num} options={{ isReadOnly: true }} />
+          <MaskedInputField id="shp_fax_num" value={bkData?.shp_cont_fax_num} options={{ isReadOnly: true }} />
 
-          <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={6} cols={32} value={mSelectedRow?.shp_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
+          <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={6} cols={32} value={bkData?.shp_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
           <div className={"col-span-2"}>
             <CustomSelect
               id="cnee_id"
               initText='Select an consinee'
               listItem={terminal as gridData}
-              valueCol={["cust_code", "cust_nm"]}
-              displayCol="cust_nm"
+              valueCol={["partner_id", "partner_name", "cust_nm"]}
+              displayCol="partner_name"
               gridOption={{
-                colVisible: { col: ["cust_code", "cust_nm"], visible: true },
+                colVisible: { col: ["partner_id", "partner_name", "cust_nm"], visible: true },
               }}
-              gridStyle={{ width: '600px', height: '300px' }}
+              gridStyle={{ width: '800px', height: '300px' }}
               style={{ width: '1000px', height: "8px" }}
-              defaultValue={mSelectedRow?.cnee_id}
+              defaultValue={bkData?.cnee_id}
               isDisplay={true}
               inline={true}
-            // onChange={handleCustomSelectChange}
+              events={{
+                onSelectionChanged: handleCustomSelectChange
+              }}
             />
           </div>
           {/* <div className={"col-span-1"}><MaskedInputField id="terminal_nm" value={mSelectedRow.terminal_nm} options={{ isReadOnly: false }} /></div> */}
@@ -298,9 +299,10 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"carrier_manage"} label={"manage_con"} width="w-15" />
+                  <Button id={"carrier_manage"} label={"manage_con"} width="w-20" onClick={handleButtonClick} />
                 </>}>
               <>
+                <CarrierContPopUp initData={loadItem} callbacks={[crTaskContRefetch, crSalesContRefetch]} />
                 <div className={"col-span-3"}>
                   <CustomSelect
                     id="carrier_code"
@@ -313,20 +315,21 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     }}
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
-                    defaultValue={mSelectedRow?.carrier_code}
+                    defaultValue={bkData?.carrier_code}
                     isDisplay={true}
                     inline={true}
                     events={{
-                      onSelectionChanged(e, id, value) {
-                        dispatch({
-                          mSelectedRow: 
-                          { ...mSelectedRow,
-                            cr_t_cont_seq: null, 
-                            cr_s_cont_seq:null
-                          }});
+                      onSelectionChanged: (e, id, value) => {
+                        bkData.cr_t_cont_seq = null;
+                        bkData.cr_t_email = null;
+                        bkData.cr_t_tel_num = null;
+                        bkData.cr_s_cont_seq = null;
+                        bkData.cr_s_email = null;
+                        bkData.cr_s_tel_num = null;
+                        // dispatch({bkData:{...bkData}});
                         handleCustomSelectChange(e,id,value);
-                        setCrSalesContRowData(null);
-                        setCrTaskContRowData(null);
+                        // setCrSalesContRowData(null);
+                        // setCrTaskContRowData(null);
                         setRefreshCrCont(true);
                       },
                     }}
@@ -352,18 +355,20 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     }}
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '500px', height: "8px" }}
-                    defaultValue={mSelectedRow?.cr_t_cont_seq}
+                    defaultValue={bkData?.cr_t_cont_seq}
                     isDisplay={true}
                     events={{
-                      onSelectionChanged(e, id, value) {
-                        var selectedRow = e.api.getSelectedRows()[0];
-                        setCrTaskContRowData(selectedRow);
+                      onSelectionChanged: (e, id, value) => {
+                        var selectedRow = e.api.getSelectedRows()[0] as any;
+                        // setCrTaskContRowData(selectedRow);
+                        bkData.cr_t_email = selectedRow.email;
+                        bkData.cr_t_tel_num = selectedRow.tel_num;
                         handleCustomSelectChange(e, id, value);
                       }
                     }}
                   />
-                <MaskedInputField id="cr_t_email" value={crTaskContRowData?.email} options={{ isReadOnly: true }} width="w-40" />
-                <MaskedInputField id="cr_t_tel_num" value={crTaskContRowData?.tel_num} options={{ isReadOnly: true }} />
+                <MaskedInputField id="cr_t_email" value={bkData?.cr_t_email} options={{ isReadOnly: true }} width="w-40" />
+                <MaskedInputField id="cr_t_tel_num" value={bkData?.cr_t_tel_num} options={{ isReadOnly: true }} />
               </fieldset>
               <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
                 <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
@@ -379,63 +384,82 @@ const BKMain = memo(({ loadItem, mainData }: any) => {
                     }}
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '500px', height: "8px" }}
-                    defaultValue={mSelectedRow?.cr_s_cont_seq}
+                    defaultValue={bkData?.cr_s_cont_seq}
                     isDisplay={true}
                     events={{
-                      onSelectionChanged(e, id, value) {
-                        var selectedRow = e.api.getSelectedRows()[0];
-                        setCrSalesContRowData(selectedRow);
+                      onSelectionChanged: (e, id, value) => {
+                        var selectedRow = e.api.getSelectedRows()[0] as any;
+                        // setCrSalesContRowData(selectedRow);
+                        bkData.cr_s_email = selectedRow.email;
+                        bkData.cr_s_tel_num = selectedRow.tel_num;
                         handleCustomSelectChange(e, id, value);
                       }
                     }}
                   />
-                <MaskedInputField id="cr_s_email" value={crSalesContRowData?.email} options={{ isReadOnly: true }} width="w-40" />
-                <MaskedInputField id="cr_s_tel_num" value={crSalesContRowData?.tel_num} options={{ isReadOnly: true }} />
+                <MaskedInputField id="cr_s_email" value={bkData?.cr_s_email} options={{ isReadOnly: true }} width="w-40" />
+                <MaskedInputField id="cr_s_tel_num" value={bkData?.cr_s_tel_num} options={{ isReadOnly: true }} />
               </fieldset>
           </div>
           {/* </div> */}
         </PageContent>
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">ETC</span>}>
-          <MaskedInputField id="bl_type" value={mSelectedRow?.bl_type} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
+          {/* <MaskedInputField id="bl_type" value={bkData?.bl_type} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} /> */}
+          <ReactSelect
+            id="bl_type" dataSrc={blType as data}
+            options={{
+              keyCol: "bl_type",
+              displayCol: ['bl_type_nm'],
+              defaultValue: bkData?.bl_type,
+              isAllYn: false
+              }} 
+            events={{
+              onChange: handleCustomSelectChange
+            }}
+            />
           <ReactSelect
             id="bill_type" dataSrc={billtype as data}
             options={{
               keyCol: "billtype",
               displayCol: ['billtype_nm'],
-              defaultValue: mSelectedRow?.bill_type,
+              defaultValue: bkData?.bill_type,
               isAllYn: false
-            }} />
+              }} 
+            events={{
+              onChange: handleCustomSelectChange
+            }}
+            />
           <ReactSelect
             id="incoterms" dataSrc={incoterms as data}
             options={{
               keyCol: "incoterms",
               displayCol: ['incoterms_nm'],
-              defaultValue: mSelectedRow?.incoterms,
+              defaultValue: bkData?.incoterms,
               isAllYn: false
             }} />
-          <MaskedInputField id="incoterms_remark" value={mSelectedRow?.incoterms_remark} options={{ isReadOnly: false }} />
+          <MaskedInputField id="incoterms_remark" value={bkData?.incoterms_remark} options={{ isReadOnly: false }} events={{onChange:handleMaskedInputChange}} />
 
           <div className="col-start-1 col-end-2 ">
-            <MaskedInputField id="ams_yn" value={mSelectedRow?.ams_yn} options={{ isReadOnly: false }} />
+            {/* <MaskedInputField id="ams_yn" value={bkData?.ams_yn} options={{ isReadOnly: false }} /> */}
+            <Checkbox id="ams_yn" value={bkData?.ams_yn} onClick={handleCheckBoxClick}/>
           </div>
-          <MaskedInputField id="ams" value={mSelectedRow?.ams} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
-          <MaskedInputField id="aci_yn" value={mSelectedRow?.aci_yn} options={{ isReadOnly: false }} />
-          <MaskedInputField id="aci" value={mSelectedRow?.aci} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
-          <MaskedInputField id="afr_yn" value={mSelectedRow?.afr_yn} options={{ isReadOnly: false }} />
-          <MaskedInputField id="edi_yn" value={mSelectedRow?.edi_yn} options={{ isReadOnly: false }} />
-          <MaskedInputField id="isf_yn" value={mSelectedRow?.isf_yn} options={{ isReadOnly: false }} />
-          <MaskedInputField id="e_manifest_yn" value={mSelectedRow?.e_manifest_yn} options={{ isReadOnly: false }} />
+          <MaskedInputField id="ams" value={bkData?.ams} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
+          <Checkbox id="aci_yn" value={bkData?.aci_yn} onClick={handleCheckBoxClick}/>
+          <MaskedInputField id="aci" value={bkData?.aci} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
+          <Checkbox id="afr_yn" value={bkData?.afr_yn} onClick={handleCheckBoxClick}/>
+          <Checkbox id="edi_yn" value={bkData?.edi_yn} onClick={handleCheckBoxClick}/>
+          <Checkbox id="isf_yn"  value={bkData?.isf_yn} onClick={handleCheckBoxClick}/>
+          <Checkbox id="e_manifest_yn" value={bkData?.e_manifest_yn} onClick={handleCheckBoxClick}/>
         </PageContent>
 
         <PageContent>
-          <div className="col-start-1 col-end-6 "><TextArea id="remark" rows={6} cols={32} value={mSelectedRow?.remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
+          <div className="col-start-1 col-end-6 "><TextArea id="remark" rows={6} cols={32} value={bkData?.remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
         </PageContent>
 
       </form>
     </FormProvider>
   );
-});
+};
 
 
 export default BKMain

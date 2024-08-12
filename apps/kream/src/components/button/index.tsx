@@ -3,7 +3,7 @@ import { TiPlus } from "react-icons/ti";
 import { RiSaveLine, RiSaveFill, RiSave2Fill } from "react-icons/ri";
 import { MdOutlineAlarm } from "react-icons/md";
 import { useTranslation } from "react-i18next";
-import { ReactElement, cloneElement } from "react";
+import { MouseEvent, ReactElement, cloneElement } from "react";
 import { GrPowerReset } from "react-icons/gr";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { GrDownload } from "react-icons/gr";
@@ -172,14 +172,14 @@ export const Button: React.FC<ButtonProps> = (props) => {
   const { Create } = useUpdateData2(SP_InsertLog, "");
   const pathName = usePathname();
 
-  const handleClick = () => {
+  const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
     var data = {
       menucode: pathName,
       buttontype: id,
     };
     Create.mutate(data);
 
-    if (onClick) onClick();
+    if (onClick) onClick(e);
   };
 
   const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'";
@@ -189,7 +189,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
       className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : "w-full"} w-min-24 p-1 text-xs font-medium flex items-center justify-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
             ${disabledCss}`}
-      id={label}
+      id={id}
       onClick={handleClick}
       type={type ? type : "button"}
       disabled={disabled ? true : false}
@@ -218,14 +218,14 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
   const { Create } = useUpdateData2(SP_InsertLog, "");
   const pathName = usePathname();
 
-  const handleClick = () => {
+  const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
     var data = {
       menucode: pathName,
       buttontype: id,
     };
     Create.mutate(data);
 
-    if (onClick) onClick();
+    if (onClick) onClick(e);
   };
 
   const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'";
@@ -236,7 +236,7 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
         className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : "w-full"} w-min-24 p-1 text-xs font-medium ml-auto flex items-center justify-center text-gray-500 hover:text-sky-500 
             ${isHidden ? "hidden" : ""}
             ${disabledCss}`}
-        id={label}
+        id={id}
         onClick={handleClick}
         type={type ? type : "button"}
         disabled={disabled ? true : false}

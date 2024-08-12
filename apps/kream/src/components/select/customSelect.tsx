@@ -92,9 +92,7 @@ function CustomSelect(props: Props) {
   };
 
   useEffect(() => {
-    if (!filteredData || listItem) {
       setFilteredData(listItem);
-    }
   }, [listItem])
 
   useEffect(() => {
@@ -118,13 +116,14 @@ function CustomSelect(props: Props) {
     if (isGridReady && selectedRow ) {
       var param = selectedRow;
       if (valueCol?.some(v => param[v])) {
-        for (var i = 0; i < filteredData?.data.length; i++) {
+        var i = -1;
+        for (i = 0; i < filteredData?.data.length; i++) {
           if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
         }
         // log('??', valueCol, displayCol, selectedRow, i, filteredData?.data[i]);
-        if (!gridRef.current.api) return;
+        if (!gridRef.current) return;
         if (i < 0) return;
-        gridRef.current.api.ensureIndexVisible(i, 'top');
+        // gridRef.current.api.ensureIndexVisible(i, 'top');
         // 약간의 딜레이 후에 포커스 설정 (렌더링이 완료될 시간을 줌)
         setTimeout(() => {
           gridRef.current?.api?.setFocusedCell(i, valueCol[0]);
@@ -142,7 +141,7 @@ function CustomSelect(props: Props) {
         index = i;
         return item[valueCol![0]] === defaultValue
       });
-      log("======", id, initialData);
+      // log("======", id);
       if (initialData) {
         // if (index > -1) gridRef.current?.api.getRowNode(index).setSelected(true);
         setSelectedValue(initialData, false);
@@ -162,7 +161,7 @@ function CustomSelect(props: Props) {
       const inputRect = inputElement?.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      if (inputRect?.bottom && inputRect.bottom + 180 > viewportHeight) {
+      if (inputRect?.bottom && inputRect.bottom + Number(defaultGridStyle.height.replace('px','')) > viewportHeight) {
         setOpenDirection('up');
       } else {
         setOpenDirection('down');
@@ -185,14 +184,13 @@ function CustomSelect(props: Props) {
   const handleSelectionChanged = (param: SelectionChangedEvent) => {
     var selectedRow = param.api.getSelectedRows()[0];
 
-    log("custom select - handleSelectionChanged", selectedRow, filteredData?.data.length)
+    // log("custom select - handleSelectionChanged", selectedRow, filteredData?.data.length)
 
     //이걸하면 x 버튼 클릭시 page에서 설정한 이벤트를 안탐
     // if (selectedRow === undefined) return;
-
     setSelectedValue(selectedRow, false);
     setDisplayVal(selectedRow);
-
+    setValue(id, selectedRow[id]);
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
       events?.onSelectionChanged(param, id, val);
@@ -216,7 +214,7 @@ function CustomSelect(props: Props) {
   }
 
   const setSelectedValue = (row: any, toggle = true) => {
-    log("setSelectedValue", row);
+    // log("setSelectedValue", row);
     // if (row === undefined) return;
     
     if (valueCol) valueCol.map(key => setValue(key, (row && row[key]) ? row[key] : null));
@@ -226,7 +224,7 @@ function CustomSelect(props: Props) {
   }
 
   const setDisplayVal = (row: any | null) => {
-    log("setDisplayVal");
+    // log("setDisplayVal");
 
     if (row === undefined) return;
 
@@ -239,16 +237,16 @@ function CustomSelect(props: Props) {
   }
 
   const handleXClick = (e: any) => {
-    log("handleXClick", gridRef, gridRef.current)
-    if (gridRef.current) gridRef.current.api.deselectAll();
-    setSelectedValue({});
+    log("handleXClick", gridRef, gridRef.current, selectedRow)
+    if (selectedRow && gridRef.current && gridRef.current.api?.getSelectedRows()) gridRef.current.api.deselectAll();
+    setSelectedValue(null);
     setDisplayVal(null);
     setFilteredData(listItem);
     setIsOpen(false);
   }
 
   const handleCellKeyDown = (e: CellKeyDownEvent | FullWidthCellKeyDownEvent) => {
-    log("handleCellKeyDown")
+    // log("handleCellKeyDown")
     const keyboardEvent = e.event as unknown as KeyboardEvent;
     const key = keyboardEvent.key;    
     if (key.length) {
@@ -269,13 +267,13 @@ function CustomSelect(props: Props) {
   }
 
   const handleCellValueChanged = () => {
-    log("handleCellValueChanged")
+    // log("handleCellValueChanged")
   }
 
   const handleCustChange = (input: string) => {
 
     let inputVal = input.toString().toUpperCase();
-    log("MaskedInputField onChange", inputVal);
+    // log("MaskedInputField onChange", inputVal);
     if (!inputVal || inputVal === initText) {
       setFilteredData(listItem);
       return;
@@ -302,7 +300,7 @@ function CustomSelect(props: Props) {
         return bool;
       })]
     };
-    log("MaskedInputField onChange2", inputVal, filtered);
+    // log("MaskedInputField onChange2", inputVal, filtered);
     setFilteredData(filtered);
   }
 
@@ -418,7 +416,7 @@ function CustomSelect(props: Props) {
           style={{
               ...defaultGridStyle,
               top: openDirection === 'down' ? 'calc(100% + 5px)' : 'auto',
-              bottom: openDirection === 'up' ? 'calc(100% + 5px)' : 'auto',
+              bottom: openDirection === 'up' ? 'calc(100% + 1px)' : 'auto',
             }}
         >
           <Grid
@@ -443,5 +441,9 @@ function CustomSelect(props: Props) {
   );
 }
 
-// export default memo(CustomSelect);
-export default CustomSelect;
+export default memo(CustomSelect
+      // , (prevProps:Props, nextProps:Props)=> {
+      //     // log("memo(CustomSelect)", prevProps, nextProps, prevProps.defaultValue === nextProps.defaultValue);
+      //     return prevProps.defaultValue + '' === nextProps.defaultValue + '';}
+      );
+// export default CustomSelect;

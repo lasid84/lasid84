@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, Dispatch, useContext, memo, useTransition } from "react";
+import React, { useState, useEffect, Dispatch, useContext, memo, useTransition, KeyboardEvent } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
@@ -9,7 +9,7 @@ import { crudType, useAppContext } from "components/provider/contextObjectProvid
 import { shallow } from "zustand/shallow";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import dayjs from "dayjs";
-import { MaskedInputField } from "@/components/input";
+import { MaskedInputField } from "components/input";
 import { toastError } from "@/components/toast";
 import { useTranslation } from "react-i18next";
 
@@ -64,6 +64,12 @@ const SearchForm = memo(({ loadItem }: any) => {
     dispatch({ searchParams: params, isMSearch: true });
   }
 
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === "Enter") {
+      onSearch();
+    }
+  }
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
@@ -75,7 +81,11 @@ const SearchForm = memo(({ loadItem }: any) => {
           }>
           <MaskedInputField id="blyy" label="blyy" value={getValues("blyy")} options={{ textAlign: 'center', inline: true, noLabel: false }} width="w-20" height='h-8' />
           <div className={"col-span-4"}>
-          <MaskedInputField id="blno" label="house_bl_no" value={searchParams.blno} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' />
+          <MaskedInputField id="blno" label="house_bl_no" value={searchParams.blno} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' 
+            events={{
+              onKeyDown: handleKeyDown
+            }}
+          />
           </div>
         </PageSearchButton>
       </form>

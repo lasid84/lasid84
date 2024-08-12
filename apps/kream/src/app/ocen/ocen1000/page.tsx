@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useReducer, useMemo, useRef } from "react";
-import { SP_Load, SP_GetBKDetailData } from "./_component/data";
+import { SP_Load, SP_GetBKDetailData, SP_GetMasterData } from "./_component/data";
 import {
   reducer,
   TableContext,
@@ -23,6 +23,7 @@ import BKCost from "./_component/bkCost";
 import { useUserSettings } from "states/useUserSettings";
 import BKSchedule from "./_component/bkSchedule";
 import { shallow } from "zustand/shallow";
+import { gridData } from "@/components/grid/ag-grid-enterprise";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const {
@@ -41,18 +42,16 @@ export default function OCEN1000() {
       isCGDSearch: false,
       mSelectedRow: {},
       mSelectedCargo: {},
-      dSelectedRow: {},
       tab1: [],
       MselectedTab: "Main",
-      isFirstRender: true,
+      isFirstRender: true,    //화면 처음 렌더링시에만 조회버튼 클릭 되도록 하기위한 state
       trans_mode: "",
       trans_type: "",
       gridRef_m: useRef<any | null>(null),
-      isShpPopUpOpen: false,
-      isCarrierPopupOpen: false,
+      isShpContPopUpOpen: false,
+      isCarrierContPopupOpen: false,
       isCYPopupOpen: false,
       isPickupPopupOpen: false,
-      selectedobj: {},
       mGridState: {},
       mGridStateInit: null,
     },
@@ -67,8 +66,10 @@ export default function OCEN1000() {
     isShpPopUpOpen,
     MselectedTab,
     isPKCSearch,
-    isFirstRender,
   } = objState;
+
+  
+  
   const val = useMemo(() => {
     return {
       objState,
@@ -83,21 +84,11 @@ export default function OCEN1000() {
     };
   }, [state]);
 
-  const { data: initData } = useGetData("", LOAD, SP_Load, {
-    staleTime: 1000 * 60 * 60,
-  });
-  const { data: mainData, refetch: mainRefetch } = useGetData(
-    { no: objState?.MselectedTab },
-    SEARCH_MD,
-    SP_GetBKDetailData,
-    { enabled: false }
-  ); //1건 Detail조회
+  const { data: initData } = useGetData("", LOAD, SP_Load, {staleTime: 1000 * 60 * 60});
+  const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, "Booking_Row_Data", /*SP_GetBKDetailData*/ SP_GetMasterData, { enabled: false }); //1건 Detail조회
 
   //사용자 정보
-  const menu_param = useUserSettings(
-    (state) => state.data.currentParams,
-    shallow
-  );
+  const menu_param = useUserSettings((state) => state.data.currentParams,shallow);
 
   useEffect(() => {
     const params = getMenuParameters(menu_param);
@@ -129,6 +120,16 @@ export default function OCEN1000() {
     }
   }, [objState?.isMDSearch]);
 
+  useEffect(() => {
+    log("Page : ", objState?.MselectedTab, mainData);
+    if (mainData) {
+      dispatch({
+        [objState?.MselectedTab]: (mainData as gridData).data[0],
+        // bkData: (mainData as gridData).data[0]
+    });
+    }
+  }, [mainData])
+
   // useEffect(() => {
   //     if (objState.isCGDSearch) {
   //         mainRefetch();
@@ -149,24 +150,30 @@ export default function OCEN1000() {
     setselectedTab(code);
   };
   const MhandleOnClickTab = (code: any) => {
+    log("MhandleOnClickTab", code)
     if (code.target.id === "Main") {
       dispatch({ MselectedTab: code.target.id });
     } else {
       dispatch({
         isMDSearch: true,
         MselectedTab: code.target.id,
-        mSelectedRow: { ...mSelectedRow, no: code.target.id },
+        // mSelectedRow: { ...mSelectedRow, no: code.target.id },
+        // bkData: { ...bkData, no: code.target.id },
+        [MselectedTab]: {...objState[code.target.id]}
       });
     }
   };
   const MhandleonClickICON = (code: any) => {
+    log("MhandleonClickICON", code)
     let filtered = objState.tab1.filter((element: any) => {
       return element.cd != code.target.id;
     });
     dispatch({
       tab1: filtered,
       MselectedTab: filtered[filtered.length - 1].cd,
-      mSelectedRow: { ...mSelectedRow, no: filtered[filtered.length - 1].cd },
+      // mSelectedRow: { ...mSelectedRow, no: filtered[filtered.length - 1].cd },
+      // bkData: { ...bkData, no: code.target.id },
+      [MselectedTab]: {...objState[MselectedTab]}
     });
   };
 
@@ -196,7 +203,7 @@ export default function OCEN1000() {
             {/* Booking Note Detail 화면 상단{Tab} */}
             <BKMainTab
               loadItem={initData}
-              mainData={mainData}
+              bkData={objState[MselectedTab]}
               onClickTab={handleOnClickTab}
             />
 
@@ -204,14 +211,16 @@ export default function OCEN1000() {
             <div
               className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}
             >
-              <BKMain loadItem={initData} mainData={mainData} />
+              <BKMain loadItem={initData as []} 
+                bkData={objState[MselectedTab]}
+              />
             </div>
             <div
               className={`w-full flex ${selectedTab == "SK" ? "" : "hidden"}`}
             >
-              <BKSchedule loadItem={initData} mainData={mainData} />
+              <BKSchedule loadItem={initData} mainData={objState[MselectedTab]} />
             </div>
-            <div
+            {/* <div
               className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}
             >
               <BKCargo loadItem={initData} mainData={mainData} />
@@ -220,7 +229,7 @@ export default function OCEN1000() {
               className={`w-full flex ${selectedTab == "CT" ? "" : "hidden"}`}
             >
               <BKCost loadItem={initData} mainData={mainData} />
-            </div>
+            </div> */}
           </>
         )}
       </div>
