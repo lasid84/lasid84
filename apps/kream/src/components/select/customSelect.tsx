@@ -190,7 +190,7 @@ function CustomSelect(props: Props) {
     // if (selectedRow === undefined) return;
     setSelectedValue(selectedRow, false);
     setDisplayVal(selectedRow);
-    setValue(id, selectedRow[id]);
+    setValue(id, selectedRow ? selectedRow[id] : null);
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
       events?.onSelectionChanged(param, id, val);
@@ -370,6 +370,7 @@ function CustomSelect(props: Props) {
 
                     break;
                   case "Enter":
+                    if (isOpen) setIsOpen(false);
                     moveNextComponent();
                     break;
                 }

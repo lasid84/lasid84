@@ -86,7 +86,7 @@ export const SP_InsertCharge = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("param : ", param)
+  // log("param : ", param)
   const {waybill_no, charge_code, charge_desc, sort_id, import_export_ind, ppc_ind, invoice_wb_amt, invoice_wb_currency_code, invoice_charge_amt	
     , invoice_currency_code, actual_cost_amt, cost_currency_code, vendor_id, vendor_ref_no, print_ind, vat_cat_code_ap, type, record_id, remark
     , invoice_dd, billto_id, inv_remark, amount, exchange_rate, waybill_cer, inv_group, confirm_yn

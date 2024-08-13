@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
-import { SP_GetDetailData, SP_InsertDetail, SP_UpdateDetail } from "./data";
+import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./_component/data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -12,47 +12,63 @@ import { PageGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "components/toast"
-import { Anonymous_Pro } from "next/font/google";
-import { LabelGrid } from "@/components/label";
+import { LabelGrid } from "components/label";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData?: any | null;
+    ref?: any | null
+    initData?: any | null
+    params: {
+        cust_code: string
+        pickup_type: string
+    }
 };
 
-const DetailGrid: React.FC<Props> = () => {
+const CustPickupPlace: React.FC<Props> = ({ ref = null, initData, params }) => {
 
-    const gridRef = useRef<any | null>(null);
+    const gridRef = useRef<any | null>(ref);
     const { dispatch, objState } = useAppContext();
-    const { Create } = useUpdateData2(SP_InsertDetail, SEARCH_D);
-    const { Update } = useUpdateData2(SP_UpdateDetail, SEARCH_D);
-    const [ gridOptions, setGridOptions ] = useState<GridOption>();
+    const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
+    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
+    // const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: detailRemove } = useGetData({...objState?.mSelectedRow, cont_type :objState.cont_type}, SEARCH_D, SP_GetDetailData, { enabled:true });
-    log("objState.cont_type", objState.cont_type);
-    useEffect(() => {
-            const gridOption: GridOption = {
-                colVisible: { col: ["place_code", "cont_seq", "cont_type", "create_date", "create_user"], visible: false },
-                gridHeight: "h-full",
-                checkbox: ["use_yn", "def"],
-                minWidth: { "pic_nm": 100, "email": 80, "use_yn": 30, "def": 30 },
-                maxWidth : {"use_yn": 90, "def":90},
-                editable: ["pic_nm",  "email", "tel_num", "fax_num", "remark", "def", "use_yn"],
-                dataType: { "create_date": "date" },
-                isAutoFitColData: false,
-            };
-            setGridOptions(gridOption);
-    }, [])
+    const { data, refetch, remove } = useGetData({...params}, SEARCH_D, SP_GetDetailData);
+
+    const gridOptions: GridOption = {
+        colVisible: { col: ["cust_code", "pickup_seq", "fax_num", "create_date", "create_user"], visible: false },
+        gridHeight: "h-full",
+        checkbox: ["use_yn", "def"],
+        minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
+        // maxWidth : {"use_yn": 80, "def": 80  },
+        editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
+        dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
+        isAutoFitColData: false,
+    };
 
     // useEffect(() => {
-    //     if (objState.isDSearch) {
-    //         detailRemove();
-    //         log("refetch");
-    //          detailRefetch();
-    //          dispatch({ isDSearch: false });
+    //     if (true) {
+    //         // log(initData[0].data)
+            
+    //         const gridOption: GridOption = {
+    //             colVisible: { col: ["cust_code", "pickup_seq", "fax_num", "create_date", "create_user"], visible: false },
+    //             gridHeight: "h-full",
+    //             checkbox: ["use_yn", "def"],
+    //             minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
+    //             // maxWidth : {"use_yn": 80, "def": 80  },
+    //             editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
+    //             dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
+    //             isAutoFitColData: false,
+    //         };
+
+    //         setGridOptions(gridOption);
     //     }
-    // }, [objState.isDSearch])
+    // }, [])
+
+    useEffect(() => {
+        remove();
+        refetch();
+    }, []);
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
@@ -71,14 +87,15 @@ const DetailGrid: React.FC<Props> = () => {
     };
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
-        // log("handleCellValueChanged");
+        log("handleCellValueChanged");
         gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
-            log("handleCellValueChanged2", param.column.getColId(), node.id, param.node.id, node.id === param.node.id, node.data.def, param.data.def);
+            log("handleCellValueChanged2", param.node.data);
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
 
             if (node.data.def === true) {
                 node.setDataValue('def', false);
+                // node.setDataValue('__change', true);
             }
         });
     };
@@ -87,18 +104,12 @@ const DetailGrid: React.FC<Props> = () => {
         var hasData = false;
         gridRef.current.api.forEachNode((node: any) => {
             var data = node.data;
-            // gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
-            if (gridOptions?.checkbox) {
-                for (let i = 0; i < gridOptions?.checkbox?.length; i++) {
-                    let col = gridOptions?.checkbox[i];
-                    data[col] = data[col] ? 'Y' : 'N';
-                }
-            }
-            data.cont_type = objState.cont_type;
+            gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
             if (data.__changed) {
                 hasData = true;
                 if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-                    data.place_code = objState.mSelectedRow.place_code;
+                    data.cust_code = params.cust_code;
+                    data.pickup_type = params.pickup_type;
                     Create.mutate(data);
                 } else { //수정
                     Update.mutate(data);
@@ -107,7 +118,6 @@ const DetailGrid: React.FC<Props> = () => {
         });
         // log("onSave", gridRef.current.api, modifiedRows);
         if (hasData) {
-            // dispatch({ dSelectedRow: {...objState?.mSelectedRow} });
             toastSuccess('Success.');
         }
 
@@ -116,16 +126,17 @@ const DetailGrid: React.FC<Props> = () => {
     return (
         <>
             <PageGrid
-                title={<LabelGrid id={'contact_nm'} />}
+                title={
+                    <><LabelGrid id={'pickup'} /></>}
                 right={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false })} width='w-15'/>
+                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn":true, "def": false })} width='w-15'/>
                         <Button id={"save"} onClick={onSave} width='w-15'/>
                     </>
                 }>
                 <Grid
                     gridRef={gridRef}
-                    listItem={detailData as gridData}
+                    listItem={data as gridData}
                     options={gridOptions}
                     event={{
                         onCellValueChanged: handleCellValueChanged,
@@ -138,4 +149,4 @@ const DetailGrid: React.FC<Props> = () => {
     );
 }
 
-export default DetailGrid;
+export default CustPickupPlace;

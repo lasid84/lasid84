@@ -126,6 +126,7 @@ export type GridOption = {
   isSelectRowAfterRender?: boolean
   isShowRowNo?: boolean
   rowSpan?: string[]
+  isColumnHeaderVisible?: boolean
 };
 
 type cols = {
@@ -186,6 +187,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // suppressMenu: true,
       // floatingFilterComponentParams: {suppressFilterButton:!options?.isShowFilterBtn ? true : false },
       suppressFloatingFilterButton: !options?.isShowFilterBtn ? true : false,
+      
     };
   }, []);
 
@@ -235,7 +237,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const gridOptions: GridOptions = useMemo(() => {
     return {
       rowHeight: 25,
-      headerHeight: 25,
+      headerHeight: options?.isColumnHeaderVisible === false ? 0 : 25,
       // autoHeaderHeight:true,
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
       // groupIncludeTotalFooter: true,

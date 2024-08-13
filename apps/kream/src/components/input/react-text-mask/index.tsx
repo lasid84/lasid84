@@ -116,7 +116,9 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     // log("handleChange", e?.target?.value)
 
-    if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
+    if (id && !isNotManageSetValue) {
+      setValue(id, e?.target?.value.replaceAll(":", ""));
+    }
     setSelectedVal(e?.target?.value);
 
     if (events?.onChange) {

@@ -16,6 +16,7 @@ import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
+    ref?: any | null
     initData?: any | null;
     params: {
         carrier_code:string
@@ -23,9 +24,9 @@ type Props = {
     }
 }   
 
-const DetailGrid: React.FC<Props> = ({ initData, params }) => {
+const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
 
-    const gridRef = useRef<any | null>(null);
+    const gridRef = useRef<any | null>(ref);
     const { dispatch, objState } = useAppContext();
     const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);

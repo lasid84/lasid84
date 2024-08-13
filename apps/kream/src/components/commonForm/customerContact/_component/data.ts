@@ -82,7 +82,7 @@ export const SP_UpdateData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("param : ", param)
+  // log("param : ", param)
   const {cust_code, cont_type, cont_seq, pic_nm, email, cust_office, tel_num,fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
   const params = {
     inparam : [
@@ -130,7 +130,7 @@ export const SP_InsertData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("param : ", param)
+  // log("param : ", param)
   const {cust_code, cont_type, pic_nm, email, cust_office, tel_num, fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr} = Param;
   const params = {
     inparam : [

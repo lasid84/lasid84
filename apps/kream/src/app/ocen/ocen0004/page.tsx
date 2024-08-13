@@ -8,7 +8,7 @@ import { LOAD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-import DetailGrid from './_component/gridDetail';
+import CyContact from 'components/commonForm/containerYardContact';
 import DetailInfo from './_component/DetailInfo';
 import { shallow } from "zustand/shallow";
 import { useUserSettings } from "@/states/useUserSettings";
@@ -51,7 +51,11 @@ export default function OCEN0004() {
                     <MasterGrid  />
                     <div className="grid h-[calc(100vh-100px)] col-span-2 grid-rows-4">
                         <div className="row-span-1"><DetailInfo initData={initData} /></div>
-                        <div className="row-span-3"><DetailGrid /></div>
+                        <div className="row-span-3">
+                            <CyContact
+                                params={{ place_code: objState.mSelectedRow?.place_code, cont_type: objState.cont_type}}
+                            />
+                         </div>
                     </div>
                 </div>
             </div>

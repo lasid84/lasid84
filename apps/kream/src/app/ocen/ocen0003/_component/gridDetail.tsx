@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
-import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
+// import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -26,11 +26,11 @@ const DetailGrid: React.FC<Props> = () => {
 
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-    const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
+    // const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
+    // const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({...objState?.mSelectedRow,pickup_type: objState.pickup_type}, SEARCH_D, SP_GetDetailData);
+    // const { data: detailData, refetch: detailRefetch, remove: mainRemove } = useGetData({...objState?.mSelectedRow,pickup_type: objState.pickup_type}, SEARCH_D, SP_GetDetailData);
 
     useEffect(() => {
         if (true) {
@@ -81,25 +81,25 @@ const DetailGrid: React.FC<Props> = () => {
     };
 
     const onSave = () => {
-        var hasData = false;
-        gridRef.current.api.forEachNode((node: any) => {
-            var data = node.data;
-            gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
-            if (data.__changed) {
-                hasData = true;
-                if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-                    data.cust_code = objState.mSelectedRow.cust_code;
-                    data.pickup_type = objState.pickup_type;
-                    Create.mutate(data);
-                } else { //수정
-                    Update.mutate(data);
-                }
-            }
-        });
-        // log("onSave", gridRef.current.api, modifiedRows);
-        if (hasData) {
-            toastSuccess('Success.');
-        }
+        // var hasData = false;
+        // gridRef.current.api.forEachNode((node: any) => {
+        //     var data = node.data;
+        //     gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
+        //     if (data.__changed) {
+        //         hasData = true;
+        //         if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
+        //             data.cust_code = objState.mSelectedRow.cust_code;
+        //             data.pickup_type = objState.pickup_type;
+        //             Create.mutate(data);
+        //         } else { //수정
+        //             Update.mutate(data);
+        //         }
+        //     }
+        // });
+        // // log("onSave", gridRef.current.api, modifiedRows);
+        // if (hasData) {
+        //     toastSuccess('Success.');
+        // }
 
     };
 
@@ -115,7 +115,7 @@ const DetailGrid: React.FC<Props> = () => {
                 }>
                 <Grid
                     gridRef={gridRef}
-                    listItem={detailData as gridData}
+                    // listItem={detailData as gridData}
                     options={gridOptions}
                     event={{
                         onCellValueChanged: handleCellValueChanged,

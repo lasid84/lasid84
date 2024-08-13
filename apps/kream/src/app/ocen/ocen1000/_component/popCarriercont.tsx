@@ -28,7 +28,7 @@ const Modal: React.FC<Props> = ({ initData, callbacks }) => {
     const closeModal = () => {
         if (callbacks?.length) callbacks.forEach(callback => callback());
         
-        dispatch({ isCarrierContPopupOpen: false,  });
+        dispatch({ isCarrierContPopupOpen: false });
         reset();
     }
 

@@ -191,25 +191,25 @@ export const SP_CreateData = async (param: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-      '20240719'//wb_no
+        bk_dd
       , origin_terminal_id
       , dest_terminal_id
-      , 'O' //trans_mode
-      , 'E' //trans_type
+      , trans_mode
+      , trans_type
       , vocc_id
       , customs_declation
       , state
       , milestone
       , bk_remark
-      , '1' //shipper_id
+      , shipper_id
       , shipper_cont_seq
       , sales_person
       , shp_remark
       , cnee_id
       , ts_port
       , vessel
-      , 'KRPUS'	 //port_of_loading
-      , 'HKHKG' //port_of_unloading
+      , port_of_loading
+      , port_of_unloading
       , etd
       , eta
       , final_dest_port
@@ -325,7 +325,7 @@ export const SP_UpdateData = async (param: any) => {
     , remark, user_id, ipaddr } = Param;
   const params = {
     inparam: [
-      "in_bk_id"
+        "in_bk_id"
       , "in_bk_dd"
       , "in_origin_terminal_id"
       , "in_dest_terminal_id"
@@ -452,132 +452,37 @@ export const SP_UpdateData = async (param: any) => {
     ],
     inproc: 'ocean.f_ocen1000_upd_bk_data',
     isShowLoading: true,
-    isShowComplete: true,
-  }
-  const result = await executFunction(params);
-  return result![0];
-}
-
-//Shipper 담당자관리(INSERT)
-export const SP_InsertShipContData = async (param: any) => {
-
-  // const Param = searchParam.queryKey[1]
-  const Param = param;
-  log("param : ", param)
-  const { cust_code, cont_type, pic_nm, email, cust_office, tel_num, fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
-  const params = {
-    inparam: [
-      "in_cust_code"
-      , "in_cont_type"
-      , "in_pic_nm"
-      , "in_email"
-      , "in_cust_office"
-      , "in_tel_num"
-      , "in_fax_num"
-      , "in_user_dept"
-      , "in_bz_plc_cd"
-      , "in_use_yn"
-      , "in_def"
-      , "in_user_id"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      cust_code
-      , cont_type
-      , pic_nm
-      , email
-      , cust_office
-      , tel_num
-      , fax_num
-      , user_dept
-      , bz_plc_cd
-      , use_yn
-      , def
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'ocean.f_ocen0002_ins_cont_detail',
-    isShowLoading: true,
     isShowComplete: false,
   }
-
   const result = await executFunction(params);
-  log('ins_cont_detail', result)
   return result![0];
 }
 
-//Shipper 담당자관리(UPDATE)
-export const SP_UpdateShipContData = async (param: any) => {
-  
-  // const Param = searchParam.queryKey[1]
-  const Param = param;
-  log("param : ", param)
-  const {cust_code, cont_type, cont_seq, pic_nm, email, cust_office, tel_num,fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
-  const params = {
-    inparam : [
-      "in_cust_code"
-    , "in_cont_seq"
-    , "in_cont_type"
-    , "in_pic_nm"
-    , "in_email"
-    , "in_cust_office"
-    , "in_tel_num"
-    , "in_fax_num"
-    , "in_user_dept"
-    , "in_bz_plc_cd"
-    , "in_use_yn"
-    , "in_def"
-    , "in_user_id"
-    , "in_ipaddr"
-    ],
-    invalue: [
-      cust_code
-    , cont_seq
-    , cont_type
-    , pic_nm
-    , email
-    , cust_office
-    , tel_num
-    , fax_num
-    , user_dept
-    , bz_plc_cd
-    , use_yn
-    , def
-    , user_id
-    , ipaddr
-    ],
-    inproc: 'ocean.f_ocen0002_upd_cont_detail',
-    isShowLoading: true,
-    isShowComplete:false,
-    }
-  
-    const result = await executFunction(params);
-    return result![0];
-}
-
-export const SP_GetBKDetailData = async (searchParam: any) => {
+//shipper 담당자data get
+export const SP_GetBkHblData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { no, user_id, ipaddr } = Param;
-  log('ocen1000 bk_no', no)
-
+  const { bk_id, user_id, ipaddr } = Param;
+  
   const params = {
     inparam: [
-      "in_no"
+        "in_bk_id"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      no
+        bk_id 
       , user_id
       , ipaddr
     ],
-    inproc: 'ocean.f_ocen1000_get_bk_detail',
-    isShowLoading: true
+    inproc: 'ocean.f_ocen1000_get_bk_bl',
+    isShowLoading: false
   }
+
   const result = await executFunction(params);
-  log('SP_GetDetailsterData', result)
-  return result
+  // log('result??',result)
+  return result![0]
 }
+
 
 
 export const SP_GetCargoData = async (searchParam: any) => {
@@ -632,104 +537,9 @@ export const SP_GetPickupContData = async (searchParam: any) => {
     }
   
     const result = await executFunction(params);
+    log("search pickup 담당자 result Data", result)
     return result![0];
 }
-
-//Pickup 담당자관리(INSERT)
-export const SP_InsertPickupContData = async (param: any) => {
-
-  // const Param = searchParam.queryKey[1]
-  const Param = param;
-  log("param  SP_InsertPickupContData: ", param)
-  const {cust_code,pickup_seq,pickup_type,pickup_nm,addr,pic_nm,email,tel_num,fax_num,def,remark,use_yn, user_id, ipaddr} = Param;
-  const params = {
-    inparam : [
-      "in_cust_code"
-    , "in_pickup_seq"
-    , "in_pickup_type"
-    , "in_pickup_nm"
-    , "in_addr"
-    , "in_pic_nm"
-    , "in_email"
-    , "in_tel_num"
-    , "in_fax_num"
-    , "in_def"
-    , "in_remark"
-    , "in_use_yn"
-    , "in_user"
-    , "in_ipaddr"
-    ],
-    invalue: [
-      cust_code
-    , pickup_seq
-    , pickup_type
-    , pickup_nm
-    , addr
-    , pic_nm
-    , email
-    , tel_num
-    , fax_num
-    , def
-    , remark
-    , use_yn
-    , user_id
-    , ipaddr
-    ],
-    inproc: 'ocean.f_ocen0003_ins_pickup_detail',
-    isShowLoading: true,
-    isShowComplete:false,
-    }
-  
-    const result = await executFunction(params);
-    return result![0];
-}
-
-//Pickup 담당자관리(UPDATE)
-export const SP_UpdatePickupContData = async (param: any) => {
-   // const Param = searchParam.queryKey[1]
-   const Param = param;
-   log("param : ", param)
-   const {cust_code,pickup_seq,pickup_type,pickup_nm,addr,pic_nm,email,tel_num,fax_num,def,remark,use_yn, user_id, ipaddr } = Param;
-   const params = {
-     inparam : [
-       "in_cust_code"
-     , "in_pickup_seq"
-     , "in_pickup_nm"
-     , "in_addr"
-     , "in_pic_nm"
-     , "in_email"
-     , "in_tel_num"
-     , "in_fax_num"
-     , "in_def"
-     , "in_remark"
-     , "in_use_yn"
-     , "in_user"
-     , "in_ipaddr"
-     ],
-     invalue: [
-       cust_code
-     , pickup_seq
-     , pickup_nm
-     , addr
-     , pic_nm
-     , email
-     , tel_num
-     , fax_num
-     , def
-     , remark
-     , use_yn
-     , user_id
-     , ipaddr
-     ],
-     inproc: 'ocean.f_ocen0003_upd_pickup_detail',
-     isShowLoading: true,
-     isShowComplete:false,
-     }
-   
-     const result = await executFunction(params);
-     return result![0];
-}
-
 
 //shipper 담당자data get
 export const SP_GetShipperContData = async (searchParam: any) => {

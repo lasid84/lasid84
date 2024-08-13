@@ -13,6 +13,7 @@ import { PageMGrid2, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from 'components/button';
 import GridReferences from "@/app/ufsm/ufsm0001/_component/gridReferences";
 import { toastSuccess } from "@/components/toast";
+import dayjs from "dayjs";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -52,6 +53,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             , "svc_type", "vement_type", "commodity", "strategic_yn", "cargo_remark", "pickup_dd", "pickup_tm", "pickup_loc", "transport_company", "cy_place_code", "carrier_code", "cr_fak", "cr_nac"
             , "bl_type", "bill_type", "incoterms", "incoterms_remark", "ams_yn", "ams", "aci_yn", "aci", "afr_yn", "edi_yn", "isf_yn", "e_manifest_yn"
          ],
+         checkbox: ["use_yn", "ams_yn", "aci_yn", "afr_yn", "isf_yn", "e_manifest_yn"]
     };
 
     useEffect(() => {
@@ -103,8 +105,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                             
             var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
             var tabName = `NEW${tabSeq}`;
-
-            var rows = await rowAdd(gridRef.current, {bk_id: tabName, use_yn: true});
+            var rows = await rowAdd(gridRef.current, 
+                {   bk_id: tabName,
+                    trans_mode: objState.trans_mode,
+                    trans_type: objState.trans_Type,
+                    bk_dd: dayjs().format('YYYYMMDD'), 
+                    use_yn: true
+                });
             for (const row of rows) {
                 await (mainData as gridData).data.push(row);
             }

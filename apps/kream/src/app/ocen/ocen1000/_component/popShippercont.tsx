@@ -1,7 +1,6 @@
 import DialogBasic from "layouts/dialog/dialog"
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { useEffect, useCallback, useRef, memo, useState } from "react";
-import {  SP_InsertShipContData, SP_UpdateShipContData } from "./data";
 import { useAppContext } from "components/provider/contextObjectProvider"
 import { Button } from "components/button"
 import { useTranslation } from "react-i18next";

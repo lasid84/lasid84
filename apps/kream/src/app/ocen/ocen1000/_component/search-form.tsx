@@ -137,7 +137,7 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onSearch = () => {
     const params = getValues();
-    // log("onSearch", params);
+    log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true});
   };
 
@@ -221,7 +221,7 @@ const SearchForm = ({ loadItem }: any) => {
               inline={true}
             />
             <MaskedInputField
-              id="wb_no"
+              id="no"
               label="mwb_hwb_bk"
               value={wb_no}
               options={{ textAlign: "center", inline: true, noLabel: false }}

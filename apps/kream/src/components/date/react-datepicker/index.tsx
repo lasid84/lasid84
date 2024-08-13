@@ -44,7 +44,7 @@ type Props = {
   };
 
   events?: {
-    onChange? : (date: Date | null, event: React.SyntheticEvent<any> | undefined) => void;
+    onChange? : (event: React.SyntheticEvent<any> | undefined, id: string, date: Date | null) => void;
     onKeyDown? : (event: React.KeyboardEvent<HTMLDivElement>) => void;
     onFocus? : (event: React.FocusEvent<HTMLDivElement>) => void;
   }
@@ -95,8 +95,12 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
         try {
             if (e.key === "Enter") {
                 const form = e.target.form;
-                const index = [...form].indexOf(e.target);
-                //log("handleKeyDown", e.target, index, form);
+                let index = [...form].indexOf(e.target);
+                
+                //필드셋과 버튼은 포커스 제외 - stephen
+                while ((form[index + 1] instanceof HTMLButtonElement) || (form[index + 1] instanceof HTMLFieldSetElement)) index++;
+
+                log("handleKeyDown", e.target, index, form[index + 1], form);
                 form[index + 1].focus();
                 e.preventDefault();
             }
@@ -105,7 +109,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
                 events.onKeyDown(e);
             }
         } catch (ex) {
-    
+            log(ex)
         }
       }
 
@@ -128,7 +132,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
         // } 
 
         if (events?.onChange) {
-            events.onChange(date, e);
+            events.onChange(e, id, date);
         }
     }
 
@@ -153,8 +157,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
                     rules={rules}
                     render={({ field }) => (
                         <ReactDatePicker
-                            // className={clsx(`${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
-                            // className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}
+                            id={id}
                             className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 ${bgColor} flex-grow-1
                                     focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
                                     dark:bg-gray-900 dark:text-white dark:border-gray-700

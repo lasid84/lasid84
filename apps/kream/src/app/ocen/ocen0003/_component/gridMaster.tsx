@@ -54,7 +54,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
         const selectedRow = param.api.getSelectedRows()[0];
 
         // log("handleSelectionChanged", selectedRow)
-        dispatch({ mSelectedRow: selectedRow, isDSearch: true });
+        dispatch({ mSelectedRow: selectedRow });
 
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';

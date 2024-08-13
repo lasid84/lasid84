@@ -18,6 +18,7 @@ import { gridData, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "components/grid/a
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
 import Stepper from "components/stepper/index";
+import { toastSuccess } from "@/components/toast";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -61,9 +62,10 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
     //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
     let val = getValues();
+    // log("onFormSubmit getValue", val)
     if (bkData[ROW_CHANGED]) {
-      log('=============', bkData[ROW_CHANGED], bkData[ROW_TYPE], bkData);
-      
+      // log('=============', bkData);
+      var hasData = true;
       if (bkData[ROW_TYPE] === ROW_TYPE_NEW) {
         Create.mutate(bkData, {
           onSuccess: (res: any) => {
@@ -86,23 +88,27 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
       } else {
         Update.mutate(bkData);
       }
+
+      if (hasData) {
+        toastSuccess('Success.');
+      }
     }
   }, [bkData]);
 
   return (
     <div className="sticky top-0 z-20 w-full pt-10 space-y-1 bg-white">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+        <form /*onSubmit={handleSubmit(onSearch)}*/ className="w-full space-y-1">
           <PageBKTabContent
             right={
               <>
                 <div className={"flex col-span-2 "}>
-                  <Button id={"download"} onClick={handleSubmit(onFormSubmit)} width="w-24" />
+                  <Button id={"download"} width="w-24" />
                   <Button id={"save"} onClick={handleSubmit(onFormSubmit)} width="w-24" />
                 </div>                
                 <div className={"flex col-span-2"}>
                   <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
-                  <ICONButton id="bkcopy" disabled={false} onClick={onRefresh} size={'24'} />
+                  <ICONButton id="bkcopy" disabled={false} size={'24'} />
                   <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
                   {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
                 </div>

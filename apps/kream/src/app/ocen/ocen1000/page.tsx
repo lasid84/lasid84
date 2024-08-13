@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useReducer, useMemo, useRef } from "react";
-import { SP_Load, SP_GetBKDetailData, SP_GetMasterData } from "./_component/data";
+import { SP_Load, SP_GetMasterData } from "./_component/data";
 import {
   reducer,
   TableContext,
@@ -51,6 +51,7 @@ export default function OCEN1000() {
       isShpContPopUpOpen: false,
       isCarrierContPopupOpen: false,
       isCYPopupOpen: false,
+      isCYContPopupOpen:false,
       isPickupPopupOpen: false,
       mGridState: {},
       mGridStateInit: null,
@@ -150,31 +151,27 @@ export default function OCEN1000() {
     setselectedTab(code);
   };
   const MhandleOnClickTab = (code: any) => {
-    log("MhandleOnClickTab", code)
+    // log("MhandleOnClickTab", code)
     if (code.target.id === "Main") {
       dispatch({ MselectedTab: code.target.id });
     } else {
+      let needSearch = objState[code.target.id] ? false : true;
       dispatch({
-        isMDSearch: true,
+        isMDSearch: needSearch,
         MselectedTab: code.target.id,
-        // mSelectedRow: { ...mSelectedRow, no: code.target.id },
-        // bkData: { ...bkData, no: code.target.id },
-        [MselectedTab]: {...objState[code.target.id]}
       });
     }
   };
   const MhandleonClickICON = (code: any) => {
-    log("MhandleonClickICON", code)
+    // log("MhandleonClickICON", code)
     let filtered = objState.tab1.filter((element: any) => {
       return element.cd != code.target.id;
     });
     dispatch({
       tab1: filtered,
       MselectedTab: filtered[filtered.length - 1].cd,
-      // mSelectedRow: { ...mSelectedRow, no: filtered[filtered.length - 1].cd },
-      // bkData: { ...bkData, no: code.target.id },
-      [MselectedTab]: {...objState[MselectedTab]}
-    });
+      [code.target.id]: null
+      });
   };
 
   return (
@@ -218,7 +215,8 @@ export default function OCEN1000() {
             <div
               className={`w-full flex ${selectedTab == "SK" ? "" : "hidden"}`}
             >
-              <BKSchedule loadItem={initData} mainData={objState[MselectedTab]} />
+              <BKSchedule loadItem={initData} 
+                bkData={objState[MselectedTab]} />
             </div>
             {/* <div
               className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}

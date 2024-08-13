@@ -2,7 +2,6 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, memo } from "react";
-import { SP_Load, SP_GetMasterData, SP_GetDetailData } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
@@ -12,6 +11,7 @@ import DetailGrid from './_component/gridDetail';
 import CustomerDetail from './_component/custDetailInfo';
 import { useUserSettings } from "@/states/useUserSettings";
 import { shallow } from "zustand/shallow";
+import  CustPickupPlace from "components/commonForm/customerPickupPlace";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
@@ -56,7 +56,11 @@ const OCEN0003: React.FC = memo(() => {
                     <MasterGrid />
                     <div className="grid h-[calc(100vh-100px)] col-span-2 grid-rows-2">
                         <div className="row-span-1"><CustomerDetail /></div>
-                        <div className="row-span-1"><DetailGrid /></div>
+                        <div className="row-span-1">
+                            <CustPickupPlace 
+                                params={{ cust_code: objState.mSelectedRow?.cust_code, pickup_type: objState.pickup_type}} />
+                        </div>
+                        {/* <div className="row-span-1"><DetailGrid /></div> */}
                     </div>
                 </div>
             </div>

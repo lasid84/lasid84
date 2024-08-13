@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
+import React, { useState, useEffect, Dispatch, useContext, memo, useRef } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input, TextArea } from 'components/input';
@@ -10,14 +10,16 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
 import ShpContPopUp from "./popShippercont";
 import CarrierContPopUp from "./popCarriercont";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
-import { SP_GetShipperContData, SP_GetCarrierContData } from "./data";
-import { ComponentStateChangedEvent } from "ag-grid-community";
+import { SP_GetBkHblData, SP_GetCarrierContData, SP_GetShipperContData } from "./data";
 import { Checkbox } from "@/components/checkbox";
+import { useTranslation } from "react-i18next";
+import { DatePicker } from "@/components/date/react-datepicker";
+import  HblGrid  from "components/grid/ag-grid-enterprise";
 const { log } = require("@repo/kwe-lib/components/logHelper");
+const { DateToString } = require("@repo/kwe-lib/components/dataFormatter");
 
 type Props = {
   // onSubmit: SubmitHandler<any>;
@@ -27,13 +29,16 @@ type Props = {
 
 const BKMain = ({ loadItem, bkData }: Props) => {
 
+  const{ t } = useTranslation();
   const { dispatch, objState } = useAppContext();
   const { trans_mode, trans_type, MselectedTab } = objState;
+  const hblGridRef = useRef<any | null>(null);
   
   //get shipper cont data
   const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enable:true});
   const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
   const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
+  const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enable:true});
 
   const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
@@ -46,9 +51,11 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const [carriercode, setCarrierCode] = useState<any>()
   const [salesperson, setSalesPerson] = useState<any>()
   const [terminal, setTerminal] = useState<any>()
+  const [customsDeclation, setCustomsDeclation] = useState<any>()
 
   const methods = useForm({
     defaultValues: {
+      // bk_dd : bkData?.bk_dd ? bkData?.bk_dd : dayjs().format('yyyymmdd')
     }
   });
 
@@ -68,11 +75,12 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       log('detailData loadItem check', bkData);
       setCustcode(loadItem[0]);
       setBLType(loadItem[4]);
-      setIncoterms(loadItem[7])
-      setBillType(loadItem[8])
-      setCarrierCode(loadItem[9])
-      setSalesPerson(loadItem[11])
-      setTerminal(loadItem[12])
+      setIncoterms(loadItem[7]);
+      setBillType(loadItem[8]);
+      setCarrierCode(loadItem[9]);
+      setSalesPerson(loadItem[11]);
+      setTerminal(loadItem[12]);
+      setCustomsDeclation(loadItem[13]);
 
     }
   }, [loadItem])
@@ -158,12 +166,49 @@ const BKMain = ({ loadItem, bkData }: Props) => {
     dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}});    
   }
 
-  //custom select value 변경 시 return object 항목 별 mselectedRow value 업데이트... 이벤트필요
-
-
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+
+        <PageContent
+          title={<span className="px-3 py-3 text-lg font-bold text-blue-500">{t("기본정보")}</span>}>
+          <div className="col-span-6">
+            <PageSearch
+              right={<></>}>
+              <>
+                      <DatePicker
+                        id="bk_dd"
+                        // label="bk_dd"
+                        value={bkData?.bk_dd}
+                        options={{
+                          inline: false,
+                          textAlign: "center",
+                          freeStyles: "p-1 border-1 border-slate-300",
+                        }}
+                        events={{
+                          onChange: (e, id, date) => {
+                            handleCustomSelectChange(e,id,DateToString(date));
+                          }
+                        }}
+                      />
+                    <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} events={{ onChange: handleMaskedInputChange }}/>
+                    <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: true}} events={{ onChange: handleMaskedInputChange }}/>
+                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true}} events={{ onChange: handleMaskedInputChange }}/>
+                  {/* <div className="col-span-2"> */}
+                    {/* <HblGrid 
+                      gridRef={hblGridRef}
+                      listItem={bkBlData as gridData}
+                      options={{
+                        colVisible:{col:["waybill_no"], visible:true},
+                        isShowFilter:false,
+                        isColumnHeaderVisible:false,
+                      }}
+                    /> */}
+                  {/* </div> */}
+              </>
+            </PageSearch>
+          </div>
+        </PageContent>
 
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Shipper</span>}>
@@ -178,7 +223,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 <div className={"col-span-2"}>
                   <CustomSelect
                     id="shipper_id"
-                    initText="Select an Shipper"
+                    initText="Select a Shipper"
                     listItem={custcode as gridData}
                     valueCol={["cust_code", "cust_nm", "bz_reg_no"]}
                     displayCol="cust_nm"
@@ -210,7 +255,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 <div className={"col-span-1"}>
                   <CustomSelect
                     id="sales_person"
-                    initText="Select an Salesperson"
+                    initText="Select a Salesperson"
                     listItem={salesperson as gridData}
                     valueCol={["sales_person", "name"]}
                     displayCol="name"
@@ -268,11 +313,11 @@ const BKMain = ({ loadItem, bkData }: Props) => {
           <MaskedInputField id="shp_tel_num" value={bkData?.shp_cont_tel_num} options={{ isReadOnly: true }} />
           <MaskedInputField id="shp_fax_num" value={bkData?.shp_cont_fax_num} options={{ isReadOnly: true }} />
 
-          <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={6} cols={32} value={bkData?.shp_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
+          <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={2} cols={32} value={bkData?.shp_remark} options={{ isReadOnly: false }} events={{ onChange: handleTextAreaChange }} /></div>
           <div className={"col-span-2"}>
             <CustomSelect
               id="cnee_id"
-              initText='Select an consinee'
+              initText='Select a consinee'
               listItem={terminal as gridData}
               valueCol={["partner_id", "partner_name", "cust_nm"]}
               displayCol="partner_name"
@@ -295,7 +340,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Carrier</span>}>
 
-          <div className="col-span-6">
+          <div className="col-span-8">
             <PageSearch
               right={
                 <>
@@ -306,7 +351,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 <div className={"col-span-3"}>
                   <CustomSelect
                     id="carrier_code"
-                    initText='Select an Carrier Code'
+                    initText='Select a Carrier Code'
                     listItem={carriercode as gridData}
                     valueCol={["carrier_code", "carrier_nm"]}
                     displayCol="carrier_nm"
@@ -367,37 +412,37 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       }
                     }}
                   />
-                <MaskedInputField id="cr_t_email" value={bkData?.cr_t_email} options={{ isReadOnly: true }} width="w-40" />
-                <MaskedInputField id="cr_t_tel_num" value={bkData?.cr_t_tel_num} options={{ isReadOnly: true }} />
+                  <MaskedInputField id="cr_t_email" value={bkData?.cr_t_cont_email} options={{ isReadOnly: true }} width="w-80"/>
+                  <MaskedInputField id="cr_t_tel_num" value={bkData?.cr_t_cont_tel_num} options={{ isReadOnly: true }} />
               </fieldset>
               <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
                 <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
                 {/* <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} /> */}
-                <CustomSelect
-                    id="cr_s_cont_seq"
-                    // initText='Select an '
-                    listItem={crSalesContData as gridData}
-                    valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
-                    displayCol="pic_nm"
-                    gridOption={{
-                      colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
-                    }}
-                    gridStyle={{ width: '600px', height: '300px' }}
-                    style={{ width: '500px', height: "8px" }}
-                    defaultValue={bkData?.cr_s_cont_seq}
-                    isDisplay={true}
-                    events={{
-                      onSelectionChanged: (e, id, value) => {
-                        var selectedRow = e.api.getSelectedRows()[0] as any;
-                        // setCrSalesContRowData(selectedRow);
-                        bkData.cr_s_email = selectedRow.email;
-                        bkData.cr_s_tel_num = selectedRow.tel_num;
-                        handleCustomSelectChange(e, id, value);
-                      }
-                    }}
-                  />
-                <MaskedInputField id="cr_s_email" value={bkData?.cr_s_email} options={{ isReadOnly: true }} width="w-40" />
-                <MaskedInputField id="cr_s_tel_num" value={bkData?.cr_s_tel_num} options={{ isReadOnly: true }} />
+                  <CustomSelect
+                      id="cr_s_cont_seq"
+                      // initText='Select an '
+                      listItem={crSalesContData as gridData}
+                      valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
+                      displayCol="pic_nm"
+                      gridOption={{
+                        colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
+                      }}
+                      gridStyle={{ width: '600px', height: '300px' }}
+                      style={{ width: '100px', height: "8px" }}
+                      defaultValue={bkData?.cr_s_cont_seq}
+                      isDisplay={true}
+                      events={{
+                        onSelectionChanged: (e, id, value) => {
+                          var selectedRow = e.api.getSelectedRows()[0] as any;
+                          // setCrSalesContRowData(selectedRow);
+                          bkData.cr_s_email = selectedRow.email;
+                          bkData.cr_s_tel_num = selectedRow.tel_num;
+                          handleCustomSelectChange(e, id, value);
+                        }
+                      }}
+                    />
+                <MaskedInputField id="cr_s_email" value={bkData?.cr_s_cont_email} options={{ isReadOnly: true }} width="w-80" />
+                <MaskedInputField id="cr_s_tel_num" value={bkData?.cr_s_cont_tel_num} options={{ isReadOnly: true }} />
               </fieldset>
           </div>
           {/* </div> */}
@@ -436,19 +481,33 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               displayCol: ['incoterms_nm'],
               defaultValue: bkData?.incoterms,
               isAllYn: false
-            }} />
+            }} 
+            events={{
+              onChange: handleCustomSelectChange
+            }}
+            />
           <MaskedInputField id="incoterms_remark" value={bkData?.incoterms_remark} options={{ isReadOnly: false }} events={{onChange:handleMaskedInputChange}} />
-
-          <div className="col-start-1 col-end-2 ">
-            {/* <MaskedInputField id="ams_yn" value={bkData?.ams_yn} options={{ isReadOnly: false }} /> */}
-            <Checkbox id="ams_yn" value={bkData?.ams_yn} onClick={handleCheckBoxClick}/>
-          </div>
+          <div></div>
+          
+          <Checkbox id="ams_yn" value={bkData?.ams_yn} onClick={handleCheckBoxClick}/>
           <MaskedInputField id="ams" value={bkData?.ams} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
           <Checkbox id="aci_yn" value={bkData?.aci_yn} onClick={handleCheckBoxClick}/>
           <MaskedInputField id="aci" value={bkData?.aci} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
           <Checkbox id="afr_yn" value={bkData?.afr_yn} onClick={handleCheckBoxClick}/>
-          <Checkbox id="edi_yn" value={bkData?.edi_yn} onClick={handleCheckBoxClick}/>
-          <Checkbox id="isf_yn"  value={bkData?.isf_yn} onClick={handleCheckBoxClick}/>
+          {/* <Checkbox id="edi_yn" value={bkData?.edi_yn} onClick={handleCheckBoxClick}/> */}
+          <ReactSelect
+            id="customs_declation" dataSrc={customsDeclation as data}
+            options={{
+              keyCol: "customs_declation",
+              displayCol: ['customs_declation', 'customs_declation_nm'],
+              defaultValue: bkData?.customs_declation,
+              isAllYn: false
+            }} 
+            events={{
+              onChange: handleCustomSelectChange
+            }}
+            />
+          <Checkbox id="isf_yn" value={bkData?.isf_yn} onClick={handleCheckBoxClick}/>
           <Checkbox id="e_manifest_yn" value={bkData?.e_manifest_yn} onClick={handleCheckBoxClick}/>
         </PageContent>
 
