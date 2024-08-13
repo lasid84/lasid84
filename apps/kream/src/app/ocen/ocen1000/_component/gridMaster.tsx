@@ -76,7 +76,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             }
         }
         dispatch({ 
-            isMDSearch: true, isCGOSearch : true, 
+            isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
             MselectedTab: selectedRow.bk_id,
             mSelectedRow: selectedRow,
             // [selectedRow.bk_id]: selectedRow,

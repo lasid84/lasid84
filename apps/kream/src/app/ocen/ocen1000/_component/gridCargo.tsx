@@ -27,7 +27,6 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
   const gridRef = useRef<any | null>(null);
   const gridRefD = useRef<any | null>(null);
   const { dispatch, objState } = useAppContext();
-  const { isCGOSearch } = objState;
   const { Create } = useUpdateData2(SP_InsertCargo);
   const { Update } = useUpdateData2(SP_UpdateCargo);
   const [gridOptions, setGridOptions] = useState<GridOption>();
@@ -174,7 +173,7 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
     rowAdd(gridRefD.current, {
       ...(cargoData as object),
       bk_id: objState.MselectedTab,
-      use_yn: true,
+      // use_yn: true,
     });
   };
 

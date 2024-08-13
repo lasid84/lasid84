@@ -39,7 +39,8 @@ export default function OCEN1000() {
       isMDSearch: false,
       isDSearch: false,
       isPKCSearch: false,
-      isCGDSearch: false,
+      isCGOSearch: false,   //Cargo
+      isCSTSearch : false,  //Cost
       mSelectedRow: {},
       mSelectedCargo: {},
       tab1: [],
@@ -218,7 +219,7 @@ export default function OCEN1000() {
               <BKSchedule loadItem={initData} 
                 bkData={objState[MselectedTab]} />
             </div>
-            {/* <div
+            <div
               className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}
             >
               <BKCargo loadItem={initData} mainData={mainData} />
@@ -227,7 +228,7 @@ export default function OCEN1000() {
               className={`w-full flex ${selectedTab == "CT" ? "" : "hidden"}`}
             >
               <BKCost loadItem={initData} mainData={mainData} />
-            </div> */}
+            </div>
           </>
         )}
       </div>
