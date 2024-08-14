@@ -59,16 +59,16 @@ export const SP_GetMasterData = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_get_bk_main2',
     isShowLoading: true
   }
-  // log('SP_GetMaster_parmas',params)
+
   const result = await executFunction(params);
-  // log('SP_GetMaster_result', result)
+
   return result![0]
 }
 
 //Create BookingNote
 export const SP_CreateData = async (param: any) => {
   const Param = param;
-  // log('=========onBKSave  Create BookingNote..', Param)
+
   const { bk_dd
     , origin_terminal_id
     , dest_terminal_id
@@ -257,7 +257,7 @@ export const SP_CreateData = async (param: any) => {
     isShowComplete: true,
   }
   const result = await executFunction(params);
-  log(result, 'success return 데이터2')
+
   return result![0];
 }
 //Update BookingNote
@@ -479,7 +479,7 @@ export const SP_GetBkHblData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-  // log('result??',result)
+
   return result![0]
 }
 
@@ -487,8 +487,7 @@ export const SP_GetBkHblData = async (searchParam: any) => {
 
 export const SP_GetCargoData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { no, user_id, ipaddr } = Param;
-  log('ocen10001 bk_no', no, Param)
+  const { bk_no, user_id, ipaddr } = Param;
 
   const params = {
     inparam: [
@@ -497,28 +496,25 @@ export const SP_GetCargoData = async (searchParam: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-      no
+      bk_no
       , user_id
       , ipaddr
     ],
     inproc: 'ocean.f_ocen1000_get_cargo',
     isShowLoading: true
   }
-  log('ocen1000 bk_no', params)
   const result = await executFunction(params);
-  log('SP_get_cargo', result)
+
   return result![0];
 }
 
 
 //pickup 담당자data get
 export const SP_GetPickupContData = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
   const {cust_code, pickup_type, user_id, ipaddr } = Param;
-  log("search pickup 담당자 get Data:", Param);
-  
+
   const params = {
     inparam : [
         "in_cust_code"
@@ -537,7 +533,7 @@ export const SP_GetPickupContData = async (searchParam: any) => {
     }
   
     const result = await executFunction(params);
-    log("search pickup 담당자 result Data", result)
+
     return result![0];
 }
 
@@ -545,7 +541,7 @@ export const SP_GetPickupContData = async (searchParam: any) => {
 export const SP_GetShipperContData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { shipper_id, cont_type, user_id, ipaddr } = Param;
-  log("SP_GetShipperContData param: ", Param, cont_type, shipper_id)
+
   if (shipper_id + "" === "") {
     return;
     toastError('Shipper Code를 선택해주세요')
@@ -568,7 +564,7 @@ export const SP_GetShipperContData = async (searchParam: any) => {
     }
 
     const result = await executFunction(params);
-    // log('result??',result)
+
     return result![0]
   }
 }
@@ -692,7 +688,7 @@ export const SP_InsertCargo = async (param: any) => {
     }
 
     const result = await executFunction(params);
-    // log("result : SP_InsertCargo -", result);
+
     return result![0];
 }
 
@@ -787,7 +783,7 @@ export const SP_UpdateCargo = async (param: any) => {
     }
 
     const result = await executFunction(params);
-    // log('SP_UpdateCargo result', result)
+
     return result![0];
 }
 
@@ -812,7 +808,7 @@ export const SP_GetCostData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
-  // log('SP_get_cost', result)
+
   return result![0];
   
 }
@@ -864,15 +860,16 @@ export const SP_InsertCost = async (param: any) => {
     isShowLoading: true,
     isShowComplete:false,
     }
-    // log('SP_InsertCost ',params)
+
     const result = await executFunction(params);
-    // log("result : SP_InsertCost -", result);
+
     return result![0];
 }
 
 export const SP_UpdateCost = async (param: any) => {
   const Param = param;
-  // log("param : SP_UpdateCost - ", Param)
+
+  
     
     const {   bk_id					      , waybill_no        , remark              , uuid                       , charge_code 		           , charge_desc				  , sort_id 
       , import_export_ind         , ppc_ind   			  , invoice_wb_amt 	  	, invoice_wb_currency_code   , invoice_charge_amt 
@@ -918,9 +915,8 @@ export const SP_UpdateCost = async (param: any) => {
     isShowComplete:false,
     }
 
-    // log('SP_UpdateCost ',params)
+
     const result = await executFunction(params);
-    // log("result : SP_UpdateCost -", result);
 
     return result![0];
 }

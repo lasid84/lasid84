@@ -36,7 +36,7 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
     data: cargoData,
     refetch: cargoRefetch,
     remove: cargoRemove,
-  } = useGetData({ no: objState?.MselectedTab }, SEARCH_CGD, SP_GetCargoData, {
+  } = useGetData({ bk_no: objState?.MselectedTab }, SEARCH_CGD, SP_GetCargoData, {
     enabled: false,
   });
 
