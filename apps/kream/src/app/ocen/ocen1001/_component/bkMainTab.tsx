@@ -66,26 +66,34 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   }
 
+  const handleMaskedInputChange = (e: any) => {
+    e.preventDefault();
+    const id = e.target.id;
+    const val = getValues(id);
+    // dispatch({ bkData: { ...bkData, [id]: val } })
+    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}})
+  }
+
+
   const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-    //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
-    let val = getValues();
-    // log("onFormSubmit getValue", val)
-    if (bkData[ROW_CHANGED]) {
-      // log('=============', bkData);
+    //템플릿 저장, crudType체크하여 UPDATE / CREATE 
+
+ // if (bkData[ROW_CHANGED]) { 
       var hasData = true;
-      if (bkData[ROW_TYPE] === ROW_TYPE_NEW) {
+      if (true) { //bkData[ROW_TYPE] === ROW_TYPE_NEW 임시주석
         Create.mutate(bkData, {
           onSuccess: (res: any) => {
-            let bk_id = res.data[0].bk_id;
+            let template_id = res.data[0].template_id;
+            let template_nm = res.data[0].template_nm;
             let updatedTab = objState.tab1.map((tab:any) => {
               if (tab.cd === MselectedTab) {
-                tab.cd = bk_id;
-                tab.cd_nm = bk_id;
+                tab.cd = template_id;
+                tab.cd_nm = template_nm;
 
                 return tab;
               } else return tab;
             });
-            dispatch({ [MselectedTab]:null, [bk_id]: res.data[0], tab1: updatedTab, MselectedTab: bk_id, })
+            dispatch({ [MselectedTab]:null, [template_id]: res.data[0], tab1: updatedTab, MselectedTab: template_nm, })
 
             // objState.tab1.push({ cd: bk_id, cd_nm: bk_id }) //발급된 bk_id로 tab update
             // var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
@@ -94,7 +102,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         })
       } else {
         Update.mutate(bkData);
-      }
+      // }
 
       if (hasData) {
         toastSuccess('Success.');
@@ -110,30 +118,28 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
             right={
               <>
                 <div className={"flex col-span-2 "}>
-                  <Button id={"download"} width="w-24" />
                   <Button id={"save"} onClick={handleSubmit(onFormSubmit)} width="w-24" />
                 </div>                
                 <div className={"flex col-span-2"}>
-                  <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="bkcopy" disabled={false}  onClick={onBKCopy} size={'24'} />
                   <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
-                  {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
                 </div>
               </>
             }
             bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
-            addition={<Stepper value={bkData?.state} ><></></Stepper>}
+            addition={<div className="w-4/12"><></></div>}
           >
-            <div className={"flex col-span-2"}>
-
-            <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <div className={"flex col-span-3"}>
+            <MaskedInputField id="template_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.template_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
             </div>
-            <div className={"flex col-span-2"}>
-
-            <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+            <div className={"flex col-span-3"}>
+            <MaskedInputField id="template_nm" lwidth='w-24' width="w-40" height='h-8' value={bkData?.template_nm} options={{ isReadOnly: false, inline: true, textAlign: 'center', }} events={{ onChange: handleMaskedInputChange }}/>
+            <MaskedInputField id="update_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
             <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
             </div>
+
           </PageBKTabContent>
         </form>
       </FormProvider>
