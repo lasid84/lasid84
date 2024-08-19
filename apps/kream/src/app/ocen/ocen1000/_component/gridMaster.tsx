@@ -26,9 +26,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     // const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
+    const { gridRef_m } = objState
 
-    const [gridRef, setGridRef] = useState(objState.gridRef_m)
-
+    //const [gridRef, setGridRef] = useState(objState.gridRef_m)
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const { Create } = useUpdateData2(SP_CreateData, SEARCH_M);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
@@ -61,7 +61,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             mainRefetch();
             // log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
-            if (gridRef.current) gotoFirstRow(gridRef.current)
+            if (gridRef_m.current) gotoFirstRow(gridRef_m.current)
         }
     }, [objState?.isMSearch]);
 
@@ -97,6 +97,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const onGridNew = async () => {
         // var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
+            log("BKCopy__onGridNew objState", objState)
             // var tabName = "NEW" + (objState.tab1.reduce((acc:number,v:{cd:string}) => v.cd.includes("NEW") && acc + 1,0)+1);
             var temp = objState.tab1
                             .filter((v:{cd:string}) => v.cd.includes("NEW"))
@@ -105,7 +106,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                             
             var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
             var tabName = `NEW${tabSeq}`;
-            var rows = await rowAdd(gridRef.current, 
+            var rows = await rowAdd(objState.gridRef_m.current, 
                 {   bk_id: tabName,
                     trans_mode: objState.trans_mode,
                     trans_type: objState.trans_Type,
@@ -144,7 +145,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const onGridSave = () => {
         var hasData = false;
-        gridRef.current.api.forEachNode((node: any) => {
+        gridRef_m.current.api.forEachNode((node: any) => {
             var data = node.data;
             
             if (data.__changed) {
@@ -199,12 +200,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     );
 });
 
-export const onGridNew1 = async (objState:any, mainData:any) => {
-    log('onBKCopy bkData1', objState, mainData )
-    // var selectedRow = { "colId": param.node.id, ...param.node.data }
-    if (objState.tab1 && objState.gridRef_m) {
-        log('onBKCopy bkData2', objState, mainData )
-        // var tabName = "NEW" + (objState.tab1.reduce((acc:number,v:{cd:string}) => v.cd.includes("NEW") && acc + 1,0)+1);
+export const BKCopy = async (objState:any, mainData:any) => {
+    if (objState.tab1) {
         var temp = objState.tab1
                         .filter((v:{cd:string}) => v.cd.includes("NEW"))
                         .sort()
@@ -212,25 +209,25 @@ export const onGridNew1 = async (objState:any, mainData:any) => {
                         
         var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
         var tabName = `NEW${tabSeq}`;
-        var rows = await rowAdd(objState.gridRef_m.current, 
-            {   bk_id: tabName,
-                trans_mode: objState.trans_mode,
-                trans_type: objState.trans_Type,
-                bk_dd: dayjs().format('YYYYMMDD'), 
-                use_yn: true
-            });
-        for (const row of rows) {
-            await (mainData as gridData).data.push(row);
-        }
+        
+        // const rows = await rowAdd(objState.gridRef_m.current, 
+        //     {   bk_id: tabName,
+        //         trans_mode: objState.trans_mode,
+        //         trans_type: objState.trans_Type,
+        //         bk_dd: dayjs().format('YYYYMMDD'), 
+        //         use_yn: true
+        //     });
+        // for (const row of rows) {
+        //     await (mainData as gridData).data.push(row);
+        // }
     
         setTimeout(() => {                
             objState.tab1.push({ cd: tabName, cd_nm: tabName })
             //dispatch({ [tabName] : rows[0] ,MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
-
         }, 200);
 
         return ({
-            data : {temp, tabSeq, tabName, rows              
+            data : {temp, tabSeq, tabName, mainData              
             }
         })
     }

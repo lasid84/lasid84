@@ -441,7 +441,6 @@ export const SP_UpdateData = async (param: any) => {
     isShowComplete: false,
   }
 
-  log('====하', params)
   const result = await executFunction(params);
   return result![0];
 }

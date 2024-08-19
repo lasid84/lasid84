@@ -79,7 +79,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
             isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
             MselectedTab: selectedRow.template_id,
             mSelectedRow: selectedRow,
-            //[selectedRow.bk_id]: selectedRow,
+            [selectedRow.template_id]: selectedRow,
             popType:crudType.UPDATE
         });
         

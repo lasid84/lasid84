@@ -19,7 +19,9 @@ import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
 import Stepper from "components/stepper/index";
 import { toastSuccess } from "@/components/toast";
-import {onGridNew1} from "./gridMaster"
+import {BKCopy} from "./gridMaster"
+import dayjs from "dayjs";
+
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -61,17 +63,34 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const onRefresh = () => { dispatch({ isMDSearch: true }) }
 
   const onBKCopy = () => {
-    log('onBKCopy bkData', objState, bkData)
-    onGridNew1(objState, bkData)
+    //BKCopy(objState, bkData)
+    var temp = objState.tab1
+    .filter((v:{cd:string}) => v.cd.includes("NEW"))
+    .sort()
+    .reverse();    
+
+    var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
+    var tabName = `NEW${tabSeq}`;
+    setTimeout(() => {                
+      objState.tab1.push({ cd: tabName, cd_nm: tabName })      
+      dispatch({ [tabName] : {...bkData, 
+        bk_id:'', 
+        bk_dd: dayjs().format('YYYYMMDD HHmmss'), 
+        create_date : dayjs().format('YYYYMMDD HHmmss'),  
+        update_date : '',
+        update_user : '',
+        state : 0,
+        __changed : true,
+        __ROWTYPE : 'NEW'
+      }, MselectedTab: tabName, popType: crudType.CREATE });
+  }, 200);
 
   }
 
   const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
     //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
     let val = getValues();
-    // log("onFormSubmit getValue", val)
     if (bkData[ROW_CHANGED]) {
-      // log('=============', bkData);
       var hasData = true;
       if (bkData[ROW_TYPE] === ROW_TYPE_NEW) {
         Create.mutate(bkData, {
@@ -117,7 +136,6 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                   <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="bkcopy" disabled={false}  onClick={onBKCopy} size={'24'} />
                   <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
-                  {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
                 </div>
               </>
             }

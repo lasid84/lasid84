@@ -61,11 +61,8 @@ const BKCargo = memo(({ loadItem, mainData }: any) => {
   }, [loadItem]);
 
   useEffect(() => {
-    log("bkcargo maindata", mainData);
     if (mainData)
-      //setCargoDetail((mainData?.[1] as gridData));
       dispatch({ mSelectedRow: (mainData[0] as gridData)?.data[0] });
-    //dispatch({ mSelectedCargo: (mainData?.[1] as gridData).data[0] })
   }, [mainData]);
 
   return (

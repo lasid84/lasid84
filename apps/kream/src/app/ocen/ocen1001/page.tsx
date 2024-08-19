@@ -134,7 +134,7 @@ export default function OCEN1001() {
     log("Page : ", objState?.MselectedTab, mainData);
     if (mainData) {
       dispatch({
-        [objState?.MselectedTab]: (mainData as gridData).data[MselectedTab-1],
+        [objState?.MselectedTab]: (mainData as gridData).data[MselectedTab-1], //template id와 getdata row번호가 맞지 않으면, 데이터가 바인딩 되지 않음
         bkData: (mainData as gridData).data[0], 
     });
     }
@@ -212,6 +212,7 @@ export default function OCEN1001() {
                 bkData={objState[MselectedTab]}
               />
             </div>
+
             <div
               className={`w-full flex ${selectedTab == "SK" ? "" : "hidden"}`}
             >

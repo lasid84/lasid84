@@ -109,12 +109,12 @@ const BKMain = ({ loadItem, bkData }: Props) => {
         // dispatch({ bkData : { ...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
         dispatch({ 
           [MselectedTab]: {...bkData, 
-            cr_t_cont_seq: t_cont_seq, 
-            cr_t_cont_email: defTask?.email,
-            cr_t_cont_tel_num: defTask?.tel_num,
-            cr_s_cont_seq: s_cont_seq, 
-            cr_s_cont_email: defSales?.email,
-            cr_s_cont_tel_num: defSales?.tel_num,
+            cr_t_cont_seq: t_cont_seq ? t_cont_seq : null, 
+            cr_t_cont_email: defTask?.email ? defTask?.email : null,
+            cr_t_cont_tel_num: defTask?.tel_num ? defTask?.tel_num : null,
+            cr_s_cont_seq: s_cont_seq ? s_cont_seq : null, 
+            cr_s_cont_email: defSales?.email ? defSales?.email : null,
+            cr_s_cont_tel_num: defSales?.tel_num ? defSales?.tel_num : null,
             [ROW_CHANGED]: true}})
         // setCrTaskContRowData(defTask);
         // setCrSalesContRowData(defSales);

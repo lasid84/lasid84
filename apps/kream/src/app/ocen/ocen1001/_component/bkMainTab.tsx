@@ -11,7 +11,7 @@ import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData, SP_UpdateData } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_UpdateData } from './data';
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
@@ -61,9 +61,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const onRefresh = () => { dispatch({ isMDSearch: true }) }
 
   const onBKCopy = () => {
-    log('onBKCopy bkData', objState, bkData)
     onGridNew1(objState, bkData)
-
   }
 
   const handleMaskedInputChange = (e: any) => {
@@ -77,10 +75,10 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
     //템플릿 저장, crudType체크하여 UPDATE / CREATE 
-
- // if (bkData[ROW_CHANGED]) { 
+    if (bkData[ROW_CHANGED]) { 
       var hasData = true;
-      if (true) { //bkData[ROW_TYPE] === ROW_TYPE_NEW 임시주석
+      log('===== bkData[ROW_TYPE]', bkData)
+      if (bkData[ROW_TYPE] === ROW_TYPE_NEW) { 
         Create.mutate(bkData, {
           onSuccess: (res: any) => {
             let template_id = res.data[0].template_id;
@@ -102,7 +100,15 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         })
       } else {
         Update.mutate(bkData);
-      // }
+        let updatedTab = objState.tab1.map((tab:any) => {
+          if (tab.cd === MselectedTab) {
+            tab.cd = bkData.template_id
+            tab.cd_nm = bkData.template_nm
+            return tab;
+          } else return tab;
+        });
+        dispatch({ tab1 : updatedTab , MselectedTab : bkData.template_id })
+      }
 
       if (hasData) {
         toastSuccess('Success.');
