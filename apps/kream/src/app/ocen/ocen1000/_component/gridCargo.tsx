@@ -20,7 +20,6 @@ const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
   initData?: any | null;
-  mainData: any | null;
 };
 
 const GridCargo: React.FC<Props> = memo(({ initData }) => {

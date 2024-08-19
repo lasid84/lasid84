@@ -75,6 +75,7 @@ const SearchForm = ({ loadItem }: any) => {
   //사용자 정보
   const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow);
   const gTransType = useUserSettings((state) => state.data.trans_type, shallow);
+  const user_id = useUserSettings((state) => state.data.user_id);
 
   const methods = useForm({
     defaultValues: {
@@ -89,7 +90,7 @@ const SearchForm = ({ loadItem }: any) => {
       wb_no: wb_no || "", // HWB, MWB, BK_NO
       cust_code: cust_code || "",
       state: "",
-      create_user: "",
+      create_user: user_id,
       search_gubn: 0,
     },
   });
@@ -156,6 +157,7 @@ const SearchForm = ({ loadItem }: any) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="flex pt-10 space-y-1">
+      <div>
         <PageSearchButton
           right={
             <>
@@ -247,7 +249,7 @@ const SearchForm = ({ loadItem }: any) => {
               dataSrc={createuser as data}
               width="w-96"
               lwidth="w-20"
-              height="8px"
+              height="8px"              
               options={{
                 keyCol: "create_user",
                 displayCol: ["create_user_nm"],
@@ -271,8 +273,9 @@ const SearchForm = ({ loadItem }: any) => {
             />
           </div>
         </PageSearchButton>
-      </form>
-    </FormProvider>
+        </div>
+       </form>
+     </FormProvider>
   );
 };
 

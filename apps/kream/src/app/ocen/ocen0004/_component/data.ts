@@ -47,7 +47,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
       , ipaddr
     ],
     inproc: 'ocean.f_ocen0004_get_place',
-    isShowLoading: true
+    isShowLoading: false
     }
   
     const result = await executFunction(params);

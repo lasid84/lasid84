@@ -34,19 +34,8 @@ import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
 
 import { Skeleton } from 'components/skeleton/skeleton';
-import { StringValidation } from 'zod';
-
-// import { SELECTED_ROW } from "./model";
-
-
-
-
 import { CustomCellRendererProps } from 'ag-grid-react';
 import React from 'react';
-
-
-
-
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { stringToFullDateString, stringToFullDate, stringToDateString, stringToTime } = require('@repo/kwe-lib/components/dataFormatter.js')
 const { sleep } = require('@repo/kwe-lib/components/sleep');
@@ -581,7 +570,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }, [mainData])
 
   const onGridReady = (param: GridReadyEvent) => {
-    log("onGridReady");
+    // log("onGridReady");
 
     let result: any = {};
 

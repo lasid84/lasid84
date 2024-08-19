@@ -101,7 +101,6 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
                     data[col] = data[col] ? 'Y' : 'N';
                 }
             }
-            data.cont_type = objState.cont_type;
             if (data.__changed) {
                 hasData = true;
                 if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
@@ -109,6 +108,7 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
                     data.cont_type = params.cont_type;
                     Create.mutate(data);
                 } else { //수정
+                    log("data", data)
                     Update.mutate(data);
                 }
             }

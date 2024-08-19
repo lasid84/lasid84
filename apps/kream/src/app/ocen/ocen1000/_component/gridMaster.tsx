@@ -78,7 +78,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         dispatch({ 
             isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
             MselectedTab: selectedRow.bk_id,
-            mSelectedRow: selectedRow,
+            // mSelectedRow: selectedRow,
             // [selectedRow.bk_id]: selectedRow,
             popType:crudType.UPDATE
         });
@@ -108,17 +108,19 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             var rows = await rowAdd(gridRef.current, 
                 {   bk_id: tabName,
                     trans_mode: objState.trans_mode,
-                    trans_type: objState.trans_Type,
-                    bk_dd: dayjs().format('YYYYMMDD'), 
-                    use_yn: true
+                    trans_type: objState.trans_type,
+                    bk_dd: dayjs().format('YYYYMMDD'),
+                    doc_close_dd: dayjs().format('YYYYMMDD'),
+                    use_yn: 'Y'
                 });
             for (const row of rows) {
+                log("onGridNew", row)
                 await (mainData as gridData).data.push(row);
             }
         
             setTimeout(() => {                
                 objState.tab1.push({ cd: tabName, cd_nm: tabName })
-                dispatch({ [tabName] : rows[0] ,MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
+                dispatch({ [tabName] : rows[0] , MselectedTab: tabName, isCGDSearch : true });
                 //dispatch({mSelectedRow: ...mSelectedRow, })
             }, 200);
         }

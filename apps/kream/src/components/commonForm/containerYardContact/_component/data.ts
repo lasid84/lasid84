@@ -32,7 +32,7 @@ export const SP_GetCYContactData = async (searchParam: any) => {
       , ipaddr
     ],
     inproc: 'ocean.f_ocen0004_get_detail',
-    isShowLoading: false
+    isShowLoading: false,
     }
   
     const result = await executFunction(params);

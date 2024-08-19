@@ -254,7 +254,7 @@ export const SP_CreateData = async (param: any) => {
     ],
     inproc: 'ocean.f_ocen1000_ins_bk_data',
     isShowLoading: true,
-    isShowComplete: true,
+    isShowComplete: false,
   }
   const result = await executFunction(params);
   log(result, 'success return 데이터2')
@@ -483,6 +483,28 @@ export const SP_GetBkHblData = async (searchParam: any) => {
   return result![0]
 }
 
+//shipper 담당자data get
+export const SP_GetBkTemplateData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { user_id, ipaddr } = Param;
+  
+  const params = {
+    inparam: [
+        "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_bk_template',
+    isShowLoading: false
+  }
+
+  const result = await executFunction(params);
+  // log('result??',result)
+  return result![0]
+}
 
 
 export const SP_GetCargoData = async (searchParam: any) => {

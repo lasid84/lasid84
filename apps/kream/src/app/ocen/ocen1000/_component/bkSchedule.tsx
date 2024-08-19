@@ -35,7 +35,6 @@ export interface typeloadItem {
   data: {} | undefined
 }
 
-
 type Props = {
   onSubmit: SubmitHandler<any>;
   loadItem: typeloadItem;
@@ -47,11 +46,12 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   const { MselectedTab, trans_mode, trans_type } = objState
 
   //SEARCH_PKC | get Pickup cont data detailData
-  const { data: cyPlaceData, refetch: cyPlaceRefetch, remove: cyPlaceRemove } = useGetData({ place_code: bkData?.cy_place_code, pickup_type: trans_mode + trans_type }, "CyPlace", SP_GetMasterData, { enable: true });
-  const { data: pickupData, refetch: pickupRefetch, remove: pickupRemove } = useGetData({ cust_code: bkData?.shipper_id, pickup_type: trans_mode + trans_type }, SEARCH_PKC, SP_GetDetailData, { enable: true });
-  const { data: cyPlaceContData, refetch: cyPlaceContRefetch, remove: cyPlaceContRemove } = useGetData({ place_code: bkData?.cy_place_code, cont_type: trans_mode + trans_type }, "CYContacotr", SP_GetCYContactData, { enable: true });
+  const { data: pickupData, refetch: pickupRefetch } = useGetData({ cust_code: bkData?.shipper_id, pickup_type: trans_mode + trans_type }, SEARCH_PKC, SP_GetDetailData, { enable: true });
+  const { data: cyPlaceData, refetch: cyPlaceRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "CyPlace", SP_GetMasterData, { enable: true });
+  const { data: cyPlaceContData, refetch: cyPlaceContRefetch } = useGetData({ place_code: bkData?.cy_place_code, cont_type: trans_mode + trans_type }, "CYContacotr", SP_GetCYContactData, { enable: true });
   // const [cyPlace, setCyPlace] = useState<any>()
   const [port, setPort] = useState<any>()
+  const [ isRefreshCyCont, setRefreshCyCont ] = useState(false);
 
 
   const methods = useForm({
@@ -66,25 +66,20 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
-  // useEffect(() => {
-  //   if (objState.isPKCSearch) {
-  //     detailRefetch();
-  //     dispatch({ isPKCSearch: false });
-  //   }
-  // }, [objState.mSelectedRow, objState.isPKCSearch]);
-
-  const onSearch = () => {
-    // const params = getValues();
-    // log("onSearch", params, objState?.mSelectedRow);
-  }
-
   useEffect(() => {
     if (loadItem) {
-      // log('loadItem',loadItem)
-      // setCyPlace(loadItem[10])
       setPort(loadItem[18]);
     }
   }, [])
+
+  useEffect(()=> {
+    if (isRefreshCyCont && cyPlaceContData && bkData) {
+      setRefreshCyCont(false);
+
+      let def = (cyPlaceContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      dispatch({ [MselectedTab]: {...bkData, cy_cont_seq:def?.cont_seq}})
+    } 
+  }, [isRefreshCyCont, cyPlaceContData, bkData])
 
   const handleButtonClick = (e:any) => {
     switch (e.target.id) {
@@ -100,44 +95,8 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
     }
   }
 
-  const handleMaskedInputChange = (e: any) => {
-    e.preventDefault();
-    const id = e.target.id;
-    const val = getValues(id);
-    // dispatch({ bkData: { ...bkData, [id]: val } })
-    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}})
-
-  }
-
-  const handleTextAreaChange = (e: any) => {
-    e.preventDefault();
-    const id = e.target.id;
-    const val = getValues(id);
-    // dispatch({ bkData: { ...bkData, [id]: val } })
-    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}})
-  }
-
-
-  //custom select event props(Shipper)
-  const handleCustomSelectChange = (e: any, id:string, val:string) => {
-    var selectedRow;
-    if (e.api) selectedRow = e.api.getSelectedRows()[0]; //react-select와 같이사용하여 if 처리
-    // dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}});    
-    bkData[id] = val;
-    bkData[ROW_CHANGED] = true
-    dispatch({[MselectedTab]: {...bkData}});    
-    log("handleCustomSelectChange", bkData)
-  }
-
-  const handleCheckBoxClick = (id:string, val:any) => {
-    log("handleCheckBoxClick", id, val);
-    // bkData[id] = val;
-    dispatch({[MselectedTab]: {...bkData, [id]:val, [ROW_CHANGED]: true}});    
-  }
-
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+    <div className="w-full">
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">SKD</span>}>
           {/* <div className="col-start-1 col-end-2"><MaskedInputField id="ts_port" value={bkData?.ts_port} options={{ isReadOnly: false }} /></div> */}
@@ -152,11 +111,8 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
             }}
             defaultValue={bkData?.ts_port}
             isDisplay={true}
-            events={{
-              onSelectionChanged: handleCustomSelectChange
-            }} 
           />
-          <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={bkData?.vessel} options={{ isReadOnly: false}} events={{ onChange: handleMaskedInputChange}} /></div>
+          <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={bkData?.vessel} options={{ isReadOnly: false}} /></div>
           <div className="col-start-1 col-end-6"><hr></hr>  </div>
           <div className="col-start-1 col-end-2">
             {/* <MaskedInputField id="port_of_loading" value={bkData?.port_of_loading} options={{ isReadOnly: false }} /> */}
@@ -171,9 +127,6 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
               }}
               defaultValue={bkData?.port_of_loading}
               isDisplay={true}
-              events={{
-                onSelectionChanged: handleCustomSelectChange
-              }} 
             />
           </div>
 
@@ -189,9 +142,6 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
               }}
               defaultValue={bkData?.port_of_unloading}
               isDisplay={true}
-              events={{
-                onSelectionChanged: handleCustomSelectChange
-              }} 
             />
           {/* <MaskedInputField id="final_dest_port" value={bkData?.final_dest_port} options={{ isReadOnly: false }} /> */}
           <CustomSelect 
@@ -205,48 +155,19 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
               }}
               defaultValue={bkData?.final_dest_port}
               isDisplay={true}
-              events={{
-                onSelectionChanged: handleCustomSelectChange
-              }} 
             />
 
-          <div className="col-start-1 col-end-2"><DatePicker id="etd" value={bkData?.etd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} 
-            events={{
-              onChange: (e, id, date) => {
-                handleCustomSelectChange(e,id,DateToString(date));
-              }
-            }} /></div>
-          <DatePicker id="eta" value={bkData?.eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} 
-            events={{
-              onChange: (e, id, date) => {
-                handleCustomSelectChange(e,id,DateToString(date));
-              }
-            }}/>
-          <DatePicker id="final_eta" value={bkData?.final_eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} 
-            events={{
-              onChange: (e, id, date) => {
-                handleCustomSelectChange(e,id,DateToString(date));
-              }
-            }}/>
+          <div className="col-start-1 col-end-2"><DatePicker id="etd" value={bkData?.etd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} /></div>
+          <DatePicker id="eta" value={bkData?.eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+          <DatePicker id="final_eta" value={bkData?.final_eta} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
           <div className="col-start-1 col-end-6"><hr></hr> </div>
 
           <div className="col-start-1 col-end-2">
-            <DatePicker id="doc_close_dd" value={bkData?.doc_close_dd || getValues("doc_close_dd")} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} 
-              events={{
-                onChange: (e, id, date) => {
-                  handleCustomSelectChange(e,id,DateToString(date));
-                }
-              }}/>
+            <DatePicker id="doc_close_dd" value={bkData?.doc_close_dd || getValues("doc_close_dd")} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
           </div>
-          <MaskedInputField id="doc_close_tm" value={bkData?.doc_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40' events={{ onChange: handleMaskedInputChange }} />
-          <DatePicker id="cargo_close_dd" value={bkData?.cargo_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} 
-            events={{
-              onChange: (e, id, date) => {
-                handleCustomSelectChange(e,id,DateToString(date));
-              }
-            }}/>
-          <MaskedInputField id="cargo_close_tm" value={bkData?.cargo_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40' events={{ onChange: handleMaskedInputChange }}/>
-
+          <MaskedInputField id="doc_close_tm" value={bkData?.doc_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40' />
+          <DatePicker id="cargo_close_dd" value={bkData?.cargo_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+          <MaskedInputField id="cargo_close_tm" value={bkData?.cargo_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40' />
         </PageContent>
 
         <PageContent
@@ -264,15 +185,10 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <PicupPlacePopUp callbacks={[pickupRefetch]} />
                 <CYPlaceContPopUp callbacks={[cyPlaceContRefetch]} />
                 <div className="col-start-1 col-end-2"> 
-                  <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} 
-                    events={{
-                      onChange: (e, id, date) => {
-                        handleCustomSelectChange(e,id,DateToString(date));
-                      }
-                    }}/>                
+                  <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
                 </div>
-                <MaskedInputField id="pickup_tm" value={bkData?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} events={{ onChange: handleMaskedInputChange }}/>
-                <MaskedInputField id="transport_company" value={bkData?.transport_company} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }}/>
+                <MaskedInputField id="pickup_tm" value={bkData?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
+                <MaskedInputField id="transport_company" value={bkData?.transport_company} options={{ isReadOnly: false }} />
                 <div className="col-start-1 col-end-6"><br></br></div>
                 <div className={"col-start-1 col-span-2"}>
                   <CustomSelect
@@ -290,16 +206,15 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     defaultValue={bkData?.pickup_seq}
                     isDisplay={true}
                     events={{
-                      onSelectionChanged: (e, id, value) => {
-                        var selectedRow = e.api.getSelectedRows()[0] as any;
-                        // setCrTaskContRowData(selectedRow);
-                        bkData.pickup_nm = selectedRow?.pickup_nm;
-                        bkData.pickup_addr = selectedRow?.addr;
-                        bkData.pickup_pic_nm = selectedRow?.pic_nm;
-                        bkData.pickup_email = selectedRow?.email;
-                        bkData.pickup_tel_num = selectedRow?.tel_num;
-                        handleCustomSelectChange(e, id, value);
-                      }
+                      onChanged: (e) => {
+                        if (!bkData) return;
+                        bkData.pickup_nm = e?.pickup_nm;
+                        bkData.pickup_addr = e?.addr;
+                        bkData.pickup_pic_nm = e?.pic_nm;
+                        bkData.pickup_email = e?.email;
+                        bkData.pickup_tel_num = e?.tel_num;
+                        dispatch({[MselectedTab]: {...bkData}});
+                      },
                     }}
                   />
                 </div>
@@ -325,12 +240,16 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     isDisplay={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        var selectedRow = e.api.getSelectedRows()[0] as any;
-                        // setCrTaskContRowData(selectedRow);
-                        bkData.cy_place_nm = selectedRow?.place_nm;
-                        bkData.cy_area_nm = selectedRow?.area_nm;
-                        bkData.cy_addr = selectedRow?.addr;
-                        handleCustomSelectChange(e, id, value);
+                        if (bkData?.cy_place_code != value) {
+                          var selectedRow = e.api.getSelectedRows()[0] as any;
+                          setRefreshCyCont(true);
+                          dispatch({[MselectedTab]: {...bkData, 
+                            cy_place_code: value, 
+                            cy_place_nm: selectedRow?.place_nm,
+                            cy_area_nm: selectedRow?.area_nm,
+                            cy_addr: selectedRow?.addr
+                          }});
+                      }
                       }}}
                   />
                 </div>
@@ -353,15 +272,25 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     style={{ width: '1000px', height: "8px" }}
                     defaultValue={bkData?.cy_cont_seq}
                     isDisplay={true}
-                    events={{
-                      onSelectionChanged: (e, id, value) => {
-                        var selectedRow = e.api.getSelectedRows()[0] as any;
-                        bkData.cy_cont_pic_nm = selectedRow?.pic_nm;
-                        bkData.cy_cont_email = selectedRow?.email;
-                        bkData.cy_cont_tel_num = selectedRow?.tel_num;
-                        bkData.cy_cont_fax_num = selectedRow?.fax_num;
-                        handleCustomSelectChange(e, id, value);
-                      }}}
+                    // events={{
+                    //   onSelectionChanged: (e, id, value) => {
+                    //     var selectedRow = e.api.getSelectedRows()[0] as any;
+                    //     bkData.cy_cont_pic_nm = selectedRow?.pic_nm;
+                    //     bkData.cy_cont_email = selectedRow?.email;
+                    //     bkData.cy_cont_tel_num = selectedRow?.tel_num;
+                    //     bkData.cy_cont_fax_num = selectedRow?.fax_num;
+                    //     handleCustomSelectChange(e, id, value);
+                    //   }
+                      events={{
+                        onChanged: (e) => {
+                          if (!bkData) return;
+                          bkData.cy_cont_pic_nm = e?.pic_nm;
+                          bkData.cy_cont_email = e?.email;
+                          bkData.cy_cont_tel_num = e?.tel_num;
+                          bkData.cy_cont_fax_num = e?.fax_num;
+                          dispatch({[MselectedTab]: {...bkData}});
+                        },
+                      }}
                   />
                 </div>
                 
@@ -371,9 +300,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
             </PageSearch>
           </div>
         </PageContent>
-
-      </form>
-    </FormProvider>
+      </div>
   );
 });
 

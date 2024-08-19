@@ -39,7 +39,7 @@ const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
     } = methods;
 
     return (
-        <FormProvider{...methods}>
+        // <FormProvider{...methods}>
             <DialogBasic
                 isOpen={isOpen}
                 onClose={closeModal}
@@ -60,7 +60,7 @@ const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
                     />
                 </div>
             </DialogBasic>
-        </FormProvider >
+        // </FormProvider >
     )
 }
 

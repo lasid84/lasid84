@@ -85,7 +85,7 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
           rows={rows}
           cols={cols}
           readOnly={isReadOnly}
-          value={text}
+          value={text || ''}
           id={id}
           // disabled={isCircle}
           spellCheck="false"

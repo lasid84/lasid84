@@ -32,6 +32,7 @@ type Props = {
   noLabel?: boolean       // Label 표시 여부
   lwidth?: string        // Label 넓이
   events?:{               //customselect event전달용
+    onChanged?: (e:any) => void;
     onRowClicked?:  (e: ChangeEvent<HTMLInputElement>) => void;
     onSelectionChanged?: (e: SelectionChangedEvent<HTMLInputElement>, id:string, value:string) => void;
     onComponentStateChanged? : (e: ComponentStateChangedEvent<HTMLInputElement>) => void
@@ -126,33 +127,55 @@ function CustomSelect(props: Props) {
         // gridRef.current.api.ensureIndexVisible(i, 'top');
         // 약간의 딜레이 후에 포커스 설정 (렌더링이 완료될 시간을 줌)
         setTimeout(() => {
-          gridRef.current?.api?.setFocusedCell(i, valueCol[0]);
+          gridRef.current?.api?.setFocusedCell(i, /*valueCol[0]*/ displayCol);
         }, 100);
+      } else {
+
       }
     }
   }, [isGridReady, selectedRow])
 
   useEffect(() => {
     // log("useEffect defaultValue, listItem, valueCol")
-    if (defaultValue && listItem?.data) {
-      // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
+    if (listItem?.data) {
+
+      if (!defaultValue) {
+        setSelectedValue(null);
+        return;
+      }
+
       let index = -1;
       const initialData = listItem.data.find((item: any, i:number) => {
         index = i;
         return item[valueCol![0]] === defaultValue
       });
-      // log("======", id);
-      if (initialData) {
-        // if (index > -1) gridRef.current?.api.getRowNode(index).setSelected(true);
-        setSelectedValue(initialData, false);
-        setDisplayVal(initialData);
-      } else {
-        if (selectedRow) handleXClick(null);
-      }
-    } else if (!defaultValue) {
-      if (selectedRow) handleXClick(null);
+
+      setSelectedValue(initialData);
+      // setDisplayVal(initialData);
     }
-  }, [defaultValue, listItem, valueCol]);
+  }, [defaultValue, listItem])
+
+  // useEffect(() => {
+  //   log("useEffect defaultValue, listItem, valueCol")
+  //   if (defaultValue && listItem?.data) {
+  //     // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
+  //     let index = -1;
+  //     const initialData = listItem.data.find((item: any, i:number) => {
+  //       index = i;
+  //       return item[valueCol![0]] === defaultValue
+  //     });
+  //     // log("======", id);
+  //     if (initialData) {
+  //       // if (index > -1) gridRef.current?.api.getRowNode(index).setSelected(true);
+  //       setSelectedValue(initialData, false);
+  //       setDisplayVal(initialData);
+  //     } else {
+  //       if (selectedRow) handleXClick(null);
+  //     }
+  //   } else if (!defaultValue) {
+  //     if (selectedRow) handleXClick(null);
+  //   }
+  // }, [defaultValue, listItem, valueCol]);
 
   useEffect(() => {
     // log("useEffect isOpen")
@@ -169,12 +192,25 @@ function CustomSelect(props: Props) {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    onChange(selectedRow);
+  }, [selectedRow])
+
+
+  const onChange = (row:any) => {
+    let event = {
+      ...row,
+      id: id
+    }
+    if (events?.onChanged) events.onChanged(event);
+  }
+
   const handelRowClicked = (param: any) => {
     // log("==selectedRow", selectedRow)
     var selectedRow = { "colId": param.node.id, ...param.node.data }
     gridRef.current.api.getRowNode(param.node.id).setSelected(true);
     toggleOptions();
-    // setSelectedValue(selectedRow);
+    setSelectedValue(selectedRow);
     // setDisplayVal(selectedRow);
     if(events?.onRowClicked){    
       events?.onRowClicked(selectedRow);
@@ -184,13 +220,13 @@ function CustomSelect(props: Props) {
   const handleSelectionChanged = (param: SelectionChangedEvent) => {
     var selectedRow = param.api.getSelectedRows()[0];
 
-    // log("custom select - handleSelectionChanged", selectedRow, filteredData?.data.length)
+    log("custom select - handleSelectionChanged", param, id, selectedRow)
 
     //이걸하면 x 버튼 클릭시 page에서 설정한 이벤트를 안탐
     // if (selectedRow === undefined) return;
-    setSelectedValue(selectedRow, false);
-    setDisplayVal(selectedRow);
-    setValue(id, selectedRow ? selectedRow[id] : null);
+    // setSelectedValue(selectedRow, false);
+    // setDisplayVal(selectedRow);
+    // setValue(id, selectedRow ? selectedRow[id] : null);
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
       events?.onSelectionChanged(param, id, val);
@@ -199,10 +235,8 @@ function CustomSelect(props: Props) {
   }
 
   const handleOnGridReady = (param: any) => {
-    // const gridApi = param.api;
-    // // const gridElement = gridApi.gridCore.eGridDiv; // AG Grid의 최상위 DOM 요소에 접근
-    // const gridCore = gridApi.gridCore;
-    // log("handleOnGridReady", /*gridApi, gridCore*/);
+    // log("handleOnGridReady", id, param, defaultValue);
+    // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
   }
 
   const handleComponentStateChanged = (param: any) => {
@@ -214,13 +248,18 @@ function CustomSelect(props: Props) {
   }
 
   const setSelectedValue = (row: any, toggle = true) => {
-    // log("setSelectedValue", row);
-    // if (row === undefined) return;
     
-    if (valueCol) valueCol.map(key => setValue(key, (row && row[key]) ? row[key] : null));
+    if (valueCol) valueCol.map((key,i) => {
+      let val = (row && row[key]) ? row[key] : null;
+      if (i === 0) setValue(id, val);
+
+      setValue(key, val);
+    });
     else Object.keys(row || {}).map(key => setValue(key, row[key] ? row[key] : null));
+
     setSelectedRow(row);
-    if (toggle) toggleOptions();
+    setDisplayVal(row);
+    // if (toggle) toggleOptions();
   }
 
   const setDisplayVal = (row: any | null) => {
@@ -240,7 +279,7 @@ function CustomSelect(props: Props) {
     log("handleXClick", gridRef, gridRef.current, selectedRow)
     if (selectedRow && gridRef.current && gridRef.current.api?.getSelectedRows()) gridRef.current.api.deselectAll();
     setSelectedValue(null);
-    setDisplayVal(null);
+    // setDisplayVal(null);
     setFilteredData(listItem);
     setIsOpen(false);
   }
@@ -255,12 +294,8 @@ function CustomSelect(props: Props) {
           let selectedRow = e.data; //gridRef.current.api.getSelectedRows()[0];
           log(selectedRow);
           setSelectedValue(selectedRow);
-          setDisplayVal(selectedRow);
+          setIsOpen(false);
           // moveNextComponent();
-          // const form = document.querySelector('form');
-          // const gridApi = gridRef.current.api;
-          // const gridElement = gridApi.gridCore.eGridDiv;
-          // log("handleCellKeyDown8", selectedRow, gridElement);
           break;
       }
     }
@@ -365,7 +400,7 @@ function CustomSelect(props: Props) {
                     e.preventDefault();
                     // log("onKeyDown", id, gridRef, gridRef.current);
                     if (!isOpen) setIsOpen(true);
-                    gridRef.current.api.setFocusedCell(0, valueCol![0]);
+                    gridRef.current.api.setFocusedCell(0, /*valueCol![0]*/displayCol);
                     gridRef.current.api.getRowNode(0).setSelected(true);
 
                     break;

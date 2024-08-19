@@ -5,7 +5,7 @@ import { useEffect, useRef, memo } from "react";
 import { SP_GetMasterData } from "./data";
 import { useAppContext, SEARCH_M, crudType } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid, { rowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { rowAdd, ROW_INDEX } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community"
 import Modal from './popup';
@@ -27,7 +27,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const gridOption: GridOption = {
         colVisible: { col: ["user_id", "user_nm", "permission_id", "bz_plc_code", "emp_no", "ufs_id", "terminal_cd", "dept_cd", "office_cd", "use_yn", "tel_num"], visible: true },
-        minWidth: { "__ROWINDEX": 10, "user_id":180, "user_nm":120, "permission_id": 200 },
+        minWidth: { ROW_INDEX: 10, "user_id":180, "user_nm":120, "permission_id": 200 },
         gridHeight: "h-full",
         isAutoFitColData: false,
     };

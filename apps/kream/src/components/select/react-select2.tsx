@@ -49,7 +49,8 @@ export type ReactSelectProps = {
         rules?: Record<string, any>;
         noLabel?: boolean;
         isAllYn?: boolean;
-        isDisplay?: boolean;      //사용자 권한에 따른 display여부
+        isDisplay?: boolean;            //사용자 권한에 따른 display여부
+        isMandatory?: boolean;          //필수값 여부
     }
     events?: event
 };
@@ -57,7 +58,9 @@ export type ReactSelectProps = {
 export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const { control } = useFormContext();
     const { id, label, dataSrc, width, height, lwidth, options = {}, events } = props;
-    const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true, isDisplay=true } = options;
+    const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true, isDisplay=true,
+        isMandatory=true
+     } = options;
     const [list, setList] = useState<{}[] | undefined>([]);
     const [selectedVal, setSelectedVal] = useState<{} | null>(null);
     const [firstVal, setFirstVal] = useState('');
@@ -81,7 +84,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 if (keyCol) value = item[keyCol];
                 else value = item[Object.keys(item)[0]];
 
-                if (!isAllYn && value === 'ALL') return {};
+                if (!isAllYn && value === 'ALL') return false;
 
                 if (displayCol) {
                     label = '';
@@ -105,7 +108,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         setFirstLab(label);
                     };
                 } else {
-                    if (i === 0) {
+                    if (isMandatory && i === 0) {
                         setFirstVal(value);
                         setFirstLab(label);
                     }
@@ -117,13 +120,15 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     }, [dataSrc, defaultValue]);
 
     useEffect(() => {
-         log(firstLab, firstVal)
+        //  log("useEffect reactselect2", firstLab, firstVal)
         if (firstLab && firstVal) {
             setSelectedVal({
                 label: firstLab,
                 value: firstVal,
             });
             setValue(id, firstVal);
+        } else {
+            setValue(id, null);
         }
     }, [firstLab, firstVal]);
 
@@ -187,7 +192,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     }
 
     const handleChange = (e: any) => {
-        log("=-=-=-handleChange", e)
+        // log("=-=-=-handleChange", e)
         setValue(id, e.value);
         setSelectedVal({ id:id, value: e.value, label: e.label });
         let dispCol = displayCol?.length 
@@ -197,7 +202,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
             events.onChange(e,id,e.value);
         }
 
-        log("handelChange", delayEnter, e);
+        // log("handelChange", delayEnter, e);
         setisChangeFinish(true);
         // moveNextComponent(target);
         
