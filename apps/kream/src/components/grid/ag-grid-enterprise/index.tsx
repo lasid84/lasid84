@@ -101,7 +101,7 @@ export type GridOption = {
   dataType?: { [key: string]: string };   //date, number, text, bizno
   typeOptions?: {
     [key: string]: {
-      // limit?: number;                  //입력 자릿수 제한
+      inputLimit?: number                  //입력 자릿수 제한
       isAllowDecimal?: boolean            //소수점 허용 여부
       decimalLimit?: number               //소수점 자리수
     }
@@ -397,6 +397,15 @@ const ListGrid: React.FC<Props> = memo((props) => {
           cellDataType: 'text',
           cellStyle: { textAlign: "center" },
         };
+
+        if (options?.typeOptions && options.typeOptions[col]) {
+          if (options.typeOptions[col].inputLimit)
+            cellOption = {
+              ...cellOption,
+              cellEditorParams: { maxLength: options.typeOptions[col].inputLimit }
+            }
+        }
+
         if (options?.dataType) {
           const optCols: { [key: string]: string } = options.dataType;
 

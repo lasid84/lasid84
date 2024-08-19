@@ -32,21 +32,21 @@ const GridCost: React.FC<Props> = memo(({ initData }) => {
     { bk_no: objState?.MselectedTab },
     SEARCH_CST,
     SP_GetCostData,
-    { enabled: false }
+    { enabled: true }
   );
 
-  useEffect(() => {
-    if (objState.isCSTSearch) {
-      costRefetch();
-      dispatch({ isCSTSearch: false });
-    }
-  }, [objState?.isCSTSearch]);
+  // useEffect(() => {
+  //   if (objState.isCSTSearch) {
+  //     costRefetch();
+  //     dispatch({ isCSTSearch: false });
+  //   }
+  // }, [objState?.isCSTSearch]);
 
-  useEffect(()=>{
-if(costData){
-  log('costData',costData)
-}
-  },[costData])
+  // useEffect(()=>{
+  //   if(costData){
+  //     log('costData',costData)
+  //   }
+  // },[costData])
 
   useEffect(() => {
     const gridOption: GridOption = {

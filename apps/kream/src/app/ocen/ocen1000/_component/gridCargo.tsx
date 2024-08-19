@@ -16,7 +16,7 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
 import { SP_InsertCargo, SP_UpdateCargo } from "./data";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+const { log, error } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
   initData?: any | null;
@@ -36,7 +36,7 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
     refetch: cargoRefetch,
     remove: cargoRemove,
   } = useGetData({ bk_no: objState?.MselectedTab }, SEARCH_CGD, SP_GetCargoData, {
-    enabled: false,
+    enabled: true,
   });
 
   useEffect(() => {
@@ -118,12 +118,12 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
     setGridDOptions(gridOption);
   }, []);
 
-  useEffect(() => {
-    if (objState.isCGOSearch) {
-      cargoRefetch();
-      dispatch({ isCGOSearch: false });
-    }
-  }, [objState?.isCGOSearch]);
+  // useEffect(() => {
+  //   if (objState.isCGOSearch) {
+  //     cargoRefetch();
+  //     dispatch({ isCGOSearch: false });
+  //   }
+  // }, [objState?.isCGOSearch]);
 
   const onSave = () => {
     const processNodes = async () => {
@@ -155,10 +155,11 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
     processNodes()
       .then(() => {
         toastSuccess("Success.")
-        dispatch({ isCGOSearch :true})
+        // dispatch({ isCGOSearch :true})
+        cargoRefetch();
       })
-      .catch((error) => {
-        log.error("node. Error", error);
+      .catch((err) => {
+        error("node. Error", err);
       });
   };
 

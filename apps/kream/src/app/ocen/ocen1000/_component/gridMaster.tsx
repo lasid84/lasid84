@@ -6,7 +6,7 @@ import { SP_CreateData, SP_GetMasterData, SP_UpdateData } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
-import Grid, { getGridState, gotoFirstRow, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
+import Grid, { getGridState, gotoFirstRow, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { CellValueChangedEvent, GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent, StateUpdatedEvent } from "ag-grid-community";
 import { PageMGrid2, PageGrid } from "layouts/grid/grid";
@@ -30,8 +30,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     //const [gridRef, setGridRef] = useState(objState.gridRef_m)
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-    const { Create } = useUpdateData2(SP_CreateData, SEARCH_M);
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
+    const { Create } = useUpdateData2(SP_CreateData, SEARCH_M, {callbacks: [mainRefetch]});
+    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M, {callbacks: [mainRefetch]});
 
 
     const gridOption: GridOption = {
@@ -46,6 +46,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             "eta": "date", "final_eta": "date", "doc_close_dd": "date", "cargo_close_dd": "date", "pickup_dd": "date",
             "doc_close_tm" : "time", "cargo_close_tm" : "time", "pickup_tm" : "time",
             "volume": "number", "gross_weight": "number", "volume_weight": "number", "chargeable_weight": "number",
+        },
+        typeOptions: {
+            bk_dd: { inputLimit : 8}
         },
         isAutoFitColData: true,
         editable: ["bk_dd", "origin_terminal_id", "dest_terminal_id", "vocc_id", "customs_declation", "milestone", "state", "bk_remark", "shipper_id", "sales_person", "ship_remark", "cnee_id"
@@ -150,7 +153,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         gridRef_m.current.api.forEachNode((node: any) => {
             var data = node.data;
             
-            if (data.__changed) {
+            if (data[ROW_CHANGED]) {
                 hasData = true;
                 if (gridOption?.checkbox) {
                     for (let i = 0; i < gridOption?.checkbox?.length; i++) {
@@ -159,7 +162,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }
                 }
                 
-                if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
+                if (data[ROW_TYPE] === ROW_TYPE_NEW) { //신규 추가
                     Create.mutate(data);
                 } else { //수정
                     Update.mutate(data);
