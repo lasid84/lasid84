@@ -46,8 +46,8 @@ const MasterGrid: React.FC<Props> = ({  }) => {
 
         // let selectedRow3 = { ...selectedRow, type:'sale'}
         // log("handleSelectionChanged", selectedRow2)
-        dispatch({ mSelectedRow: selectedRow, isDSearchT: true });
-        dispatch({ mSelectedRow: selectedRow, isDSearchS: true });
+        dispatch({ mSelectedRow: selectedRow, isDSearch: true });
+        //dispatch({ mSelectedRow: selectedRow, isDSearch: true });
     };
 
     useEffect(() => {

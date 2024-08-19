@@ -152,7 +152,6 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
         }
       }
     };
-    // Call the async function
     processNodes()
       .then(() => {
         toastSuccess("Success.")

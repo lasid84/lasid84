@@ -31,6 +31,7 @@ export default function OCEN0001() {
     const { searchParams, isMSearch } = objState;
     const val = useMemo(() => { return { dispatch, objState } }, [state]);
 
+
       return (
         <TableContext.Provider value={val}>
             <div className={`w-full h-full`}>
