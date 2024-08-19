@@ -19,17 +19,18 @@ import dayjs from "dayjs";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null
+    initData: any | null,
+    mainData: any | null
 }
 
-const MasterGrid: React.FC<Props> = memo(({ initData }) => {
+const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
 
     // const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
-    const { gridRef_m } = objState
 
-    //const [gridRef, setGridRef] = useState(objState.gridRef_m)
-    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
+    const [gridRef, setGridRef] = useState(objState.gridRef_m)
+
+    // const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const { Create } = useUpdateData2(SP_CreateData, SEARCH_M);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
 
@@ -39,7 +40,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                             "cr_t_cont_seq","cr_s_cont_seq", "orig_agent_id", "b_agent_id", "ams_yn","ams","cr_fak","cr_nac",
                             "aci_yn","aci","afr_yn","edi_yn","isf_yn","e_manifest_yn","use_yn",
                             "create_user", "update_date", "update_user"], visible: false },
-        gridHeight: "h-[calc(100vh-200px)]",
+        gridHeight: "h-full",
         minWidth: { "bk_id": 100, "waybill_no": 150, "shipment_status": 40 },
         dataType: {
             "executed_on_date": "date", "accounting_date": "date",  "create_date": "date", "bk_dd": "date", "etd": "date", 
@@ -56,30 +57,29 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
          checkbox: ["use_yn", "ams_yn", "aci_yn", "afr_yn", "isf_yn", "e_manifest_yn"]
     };
 
-    useEffect(() => {
-        if (objState.isMSearch) {
-            mainRefetch();
-            // log("mainisSearch", objState.isMSearch);
-            dispatch({ isMSearch: false });
-            if (gridRef_m.current) gotoFirstRow(gridRef_m.current)
-        }
-    }, [objState?.isMSearch]);
+    // useEffect(() => {
+    //     if (objState.isMSearch) {
+    //         mainRefetch();
+    //         // log("mainisSearch", objState.isMSearch);
+    //         dispatch({ isMSearch: false });
+    //         if (gridRef.current) gotoFirstRow(gridRef.current)
+    //     }
+    // }, [objState?.isMSearch]);
 
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
-        log("handleRowDoubleClicked")
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
-                return element.cd === selectedRow.bk_id;
+                return element.cd === selectedRow.template_id;
             }) === -1) {
-                objState.tab1.push({ cd: selectedRow.bk_id, cd_nm: selectedRow.bk_id })
+                objState.tab1.push({ cd: selectedRow.template_id, cd_nm: selectedRow.template_nm })
             }
         }
         dispatch({ 
             isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
-            MselectedTab: selectedRow.bk_id,
-            // mSelectedRow: selectedRow,
-            // [selectedRow.bk_id]: selectedRow,
+            MselectedTab: selectedRow.template_id,
+            mSelectedRow: selectedRow,
+            [selectedRow.template_id]: selectedRow,
             popType:crudType.UPDATE
         });
         
@@ -95,34 +95,29 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     };
 
     const onGridNew = async () => {
-        // var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
-            log("BKCopy__onGridNew objState", objState)
-            // var tabName = "NEW" + (objState.tab1.reduce((acc:number,v:{cd:string}) => v.cd.includes("NEW") && acc + 1,0)+1);
-            var temp = objState.tab1
+           var temp = objState.tab1
                             .filter((v:{cd:string}) => v.cd.includes("NEW"))
                             .sort()
                             .reverse();
                             
             var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
             var tabName = `NEW${tabSeq}`;
-            var rows = await rowAdd(objState.gridRef_m.current, 
-                {   bk_id: tabName,
+            var rows = await rowAdd(gridRef.current, 
+                {   template_id: tabName,
                     trans_mode: objState.trans_mode,
-                    trans_type: objState.trans_type,
-                    bk_dd: dayjs().format('YYYYMMDD'),
-                    doc_close_dd: dayjs().format('YYYYMMDD'),
-                    use_yn: 'Y'
+                    trans_type: objState.trans_Type,
+                    bk_dd: dayjs().format('YYYYMMDD'), 
+                    ROW_TYPE : 'NEW',
+                    ROW_CHANGED : '__changed',
+                    use_yn: true
                 });
             for (const row of rows) {
-                log("onGridNew", row)
-                await (mainData as gridData).data.push(row);
+                await (mainData as gridData).data.push(row);         
             }
-        
             setTimeout(() => {                
                 objState.tab1.push({ cd: tabName, cd_nm: tabName })
-                dispatch({ [tabName] : rows[0] , MselectedTab: tabName, isCGDSearch : true });
-                //dispatch({mSelectedRow: ...mSelectedRow, })
+                dispatch({ [tabName] : rows[0] , MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
             }, 200);
         }
         
@@ -147,7 +142,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const onGridSave = () => {
         var hasData = false;
-        gridRef_m.current.api.forEachNode((node: any) => {
+        gridRef.current.api.forEachNode((node: any) => {
             var data = node.data;
             
             if (data.__changed) {
@@ -202,8 +197,12 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     );
 });
 
-export const BKCopy = async (objState:any, mainData:any) => {
-    if (objState.tab1) {
+export const onGridNew1 = async (objState:any, mainData:any) => {
+    log('onBKCopy bkData1', objState, mainData )
+    // var selectedRow = { "colId": param.node.id, ...param.node.data }
+    if (objState.tab1 && objState.gridRef_m) {
+        log('onBKCopy bkData2', objState, mainData )
+        // var tabName = "NEW" + (objState.tab1.reduce((acc:number,v:{cd:string}) => v.cd.includes("NEW") && acc + 1,0)+1);
         var temp = objState.tab1
                         .filter((v:{cd:string}) => v.cd.includes("NEW"))
                         .sort()
@@ -211,25 +210,25 @@ export const BKCopy = async (objState:any, mainData:any) => {
                         
         var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
         var tabName = `NEW${tabSeq}`;
-        
-        // const rows = await rowAdd(objState.gridRef_m.current, 
-        //     {   bk_id: tabName,
-        //         trans_mode: objState.trans_mode,
-        //         trans_type: objState.trans_Type,
-        //         bk_dd: dayjs().format('YYYYMMDD'), 
-        //         use_yn: true
-        //     });
-        // for (const row of rows) {
-        //     await (mainData as gridData).data.push(row);
-        // }
+        var rows = await rowAdd(objState.gridRef_m.current, 
+            {   bk_id: tabName,
+                trans_mode: objState.trans_mode,
+                trans_type: objState.trans_Type,
+                bk_dd: dayjs().format('YYYYMMDD'), 
+                use_yn: true
+            });
+        for (const row of rows) {
+            await (mainData as gridData).data.push(row);
+        }
     
         setTimeout(() => {                
             objState.tab1.push({ cd: tabName, cd_nm: tabName })
             //dispatch({ [tabName] : rows[0] ,MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
+
         }, 200);
 
         return ({
-            data : {temp, tabSeq, tabName, mainData              
+            data : {temp, tabSeq, tabName, rows              
             }
         })
     }

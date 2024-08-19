@@ -19,6 +19,9 @@ import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
 import Stepper from "components/stepper/index";
 import { toastSuccess } from "@/components/toast";
+import {BKCopy} from "./gridMaster"
+import dayjs from "dayjs";
+
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -82,44 +85,30 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
       toastSuccess('Success.');
     }
   }
+  
+  const onBKCopy = () => {
+    //BKCopy(objState, bkData)
+    var temp = objState.tab1
+    .filter((v:{cd:string}) => v.cd.includes("NEW"))
+    .sort()
+    .reverse();    
 
-  const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-    //부킹노트 저장, crudType체크하여 UPDATE / CREATE 
-    let val = getValues();
-    log("onFormSubmit getValue", val)
-    // if (bkData[ROW_CHANGED]) {
-    //   // log('=============', bkData);
-    //   var hasData = true;
-    //   if (bkData[ROW_TYPE] === ROW_TYPE_NEW) {
-    //     Create.mutate(bkData, {
-    //       onSuccess: (res: any) => {
-    //         let bk_id = res.data[0].bk_id;
-    //         let updatedTab = objState.tab1.map((tab:any) => {
-    //           if (tab.cd === MselectedTab) {
-    //             log("onSuccess", MselectedTab, bk_id);
-    //             tab.cd = bk_id;
-    //             tab.cd_nm = bk_id;
-
-    //             return tab;
-    //           } else return tab;
-    //         });
-    //         log("onSuccess2", objState.tab1, res.data[0]);
-    //         dispatch({ [MselectedTab]:null, [bk_id]: res.data[0], tab1: updatedTab, MselectedTab: bk_id, isNew:false })
-
-    //         // objState.tab1.push({ cd: bk_id, cd_nm: bk_id }) //발급된 bk_id로 tab update
-    //         // var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
-    //         // dispatch({ popType: crudType.UPDATE, mSelectedRow: res.data[0], tab1: filtered, MselectedTab: res.data[0].bk_id, })
-    //       },
-    //     })
-    //   } else {
-    //     Update.mutate(bkData);
-    //   }
-
-    //   if (hasData) {
-    //     toastSuccess('Success.');
-    //   }
-    // }
-  }, [bkData]);
+    var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
+    var tabName = `NEW${tabSeq}`;
+    setTimeout(() => {                
+      objState.tab1.push({ cd: tabName, cd_nm: tabName })      
+      dispatch({ [tabName] : {...bkData, 
+        bk_id:'', 
+        bk_dd: dayjs().format('YYYYMMDD HHmmss'), 
+        create_date : dayjs().format('YYYYMMDD HHmmss'),  
+        update_date : '',
+        update_user : '',
+        state : 0,
+        __changed : true,
+        __ROWTYPE : 'NEW'
+      }, MselectedTab: tabName, popType: crudType.CREATE });
+  }, 200);
+  }
 
   return (
     <div className="sticky top-0 z-20 flex w-full pt-10 space-y-1 bg-white">

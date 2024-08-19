@@ -84,6 +84,7 @@ type GridEvent = {
 export type GridOption = {
   checkbox?: string[];
   select?: any;
+  icon?: any;
   colVisible?: {
     col: string[]
     visible: boolean
@@ -479,6 +480,17 @@ const ListGrid: React.FC<Props> = memo((props) => {
             }
           }
         }
+
+                //icon 셋팅
+                if (options?.icon) {
+                  var arrCols = Object.keys(options.icon);
+                  if (arrCols.indexOf(col) > -1) {
+                    cellOption = {
+                      ...cellOption,
+                      cellRenderer : options.icon[col],
+                  }
+                }        
+              }
 
         if (options?.minWidth) {
           var arrCols = Object.keys(options.minWidth);

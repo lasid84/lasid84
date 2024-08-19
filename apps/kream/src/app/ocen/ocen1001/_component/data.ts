@@ -31,45 +31,26 @@ export const SP_Load = async (searchParam: any) => {
 //SP_GetInvoiceMasterContent
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
-  const { no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
+  const { user_id, ipaddr } = Param;
 
   const params = {
-    inparam: [
-        "in_fr_date"
-      , "in_to_date"
-      , "in_cust_code"
-      , "in_no"
-      , "in_search_gubn"
-      , "in_state"
-      , "in_create_user"
-      , "in_user_id"
-      , "in_ipaddr"
-    ],
-    invalue: [
-        fr_date
-      , to_date
-      , cust_code
-      , no
-      , search_gubn
-      , state
-      , create_user
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'ocean.f_ocen1000_get_bk_main2',
-    isShowLoading: true
+    inparam: ["in_user", "in_ipaddr"],
+    invalue: [user_id, ipaddr],
+    inproc: 'ocean.f_ocen1000_get_bk_template',
+    isShowLoading: false
   }
-
   const result = await executFunction(params);
 
   return result![0]
 }
 
-//Create BookingNote
+//Create Template Data
 export const SP_CreateData = async (param: any) => {
   const Param = param;
 
-  const { bk_dd
+  const { 
+    template_nm
+    ,bk_dd
     , origin_terminal_id
     , dest_terminal_id
     , trans_mode
@@ -129,7 +110,8 @@ export const SP_CreateData = async (param: any) => {
     , remark, user_id, ipaddr } = Param;
   const params = {
     inparam: [
-      "in_bk_dd"
+      "in_template_nm"
+      ,"in_bk_dd"
       , "in_origin_terminal_id"
       , "in_dest_terminal_id"
       , "in_trans_mode"
@@ -191,7 +173,8 @@ export const SP_CreateData = async (param: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-        bk_dd
+      template_nm
+      ,  bk_dd
       , origin_terminal_id
       , dest_terminal_id
       , trans_mode
@@ -252,19 +235,20 @@ export const SP_CreateData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'ocean.f_ocen1000_ins_bk_data',
+    inproc: 'ocean.f_ocen1001_ins_bk_template_data',
     isShowLoading: true,
-    isShowComplete: false,
+    isShowComplete: true,
   }
   const result = await executFunction(params);
 
   return result![0];
 }
-//Update BookingNote
+//Update Template Data
 export const SP_UpdateData = async (param: any) => {
   const Param = param;
   const {
-    bk_id 
+    template_id 
+    ,template_nm    
     , bk_dd
     , origin_terminal_id
     , dest_terminal_id
@@ -325,7 +309,8 @@ export const SP_UpdateData = async (param: any) => {
     , remark, user_id, ipaddr } = Param;
   const params = {
     inparam: [
-        "in_bk_id"
+        "in_template_id"
+      , "in_template_nm"
       , "in_bk_dd"
       , "in_origin_terminal_id"
       , "in_dest_terminal_id"
@@ -388,7 +373,8 @@ export const SP_UpdateData = async (param: any) => {
       , "in_ipaddr"
     ],
     invalue: [
-      bk_id
+      template_id
+      , template_nm
       ,bk_dd
       , origin_terminal_id
       , dest_terminal_id
@@ -450,10 +436,11 @@ export const SP_UpdateData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'ocean.f_ocen1000_upd_bk_data',
+    inproc: 'ocean.f_ocen1001_upd_bk_template_data',
     isShowLoading: true,
     isShowComplete: false,
   }
+
   const result = await executFunction(params);
   return result![0];
 }
@@ -483,28 +470,6 @@ export const SP_GetBkHblData = async (searchParam: any) => {
   return result![0]
 }
 
-//shipper 담당자data get
-export const SP_GetBkTemplateData = async (searchParam: any) => {
-  const Param = searchParam.queryKey[1]
-  const { user_id, ipaddr } = Param;
-  
-  const params = {
-    inparam: [
-        "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-        user_id
-      , ipaddr
-    ],
-    inproc: 'ocean.f_ocen1000_get_bk_template',
-    isShowLoading: false
-  }
-
-  const result = await executFunction(params);
-  // log('result??',result)
-  return result![0]
-}
 
 
 export const SP_GetCargoData = async (searchParam: any) => {
