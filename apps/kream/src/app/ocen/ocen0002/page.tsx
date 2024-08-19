@@ -50,7 +50,7 @@ export default function OCEN0002() {
                 <SearchForm  />
                 <div className="grid w-full h-[calc(100vh-100px)] grid-cols-3">
                     <MasterGrid  />
-                    <div className="grid h-full col-span-2 grid-rows-2 ">
+                    <div className="grid h-[calc(100vh-100px)] col-span-2 grid-rows-2 ">
                         <div className="row-span-1"><DetailInfo /></div>
                         <div className="row-span-1">
                             <CustCont 

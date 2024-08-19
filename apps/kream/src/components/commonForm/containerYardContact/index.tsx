@@ -61,6 +61,13 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
         refetch();
     }, []);
 
+    useEffect(() => {
+        if (objState.isDSearch) {
+            refetch();
+          dispatch({ isDSearch: false });
+        }
+      }, [objState.isDSearch]);
+
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
@@ -90,36 +97,71 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
         });
     };
 
+    // const onSave = () => {
+    //     var hasData = false;
+    //     gridRef.current.api.forEachNode((node: any) => {
+    //         var data = node.data;
+    //         // gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
+    //         if (gridOptions?.checkbox) {
+    //             for (let i = 0; i < gridOptions?.checkbox?.length; i++) {
+    //                 let col = gridOptions?.checkbox[i];
+    //                 data[col] = data[col] ? 'Y' : 'N';
+    //             }
+    //         }
+    //         data.cont_type = objState.cont_type;
+    //         if (data.__changed) {
+    //             hasData = true;
+    //             if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
+    //                 data.place_code = params.place_code;
+    //                 data.cont_type = params.cont_type;
+    //                 Create.mutate(data);
+    //             } else { //수정
+    //                 Update.mutate(data);
+    //             }
+    //         }
+    //     });
+    //     // log("onSave", gridRef.current.api, modifiedRows);
+    //     if (hasData) {
+    //         // dispatch({ dSelectedRow: {...objState?.mSelectedRow} });
+    //         toastSuccess('Success.');
+    //     }
+
+    // };
+
     const onSave = () => {
-        var hasData = false;
-        gridRef.current.api.forEachNode((node: any) => {
+        const processNodes = async () => {
+          const api = gridRef.current.api;
+          for (const node of api.getRenderedNodes()) {
             var data = node.data;
-            // gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
-            if (gridOptions?.checkbox) {
-                for (let i = 0; i < gridOptions?.checkbox?.length; i++) {
-                    let col = gridOptions?.checkbox[i];
-                    data[col] = data[col] ? 'Y' : 'N';
-                }
-            }
-            data.cont_type = objState.cont_type;
+            gridOptions?.checkbox?.forEach((col) => {
+              data[col] = data[col] ? "Y" : "N";
+            });
             if (data.__changed) {
-                hasData = true;
-                if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
+              try {
+                if (data.__ROWTYPE === ROW_TYPE_NEW) {
                     data.place_code = params.place_code;
                     data.cont_type = params.cont_type;
-                    Create.mutate(data);
-                } else { //수정
-                    Update.mutate(data);
+                  await Create.mutateAsync(data);
+                } else {
+                  await Update.mutateAsync(data);
                 }
+              } catch (error) {
+                log.error("error:", error);
+              } finally {
+                data.__changed = false;
+              }
             }
-        });
-        // log("onSave", gridRef.current.api, modifiedRows);
-        if (hasData) {
-            // dispatch({ dSelectedRow: {...objState?.mSelectedRow} });
-            toastSuccess('Success.');
-        }
-
-    };
+          }
+        };
+        processNodes()
+          .then(() => {
+            toastSuccess("Success.");
+            dispatch({ isDSearch: true });
+          })
+          .catch((error) => {
+            log.error("node. Error", error);
+          });
+      };
 
     return (
         <>

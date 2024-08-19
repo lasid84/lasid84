@@ -68,11 +68,18 @@ const MasterGrid: React.FC<Props> = ({ }) => {
         }
     }, [objState?.isMSearch]);
 
+
+
     const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
     return (
         <>
-            <PageMGrid>
+            <PageMGrid
+                right={
+                    <>                        
+                        {/* <Button id={"interface"} onClick={onInterface} width='w-32'/> */}
+                    </>
+                }>
                 <Grid
                     gridRef={gridRef}
                     listItem={mainData as gridData}
