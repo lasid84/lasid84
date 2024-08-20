@@ -38,8 +38,6 @@ export default function OCEN1000() {
       searchParams: {},
       isMSearch: false,
       isMDSearch: false,
-      isDSearch: false,
-      isPKCSearch: false,
       isCGOSearch: false,   //Cargo
       isCSTSearch : false,  //Cost
       mSelectedRow: {},
