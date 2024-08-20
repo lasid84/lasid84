@@ -421,24 +421,25 @@ class Library {
             
             v_tracking = 'send post finish' - + JSON.stringify(result);
     
-            if (result) {
-                if (result.count == 0) {
-                    let if_yn = this.type == 'E' ? 'I' : 'E';
-                    await this.setBLIFData(if_yn, '', '');
-                    throw "check exist";
-                }
+            //2024.08.20 executeAPI 안으로 이동
+            // if (result) {
+            //     if (result.count == 0) {
+            //         let if_yn = this.type == 'E' ? 'I' : 'E';
+            //         await this.setBLIFData(if_yn, '', '');
+            //         throw "check exist";
+            //     }
 
-                if (result.errors && result.errors.length) {
-                    msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
-                    throw msg_result
-                }
+            //     if (result.errors && result.errors.length) {
+            //         msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
+            //         throw msg_result
+            //     }
                 
-                if (result.bat && result.bat.errors.length) {
-                    msg_result = result.bat.errors.reduce((acc,obj) => acc += obj.message, '');
-                    this.mainData.error = msg_result;
-                    throw msg_result
-                }
-            }
+            //     if (result.bat && result.bat.errors.length) {
+            //         msg_result = result.bat.errors.reduce((acc,obj) => acc += obj.message, '');
+            //         this.mainData.error = msg_result;
+            //         throw msg_result
+            //     }
+            // }
     
             v_tracking = 'get post result complete-' + JSON.stringify(result) /*+ " / " + JSON.stringify(bodyText)*/;
     
@@ -547,6 +548,19 @@ class Library {
             if (result && result.success === false) {
                 this.mainData['error'] = result.error;
                 throw result.error;
+            }
+
+            if (result) {
+                if (result.count == 0) {
+                    let if_yn = this.type == 'E' ? 'I' : 'E';
+                    await this.setBLIFData(if_yn, '', '');
+                    throw "check exist";
+                }
+
+                if (result.errors && result.errors.length) {
+                    msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
+                    throw msg_result
+                }
             }
 
             if (result.bat) {
