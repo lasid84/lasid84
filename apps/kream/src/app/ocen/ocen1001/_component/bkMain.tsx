@@ -489,11 +489,11 @@ const BKMain = ({ loadItem, bkData }: Props) => {
           <MaskedInputField id="incoterms_remark" value={bkData?.incoterms_remark} options={{ isReadOnly: false }} events={{onChange:handleMaskedInputChange}} />
           <div></div>
           
-          <Checkbox id="ams_yn" value={bkData?.ams_yn} onClick={handleCheckBoxClick}/>
+          <Checkbox id="ams_yn" value={bkData?.ams_yn} />
           <MaskedInputField id="ams" value={bkData?.ams} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
-          <Checkbox id="aci_yn" value={bkData?.aci_yn} onClick={handleCheckBoxClick}/>
+          <Checkbox id="aci_yn" value={bkData?.aci_yn}/>
           <MaskedInputField id="aci" value={bkData?.aci} options={{ isReadOnly: false }} events={{ onChange: handleMaskedInputChange }} />
-          <Checkbox id="afr_yn" value={bkData?.afr_yn} onClick={handleCheckBoxClick}/>
+          <Checkbox id="afr_yn" value={bkData?.afr_yn}/>
           {/* <Checkbox id="edi_yn" value={bkData?.edi_yn} onClick={handleCheckBoxClick}/> */}
           <ReactSelect
             id="customs_declation" dataSrc={customsDeclation as data}
@@ -507,8 +507,8 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               onChange: handleCustomSelectChange
             }}
             />
-          <Checkbox id="isf_yn" value={bkData?.isf_yn} onClick={handleCheckBoxClick}/>
-          <Checkbox id="e_manifest_yn" value={bkData?.e_manifest_yn} onClick={handleCheckBoxClick}/>
+          <Checkbox id="isf_yn" value={bkData?.isf_yn}/>
+          <Checkbox id="e_manifest_yn" value={bkData?.e_manifest_yn}/>
         </PageContent>
 
         <PageContent>
