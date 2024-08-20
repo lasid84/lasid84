@@ -14,12 +14,11 @@ import SubMenuTab, { tab } from "components/tab/tab"
 import { SP_CreateData, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
-import { gridData, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
+import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
 import Stepper from "components/stepper/index";
 import { toastSuccess } from "@/components/toast";
-import {BKCopy} from "./gridMaster"
 import dayjs from "dayjs";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -40,6 +39,11 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   const { dispatch, objState } = useAppContext();
   const { MselectedTab } = objState;
+  const [ref, setRef] = useState(objState.gridRef_m);
+
+  useEffect(() => {
+    setRef(objState.gridRef_m);
+  }, [objState?.gridRef_m])
 
   const { getValues } = useFormContext();
 
@@ -51,6 +55,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     let curData = getValues(); 
     let hasData = false;
     if (bkData && bkData[ROW_TYPE] === ROW_TYPE_NEW) {
+
       let newData = {...bkData, ...curData};
       hasData = true;
       Create.mutate(newData, {
@@ -87,7 +92,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   }
   
   const onBKCopy = () => {
-    //BKCopy(objState, bkData)
+    //await BKCopy(objState, bkData)
     var temp = objState.tab1
     .filter((v:{cd:string}) => v.cd.includes("NEW"))
     .sort()
@@ -122,9 +127,8 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
               </div>                
               <div className={"flex col-span-2"}>
                 <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
-                <ICONButton id="bkcopy" disabled={false} size={'24'} onClick={onBKCopy} />
+                <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
                 <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
-                {/* <ICONButton id="reset" disabled={false} onClick={onSearch} size={'24'} /> */}
               </div>
             </>
           }

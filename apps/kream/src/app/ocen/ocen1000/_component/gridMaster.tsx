@@ -28,7 +28,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { dispatch, objState } = useAppContext();
     const { gridRef_m } = objState
 
-    //const [gridRef, setGridRef] = useState(objState.gridRef_m)
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
     const { Create } = useUpdateData2(SP_CreateData, SEARCH_M, {callbacks: [mainRefetch]});
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M, {callbacks: [mainRefetch]});
@@ -61,12 +60,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     useEffect(() => {
         if (objState.isMSearch) {
+            
             mainRefetch();
-            // log("mainisSearch", objState.isMSearch);
+            log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
             if (gridRef_m.current) gotoFirstRow(gridRef_m.current)
         }
     }, [objState?.isMSearch]);
+    
 
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
         log("handleRowDoubleClicked")
@@ -205,38 +206,39 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     );
 });
 
-export const BKCopy = async (objState:any, mainData:any) => {
-    if (objState.tab1) {
-        var temp = objState.tab1
-                        .filter((v:{cd:string}) => v.cd.includes("NEW"))
-                        .sort()
-                        .reverse();
+// export const BKCopy = async (objState:any, mainData:any) => {
+//     const {gridRef_m} = objState
+//     if (objState.tab1) {
+//         var temp = objState.tab1
+//                         .filter((v:{cd:string}) => v.cd.includes("NEW"))
+//                         .sort()
+//                         .reverse();
                         
-        var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
-        var tabName = `NEW${tabSeq}`;
+//         var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
+//         var tabName = `NEW${tabSeq}`;
         
-        // const rows = await rowAdd(objState.gridRef_m.current, 
-        //     {   bk_id: tabName,
-        //         trans_mode: objState.trans_mode,
-        //         trans_type: objState.trans_Type,
-        //         bk_dd: dayjs().format('YYYYMMDD'), 
-        //         use_yn: true
-        //     });
-        // for (const row of rows) {
-        //     await (mainData as gridData).data.push(row);
-        // }
+//         const rows = await rowAdd(gridRef_m.current, 
+//             {   bk_id: tabName,
+//                 trans_mode: objState.trans_mode,
+//                 trans_type: objState.trans_Type,
+//                 bk_dd: dayjs().format('YYYYMMDD'), 
+//                 use_yn: true
+//             });
+//         for (const row of rows) {
+//             await (mainData as gridData).data.push(row);
+//         }
     
-        setTimeout(() => {                
-            objState.tab1.push({ cd: tabName, cd_nm: tabName })
-            //dispatch({ [tabName] : rows[0] ,MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
-        }, 200);
+//         setTimeout(() => {                
+//             objState.tab1.push({ cd: tabName, cd_nm: tabName })
+//             //dispatch({ [tabName] : rows[0] ,MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
+//         }, 200);
 
-        return ({
-            data : {temp, tabSeq, tabName, mainData              
-            }
-        })
-    }
+//         return ({
+//             data : {temp, tabSeq, tabName, mainData              
+//             }
+//         })
+//     }
     
-}
+// }
 
 export default MasterGrid;
