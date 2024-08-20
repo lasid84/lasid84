@@ -8,8 +8,11 @@ export type CheckboxProps = {
   label?: string;
   value?: "Y" | "N"
   rules?: Record<string, any>;
-  onClick?: any;
   readOnly?: boolean;
+  events?: {
+    onClick?: any;
+    onChange?: any;
+  }
 };
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -18,7 +21,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   label,
   value,
   rules = {},
-  onClick,
+  events,
   readOnly = false,
 }) => {
   const { register, getValues, setValue } = useFormContext();
@@ -41,12 +44,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           checked={checkVal}
           type="checkbox"
           className="w-4 h-4 text-blue-600 border-gray-300 rounded form-checkbox focus:ring-blue-500"
-          onClick={(e: any) => {
-            console.log("checkbox onclick")
-            if (readOnly) e.preventDefault();
-            setValue(id, e.target.checked ? 'Y' : 'N');
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (readOnly) return;
             setChceckVal(e.target.checked);
-            if (onClick) onClick(id, e.target.checked ? 'Y' : 'N');
+            setValue(id, e.target.checked ? 'Y' : 'N');
+            if (events?.onChange) events.onChange(id, e.target.checked ? 'Y' : 'N');
           }}
         />
       </div>

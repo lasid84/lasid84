@@ -116,16 +116,17 @@ const SearchForm = ({ loadItem }: any) => {
       setCustcode(loadItem[0]);
       setCreateuser(loadItem[1]);
       setStatus(loadItem[2]);
-      dispatch({ isFirstRender: false });
-      if (objState.isFirstRender) {
-        onSearch();
-      }
     }
     resetComponent(0);
   }, [loadItem?.length]);
 
   useEffect(() => {
-    log("user_id", user_id, getValues("create_user"));
+    if (user_id && objState.isFirstRender) {
+      setValue("create_user", user_id);
+      log("useEffect user_id", user_id, getValues("create_user"));
+      onSearch();
+    }
+    dispatch({ isFirstRender: false });
   }, [user_id])
 
   const resetComponent = (search_gubn : number) => {
@@ -247,7 +248,6 @@ const SearchForm = ({ loadItem }: any) => {
                 displayCol: ["create_user_nm"],
                 inline: true,
                 defaultValue: getValues("create_user"),
-                isMandatory:false
               }}
             />
             <ReactSelect
