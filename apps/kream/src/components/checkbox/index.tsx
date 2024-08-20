@@ -42,6 +42,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           type="checkbox"
           className="w-4 h-4 text-blue-600 border-gray-300 rounded form-checkbox focus:ring-blue-500"
           onClick={(e: any) => {
+            console.log("checkbox onclick")
             if (readOnly) e.preventDefault();
             setValue(id, e.target.checked ? 'Y' : 'N');
             setChceckVal(e.target.checked);

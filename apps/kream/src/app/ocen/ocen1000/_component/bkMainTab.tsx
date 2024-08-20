@@ -14,7 +14,7 @@ import SubMenuTab, { tab } from "components/tab/tab"
 import { SP_CreateData, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
-import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
+import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
 import Stepper from "components/stepper/index";
@@ -71,7 +71,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
             } else return tab;
           });
           log("onSuccess2", objState.tab1, res.data[0]);
-          dispatch({ [MselectedTab]:null, [bk_id]: newData, tab1: updatedTab, MselectedTab: bk_id , isMDSearch :true, isCGOSearch : true, isCSTSearch : true})
+          dispatch({ [MselectedTab]:null, [bk_id]: newData, tab1: updatedTab, MselectedTab: bk_id, isMSearch:true })
 
           // objState.tab1.push({ cd: bk_id, cd_nm: bk_id }) //발급된 bk_id로 tab update
           // var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
@@ -100,30 +100,20 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
     var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
     var tabName = `NEW${tabSeq}`;
-    setTimeout(() => {                
+    // setTimeout(() => {                
       objState.tab1.push({ cd: tabName, cd_nm: tabName })      
       dispatch({ [tabName] : {...bkData, 
         bk_id:'', 
-        bk_dd: dayjs().format('YYYYMMDD HHmmss'), 
-        create_date : dayjs().format('YYYYMMDD HHmmss'),  
-        update_date : '',
-        update_user : '',
+        bk_dd: dayjs().format('YYYYMMDD'),
+        trans_mode: objState.trans_mode,
+        trans_type: objState.trans_type,
+        doc_close_dd: dayjs().format('YYYYMMDD'),
+        use_yn: 'Y',
         state : 0,
-        __changed : true,
-        __ROWTYPE : 'NEW'
-      }, MselectedTab: tabName, popType: crudType.CREATE });
-    }, 200);
-
-    // const rows = await rowAdd(objState.gridRef_m, 
-    //   {   bk_id: tabName,
-    //       trans_mode: objState.trans_mode,
-    //       trans_type: objState.trans_Type,
-    //       bk_dd: dayjs().format('YYYYMMDD'), 
-    //       use_yn: true
-    //   });
-    // for (const row of rows) {
-    //     await (mainData as gridData).data.push(row);
-    // }
+        [ROW_CHANGED] : true,
+        [ROW_TYPE] : ROW_TYPE_NEW
+      }, MselectedTab: tabName });
+  // }, 200);
   }
 
   return (
@@ -136,8 +126,8 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                 <Button id={"save"} onClick={onSave} width="w-24" />
               </div>                
               <div className={"flex col-span-2"}>
-                {/* <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} /> */}
-                <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'} />
+                <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
+                <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
                 <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
               </div>
             </>

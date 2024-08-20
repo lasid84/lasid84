@@ -124,6 +124,10 @@ const SearchForm = ({ loadItem }: any) => {
     resetComponent(0);
   }, [loadItem?.length]);
 
+  useEffect(() => {
+    log("user_id", user_id, getValues("create_user"));
+  }, [user_id])
+
   const resetComponent = (search_gubn : number) => {
     if (search_gubn === 0) {
       setValue("fr_date", dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"));
@@ -134,7 +138,6 @@ const SearchForm = ({ loadItem }: any) => {
     }
     trigger()
   }
-
 
   const onSearch = () => {
     const params = getValues();
@@ -229,17 +232,6 @@ const SearchForm = ({ loadItem }: any) => {
               options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
             />
-            <MaskedInputField
-              id="cust_nm"
-              value={objState.searchParams?.cust_nm}
-              options={{
-                textAlign: "center",
-                inline: true,
-                noLabel: false,
-                outerClassName: "hidden",
-              }}
-              height="h-8"
-            />
           </div>
 
           <div className={"col-span-1"}>
@@ -255,6 +247,7 @@ const SearchForm = ({ loadItem }: any) => {
                 displayCol: ["create_user_nm"],
                 inline: true,
                 defaultValue: getValues("create_user"),
+                isMandatory:false
               }}
             />
             <ReactSelect

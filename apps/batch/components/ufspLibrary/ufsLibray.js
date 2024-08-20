@@ -39,7 +39,7 @@ class Library {
     }
 
     async startBrowser() {
-        
+        try {
         if (!this.browser) {
             log(this.pgm, " / ", this.idx, " / brower restart")
             this.browser = await puppeteer.launch(
@@ -62,6 +62,10 @@ class Library {
         // lastExcute = new Date();
         this.lastExcute = getKoreaTime();
         log("lastExcute", this.lastExcute);
+    } catch (ex) {
+        this.close();
+        throw ex;
+    }
     };
 
     async close() {

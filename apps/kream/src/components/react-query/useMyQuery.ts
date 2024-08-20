@@ -59,16 +59,20 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
   const ipaddr = useUserSettings((state) => state.data.ipaddr);
   const menu_seq = useUserSettings((state) => state.data.currentMenu, shallow);
   const queryClient = useQueryClient();
+  const path = usePathname() + "/";
 
-  const Update = useMutation(['key'], mutationFn, {
+  const Update = useMutation([path + queryKey], mutationFn, {
     // ...option,
     onSuccess: (res:any, data:any, context:any) => {
-      // log("onSuccess : ", data)
-      // queryClient.invalidateQueries([queryKey]);
+      log("onSuccess : ", data, path, queryKey)
+      // queryClient.invalidateQueries([path + queryKey]);
+      if (option?.callbacks) {
+        option.callbacks.forEach((callback: () => any) => callback());
+      }
       data[ROW_CHANGED] = false;
     },
     onMutate: async (data) => {
-      log("onMutate : ", queryClient, data);
+      // log("onMutate : ", queryClient, data);
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;
     },
@@ -77,7 +81,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
   const Create = useMutation(['key'], mutationFn, {
     onSuccess: (res:any, data:any, context:any) => {
       // log("onSuccess : ", data, res, context)
-      // queryClient.invalidateQueries([queryKey])
+      queryClient.invalidateQueries([path + queryKey])
       data[ROW_CHANGED] = false;
       data[ROW_TYPE_NEW] = null;
     },
