@@ -64,6 +64,7 @@ class Library {
         log("lastExcute", this.lastExcute);
     } catch (ex) {
         this.close();
+        throw ex;
     }
     };
 
