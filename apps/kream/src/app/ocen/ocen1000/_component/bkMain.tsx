@@ -43,6 +43,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
 
   const [custcode, setCustcode] = useState<any>()
+  const [MblType, setMBLType] = useState<any>()
   const [blType, setBLType] = useState<any>()
   const [incoterms, setIncoterms] = useState<any>()
   const [billtype, setBillType] = useState<any>()
@@ -61,7 +62,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       setSalesPerson(loadItem[11]);
       setTerminal(loadItem[12]);
       setCustomsDeclation(loadItem[13]);
-
+      setMBLType(loadItem[20])
     }
   }, [loadItem])
 
@@ -321,17 +322,17 @@ const BKMain = ({ loadItem, bkData }: Props) => {
             /> */}
             <div className={"col-span-1"}>
                 <CustomSelect
-                  id="cust_bl_type"
-                  initText='Select a BL Type'
-                  listItem={blType as gridData}
-                  valueCol={["bl_type", "bl_type_nm",]}
-                  displayCol="bl_type_nm"
+                  id="carrier_bl_type"
+                  initText='Select a Carrier BL Type'
+                  listItem={MblType as gridData}
+                  valueCol={["carrier_bl_type", "carrier_bl_type_nm",]}
+                  displayCol="carrier_bl_type_nm"
                   gridOption={{
-                    colVisible: { col: ["bl_type_nm"], visible: true },
+                    colVisible: { col: ["carrier_bl_type_nm"], visible: true },
                   }}
                   gridStyle={{ width: '320px', height: '200px' }}
                   style={{ width: '500px', height: "8px" }}
-                  defaultValue={bkData?.bl_type}
+                  defaultValue={bkData?.carrier_bl_type}
                   isDisplay={true}
                 />
             </div>
