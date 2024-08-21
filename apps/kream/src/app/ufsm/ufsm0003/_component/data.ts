@@ -38,15 +38,17 @@ export const SP_GetIFData = async (searchParam: any) => {
 export const SP_CreateIFData = async (param: any) => {
   
   const Param = param;
-  const { excel_data, user_id, ipaddr } = Param;
+  const { upload_gubn, excel_data, user_id, ipaddr } = Param;
   const params = {
     inparam : [
-      "in_excel_data"
+      "in_gubn"
+    , "in_excel_data"
     , "in_user_id"
     , "in_ipaddr"
     ],
     invalue: [
-      excel_data
+      upload_gubn
+    , excel_data
     , user_id
     , ipaddr
     ],

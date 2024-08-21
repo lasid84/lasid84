@@ -74,13 +74,13 @@ const SearchForm = memo(({loadItem}:any) => {
   }
 
   const onSave = () => {
-      log("onSave", !!Object.keys(excel_data).length)
-      Create.mutate({excel_data:JSON.stringify(excel_data.data)}, {
-          onSuccess: (res: any) => {
-              dispatch({ isMSearch: true });
-          }
-      });
-      dispatch({excel_data: {}});
+    const params = getValues();
+    Create.mutate({...params, excel_data:JSON.stringify(excel_data.data)}, {
+        onSuccess: (res: any) => {
+            dispatch({ isMSearch: true });
+        }
+    });
+    dispatch({excel_data: {}});
   }
 
   return (
