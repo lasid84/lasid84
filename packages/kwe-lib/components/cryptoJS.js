@@ -20,4 +20,4 @@ module.exports = {
 }
 
 // console.log(encrypt("1q2w#E$R"));
-console.log(decrypt("U2FsdGVkX1/KowzvJxLaFQHcWI2nI7QLrJMK/V8gn+c="));
+// console.log(decrypt("U2FsdGVkX1/KowzvJxLaFQHcWI2nI7QLrJMK/V8gn+c="));
