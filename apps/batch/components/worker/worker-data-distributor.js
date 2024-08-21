@@ -16,7 +16,7 @@ async function setIFDataInit() {
         const invalue = [pgm, idx, '', ''];
         const inproc = 'scrap.f_scrp0001_set_init_if_data2'; 
         const result = await executFunction(inproc, inparam, invalue);
-        error(result);
+
  
     } catch (ex) {
         throw ex;
@@ -56,7 +56,7 @@ const mySetInterval = () => {
 
 
 try {
-    log("worker.js시작");
+    log("distributor worker.js시작");
     // setInitBLIFData(); //데이터 분배 스레드 추가로 사용 안함(worker-data-distributor.js)
     setIFDataInit();
     mySetInterval();
