@@ -135,7 +135,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
             </>
           }
           bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
-          addition={<Stepper value={bkData?.state} ><></></Stepper>}
+          addition={<div className="w-8/12"></div>}
         >
           <div className={"flex col-span-2"}>
 

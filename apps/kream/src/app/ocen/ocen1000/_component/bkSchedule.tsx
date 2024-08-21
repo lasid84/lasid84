@@ -11,9 +11,9 @@ import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
 import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
-import { SP_GetPickupContData } from "./data";
+import { SP_GetPickupContData, SP_GetCarrierContData } from "./data";
 import PicupPlacePopUp from "./popPickupcont"
-// import PicupPlacePopUp from "./popPickupcont"
+import CarrierContPopUp from "./popCarriercont";
 import { Button } from "components/button";
 import dayjs from "dayjs";
 import { SP_GetDetailData } from "@/components/commonForm/customerPickupPlace/_component/data";
@@ -49,10 +49,14 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   const { data: pickupData, refetch: pickupRefetch } = useGetData({ cust_code: bkData?.shipper_id, pickup_type: trans_mode + trans_type }, SEARCH_PKC, SP_GetDetailData, { enable: true });
   const { data: cyPlaceData, refetch: cyPlaceRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "CyPlace", SP_GetMasterData, { enable: true });
   const { data: cyPlaceContData, refetch: cyPlaceContRefetch } = useGetData({ place_code: bkData?.cy_place_code, cont_type: trans_mode + trans_type }, "CYContacotr", SP_GetCYContactData, { enable: true });
+  const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
+  const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
+  
   // const [cyPlace, setCyPlace] = useState<any>()
+  const [carriercode, setCarrierCode] = useState<any>()
   const [port, setPort] = useState<any>()
   const [ isRefreshCyCont, setRefreshCyCont ] = useState(false);
-
+  const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
 
   const methods = useForm({
     defaultValues: {
@@ -68,16 +72,21 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
 
   useEffect(() => {
     if (loadItem) {
+      setCarrierCode(loadItem[9]);
       setPort(loadItem[18]);
     }
   }, [])
 
   useEffect(()=> {
-    if (isRefreshCyCont && cyPlaceContData && bkData) {
+    if (isRefreshCyCont && cyPlaceContData && crTaskContData && crSalesContData && bkData) {
       setRefreshCyCont(false);
 
+      let defTask = (crTaskContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      let t_cont_seq = defTask ? defTask.cont_seq : null;
+      let defSales = (crSalesContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      let s_cont_seq = defSales ? defSales.cont_seq : null;
       let def = (cyPlaceContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
-      dispatch({ [MselectedTab]: {...bkData, cy_cont_seq:def?.cont_seq}})
+      dispatch({ [MselectedTab]: {...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq, cy_cont_seq:def?.cont_seq}})
     } 
   }, [isRefreshCyCont, cyPlaceContData, bkData])
 
@@ -92,6 +101,9 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
       case "cy_cont_manage":
         dispatch({ isCYContPopupOpen: true });
         break;
+      case "carrier_manage":
+          dispatch({ isCarrierContPopupOpen: true });
+        break;  
     }
   }
 
@@ -99,23 +111,36 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
     <div className="w-full">
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">SKD</span>}>
-          {/* <div className="col-start-1 col-end-2"><MaskedInputField id="ts_port" value={bkData?.ts_port} options={{ isReadOnly: false }} /></div> */}
-          <CustomSelect 
-            id="ts_port"
-            initText="Select a T/S Port"
-            listItem={port as gridData}
-            valueCol={["port_code", "port_nm"]}
-            displayCol="port_nm"
-            gridOption={{
-              colVisible: { col: ["port_code", "port_nm"], visible: true },
-            }}
-            defaultValue={bkData?.ts_port}
-            isDisplay={true}
-          />
-          <div className="col-start-2 col-end-4"><MaskedInputField id="vessel" value={bkData?.vessel} options={{ isReadOnly: false}} /></div>
-          <div className="col-start-1 col-end-6"><hr></hr>  </div>
+          <div className={"col-span-2"}>
+                  <CustomSelect
+                    id="carrier_code"
+                    initText='Select a Carrier Code'
+                    listItem={carriercode as gridData}
+                    valueCol={["carrier_code", "carrier_nm"]}
+                    displayCol="carrier_nm"
+                    gridOption={{
+                      colVisible: { col: ["carrier_code", "carrier_nm"], visible: true },
+                    }}
+                    gridStyle={{ width: '600px', height: '300px' }}
+                    style={{ width: '1000px', height: "8px" }}
+                    defaultValue={bkData?.carrier_code}
+                    isDisplay={true}
+                    events={{
+                      onSelectionChanged: (e, id, value) => {
+                        if (bkData?.carrier_code != value) {
+                          setRefreshCrCont(true);
+                          dispatch({[MselectedTab]: {...bkData, carrier_code:value }});
+                          log("onSelectionChanged carrier_code", id, value);
+                        }
+                      },
+                    }}
+                  />
+                </div>
+        
+        
+          <div className="col-start-3 col-end-5"><MaskedInputField id="vessel" value={bkData?.vessel} options={{ isReadOnly: false}} /></div>
+          <div className="col-start-1 col-end-6"> <hr></hr>  </div>
           <div className="col-start-1 col-end-2">
-            {/* <MaskedInputField id="port_of_loading" value={bkData?.port_of_loading} options={{ isReadOnly: false }} /> */}
             <CustomSelect 
               id="port_of_loading"
               initText="Select a Port"
@@ -130,7 +155,6 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
             />
           </div>
 
-          {/* <MaskedInputField id="port_of_unloading" value={bkData?.port_of_unloading} options={{ isReadOnly: false }} /> */}
           <CustomSelect 
               id="port_of_unloading"
               initText="Select a Port"
@@ -143,7 +167,18 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
               defaultValue={bkData?.port_of_unloading}
               isDisplay={true}
             />
-          {/* <MaskedInputField id="final_dest_port" value={bkData?.final_dest_port} options={{ isReadOnly: false }} /> */}
+          <CustomSelect 
+            id="ts_port"
+            initText="Select a T/S Port"
+            listItem={port as gridData}
+            valueCol={["port_code", "port_nm"]}
+            displayCol="port_nm"
+            gridOption={{
+              colVisible: { col: ["port_code", "port_nm"], visible: true },
+            }}
+            defaultValue={bkData?.ts_port}
+            isDisplay={true}
+          />
           <CustomSelect 
               id="final_dest_port"
               initText="Select a Port"
@@ -179,7 +214,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                   <Button id={"pickup_manage"} label={"manage_pickup"} onClick={handleButtonClick} width="w-24"   />
                   {/* <Button id={"cy_manage"} label={"manage_cy"} onClick={handleButtonClick} width="w-30"   /> */}
                   <Button id={"cy_cont_manage"} label={"manage_cont_cy"} onClick={handleButtonClick} width="w-24"/>
-                  {/* <Button id={"delete"} width="w-24"   /> */}
+
                 </>}>
               <>
                 <PicupPlacePopUp callbacks={[pickupRefetch]} />
@@ -258,7 +293,6 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <div className="col-span-2"><MaskedInputField id="cy_place_addr" value={bkData?.cy_addr} options={{ isReadOnly: true }} /></div>
 
                 <div className="col-start-1 col-end-2">
-                  {/* <MaskedInputField id="cy_cont_nm" value={bkData?.cy_cont_nm} options={{ isReadOnly: false }} /> */}
                   <CustomSelect
                     id="cy_cont_seq"
                     initText='Select an option'
