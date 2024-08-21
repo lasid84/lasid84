@@ -7,7 +7,7 @@ import { useAppContext, SEARCH_M, crudType } from "components/provider/contextOb
 import { useGetData } from "components/react-query/useMyQuery";
 import Grid, { rowAdd, ROW_INDEX } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community"
+import { RowClickedEvent, RowDoubleClickedEvent, SelectionChangedEvent } from "ag-grid-community"
 import Modal from './popup';
 import { PopType } from "@/utils/modal";
 const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
@@ -41,6 +41,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         dispatch({ mSelectedRow: selectedRow2, isPopUpOpen: true, crudType: PopType.UPDATE })
     };
 
+    const handleRowDoubleClicked = (param: RowDoubleClickedEvent) => {
+        // var data = onRowClicked(param);
+        var selectedRow = { "colId": param.node.id, ...param.node.data}
+        const ufs_pw2 = decrypt(selectedRow?.ufs_pw)
+        var selectedRow2 = {...selectedRow, ufs_pw:ufs_pw2 }
+        dispatch({ mSelectedRow: selectedRow2, isPopUpOpen: true, crudType: PopType.UPDATE })
+    };
+
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const selectedRow = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
@@ -62,7 +70,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 listItem={mainData as gridData}
                 options={gridOption}
                 event={{
-                    onRowClicked: handleRowClicked,
+                    // onRowClicked: handleRowClicked,
+                    onRowDoubleClicked: handleRowDoubleClicked,
                     onSelectionChanged: handleSelectionChanged,
                 }}
             />

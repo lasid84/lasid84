@@ -123,7 +123,6 @@ const SearchForm = ({ loadItem }: any) => {
   useEffect(() => {
     if (user_id && objState.isFirstRender) {
       setValue("create_user", user_id);
-      log("useEffect user_id", user_id, getValues("create_user"));
       onSearch();
     }
     dispatch({ isFirstRender: false });
@@ -177,8 +176,8 @@ const SearchForm = ({ loadItem }: any) => {
 
           <div className={"col-span-1 border"}>
             <RadioGroup label="search_gubn" >
-              <Radio name="search_gubn" value="0" label="doc_close_dd" onChange={onChange} defaultChecked/>
-              <Radio name="search_gubn" value="1" label="create_date" onChange={onChange} />
+              <Radio id ="search_gubn" name="search_gubn" value="0" label="doc_close_dd" onChange={onChange} defaultChecked/>
+              <Radio id ="search_gubn" name="search_gubn" value="1" label="create_date" onChange={onChange} />
             </RadioGroup>
           </div>
 

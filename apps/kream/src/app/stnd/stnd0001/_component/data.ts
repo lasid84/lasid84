@@ -83,6 +83,7 @@ export const SP_UpdateData = async (param: any) => {
   const Param = param
   const { user_id2, ufs_pw, emp_no, ufs_id, perm_id, bz_plc_code, terminal_cd, use_yn, dept_cd, office_cd, remark, tel_num, edi_email, edi_id, edi_pass, upd_user, ip_addr } = Param;
   const ufs_pw2 = encrypt(ufs_pw)
+  log("user SP_UpdateData", ufs_pw, ufs_pw2);
   const perm_id2 = convertToCommaSeparatedString(perm_id)
 
   const params = {

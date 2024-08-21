@@ -46,8 +46,12 @@
 import { useTranslation } from "react-i18next";
 import { useContext, useState } from "react";
 import RadioContext from "./RadioGroup";
+import { useFormContext } from "react-hook-form";
+
+const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export type RadioProps = {
+  id: string;
   title?: React.ReactNode;
   right?: React.ReactNode;
   children?: React.ReactNode;
@@ -60,6 +64,7 @@ export type RadioProps = {
 };
 
 const Radio: React.FC<RadioProps> = ({
+  id,
   children,
   value,
   name,
@@ -69,9 +74,13 @@ const Radio: React.FC<RadioProps> = ({
   onChange,
 }) => {
   const { t } = useTranslation();
+  const { register, getValues, setValue } = useFormContext();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    //console.log('handleChange index', e.target.value);
+    // log("Radio onChange", e.target.id,e.target.value)
+    const value = parseInt(e.target.value, 10);
+    setValue(e.target.id, value)
+
     if (onChange) {
       onChange(e);  
     }
@@ -82,8 +91,9 @@ const Radio: React.FC<RadioProps> = ({
       <input
         className="items-center p-1 text-gray-500"
         type="radio"
+        id={id}
         value={value}
-        name={name}
+        name={name?name:id}
         defaultChecked={defaultChecked}
         disabled={disabled}
         onChange={handleChange}

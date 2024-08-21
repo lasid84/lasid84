@@ -45,6 +45,10 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     setRef(objState.gridRef_m);
   }, [objState?.gridRef_m])
 
+  useEffect(() => {
+    log("useEffect bkData", bkData);
+  }, [bkData])
+
   const { getValues } = useFormContext();
 
   const onRefresh = () => { dispatch({ isMDSearch: true }) }
@@ -63,15 +67,13 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           let bk_id = res.data[0].bk_id;
           let updatedTab = objState.tab1.map((tab:any) => {
             if (tab.cd === MselectedTab) {
-              log("onSuccess", MselectedTab, bk_id);
               tab.cd = bk_id;
               tab.cd_nm = bk_id;
 
               return tab;
             } else return tab;
           });
-          log("onSuccess2", objState.tab1, res.data[0]);
-          dispatch({ [MselectedTab]:null, [bk_id]: newData, tab1: updatedTab, MselectedTab: bk_id, isMSearch:true })
+          dispatch({ [MselectedTab]:null, [bk_id]: res.data[0], tab1: updatedTab, MselectedTab: bk_id, isMSearch:true })
 
           // objState.tab1.push({ cd: bk_id, cd_nm: bk_id }) //발급된 bk_id로 tab update
           // var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })

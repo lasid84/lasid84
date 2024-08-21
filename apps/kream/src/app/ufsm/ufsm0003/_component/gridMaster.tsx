@@ -27,7 +27,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     const gridOption: GridOption = {
         colVisible: { col : ["uuid", "record_id", "sort_id", "print_ind", "type"], visible:false },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-        gridHeight: "80%",
+        gridHeight: "h-full",
         // checkbox: ["no"],
         // editable: ["trans_mode"],
         dataType: { "create_date" : "date", "complete_date" : "date", "invoice_wb_amt": "number", "invoice_charge_amt" : "number", "actual_cost_amt" : "number"},
@@ -77,7 +77,6 @@ const MasterGrid: React.FC<Props> = memo(() => {
                 onSelectionChanged: handleSelectionChanged,
             }}
         />
-            
     );
 });
 

@@ -9,6 +9,8 @@ import SearchForm from "./_component/search-form";
 import MasterGrid from './_component/gridMaster';
 import { FileUpload } from "components/file-upload";
 import { gridData, JsonToGridData, ROW_TYPE, ROW_TYPE_NEW } from "@/components/grid/ag-grid-enterprise";
+import { FormProvider, useForm } from "react-hook-form";
+import dayjs from "dayjs";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -24,8 +26,28 @@ export default function UFSM0003() {
         }
     });
     const { objState } = state;
-
+    const { fr_date, to_date } = objState.searchParams;
+    
     const val = useMemo(() => { return { objState, dispatch } }, [state]);
+
+    const methods = useForm({
+        // resolver: zodResolver(formSchema),
+        defaultValues: {
+          fr_date: fr_date || dayjs().format("YYYYMMDD"),
+          to_date: to_date || dayjs().format("YYYYMMDD"),
+        }
+      });
+    
+      const {
+        handleSubmit,
+        reset,
+        setFocus,
+        setValue,
+        getValues,
+        register,
+        trigger,
+        formState: { errors, isSubmitSuccessful },
+      } = methods;
     
     
     useEffect(() => {
@@ -60,9 +82,17 @@ export default function UFSM0003() {
 
     return (
         <TableContext.Provider value={val}>
-            <SearchForm loadItem={null} />
-            <FileUpload onFileDrop={handleFileDrop} isInit={objState.uploadFile_init}/>
-            <MasterGrid />
+            <div className={`w-full h-full`}>
+            <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit(() => {})} className="space-y-1">
+                        <SearchForm loadItem={null} />
+                        <FileUpload onFileDrop={handleFileDrop} isInit={objState.uploadFile_init}/>
+                        <div className={`w-full h-[calc(75vh)]`}>
+                            <MasterGrid />
+                        </div>
+                    </form>
+            </FormProvider>
+            </div>
         </TableContext.Provider>
     );
 }

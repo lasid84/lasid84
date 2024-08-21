@@ -58,7 +58,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => {
         if (loadItem) {
-            console.log('updatelogic2', loadItem)
             setBzplccode(loadItem[0])
             setTerminalcode(loadItem[1])
             setPermissionId(loadItem[2])
@@ -70,7 +69,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
         if (popType === crudType.UPDATE) {
-            console.log('UpdateLogic')
+            console.log('UpdateLogic', param)
             Update.mutate(param, {
                 onSuccess: (res: any) => {
                     closeModal();

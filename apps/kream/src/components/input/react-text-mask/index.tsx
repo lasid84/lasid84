@@ -157,7 +157,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
                  ${freeStyles}
                  text-${textAlign}
                  `)}
-              mask={mask!}
+              mask={type === 'password' ? false : mask!}
               // pipe={pipe}
               value={selectedVal}
               defaultValue={value}
