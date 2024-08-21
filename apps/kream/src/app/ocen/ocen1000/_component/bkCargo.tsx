@@ -69,9 +69,8 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             isMandatory:false
           }}
         />
-
-        <MaskedInputField id="commodity" value={bkData?.commodity} options={{ isReadOnly: false, textAlign: "center" }} />
-        <Checkbox id="strategic_yn" value={bkData?.strategic_yn} />
+        {/* <MaskedInputField id="commodity" value={bkData?.commodity} options={{ isReadOnly: false, textAlign: "center" }} />
+        <Checkbox id="strategic_yn" value={bkData?.strategic_yn} /> */}
       </PageContent>
 
       <div className="flex flex-row w-full">

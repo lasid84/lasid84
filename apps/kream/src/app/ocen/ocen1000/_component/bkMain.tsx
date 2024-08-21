@@ -36,8 +36,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   
   //get shipper cont data
   const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enable:true});
-  const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
-  const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
   const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enable:true});
   const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplate", SP_GetBkTemplateData, {enable:false});
 
@@ -49,7 +47,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const [incoterms, setIncoterms] = useState<any>()
   const [billtype, setBillType] = useState<any>()
   
-  const [carriercode, setCarrierCode] = useState<any>()
   const [salesperson, setSalesPerson] = useState<any>()
   const [terminal, setTerminal] = useState<any>()
   const [customsDeclation, setCustomsDeclation] = useState<any>()
@@ -61,7 +58,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       setBLType(loadItem[4]);
       setIncoterms(loadItem[7]);
       setBillType(loadItem[8]);
-      setCarrierCode(loadItem[9]);
       setSalesPerson(loadItem[11]);
       setTerminal(loadItem[12]);
       setCustomsDeclation(loadItem[13]);
@@ -87,18 +83,15 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   }, [isRefreshShpCont, shipperContData, bkData])
 
   useEffect(()=> {
-    if (isRefreshCrCont && crTaskContData && crSalesContData && bkData) {
+    if (isRefreshCrCont && bkData) {
       setRefreshCrCont(false);
 
-      let defTask = (crTaskContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
-      let t_cont_seq = defTask ? defTask.cont_seq : null;
-      let defSales = (crSalesContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
-      let s_cont_seq = defSales ? defSales.cont_seq : null;
+     
       // if (t_cont_seq) {
         // dispatch({ bkData : { ...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
-        dispatch({ [MselectedTab]: {...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq, [ROW_CHANGED]: true}});
+        dispatch({ [MselectedTab]: {...bkData, [ROW_CHANGED]: true}});
     } 
-  }, [isRefreshShpCont, bkData, crTaskContData, crSalesContData]);
+  }, [isRefreshShpCont, bkData]);
 
   /* TODO */
   const setBookingState = (id: string) => {
@@ -110,9 +103,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
     switch (e.target.id) {
       case "shipper_manage":
         dispatch({ isShpContPopUpOpen: true });
-        break;
-      case "carrier_manage":
-        dispatch({ isCarrierContPopupOpen: true });
         break;
     }
   }
@@ -150,7 +140,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                   : <></> } 
                   <DatePicker
                     id="bk_dd"
-                    // label="bk_dd"
                     value={bkData?.bk_dd}
                     options={{
                       inline: false,
@@ -234,12 +223,15 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                     defaultValue={bkData?.sales_person}
                   />
                 </div>
+
+                
               </>
+
             </PageSearch>
           </div>
 
           {/* Shipper 담당자 */}
-          <div className={"col-span-1"}>
+          {/* <div className={"col-span-1"}>
             <CustomSelect
               id="shipper_cont_seq"
               initText="Select..."
@@ -271,9 +263,11 @@ const BKMain = ({ loadItem, bkData }: Props) => {
           </div>
           <MaskedInputField id="shp_cont_email" value={bkData?.shp_cont_email} options={{ isReadOnly: true}} />
           <MaskedInputField id="shp_tel_num" value={bkData?.shp_cont_tel_num} options={{ isReadOnly: true }} />
-          <MaskedInputField id="shp_fax_num" value={bkData?.shp_cont_fax_num} options={{ isReadOnly: true }} />
+          <MaskedInputField id="shp_fax_num" value={bkData?.shp_cont_fax_num} options={{ isReadOnly: true }} /> */}
 
-          <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={2} cols={32} value={bkData?.shp_remark} options={{ isReadOnly: false }} /></div>
+          {/* Shipper 비고 */}
+          {/* <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={2} cols={32} value={bkData?.shp_remark} options={{ isReadOnly: false }} /></div> */}
+          
           <div className={"col-span-2"}>
             <CustomSelect
               id="cnee_id"
@@ -284,114 +278,14 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               gridOption={{
                 colVisible: { col: ["partner_id", "partner_name", "cust_nm"], visible: true },
               }}
-              gridStyle={{ width: '800px', height: '300px' }}
-              style={{ width: '1000px', height: "8px" }}
+              gridStyle={{ width: '600px', height: '300px' }}
+              style={{ width: '500px', height: "8px" }}
               defaultValue={bkData?.cnee_id}
               isDisplay={true}
-              inline={true}
             />
           </div>
         </PageContent>
 
-        <PageContent
-          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Carrier</span>}>
-
-          <div className="col-span-8">
-            <PageSearch
-              right={
-                <>
-                  <Button id={"carrier_manage"} label={"manage_con"} width="w-20" onClick={handleButtonClick} />
-                </>}>
-              <>
-                <CarrierContPopUp initData={loadItem} callbacks={[crTaskContRefetch, crSalesContRefetch]} />
-                <div className={"col-span-3"}>
-                  <CustomSelect
-                    id="carrier_code"
-                    initText='Select a Carrier Code'
-                    listItem={carriercode as gridData}
-                    valueCol={["carrier_code", "carrier_nm"]}
-                    displayCol="carrier_nm"
-                    gridOption={{
-                      colVisible: { col: ["carrier_code", "carrier_nm"], visible: true },
-                    }}
-                    gridStyle={{ width: '600px', height: '300px' }}
-                    style={{ width: '1000px', height: "8px" }}
-                    defaultValue={bkData?.carrier_code}
-                    isDisplay={true}
-                    inline={true}
-                    events={{
-                      onSelectionChanged: (e, id, value) => {
-                        if (bkData?.carrier_code != value) {
-                          setRefreshCrCont(true);
-                          dispatch({[MselectedTab]: {...bkData, carrier_code:value}});
-                          log("onSelectionChanged carrier_code", id, value);
-                        }
-                      },
-                    }}
-                  />
-                </div>
-              </>
-            </PageSearch>
-          </div>
-
-          <div className="flex col-start-1 col-end-6">
-              <fieldset className="flex w-1/2 p-3 pb-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
-                <legend className="text-base font-bold text-blue-800 ">업무 담당자</legend>
-                <CustomSelect
-                    id="cr_t_cont_seq"
-                    // initText='Select an '
-                    listItem={crTaskContData as gridData}
-                    valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
-                    displayCol="pic_nm"
-                    gridOption={{
-                      colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
-                    }}
-                    gridStyle={{ width: '600px', height: '300px' }}
-                    style={{ width: '500px', height: "8px" }}
-                    defaultValue={bkData?.cr_t_cont_seq}
-                    isDisplay={true}
-                    events={{
-                      onChanged(e) {
-                        if (!bkData) return;                  
-                        bkData.cr_t_cont_email = e?.email;
-                        bkData.cr_t_cont_tel_num = e?.tel_num;
-                        dispatch({[MselectedTab]: {...bkData}});
-                      },
-                    }}
-                  />
-                  <MaskedInputField id="cr_t_email" value={bkData?.cr_t_cont_email} options={{ isReadOnly: true }} width="w-80"/>
-                  <MaskedInputField id="cr_t_tel_num" value={bkData?.cr_t_cont_tel_num} options={{ isReadOnly: true }} />
-              </fieldset>
-              <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
-                <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
-                  <CustomSelect
-                      id="cr_s_cont_seq"
-                      // initText='Select an '
-                      listItem={crSalesContData as gridData}
-                      valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
-                      displayCol="pic_nm"
-                      gridOption={{
-                        colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
-                      }}
-                      gridStyle={{ width: '600px', height: '300px' }}
-                      style={{ width: '100px', height: "8px" }}
-                      defaultValue={bkData?.cr_s_cont_seq}
-                      isDisplay={true}
-                      events={{
-                        onChanged(e) {
-                          if (!bkData) return;                  
-                          bkData.cr_s_cont_email = e?.email;
-                          bkData.cr_s_cont_tel_num = e?.tel_num;
-                          dispatch({[MselectedTab]: {...bkData}});
-                        }
-                      }}
-                    />
-                <MaskedInputField id="cr_s_email" value={bkData?.cr_s_cont_email} options={{ isReadOnly: true }} width="w-80" />
-                <MaskedInputField id="cr_s_tel_num" value={bkData?.cr_s_cont_tel_num} options={{ isReadOnly: true }} />
-              </fieldset>
-          </div>
-          {/* </div> */}
-        </PageContent>
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">ETC</span>}>
           <ReactSelect
@@ -427,11 +321,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
           <MaskedInputField id="incoterms_remark" value={bkData?.incoterms_remark} options={{ isReadOnly: false }} />
           <div></div>
           
-          <Checkbox id="ams_yn" value={bkData?.ams_yn} />
-          <MaskedInputField id="ams" value={bkData?.ams} options={{ isReadOnly: false }} />
-          <Checkbox id="aci_yn" value={bkData?.aci_yn} />
-          <MaskedInputField id="aci" value={bkData?.aci} options={{ isReadOnly: false }}  />
-          <Checkbox id="afr_yn" value={bkData?.afr_yn} />
           <ReactSelect
             id="customs_declation" dataSrc={customsDeclation as data}
             options={{
@@ -439,10 +328,15 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               displayCol: ['customs_declation', 'customs_declation_nm'],
               defaultValue: bkData?.customs_declation,
               isAllYn: false
-            }}
-            />
-          <Checkbox id="isf_yn" value={bkData?.isf_yn} />
-          <Checkbox id="e_manifest_yn" value={bkData?.e_manifest_yn} />
+            }}/>
+
+            {/* <Checkbox id="ams_yn" value={bkData?.ams_yn} />
+            <MaskedInputField id="ams" value={bkData?.ams} options={{ isReadOnly: false }} />
+            <Checkbox id="aci_yn" value={bkData?.aci_yn} />
+            <MaskedInputField id="aci" value={bkData?.aci} options={{ isReadOnly: false }}  />
+            <Checkbox id="afr_yn" value={bkData?.afr_yn} />
+            <Checkbox id="isf_yn" value={bkData?.isf_yn} />
+            <Checkbox id="e_manifest_yn" value={bkData?.e_manifest_yn} /> */}
         </PageContent>
 
         <PageContent>
