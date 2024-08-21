@@ -133,16 +133,24 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
             </>
           }
           bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
-          addition={<div className="w-8/12"></div>}
+          //addition={<div className="w-2/12"></div>}
         >
-          <div className={"flex col-span-2"}>
-
+          <div className={"flex-col col-span-2"}>
           <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
           </div>
-          <div className={"flex col-span-2"}>
-
+          <div className={"flex-col col-span-2"}>
+          <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
+          </div>
+          <div className={"flex-col col-span-2"}>
+          <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: false, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
+          </div>
+          <div className={"flex-col col-span-2"}>
           <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="update_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+          </div>
+          <div className={"flex-col col-span-2"}>
+          <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date'  }} />
           <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
           </div>
         </PageBKTabContent>
