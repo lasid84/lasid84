@@ -1039,11 +1039,11 @@ export const JsonToGridData = (arrDataJson:any[], header:string[],headerLine=1) 
   for (let i = 1; i < headerLine; i++) {
     let objData = arrDataJson.splice(0,1);
     
-    Object.entries(objData[0]).forEach(([key,val],j) => {
-      let idx = header.indexOf(key);
-      header[idx] = header[idx] + "\n" + val;
-      log("JsonToGridData", key, val, header);
-    });
+    //header 값이 달라져 데이터가 안보임..
+    // Object.entries(objData[0]).forEach(([key,val],j) => {
+    //   let idx = header.indexOf(key);
+    //   header[idx] = header[idx] + "\n" + val;
+    // });
   }
 
   data.data = arrDataJson;
@@ -1051,7 +1051,7 @@ export const JsonToGridData = (arrDataJson:any[], header:string[],headerLine=1) 
     let obj = {"name":v};
     return obj
   });
-
+  log("JsonToGridData", data);
   return data;
 }
 

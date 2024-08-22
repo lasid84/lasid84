@@ -10,12 +10,12 @@ const ufsp = new Library(workerData);
 let onExcute = false;
 var x_date;
 
-async function setCodeMasterData() {
+async function setChargeData() {
     try {
 
         const inparam = ['in_data', 'in_user', 'in_ipaddr'];
         const invalue = [JSON.stringify(ufsp.resultData),'scrap_codemaster', ''];
-        const inproc = 'scrap.f_scrp0007_set_codemaster_data'; 
+        const inproc = 'scrap.f_scrp0011_set_charge_data'; 
         await executFunction(inproc, inparam, invalue);
         //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
         
@@ -69,7 +69,7 @@ async function startScraping() {
             await ufsp.startScript(script);
 
             log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
-            await setCodeMasterData();
+            await setChargeData();
             // await ufsp.setBLIFData('Y', '', '');     
             await ufsp.setBLIFData('Y', '', '');       
             ufsp.errCnt = 0;
@@ -80,7 +80,7 @@ async function startScraping() {
     catch(ex) {
         if (ufsp.mainData) {
             if (ufsp.mainData.error) ufsp.setBLIFData('R', '', ufsp.mainData.error);
-            else await ufsp.setBLIFData('R', '', ex);
+            else await ufsp.setBLIFData('R', ufsp.resultData, ex);
         }    
         error(this.idx, ": Parent Ex :", ex);
         ufsp.errCnt++;

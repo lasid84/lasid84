@@ -3,11 +3,12 @@
 import { NavigationState, useNavigation } from "states/useNavigation";
 import { memo, useState, useEffect } from "react";
 import {FiPlus} from "react-icons/fi";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { navigate } from "services/serverAction";
 import { useUserSettings } from "@/states/useUserSettings";
 import { shallow } from "zustand/shallow";
+import { toastError } from "../toast";
 // import Breadcrumb,{ BreadcrumbItemProps } from  "@repo/ui/src/breadcrumb/breadcrumb"; 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -41,6 +42,7 @@ export type PageTitleProps = {
 
 function getMenuTitle(menu: NavigationState[], menu_seq: number):string|undefined {
   if (!menu) return '';
+  // log("getMenuTitle", menu, menu_seq);
   var title;
   for (var obj of menu) {
     if (obj.items.length > 0) {
@@ -58,7 +60,7 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
   const [title, setTitle] = useState('');
 
   const navigation = useNavigation((state) => state.navigation);
-  const router = usePathname();
+  const router = useRouter();
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
   // log("==========PageTitle", queryParam, params, " / ");
@@ -69,6 +71,12 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
   useEffect(() => {
     let title = getMenuTitle(navigation, menu_seq) || '';
     setTitle(title)
+
+    if (menu_seq !== 0 && title === '') {
+      setTitle(title)
+      toastError("권한이 없습니다.")
+      router.replace('/');
+    }
   }, [navigation, menu_seq])
 
   return (

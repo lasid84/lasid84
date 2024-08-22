@@ -31,7 +31,7 @@ export const SP_GetIFData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
-  log("SP_GetIFData", result)
+  // log("SP_GetIFData", result)
   return result![0]
 }
 

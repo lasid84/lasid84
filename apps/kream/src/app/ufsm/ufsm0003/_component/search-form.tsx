@@ -14,6 +14,7 @@ import { SP_CreateIFData, SP_GetExcelFormData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import RadioGroup from "@/components/radio/RadioGroup";
 import Radio from "@/components/radio";
+import { toastError } from "@/components/toast";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -37,7 +38,6 @@ type Props = {
 // export function SearchForm({searchParams, dispatch}) {
 const SearchForm = memo(({loadItem}:any) => {
 
-  log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
   const { excel_data } = objState;
   
@@ -48,6 +48,7 @@ const SearchForm = memo(({loadItem}:any) => {
 
   useEffect(() => {
     const params = getValues();
+    log("start", params)
     dispatch({ searchParams: params});
     onSearch();
   }, [])
@@ -55,7 +56,6 @@ const SearchForm = memo(({loadItem}:any) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params, getValues());
     dispatch({ searchParams: params, isMSearch:true, uploadFile_init:true, excel_data:{}});
   }
 
@@ -75,6 +75,15 @@ const SearchForm = memo(({loadItem}:any) => {
 
   const onSave = () => {
     const params = getValues();
+    log("params", params, excel_data, !excel_data.data.some((obj:any) => obj["Billto ID"]) , !excel_data.data.some((obj:any) => obj["Invoice Date"]));
+
+    if (Number(params.upload_gubn) > 0) {
+      if (!excel_data.data.some((obj:any) => obj["Billto ID"]) || !excel_data.data.some((obj:any) => obj["Invoice Date"])) {
+        toastError("인보이스 발행 경우 Invoice Date, BillTo Id는 필수입니다.");
+        return;
+      }
+    }
+
     Create.mutate({...params, excel_data:JSON.stringify(excel_data.data)}, {
         onSuccess: (res: any) => {
             dispatch({ isMSearch: true });
@@ -96,9 +105,9 @@ const SearchForm = memo(({loadItem}:any) => {
 
           <div className={"col-span-2 border"}>
             <RadioGroup label="gubn" >
-              <Radio id="upload_gubn" value="0" label="invoicing_confirm" defaultChecked/>
+              <Radio id="upload_gubn" value="2" label="invoicing_confirm" defaultChecked/>
               <Radio id="upload_gubn" value="1" label="invoicing" />
-              <Radio id="upload_gubn" value="2" label="charge_upload" />
+              <Radio id="upload_gubn" value="0" label="charge_upload" />
             </RadioGroup>
           </div>
           <DatePicker id="fr_date" value={getValues("fr_date")} options={{ inline: true, textAlign: 'center', freeStyles: "p-1 border-1 border-slate-300" }} lwidth='w-20' height="h-8" />

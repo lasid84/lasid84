@@ -97,6 +97,11 @@ async function startWorker() {
         , { workerData: { idx: thread.idx, pgm:thread.pgm, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
         }});
       break;  
+      case "SCRAP_UFSP_PROFILE_CHARGE":
+          const workerProfileCharge = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-profile-chargecode.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
+              }});
+          break;
     }
     await sleep(5000);
     i++;

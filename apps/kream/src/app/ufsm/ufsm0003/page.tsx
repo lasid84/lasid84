@@ -35,6 +35,7 @@ export default function UFSM0003() {
         defaultValues: {
           fr_date: fr_date || dayjs().format("YYYYMMDD"),
           to_date: to_date || dayjs().format("YYYYMMDD"),
+          upload_gubn: "2" //Invoice Confirm
         }
       });
     
