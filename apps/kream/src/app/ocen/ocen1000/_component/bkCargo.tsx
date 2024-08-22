@@ -47,7 +47,7 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
           </span>
         }
       >
-        <ReactSelect
+        {/* <ReactSelect
           id="svc_type"
           dataSrc={svctype as gridData}
           options={{
@@ -56,9 +56,23 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             defaultValue: bkData?.svc_type,
             isAllYn: false,
           }}
-        />
+        /> */}
+        <div className={"col-span-1"}>
+          <CustomSelect
+            id="svc_type"
+            initText='Select a BL Type'
+            listItem={svctype as gridData}
+            valueCol={["svc_type", "svc_type_nm",]}
+            displayCol="svc_type_nm"
+            gridOption={{colVisible: { col: ["svc_type_nm"], visible: true },}}
+            gridStyle={{ width: '320px', height: '200px' }}
+            style={{ width: '500px', height: "8px" }}
+            defaultValue={bkData?.svc_type}
+            isDisplay={true}
+          />
+        </div>
 
-        <ReactSelect
+        {/* <ReactSelect
           id="movement_type"
           dataSrc={movementtype as gridData}
           options={{
@@ -68,9 +82,21 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             isAllYn: false,
             isMandatory:false
           }}
-        />
-        {/* <MaskedInputField id="commodity" value={bkData?.commodity} options={{ isReadOnly: false, textAlign: "center" }} />
-        <Checkbox id="strategic_yn" value={bkData?.strategic_yn} /> */}
+        /> */}
+        <div className={"col-span-1"}>
+          <CustomSelect
+            id="movement_type"
+            initText='Select a BL Type'
+            listItem={movementtype as gridData}
+            valueCol={["movement_type", "movement_nm",]}
+            displayCol="movement_nm"
+            gridOption={{colVisible: { col: ["movement_nm"], visible: true },}}
+            gridStyle={{ width: '320px', height: '200px' }}
+            style={{ width: '500px', height: "8px" }}
+            defaultValue={bkData?.movement_type}
+            isDisplay={true}
+          />
+        </div>        
       </PageContent>
 
       <div className="flex flex-row w-full">

@@ -24,7 +24,7 @@ const RadioGroup: React.FC<Props> = ({
 
   return (
     <InputWrapper outerClassName="" inline={inline}>
-      <fieldset className="flex items-center content-around w-full p-1 m-1">
+      <fieldset className="flex items-center content-around w-full p-1 m-1 space-x-1">
         <legend className="flex w-full text-gray-500">{t(label)}</legend>
         {/* <RadioContext.Provider value={rest} >{children}</RadioContext.Provider> */}
         {children}

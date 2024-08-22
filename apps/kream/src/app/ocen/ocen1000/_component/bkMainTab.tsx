@@ -15,9 +15,9 @@ import { SP_CreateData, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
-import { Button, ICONButton } from 'components/button';
-import { Badge } from "@/components/badge";
-import Stepper from "components/stepper/index";
+import { Button, ICONButton, DropButton } from 'components/button';
+import Radio from "components/radio/index"
+import RadioGroup from "components/radio/RadioGroup"
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
 
@@ -41,6 +41,8 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { MselectedTab } = objState;
   const [ref, setRef] = useState(objState.gridRef_m);
 
+  const [createuser, setCreateuser] = useState<any>();
+
   useEffect(() => {
     setRef(objState.gridRef_m);
   }, [objState?.gridRef_m])
@@ -48,6 +50,13 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   useEffect(() => {
     log("useEffect bkData", bkData);
   }, [bkData])
+
+  useEffect(() => {
+    if (loadItem?.length) {
+      setCreateuser(loadItem[1]);
+    }
+  }, [loadItem?.length]);
+
 
   const { getValues } = useFormContext();
 
@@ -124,27 +133,39 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           right={
             <>
               <div className={"flex col-span-2 "}>
-                <Button id={"download"} width="w-24" />
+                <DropButton id={"download"} width="w-24" dataSrc={createuser as data} options={{ keyCol :"create_user" }} />
                 <Button id={"save"} onClick={onSave} width="w-24" />
               </div>                
               <div className={"flex col-span-2"}>
+                <div className ={"flex space-x-1 px-1 mx-1 border rounded-full"}>
+                  <RadioGroup label=''>
+                      <Radio id ="search_gubn" name="download" value="0" label="excel"  defaultChecked/>
+                      <Radio id ="search_gubn" name="download" value="1" label="pdf"  />
+                  </RadioGroup>
+                </div>
                 <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
-                <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
-                <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
+                  <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
+                  <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
               </div>
             </>
           }
           bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
-          addition={<div className="w-8/12"></div>}
+          //addition={<div className="w-2/12"></div>}
         >
-          <div className={"flex col-span-2"}>
-
+          <div className={"flex-col col-span-2"}>
           <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+          <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
           </div>
-          <div className={"flex col-span-2"}>
-
+          <div className={"flex-col col-span-2"}>
+          <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: false, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
+          </div>
+          <div className={"flex-col col-span-2"}>
           <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="update_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+          </div>
+          <div className={"flex-col col-span-2"}>
+          <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date'  }} />
           <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
           </div>
         </PageBKTabContent>

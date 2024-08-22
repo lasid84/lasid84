@@ -43,6 +43,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
 
   const [custcode, setCustcode] = useState<any>()
+  const [MblType, setMBLType] = useState<any>()
   const [blType, setBLType] = useState<any>()
   const [incoterms, setIncoterms] = useState<any>()
   const [billtype, setBillType] = useState<any>()
@@ -61,7 +62,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       setSalesPerson(loadItem[11]);
       setTerminal(loadItem[12]);
       setCustomsDeclation(loadItem[13]);
-
+      setMBLType(loadItem[20])
     }
   }, [loadItem])
 
@@ -146,9 +147,9 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       textAlign: "center",
                       freeStyles: "p-1 border-1 border-slate-300",
                     }}/>
-                    <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} />
-                    <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: true}} />
-                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true}} />
+                    {/* <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} /> */}
+                    {/* <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: true}} /> */}
+                    {/* <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true}} /> */}
                   
                   {/* <div className="col-span-2"> */}
                     {/* <HblGrid 
@@ -167,12 +168,12 @@ const BKMain = ({ loadItem, bkData }: Props) => {
         </PageContent>
 
         <PageContent
-          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Shipper</span>}>
+          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Customer Waybill</span>}>
           <div className="col-span-6">
             <PageSearch
               right={
                 <>
-                  <Button id={"shipper_manage"} label={"manage_con"} onClick={handleButtonClick} width="w-20" disabled={bkData?.shipper_id ? false : true} />
+                  {/* <Button id={"shipper_manage"} label={"manage_con"} onClick={handleButtonClick} width="w-20" disabled={bkData?.shipper_id ? false : true} /> */}
                 </>}>
               <>
                 <ShpContPopUp initData={loadItem} callbacks={[shipperContRefetch]} />
@@ -207,6 +208,23 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                      }} 
                   />
                 </div>
+                
+                <div className={"col-span-2"}>
+                <CustomSelect
+                  id="cnee_id"
+                  initText='Select a consinee'
+                  listItem={terminal as gridData}
+                  valueCol={["partner_id", "partner_name", "cust_nm"]}
+                  displayCol="partner_name"
+                  gridOption={{
+                    colVisible: { col: ["partner_id", "partner_name", "cust_nm"], visible: true },
+                  }}
+                  gridStyle={{ width: '600px', height: '300px' }}
+                  style={{ width: '1000px', height: "8px" }}
+                  defaultValue={bkData?.cnee_id}
+                  isDisplay={true}
+                />
+                </div>
                 <div className={"col-span-1"}>
                   <CustomSelect
                     id="sales_person"
@@ -223,72 +241,118 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                     defaultValue={bkData?.sales_person}
                   />
                 </div>
-
                 
               </>
 
             </PageSearch>
           </div>
+         
+        </PageContent>
 
-          {/* Shipper 담당자 */}
-          {/* <div className={"col-span-1"}>
-            <CustomSelect
-              id="shipper_cont_seq"
-              initText="Select..."
-              label="shp_cont_pic_nm"
-              listItem={shipperContData as gridData}
-              valueCol={["cont_seq", "pic_nm", "email", "tel_num", "fax_num"]}
-              displayCol="pic_nm"
-              gridOption={{
-                colVisible: { col: ["pic_nm", "email", "tel_num", "fax_num"], visible: true },
-              }}
-              gridStyle={{ width: '800px', height: '300px' }}
-              style={{ width: '1000px', height: "8px" }}
-              isDisplay={true}
-              defaultValue={bkData?.shipper_cont_seq}
-              events={{
-                onSelectionChanged: (e,id,value) => {
-                },
-                onChanged(e) {
-                  log("shipper_cont_seq onChange", e, bkData);
-                  if (!bkData) return;                  
-                  // bkData.shipper_cont_seq = e?.cont_seq;
-                  bkData.shp_cont_email = e?.email;
-                  bkData.shp_cont_tel_num = e?.tel_num;
-                  bkData.shp_cont_fax_num = e?.fax_num;
-                  dispatch({[MselectedTab]: {...bkData}});
-                },
-              }}
-            />
-          </div>
-          <MaskedInputField id="shp_cont_email" value={bkData?.shp_cont_email} options={{ isReadOnly: true}} />
-          <MaskedInputField id="shp_tel_num" value={bkData?.shp_cont_tel_num} options={{ isReadOnly: true }} />
-          <MaskedInputField id="shp_fax_num" value={bkData?.shp_cont_fax_num} options={{ isReadOnly: true }} /> */}
+        <PageContent
+          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Carrier Waybill</span>}>
+          <div className="col-span-6">
+            <PageSearch>
+              <>
+                <ShpContPopUp initData={loadItem} callbacks={[shipperContRefetch]} />
+                <div className={"col-span-2"}>
+                  <CustomSelect
+                    id="shipper_id"
+                    initText="Select a Shipper"
+                    listItem={custcode as gridData}
+                    valueCol={["cust_code"]}
+                    displayCol="cust_nm"
+                    gridOption={{
+                      colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
+                    }}
+                    gridStyle={{ width: '600px', height: '300px' }}
+                    style={{ width: '1000px', height: "8px" }}
+                    isDisplay={true}
+                    defaultValue={bkData?.shipper_id}
+                    // inline={true}
+                    events={{
+                      onSelectionChanged: (e, id, value) => {
+                        if (bkData?.shipper_id != value) {
+                            setRefreshShpCont(true);
+                            dispatch({[MselectedTab]: {...bkData, shipper_id:value}});
+                            // log("onSelectionChanged", id, value);
+                        }
+                      },
+                      onChanged: (e) => {
+                        // if (!bkData) return;
+                        // log("custom select onChance", e, bkData);
+                        // setRefreshShpCont(true);
+                      },
+                     }} 
+                  />
+                </div>                       
+                <div className={"col-span-2"}>
+                <CustomSelect
+                  id="cnee_id"
+                  initText='Select a consinee'
+                  listItem={terminal as gridData}
+                  valueCol={["partner_id", "partner_name", "cust_nm"]}
+                  displayCol="partner_name"
+                  gridOption={{
+                    colVisible: { col: ["partner_id", "partner_name", "cust_nm"], visible: true },
+                  }}
+                  gridStyle={{ width: '600px', height: '300px' }}
+                  style={{ width: '500px', height: "8px" }}
+                  defaultValue={bkData?.cnee_id}
+                  isDisplay={true}
+                />
+              </div>
+              </>
 
-          {/* Shipper 비고 */}
-          {/* <div className="col-start-1 col-end-6"><TextArea id="shp_remark" rows={2} cols={32} value={bkData?.shp_remark} options={{ isReadOnly: false }} /></div> */}
-          
-          <div className={"col-span-2"}>
-            <CustomSelect
-              id="cnee_id"
-              initText='Select a consinee'
-              listItem={terminal as gridData}
-              valueCol={["partner_id", "partner_name", "cust_nm"]}
-              displayCol="partner_name"
-              gridOption={{
-                colVisible: { col: ["partner_id", "partner_name", "cust_nm"], visible: true },
-              }}
-              gridStyle={{ width: '600px', height: '300px' }}
-              style={{ width: '500px', height: "8px" }}
-              defaultValue={bkData?.cnee_id}
-              isDisplay={true}
-            />
-          </div>
+            </PageSearch>
+          </div>  
         </PageContent>
 
         <PageContent
           title={<span className="px-1 py-1 text-lg font-bold text-blue-500">ETC</span>}>
-          <ReactSelect
+          {/* <ReactSelect
+            id="cust_bl_type" dataSrc={blType as data}
+            options={{
+              keyCol: "bl_type",
+              displayCol: ['bl_type_nm'],
+              defaultValue: bkData?.bl_type,
+              isAllYn: false,
+              isMandatory:false
+              }} 
+            /> */}
+            <div className={"col-span-1"}>
+                <CustomSelect
+                  id="carrier_bl_type"
+                  initText='Select a Carrier BL Type'
+                  listItem={MblType as gridData}
+                  valueCol={["carrier_bl_type", "carrier_bl_type_nm",]}
+                  displayCol="carrier_bl_type_nm"
+                  gridOption={{
+                    colVisible: { col: ["carrier_bl_type_nm"], visible: true },
+                  }}
+                  gridStyle={{ width: '320px', height: '200px' }}
+                  style={{ width: '500px', height: "8px" }}
+                  defaultValue={bkData?.carrier_bl_type}
+                  isDisplay={true}
+                />
+            </div>
+            <div className={"col-span-1"}>
+                <CustomSelect
+                  id="bl_type"
+                  initText='Select a BL Type'
+                  listItem={blType as gridData}
+                  valueCol={["bl_type", "bl_type_nm",]}
+                  displayCol="bl_type_nm"
+                  gridOption={{
+                    colVisible: { col: ["bl_type_nm"], visible: true },
+                  }}
+                  gridStyle={{ width: '320px', height: '200px' }}
+                  style={{ width: '500px', height: "8px" }}
+                  defaultValue={bkData?.bl_type}
+                  isDisplay={true}
+                />
+              </div>
+          {/* <ReactSelect
             id="bl_type" dataSrc={blType as data}
             options={{
               keyCol: "bl_type",
@@ -297,8 +361,24 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               isAllYn: false,
               isMandatory:false
               }} 
-            />
-          <ReactSelect
+            /> */}
+            <div className={"col-span-1"}>
+                <CustomSelect
+                  id="bill_type"
+                  initText='Select a Bill Type'
+                  listItem={billtype as gridData}
+                  valueCol={["bill_type", "bill_type_nm",]}
+                  displayCol="bill_type_nm"
+                  gridOption={{
+                    colVisible: { col: ["bill_type_nm"], visible: true },
+                  }}
+                  gridStyle={{ width: '320px', height: '200px' }}
+                  style={{ width: '500px', height: "8px" }}
+                  defaultValue={bkData?.bill_type}
+                  isDisplay={true}
+                />
+              </div>
+          {/* <ReactSelect
             id="bill_type" dataSrc={billtype as data}
             options={{
               keyCol: "billtype",
@@ -307,8 +387,24 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               isAllYn: false,
               isMandatory:false
               }}
-            />
-          <ReactSelect
+            /> */}
+           <div className={"col-span-1"}>
+                <CustomSelect
+                  id="incoterms"
+                  initText='Select a Incoterms'
+                  listItem={incoterms as gridData}
+                  valueCol={["incoterms", "incoterms_nm",]}
+                  displayCol="incoterms_nm"
+                  gridOption={{
+                    colVisible: { col: ["incoterms_nm"], visible: true },
+                  }}
+                  gridStyle={{ width: '320px', height: '200px' }}
+                  style={{ width: '500px', height: "8px" }}
+                  defaultValue={bkData?.incoterms}
+                  isDisplay={true}
+                />
+          </div>
+          {/* <ReactSelect
             id="incoterms" dataSrc={incoterms as data}
             options={{
               keyCol: "incoterms",
@@ -317,10 +413,8 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               isAllYn: false,
               isMandatory:false
             }} 
-            />
+            /> */}
           <MaskedInputField id="incoterms_remark" value={bkData?.incoterms_remark} options={{ isReadOnly: false }} />
-          <div></div>
-          
           <ReactSelect
             id="customs_declation" dataSrc={customsDeclation as data}
             options={{
@@ -329,14 +423,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               defaultValue: bkData?.customs_declation,
               isAllYn: false
             }}/>
-
-            {/* <Checkbox id="ams_yn" value={bkData?.ams_yn} />
-            <MaskedInputField id="ams" value={bkData?.ams} options={{ isReadOnly: false }} />
-            <Checkbox id="aci_yn" value={bkData?.aci_yn} />
-            <MaskedInputField id="aci" value={bkData?.aci} options={{ isReadOnly: false }}  />
-            <Checkbox id="afr_yn" value={bkData?.afr_yn} />
-            <Checkbox id="isf_yn" value={bkData?.isf_yn} />
-            <Checkbox id="e_manifest_yn" value={bkData?.e_manifest_yn} /> */}
         </PageContent>
 
         <PageContent>

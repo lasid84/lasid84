@@ -1,3 +1,4 @@
+import React, {  useState, } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { TiPlus } from "react-icons/ti";
 import { RiSaveLine, RiSaveFill, RiSave2Fill } from "react-icons/ri";
@@ -17,6 +18,13 @@ import { usePathname } from "next/navigation";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
+export type data = {
+  data?: {}[],
+  field?: any[]
+} | undefined;
+
+
+
 export type ButtonProps = {
   id: string;
   label?: string;
@@ -30,6 +38,10 @@ export type ButtonProps = {
   //   refresh?: boolean;
   isHidden?: boolean;
   width?: string;
+  dataSrc? : data;
+  options ? : {
+    keyCol ?: string;
+  }
 };
 
 const btnColor: any = {
@@ -169,6 +181,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
     width,
   } = props;
 
+
   const { Create } = useUpdateData2(SP_InsertLog, "");
   const pathName = usePathname();
 
@@ -199,6 +212,95 @@ export const Button: React.FC<ButtonProps> = (props) => {
     </button>
   );
 };
+
+
+export const DropButton: React.FC<ButtonProps> = (props) => {
+  // BUTTON 순서
+  // SEARCH - INTERFACE - ADD - DELETE - SAVE - DOWNLIAD - MANAGE
+
+  const { t } = useTranslation();
+  const {
+    id,
+    label,
+    disabled,
+    color,
+    type,
+    size,
+    isHidden,
+    icon,
+    onClick,
+    width,
+    dataSrc,
+    options = {},
+  } = props;
+  const { keyCol } = options;
+
+  const { Create } = useUpdateData2(SP_InsertLog, "");
+  const pathName = usePathname();
+
+
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+  const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
+    var data = {
+      menucode: pathName,
+      buttontype: id,
+    };
+    Create.mutate(data);
+
+    if (onClick) onClick(e);
+
+    if (dataSrc && dataSrc.data && dataSrc.data.length > 0) {
+      // Toggle dropdown visibility
+      setDropdownVisible((prev) => !prev);
+    } else if (onClick) {
+      onClick(e);
+    }
+  };
+  
+  const handleSelect = (item: any) => {
+    log('item',item)
+    //setSelectedItem(item[dataSrc?.data]);
+    setDropdownVisible(false);
+    if (onClick) onClick(item); // Return the selected item
+  };
+
+  const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'";
+
+  return (
+    <div className='relative'>
+      <button
+        className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : "w-full"} w-min-24 p-1 text-xs font-medium flex items-center justify-center ${getColor(label ? label : id, color)}
+              ${isHidden ? "hidden" : ""}
+              ${disabledCss}`}
+        id={id}
+        onClick={handleClick}
+        type={type ? type : "button"}
+        disabled={disabled ? true : false}
+      >
+        {getIcon(label ? label : id, icon, size ? size : "14")}
+        {t((label ? label : id).toLowerCase())}
+      </button>
+            {dropdownVisible && dataSrc && dataSrc.data && dataSrc.data.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded shadow-md max-h-60">
+                {dataSrc.data.map((item : any, i) => (
+                  <div
+                    key={i}
+                    className="p-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSelect(i)}
+                  >
+                    {keyCol && item[keyCol]}
+                  </div>
+                ))}
+              </div>
+            )}
+    </div>
+
+    
+  );
+};
+
 
 export const ICONButton: React.FC<ButtonProps> = (props) => {
   const { t } = useTranslation();
@@ -249,3 +351,4 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
     </div>
   );
 };
+

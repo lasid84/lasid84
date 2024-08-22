@@ -59,13 +59,13 @@ const Modal: React.FC<Props> = ({ initData, callbacks }) => {
                      </>
                  }>
                 <div className="flex flex-col w-[78rem] h-[28rem] gap-4 w-76 ">
-                    <ShpContModal initData={[initData[15]]} 
+                    {/* <ShpContModal initData={[initData[15]]} 
                             params={
                                 {
                                     cust_code:objState[MselectedTab]?.shipper_id, 
                                     cont_type:objState.trans_mode + objState.trans_type
                                 }}
-                    />
+                    /> */}
                  </div>
             </DialogBasic>
         // </FormProvider >
