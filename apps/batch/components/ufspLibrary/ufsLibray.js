@@ -366,7 +366,7 @@ class Library {
                     return await this.invoicing(data);
                 case "GOTO":
                     return await this.gotoUrl(data);
-                case "CheckWBStatus":
+                case "CHECKWBSTATUS":
                     return await this.CheckWBStatus(data);
 
             }
@@ -417,7 +417,7 @@ class Library {
             v_tracking = 'send post start';
             const header = this.convertJSON(data.header);
 
-            if (data.seq === '60' ) log("=========", data.seq, JSON.stringify(bodyText))
+            // if (data.seq === '60' ) log("=========", data.seq, JSON.stringify(bodyText))
 
             const result = await this.executeAPI(method, url, header, bodyText);
             
@@ -451,7 +451,7 @@ class Library {
     
         } catch(ex) {
             // if (msg_result.error == "Unauthorized") throw  "tracking : " + v_tracking + " callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
-            log("=========", data.seq, JSON.stringify(bodyText))
+            // log("=========", data.seq, JSON.stringify(bodyText))
             if (msg_result) throw msg_result;
 
             throw  "tracking : " + v_tracking + " callAPIPost : " + ex;
@@ -793,7 +793,7 @@ class Library {
                     if (this.isValidDate(val)) {
                         val = this.transformDate(val);
                     } 
-                    log('======= ', key, seq, val)
+                    // log('======= ', key, seq, val)
                     this.resultData.arrCharge[seq] = val;
                 }
             }
@@ -1036,7 +1036,7 @@ class Library {
                             await updateResult(result.bat.methodReturn.arguments);
                             bodyText = await updateBodyText(bodyText);
 
-                            if (lowerKey ==='invoice_wb_amt') log("============================invoice_wb_amt", JSON.stringify(bodyText), JSON.stringify(result.bat.methodReturn.arguments));
+                            // if (lowerKey ==='invoice_wb_amt') log("============================invoice_wb_amt", JSON.stringify(bodyText), JSON.stringify(result.bat.methodReturn.arguments));
                             break;
                     }
                 }
@@ -1127,7 +1127,10 @@ class Library {
 
     async CheckWBStatus(data) {
         var wbStatus = data.upd_body_col.split(',');
-        var val = await this.GetJsonNode2(this.resultData, data.upd_body_val.split('.'))
+        var val = await this.GetJsonNode2(this.resultData, data.body.split('.'))
+
+        log("============================================CheckWBStatus", wbStatus, val, data, this.resultData);
+
         if (!wbStatus.includes(val)) {
             this.mainData.error = `BL Status가 ${val}입니다.` 
             throw "";
