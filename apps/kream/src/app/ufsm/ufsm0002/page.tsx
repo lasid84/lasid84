@@ -18,6 +18,10 @@ import WBCharges from "./_component/wbCharges"
 import WBShipmentDetails from "./_component/wbShipmentDetails"
 import WBShipmentText from "./_component/wbShipmentText";
 import WBReference from "./_component/wbreferences";
+import { useUserSettings } from "@/states/useUserSettings";
+import { shallow } from "zustand/shallow";
+import { FormProvider, useForm } from "react-hook-form";
+import dayjs from "dayjs";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -43,6 +47,31 @@ export default function UFSM0002() {
     });
     const { objState } = state;
     const { searchParams, mSelectedRow, mSelectedDetail, crudType, isMSearch, isPopUpOpen, MselectedTab, isFirstRender } = objState;
+
+    //사용자 정보
+    const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow)
+    const gTransType = useUserSettings((state) => state.data.trans_type, shallow)
+
+    const methods = useForm({
+    defaultValues: {
+        trans_mode: gTransMode || 'ALL',
+        trans_type: gTransType || 'ALL',
+        fr_date: dayjs().subtract(0, 'month').startOf('month').format("YYYYMMDD"),
+        to_date: dayjs().format("YYYYMMDD"),
+        wb_no: '',
+        cust_code: ''
+    }
+    });
+
+    const {
+        handleSubmit,
+        reset,
+        setFocus,
+        setValue,
+        getValues,
+        register,
+        formState: { errors, isSubmitSuccessful },
+    } = methods;
 
     const val = useMemo(() => { return { objState, searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen, mSelectedDetail, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
@@ -88,43 +117,45 @@ export default function UFSM0002() {
 
     return (
         <TableContext.Provider value={val}>
-             <div className={`w-full h-full`}>
-            <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
-            {/* WayBill Main List 화면 */}
-            {objState.MselectedTab == "Main" ? <div className={`w-full h-[calc(100vh-210px)] flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
-                <SearchForm loadItem={initData} />
-                <MasterGrid initData={initData} />
-            </div> : <>
-                {/* WayBill Detail 화면 상단{Tab} */}
-                <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
-                {/* <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} /> */}
+            <FormProvider {...methods}>
+                <div className={`w-full h-full`}>
+                <WBMenuTab tabList={objState.tab1} onClickTab={MhandleOnClickTab} onClickICON={MhandleonClickICON} MselectedTab={MselectedTab} />
+                {/* WayBill Main List 화면 */}
+                {objState.MselectedTab == "Main" ? <div className={`w-full h-[calc(100vh-210px)] flex-col ${MselectedTab == "Main" ? "" : "hidden"}`}>
+                    <SearchForm loadItem={initData} />
+                    <MasterGrid initData={initData} />
+                </div> : <>
+                    {/* WayBill Detail 화면 상단{Tab} */}
+                    <WBMainTab loadItem={initData} mainData={mainData} onClickTab={handleOnClickTab} />
+                    {/* <SubMenuTab loadItem={initData} onClickTab={handleOnClickTab} /> */}
 
-                {/* WayBill Detail 화면 하단(Sub) */}
-                <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
-                    <WBMain loadItem={initData} mainData={mainData} />
-                </div>
+                    {/* WayBill Detail 화면 하단(Sub) */}
+                    <div className={`w-full flex ${selectedTab == "NM" ? "" : "hidden"}`}>
+                        <WBMain loadItem={initData} mainData={mainData} />
+                    </div>
 
-                <div className={`w-full flex ${selectedTab == "WS" ? "" : "hidden"}`}>
-                    <WBSub loadItem={initData} mainData={mainData} />
-                </div>
-                <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
-                    <WBShipmentDetails initData={initData} mainData={mainData} />
-                </div>
+                    <div className={`w-full flex ${selectedTab == "WS" ? "" : "hidden"}`}>
+                        <WBSub loadItem={initData} mainData={mainData} />
+                    </div>
+                    <div className={`w-full flex ${selectedTab == "SD" ? "" : "hidden"}`}>
+                        <WBShipmentDetails initData={initData} mainData={mainData} />
+                    </div>
 
-                <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
-                    <WBCharges initData={initData} mainData={mainData} />
-                </div>
-                <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
-                    <WBShipmentText loadItem={initData} mainData={mainData} />
-                </div>
+                    <div className={`w-full flex ${selectedTab == "CG" ? "" : "hidden"}`}>
+                        <WBCharges initData={initData} mainData={mainData} />
+                    </div>
+                    <div className={`w-full flex ${selectedTab == "ST" ? "" : "hidden"}`}>
+                        <WBShipmentText loadItem={initData} mainData={mainData} />
+                    </div>
 
-                <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
-                    <WBReference loadItem={initData} mainData={mainData} />
+                    <div className={`w-full flex ${selectedTab == "RF" ? "" : "hidden"}`}>
+                        <WBReference loadItem={initData} mainData={mainData} />
+                    </div>
+
+
+                </>}
                 </div>
-
-
-            </>}
-            </div>
+            </FormProvider>
         </TableContext.Provider>
     );
 }

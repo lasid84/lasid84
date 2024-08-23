@@ -240,6 +240,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       animateRows: true,
       // grandTotalRow:"bottom",
       suppressScrollOnNewData:true,
+      // domLayout:"autoHeight",
       navigateToNextCell(params) {
         const suggestedNextCell = params.nextCellPosition;
 

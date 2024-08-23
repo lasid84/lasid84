@@ -57,6 +57,10 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     } = formZodMethods;
 
     useEffect(() => {
+        log("gUserGroupId: ", gUserGroupId)
+    }, [gUserGroupId])
+
+    useEffect(() => {
         if (loadItem) {
             setBzplccode(loadItem[0])
             setTerminalcode(loadItem[1])

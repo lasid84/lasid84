@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, Dispatch, useContext, memo, useTransition, KeyboardEvent } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
@@ -29,25 +29,7 @@ const SearchForm = memo(({ loadItem }: any) => {
   const { t } = useTranslation();
   const { dispatch, objState } = useAppContext();
   const { searchParams } = objState;
-
-  // const methods = useForm<FormType>({
-  const methods = useForm({
-    // resolver: zodResolver(formSchema),
-    defaultValues: {
-      blyy: dayjs().year().toString(),
-      blno: ''
-    }
-  });
-
-  const {
-    handleSubmit,
-    reset,
-    setFocus,
-    setValue,
-    getValues,
-    register,
-    formState: { errors, isSubmitSuccessful },
-  } = methods;
+  const { getValues, setFocus, handleSubmit } = useFormContext();
 
   useEffect(() => {
     const params = getValues();
@@ -71,7 +53,6 @@ const SearchForm = memo(({ loadItem }: any) => {
   }
 
   return (
-    <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
         <PageSearchButton
           right={
@@ -89,7 +70,6 @@ const SearchForm = memo(({ loadItem }: any) => {
           </div>
         </PageSearchButton>
       </form>
-    </FormProvider>
   );
 });
 
