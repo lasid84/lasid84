@@ -89,12 +89,12 @@ async function startWorker() {
         break;          
       case "SCRAP_UFSP_CODE_MASTER":
         const workerCodeMaster = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-scraping-codemaster.js'
-            , { workerData: { idx: thread.idx, pgm:thread.pgm, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
+            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
             }});
         break;  
       case "SCRAP_UFSP_INVOICING_UPLOAD":
         const workerInvoicing = new Worker(arp + '/apps/batch/components/worker/worker-ufsp-invoicing.js'
-        , { workerData: { idx: thread.idx, pgm:thread.pgm, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
+        , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
         }});
       break;  
       case "SCRAP_UFSP_PROFILE_CHARGE":
