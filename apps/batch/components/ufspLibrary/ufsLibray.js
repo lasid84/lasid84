@@ -366,6 +366,8 @@ class Library {
                     return await this.invoicing(data);
                 case "GOTO":
                     return await this.gotoUrl(data);
+                case "CheckWBStatus":
+                    return await this.CheckWBStatus(data);
 
             }
         } catch(ex) {
@@ -1121,6 +1123,15 @@ class Library {
                 // ❸ 모든 네트워크 연결이 500ms 이상 유휴 상태가 될 때까지 기다림
                 waitUntil: ['networkidle0','domcontentloaded'],
             })]);
+    }
+
+    async CheckWBStatus(data) {
+        var wbStatus = data.upd_body_col.split(',');
+        var val = await this.GetJsonNode2(this.resultData, data.upd_body_val.split('.'))
+        if (!wbStatus.includes(val)) {
+            this.mainData.error = `BL Status가 ${val}입니다.` 
+            throw "";
+        }
     }
 
     /* [] 일때 loop 돌리기 */
