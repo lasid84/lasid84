@@ -3,6 +3,7 @@ import compression from "compression";
 import bodyParser from "body-parser";
 import helmet from "helmet";
 import cors from "cors";
+import fileUpload from 'express-fileupload';
 
 /**
  * @dev
@@ -37,6 +38,8 @@ export default function serverConfig(app: Express) {
     .use(json())
 
     .use(cors())
+
+    .use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 }}))
 
     .set("trust proxy", true)
 
