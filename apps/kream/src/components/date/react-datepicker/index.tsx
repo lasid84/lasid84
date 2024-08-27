@@ -169,6 +169,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
                                     mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
                                     keepCharPositions= {true}/>
                                 }
+                            autoComplete='off'
                             dateFormat={dateFormat}
                             selected={selectedVal}
                             // locale={ko}

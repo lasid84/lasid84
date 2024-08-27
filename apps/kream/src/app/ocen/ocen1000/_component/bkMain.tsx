@@ -70,9 +70,9 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       bkTemplateRefetch();    
   }, [])
 
-  useEffect(() => {
-    log("==========bkData", bkData);
-  }, [bkData])
+  // useEffect(() => {
+  //   log("==========bkData", bkData);
+  // }, [bkData])
 
   useEffect(()=> {
     if (isRefreshShpCont && shipperContData && bkData) {
@@ -147,9 +147,8 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       textAlign: "center",
                       freeStyles: "p-1 border-1 border-slate-300",
                     }}/>
-                    {/* <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} /> */}
-                    {/* <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: true}} /> */}
-                    {/* <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true}} /> */}
+                    <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} />
+                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: false}} />
                   
                   {/* <div className="col-span-2"> */}
                     {/* <HblGrid 
@@ -257,7 +256,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 <ShpContPopUp initData={loadItem} callbacks={[shipperContRefetch]} />
                 <div className={"col-span-2"}>
                   <CustomSelect
-                    id="shipper_id"
+                    id="carr_shipper_id"
                     initText="Select a Shipper"
                     listItem={custcode as gridData}
                     valueCol={["cust_code"]}
@@ -268,13 +267,13 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
                     isDisplay={true}
-                    defaultValue={bkData?.shipper_id}
+                    defaultValue={bkData?.carr_shipper_id}
                     // inline={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        if (bkData?.shipper_id != value) {
+                        if (bkData?.carr_shipper_id != value) {
                             setRefreshShpCont(true);
-                            dispatch({[MselectedTab]: {...bkData, shipper_id:value}});
+                            dispatch({[MselectedTab]: {...bkData, carr_shipper_id:value}});
                             // log("onSelectionChanged", id, value);
                         }
                       },
@@ -288,7 +287,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 </div>                       
                 <div className={"col-span-2"}>
                 <CustomSelect
-                  id="cnee_id"
+                  id="carr_cnee_id"
                   initText='Select a consinee'
                   listItem={terminal as gridData}
                   valueCol={["partner_id", "partner_name", "cust_nm"]}
@@ -298,7 +297,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                   }}
                   gridStyle={{ width: '600px', height: '300px' }}
                   style={{ width: '500px', height: "8px" }}
-                  defaultValue={bkData?.cnee_id}
+                  defaultValue={bkData?.carr_cnee_id}
                   isDisplay={true}
                 />
               </div>

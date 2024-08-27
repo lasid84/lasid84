@@ -57,12 +57,12 @@ type Props = {
 
 export const MaskedInputField: React.FC<Props> = (props: Props) => {
   // const MaskedInputField = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { control, setValue, setFocus } = useFormContext();
+  const { control, setValue, setFocus, getValues } = useFormContext();
   const { t } = useTranslation();
   // if (!control) return null;
   const localRef = useRef<HTMLInputElement | null>(null);
 
-  const { id, label, value, width, lwidth, height, options = {}, events, isFocus=false } = props;
+  const { id, label, value = '', width, lwidth, height, options = {}, events, isFocus=false } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
     freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
@@ -75,11 +75,11 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const defWidth = width ? width : "w-full";
   const defHeight = height ? height : "h-8";
 
-  // useEffect(() => {
-  //   log("MaskedInputField useEffect", id, value, selectedVal);
-  //   if (id && !isNotManageSetValue) setValue(id, value);
-  //   setSelectedVal(value === undefined ? '' : value);
-  // }, [value])
+  useEffect(() => {
+    log("MaskedInputField useEffect", id, value, selectedVal);
+    if (id && !isNotManageSetValue) setValue(id, value);
+    setSelectedVal(value);
+  }, [value])
 
   useEffect(() => {
     // log("isFocus ",isFocus, id, localRef?.current)
@@ -97,7 +97,10 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
         // log("form[index + 1]", form[index + 1])
 
         //필드셋과 버튼은 포커스 제외 - stephen
-        while ((form[index + 1] instanceof HTMLButtonElement) || (form[index + 1] instanceof HTMLFieldSetElement)) index++;
+        while ((form[index + 1] instanceof HTMLButtonElement) 
+          || (form[index + 1] instanceof HTMLFieldSetElement) 
+          || (form[index + 1].readOnly === true)
+        ) index++;
         
         // log(form.length, index)
         if (form.length > index + 1) form[index + 1].focus();
@@ -125,9 +128,10 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    // log("handleChange", e?.target?.value)
+    log("handleChange", e?.target?.value)
 
     if (id && !isNotManageSetValue) {
+      log("handleChange in if", id, e?.target?.value.replaceAll(":", ""))
       setValue(id, e?.target?.value.replaceAll(":", ""));
     }
     setSelectedVal(e?.target?.value);
@@ -138,10 +142,12 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   }
 
   function handleFocus(e: FocusEvent<HTMLInputElement>) {
-    // log("handleFocus", e.target?.value)
+    log("handleFocus", e.target?.value, getValues(id))
 
-    if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
-    setSelectedVal(e?.target?.value);
+    // if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
+    // setSelectedVal(e?.target?.value);
+
+    // if (!getValues(id)) setSelectedVal(getValues(id));
 
     if (events?.onFocus) {
       events.onFocus(e);
@@ -163,14 +169,13 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
               type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}
               className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
-                 focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
-                 dark:bg-gray-900 dark:text-white dark:border-gray-700
-                 ${freeStyles}
-                 text-${textAlign}
-                 `)}
+                focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
+                dark:bg-gray-900 dark:text-white dark:border-gray-700
+                ${freeStyles}
+                text-${textAlign}
+                `)}
               mask={type === 'password' ? false : mask!}
-              // pipe={pipe}
-              // value={selectedVal}
+              {...(isNotManageSetValue ? { value: selectedVal } : {})}
               defaultValue={value}
               readOnly={isReadOnly}
               placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
@@ -197,9 +202,9 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
             />
           )}
         />
-         {useIcon && <div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
-       </div>
-     </InputWrapper>
+        {useIcon && <div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
+      </div>
+    </InputWrapper>
   );
 };
 

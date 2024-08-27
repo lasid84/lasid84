@@ -32,8 +32,9 @@ const SearchForm = memo(({ loadItem }: any) => {
   const { t } = useTranslation();
   const { dispatch, objState } = useAppContext();
   const { searchParams } = objState;
-  const { getValues, setFocus, handleSubmit, reset, register } = useFormContext();
+  const { getValues, setFocus, handleSubmit, reset, trigger } = useFormContext();
   const [ blNoFocus, setBLNoFocus] = useState(false);
+  const [ blyy, setBLYY ] = useState(getValues('blyy'));
 
   useEffect(() => {
     const params = getValues();
@@ -57,9 +58,11 @@ const SearchForm = memo(({ loadItem }: any) => {
     }
   }
 
-  const onReset = () => {
+  const onReset = async () => {
     reset();
-    setFocus("blno");
+    const params = getValues();
+    log("reset params", params)
+    dispatch({ searchParams: params});
     setBLNoFocus(true);
   }
 
@@ -68,7 +71,6 @@ const SearchForm = memo(({ loadItem }: any) => {
   }
 
   return (
-      <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
         <PageSearchButton
           right={
             <>
@@ -89,9 +91,9 @@ const SearchForm = memo(({ loadItem }: any) => {
               ]}
             />
           </div>
-          <MaskedInputField id="blyy"  label="blyy" value={getValues('blyy')}  options={{ textAlign: 'center', inline: true, noLabel: false }} width="w-20" height='h-8' />
+          <MaskedInputField id="blyy"  label="blyy" value={searchParams.blyy} options={{ textAlign: 'center', inline: true, noLabel: false, limit:4 }} width="w-20" height='h-8' />
           <div className={"col-span-3"}>
-          <MaskedInputField id="blno" label="house_bl_no" value={getValues('blno')}  options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' isFocus={blNoFocus}
+          <MaskedInputField id="blno" label="house_bl_no" value={getValues('blno')} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' isFocus={blNoFocus}
             events={{
               onKeyDown: handleKeyDown,
               onFocus(e) {
@@ -102,7 +104,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           />
           </div>
         </PageSearchButton>
-      </form>
+      // </form>
   );
 });
 

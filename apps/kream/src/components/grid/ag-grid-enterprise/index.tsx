@@ -98,7 +98,7 @@ export type GridOption = {
   alignRight?: string[],                  //dataType : number면 자동 우측 정렬
   editable?: string[];
   isEditableOnlyNewRow?: boolean,
-  dataType?: { [key: string]: string };   //date, number, text, bizno
+  dataType?: { [key: string]: string };   //date, number, text, bizno, largetext
   typeOptions?: {
     [key: string]: {
       inputLimit?: number                  //입력 자릿수 제한
@@ -435,6 +435,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
             cellOption = {
               ...cellOption,
               valueFormatter: bizNoFormatter,
+            }
+          } else if (optCols[col] === 'largetext') {
+            cellOption = {
+              ...cellOption,
+              cellEditor: 'agLargeTextCellEditor',
+              cellEditorPopup: true,
             }
           }
         };

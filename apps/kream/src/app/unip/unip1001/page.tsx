@@ -77,13 +77,15 @@ export default function UNIP1001() {
   return (
     <TableContext.Provider value={val}>
       <FormProvider {...methods}>
+      <form className="flex space-y-1">
           <div className={`w-full h-full`}>
               <SearchForm loadItem={initData} />
               <div className={`w-full h-[calc(100vh-150px)]`}>
                   <MasterGrid initData={initData} />
               </div>
           </div>
-      </FormProvider>
+        </form>
+      </FormProvider>      
     </TableContext.Provider>
   );
 }

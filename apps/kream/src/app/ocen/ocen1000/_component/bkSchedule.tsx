@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input, TextArea } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
@@ -11,7 +11,7 @@ import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
 import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
-import { SP_GetPickupContData, SP_GetCarrierContData } from "./data";
+import { SP_GetPickupContData, SP_GetCarrierContData, SP_GetTransportData } from "./data";
 import PicupPlacePopUp from "./popPickupcont"
 import CarrierContPopUp from "./popCarriercont";
 import { Button } from "components/button";
@@ -51,24 +51,15 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   const { data: cyPlaceContData, refetch: cyPlaceContRefetch } = useGetData({ place_code: bkData?.cy_place_code, cont_type: trans_mode + trans_type }, "CYContacotr", SP_GetCYContactData, { enable: true });
   const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
   const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
+
+  const { data: transportCompData, refetch: transportCompRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "TransportCompany", SP_GetTransportData, { enable: true });
   
   // const [cyPlace, setCyPlace] = useState<any>()
   const [carriercode, setCarrierCode] = useState<any>()
   const [port, setPort] = useState<any>()
   const [ isRefreshCyCont, setRefreshCyCont ] = useState(false);
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
-
-  const methods = useForm({
-    defaultValues: {
-      doc_close_dd: dayjs().format('YYYYMMDD')
-    }
-  });
-
-  const {
-    handleSubmit,
-    getValues,
-    formState: { errors, isSubmitSuccessful },
-  } = methods;
+  const { getValues } = useFormContext();
 
   useEffect(() => {
     if (loadItem) {
@@ -76,6 +67,10 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
       setPort(loadItem[18]);
     }
   }, [])
+
+  useEffect(() => {
+    log("cyPlaceData", bkData);
+  }, [cyPlaceData])
 
   useEffect(()=> {
     if (isRefreshCyCont && cyPlaceContData && crTaskContData && crSalesContData && bkData) {
@@ -127,11 +122,11 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     isDisplay={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        if (bkData?.carrier_code != value) {
-                          setRefreshCrCont(true);
-                          dispatch({[MselectedTab]: {...bkData, carrier_code:value }});
-                          log("onSelectionChanged carrier_code", id, value);
-                        }
+                        // if (bkData?.carrier_code != value) {
+                        //   setRefreshCrCont(true);
+                        //   dispatch({[MselectedTab]: {...bkData, carrier_code:value }});
+                        //   log("onSelectionChanged carrier_code", id, value);
+                        // }
                       },
                     }}
                   />
@@ -211,7 +206,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"pickup_manage"} label={"manage_pickup"} onClick={handleButtonClick} width="w-24"   />
+                  <Button id={"pickup_manage"} label={"manage_pickup"} onClick={handleButtonClick} width="w-24" disabled={bkData?.shipper_id ? false : true} />
                   {/* <Button id={"cy_manage"} label={"manage_cy"} onClick={handleButtonClick} width="w-30"   /> */}
                   <Button id={"cy_cont_manage"} label={"manage_cont_cy"} onClick={handleButtonClick} width="w-24"/>
 
@@ -242,12 +237,14 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     isDisplay={true}
                     events={{
                       onChanged: (e) => {
+                        log("pickup_seq onChange", e, bkData)
                         if (!bkData) return;
                         bkData.pickup_nm = e?.pickup_nm;
                         bkData.pickup_addr = e?.addr;
                         bkData.pickup_pic_nm = e?.pic_nm;
                         bkData.pickup_email = e?.email;
                         bkData.pickup_tel_num = e?.tel_num;
+                        bkData.pickup_remark = e?.remark;
                         dispatch({[MselectedTab]: {...bkData}});
                       },
                     }}
@@ -258,19 +255,15 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <div className={"col-start-1"}><MaskedInputField id="pickup_pic_nm" value={bkData?.pickup_pic_nm} options={{ isReadOnly: true }} /></div>
                 <MaskedInputField id="pickup_email" value={bkData?.pickup_email} options={{ isReadOnly: true }} />
                 <MaskedInputField id="pickup_tel_num" value={bkData?.pickup_tel_num} options={{ isReadOnly: true }} />
-                <div className="col-start-1 col-end-6"><br></br>  </div>
+                <div className="col-start-1 col-end-6 "><TextArea id="pickup_remark" rows={3} cols={32} value={bkData?.pickup_remark} options={{ isReadOnly: true }} /></div>
 
-                <PageContent>
-                  <div className="col-start-1 col-end-6 "><TextArea id="remark" rows={3} cols={32} value={bkData?.remark} options={{ isReadOnly: false }} /></div>
-                </PageContent>
-
-                <div className={"col-start-1 col-span-2"}>
+                {/* <div className={"col-start-1 col-span-2"}> */}
                   <CustomSelect
                     id="cy_place_code"
                     initText='Select an Container Yard'
                     listItem={cyPlaceData as gridData}
                     valueCol={["place_code", "place_nm"]}
-                    displayCol="place_nm"
+                    displayCol="place_code"
                     gridOption={{
                       colVisible: { col: ["place_code", "place_nm", "area_nm", "addr"], visible: true },
                     }}
@@ -292,8 +285,8 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                       }
                       }}}
                   />
-                </div>
-                {/* <MaskedInputField id="cy_place_code_nm" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} /> */}
+                {/* </div> */}
+                <MaskedInputField id="cy_place_nm" value={bkData?.cy_place_nm} options={{ isReadOnly: true }} />
                 <MaskedInputField id="cy_place_area" value={bkData?.cy_area_nm} options={{ isReadOnly: true }} />
                 <div className="col-span-2"><MaskedInputField id="cy_place_addr" value={bkData?.cy_addr} options={{ isReadOnly: true }} /></div>
 
@@ -338,6 +331,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
               </>
             </PageSearch>
           </div>
+          <div className="col-start-1 col-end-6"> <hr></hr>  </div>
         </PageContent>
       </div>
   );

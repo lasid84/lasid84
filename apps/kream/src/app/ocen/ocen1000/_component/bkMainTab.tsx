@@ -47,9 +47,9 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     setRef(objState.gridRef_m);
   }, [objState?.gridRef_m])
 
-  useEffect(() => {
-    log("useEffect bkData", bkData);
-  }, [bkData])
+  // useEffect(() => {
+  //   log("useEffect bkData", bkData);
+  // }, [bkData])
 
   useEffect(() => {
     if (loadItem?.length) {
@@ -154,11 +154,11 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         >
           <div className={"flex-col col-span-2"}>
           <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
+          <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
           </div>
           <div className={"flex-col col-span-2"}>
-          <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: false, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
+          <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
           </div>
           <div className={"flex-col col-span-2"}>
           <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />

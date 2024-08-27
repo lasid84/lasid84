@@ -65,6 +65,33 @@ export const SP_GetMasterData = async (searchParam: any) => {
   return result![0]
 }
 
+//SP_GetInvoiceMasterContent
+export const SP_GetTransportData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { trans_mode, trans_type, user_id, ipaddr } = Param;
+
+  const params = {
+    inparam: [
+        "in_trans_mode"
+      , "in_trans_type"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        trans_mode
+      , trans_type
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1007_get_transport',
+    isShowLoading: true
+  }
+
+  const result = await executFunction(params);
+
+  return result![0]
+}
+
 //Create BookingNote
 export const SP_CreateData = async (param: any) => {
   const Param = param;

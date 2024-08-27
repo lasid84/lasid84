@@ -93,6 +93,7 @@ function CustomSelect(props: Props) {
   };
 
   useEffect(() => {
+      log("listitem useEffect", listItem)
       setFilteredData(listItem);
   }, [listItem])
 
@@ -206,9 +207,9 @@ function CustomSelect(props: Props) {
   }
 
   const handelRowClicked = (param: any) => {
-    // log("==selectedRow", selectedRow)
     var selectedRow = { "colId": param.node.id, ...param.node.data }
     gridRef.current.api.getRowNode(param.node.id).setSelected(true);
+    log("==selectedRow", selectedRow)
     toggleOptions();
     setSelectedValue(selectedRow);
     // setDisplayVal(selectedRow);
@@ -220,7 +221,7 @@ function CustomSelect(props: Props) {
   const handleSelectionChanged = (param: SelectionChangedEvent) => {
     var selectedRow = param.api.getSelectedRows()[0];
 
-    log("custom select - handleSelectionChanged", param, id, selectedRow)
+    // log("custom select - handleSelectionChanged", param, id, selectedRow)
 
     //이걸하면 x 버튼 클릭시 page에서 설정한 이벤트를 안탐
     // if (selectedRow === undefined) return;
@@ -271,7 +272,7 @@ function CustomSelect(props: Props) {
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
     }
-    // log("setDisplayVal", val, row)
+    // log("setDisplayVal", displayCol, val, row)
     setDisplayText(val);
   }
 
@@ -341,15 +342,22 @@ function CustomSelect(props: Props) {
 
   const moveNextComponent = () => {
     // const formElement = document.querySelector('form'); // 예시로 폼 요소를 선택합니다.
-    const inputElement = document.querySelector(`#${id}`);
-    const formElement = inputElement?.closest('form'); 
-    // log("moveNextComponent", formElement, inputElement, inputElement?.closest('form'));
+    const inputElement = document.querySelector(`#${id}`) as HTMLInputElement | null;
+    const formElement = inputElement?.closest('form') as HTMLFormElement | null; 
+    log("moveNextComponent", formElement, inputElement, inputElement?.closest('form'));
     if (formElement && inputElement) {
       const elementsArray = Array.from(formElement.elements)
+                              .filter((v): v is HTMLInputElement | HTMLTextAreaElement => 
+                                v instanceof HTMLInputElement || 
+                                v instanceof HTMLTextAreaElement
+                              )
                               .filter(v => !v.className.includes("ag-input-field-input") 
                                         && !v.className.includes("ag-button") 
                                         && !(v instanceof HTMLButtonElement) 
-                                        && !(v instanceof HTMLFieldSetElement));
+                                        && !(v instanceof HTMLFieldSetElement)
+                                        && !(v.readOnly)
+                                      );
+
       const currIndex = elementsArray.indexOf(inputElement);
       // log("moveNextComponent",elementsArray, currIndex)
       if (currIndex !== -1 && currIndex < elementsArray.length - 1) {
@@ -361,6 +369,10 @@ function CustomSelect(props: Props) {
       }
     }
   };
+
+  useEffect(()=> {
+    log("displayText", displayText)
+  }, [displayText]);
 
   return (
     <>
@@ -405,8 +417,9 @@ function CustomSelect(props: Props) {
 
                     break;
                   case "Enter":
-                    if (isOpen) setIsOpen(false);
+                    log("??enter")
                     moveNextComponent();
+                    if (isOpen) setIsOpen(false);
                     break;
                 }
               },
@@ -415,8 +428,8 @@ function CustomSelect(props: Props) {
                 e.target.select();
               },
             }}
-          />
-          {/* {displayText} */}
+            />      
+          
           <div className="select-arrow"
             style={{
               position: 'absolute',

@@ -11,7 +11,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
 
   const {carrier_code, cont_type, user_id, ipaddr } = Param;
-  log("search Detail Data:", Param);
+  // log("search Detail Data:", Param);
   
   const params = {
     inparam : [

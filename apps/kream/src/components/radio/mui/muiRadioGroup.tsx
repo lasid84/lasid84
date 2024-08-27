@@ -12,13 +12,17 @@ import { useTranslation } from 'react-i18next';
     id: string;
     name?: string | null;
     label?: string;
+    noLabel?: boolean
+    isRow?:boolean
     dataSrc: RadioOption[];
   }
 
   const RadioGroupField: React.FC<RadioGroupFieldProps> = ({ 
     id, 
     name, 
-    label, 
+    label,
+    noLabel = false,
+    isRow = true,
     dataSrc 
 }) => {
     const { control } = useFormContext();
@@ -26,18 +30,20 @@ import { useTranslation } from 'react-i18next';
   
     return (
       <FormControl component="fieldset">
-        <FormLabel component="legend">{t(label?label:id)}</FormLabel>
+        {!noLabel && <FormLabel component="legend" className="justify-center block text-xs font-medium text-gray-500/75 dark:text-gray-200 whitespace-nowrap">{t(label?label:id)}</FormLabel>}
         <Controller
           name={name ? name : id}
           control={control}
           render={({ field }) => (
-            <RadioGroup {...field}>
+            <RadioGroup {...field} row={isRow}>
               {dataSrc.map((option) => (
                 <FormControlLabel
                   key={option.value}
                   value={option.value}
-                  control={<Radio />}
-                  label={option.label}
+                  control={<Radio  size="small" />}
+                  // label={option.label}
+                  label={<span className="text-sm">{t(option.label)}</span>}
+                  className="mr-4"
                 />
               ))}
             </RadioGroup>
