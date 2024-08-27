@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import React from "react";
 
 type Props = {
-  label: string;
+  id?:string;
+  label?: string;
   inline?: boolean;
   value?: any;
   children: React.ReactNode;
@@ -13,6 +14,7 @@ type Props = {
 };
 // const RadioContext = createContext({});
 const RadioGroup: React.FC<Props> = ({
+  id,
   label,
   children,
   inline = false,
@@ -20,12 +22,11 @@ const RadioGroup: React.FC<Props> = ({
   ...rest
 }) => {
   const { t } = useTranslation();
-   
 
   return (
     <InputWrapper outerClassName="" inline={inline}>
       <fieldset className="flex items-center content-around w-full p-1 m-1 space-x-1">
-        <legend className="flex w-full text-gray-500">{t(label)}</legend>
+        <legend className="flex w-full text-gray-500">{t(label || '')}</legend>
         {/* <RadioContext.Provider value={rest} >{children}</RadioContext.Provider> */}
         {children}
       </fieldset>

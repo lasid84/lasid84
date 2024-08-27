@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
-import { MaskedInputField, Input } from 'components/input';
+import { MaskedInputField, Input, TextArea } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { DateInput, DatePicker } from 'components/date'
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
@@ -259,6 +259,11 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <MaskedInputField id="pickup_email" value={bkData?.pickup_email} options={{ isReadOnly: true }} />
                 <MaskedInputField id="pickup_tel_num" value={bkData?.pickup_tel_num} options={{ isReadOnly: true }} />
                 <div className="col-start-1 col-end-6"><br></br>  </div>
+
+                <PageContent>
+                  <div className="col-start-1 col-end-6 "><TextArea id="remark" rows={3} cols={32} value={bkData?.remark} options={{ isReadOnly: false }} /></div>
+                </PageContent>
+
                 <div className={"col-start-1 col-span-2"}>
                   <CustomSelect
                     id="cy_place_code"

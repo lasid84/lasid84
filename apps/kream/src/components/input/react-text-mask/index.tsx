@@ -1,5 +1,5 @@
 
-import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef } from 'react';
+import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
@@ -21,6 +21,7 @@ type Props = {
   width?: string;
   lwidth?: string;
   height?: string;
+  isFocus?:boolean
   options?: {
     inline?: boolean;         //라벨명 위치
     type?: string;            //number, text,  custom: ipaddr, bz_reg_no
@@ -55,11 +56,13 @@ type Props = {
 };
 
 export const MaskedInputField: React.FC<Props> = (props: Props) => {
-  const { control, setValue } = useFormContext();
+  // const MaskedInputField = forwardRef<HTMLInputElement, Props>((props, ref) => {
+  const { control, setValue, setFocus } = useFormContext();
   const { t } = useTranslation();
-  if (!control) return null;
+  // if (!control) return null;
+  const localRef = useRef<HTMLInputElement | null>(null);
 
-  const { id, label, value, width, lwidth, height, options = {}, events } = props;
+  const { id, label, value, width, lwidth, height, options = {}, events, isFocus=false } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
     freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
@@ -72,11 +75,19 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const defWidth = width ? width : "w-full";
   const defHeight = height ? height : "h-8";
 
+  // useEffect(() => {
+  //   log("MaskedInputField useEffect", id, value, selectedVal);
+  //   if (id && !isNotManageSetValue) setValue(id, value);
+  //   setSelectedVal(value === undefined ? '' : value);
+  // }, [value])
+
   useEffect(() => {
-    // log("MaskedInputField useEffect", id, value, selectedVal);
-    if (id && !isNotManageSetValue) setValue(id, value);
-    setSelectedVal(value === undefined ? '' : value);
-  }, [value])
+    // log("isFocus ",isFocus, id, localRef?.current)
+    if (isFocus) {
+      // setFocus(id);
+      if(localRef?.current) (localRef.current as HTMLInputElement)?.focus();
+    }
+  }, [isFocus])
 
   function handleKeyDown(e: any) {
     try {
@@ -147,7 +158,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
           // defaultValue = {val}
           render={({ field }) => (
             <MaskedInput
-              // {...field}
+              {...field}
               id={id}
               type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}
@@ -159,7 +170,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
                  `)}
               mask={type === 'password' ? false : mask!}
               // pipe={pipe}
-              value={selectedVal}
+              // value={selectedVal}
               defaultValue={value}
               readOnly={isReadOnly}
               placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
@@ -168,19 +179,27 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
               //     // setValue(name, e.target.value);
               // }}
               guide={false}
-
               // showMask={true}
               onKeyDown={(e) => handleKeyDown(e)}
               onBlur={(e) => handleBlur(e)}
               onChange={(e: any) => { handleChange(e); }}
               onFocus={(e: any) => { handleFocus(e); }}
               autoComplete={isAutoComplete}
+              render={(textMaskRef, props) => (
+                <input
+                  {...props}
+                  ref={(node:HTMLInputElement) => {
+                    textMaskRef(node); // Keep this so the component can still function
+                    localRef.current = node as HTMLInputElement; // Copy the ref for yourself
+                  }}
+                />
+              )}
             />
           )}
         />
-        {useIcon && <div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
-      </div>
-    </InputWrapper>
+         {useIcon && <div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
+       </div>
+     </InputWrapper>
   );
 };
 

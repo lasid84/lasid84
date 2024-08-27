@@ -79,7 +79,7 @@ const Radio: React.FC<RadioProps> = ({
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     // log("Radio onChange", e.target.id,e.target.value)
     const value = parseInt(e.target.value, 10);
-    setValue(e.target.id, value)
+    setValue(e.target.id, value.toString());
 
     if (onChange) {
       onChange(e);  
@@ -89,6 +89,7 @@ const Radio: React.FC<RadioProps> = ({
   return (
     <label className="flex items-center w-full text-gray-500">
       <input
+        // {...register(id)}
         className="items-center p-1 text-gray-500"
         type="radio"
         id={id}
