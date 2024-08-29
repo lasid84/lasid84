@@ -76,7 +76,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const defHeight = height ? height : "h-8";
 
   useEffect(() => {
-    log("MaskedInputField useEffect", id, value, selectedVal);
+    // log("MaskedInputField useEffect", id, value, selectedVal);
     if (id && !isNotManageSetValue) setValue(id, value);
     setSelectedVal(value);
   }, [value])
@@ -128,10 +128,10 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    log("handleChange", e?.target?.value)
+    // log("handleChange", e?.target?.value)
 
     if (id && !isNotManageSetValue) {
-      log("handleChange in if", id, e?.target?.value.replaceAll(":", ""))
+      // log("handleChange in if", id, e?.target?.value.replaceAll(":", ""))
       setValue(id, e?.target?.value.replaceAll(":", ""));
     }
     setSelectedVal(e?.target?.value);

@@ -93,6 +93,7 @@ export async function executFunction(params:exeFuncParams) {
         if (numericData !== 0) {
             toastWaring((numericData + " : " + textData))
             // log("==",numericData + " : " + textData);
+            throw new Error(numericData + " : " + textData);
             return null;
         }
         if (isShowComplete) {
@@ -101,6 +102,7 @@ export async function executFunction(params:exeFuncParams) {
         return cursorData;
     } catch (err) {
         const typedErr = err as Error
+        throw new Error(typedErr.message);
         log("executFunction", typedErr.message);
     } finally {
         // useUserSettings.getState().actions.setData({ loading: "OFF" });

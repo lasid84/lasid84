@@ -62,7 +62,7 @@ function CustomSelect(props: Props) {
   const inputRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
-  const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true
+  const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol = id, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true
     , noLabel = false, lwidth, defaultValue, events
   } = props;
   const customselect = true
@@ -148,7 +148,8 @@ function CustomSelect(props: Props) {
       let index = -1;
       const initialData = listItem.data.find((item: any, i:number) => {
         index = i;
-        return item[valueCol![0]] === defaultValue
+        if (valueCol?.length) return item[valueCol![0]] === defaultValue
+        else return item[displayCol] === defaultValue
       });
 
       setSelectedValue(initialData);
@@ -254,7 +255,8 @@ function CustomSelect(props: Props) {
       let val = (row && row[key]) ? row[key] : null;
       if (i === 0) setValue(id, val);
 
-      setValue(key, val);
+      //거래처 관리 main_cust_code 쪽 문제가 됨(cust_code에 main_cust_code가 표시됨으로 아래 주석)
+      // setValue(key, val);
     });
     else Object.keys(row || {}).map(key => setValue(key, row[key] ? row[key] : null));
 

@@ -1,31 +1,38 @@
 import DialogBasic from "layouts/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray, useFormContext } from "react-hook-form";
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
-import { crudType, useAppContext } from "components/provider/contextObjectProvider"
-import { SP_UpdateData } from './data';
+import { crudType, SEARCH_M, useAppContext } from "components/provider/contextObjectProvider"
+import { CUST_TYPE_TRANSPORT, SP_InsertCustData, SP_UpdateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import CustomSelect from "components/select/customSelect";
 import { useRouter, usePathname } from 'next/navigation'
 import { Button } from "components/button";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
+import { Checkbox } from "@/components/checkbox";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
+type Callback = () => void;
 type Props = {
     loadItem: any | null
+    callbacks?: Callback[];
 }
 
-const Modal: React.FC<Props> = ({ loadItem }) => {
+const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
 
     const { dispatch, objState } = useAppContext();
     const { mSelectedRow, crudType: popType, isPopUpOpen: isOpen, searchParams } = objState;
-    const router = usePathname()
+    const router = usePathname();
+    const { Create } = useUpdateData2(SP_InsertCustData);
     const { Update } = useUpdateData2(SP_UpdateData);
     const { getValues, setValue, reset, setFocus, handleSubmit } = useFormContext();
 
     const closeModal = () => {
         dispatch({ isPopUpOpen: false });
+
+        if (callbacks?.length) callbacks.forEach((callback: Callback) => callback())
+
         reset();
     }
 
@@ -52,21 +59,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         }
     }, [mSelectedRow, loadItem])
 
-    //Refactore by using custom hook
-    const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-        log("onFormSubmit", param)
-        if (popType === crudType.UPDATE) {
-            Update.mutate(param, {
-                onSuccess: (res: any) => {
-                    closeModal();
-                    dispatch({ isMSearch: true });
-                },
-            });
-        } else {
-        }
-
-    }, [popType]);
-
     useEffect(() => {
         reset()
         log("popup mSelectedRow :", mSelectedRow);
@@ -75,6 +67,31 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
         }
     }, [popType, isOpen])
 
+    const onSave = useCallback(async () => {
+        var param = getValues();
+        log("onFormSubmit", param)
+        // try {
+            if (popType === crudType.UPDATE) {
+                await Update.mutateAsync(param, {
+                    onSuccess: (res: any) => {
+                        dispatch({ isMSearch: true });
+                        closeModal();
+                    },
+                }).catch(err => {});
+            } else {
+                await Create.mutateAsync(param, {
+                    onSuccess(data, variables, context) {
+                        closeModal();
+                    },
+                    onError(error, variables, context) {
+                    },
+                }).catch(err => {});
+            }
+        // } catch(err) {
+        //     log("catch err", err)
+        // }
+    }, []);
+
     return (
         <DialogBasic
             isOpen={isOpen!}
@@ -82,19 +99,19 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
             title={"거래처 관리 - " + (popType === crudType.CREATE ? "등록" : "수정")}
             bottomRight={
                 <>
-                    <Button id={"save"} onClick={closeModal} width="w-32" />
+                    <Button id={"save"} onClick={onSave} width="w-32" />
                     <Button id={"cancel"} onClick={closeModal} width="w-32" />
                 </>
             }
         >
-            <form onSubmit={handleSubmit(onFormSubmit)}>
+            <form>
                 <div className="flex flex-col gap-4 md:grid md:grid-cols-6">
                     <div className="col-span-1">
                         <MaskedInputField
                             id="cust_code"
                             value={mSelectedRow?.cust_code}
                             options={{
-                                isReadOnly: popType === crudType.CREATE ? false : true,
+                                isReadOnly: mSelectedRow?.cust_code === CUST_TYPE_TRANSPORT ? true : (popType === crudType.CREATE ? false : true),
                             }}
                         />
                     </div>
@@ -103,7 +120,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             id="main_cust_code"
                             defaultValue={mSelectedRow?.main_cust_code}
                             listItem={maincustcode as data}
-                            valueCol={["cust_code", "cust_nm"]}
+                            valueCol={["cust_code"]}
                             displayCol="cust_nm"
                             gridOption={{
                                 colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
@@ -257,7 +274,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                         }} />
 
 
-                    <div className="col-span-2">
+                    {/* <div className="col-span-2">
                         <ReactSelect
                             id="use_yn" dataSrc={{
                                 data: [
@@ -271,7 +288,12 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 displayCol: ['use_yn'],
                                 defaultValue: mSelectedRow?.use_yn
                             }} />
-                    </div>
+                    </div> */}
+                    <MaskedInputField id="executive_nm" value={mSelectedRow?.executive_nm} 
+                            options={{
+                                isReadOnly: popType === crudType.CREATE ? false : true,
+                            }} />
+                    <Checkbox id="use_yn" value={mSelectedRow?.use_yn} />
 
                     <div className="col-span-2">
                         <MaskedInputField
@@ -298,7 +320,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                             isReadOnly: popType === crudType.CREATE ? false : true,
                         }} />
 
-                    <div className="col-span-1">
+                    {/* <div className="col-span-1">
                         <ReactSelect
                             id="sale_cust_yn" dataSrc={{
                                 data: [
@@ -312,9 +334,10 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 displayCol: ['sale_cust_yn'],
                                 defaultValue: mSelectedRow?.sale_cust_yn
                             }} />
-                    </div>
+                    </div> */}
+                    <Checkbox id="sale_cust_yn" value={mSelectedRow?.sale_cust_yn} />
 
-                    <div className="col-span-1">
+                    {/* <div className="col-span-1">
                         <ReactSelect
                             id="prch_cust_yn" dataSrc={{
                                 data: [
@@ -328,7 +351,8 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 displayCol: ['prch_cust_yn'],
                                 defaultValue: mSelectedRow?.prch_cust_yn
                             }} />
-                    </div>
+                    </div> */}
+                    <Checkbox id="prch_cust_yn" value={mSelectedRow?.prch_cust_yn} />
 
                     <div className="col-span-2">
                         <MaskedInputField
@@ -359,7 +383,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
 
 
-                    <div className="col-span-1">
+                    {/* <div className="col-span-1">
                         <ReactSelect
                             id="gen_cust_yn" dataSrc={{
                                 data: [
@@ -388,7 +412,11 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                                 displayCol: ['cal_except_yn'],
                                 defaultValue: mSelectedRow?.cal_except_yn
                             }} />
-                    </div>
+                    </div> */}
+                    
+                    <Checkbox id="gen_cust_yn" value={mSelectedRow?.gen_cust_yn} />
+                    <Checkbox id="cal_except_yn" value={mSelectedRow?.cal_except_yn} />
+                    <Checkbox id="crrg_cust_yn" value={mSelectedRow?.crrg_cust_yn} />
                     <MaskedInputField
                         id="post_no"
                         value={mSelectedRow?.post_no}
@@ -400,7 +428,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                 </div>
             </form>
         </DialogBasic>
-
     )
 
 }

@@ -11,7 +11,8 @@ import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
 import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
-import { SP_GetPickupContData, SP_GetCarrierContData, SP_GetTransportData } from "./data";
+import { SP_GetPickupContData, SP_GetCarrierContData } from "./data";
+import { SP_GetTransPortData } from "@/app/stnd/stnd0012/_component/data";
 import PicupPlacePopUp from "./popPickupcont"
 import CarrierContPopUp from "./popCarriercont";
 import { Button } from "components/button";
@@ -52,7 +53,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
   const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
 
-  const { data: transportCompData, refetch: transportCompRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "TransportCompany", SP_GetTransportData, { enable: true });
+  const { data: transportCompData, refetch: transportCompRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "TransportCompany", SP_GetTransPortData, { enable: true });
   
   // const [cyPlace, setCyPlace] = useState<any>()
   const [carriercode, setCarrierCode] = useState<any>()
@@ -218,7 +219,21 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                   <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
                 </div>
                 <MaskedInputField id="pickup_tm" value={bkData?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
-                <MaskedInputField id="transport_company" value={bkData?.transport_company} options={{ isReadOnly: false }} />
+                {/* <MaskedInputField id="transport_company" value={bkData?.transport_company} options={{ isReadOnly: false }} /> */}
+                <CustomSelect
+                    id="transport_company"
+                    listItem={transportCompData as gridData}
+                    valueCol={["cust_code"]}
+                    displayCol="cust_nm"
+                    gridOption={{
+                      colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
+                    }}
+                    gridStyle={{ width: '800px', height: '300px' }}
+                    style={{ width: '1000px', height: "8px" }}
+                    defaultValue={bkData?.transport_company}
+                    isDisplay={true}
+                    // events={}
+                  />
                 <div className="col-start-1 col-end-6"><br></br></div>
                 <div className={"col-start-1 col-span-2"}>
                   <CustomSelect
