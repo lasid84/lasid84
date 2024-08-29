@@ -11,6 +11,7 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
 import { SP_InsertCargo, SP_UpdateCargo } from "./data";
 import CargoFCL, {CargoLCL} from "./cargoDetailRow"
+import Grid, { getGridState, gotoFirstRow, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 const { log, error } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -42,7 +43,41 @@ export type Cargo = {
   class: string;
   description: string;
   __changed : boolean;
+  __ROWTYPE : string;
 };
+
+
+export const initialCargo = {
+  bk_id: '', //bkData?.bk_id,
+  seq: -1,
+  container_type: "",
+  piece: 1,
+  // same: false, //상태type
+  pkg_type: "",
+  container_refno: "",
+  seal_no: "",
+  slac_stc: 0,
+  stc_uom: "",
+  gross_wt: 0,
+  gross_uom: "",
+  measurement: "",
+  measurement_uom: "",
+  // dg_yn: false,
+  length: 0,
+  width: 0,
+  height: 0,
+  weight: 0,
+  soc: "",
+  empty: "",
+  temp: 0,
+  vent: "",
+  un_no: "",
+  class: "",
+  description: "",
+  __changed : false,
+  __ROWTYPE : ROW_TYPE_NEW //NEW      
+  };
+
 
 const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo }) => {
   const { dispatch, objState } = useAppContext();
@@ -51,58 +86,28 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
   const { Create } = useUpdateData2(SP_InsertCargo);
   const { Update } = useUpdateData2(SP_UpdateCargo);
 
-  var initialCargo = {
-    bk_id: bkData?.bk_id,
-    seq: -1,
-    container_type: "",
-    piece: 1,
-    // same: false, //상태type
-    pkg_type: "",
-    container_refno: "",
-    seal_no: "",
-    slac_stc: 0,
-    stc_uom: "",
-    gross_wt: 0,
-    gross_uom: "",
-    measurement: "",
-    measurement_uom: "",
-    // dg_yn: false,
-    length: 0,
-    width: 0,
-    height: 0,
-    weight: 0,
-    soc: "",
-    empty: "",
-    temp: 0,
-    vent: "",
-    un_no: "",
-    class: "",
-    description: "",
-    __changed : false, //NEW      
-    };
+  // const {
+  //   data: cargoData,
+  //   refetch: cargoRefetch,
+  //   remove: cargoRemove,
+  // } = useGetData(
+  //   { bk_no: objState?.MselectedTab },
+  //   SEARCH_CGD,
+  //   SP_GetCargoData,
+  //   {
+  //     enabled: false,
+  //   }
+  // );
 
-  const {
-    data: cargoData,
-    refetch: cargoRefetch,
-    remove: cargoRemove,
-  } = useGetData(
-    { bk_no: objState?.MselectedTab },
-    SEARCH_CGD,
-    SP_GetCargoData,
-    {
-      enabled: false,
-    }
-  );
-
-  useEffect(() => {
-    if (cargoData) {
-      const updatedCargo = Array.isArray(cargoData) && cargoData.length > 0
-      ? cargoData
-      : [initialCargo];
-      log('getCargoData',updatedCargo)
-      dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargo } });
-    }
-  }, [cargoData]);
+  // useEffect(() => {
+  //   if (cargoData) {
+  //     const updatedCargo = Array.isArray(cargoData) && cargoData.length > 0
+  //     ? cargoData
+  //     : [initialCargo];
+  //     log('getCargoData',updatedCargo)
+  //     dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargo } });
+  //   }
+  // }, [cargoData]);
 
 
 
@@ -118,6 +123,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
           const maxSeq = Math.max(...bkData.cargo.map((item: any) => item.seq)); 
           const newCargoItems = Array.from({ length: pieceCount - 1 }, (_, j) => ({
               ...initialCargo,
+              bk_id:bkData?.bk_id,
               seq: maxSeq + j + 1,
               container_type: bkData.cargo[index]?.container_type,
               piece: 1, 
@@ -139,7 +145,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 
   const handleChange = (seq: number,id:string, value: string, index : number) => {
     const updatedCargoList = bkData?.cargo.map((item: any, i: number) => {
-      return i == index ? { ...item, [id]: value } : item 
+      return i == index ? { ...item, [id]: value, __changed : true, } : item 
       }
     );
     //log('handleChange...updatedCargoList', updatedCargoList)
@@ -154,7 +160,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
       const maxSeq = bkData.cargo && bkData.cargo.length > 0
       ? Math.max(...bkData.cargo.map((item: any) => item.seq)) // 현재 최대 seq 값 찾기
       : 0;
-      const newCargo = { ...initialCargo, seq: maxSeq+1 }; //nextSeq
+      const newCargo = { ...initialCargo, bk_id:bkData?.bk_id, seq: maxSeq+1 }; //nextSeq
       const newCargoList = bkData.cargo ? [...bkData.cargo, newCargo] : [newCargo];
       dispatch({ [MselectedTab]: { ...bkData, cargo: newCargoList } });
     }
@@ -170,12 +176,18 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
   const onSave = () => {
     var hasData = false
     if (bkData?.cargo) {
-      bkData.cargo.forEach((item: Cargo) => {
-        log('item check', item)
+      bkData.cargo.forEach((data: Cargo) => {
+        log('item check', data)
         // 변경된 항목인지 확인
-        if (item.__changed) {
-          hasData = true;}})
-
+        if (data.__changed) {
+             hasData = true
+             if (data.__ROWTYPE === ROW_TYPE_NEW) {
+              Create.mutate(data);
+            } else {          //수정
+              Update.mutate(data);
+            }
+                
+        }})
     }
   }
 
@@ -190,7 +202,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
     >
       
       <div className="flex-row w-full">
-        {bkData?.cargo?.map((cargoItem: any, i: any) =>
+        {bkData?.cargo && bkData?.cargo?.map((cargoItem: any, i: any) =>
           bkData?.svc_type === "LCL" ? (
             <CargoLCL
               key={i}

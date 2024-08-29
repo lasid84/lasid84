@@ -28,7 +28,43 @@ export const SP_Load = async (searchParam: any) => {
 }
 
 
-//SP_GetInvoiceMasterContent
+export const SP_GetMData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
+
+  const params = {
+    inparam: [
+        "in_fr_date"
+      , "in_to_date"
+      , "in_cust_code"
+      , "in_no"
+      , "in_search_gubn"
+      , "in_state"
+      , "in_create_user"
+      , "in_user_id"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        fr_date
+      , to_date
+      , cust_code
+      , no
+      , search_gubn
+      , state
+      , create_user
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_bk_main2',
+    isShowLoading: true
+  }
+
+  const result = await executFunction(params);
+  log('mainData Result', result)
+  log('mainData Result?', result![0])
+  return result
+}
+
 export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
@@ -61,7 +97,8 @@ export const SP_GetMasterData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-
+  log('mainData Result', result)
+  log('mainData Result?', result![0])
   return result![0]
 }
 
@@ -625,82 +662,86 @@ export const SP_GetCarrierContData = async (searchParam: any) => {
 export const SP_InsertCargo = async (param: any) => {
   const Param = param;
   
-  const {  bk_id					   , waybill_no 		, piece				        , pkg_type 
+  const {  bk_id					   , seq 		, piece				        , pkg_type 
           , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
           , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
-          , hs_cd 			     , rate 					, total 						  , no_plt_gross_wt     , no_plt_gross_uom 
-          , no_plt_measurement , no_plt_measurement_uom , rate_class , rate_as_amt	      , use_yn 
+          , hs_cd 			           , length  
+          , width 			
+          , height 			
+          , weight
+          , soc
+          , empty 
+          , temp 
+          , vent 			
+          , un_no 	
+          , remark   , use_yn 
           , user_id            , ipaddr
   } = Param;
 
   const params = {
     inparam : [
-      "in_bk_id"
-    , "in_waybill_no"
-    , "in_piece"
-    , "in_pkg_type"
-    , "in_slac_stc"
-    , "in_stc_uom"
-    , "in_container_refno"
-    , "in_container_type"
-    , "in_seal_no"
-    , "in_description"
-    , "in_measurement"
-    , "in_measurement_uom"
-    , "in_gross_wt"
-    , "in_gross_uom"
-    , "in_volume_factor"
-    , "in_volume_wt"
-    , "in_volume_uom"
-    , "in_chargeable_wt"
-    , "in_chargeable_uom"
-    , "in_commodity_cd"
-    , "in_dg_yn" 
-    , "in_hs_cd"
-    , "in_rate"
-    , "in_total"
-    , "in_no_plt_gross_wt"
-    , "in_no_plt_gross_uom" 
-    , "in_no_plt_measurement"
-    , "in_no_plt_measurement_uom"
-    , "in_rate_class"
-    , "in_rate_as_amt"
-    , "in_use_yn"
-    , "in_user_id"
-    , "in_ipaddr"
+      "in_bk_id" 
+      , "in_seq" 
+      , "in_container_type" 
+      , "in_piece" 
+      , "in_pkg_type" 
+      , "in_container_refno" 
+      , "in_seal_no"
+      , "in_slac_stc" 
+      , "in_stc_uom" 
+      , "in_gross_wt" 
+      , "in_gross_uom" 
+      , "in_measurement" 
+      , "in_measurement_uom" 
+      , "in_dg_yn" 
+      , "in_length" 
+      , "in_width" 
+      , "in_height" 
+      , "in_weight" 
+      , "in_soc" 
+      , "in_empty" 
+      , "in_temp" 
+      , "in_vent" 
+      , "in_un_no" 
+      , "in_class" 
+      , "in_volume_factor" 
+      , "in_commodity_cd" 
+      , "in_hs_cd" 
+      , "in_remark" 
+      , "in_use_yn" 
+      , "in_user_id" 
+      , "in_ipaddr" 
     ],
     invalue: [
       bk_id				
-      , waybill_no 				
-      , piece				
-      , pkg_type 
-      , slac_stc 			
-      , stc_uom 			
-      , container_refno 		
-      , container_type 
-      , seal_no 
-      , description		
-      , measurement		
-      , measurement_uom	 
+      , seq 				
+      , container_type				
+      , piece 
+      , pkg_type 			
+      , container_refno 			
+      , seal_no 		
+      , slac_stc 
+      , stc_uom 
       , gross_wt		
-      , gross_uom
-      , volume_factor  
-      , volume_wt 			
-      , volume_uom 			
-      , chargeable_wt
-      , chargeable_uom
+      , gross_uom		
+      , measurement	 
+      , measurement_uom		
+      , dg_yn
+      , length  
+      , width 			
+      , height 			
+      , weight
+      , soc
+      , empty 
+      , temp 
+      , vent 			
+      , un_no 					
+      , "class"	 //class ????				
+      , volume_factor   
       , commodity_cd 
-      , dg_yn 
-      , hs_cd 			
-      , rate 					
-      , total 						
-      , no_plt_gross_wt   
-      , no_plt_gross_uom 
-      , no_plt_measurement 
-      , no_plt_measurement_uom 
-      , rate_class 
-      , rate_as_amt	
+      , hs_cd 
+      , remark 
       , use_yn 
       , user_id
       , ipaddr

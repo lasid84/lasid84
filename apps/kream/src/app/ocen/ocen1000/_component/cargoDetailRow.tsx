@@ -67,7 +67,6 @@ const CargoFCL = memo(
     onDelete,
     onValueChange,
   }: any) => {
-    const { dispatch, objState } = useAppContext();
 
     var cargoItem = bkData.cargo;
     const [containertype, setContainertype] = useState<any>();
@@ -92,20 +91,21 @@ const CargoFCL = memo(
     };
 
     const handleFieldReadOnly = (field: string) => {
-      const containerType = bkData?.cargo.container_type;
-      log('containerType', containerType);
-    
-      switch (true) {
-        case containerType.includes("OT"): // OPEN TOP
-          return ["length", "width", "height", "weight"].includes(field);
-        case containerType.includes("FR"): // FLAT RACK
-          return ["length", "width", "height", "weight"].includes(field);
-        case containerType.includes("R"): // REEFER
-          return ["temp", "vent"].includes(field);
-        case containerType.includes("TC"): // TANK
-          return ["soc", "empty"].includes(field);
-        default:
-          return false;
+      const containerType = bkData?.cargo && bkData?.cargo.container_type;    
+      if(containerType){
+        switch (true) {
+          case containerType.includes("OT"): // OPEN TOP
+          log('?', ["length", "width", "height", "weight"].includes(field))
+            return ["length", "width", "height", "weight"].includes(field)
+          case containerType.includes("FR"): // FLAT RACK
+            return ["length", "width", "height", "weight"].includes(field)
+          case containerType.includes("R"): // REEFER
+            return ["temp", "vent"].includes(field)
+          case containerType.includes("TC"): // TANK
+            return ["soc", "empty"].includes(field)
+          default:
+            return false;
+        }
       }
     };
     
@@ -155,7 +155,7 @@ const CargoFCL = memo(
             </div>
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_piece`}
-              key={`masked-input-${cargoItem.seq}-${cargoItem.piece}`} 
+              key={`masked-input-${bkData?.cargo?.seq}-${bkData?.cargo?.piece}`} 
               id="piece"
               value={bkData?.cargo?.piece}
               events={{ onChange: handlePieceChange }}
@@ -250,7 +250,7 @@ const CargoFCL = memo(
               id="length"
               value={bkData?.cargo?.length}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("length") }}
+              options={{isReadOnly : !handleFieldReadOnly("length") }}
               width="w-24"
             />           
             <MaskedInputField
@@ -258,7 +258,7 @@ const CargoFCL = memo(
               id="width"
               value={bkData?.cargo?.width}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("width") }}
+              options={{isReadOnly : !handleFieldReadOnly("width") }}
               width="w-24"
             />
              <MaskedInputField
@@ -266,7 +266,7 @@ const CargoFCL = memo(
               id="height"
               value={bkData?.cargo?.height}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("height") }}
+              options={{isReadOnly : !handleFieldReadOnly("height") }}
               width="w-24"
             />           
             <MaskedInputField
@@ -274,7 +274,7 @@ const CargoFCL = memo(
               id="weight"
               value={bkData?.cargo?.weight}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("weight") }}
+              options={{isReadOnly : !handleFieldReadOnly("weight") }}
               width="w-24"
             />
              <MaskedInputField
@@ -282,7 +282,7 @@ const CargoFCL = memo(
               id="soc"
               value={bkData?.cargo?.soc}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("soc") }}
+              options={{isReadOnly : !handleFieldReadOnly("soc") }}
               width="w-24"
             />
             <MaskedInputField
@@ -290,7 +290,7 @@ const CargoFCL = memo(
               id="empty"
               value={bkData?.cargo?.empty}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("empty")}}
+              options={{isReadOnly : !handleFieldReadOnly("empty") }}
               width="w-24"
             />
              <MaskedInputField
@@ -298,7 +298,7 @@ const CargoFCL = memo(
               id="temp"
               value={bkData?.cargo?.temp}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("temp") }}
+              options={{isReadOnly : !handleFieldReadOnly("temp") }}
               width="w-24"
             />
             <MaskedInputField
@@ -306,7 +306,7 @@ const CargoFCL = memo(
               id="vent"
               value={bkData?.cargo?.vent}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("vent") }}
+              options={{isReadOnly : !handleFieldReadOnly("vent") }}
               width="w-24"
             />
             <MaskedInputField
@@ -314,7 +314,7 @@ const CargoFCL = memo(
               id="un_no"
               value={bkData?.cargo?.un_no}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("un_no")}}
+              options={{isReadOnly : !handleFieldReadOnly("un_no") }}
               width="w-24"
             />
             <MaskedInputField
@@ -322,7 +322,7 @@ const CargoFCL = memo(
               id="class"
               value={bkData?.cargo?.class}
               events={{ onChange: handleChange }}
-              options={{isReadOnly : handleFieldReadOnly("class")}}
+              options={{isReadOnly : !handleFieldReadOnly("class") }}
               width="w-24"
             />
             <MaskedInputField
@@ -330,7 +330,7 @@ const CargoFCL = memo(
               id="volume_factor"
               value={bkData?.cargo?.volume_factor}
               events={{ onChange: handleChange }}
-              options={{ isReadOnly :  false }}
+              options={{ isReadOnly :  true }}
               width="w-24"
             />
             <MaskedInputField
@@ -338,7 +338,7 @@ const CargoFCL = memo(
               id="commodity_cd"
               value={bkData?.cargo?.commodity_cd}
               events={{ onChange: handleChange }}
-              options={{ isReadOnly :  false }}
+              options={{ isReadOnly :  true }}
               width="w-24"
             />
             <MaskedInputField
@@ -346,7 +346,7 @@ const CargoFCL = memo(
               id="hs_cd"
               value={bkData?.cargo?.hs_cd}
               events={{ onChange: handleChange }}
-              options={{ isReadOnly :  false }}
+              options={{ isReadOnly :  true }}
               width="w-24"
             />
           </div>
@@ -366,10 +366,6 @@ export const CargoLCL = memo(
     onDelete,
     onValueChange,
   }: any) => {
-    const { dispatch, objState } = useAppContext();
-    const { Create } = useUpdateData2(SP_InsertCargo);
-    const { Update } = useUpdateData2(SP_UpdateCargo);
-
     const [containertype, setContainertype] = useState<any>();
     var cargoItem = bkData.cargo;
 

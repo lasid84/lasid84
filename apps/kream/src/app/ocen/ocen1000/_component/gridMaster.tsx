@@ -189,7 +189,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 <Grid
                     gridRef={objState.gridRef_m}
                     loadItem={initData}
-                    listItem={mainData as gridData}
+                    listItem={mainData as gridData}//                await ((mainData as string[])[0] as unknown as gridData).data.push(row);
                     options={gridOption}
                     event={{
                         onRowDoubleClicked: handleRowDoubleClicked,

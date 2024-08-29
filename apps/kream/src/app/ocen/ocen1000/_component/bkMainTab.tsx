@@ -45,7 +45,6 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   }, [objState?.gridRef_m])
 
   useEffect(() => {
-    log("useEffect bkData", bkData);
   }, [bkData])
 
   useEffect(() => {
