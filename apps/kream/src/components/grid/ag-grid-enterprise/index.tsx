@@ -956,7 +956,6 @@ export const rowAdd = async (
     var data = {
       [col]: '',
       ...row,
-      use_yn: true,
       [ROW_INDEX]: rowCount + 1,
       [ROW_TYPE]: ROW_TYPE_NEW,
       [ROW_CHANGED]: true

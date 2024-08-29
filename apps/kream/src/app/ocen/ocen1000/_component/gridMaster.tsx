@@ -50,10 +50,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             bk_dd: { inputLimit : 8}
         },
         isAutoFitColData: true,
-        editable: ["bk_dd", "origin_terminal_id", "dest_terminal_id", "vocc_id", "customs_declation", "milestone", "state", "bk_remark", "shipper_id", "sales_person", "ship_remark", "cnee_id"
-            , "ts_port", "vessel", "port_of_loading", "port_of_unloading", "etd", "eta", "final_dest_port", "final_eta", "doc_close_dd", "doc_close_tm", "cargo_close_dd", "cargo_close_tm"
-            , "svc_type", "vement_type", "commodity", "strategic_yn", "cargo_remark", "pickup_dd", "pickup_tm", "pickup_loc", "transport_company", "cy_place_code", "carrier_code", "cr_fak", "cr_nac"
-            , "bl_type", "bill_type", "incoterms", "incoterms_remark", "ams_yn", "ams", "aci_yn", "aci", "afr_yn", "edi_yn", "isf_yn", "e_manifest_yn"
+        editable: ["shipper_id", "carrier_code", "bk_dd", "waybill_no", "incoterms", "incoterms_remark", "port_of_loading", "port_of_unloading", "final_dest_port"
+            , "pickup_dd", "pickup_tm", "doc_close_dd", "doc_close_tm", "vessel", "etd", "eta", "final_eta", "vocc", "customs_declation", "status", "bk_remark", "shp_remark"
          ],
          checkbox: ["use_yn", "ams_yn", "aci_yn", "afr_yn", "isf_yn", "e_manifest_yn"]
     };

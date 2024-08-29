@@ -112,6 +112,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   }
 
   const sendTransPortEmail = useCallback(async () => {
+    log()
     var data = {...bkData, pgm_code: TRANPOSRT_EMAIL_LIST_OE + bkData?.transport_company};
     await sendEmail.mutateAsync(data, {
       onSuccess(data, variables, context) {
