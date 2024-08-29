@@ -2,12 +2,9 @@
 
 
 import React, { useCallback, useState, useEffect, Dispatch, useContext, memo, MouseEventHandler } from "react";
-import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { PageBKTabContent } from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
-import { shallow } from "zustand/shallow";
-import { MaskedInputField, Input } from 'components/input';
-import { useGetData } from "components/react-query/useMyQuery";
+import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
@@ -41,19 +38,18 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { MselectedTab } = objState;
   const [ref, setRef] = useState(objState.gridRef_m);
 
-  const [createuser, setCreateuser] = useState<any>();
+  const [reporttype, setReporttype] = useState<any>();
 
   useEffect(() => {
     setRef(objState.gridRef_m);
   }, [objState?.gridRef_m])
 
-  // useEffect(() => {
-  //   log("useEffect bkData", bkData);
-  // }, [bkData])
+  useEffect(() => {
+  }, [bkData])
 
   useEffect(() => {
     if (loadItem?.length) {
-      setCreateuser(loadItem[1]);
+      setReporttype(loadItem[21]);
     }
   }, [loadItem?.length]);
 
@@ -134,7 +130,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           right={
             <>
               <div className={"flex col-span-2 "}>
-                <DropButton id={"download"} width="w-24" dataSrc={createuser as data} options={{ keyCol :"create_user" }} />
+                <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} />
                 <Button id={"save"} onClick={onSave} width="w-24" />
               </div>                
               <div className={"flex col-span-2"}>

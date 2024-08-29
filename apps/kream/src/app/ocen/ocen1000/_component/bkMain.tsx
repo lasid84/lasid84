@@ -1,15 +1,14 @@
 'use client'
 
-import React, { useState, useEffect, Dispatch, useContext, memo, useRef } from "react";
-import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input, TextArea } from 'components/input';
-import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
+import { useAppContext } from "components/provider/contextObjectProvider";
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
 import ShpContPopUp from "./popShippercont";
-import CarrierContPopUp from "./popCarriercont";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
@@ -148,6 +147,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       freeStyles: "p-1 border-1 border-slate-300",
                     }}/>
                     <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} />
+                    <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: false}} />
                     <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: false}} />
                   
                   {/* <div className="col-span-2"> */}

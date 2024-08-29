@@ -20,9 +20,10 @@ const { log, error } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
   initData?: any | null;
+  svcType? : string;
 };
 
-const GridCargo: React.FC<Props> = memo(({ initData }) => {
+const GridCargo: React.FC<Props> = memo(({ initData, svcType }) => {
   const gridRef = useRef<any | null>(null);
   const gridRefD = useRef<any | null>(null);
   const { dispatch, objState } = useAppContext();
@@ -188,7 +189,8 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
         }
       >
         <>
-          <Grid
+        {svcType}
+          {/* <Grid
             gridRef={gridRef}
             listItem={cargoData as gridData} //{mainData?.[1] as gridData}
             options={gridOptions}
@@ -206,7 +208,7 @@ const GridCargo: React.FC<Props> = memo(({ initData }) => {
                 };
               },
             }}
-          />
+          /> */}
         </>
       </PageBKCargo>
     </>

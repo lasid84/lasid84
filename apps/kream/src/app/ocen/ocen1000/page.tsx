@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useReducer, useMemo, useRef } from "react";
-import { SP_Load, SP_GetMasterData } from "./_component/data";
+import { SP_Load, SP_GetMData } from "./_component/data";
 import {
   reducer,
   TableContext,
@@ -25,6 +25,7 @@ import BKSchedule from "./_component/bkSchedule";
 import { shallow } from "zustand/shallow";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { FormProvider, useForm } from "react-hook-form";
+import { initialCargo } from "./_component/cargoDetail";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const {
@@ -102,8 +103,10 @@ export default function OCEN1000() {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+
+
   const { data: initData } = useGetData("", LOAD, SP_Load, {staleTime: 1000 * 60 * 60});
-  const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, "Booking_Row_Data", /*SP_GetBKDetailData*/ SP_GetMasterData, { enabled: false }); //1건 Detail조회
+  const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, "Booking_Row_Data", /*SP_GetBKDetailData*/ SP_GetMData, { enabled: false }); //1건 Detail조회
 
   //사용자 정보
   const menu_param = useUserSettings((state) => state.data.currentParams,shallow);
@@ -138,8 +141,13 @@ export default function OCEN1000() {
 
   useEffect(() => {
     if (mainData) {
+      log('mainData11', mainData, ((mainData as string[])[1] as unknown as gridData).data[0])
+      // if()
       dispatch({
-        [objState?.MselectedTab]: (mainData as gridData).data[0],
+        // TYPE 캐스팅 ((mainData as string[])[0] as unknown as gridData)
+        [objState?.MselectedTab]: {...((mainData as string[])[0] as unknown as gridData).data[0],
+                                    cargo : [((mainData as string[])[1] as unknown as gridData).data[0]|| {...initialCargo, bk_id:objState?.MselectedTab}] 
+        }
         // bkData: (mainData as gridData).data[0]
     });
     }
