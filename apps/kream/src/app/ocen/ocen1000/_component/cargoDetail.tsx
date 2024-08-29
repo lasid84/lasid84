@@ -131,18 +131,16 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 
   // 업데이트된 cargo 리스트를 상태에 반영
   dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
- // 강제로 리렌더링 (optional)
- setTimeout(() => {
-  dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
-}, 0);
+//  // 강제로 리렌더링 (optional)
+//  setTimeout(() => {
+//   dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
+// }, 0);
 };
 
-
   const handleChange = (seq: number,id:string, value: string, index : number) => {
-    log('handleChange..........',seq,id,value,index ) 
     const updatedCargoList = bkData?.cargo.map((item: any, i: number) => {
-      return i == index ? { ...item, [id]: value } : item
-    }
+      return i == index ? { ...item, [id]: value } : item 
+      }
     );
     //log('handleChange...updatedCargoList', updatedCargoList)
     dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });

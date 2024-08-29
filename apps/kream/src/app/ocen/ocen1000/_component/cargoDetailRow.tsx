@@ -37,20 +37,20 @@ export type Cargo = {
   pkg_type: string;
   container_refno: string;
   seal_no: string;
-  // slac_stc: number;
+  slac_stc: number;
   stc_uom: string;
-  // gross_wt: number;
+  gross_wt: number;
   gross_uom: string;
   measurement: string;
   measurement_uom: string;
-  // dg_yn: boolean;
+  //dg_yn: boolean;
   length: number;
   width: number;
   height: number;
   weight: number;
   soc: string;
   empty: string;
-  // temp: number;
+  temp: number;
   vent: string;
   un_no: string;
   class: string;
@@ -68,8 +68,6 @@ const CargoFCL = memo(
     onValueChange,
   }: any) => {
     const { dispatch, objState } = useAppContext();
-    const { Create } = useUpdateData2(SP_InsertCargo);
-    const { Update } = useUpdateData2(SP_UpdateCargo);
 
     var cargoItem = bkData.cargo;
     const [containertype, setContainertype] = useState<any>();
@@ -99,8 +97,6 @@ const CargoFCL = memo(
     
       switch (true) {
         case containerType.includes("OT"): // OPEN TOP
-          log('??????????????????????????????? field ',field)
-          log(["length", "width", "height", "weight"].includes(field))
           return ["length", "width", "height", "weight"].includes(field);
         case containerType.includes("FR"): // FLAT RACK
           return ["length", "width", "height", "weight"].includes(field);
@@ -115,22 +111,6 @@ const CargoFCL = memo(
     
     
 
-    // const handleFieldReadOnly = (field: any) => {
-    //   const containerType = bkData?.cargo.container_type;
-   
-    //   switch (containerType) {
-    //     case "OT": //OPEN TOP
-    //       return field === "length" || field === "width" || field === "height" || field === "weight";
-    //     case "FR": //FLAT RACK
-    //       return field === "length" || field === "width" || field === "height" || field === "weight";
-    //     case "R": // REEFER
-    //       return field === "temp" || field === "vent";
-    //     case "TC": //TANK
-    //       return field === "soc" || field === "empty"
-    //     default:
-    //       return true;
-    //   }
-    // };
 
     return (
       <>
