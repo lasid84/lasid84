@@ -12,6 +12,7 @@ import {
 import CustomSelect from "components/select/customSelect";
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import GridCargo from "./gridCargo";
+import CargoDetail from "./cargoDetail"
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { Checkbox } from "@/components/checkbox";
 // import { useGetData } from './test'
@@ -30,13 +31,16 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
   //Set select box data
   const [svctype, setSvcType] = useState<any>();
   const [movementtype, setMovementType] = useState<any>();
-
+  //const [selectedSvcType, setSelectedSvcType] = useState<string | undefined>();
+  const [ isRefreshCargo, setRefreshCargo ] = useState(false);
+  
   useEffect(() => {
     if (loadItem) {
       setSvcType(loadItem[5]);
       setMovementType(loadItem[6]);
+      //setSelectedSvcType(bkData?.svc_type); 
     }
-  }, [loadItem]);
+  }, [loadItem]); //bkData
 
   return (
     <div className="flex-row w-full">
@@ -69,6 +73,19 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             style={{ width: '500px', height: "8px" }}
             defaultValue={bkData?.svc_type}
             isDisplay={true}
+            //onChange={(value: string) => setSelectedSvcType(value)}
+            events={{
+              onSelectionChanged: (e, id, value)=> {
+                if(bkData?.svc_type != value){                  
+                  var selectedRow = e.api.getSelectedRows()[0] as any;                  
+                  dispatch({[MselectedTab] : {...bkData,
+                  svc_type : value,
+                  svc_type_nm : value,
+                }})
+                setRefreshCargo(true);
+                }
+              }
+            }}
           />
         </div>
 
@@ -104,10 +121,9 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
           <PageContent
             title={
               <span className="px-1 py-1 text-lg font-bold text-blue-500">Cargo Detail</span>
-            }
-          >
+            }>
             <div className="col-span-6">
-              <GridCargo initData={loadItem} />
+              <CargoDetail initData={loadItem}  bkData={objState[MselectedTab]} isRefreshCargo={isRefreshCargo}/>
             </div>
           </PageContent>
         </div>

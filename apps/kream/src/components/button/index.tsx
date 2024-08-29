@@ -15,6 +15,7 @@ import { RxCopy } from "react-icons/rx"; //copy
 import { SP_InsertLog } from "@/services/clientAction";
 import { useUpdateData2 } from "../react-query/useMyQuery";
 import { usePathname } from "next/navigation";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -37,6 +38,7 @@ export type ButtonProps = {
   //   direction?: "UP" | "DOWN" | "LEFT" | "RIGHT";
   //   refresh?: boolean;
   isHidden?: boolean;
+  isLabel?: boolean;
   width?: string;
   dataSrc? : data;
   options ? : {
@@ -74,6 +76,8 @@ const btnColor: any = {
     "bg-transparent hover:bg-orange-600/75 text-orange-600/75 hover:text-white border border-orange-600/75  hover:border-transparent rounded",
   "red-outline":
     "bg-transparent hover:bg-red-600/75 text-red-600/75 hover:text-white border border-red-600/75  hover:border-transparent rounded",
+  "light-gray-outline":
+    "bg-transparent hover:bg-gray-300/75 text-gray-900/75 hover:text-gray-900/75 border border-gray-200/75  hover:border-transparent rounded dark:border-gray-200/75 dark:text-gray-100 dark:hover:bg-gray-200",
 };
 
 const getColor = (label: string, color: string = "") => {
@@ -90,6 +94,9 @@ const getColor = (label: string, color: string = "") => {
       case "add_d":
       case "new":
         c = "gray-outline";
+        break;
+      case "delete":
+        c = "light-gray-outline"
         break;
       case "download":
         c = "sky-outline";
@@ -159,6 +166,8 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
     case "bkcopy":
       icon = <RxCopy size={size} />;
       break;
+    case "delete":
+      icon = <RiDeleteBinLine size={size} />
   }
   return icon;
 };
@@ -175,7 +184,8 @@ export const Button: React.FC<ButtonProps> = (props) => {
     color,
     type,
     size,
-    isHidden,
+    isHidden = false,
+    isLabel = true,
     icon,
     onClick,
     width,
@@ -206,9 +216,9 @@ export const Button: React.FC<ButtonProps> = (props) => {
       onClick={handleClick}
       type={type ? type : "button"}
       disabled={disabled ? true : false}
-    >
+    > 
       {getIcon(label ? label : id, icon, size ? size : "14")}
-      {t((label ? label : id).toLowerCase())}
+    {isLabel && t((label ? label : id).toLowerCase())}
     </button>
   );
 };
@@ -216,8 +226,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 
 export const DropButton: React.FC<ButtonProps> = (props) => {
   // BUTTON 순서
-  // SEARCH - INTERFACE - ADD - DELETE - SAVE - DOWNLIAD - MANAGE
-
+  // SEARCH - INTERFACE - ADD - DELETE - SAVE - DOWNLOAD - MANAGE
   const { t } = useTranslation();
   const {
     id,
@@ -252,7 +261,7 @@ export const DropButton: React.FC<ButtonProps> = (props) => {
     if (onClick) onClick(e);
 
     if (dataSrc && dataSrc.data && dataSrc.data.length > 0) {
-      // Toggle dropdown visibility
+
       setDropdownVisible((prev) => !prev);
     } else if (onClick) {
       onClick(e);
@@ -263,7 +272,7 @@ export const DropButton: React.FC<ButtonProps> = (props) => {
     log('item',item)
     //setSelectedItem(item[dataSrc?.data]);
     setDropdownVisible(false);
-    if (onClick) onClick(item); // Return the selected item
+    if (onClick) onClick(item); 
   };
 
   const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'";

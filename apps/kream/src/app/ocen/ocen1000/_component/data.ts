@@ -526,6 +526,7 @@ export const SP_GetCargoData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
+  log('getCargo?', result)
 
   return result![0];
 }

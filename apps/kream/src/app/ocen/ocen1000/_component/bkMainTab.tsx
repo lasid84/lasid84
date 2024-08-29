@@ -2,12 +2,9 @@
 
 
 import React, { useCallback, useState, useEffect, Dispatch, useContext, memo, MouseEventHandler } from "react";
-import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { PageBKTabContent } from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
-import { shallow } from "zustand/shallow";
-import { MaskedInputField, Input } from 'components/input';
-import { useGetData } from "components/react-query/useMyQuery";
+import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
@@ -41,7 +38,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { MselectedTab } = objState;
   const [ref, setRef] = useState(objState.gridRef_m);
 
-  const [createuser, setCreateuser] = useState<any>();
+  const [reporttype, setReporttype] = useState<any>();
 
   useEffect(() => {
     setRef(objState.gridRef_m);
@@ -53,7 +50,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   useEffect(() => {
     if (loadItem?.length) {
-      setCreateuser(loadItem[1]);
+      setReporttype(loadItem[21]);
     }
   }, [loadItem?.length]);
 
@@ -133,7 +130,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           right={
             <>
               <div className={"flex col-span-2 "}>
-                <DropButton id={"download"} width="w-24" dataSrc={createuser as data} options={{ keyCol :"create_user" }} />
+                <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} />
                 <Button id={"save"} onClick={onSave} width="w-24" />
               </div>                
               <div className={"flex col-span-2"}>
@@ -154,11 +151,11 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         >
           <div className={"flex-col col-span-2"}>
           <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
+          <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
           </div>
           <div className={"flex-col col-span-2"}>
-          <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: false, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: false, inline: true, textAlign : 'center'}} />
+          <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+          <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
           </div>
           <div className={"flex-col col-span-2"}>
           <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
