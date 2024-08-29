@@ -69,7 +69,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
 
     const onSave = useCallback(async () => {
         var param = getValues();
-        log("onFormSubmit", param)
+        // log("onFormSubmit", param)
         // try {
             if (popType === crudType.UPDATE) {
                 await Update.mutateAsync(param, {

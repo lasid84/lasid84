@@ -80,8 +80,8 @@ const CustPickupPlace: React.FC<Props> = ({ ref = null, initData, params }) => {
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow)
-        dispatch({ dSelectedRow: selectedRow });
+        // log("handleSelectionChanged", selectedRow)
+        // dispatch({ dSelectedRow: selectedRow });
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };

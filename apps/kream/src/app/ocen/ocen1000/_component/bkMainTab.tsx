@@ -67,6 +67,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const onSave = (param: MouseEventHandler) => {
     let curData = getValues(); 
     let hasData = false;
+    log("onSave", bkData, curData);
     if (bkData && bkData[ROW_TYPE] === ROW_TYPE_NEW) {
 
       let newData = {...bkData, ...curData};

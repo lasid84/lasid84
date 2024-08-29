@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
+import React, { useState, useEffect, Dispatch, useContext, memo, useCallback } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input, TextArea } from 'components/input';
@@ -9,11 +9,12 @@ import { DateInput, DatePicker } from 'components/date'
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
-import { useGetData } from "components/react-query/useMyQuery";
+import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
-import { SP_GetPickupContData, SP_GetCarrierContData } from "./data";
+import { SP_GetPickupContData, SP_GetCarrierContData, SP_SendEmail } from "./data";
 import { SP_GetTransPortData } from "@/app/stnd/stnd0012/_component/data";
 import PicupPlacePopUp from "./popPickupcont"
+import TransportEmailRcvPopup from "./popEmailRcvList"
 import CarrierContPopUp from "./popCarriercont";
 import { Button } from "components/button";
 import dayjs from "dayjs";
@@ -21,6 +22,7 @@ import { SP_GetDetailData } from "@/components/commonForm/customerPickupPlace/_c
 import { SP_GetCYContactData } from "@/components/commonForm/containerYardContact/_component/data";
 import { SP_GetMasterData } from "@/app/ocen/ocen0004/_component/data";
 import CYPlaceContPopUp from './popCyPlaceCont';
+import { TRANPOSRT_EMAIL_LIST_OE } from "@/components/commonForm/mailReceiver/_component/data";
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -52,14 +54,14 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   const { data: cyPlaceContData, refetch: cyPlaceContRefetch } = useGetData({ place_code: bkData?.cy_place_code, cont_type: trans_mode + trans_type }, "CYContacotr", SP_GetCYContactData, { enable: true });
   const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
   const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
-
   const { data: transportCompData, refetch: transportCompRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "TransportCompany", SP_GetTransPortData, { enable: true });
+
+  const { Create: sendEmail } = useUpdateData2(SP_SendEmail, '');
   
   // const [cyPlace, setCyPlace] = useState<any>()
   const [carriercode, setCarrierCode] = useState<any>()
   const [port, setPort] = useState<any>()
   const [ isRefreshCyCont, setRefreshCyCont ] = useState(false);
-  const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
   const { getValues } = useFormContext();
 
   useEffect(() => {
@@ -88,21 +90,37 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
 
   const handleButtonClick = (e:any) => {
     switch (e.target.id) {
-      case "pickup_manage":
+      case "btn_pickup_manage":
         dispatch({ isPickupPopupOpen: true });
         break;
       case "cy_manage":
         dispatch({ isCYPopupOpen: true });
         break;
-      case "cy_cont_manage":
+      case "btn_cy_cont_manage":
         dispatch({ isCYContPopupOpen: true });
         break;
       case "carrier_manage":
           dispatch({ isCarrierContPopupOpen: true });
         break;  
+      case "btn_transport_email":
+          dispatch({ isMailRcvPopupOpen: true });
+        break;  
+      case "btn_transport_send_email":
+        sendTransPortEmail();
+        break;
     }
   }
 
+  const sendTransPortEmail = useCallback(async () => {
+    var data = {...bkData, pgm_code: TRANPOSRT_EMAIL_LIST_OE + bkData?.transport_company};
+    await sendEmail.mutateAsync(data, {
+      onSuccess(data, variables, context) {
+      },
+    })
+    .catch(() => {});
+  }, []);
+    
+  
   return (
     <div className="w-full">
         <PageContent
@@ -207,14 +225,15 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"pickup_manage"} label={"manage_pickup"} onClick={handleButtonClick} width="w-24" disabled={bkData?.shipper_id ? false : true} />
+                  <Button id={"btn_pickup_manage"} label={"manage_pickup"} onClick={handleButtonClick} width="w-24" disabled={bkData?.shipper_id ? false : true} />
                   {/* <Button id={"cy_manage"} label={"manage_cy"} onClick={handleButtonClick} width="w-30"   /> */}
-                  <Button id={"cy_cont_manage"} label={"manage_cont_cy"} onClick={handleButtonClick} width="w-24"/>
+                  <Button id={"btn_cy_cont_manage"} label={"manage_cont_cy"} onClick={handleButtonClick} width="w-24"/>
 
                 </>}>
               <>
                 <PicupPlacePopUp callbacks={[pickupRefetch]} />
                 <CYPlaceContPopUp callbacks={[cyPlaceContRefetch]} />
+                <TransportEmailRcvPopup cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
                 <div className="col-start-1 col-end-2"> 
                   <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
                 </div>
@@ -232,8 +251,23 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     style={{ width: '1000px', height: "8px" }}
                     defaultValue={bkData?.transport_company}
                     isDisplay={true}
-                    // events={}
+                    events={{
+                      onChanged(e) {
+                        if (!bkData || !bkData.transport_company) return;
+                        if (bkData.transport_company !== e?.cust_code) {
+                          bkData.transport_company = e?.cust_code;
+                        }
+
+                        bkData.transport_company_nm = e?.cust_nm;
+                        dispatch({[MselectedTab]: {...bkData}});
+                        log("transport_company onChange", bkData.transport_company, e?.cust_code)
+                      },
+                    }}
                   />
+                <div>                  
+                  <Button id={"btn_transport_email"} label="mail_rcvlist" width="w-20" onClick={handleButtonClick} disabled={bkData?.transport_company ? false : true}/>
+                  <Button id={"btn_transport_send_email"} label="send_email" width="w-20" onClick={handleButtonClick} disabled={bkData?.transport_company ? false : true}/>
+                </div>
                 <div className="col-start-1 col-end-6"><br></br></div>
                 <div className={"col-start-1 col-span-2"}>
                   <CustomSelect
@@ -248,11 +282,12 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     }}
                     gridStyle={{ width: '800px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
-                    defaultValue={bkData?.pickup_seq}
+                    // defaultValue={bkData?.pickup_seq}
+                    defaultValue={getValues("pickup_seq")}
                     isDisplay={true}
                     events={{
                       onChanged: (e) => {
-                        log("pickup_seq onChange", e, bkData)
+                        // log("pickup_seq onChange", e, bkData)
                         if (!bkData) return;
                         bkData.pickup_nm = e?.pickup_nm;
                         bkData.pickup_addr = e?.addr;
@@ -317,7 +352,8 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     }}
                     gridStyle={{ width: '800px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
-                    defaultValue={bkData?.cy_cont_seq}
+                    // defaultValue={bkData?.cy_cont_seq}
+                    defaultValue={getValues("cy_cont_seq")}
                     isDisplay={true}
                     // events={{
                     //   onSelectionChanged: (e, id, value) => {

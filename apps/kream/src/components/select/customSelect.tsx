@@ -93,7 +93,7 @@ function CustomSelect(props: Props) {
   };
 
   useEffect(() => {
-      log("listitem useEffect", listItem)
+      // log("listitem useEffect", listItem)
       setFilteredData(listItem);
   }, [listItem])
 

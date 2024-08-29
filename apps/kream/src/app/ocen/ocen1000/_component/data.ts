@@ -969,3 +969,32 @@ export const SP_UpdateCost = async (param: any) => {
 
     return result![0];
 }
+
+
+export const SP_SendEmail = async (param: any) => {
+  
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  // log("param : ", param)
+  const { pgm_code, bk_id, user_id, ipaddr} = Param;
+  const params = {
+    inparam : [
+      "in_pgm_code"
+    , "in_bk_id"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      pgm_code
+    , bk_id
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_ins_send_email',
+    isShowLoading: true,
+    isShowComplete:true,
+    }
+  
+    const result = await executFunction(params);
+    return result![0];
+}
