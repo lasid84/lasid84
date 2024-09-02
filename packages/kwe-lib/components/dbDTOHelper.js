@@ -5,24 +5,26 @@ const { log, error } = require('./logHelper');
 
 var pool;
 
-async function initconnectionString() {
-  // async () => {
+async function initconnectionString() {  
+  // // log("initconnectionString", process.env.DB_CONNSTR);
+  // const ini = require("ini");
+  // const objectPath = require("object-path");
+  // const fs = require("fs").promises;
 
-  const ini = require("ini");
-  const objectPath = require("object-path");
-  const fs = require("fs").promises;
+  // var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
+  // // log("process.cwd()", process.cwd())
+  // let connstr = objectPath.get(iniData, "db.connstr");
 
-  var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
-  // log("process.cwd()", process.cwd())
-  let connstr = objectPath.get(iniData, "db.connstr");
+  let connstr = process.env.DB_CONNSTR;
 
-      if (!pool) {
-        pool = new Pool({
-          connectionString: connstr,
-          statement_timeout: 30000,
-        });
-      }
-    return connstr
+  if (!pool) {
+    pool = new Pool({
+      connectionString: connstr,
+      statement_timeout: 30000,
+    });
+  }
+  
+  return connstr
 }
 
 async function callFunction(pProcName, pParamsList, pValueList) {

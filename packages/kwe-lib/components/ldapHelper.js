@@ -15,19 +15,16 @@ let baseDN = '';
 
 async function init() {
 
-  const ini = require("ini");
-  const objectPath = require("object-path");
-  const fs = require("fs").promises;
+  // const ini = require("ini");
+  // const objectPath = require("object-path");
+  // const fs = require("fs").promises;
 
-  var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
-  ldapServerUrl = objectPath.get(iniData, "sso.url");
-  baseDN = 'ou=kwekr_user,dc=kwekr,dc=local';
-
-    // var config = new Config("/configs/server.ini");
-  //const config = Config("./configs/server.ini");
-  // await config.load();
-  // ldapServerUrl = config.get("sso.url");
+  // var iniData = ini.decode(await fs.readFile(process.cwd() + "/dist/configs/server.ini", "utf8"));
+  // ldapServerUrl = objectPath.get(iniData, "sso.url");
   // baseDN = 'ou=kwekr_user,dc=kwekr,dc=local';
+
+  ldapServerUrl = process.env.SSO_URL;
+  baseDN = process.env.SSO_BASE_DN;
 }
 
 // 사용자 인증 및 계정 체크 함수
