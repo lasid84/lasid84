@@ -21,6 +21,7 @@ type Props = {
   width?: string;
   lwidth?: string;
   height?: string;
+  isDisplay ?: boolean;      //사용자 권한에 따른 display여부(Controlling the visibility of an element)
   options?: {
     inline?: boolean;         //라벨명 위치
     type?: string;            //number, text,  custom: ipaddr, bz_reg_no
@@ -42,7 +43,6 @@ type Props = {
     useIcon?: boolean;
     outerClassName?: string;    //outerClassName
     isAutoComplete?: string;
-    isDisplay ?: boolean;      //사용자 권한에 따른 display여부
     isNotManageSetValue? : boolean; //값 변경시 setValue 처리 여부
   };
 
@@ -59,11 +59,11 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   const { t } = useTranslation();
   if (!control) return null;
 
-  const { id, label, value, width, lwidth, height, options = {}, events } = props;
+  const { id, label, value, width, lwidth, height, isDisplay=true, options = {}, events } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
     freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
-    isDisplay=true, isNotManageSetValue=false
+    isNotManageSetValue=false
   } = options;
   const { mask, pipe, placeholder } = getMask(type, options);
   // log("===MaskedInputField", type, mask);
@@ -137,8 +137,9 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     }
   }
 
+
   return (
-    <InputWrapper outerClassName={outerClassName} inline={inline}>
+    <InputWrapper outerClassName={`${outerClassName} ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline}>
       {!noLabel && <Label id={id} name={label === null ? '' : label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />}
       <div className={`flex w-full ${outerClassName} ${defWidth}`}>
         <Controller
