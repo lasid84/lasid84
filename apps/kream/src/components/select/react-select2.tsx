@@ -141,7 +141,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     }, [delayEnter, isChangeFinish]);
 
     const moveNextComponent = (target: EventTarget | null) => {
-        log("moveNextComponent", target)
+        // log("moveNextComponent", target)
         if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLTextAreaElement) {
           const form = target.form;
           if (form) {

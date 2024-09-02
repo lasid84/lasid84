@@ -1,5 +1,5 @@
 
-const { init, dataCall } = require('@repo/kwe-lib/components/api.service.js');
+const { init, dataCall, initAPIService, apiCallPost } = require('@repo/kwe-lib/components/api.service.js');
 const { ini, objectPath, fs } = require("@repo/kwe-lib");
 const { signJwtAccessToken } = require('@repo/kwe-lib/components/jsonWebToken.js');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
@@ -27,23 +27,50 @@ async function initService() {
     }
 }
 
-async function executFunction(inproc, inparam, invalue) {
-    await initService();
-    token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
-    const client = await init({url:url, isAuth:false, accessToken:token});
-    
-    // log("executFunction1", iniData, url, token);
-    const { cursorData, numericData, textData } = await dataCall(client, inproc,inparam, invalue,'');
-
-    // log("============executFunction2", url, inproc,inparam, invalue, numericData, textData, cursorData);
-    if (numericData !== 0)
-    {
-        let errMsg = numericData + " : " +  textData;
-    //   log(errMsg);
-      throw new Error(errMsg);
-    }
-
-    return cursorData;
+async function initService2() {
+    url = process.env.API_URL;
+    // log("process.env.API_URL : ", url);
 }
 
-module.exports = { executFunction }
+async function executFunction(inproc, inparam, invalue) {
+    try {
+        await initService();
+        token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
+        const client = await init({url:url, isAuth:false, accessToken:token});
+        
+        // log("executFunction1", iniData, url, token);
+        const { cursorData, numericData, textData } = await dataCall(client, inproc,inparam, invalue,'');
+
+        // log("============executFunction2", url, inproc,inparam, invalue, numericData, textData, cursorData);
+        if (numericData !== 0)
+        {
+            let errMsg = numericData + " : " +  textData;
+        //   log(errMsg);
+        throw new Error(errMsg);
+        }
+
+        return cursorData;
+    } catch(ex) {
+        return ex;
+    }
+}
+
+async function sendEmail(mailOptions) {
+
+    await initService2();
+    token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
+    var config = {
+        type: "1",
+        token: token,
+        baseURL: url
+    };
+    const client = await initAPIService(config);
+
+    var params = {
+        url: "/api/mailing",
+        mailOptions: mailOptions
+    };
+    const result = await apiCallPost(client, params);
+}
+
+module.exports = { executFunction, sendEmail }

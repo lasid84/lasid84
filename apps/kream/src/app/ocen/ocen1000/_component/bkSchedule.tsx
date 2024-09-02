@@ -112,9 +112,8 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   }
 
   const sendTransPortEmail = useCallback(async () => {
-    log()
-    var data = {...bkData, pgm_code: TRANPOSRT_EMAIL_LIST_OE + bkData?.transport_company};
-    await sendEmail.mutateAsync(data, {
+    log("sendTransPortEmail", bkData)
+    await sendEmail.mutateAsync({...bkData, pgm_code: TRANPOSRT_EMAIL_LIST_OE + bkData?.transport_company}, {
       onSuccess(data, variables, context) {
       },
     })
@@ -254,14 +253,14 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     isDisplay={true}
                     events={{
                       onChanged(e) {
-                        if (!bkData || !bkData.transport_company) return;
+                        log("transport_company onChange", bkData, e?.cust_code)
+                        if (!bkData) return;
                         if (bkData.transport_company !== e?.cust_code) {
                           bkData.transport_company = e?.cust_code;
                         }
 
                         bkData.transport_company_nm = e?.cust_nm;
                         dispatch({[MselectedTab]: {...bkData}});
-                        log("transport_company onChange", bkData.transport_company, e?.cust_code)
                       },
                     }}
                   />

@@ -8,7 +8,7 @@ const { workerData } = require('worker_threads');
 const  puppeteer = require('puppeteer');
 const { pgm, type, idx, isHeadless } = workerData;
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
-const { executFunction } = require('../lib/api.service.ts');
+const { executFunction } = require('../../api.service/api.service');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 
 

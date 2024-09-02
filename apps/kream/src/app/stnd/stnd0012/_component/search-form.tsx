@@ -54,7 +54,8 @@ const SearchForm: React.FC<Props> = (props) => {
             <>
               <Button id={"search"} onClick={onSearch} width={`w-24`}/>
               <Button id={"interface"} onClick={onInterface} width={`w-24`} />
-              <Button id={"add"} onClick={onAdd} width={`w-24`} />
+              {/* 운송사는 ufs에 등록 됨.. 신규로 등록 일단 막음*/}
+              {/* <Button id={"add"} onClick={onAdd} width={`w-24`} /> */}
             </>
           }>
           <></>

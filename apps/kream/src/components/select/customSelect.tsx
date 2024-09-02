@@ -346,7 +346,7 @@ function CustomSelect(props: Props) {
     // const formElement = document.querySelector('form'); // 예시로 폼 요소를 선택합니다.
     const inputElement = document.querySelector(`#${id}`) as HTMLInputElement | null;
     const formElement = inputElement?.closest('form') as HTMLFormElement | null; 
-    log("moveNextComponent", formElement, inputElement, inputElement?.closest('form'));
+    // log("moveNextComponent", formElement, inputElement, inputElement?.closest('form'));
     if (formElement && inputElement) {
       const elementsArray = Array.from(formElement.elements)
                               .filter((v): v is HTMLInputElement | HTMLTextAreaElement => 

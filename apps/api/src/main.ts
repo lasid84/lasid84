@@ -4,6 +4,9 @@ import setupRoutes from "./router";
 
 import loggerMiddleware from "./helpers/log/logger";
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 const app: express.Express = express();
