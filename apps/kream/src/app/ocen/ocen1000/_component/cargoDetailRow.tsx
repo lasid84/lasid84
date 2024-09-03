@@ -195,7 +195,7 @@ const CargoFCL = memo(
               options={{}}
               width="w-24"
             /> */}
-           <div className="flex w-28">              
+           <div className="flex w-32">              
               <CustomSelect
                 id="pkg_type"
                 initText="Select.."
@@ -312,7 +312,7 @@ const CargoFCL = memo(
                 initText="Select.."
                 listItem={grossuom as gridData}
                 valueCol={["gross_uom", "gross_uom_nm"]}
-                displayCol="gross_uom_nm"
+                displayCol="gross_uom"
                 gridOption={{
                   colVisible: {
                     col: ["gross_uom", "gross_uom_nm"],
@@ -357,7 +357,7 @@ const CargoFCL = memo(
                 initText="Select.."
                 listItem={measurementuom as gridData}
                 valueCol={["measurement_uom", "measurement_uom_nm"]}
-                displayCol="measurement_uom_nm"
+                displayCol="measurement_uom"
                 gridOption={{
                   colVisible: {
                     col: ["measurement_uom", "measurement_uom_nm"],
@@ -517,21 +517,20 @@ export const CargoLCL = memo(
     onDelete,
     onValueChange,
   }: any) => {
-    const [containertype, setContainertype] = useState<any>();
     var cargoItem = bkData.cargo;
+    const [pkgtype, setPkgtype] = useState<any>()
+    const [grossuom, setGrossuom] = useState<any>()
+    const [measurementuom, setMeasurementuom] = useState<any>()
+
 
     useEffect(() => {
       if (loadItem?.length) {
-        setContainertype(loadItem[16]);
+        setPkgtype(loadItem[22])
+        setGrossuom(loadItem[24])
+        setMeasurementuom(loadItem[25])
+
       }
     }, [loadItem?.length]);
-
-    const handlePieceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = parseInt(event.target.value, 10);
-      if (!isNaN(value)) {
-        onPieceChange(cargoItem.seq, value, index);
-      }
-    };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const id = event.target.id;
@@ -554,31 +553,42 @@ export const CargoLCL = memo(
             </InputWrapper>
             
             <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_piece`}
-              id="piece"
+              id={`${index}_${bkData?.cargo?.seq}-piece`}
+              label="piece"
               value={bkData?.cargo?.piece}
-              events={{ onChange: handlePieceChange }}
+              events={{ onChange: handleChange }}
               options={{ type:"number" }}
               width="w-24"
             />
 
-            <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_pkg_type`}
-              id="pkg_type"
-              value={bkData?.cargo?.pkg_type}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            />
+              <div className="flex w-32">              
+              <CustomSelect
+                id="pkg_type"
+                initText="Select.."
+                listItem={pkgtype as gridData}
+                valueCol={["pkg_type", "pkg_type_nm"]}
+                displayCol="pkg_type_nm"
+                gridOption={{
+                  colVisible: {
+                    col: ["pkg_type", "pkg_type_nm"],
+                    visible: true,
+                  },
+                }}
+                events={{
+                  onSelectionChanged: (e, id, value) => {
+                      var id = id
+                      var value = value
+                      onValueChange(cargoItem.seq, id, value, index);
+                  },
+                }}
+                gridStyle={{ width: "400px", height: "200px" }}
+                style={{ width: "400px", height: "8px" }}
+                defaultValue={bkData?.cargo?.pkg_type}
+                inline={false}
+              />
+            </div>
 
-              <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_slac_stc`}
-              id="slac_stc"
-              value={bkData?.cargo?.slac_stc}
-              events={{ onChange: handleChange }}
-              options={{type:"number"}}
-              width="w-24"
-            />
+
              {/* selectbox 수정예정 */}
               {/* <MaskedInputField
               key={`${index}_${bkData?.cargo?.seq}_slac_uom`}
@@ -589,71 +599,107 @@ export const CargoLCL = memo(
               width="w-24"
             /> */}
               <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_length`}
-              id="length"
+              id={`${index}_${bkData?.cargo?.seq}-length`}              
+              label="length"
               value={bkData?.cargo?.length}
               events={{ onChange: handleChange }}
-              options={{}}
+              options={{type:"number" }}
               width="w-24"
             />           
             <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_width`}
-              id="width"
+              id={`${index}_${bkData?.cargo?.seq}-width`}              
+              label="width"
               value={bkData?.cargo?.width}
               events={{ onChange: handleChange }}
-              options={{}}
+              options={{type:"number" }}
               width="w-24"
             />
              <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_height`}
-              id="height"
+              id={`${index}_${bkData?.cargo?.seq}-height`}              
+              label="height"
               value={bkData?.cargo?.height}
               events={{ onChange: handleChange }}
-              options={{}}
+              options={{type:"number" }}
               width="w-24"
             />           
             <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_weight`}
-              id="weight"
+              id={`${index}_${bkData?.cargo?.seq}-weight`}              
+              label="weight"
               value={bkData?.cargo?.weight}
               events={{ onChange: handleChange }}
-              options={{}}
+              options={{type:"number" }}
               width="w-24"
             />
             <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_gross_wt`}
-              id="gross_wt"
+              id={`${index}_${bkData?.cargo?.seq}-gross_wt`}
+              label="gross_wt"
               value={bkData?.cargo?.gross_wt}
               events={{ onChange: handleChange }}
               options={{type:"number"}}
               width="w-24"
             />
-            {/* selectbox 수정예정 */}
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_gross_uom`}
-              id="gross_uom"
-              value={bkData?.cargo?.gross_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
+              <div className="flex w-28">
+              <CustomSelect
+                id="gross_uom"
+                initText="Select.."
+                listItem={grossuom as gridData}
+                valueCol={["gross_uom", "gross_uom_nm"]}
+                displayCol="gross_uom"
+                gridOption={{
+                  colVisible: {
+                    col: ["gross_uom", "gross_uom_nm"],
+                    visible: true,
+                  },
+                }}
+                events={{
+                  onSelectionChanged: (e, id, value) => {
+                      var id = id
+                      var value = value
+                      onValueChange(cargoItem.seq, id, value, index);
+                  },
+                }}
+                gridStyle={{ width: "400px", height: "200px" }}
+                style={{ width: "400px", height: "8px" }}
+                defaultValue={bkData?.cargo?.gross_uom}
+                inline={false}
+              />
+            </div>
+
             <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_measurement`}
-              id="measurement"
+              id={`${index}_${bkData?.cargo?.seq}-measurement`}
+              label="measurement"
               value={bkData?.cargo?.measurement}
               events={{ onChange: handleChange }}
-              options={{}}
+              options={{type:"number" }}
               width="w-24"
             />
             {/* selectbox 수정예정 */}
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_measurement_uom`}
-              id="measurement_uom"
-              value={bkData?.cargo?.measurement_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
+            <div className="flex w-28">              
+              <CustomSelect
+                id="measurement_uom"
+                initText="Select.."
+                listItem={measurementuom as gridData}
+                valueCol={["measurement_uom", "measurement_uom_nm"]}
+                displayCol="measurement_uom"
+                gridOption={{
+                  colVisible: {
+                    col: ["measurement_uom", "measurement_uom_nm"],
+                    visible: true,
+                  },
+                }}
+                events={{
+                  onSelectionChanged: (e, id, value) => {
+                      var id = id
+                      var value = value
+                      onValueChange(cargoItem.seq, id, value, index);
+                  },
+                }}
+                gridStyle={{ width: "400px", height: "200px" }}
+                style={{ width: "400px", height: "8px" }}
+                defaultValue={bkData?.cargo?.measurement_uom}
+                inline={false}
+              />
+            </div>
 
           </div>
         </div>
