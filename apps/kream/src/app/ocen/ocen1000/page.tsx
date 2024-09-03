@@ -25,7 +25,6 @@ import BKSchedule from "./_component/bkSchedule";
 import { shallow } from "zustand/shallow";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { FormProvider, useForm } from "react-hook-form";
-import { initialCargo } from "./_component/cargoDetail";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const {
@@ -146,7 +145,7 @@ export default function OCEN1000() {
       dispatch({
         // TYPE 캐스팅 ((mainData as string[])[0] as unknown as gridData)
         [objState?.MselectedTab]: {...((mainData as string[])[0] as unknown as gridData).data[0],
-                                    cargo : [((mainData as string[])[1] as unknown as gridData).data[0]|| {...initialCargo, bk_id:objState?.MselectedTab}] 
+                                    cargo : ((mainData as string[])[1] as unknown as gridData).data
         }
         // bkData: (mainData as gridData).data[0]
     });

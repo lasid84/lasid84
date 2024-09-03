@@ -27,7 +27,7 @@ type Props = {
   isSelectRowAfterRender?: boolean     // 초기 렌더시 첫번째값 선택 여부
   defaultValue?: string   // 기본값, 설정시 isNoSelect는 무시
   inline?: boolean
-  isDisplay?: boolean
+  isDisplay?: boolean       // Controlling the visibility of an element.
   isDisplayX?: boolean    // X 아이콘 표시여부(필수값 여부)
   noLabel?: boolean       // Label 표시 여부
   lwidth?: string        // Label 넓이
@@ -62,7 +62,7 @@ function CustomSelect(props: Props) {
   const inputRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
-  const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol = id, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay, isDisplayX = true
+  const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol = id, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay=true, isDisplayX = true
     , noLabel = false, lwidth, defaultValue, events
   } = props;
   const customselect = true
@@ -372,6 +372,7 @@ function CustomSelect(props: Props) {
     }
   };
 
+
   useEffect(()=> {
     log("displayText", displayText)
   }, [displayText]);
@@ -384,7 +385,7 @@ function CustomSelect(props: Props) {
         style={{ position: 'relative' }}
       >
         <Label id={id} name={label} isDisplay={isDisplay} /> */}
-      <InputWrapper outerClassName="w-full relative" inline={inline} >
+      <InputWrapper outerClassName={`w-full relative ${isDisplay ? '' : 'invisible'}`} inline={inline}>
       {/* <div className="relative w-full"> */}
         {!noLabel && <Label id={id} name={label} lwidth={lwidth} isDisplay={isDisplay} />}
         <div ref={ref}
@@ -395,7 +396,7 @@ function CustomSelect(props: Props) {
             height: "30px",
             position: 'relative',
             cursor: 'pointer',
-            // border: '1px solid #ccc'
+            visibility: isDisplay ? 'visible' : 'hidden'  
           }}
         >
           <MaskedInputField id={id} value={displayText} options={{ textAlign: 'center', noLabel: true, isNotManageSetValue: true, isAutoComplete: "off" }} height='h-8'
@@ -439,6 +440,7 @@ function CustomSelect(props: Props) {
               right: '5px',
               transform: 'translateY(-50%)',
               cursor: 'pointer',
+              visibility: isDisplay ? 'visible' : 'hidden'  
             }}
             onClick={() => {
               const inputElement = document.querySelector(`#${id}`);
@@ -470,6 +472,7 @@ function CustomSelect(props: Props) {
               bottom: openDirection === 'up' ? 'calc(100% + 1px)' : 'auto',
             }}
         >
+          { isDisplay &&
           <Grid
             customselect={customselect}
             gridRef={gridRef}
@@ -484,6 +487,7 @@ function CustomSelect(props: Props) {
               onComponentStateChanged: handleComponentStateChanged
             }}
           />
+          }
         </div>
         
         {/* </div> */}

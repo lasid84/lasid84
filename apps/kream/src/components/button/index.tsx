@@ -39,6 +39,7 @@ export type ButtonProps = {
   //   refresh?: boolean;
   isHidden?: boolean;
   isLabel?: boolean;
+  isDisplay? : boolean; // Controlling the visibility of an element.
   width?: string;
   dataSrc? : data;
   options ? : {
@@ -186,6 +187,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
     size,
     isHidden = false,
     isLabel = true,
+    isDisplay=true,
     icon,
     onClick,
     width,
@@ -211,7 +213,9 @@ export const Button: React.FC<ButtonProps> = (props) => {
     <button
       className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : "w-full"} w-min-24 p-1 text-xs font-medium flex items-center justify-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
-            ${disabledCss}`}
+            ${disabledCss}
+            ${isDisplay ? '' : 'invisible'}
+            `}
       id={id}
       onClick={handleClick}
       type={type ? type : "button"}
