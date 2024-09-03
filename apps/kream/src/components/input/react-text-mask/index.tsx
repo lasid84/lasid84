@@ -52,6 +52,7 @@ type Props = {
     onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
     onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
+    onClick?: (e:any) => void;
   }
 };
 
@@ -171,6 +172,11 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     }
   }
 
+  function handleClick(e:any) {
+    if (events?.onClick) {
+      events.onClick(e);
+    }
+  }
 
   return (
     <InputWrapper outerClassName={`${outerClassName} ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline}>
@@ -207,6 +213,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
               onBlur={(e) => handleBlur(e)}
               onChange={(e: any) => { handleChange(e); }}
               onFocus={(e: any) => { handleFocus(e); }}
+              onClick={(e: any) => { handleClick(e); }}
               autoComplete={isAutoComplete}
               render={(textMaskRef, props) => (
                 <input

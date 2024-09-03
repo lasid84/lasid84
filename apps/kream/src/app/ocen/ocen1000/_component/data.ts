@@ -60,8 +60,8 @@ export const SP_GetMData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-  log('mainData Result', result)
-  log('mainData Result?', result![0])
+  // log('mainData Result', result)
+  // log('mainData Result?', result![0])
   return result
 }
 
@@ -97,8 +97,8 @@ export const SP_GetMasterData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-  log('mainData Result', result)
-  log('mainData Result?', result![0])
+  // log('mainData Result', result)
+  // log('mainData Result?', result![0])
   return result![0]
 }
 
@@ -522,8 +522,9 @@ export const SP_UpdateData = async (param: any) => {
   return result![0];
 }
 
-//shipper 담당자data get
+//부킹별 House BL 조회
 export const SP_GetBkHblData = async (searchParam: any) => {
+  log("searchParam: ", searchParam)
   const Param = searchParam.queryKey[1]
   const { bk_id, user_id, ipaddr } = Param;
   
@@ -539,6 +540,37 @@ export const SP_GetBkHblData = async (searchParam: any) => {
       , ipaddr
     ],
     inproc: 'ocean.f_ocen1000_get_bk_bl',
+    isShowLoading: false
+  }
+
+  const result = await executFunction(params);
+
+  return result![0]
+}
+
+export const SP_SaveBkHblData = async (searchParam: any) => {
+  const Param = searchParam;
+  log("SP_SaveBkHblData", searchParam)
+  const { bk_id, waybill_no, remark, use_yn, user_id, ipaddr } = Param;
+  
+  const params = {
+    inparam: [
+        "in_bk_id"
+      , "in_waybill_no"
+      , "in_remark"
+      , "in_use_yn"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        bk_id 
+      , waybill_no
+      , remark
+      , use_yn
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_ins_bk_hbl',
     isShowLoading: false
   }
 

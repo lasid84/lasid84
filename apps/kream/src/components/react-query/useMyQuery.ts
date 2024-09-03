@@ -20,7 +20,7 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
     user_id: user_id,
     ipaddr: ipaddr
   }
-  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, { ...option});
+  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, option);
   // log('useGetData', queryNm, searchParam, isLoading)
   return { data, isLoading, isError, refetch, remove }
 };
@@ -82,7 +82,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
       if (option?.callbacks) {
         option.callbacks.forEach((callback: () => any) => callback());
       }
-      queryClient.invalidateQueries([path + queryKey])
+      // queryClient.invalidateQueries([path + queryKey])
       data[ROW_CHANGED] = false;
       data[ROW_TYPE] = null;
     },

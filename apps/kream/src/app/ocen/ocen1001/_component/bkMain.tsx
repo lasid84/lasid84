@@ -72,7 +72,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
 
   useEffect(() => {
     if (loadItem) {
-      log('detailData loadItem check', bkData);
+      // log('detailData loadItem check', bkData);
       setCustcode(loadItem[0]);
       setBLType(loadItem[4]);
       setIncoterms(loadItem[7]);

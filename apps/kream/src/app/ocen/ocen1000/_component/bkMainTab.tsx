@@ -142,7 +142,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                 </div>
                 <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
                   <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
-                  <ICONButton id="refresh" disabled={false} onClick={onSearch} size={'24'} />
+                  <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
               </div>
             </>
           }
