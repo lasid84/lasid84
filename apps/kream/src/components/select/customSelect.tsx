@@ -137,7 +137,7 @@ function CustomSelect(props: Props) {
   }, [isGridReady, selectedRow])
 
   useEffect(() => {
-    // log("useEffect defaultValue, listItem, valueCol")
+    // log("useEffect defaultValue, listItem, valueCol", id, defaultValue)
     if (listItem?.data) {
 
       if (!defaultValue) {
@@ -372,9 +372,9 @@ function CustomSelect(props: Props) {
     }
   };
 
-  useEffect(()=> {
-    log("displayText", displayText)
-  }, [displayText]);
+  // useEffect(()=> {
+  //   log("displayText", displayText)
+  // }, [displayText]);
 
   return (
     <>

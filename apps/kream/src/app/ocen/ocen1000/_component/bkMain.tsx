@@ -9,6 +9,7 @@ import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
 import ShpContPopUp from "./popShippercont";
+import WabillPopUp from "./popAddWaybillNo"
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
@@ -34,9 +35,9 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const { trans_mode, trans_type, MselectedTab, isNew } = objState;
   
   //get shipper cont data
-  const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enable:true});
-  const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enable:true});
-  const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplate", SP_GetBkTemplateData, {enable:false});
+  const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enabled:true});
+  const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enabled:true});
+  const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplate", SP_GetBkTemplateData, {enabled:false});
 
   const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
@@ -107,6 +108,10 @@ const BKMain = ({ loadItem, bkData }: Props) => {
     }
   }
 
+  const handleClickPopUpWaybill = () => {
+    dispatch({isWaybillPopupOpen:true});
+  }
+
   return (
     <div className="w-full">
         <PageContent
@@ -147,8 +152,13 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       freeStyles: "p-1 border-1 border-slate-300",
                     }}/>
                     <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} />
-                    <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: false}} />
-                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: false}} />
+                    <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: true}} />
+                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true}} 
+                      events={{
+                        onClick: handleClickPopUpWaybill
+                      }} 
+                    />
+                    <WabillPopUp bkData={bkData}/>
                   
                   {/* <div className="col-span-2"> */}
                     {/* <HblGrid 

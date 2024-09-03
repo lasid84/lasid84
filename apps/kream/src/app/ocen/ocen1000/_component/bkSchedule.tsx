@@ -252,15 +252,16 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     defaultValue={bkData?.transport_company}
                     isDisplay={true}
                     events={{
-                      onChanged(e) {
-                        log("transport_company onChange", bkData, e?.cust_code)
+                      onSelectionChanged(e, id, value) {
                         if (!bkData) return;
-                        if (bkData.transport_company !== e?.cust_code) {
-                          bkData.transport_company = e?.cust_code;
+                        log("transport_company onChange", bkData, id, value)
+                        var selectedRow = e.api.getSelectedRows()[0];
+                        // bkData.transport_company_nm = selectedRow.cust_nm;
+                        
+                        if (bkData?.transport_company != value) {
+                          dispatch({[MselectedTab]: {...bkData, transport_company:value}});
+                          // log("onSelectionChanged", id, value);
                         }
-
-                        bkData.transport_company_nm = e?.cust_nm;
-                        dispatch({[MselectedTab]: {...bkData}});
                       },
                     }}
                   />

@@ -28,9 +28,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { dispatch, objState } = useAppContext();
     const { gridRef_m } = objState
 
-    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-    const { Create } = useUpdateData2(SP_CreateData, SEARCH_M, {callbacks: [mainRefetch]});
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M, {callbacks: [mainRefetch]});
+    const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMasterData, { enabled: false });
+    const { Create } = useUpdateData2(SP_CreateData, "BKMainData", {callbacks: [mainRefetch]});
+    const { Update } = useUpdateData2(SP_UpdateData, "BKMainData", {callbacks: [mainRefetch]});
 
 
     const gridOption: GridOption = {
@@ -58,7 +58,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     useEffect(() => {
         if (objState.isMSearch) {
-            
+            remove();
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
@@ -78,7 +78,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             }
         }
         dispatch({ 
-            isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
+            isMDSearch: true, 
+            isCGOSearch : true, isCSTSearch : true,
             MselectedTab: selectedRow.bk_id,
             // mSelectedRow: selectedRow,
             // [selectedRow.bk_id]: selectedRow,

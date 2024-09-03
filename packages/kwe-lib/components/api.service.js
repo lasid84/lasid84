@@ -42,30 +42,31 @@ const initAPIService = async (config) => {
 
  async function init(configParam) {
 
-  // const config = {
-  //   baseURL: configParam.url,
-  //   headers: {
-  //     "Content-Type": configParam.content_type ? configParam.content_type : "application/json",
-  //     "Authorization": `${configParam.accessToken}`,
-  //     // "X-Forwarded-Host": configParam.host
-  //   },
-  //   // withCredentials: configParam.isAuth ? true : false,
-  //   // withCredentials: true
+  const config = {
+    baseURL: configParam.url,
+    headers: {
+      "Content-Type": configParam.content_type ? configParam.content_type : "application/json",
+      "Authorization": `${configParam.accessToken}`,
+      // "X-Forwarded-Host": configParam.host
+    },
+    // withCredentials: configParam.isAuth ? true : false,
+    // withCredentials: true
+  }
+  const client = axios.create(config);
+  client.defaults.timeout = 30000;
+
+  // 싱글톤으로 할 경우 client.interceptors 가 중복되어 isShowLoading이 제대로 안먹음
+  // const client = createAxiosInstance();
+
+  // /* 싱글톤으로 사용, front에서 createAxiosInstance 직접 호출 후 생성된 instance의 속성을 직접 세팅방식으로 변경 */
+  // /* init을 사용하던 관련 코드드 변경 후 이 함수는 삭제 */
+  // if (configParam.url) {
+  //   client.defaults.baseURL = configParam.url;
   // }
-  // const client = axios.create(config);
-  // client.defaults.timeout = 30000;
-
-  const client = createAxiosInstance();
-
-  /* 싱글톤으로 사용, front에서 createAxiosInstance 직접 호출 후 생성된 instance의 속성을 직접 세팅방식으로 변경 */
-  /* init을 사용하던 관련 코드드 변경 후 이 함수는 삭제 */
-  if (configParam.url) {
-    client.defaults.baseURL = configParam.url;
-  }
-  if (configParam.accessToken) {
-    client.defaults.headers = { ...client.defaults.headers, "Authorization": `${configParam.accessToken}`};
-  }
-  /************************************************/
+  // if (configParam.accessToken) {
+  //   client.defaults.headers = { ...client.defaults.headers, "Authorization": `${configParam.accessToken}`};
+  // }
+  // /************************************************/
 
   return client;
 }
