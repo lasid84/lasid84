@@ -155,10 +155,17 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 
   const handleDelete = (seq: number) => {
     if (bkData && bkData.cargo) {
-      const updatedCargoList = bkData.cargo.filter((item: any) =>   {
-        return (item.group && item.group !== seq) || (!item.group && item.seq !== seq) 
-      })
-      dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
+      if(bkData.svc_type === "FCL"){
+        const updatedCargoList = bkData.cargo.filter((item: any) =>   {
+          return (item.group && item.group !== seq) || (!item.group && item.seq !== seq) 
+        })
+        dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
+      }else{
+        const updatedCargoList = bkData.cargo.filter((item: any) =>   {
+          return item.seq !== seq 
+        })
+        dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
+      }      
     }
   };
 
