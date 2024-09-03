@@ -101,7 +101,7 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
 
 
 const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
-  log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
+  //log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
 
   // 그룹으로 기존 항목 필터링 (기존에 seq와 동일한 group 값을 가진 cargo 들을 제거)
   const filteredCargoList = bkData.cargo.filter((item: any) => item.group !== seq);
@@ -130,7 +130,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 
 
   const handleChange = (seq: number,id:string, value: string, index : number) => {
-    log('handleChange..........',seq,id,value,index ) 
+    //log('handleChange..........',seq,id,value,index ) 
     const updatedCargoList = bkData?.cargo.map((item: any, i: number) => {
       return i == index ? { ...item, [id]: value,  __changed : true, } : item
     }
@@ -163,7 +163,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
   };
 
   const onSave = () => {
-    log('onSave.................',bkData?.cargo)
+    //log('onSave.................',bkData?.cargo)
     const processNodes = async () => {
       if (bkData?.cargo) {
         bkData.cargo.forEach( async (data: Cargo) => {
@@ -180,17 +180,17 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
               data.__changed = false;
             }            
           }
-          toastSuccess("Success.")
         })        
       }
+      //toastSuccess("Success.")
     }    
     processNodes()
     .then(() => {
-      // toastSuccess("Success.")
+      toastSuccess("Success.")
       //dispatch({ isDSearch: true }); //maindata refetch?
     })
     .catch((error) => {
-      log.error("node. Error", error);
+      log("node. Error", error);
     });
   }
 

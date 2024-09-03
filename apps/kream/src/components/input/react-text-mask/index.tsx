@@ -148,7 +148,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
           // defaultValue = {val}
           render={({ field }) => (
             <MaskedInput
-              // {...field}
+              {...field}
               id={id}
               type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}
