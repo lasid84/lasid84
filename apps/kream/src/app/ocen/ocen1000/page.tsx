@@ -143,9 +143,9 @@ export default function OCEN1000() {
       log('mainData11', mainData, ((mainData as string[])[1] as unknown as gridData).data[0])
       // if()
       dispatch({
-        // TYPE 캐스팅 ((mainData as string[])[0] as unknown as gridData)
         [objState?.MselectedTab]: {...((mainData as string[])[0] as unknown as gridData).data[0],
-                                    cargo : ((mainData as string[])[1] as unknown as gridData).data
+                                    cargo : ((mainData as string[])[1] as unknown as gridData).data,
+                                    cost : ((mainData as string[])[2] as unknown as gridData).data
         }
         // bkData: (mainData as gridData).data[0]
     });
