@@ -142,6 +142,34 @@ const postCall = async (params) => {
   }
 };
 
+const responseBlobPostCall = async (params) => {
+  try {
+    const {url, isShowLoading} = params;
+    const config = {
+      baseURL: params.url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `${params.accessToken}`,
+      },
+      responseType: 'blob'
+    }
+    const client = axios.create(config);
+    client.defaults.timeout = 30000;
+
+    const response = isShowLoading ? 
+                          await client.post<AxiosResponse>(url, params)
+                        : await client.post(url, params);
+    return response;
+  } catch (err) {
+    return {
+      data: {
+        success: false,
+        message: 'Cannot connect to server.. ' + err.name
+      }
+    }
+  }
+};
+
 const apiCallPost = async (client, params) => {
   try {
     var result = await client.post(params.url, params);
@@ -291,5 +319,6 @@ module.exports = {
   getCall,
   createAxiosInstance,
   initAPIService,
-  apiCallPost
+  apiCallPost,
+  responseBlobPostCall
 }
