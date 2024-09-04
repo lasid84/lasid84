@@ -11,8 +11,8 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
 import { SP_InsertCargo, SP_UpdateCargo } from "./data";
 import CargoFCL, {CargoLCL} from "./cargoDetailRow"
-import Grid, { getGridState, gotoFirstRow, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 const { log, error } = require("@repo/kwe-lib/components/logHelper");
+import { ROW_TYPE_NEW } from 'components/grid/ag-grid-enterprise';
 
 type Props = {
   initData?: any | null;
@@ -43,12 +43,10 @@ export type Cargo = {
   class: string;
   description: string;
   __changed : boolean;
-  __ROWTYPE : string;
+  __ROWTYPE : string;  
 };
-
-
 export const initialCargo = {
-  bk_id: '', //bkData?.bk_id,
+  bk_id: '', //bkData?.bk_id
   seq: -1,
   container_type: "",
   piece: 1,
@@ -73,11 +71,11 @@ export const initialCargo = {
   vent: "",
   un_no: "",
   class: "",
-  description: "",
-  __changed : false,
-  __ROWTYPE : ROW_TYPE_NEW //NEW      
+  description: "",   
+  __changed : true,
+  __ROWTYPE : ROW_TYPE_NEW //NEW
+   
   };
-
 
 const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo }) => {
   const { dispatch, objState } = useAppContext();
@@ -86,6 +84,7 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
   const { Create } = useUpdateData2(SP_InsertCargo);
   const { Update } = useUpdateData2(SP_UpdateCargo);
 
+  
   // const {
   //   data: cargoData,
   //   refetch: cargoRefetch,
@@ -95,58 +94,46 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
   //   SEARCH_CGD,
   //   SP_GetCargoData,
   //   {
-  //     enabled: false,
+  //     enabled: true,
   //   }
   // );
-
-  // useEffect(() => {
-  //   if (cargoData) {
-  //     const updatedCargo = Array.isArray(cargoData) && cargoData.length > 0
-  //     ? cargoData
-  //     : [initialCargo];
-  //     log('getCargoData',updatedCargo)
-  //     dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargo } });
-  //   }
-  // }, [cargoData]);
 
 
 
 const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
-  log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
+  //log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
 
-  // 기존 cargo 리스트에서 seq가 동일한 항목들을 제거하고, 새로운 항목들을 추가
-  const updatedCargoList = bkData.cargo.reduce((acc: any, item: any, i: any) => {
-      if (i === index) {
-          item.piece = 1;
-          acc.push(item);
+  // 그룹으로 기존 항목 필터링 (기존에 seq와 동일한 group 값을 가진 cargo 들을 제거)
+  const filteredCargoList = bkData.cargo.filter((item: any) => item.group !== seq);
 
-          const maxSeq = Math.max(...bkData.cargo.map((item: any) => item.seq)); 
-          const newCargoItems = Array.from({ length: pieceCount - 1 }, (_, j) => ({
-              ...initialCargo,
-              bk_id:bkData?.bk_id,
-              seq: maxSeq + j + 1,
-              container_type: bkData.cargo[index]?.container_type,
-              piece: 1, 
-          }));
-          acc.push(...newCargoItems);
-      } else {
-          acc.push(item);
-      }
-      return acc;
-  }, [] as Cargo[]);
+  const updatedCargoList = filteredCargoList.reduce((acc:any, item:any, i:any) => {
+    acc.push(item);
+    if (i === index) {
+        const maxSeq = Math.max(...bkData.cargo.map((item: any) => item.seq)); // 최대 seq 값 찾기
+        const newCargoItems = Array.from({ length: pieceCount - 1 }, (_, j) => ({
+            ...initialCargo,
+            bk_id:bkData?.bk_id,
+            seq: maxSeq + j + 1, // 새로운cargo의 seq는 기존 최대 값보다 큰 값으로 설정
+            container_type: bkData.cargo[index]?.container_type,
+            group: seq, //group index를 생성
+            piece : null,
+            isHandlePieceChange: true, // 플래그 추가
+        }));
+        acc.push(...newCargoItems);
+    }
+    return acc;
+}, [] as Cargo[]);
 
-  // 업데이트된 cargo 리스트를 상태에 반영
   dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
-//  // 강제로 리렌더링 (optional)
-//  setTimeout(() => {
-//   dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
-// }, 0);
 };
 
+
+
   const handleChange = (seq: number,id:string, value: string, index : number) => {
+    //log('handleChange..........',seq,id,value,index ) 
     const updatedCargoList = bkData?.cargo.map((item: any, i: number) => {
-      return i == index ? { ...item, [id]: value, __changed : true, } : item 
-      }
+      return i == index ? { ...item, [id]: value,  __changed : true, } : item
+    }
     );
     //log('handleChange...updatedCargoList', updatedCargoList)
     dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
@@ -156,40 +143,65 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 
   const handleonClick = () => {
     if (bkData) {
-
       const maxSeq = bkData.cargo && bkData.cargo.length > 0
       ? Math.max(...bkData.cargo.map((item: any) => item.seq)) // 현재 최대 seq 값 찾기
       : 0;
-      const newCargo = { ...initialCargo, bk_id:bkData?.bk_id, seq: maxSeq+1 }; //nextSeq
-      const newCargoList = bkData.cargo ? [...bkData.cargo, newCargo] : [newCargo];
+      const newCargo = { ...initialCargo,bk_id:bkData?.bk_id, seq: maxSeq+1 } 
+      const newCargoList = bkData.cargo ? [...bkData.cargo, newCargo] : [newCargo]
       dispatch({ [MselectedTab]: { ...bkData, cargo: newCargoList } });
     }
   };
 
+
   const handleDelete = (seq: number) => {
     if (bkData && bkData.cargo) {
-      const updatedCargoList = bkData.cargo.filter((item: any) => item.seq !== seq);
-      dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
+      if(bkData.svc_type === "FCL"){
+        const updatedCargoList = bkData.cargo.filter((item: any) =>   {
+          return (item.group && item.group !== seq) || (!item.group && item.seq !== seq) 
+        })
+        dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
+      }else{
+        const updatedCargoList = bkData.cargo.filter((item: any) =>   {
+          return item.seq !== seq 
+        })
+        dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
+      }      
     }
   };
 
   const onSave = () => {
-    var hasData = false
-    if (bkData?.cargo) {
-      bkData.cargo.forEach((data: Cargo) => {
-        log('item check', data)
-        // 변경된 항목인지 확인
-        if (data.__changed) {
-             hasData = true
-             if (data.__ROWTYPE === ROW_TYPE_NEW) {
-              Create.mutate(data);
-            } else {          //수정
-              Update.mutate(data);
-            }
-                
-        }})
-    }
+    //log('onSave.................',bkData?.cargo)
+    const processNodes = async () => {
+      if (bkData?.cargo) {
+        bkData.cargo.forEach( async (data: Cargo) => {
+          if (data.__changed) {
+            try{
+              if (data.__ROWTYPE === ROW_TYPE_NEW) {
+                await Create.mutateAsync(data);
+              } else {          //수정
+                await Update.mutateAsync(data);
+              }   
+            }catch(error){
+              log("error:", error);
+            }finally{
+              data.__changed = false;
+            }            
+          }
+        })        
+      }
+      //toastSuccess("Success.")
+    }    
+    processNodes()
+    .then(() => {
+      toastSuccess("Success.")
+      //dispatch({ isDSearch: true }); //maindata refetch?
+    })
+    .catch((error) => {
+      log("node. Error", error);
+    });
   }
+
+  
 
   return (
     <PageBKCargo
@@ -202,8 +214,8 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
     >
       
       <div className="flex-row w-full">
-        {bkData?.cargo && bkData?.cargo?.map((cargoItem: any, i: any) =>
-          bkData?.svc_type === "LCL" ? (
+        {bkData?.cargo && bkData?.cargo?.map((cargoItem: any, i: any) => {
+            return bkData?.svc_type === "LCL" ? (
             <CargoLCL
               key={i}
               index={i}
@@ -213,23 +225,23 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
               onDelete={handleDelete}
               onPieceChange={handlePieceChange}
               onValueChange={handleChange}
-            />
-          ) : (
-            <CargoFCL
-              key={i}
-              index={i}
-              loadItem={initData}
-              bkData={{ cargo: cargoItem }}
-              isRefreshCargo={isRefreshCargo}
-              onDelete={handleDelete}
-              onPieceChange={handlePieceChange}
-              onValueChange={handleChange}
-            />
-          )
-        )}
-      </div>
-    </PageBKCargo>
-  );
+              />
+              ) : (
+                <CargoFCL
+                key={i}
+                index={i}
+                loadItem={initData}
+                bkData={{ cargo: cargoItem }}
+                isRefreshCargo={isRefreshCargo}
+                onDelete={handleDelete}
+                onPieceChange={handlePieceChange}
+                onValueChange={handleChange}
+                />
+                )
+              })}              
+                </div>
+                </PageBKCargo>
+                );
 });
 
 export default CargoDetail;
