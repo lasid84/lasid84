@@ -1093,5 +1093,5 @@ export const SP_GetReportData = async (param: any) => {
     }
   
     const result = await executFunction(params);
-    return result![0];
+    return result;
 }

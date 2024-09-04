@@ -127,10 +127,12 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   }
 
   const onDropButtonClick = async (e: any) => {
+    log("onDropButtonClick1", e)
+    if (e === null || e === undefined) return;
     GetReportData.mutateAsync({type: e, bk_id:bkData.bk_id}, {
       onSuccess: (res: any) => {
-        let report_data = res.data[0];
-        log("onDropButtonClick", report_data);
+        let report_data = res[0].data[0];
+        log("onDropButtonClick2", res.data, report_data);
       }
     }
   )};
