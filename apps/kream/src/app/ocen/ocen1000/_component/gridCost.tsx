@@ -71,7 +71,7 @@ const GridCost: React.FC<Props> = memo(({ initData }) => {
       },
       icon : {
         icon : IconSelect,
-        vendor_id : IconSelect
+        //vendor_id : IconSelect
       },
       maxWidth: { use_yn: 120 },
       minWidth: {

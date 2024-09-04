@@ -71,10 +71,10 @@ export const initialCargo = {
   vent: "",
   un_no: "",
   class: "",
-  description: "",   
+  description: "",
+  use_yn : "Y",
   __changed : true,
-  __ROWTYPE : ROW_TYPE_NEW //NEW
-   
+  __ROWTYPE : ROW_TYPE_NEW //NEW   
   };
 
 const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo }) => {
@@ -84,21 +84,15 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
   const { Create } = useUpdateData2(SP_InsertCargo);
   const { Update } = useUpdateData2(SP_UpdateCargo);
 
-  
-  // const {
-  //   data: cargoData,
-  //   refetch: cargoRefetch,
-  //   remove: cargoRemove,
-  // } = useGetData(
-  //   { bk_no: objState?.MselectedTab },
-  //   SEARCH_CGD,
-  //   SP_GetCargoData,
-  //   {
-  //     enabled: true,
-  //   }
-  // );
+useEffect(()=>{
+  //1. bkData?.cargo.svc_tye 이 변할때, cargo 객체배열 초기화 로직추가?
+  //2. handleDelete 함수 내에서.. bkData.cargo 상태 업데이트 전에, 
+  // db에서 가져온데이터라는 뜻이고(삭제), XXXXX해당item의 __changed 키 항목이 아예 존재하지않는경우
+  //  use_yn='N'로 상태값만 업데이트해서 bkData.cargo에 데이터가 들어있어야한다
+  // 다만 이것은 cargoItem.map 으로 랜더링되면 안된다 (use_yn='N'인 경우)
 
 
+})
 
 const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
   //log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
@@ -118,6 +112,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
             group: seq, //group index를 생성
             piece : null,
             isHandlePieceChange: true, // 플래그 추가
+            use_yn : 'Y'
         }));
         acc.push(...newCargoItems);
     }
@@ -153,20 +148,26 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
   };
 
 
+  //delete -> use_yn ='N'
   const handleDelete = (seq: number) => {
     if (bkData && bkData.cargo) {
-      if(bkData.svc_type === "FCL"){
-        const updatedCargoList = bkData.cargo.filter((item: any) =>   {
-          return (item.group && item.group !== seq) || (!item.group && item.seq !== seq) 
-        })
-        dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
-      }else{
-        const updatedCargoList = bkData.cargo.filter((item: any) =>   {
-          return item.seq !== seq 
+
+      
+        // BKDATA.CARGO 객체 내 __ROWTYPE KEY가 존재하고, 'NEW'면 필터링처리, __ROWTYPE KEY가 존재하지않으면
+        // DB에 존재하는 데이터이므로 use_yn ='N'업데이트 처리 하고 updatedCargoList 에 남아있어야함.           
+        const updatedCargoList = bkData.cargo.map((item: any) => {
+          if(item.seq === seq || (item.group && (item.group === seq))){              
+              if(item.__ROWTYPE && item.__ROWTYPE ==='NEW'){ 
+                //브라우저상에서만 생성된 CARGO 객체(DB저장X상태)는 리스트에서 제거, 반대의 경우 use_yn='N'업데이트
+                return null 
+              }else if(!item.__ROWTYPE){
+                 return {...item, use_yn:'N', __changed:true}
+              }
+          }
         })
         dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
       }      
-    }
+    
   };
 
   const onSave = () => {
@@ -214,7 +215,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
     >
       
       <div className="flex-row w-full">
-        {bkData?.cargo && bkData?.cargo?.map((cargoItem: any, i: any) => {
+      { bkData?.cargo?.filter((cargoItem: any) => cargoItem.use_yn && cargoItem.use_yn === 'Y').map((cargoItem: any, i: any) => {
             return bkData?.svc_type === "LCL" ? (
             <CargoLCL
               key={i}

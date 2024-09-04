@@ -13,6 +13,7 @@ import { InputWrapper } from "components/wrapper";
 import CustomSelect from "components/select/customSelect";
 import { ReactSelect, data } from "@/components/select/react-select2";
 const { log, error } = require("@repo/kwe-lib/components/logHelper");
+import { Checkbox } from "@/components/checkbox";
 
 export interface typeloadItem {
   data: {} | undefined;
@@ -342,15 +343,7 @@ const CargoFCL = memo(
               options={{}}
               width="w-24"
             />
-            {/* selectbox 수정예정 */}
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_measurement_uom`}
-              id="measurement_uom"
-              value={bkData?.cargo?.measurement_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
+           
              <div className="flex w-28">              
               <CustomSelect
                 id="measurement_uom"
@@ -377,7 +370,17 @@ const CargoFCL = memo(
                 inline={false}
               />
             </div>
-
+             {/* selectbox 수정예정 */}
+            {/* <MaskedInputField
+              key={`${index}_${bkData?.cargo?.seq}_measurement_uom`}
+              id="measurement_uom"
+              value={bkData?.cargo?.measurement_uom}
+              events={{ onChange: handleChange }}
+              options={{}}
+              width="w-24"
+            /> */}
+            <Checkbox id={`${index}_${bkData?.cargo?.seq}_dg`}
+                      label="dg" value={bkData?.cargo?.dg} />
             {/* DG 체크박스 추가예정 */}
           </div>
 
