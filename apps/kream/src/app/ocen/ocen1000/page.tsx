@@ -142,7 +142,7 @@ export default function OCEN1000() {
 
   useEffect(() => {
     if (detailData) {
-      log('detailData', detailData, ((detailData as string[])[1] as unknown as gridData).data[0])
+      //log('detailData', detailData, ((detailData as string[])[1] as unknown as gridData).data[0])
       // if()
       dispatch({
         [objState?.MselectedTab]: {...((detailData as string[])[0] as unknown as gridData).data[0],

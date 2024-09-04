@@ -51,16 +51,7 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
           </span>
         }
       >
-        {/* <ReactSelect
-          id="svc_type"
-          dataSrc={svctype as gridData}
-          options={{
-            keyCol: "svc_type",
-            displayCol: ["svc_type_nm"],
-            defaultValue: bkData?.svc_type,
-            isAllYn: false,
-          }}
-        /> */}
+
         <div className={"col-span-1"}>
           <CustomSelect
             id="svc_type"
@@ -76,7 +67,7 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             //onChange={(value: string) => setSelectedSvcType(value)}
             events={{
               onSelectionChanged: (e, id, value)=> {
-                if(bkData?.svc_type != value){                  
+                if(bkData?.svc_type != value){
                   var selectedRow = e.api.getSelectedRows()[0] as any;                  
                   dispatch({[MselectedTab] : {...bkData,
                   svc_type : value,
@@ -84,22 +75,16 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
                 }})
                 setRefreshCargo(true);
                 }
+                /* TODO */
+                //CARGO 객체 초기화 로직 필요?                
+                // if(bkData?.svc_type ==='LCL'){
+                // }
               }
             }}
           />
         </div>
 
-        {/* <ReactSelect
-          id="movement_type"
-          dataSrc={movementtype as gridData}
-          options={{
-            keyCol: "movement",
-            displayCol: ["movement_nm"],
-            defaultValue: bkData?.movement_type,
-            isAllYn: false,
-            isMandatory:false
-          }}
-        /> */}
+       
         <div className={"col-span-1"}>
           <CustomSelect
             id="movement_type"
