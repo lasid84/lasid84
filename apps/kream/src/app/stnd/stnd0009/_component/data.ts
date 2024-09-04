@@ -27,7 +27,7 @@ export const SP_Load = async (searchParam:any) => {
 }
 
 export const SP_GetData = async (searchParam: any) => {
-  console.log('searchParam', searchParam)
+  // console.log('searchParam', searchParam)
   const Param = searchParam.queryKey[1]
 
   const {carrier_type, user_id, ipaddr } = Param;

@@ -284,18 +284,18 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     gridStyle={{ width: '800px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
                     // defaultValue={bkData?.pickup_seq}
-                    defaultValue={getValues("pickup_seq")}
+                    defaultValue={bkData?.pickup_seq}
                     isDisplay={true}
                     events={{
                       onChanged: (e) => {
                         // log("pickup_seq onChange", e, bkData)
                         if (!bkData) return;
-                        bkData.pickup_nm = e?.pickup_nm;
-                        bkData.pickup_addr = e?.addr;
-                        bkData.pickup_pic_nm = e?.pic_nm;
-                        bkData.pickup_email = e?.email;
-                        bkData.pickup_tel_num = e?.tel_num;
-                        bkData.pickup_remark = e?.remark;
+                        bkData.pickup_nm = !e ? null : e.pickup_nm;
+                        bkData.pickup_addr = !e ? null : e.addr;
+                        bkData.pickup_pic_nm = !e ? null : e.pic_nm;
+                        bkData.pickup_email = !e ? null : e.email;
+                        bkData.pickup_tel_num = !e ? null : e.tel_num;
+                        bkData.pickup_remark = !e ? null : e.remark;
                         dispatch({[MselectedTab]: {...bkData}});
                       },
                     }}
@@ -354,7 +354,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     gridStyle={{ width: '800px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
                     // defaultValue={bkData?.cy_cont_seq}
-                    defaultValue={getValues("cy_cont_seq")}
+                    defaultValue={bkData?.cy_cont_seq}
                     isDisplay={true}
                     // events={{
                     //   onSelectionChanged: (e, id, value) => {

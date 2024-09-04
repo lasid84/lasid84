@@ -16,29 +16,15 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
-export interface typeloadItem {
-  data: {} | undefined;
-}
-
 type Props = {
-  onSubmit: SubmitHandler<any>;
-  loadItem: typeloadItem;
+  bkData:any;
+  loadItem: any;
 };
 
-const BKCost = memo(({ loadItem, mainData }: any) => {
+const BKCost = memo(({ loadItem, bkData }: Props) => {
   const { dispatch, objState } = useAppContext();
   const { MselectedTab, mSelectedRow, popType, mSelectedCargo, selectedobj } =
     objState;
-
-  useEffect(() => {
-    if (loadItem) {
-    }
-  }, [loadItem]);
-
-  useEffect(() => {
-    if (mainData)
-      dispatch({ mSelectedRow: (mainData[0] as gridData)?.data[0] });
-  }, [mainData]);
 
   return (
       <div className="w-full">
@@ -50,7 +36,7 @@ const BKCost = memo(({ loadItem, mainData }: any) => {
           }
         >
           <div className="col-span-6">
-            <GridCost initData={loadItem} />
+            <GridCost initData={loadItem} bkData={bkData} />
           </div>
         </PageContent>
       </div>

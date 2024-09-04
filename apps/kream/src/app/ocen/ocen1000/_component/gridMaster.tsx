@@ -27,6 +27,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     // const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
     const { gridRef_m } = objState
+    const [ gridMainData, setGridMainData ] = useState<gridData>();
 
     const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMasterData, { enabled: false });
     const { Create } = useUpdateData2(SP_CreateData, "BKMainData", {callbacks: [mainRefetch]});
@@ -58,13 +59,18 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     useEffect(() => {
         if (objState.isMSearch) {
-            remove();
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
             if (gridRef_m.current) gotoFirstRow(gridRef_m.current)
         }
     }, [objState?.isMSearch]);
+
+    useEffect(() => {
+        if (mainData) {
+            setGridMainData(mainData as gridData);
+        }
+    }, [mainData])
     
 
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
@@ -188,7 +194,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 <Grid
                     gridRef={objState.gridRef_m}
                     loadItem={initData}
-                    listItem={mainData as gridData}//                await ((mainData as string[])[0] as unknown as gridData).data.push(row);
+                    listItem={gridMainData}//                await ((mainData as string[])[0] as unknown as gridData).data.push(row);
                     options={gridOption}
                     event={{
                         onRowDoubleClicked: handleRowDoubleClicked,

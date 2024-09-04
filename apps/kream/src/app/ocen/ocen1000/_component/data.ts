@@ -524,7 +524,7 @@ export const SP_UpdateData = async (param: any) => {
 
 //부킹별 House BL 조회
 export const SP_GetBkHblData = async (searchParam: any) => {
-  log("searchParam: ", searchParam)
+  // log("searchParam: ", searchParam)
   const Param = searchParam.queryKey[1]
   const { bk_id, user_id, ipaddr } = Param;
   
