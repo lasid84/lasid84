@@ -8,9 +8,9 @@ import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData, SP_UpdateData } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_GetReportData, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
-import { useUpdateData2 } from "components/react-query/useMyQuery";
+import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton, DropButton } from 'components/button';
 import Radio from "components/radio/index"
@@ -31,12 +31,14 @@ export interface typeloadItem {
 }
 
 const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
-  const { Create } = useUpdateData2(SP_CreateData, SEARCH_D);
-  const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
-
+  
   const { dispatch, objState } = useAppContext();
   const { MselectedTab } = objState;
   const [ref, setRef] = useState(objState.gridRef_m);
+  const [ reportType, setReportType ] = useState<string>('');
+  const { Create } = useUpdateData2(SP_CreateData, SEARCH_D);
+  const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
+  const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
 
   const [reporttype, setReporttype] = useState<any>();
 
@@ -124,13 +126,22 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   // }, 200);
   }
 
+  const onDropButtonClick = async (e: any) => {
+    GetReportData.mutateAsync({type: e, bk_id:bkData.bk_id}, {
+      onSuccess: (res: any) => {
+        let report_data = res.data[0];
+        log("onDropButtonClick", report_data);
+      }
+    }
+  )};
+
   return (
     <div className="sticky top-0 z-20 flex w-full pt-10 space-y-1 bg-white">
         <PageBKTabContent
           right={
             <>
               <div className={"flex col-span-2 "}>
-                <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} />
+                <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} onClick={onDropButtonClick} />
                 <Button id={"save"} onClick={onSave} width="w-24" />
               </div>                
               <div className={"flex col-span-2"}>

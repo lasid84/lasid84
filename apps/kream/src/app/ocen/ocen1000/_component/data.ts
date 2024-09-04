@@ -1072,3 +1072,31 @@ export const SP_SendEmail = async (param: any) => {
     const result = await executFunction(params);
     return result![0];
 }
+
+export const SP_GetReportData = async (param: any) => {
+  
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  log("param : ", param)
+  const { type, bk_id, user_id, ipaddr} = Param;
+  const params = {
+    inparam : [
+      "in_type"
+    , "in_bk_id"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      type
+    , bk_id
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_report_data',
+    isShowLoading: false,
+    isShowComplete:false,
+    }
+  
+    const result = await executFunction(params);
+    return result![0];
+}
