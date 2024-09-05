@@ -84,15 +84,6 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
   const { Create } = useUpdateData2(SP_InsertCargo);
   const { Update } = useUpdateData2(SP_UpdateCargo);
 
-useEffect(()=>{
-  //1. bkData?.cargo.svc_tye 이 변할때, cargo 객체배열 초기화 로직추가?
-  //2. handleDelete 함수 내에서.. bkData.cargo 상태 업데이트 전에, 
-  // db에서 가져온데이터라는 뜻이고(삭제), XXXXX해당item의 __changed 키 항목이 아예 존재하지않는경우
-  //  use_yn='N'로 상태값만 업데이트해서 bkData.cargo에 데이터가 들어있어야한다
-  // 다만 이것은 cargoItem.map 으로 랜더링되면 안된다 (use_yn='N'인 경우)
-
-
-})
 
 const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
   log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
@@ -114,7 +105,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 log('handlePieceChange filteredCargoList..........', filteredCargoList);
 
   const updatedCargoList = filteredCargoList.reduce((acc:any, item:any, i:any) => {
-    
+    acc.push(item);
     if (i === index) {
         item.piece = pieceCount;
         acc.push(item);
@@ -126,7 +117,7 @@ log('handlePieceChange filteredCargoList..........', filteredCargoList);
             group: seq, //group index를 생성
             piece : null,
             isHandlePieceChange: true, // 플래그 추가
-            use_yn : 'Y'
+            use_yn : 'Y',            
         }));
         acc.push(...newCargoItems);
     } else {
