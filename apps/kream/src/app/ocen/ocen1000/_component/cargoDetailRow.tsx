@@ -92,21 +92,14 @@ const CargoFCL = memo(
       }
     }, [loadItem?.length]);
 
-    const handlePieceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = parseInt(event.target.value, 10);
-      if (!isNaN(value)) {
-        onPieceChange(cargoItem.seq, value, index);
-      }
-    };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const id = event.target.id;
-
+    
+    const handleCheckBoxClick = (id : string, val : any) => {
+      const value = val ? 'Y': 'N'
       const replaced_id = id.split("-").reverse()[0]
-      log('replaced_id', replaced_id)
-      const value = event.target.value;
       onValueChange(cargoItem.seq, replaced_id, value, index);
-    };
+         
+    }
 
     const handleFieldReadOnly = (field: string) => {
       const containerType = cargoItem && cargoItem.container_type;    
@@ -389,7 +382,11 @@ const CargoFCL = memo(
               width="w-24"
             /> */}
             <Checkbox id={getID(index, cargoItem?.seq, "dg_yn")}
-                      label="dg" value={cargoItem?.dg_yn} />
+                      label="dg" value={cargoItem?.dg_yn} 
+                      options={{inline:false}}
+                      events ={{
+                        onChange : handleCheckBoxClick
+                        }}/>
             {/* DG 체크박스 추가예정 */}
           </div>
 
@@ -545,11 +542,7 @@ const CargoLCL = memo(
       }
     }, [loadItem?.length]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const id = event.target.id;
-      const value = event.target.value;
-      onValueChange(cargoItem.seq, id, value, index);
-    };
+
 
     return (
       <>
