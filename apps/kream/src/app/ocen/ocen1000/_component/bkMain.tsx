@@ -9,6 +9,7 @@ import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
 import ShpContPopUp from "./popShippercont";
+import WabillPopUp from "./popAddWaybillNo"
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
@@ -34,9 +35,9 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const { trans_mode, trans_type, MselectedTab, isNew } = objState;
   
   //get shipper cont data
-  const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enable:true});
-  const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enable:true});
-  const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplate", SP_GetBkTemplateData, {enable:false});
+  const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enabled:true});
+  const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enabled:true});
+  const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplate", SP_GetBkTemplateData, {enabled:false});
 
   const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
@@ -69,9 +70,9 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       bkTemplateRefetch();    
   }, [])
 
-  useEffect(() => {
-    log("==========bkData", bkData);
-  }, [bkData])
+  // useEffect(() => {
+  //   log("==========bkData", bkData);
+  // }, [bkData])
 
   useEffect(()=> {
     if (isRefreshShpCont && shipperContData && bkData) {
@@ -107,6 +108,10 @@ const BKMain = ({ loadItem, bkData }: Props) => {
     }
   }
 
+  const handleClickPopUpWaybill = () => {
+    dispatch({isWaybillPopupOpen:true});
+  }
+
   return (
     <div className="w-full">
         <PageContent
@@ -132,7 +137,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       events={{
                         onSelectionChanged: async (e, id, value) => {
                           let selectedRow = await e.api.getSelectedRows()[0];
-                          await dispatch({[MselectedTab]:{...bkData, ...selectedRow}});
+                          await dispatch({[MselectedTab]:{...bkData, ...selectedRow, [ROW_CHANGED]:true}});
                         },
                       }} 
                     />
@@ -147,8 +152,13 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       freeStyles: "p-1 border-1 border-slate-300",
                     }}/>
                     <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} />
-                    <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: false}} />
-                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: false}} />
+                    <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: true}} />
+                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true}} 
+                      events={{
+                        onClick: handleClickPopUpWaybill
+                      }} 
+                    />
+                    <WabillPopUp bkData={bkData}/>
                   
                   {/* <div className="col-span-2"> */}
                     {/* <HblGrid 
@@ -195,7 +205,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       onSelectionChanged: (e, id, value) => {
                         if (bkData?.shipper_id != value) {
                             setRefreshShpCont(true);
-                            dispatch({[MselectedTab]: {...bkData, shipper_id:value}});
+                            dispatch({[MselectedTab]: {...bkData, shipper_id:value, [ROW_CHANGED]:true}});
                             // log("onSelectionChanged", id, value);
                         }
                       },
@@ -256,7 +266,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 <ShpContPopUp initData={loadItem} callbacks={[shipperContRefetch]} />
                 <div className={"col-span-2"}>
                   <CustomSelect
-                    id="shipper_id"
+                    id="carr_shipper_id"
                     initText="Select a Shipper"
                     listItem={custcode as gridData}
                     valueCol={["cust_code"]}
@@ -267,13 +277,13 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                     gridStyle={{ width: '600px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
                     isDisplay={true}
-                    defaultValue={bkData?.shipper_id}
+                    defaultValue={bkData?.carr_shipper_id}
                     // inline={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        if (bkData?.shipper_id != value) {
+                        if (bkData?.carr_shipper_id != value) {
                             setRefreshShpCont(true);
-                            dispatch({[MselectedTab]: {...bkData, shipper_id:value}});
+                            dispatch({[MselectedTab]: {...bkData, carr_shipper_id:value, [ROW_CHANGED]:true}});
                             // log("onSelectionChanged", id, value);
                         }
                       },
@@ -287,7 +297,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 </div>                       
                 <div className={"col-span-2"}>
                 <CustomSelect
-                  id="cnee_id"
+                  id="carr_cnee_id"
                   initText='Select a consinee'
                   listItem={terminal as gridData}
                   valueCol={["partner_id", "partner_name", "cust_nm"]}
@@ -297,7 +307,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                   }}
                   gridStyle={{ width: '600px', height: '300px' }}
                   style={{ width: '500px', height: "8px" }}
-                  defaultValue={bkData?.cnee_id}
+                  defaultValue={bkData?.carr_cnee_id}
                   isDisplay={true}
                 />
               </div>

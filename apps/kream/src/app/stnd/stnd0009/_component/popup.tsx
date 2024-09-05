@@ -1,5 +1,5 @@
 import DialogBasic from "layouts/dialog/dialog"
-import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray } from "react-hook-form";
+import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray, useFormContext } from "react-hook-form";
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import { crudType, useAppContext } from "components/provider/contextObjectProvider"
 import { SP_UpdateData, SP_CreateData } from './data';
@@ -23,28 +23,29 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     const router = usePathname()
     const { Update } = useUpdateData2(SP_UpdateData);
     const { Create } = useUpdateData2(SP_CreateData);
+    const { getValues, setValue, reset, setFocus, handleSubmit } = useFormContext();
 
     const closeModal = () => {
         dispatch({ isPopUpOpen: false });
         reset();
     }
 
-    const formZodMethods = useForm({
-        defaultValues: {
-            use_yn: "Y",
-        },
-    });
+    // const formZodMethods = useForm({
+    //     defaultValues: {
+    //         use_yn: "Y",
+    //     },
+    // });
 
-    const {
-        handleSubmit,
-        reset,
-        setFocus,
-        setValue,
-        resetField,
-        getValues,
-        formState: { errors },
-        control,
-    } = formZodMethods;
+    // const {
+    //     handleSubmit,
+    //     reset,
+    //     setFocus,
+    //     setValue,
+    //     resetField,
+    //     getValues,
+    //     formState: { errors },
+    //     control,
+    // } = formZodMethods;
 
     useEffect(() => {
         if (loadItem) {
@@ -100,7 +101,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     return (
 
-        <FormProvider{...formZodMethods}>
+        // <FormProvider{...formZodMethods}>
             <DialogBasic
                 isOpen={isOpen!}
                 onClose={closeModal}
@@ -307,7 +308,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
                     </div>
                 </form>
             </DialogBasic>
-        </FormProvider>
+        // </FormProvider>
 
     )
 

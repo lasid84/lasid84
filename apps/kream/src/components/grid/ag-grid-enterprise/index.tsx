@@ -98,7 +98,7 @@ export type GridOption = {
   alignRight?: string[],                  //dataType : number면 자동 우측 정렬
   editable?: string[];
   isEditableOnlyNewRow?: boolean,
-  dataType?: { [key: string]: string };   //date, number, text, bizno
+  dataType?: { [key: string]: string };   //date, number, text, bizno, largetext
   typeOptions?: {
     [key: string]: {
       inputLimit?: number                  //입력 자릿수 제한
@@ -240,6 +240,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       animateRows: true,
       // grandTotalRow:"bottom",
       suppressScrollOnNewData:true,
+      // domLayout:"autoHeight",
       navigateToNextCell(params) {
         const suggestedNextCell = params.nextCellPosition;
 
@@ -435,6 +436,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
               ...cellOption,
               valueFormatter: bizNoFormatter,
             }
+          } else if (optCols[col] === 'largetext') {
+            cellOption = {
+              ...cellOption,
+              cellEditor: 'agLargeTextCellEditor',
+              cellEditorPopup: true,
+            }
           }
         };
 
@@ -595,7 +602,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
     let result: any = {};
 
-    gridRef.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
+    gridRef?.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
       result[item.colId] = null;
     });
 
@@ -603,7 +610,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // log("============onGridReady", pinnedBottomData)
 
     if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
-      gridRef.current.api.setPinnedBottomRowData([pinnedBottomData]);
+      gridRef?.current.api.setPinnedBottomRowData([pinnedBottomData]);
     }
 
     if (event?.onGridReady) event.onGridReady(param);
@@ -949,7 +956,6 @@ export const rowAdd = async (
     var data = {
       [col]: '',
       ...row,
-      use_yn: true,
       [ROW_INDEX]: rowCount + 1,
       [ROW_TYPE]: ROW_TYPE_NEW,
       [ROW_CHANGED]: true

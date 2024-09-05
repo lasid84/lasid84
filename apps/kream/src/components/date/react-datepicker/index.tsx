@@ -94,15 +94,30 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
     function handleKeyDown(e:any){
         try {
             if (e.key === "Enter") {
-                const form = e.target.form;
-                let index = [...form].indexOf(e.target);
+                // e.preventDefault();
+                // const form = e.target.form;
+                // let index = [...form].indexOf(e.target);
                 
-                //필드셋과 버튼은 포커스 제외 - stephen
-                while ((form[index + 1] instanceof HTMLButtonElement) || (form[index + 1] instanceof HTMLFieldSetElement)) index++;
+                // //필드셋과 버튼은 포커스 제외 - stephen
+                // while ((form[index + 1] instanceof HTMLButtonElement) || (form[index + 1] instanceof HTMLFieldSetElement)) index++;
 
-                log("handleKeyDown", e.target, index, form[index + 1], form);
-                form[index + 1].focus();
-                e.preventDefault();
+                // log("handleKeyDown", e.target, index, form[index + 1], form);
+                // form[index + 1].focus();
+                
+                e.preventDefault();  // 기본 엔터 동작을 막음
+                const form = e.target.form.elements;
+                var index = Array.prototype.indexOf.call(form, e.target);
+
+                //필드셋과 버튼은 포커스 제외 - stephen
+                while ((form[index + 1] instanceof HTMLButtonElement) 
+                || (form[index + 1] instanceof HTMLFieldSetElement) 
+                || (form[index + 1].readOnly === true)
+                ) index++;
+
+                // 다음 요소가 input일 경우 포커스 이동
+                if (form[index + 1]) {
+                    form[index + 1].focus();
+                }
             }
         
             if (events?.onKeyDown) {
@@ -169,6 +184,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
                                     mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
                                     keepCharPositions= {true}/>
                                 }
+                            autoComplete='off'
                             dateFormat={dateFormat}
                             selected={selectedVal}
                             // locale={ko}

@@ -17,6 +17,10 @@ interface resultType {
     cursorData: []
 }
 
+export const healthcheck = async (req: Request, res: Response) => {
+    res.status(200).send("ok");
+}
+
 /**
  ※ 2024.08.05 관세청 유니패스
   1. 화물통관 진행정보

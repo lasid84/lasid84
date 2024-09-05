@@ -40,7 +40,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
 
     useEffect(() => {
         if (loadItem?.length) {
-            log("loadItem111111", loadItem[14].data)
+            // log("loadItem111111", loadItem[14].data)
             settab(loadItem[14].data)
         }
     }, [loadItem?.length])

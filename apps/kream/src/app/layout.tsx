@@ -42,8 +42,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  log("app/layout.tsx");
-
   return (
     <>
       <html lang="en">

@@ -60,8 +60,8 @@ export const SP_GetMData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-  log('mainData Result', result)
-  log('mainData Result?', result![0])
+  // log('mainData Result', result)
+  // log('mainData Result?', result![0])
   return result
 }
 
@@ -97,8 +97,35 @@ export const SP_GetMasterData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-  log('mainData Result', result)
-  log('mainData Result?', result![0])
+  // log('mainData Result', result)
+  // log('mainData Result?', result![0])
+  return result![0]
+}
+
+//SP_GetInvoiceMasterContent
+export const SP_GetTransportData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { trans_mode, trans_type, user_id, ipaddr } = Param;
+
+  const params = {
+    inparam: [
+        "in_trans_mode"
+      , "in_trans_type"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        trans_mode
+      , trans_type
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1007_get_transport',
+    isShowLoading: true
+  }
+
+  const result = await executFunction(params);
+
   return result![0]
 }
 
@@ -495,8 +522,9 @@ export const SP_UpdateData = async (param: any) => {
   return result![0];
 }
 
-//shipper 담당자data get
+//부킹별 House BL 조회
 export const SP_GetBkHblData = async (searchParam: any) => {
+  // log("searchParam: ", searchParam)
   const Param = searchParam.queryKey[1]
   const { bk_id, user_id, ipaddr } = Param;
   
@@ -512,6 +540,37 @@ export const SP_GetBkHblData = async (searchParam: any) => {
       , ipaddr
     ],
     inproc: 'ocean.f_ocen1000_get_bk_bl',
+    isShowLoading: false
+  }
+
+  const result = await executFunction(params);
+
+  return result![0]
+}
+
+export const SP_SaveBkHblData = async (searchParam: any) => {
+  const Param = searchParam;
+  log("SP_SaveBkHblData", searchParam)
+  const { bk_id, waybill_no, remark, use_yn, user_id, ipaddr } = Param;
+  
+  const params = {
+    inparam: [
+        "in_bk_id"
+      , "in_waybill_no"
+      , "in_remark"
+      , "in_use_yn"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        bk_id 
+      , waybill_no
+      , remark
+      , use_yn
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_ins_bk_hbl',
     isShowLoading: false
   }
 
@@ -666,7 +725,7 @@ export const SP_InsertCargo = async (param: any) => {
           , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
           , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
-          , hs_cd 			     , length         , width 			        , height 			
+          , hs_cd 			     , length         , width 			        , height 			        , class:cargo_class
           , weight           , soc            , empty               , temp 
           , vent 			       , un_no 	        , remark              , use_yn 
           , user_id          , ipaddr
@@ -730,7 +789,7 @@ export const SP_InsertCargo = async (param: any) => {
       , temp 
       , vent 			
       , un_no 					
-      , "class"	 //class ????				
+      , cargo_class		
       , volume_factor   
       , commodity_cd 
       , hs_cd 
@@ -763,7 +822,7 @@ export const SP_UpdateCargo = async (param: any) => {
           , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
           , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
-          , hs_cd 			     , length         , width 			        , height 			
+          , hs_cd 			     , length         , width 			        , height 			        , class: cargo_class
           , weight           , soc            , empty               , temp 
           , vent 			       , un_no 	        , remark              , use_yn 
           , user_id          , ipaddr
@@ -826,7 +885,7 @@ export const SP_UpdateCargo = async (param: any) => {
       , temp 
       , vent 			
       , un_no 					
-      , "class"	 //class ????				
+      , cargo_class
       , volume_factor   
       , commodity_cd 
       , hs_cd 
@@ -978,4 +1037,61 @@ export const SP_UpdateCost = async (param: any) => {
     const result = await executFunction(params);
 
     return result![0];
+}
+
+
+export const SP_SendEmail = async (param: any) => {
+  
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  // log("param : ", param)
+  const { pgm_code, bk_id, user_id, ipaddr} = Param;
+  const params = {
+    inparam : [
+      "in_pgm_code"
+    , "in_bk_id"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      pgm_code
+    , bk_id
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_ins_send_email',
+    isShowLoading: true,
+    isShowComplete:true,
+    }
+  
+    const result = await executFunction(params);
+    return result![0];
+}
+
+export const SP_GetReportData = async (param: any) => {
+  
+  // const Param = searchParam.queryKey[1]
+  const Param = param;
+  log("param : ", param)
+  const { type, bk_id, user_id, ipaddr} = Param;
+  const params = {
+    inparam : [
+      "in_type"
+    , "in_bk_id"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      type
+    , bk_id
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_report_data',
+    isShowLoading: false,
+    isShowComplete:false,
+    }
+  
+    const result = await executFunction(params);
+    return result;
 }

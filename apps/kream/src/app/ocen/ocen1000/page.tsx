@@ -53,6 +53,8 @@ export default function OCEN1000() {
       isCYPopupOpen: false,
       isCYContPopupOpen:false,
       isPickupPopupOpen: false,
+      isMailRcvPopupOpen:false,
+      isWaybillPopupOpen:false,
       mGridState: {},
       mGridStateInit: null
     },
@@ -104,7 +106,7 @@ export default function OCEN1000() {
 
 
   const { data: initData } = useGetData("", LOAD, SP_Load, {staleTime: 1000 * 60 * 60});
-  const { data: mainData, refetch: mainRefetch } = useGetData({ no: objState?.MselectedTab }, "Booking_Row_Data", /*SP_GetBKDetailData*/ SP_GetMData, { enabled: false }); //1건 Detail조회
+  const { data: detailData, refetch: detailRefetch } = useGetData({ no: objState?.MselectedTab }, "Booking_Row_Data", /*SP_GetBKDetailData*/ SP_GetMData, { enabled: false }); //1건 Detail조회
 
   //사용자 정보
   const menu_param = useUserSettings((state) => state.data.currentParams,shallow);
@@ -132,24 +134,25 @@ export default function OCEN1000() {
 
   useEffect(() => {
     if (objState.isMDSearch) {
-      mainRefetch();
+      log("???")
+      detailRefetch();
       dispatch({ isMDSearch: false });
     }
   }, [objState?.isMDSearch]);
 
   useEffect(() => {
-    if (mainData) {
-      log('mainData11', mainData, ((mainData as string[])[2] as unknown as gridData).data)
+    if (detailData) {
+      //log('detailData', detailData, ((detailData as string[])[1] as unknown as gridData).data[0])
       // if()
       dispatch({
-        [objState?.MselectedTab]: {...((mainData as string[])[0] as unknown as gridData).data[0],
-                                    cargo : ((mainData as string[])[1] as unknown as gridData).data,
-                                    cost : ((mainData as string[])[2] as unknown as gridData).data
+        [objState?.MselectedTab]: {...((detailData as string[])[0] as unknown as gridData).data[0],
+                                    cargo : ((detailData as string[])[1] as unknown as gridData).data,
+                                    cost : ((detailData as string[])[2] as unknown as gridData).data
         }
         // bkData: (mainData as gridData).data[0]
     });
     }
-  }, [mainData])
+  }, [detailData])
 
   // useEffect(() => {
   //     if (objState.isCGDSearch) {
@@ -185,7 +188,7 @@ export default function OCEN1000() {
     } else {
       let needSearch = objState[code.target.id] ? false : true;
       dispatch({
-        isMDSearch: needSearch,
+        // isMDSearch: needSearch,
         MselectedTab: code.target.id,
       });
     }

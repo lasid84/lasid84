@@ -1,29 +1,28 @@
-/*
- * To Do
-   1) 계정 비번 만료 시 처리 기능(유저별 메일 발송 or 등등등)
-   2) 리팩토링
-*/ 
-
-// import { workerData } from 'worker_threads'; 
-// import  puppeteer from 'puppeteer';
-// import { log, error } from '@repo/kwe-lib/components/logHelper.js';
-// import { executFunction } from './api.service.ts';
-// import { getKoreaTime } from '@repo/kwe-lib/components/dataFormatter.js';
-// // import Library from '../lib/ufsLibray.ts';
-// import Library from './lib/ufsLibray.ts';
-
-
 
 const { workerData } = require('worker_threads'); 
 const  puppeteer = require('puppeteer');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
-const { executFunction } = require('../api.service/api.service.js');
+const { executFunction } = require('../../api.service/api.service.js');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
-const Library = require('../ufspLibrary/ufsLibray');
+const Library = require('../../ufspLibrary/ufsLibray');
 
 const ufsp = new Library(workerData);
 
 let onExcute = false;
+
+async function setCustomerData() {
+    try {
+
+        const inparam = ['in_data', 'in_user_id', 'in_ipaddr'];
+        const invalue = [JSON.stringify(ufsp.resultData),'', ''];
+        const inproc = 'scrap.f_scrp0004_set_customer_data'; 
+        await executFunction(inproc, inparam, invalue);
+        //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
+        
+    } catch (ex) {
+        throw ex;
+    }
+}
 
 async function startScraping() {
 
@@ -52,7 +51,6 @@ async function startScraping() {
         const datas = await ufsp.getIFData();
         let script;
 
-        log("1 - ", ufsp.idx, datas.length);
         if (datas.length > 0) {
             // if (datas[0].needlogin.toLowerCase() == 't') {
             //     await ufsp.checkSession();
@@ -64,23 +62,24 @@ async function startScraping() {
             /***************
              * data
              * 1) pgm_code
-             * 2) blno
+             * 2) keydata
              * 3) create_date
              */
             ufsp.resultData = {};
             ufsp.mainData = data;
-            log("ufsp.mainData", ufsp.mainData);
-            
-            // await addJsonResult(data.tab, 'bl_no', data.bl_no, '');
-            // await addJsonResult(data.tab, 'trans_type', type, '');
 
             Object.keys(data).forEach(async function(key) {
                 await ufsp.addJsonResult(data.tab, key, data[key], '');
             });
 
             await ufsp.startScript(script);
-            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
-            await ufsp.setBLIFData('O', JSON.stringify(ufsp.resultData), '');
+            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.keydata, JSON.stringify(ufsp.resultData));
+            await setCustomerData();
+            var v_err = '';
+            if (!ufsp.resultData.t_cust_ufs) {
+                v_err = 'no data';
+            }
+            await ufsp.setBLIFData('Y', '', v_err);
             ufsp.errCnt = 0;
             // lastExcute = new Date();
             ufsp.lastExcute = getKoreaTime();
@@ -91,8 +90,8 @@ async function startScraping() {
     catch(ex) {
         if (ufsp.mainData) {
             await ufsp.setBLIFData('R', '', ex);
-        }
-        /*if (!ex.message.includes('check exist'))*/ error(ufsp.idx, ": Parent Ex :", ex, ufsp.mainData);
+        }    
+        error(ufsp.idx, ": Parent Ex :", ex, ufsp.mainData);
         ufsp.errCnt++;
     } finally {
         onExcute = false;
@@ -124,13 +123,11 @@ try {
     process.on('SIGINT', async () => {
         log('SIGINT signal received.');
         await ufsp.close();
-        process.exit();
     });
 
     process.on('SIGTERM', async () => {
         log('SIGTERM signal received.');
         await ufsp.close();
-        process.exit();
     });
 
     process.on('exit', async () => {

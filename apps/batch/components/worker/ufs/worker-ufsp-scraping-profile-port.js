@@ -1,21 +1,21 @@
 
 const { workerData } = require('worker_threads'); 
+const  puppeteer = require('puppeteer');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
-const { executFunction } = require('../api.service/api.service.js');
+const { executFunction } = require('../../api.service/api.service.js');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
-const Library = require('../ufspLibrary/ufsLibray');
+const Library = require('../../ufspLibrary/ufsLibray');
 
 const ufsp = new Library(workerData);
 
 let onExcute = false;
-var x_date;
 
-async function setCodeMasterData() {
+async function setPortData() {
     try {
 
-        const inparam = ['in_data', 'in_user', 'in_ipaddr'];
-        const invalue = [JSON.stringify(ufsp.resultData),'scrap_codemaster', ''];
-        const inproc = 'scrap.f_scrp0007_set_codemaster_data'; 
+        const inparam = ['in_data', 'in_user_id', 'in_ipaddr'];
+        const invalue = [JSON.stringify(ufsp.resultData),'', ''];
+        const inproc = 'scrap.f_scrp0005_set_port_data'; 
         await executFunction(inproc, inparam, invalue);
         //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
         
@@ -30,59 +30,64 @@ async function startScraping() {
         onExcute = true;
         ufsp.mainData = null;
 
-        const koreaTime = getKoreaTime(); 
-        const date = koreaTime.getUTCDate();
-        const hours = koreaTime.getUTCHours();
-        const minutes = koreaTime.getUTCMinutes();
-        
+        // const now = getKoreaTime(); 
+        // const hours = now.getUTCHours();
+        // const minutes = now.getUTCMinutes();       
 
-        if (x_date != date && hours === 12 && minutes === 10) {
-            await ufsp.insertIFData('X');
-            x_date = date;
-            // log("in if", koreaTime, date, hours, minutes);
-        }
-        
+        // if (hours === 8 && minutes === 30) {
+        //     if (!ufsp.lastExcute) {
+        //         await ufsp.checkSession(true);
+        //     } else {
+        //         const diffMSec = now - ufsp.lastExcute.getTime();
+        //         const diffMin = diffMSec / (60 * 1000);
+        //         if (diffMin > 10) {
+        //             await ufsp.checkSession(true);
+        //         }
+        //     }
+        // }
+
+        await ufsp.loginByApi('', false);
+
         const datas = await ufsp.getIFData();
         let script;
+
         if (datas.length > 0) {
-            script = await ufsp.getScript(this.pgm);
+            // if (datas[0].needlogin.toLowerCase() == 't') {
+            //     await ufsp.checkSession();
+            // }
+            script = await ufsp.getScript(ufsp.pgm);
         }
 
         for (const data of datas) {
             /***************
              * data
              * 1) pgm_code
-             * 2) blno
+             * 2) keydata
              * 3) create_date
-             * 4) updload_data - file_contents
              */
-
-            await ufsp.loginByApi('', true);
-
             ufsp.resultData = {};
             ufsp.mainData = data;
-            
-            await Object.keys(data).forEach(async function(key) {
+
+            Object.keys(data).forEach(async function(key) {
                 await ufsp.addJsonResult(data.tab, key, data[key], '');
             });
-            // log("for ", data, script);
-            await ufsp.startScript(script);
 
-            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
-            await setCodeMasterData();
-            // await ufsp.setBLIFData('Y', '', '');     
-            await ufsp.setBLIFData('Y', '', '');       
+            await ufsp.startScript(script);
+            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.keydata, JSON.stringify(ufsp.resultData));
+            await setPortData();
+            await ufsp.setBLIFData('Y', '', '');
             ufsp.errCnt = 0;
+            // lastExcute = new Date();
             ufsp.lastExcute = getKoreaTime();
+            // log(JSON.stringify(resultData));
         }
 
     }
     catch(ex) {
         if (ufsp.mainData) {
-            if (ufsp.mainData.error) ufsp.setBLIFData('R', '', ufsp.mainData.error);
-            else await ufsp.setBLIFData('R', '', ex);
+            await ufsp.setBLIFData('R', '', ex);
         }    
-        error(this.idx, ": Parent Ex :", ex);
+        error(ufsp.idx, ": Parent Ex :", ex, ufsp.mainData);
         ufsp.errCnt++;
     } finally {
         onExcute = false;

@@ -1,5 +1,5 @@
 
-import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef } from 'react';
+import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
@@ -21,6 +21,7 @@ type Props = {
   width?: string;
   lwidth?: string;
   height?: string;
+  isFocus?:boolean
   isDisplay ?: boolean;      //사용자 권한에 따른 display여부(Controlling the visibility of an element)
   options?: {
     inline?: boolean;         //라벨명 위치
@@ -47,19 +48,22 @@ type Props = {
   };
 
   events?: {
-    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: ChangeEvent<HTMLInputElement>, dataType?:string) => void;
     onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
     onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
+    onClick?: (e:any) => void;
   }
 };
 
 export const MaskedInputField: React.FC<Props> = (props: Props) => {
-  const { control, setValue } = useFormContext();
+  // const MaskedInputField = forwardRef<HTMLInputElement, Props>((props, ref) => {
+  const { control, setValue, setFocus, getValues } = useFormContext();
   const { t } = useTranslation();
-  if (!control) return null;
+  // if (!control) return null;
+  const localRef = useRef<HTMLInputElement | null>(null);
 
-  const { id, label, value, width, lwidth, height, isDisplay=true, options = {}, events } = props;
+  const { id, label, value = '', width, lwidth, height, options = {}, events, isFocus=false, isDisplay=true,  } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
     freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
@@ -75,22 +79,50 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // log("MaskedInputField useEffect", id, value, selectedVal);
     if (id && !isNotManageSetValue) setValue(id, value);
-    setSelectedVal(value === undefined ? '' : value);
+    setSelectedVal(value);
   }, [value])
+
+  useEffect(() => {
+    // log("isFocus ",isFocus, id, localRef?.current)
+    if (isFocus) {
+      // setFocus(id);
+      if(localRef?.current) (localRef.current as HTMLInputElement)?.focus();
+    }
+  }, [isFocus])
 
   function handleKeyDown(e: any) {
     try {
       if (e.key === "Enter") {
-        const form = e.target.form;
-        let index = [...form].indexOf(e.target);
-        // log("form[index + 1]", form[index + 1])
+        // e.preventDefault();
+        // const form = e.target.form;
+        // let index = [...form].indexOf(e.target);
+        // for (const f of form) {
+        //   log("======", f)
+        // }
 
-        //필드셋과 버튼은 포커스 제외 - stephen
-        while ((form[index + 1] instanceof HTMLButtonElement) || (form[index + 1] instanceof HTMLFieldSetElement)) index++;
+        // //필드셋과 버튼은 포커스 제외 - stephen
+        // while ((form[index + 1] instanceof HTMLButtonElement) 
+        //   || (form[index + 1] instanceof HTMLFieldSetElement) 
+        //   || (form[index + 1].readOnly === true)
+        // ) index++;
         
         // log(form.length, index)
-        if (form.length > index + 1) form[index + 1].focus();
-        e.preventDefault();
+        // if (form.length > index + 1) form[index + 1].focus();
+
+        e.preventDefault();  // 기본 엔터 동작을 막음
+        const form = e.target.form.elements;
+        var index = Array.prototype.indexOf.call(form, e.target);
+
+        //필드셋과 버튼은 포커스 제외 - stephen
+        while ((form[index + 1] instanceof HTMLButtonElement) 
+          || (form[index + 1] instanceof HTMLFieldSetElement) 
+          || (form[index + 1].readOnly === true)
+        ) index++;
+
+        // 다음 요소가 input일 경우 포커스 이동
+        if (form[index + 1]) {
+            form[index + 1].focus();
+        }
       }
 
       if (events?.onKeyDown) {
@@ -117,26 +149,48 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     // log("handleChange", e?.target?.value)
 
     if (id && !isNotManageSetValue) {
+      // log("handleChange in if", id, e?.target?.value.replaceAll(":", ""))
       setValue(id, e?.target?.value.replaceAll(":", ""));
     }
     setSelectedVal(e?.target?.value);
 
     if (events?.onChange) {
-      events.onChange(e);
+      events.onChange(e, type);
     }
   }
 
-  function handleFocus(e: FocusEvent<HTMLInputElement>) {
-    // log("handleFocus", e.target?.value)
+  // const handleChange = (dataType: string) => (e:ChangeEvent<HTMLInputElement>) {
+  //     log("handleChange 고차함수", e?.target?.value)
 
-    if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
-    setSelectedVal(e?.target?.value);
+  //   if (id && !isNotManageSetValue) {
+  //     // log("handleChange in if", id, e?.target?.value.replaceAll(":", ""))
+  //     setValue(id, e?.target?.value.replaceAll(":", ""));
+  //   }
+  //   setSelectedVal(e?.target?.value);
+
+  //   if (events?.onChange) {
+  //     events.onChange(e);
+  //   }
+  // }
+
+  function handleFocus(e: FocusEvent<HTMLInputElement>) {
+    // log("handleFocus", e.target?.value, getValues(id))
+
+    // if (id && !isNotManageSetValue) setValue(id, e?.target?.value);
+    // setSelectedVal(e?.target?.value);
+
+    // if (!getValues(id)) setSelectedVal(getValues(id));
 
     if (events?.onFocus) {
       events.onFocus(e);
     }
   }
 
+  function handleClick(e:any) {
+    if (events?.onClick) {
+      events.onClick(e);
+    }
+  }
 
   return (
     <InputWrapper outerClassName={`${outerClassName} ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline}>
@@ -153,14 +207,13 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
               type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}
               className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
-                 focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
-                 dark:bg-gray-900 dark:text-white dark:border-gray-700
-                 ${freeStyles}
-                 text-${textAlign}
-                 `)}
+                focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
+                dark:bg-gray-900 dark:text-white dark:border-gray-700
+                ${freeStyles}
+                text-${textAlign}
+                `)}
               mask={type === 'password' ? false : mask!}
-              // pipe={pipe}
-              value={selectedVal}
+              {...(isNotManageSetValue ? { value: selectedVal } : {})}
               defaultValue={value}
               readOnly={isReadOnly}
               placeholder={t(myPlaceholder ? myPlaceholder! : placeholder!) as string}
@@ -169,13 +222,22 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
               //     // setValue(name, e.target.value);
               // }}
               guide={false}
-
               // showMask={true}
               onKeyDown={(e) => handleKeyDown(e)}
               onBlur={(e) => handleBlur(e)}
               onChange={(e: any) => { handleChange(e); }}
               onFocus={(e: any) => { handleFocus(e); }}
+              onClick={(e: any) => { handleClick(e); }}
               autoComplete={isAutoComplete}
+              render={(textMaskRef, props) => (
+                <input
+                  {...props}
+                  ref={(node:HTMLInputElement) => {
+                    textMaskRef(node); // Keep this so the component can still function
+                    localRef.current = node as HTMLInputElement; // Copy the ref for yourself
+                  }}
+                />
+              )}
             />
           )}
         />

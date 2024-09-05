@@ -27,10 +27,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     // const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
     const { gridRef_m } = objState
+    const [ gridMainData, setGridMainData ] = useState<gridData>();
 
-    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-    const { Create } = useUpdateData2(SP_CreateData, SEARCH_M, {callbacks: [mainRefetch]});
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M, {callbacks: [mainRefetch]});
+    const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMasterData, { enabled: false });
+    const { Create } = useUpdateData2(SP_CreateData, "BKMainData", {callbacks: [mainRefetch]});
+    const { Update } = useUpdateData2(SP_UpdateData, "BKMainData", {callbacks: [mainRefetch]});
 
 
     const gridOption: GridOption = {
@@ -50,23 +51,26 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             bk_dd: { inputLimit : 8}
         },
         isAutoFitColData: true,
-        editable: ["bk_dd", "origin_terminal_id", "dest_terminal_id", "vocc_id", "customs_declation", "milestone", "state", "bk_remark", "shipper_id", "sales_person", "ship_remark", "cnee_id"
-            , "ts_port", "vessel", "port_of_loading", "port_of_unloading", "etd", "eta", "final_dest_port", "final_eta", "doc_close_dd", "doc_close_tm", "cargo_close_dd", "cargo_close_tm"
-            , "svc_type", "vement_type", "commodity", "strategic_yn", "cargo_remark", "pickup_dd", "pickup_tm", "pickup_loc", "transport_company", "cy_place_code", "carrier_code", "cr_fak", "cr_nac"
-            , "bl_type", "bill_type", "incoterms", "incoterms_remark", "ams_yn", "ams", "aci_yn", "aci", "afr_yn", "edi_yn", "isf_yn", "e_manifest_yn"
+        editable: ["shipper_id", "carrier_code", "bk_dd", "waybill_no", "incoterms", "incoterms_remark", "port_of_loading", "port_of_unloading", "final_dest_port"
+            , "pickup_dd", "pickup_tm", "doc_close_dd", "doc_close_tm", "vessel", "etd", "eta", "final_eta", "vocc", "customs_declation", "status", "bk_remark", "shp_remark"
          ],
          checkbox: ["use_yn", "ams_yn", "aci_yn", "afr_yn", "isf_yn", "e_manifest_yn"]
     };
 
     useEffect(() => {
         if (objState.isMSearch) {
-            
             mainRefetch();
             log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
             if (gridRef_m.current) gotoFirstRow(gridRef_m.current)
         }
     }, [objState?.isMSearch]);
+
+    useEffect(() => {
+        if (mainData) {
+            setGridMainData(mainData as gridData);
+        }
+    }, [mainData])
     
 
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
@@ -80,7 +84,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             }
         }
         dispatch({ 
-            isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
+            isMDSearch: true, 
+            isCGOSearch : true, isCSTSearch : true,
             MselectedTab: selectedRow.bk_id,
             // mSelectedRow: selectedRow,
             // [selectedRow.bk_id]: selectedRow,
@@ -189,7 +194,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 <Grid
                     gridRef={objState.gridRef_m}
                     loadItem={initData}
-                    listItem={mainData as gridData}//                await ((mainData as string[])[0] as unknown as gridData).data.push(row);
+                    listItem={gridMainData}//                await ((mainData as string[])[0] as unknown as gridData).data.push(row);
                     options={gridOption}
                     event={{
                         onRowDoubleClicked: handleRowDoubleClicked,

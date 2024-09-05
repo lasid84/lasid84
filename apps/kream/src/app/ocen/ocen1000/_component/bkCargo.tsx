@@ -67,13 +67,27 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             //onChange={(value: string) => setSelectedSvcType(value)}
             events={{
               onSelectionChanged: (e, id, value)=> {
-                if(bkData?.svc_type != value){
-                  var selectedRow = e.api.getSelectedRows()[0] as any;                  
-                  dispatch({[MselectedTab] : {...bkData,
-                  svc_type : value,
-                  svc_type_nm : value,
-                }})
-                setRefreshCargo(true);
+                if(bkData?.svc_type != value) {
+                  var selectedRow = e.api.getSelectedRows()[0] as any;   
+                  bkData = {
+                    ...bkData,
+                    cargo: bkData.cargo.map((row:any) => {
+                      return {
+                        ...row, 
+                        use_yn :'N',
+                        [ROW_CHANGED]:true
+                      }
+                    })
+                  };         
+                  log("svc_type onSelectionChanged", bkData);
+                  dispatch({
+                    [MselectedTab] : {
+                      ...bkData,
+                      svc_type : value,
+                      svc_type_nm : value,
+                      [ROW_CHANGED]:true
+                    }});
+                // setRefreshCargo(true);
                 }
                 /* TODO */
                 //CARGO 객체 초기화 로직 필요?                
@@ -108,7 +122,7 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
               <span className="px-1 py-1 text-lg font-bold text-blue-500">Cargo Detail</span>
             }>
             <div className="col-span-6">
-              <CargoDetail initData={loadItem}  bkData={objState[MselectedTab]} isRefreshCargo={isRefreshCargo}/>
+              <CargoDetail initData={loadItem}  bkData={objState[MselectedTab]} /*isRefreshCargo={isRefreshCargo}*//>
             </div>
           </PageContent>
         </div>

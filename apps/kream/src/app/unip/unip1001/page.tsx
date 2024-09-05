@@ -16,6 +16,9 @@ import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import SearchForm from "./_component/search-form";
 import MasterGrid from "./_component/gridMaster";
+import { FormProvider, useForm } from "react-hook-form";
+import dayjs from "dayjs";
+import { Button } from "@/components/button";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const {
@@ -36,6 +39,7 @@ export default function UNIP1001() {
     mSelectedRow,
     isMSearch,
   } = objState;
+
   const val = useMemo(() => {
     return {
       objState,
@@ -50,14 +54,38 @@ export default function UNIP1001() {
     staleTime: 1000 * 60 * 60,
   });
 
+  // const methods = useForm<FormType>({
+  const methods = useForm({
+    // resolver: zodResolver(formSchema),
+    defaultValues: {
+      blyy: dayjs().year().toString(),
+      blno: '',
+      search_gubn: '0'
+    }
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    setFocus,
+    setValue,
+    getValues,
+    register,
+    formState: { errors, isSubmitSuccessful },
+  } = methods;
+
   return (
     <TableContext.Provider value={val}>
-      <div className={`w-full h-full`}>
-          <SearchForm loadItem={initData} />
-          <div className={`w-full h-[calc(100vh-150px)]`}>
-              <MasterGrid initData={initData} />
+      <FormProvider {...methods}>
+      <form className="flex space-y-1">
+          <div className={`w-full h-full`}>
+              <SearchForm loadItem={initData} />
+              <div className={`w-full h-[calc(100vh-150px)]`}>
+                  <MasterGrid initData={initData} />
+              </div>
           </div>
-      </div>
+        </form>
+      </FormProvider>      
     </TableContext.Provider>
   );
 }

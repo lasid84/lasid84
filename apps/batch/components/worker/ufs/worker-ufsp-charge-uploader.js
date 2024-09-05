@@ -1,93 +1,90 @@
+/*
+ * To Do
+   1) 계정 비번 만료 시 처리 기능(유저별 메일 발송 or 등등등)
+   2) 리팩토링
+*/ 
+
+// import { workerData } from 'worker_threads'; 
+// import  puppeteer from 'puppeteer';
+// import { log, error } from '@repo/kwe-lib/components/logHelper.js';
+// import { executFunction } from './api.service.ts';
+// import { getKoreaTime } from '@repo/kwe-lib/components/dataFormatter.js';
+// // import Library from '../lib/ufsLibray.ts';
+// import Library from './lib/ufsLibray.ts';
+
+
 
 const { workerData } = require('worker_threads'); 
 const  puppeteer = require('puppeteer');
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
-const { executFunction } = require('../api.service/api.service.js');
+const { executFunction } = require('../../api.service/api.service.js');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
-const Library = require('../ufspLibrary/ufsLibray');
+const Library = require('../../ufspLibrary/ufsLibray');
 
 const ufsp = new Library(workerData);
 
 let onExcute = false;
-
-async function setCarrierData() {
-    try {
-
-        const inparam = ['in_data', 'in_user_id', 'in_ipaddr'];
-        const invalue = [JSON.stringify(ufsp.resultData),'', ''];
-        const inproc = 'scrap.f_scrp0003_set_carrier_data'; 
-        await executFunction(inproc, inparam, invalue);
-        //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;
-        
-    } catch (ex) {
-        throw ex;
-    }
-}
 
 async function startScraping() {
 
     try {
         onExcute = true;
         ufsp.mainData = null;
-
-        // const now = getKoreaTime(); 
-        // const hours = now.getUTCHours();
-        // const minutes = now.getUTCMinutes();       
-
-        // if (hours === 8 && minutes === 30) {
-        //     if (!ufsp.lastExcute) {
-        //         await ufsp.checkSession(true);
-        //     } else {
-        //         const diffMSec = now - ufsp.lastExcute.getTime();
-        //         const diffMin = diffMSec / (60 * 1000);
-        //         if (diffMin > 10) {
-        //             await ufsp.checkSession(true);
-        //         }
-        //     }
-        // }
-
-        await ufsp.loginByApi('', false);
-
         const datas = await ufsp.getIFData();
         let script;
 
+        // log("1 - ", ufsp.idx, datas.length);
         if (datas.length > 0) {
             // if (datas[0].needlogin.toLowerCase() == 't') {
             //     await ufsp.checkSession();
             // }
-            script = await ufsp.getScript(ufsp.pgm);
+            script = await ufsp.getScript();
         }
 
         for (const data of datas) {
             /***************
              * data
              * 1) pgm_code
-             * 2) keydata
+             * 2) blno
              * 3) create_date
+             * 4) updload_data - file_contents
              */
             ufsp.resultData = {};
             ufsp.mainData = data;
+            log("ufsp.mainData", ufsp.mainData);
 
-            Object.keys(data).forEach(async function(key) {
+            await ufsp.loginByApi(data.id);
+            
+            // await addJsonResult(data.tab, 'bl_no', data.bl_no, '');
+            // await addJsonResult(data.tab, 'trans_type', type, '');
+
+            await Object.keys(data).forEach(async function(key) {
                 await ufsp.addJsonResult(data.tab, key, data[key], '');
             });
 
-            await ufsp.startScript(script);
-            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.keydata, JSON.stringify(ufsp.resultData));
-            await setCarrierData();
+            let uploadData = await ufsp.getChargeUploadData();
+
+            if (!uploadData.length) continue;
+            
+            for (const dataItem of uploadData) {
+                await ufsp.addJsonResult('t_hbl_charge_if', '', '', dataItem, 'addBulk');
+                await ufsp.startScript(script);
+                await ufsp.setChargeIFData();
+            }
+
+            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
             await ufsp.setBLIFData('Y', '', '');
             ufsp.errCnt = 0;
-            // lastExcute = new Date();
             ufsp.lastExcute = getKoreaTime();
-            // log(JSON.stringify(resultData));
         }
 
     }
     catch(ex) {
         if (ufsp.mainData) {
-            await ufsp.setBLIFData('R', '', ex);
+            if (ufsp.mainData.error) ufsp.setBLIFData('R', '', ufsp.mainData.error);
+            else await ufsp.setBLIFData('R', '', ex);
         }    
-        error(ufsp.idx, ": Parent Ex :", ex, ufsp.mainData);
+        error(this.idx, ": Parent Ex :", ex);
         ufsp.errCnt++;
     } finally {
         onExcute = false;

@@ -366,6 +366,8 @@ class Library {
                     return await this.invoicing(data);
                 case "GOTO":
                     return await this.gotoUrl(data);
+                case "CHECKWBSTATUS":
+                    return await this.CheckWBStatus(data);
 
             }
         } catch(ex) {
@@ -415,7 +417,7 @@ class Library {
             v_tracking = 'send post start';
             const header = this.convertJSON(data.header);
 
-            if (data.seq === '60' ) log("=========", data.seq, JSON.stringify(bodyText))
+            // if (data.seq === '60' ) log("=========", data.seq, JSON.stringify(bodyText))
 
             const result = await this.executeAPI(method, url, header, bodyText);
             
@@ -449,7 +451,7 @@ class Library {
     
         } catch(ex) {
             // if (msg_result.error == "Unauthorized") throw  "tracking : " + v_tracking + " callAPIPost : " + JSON.stringify(msg_result) + " / " + ex;
-            log("=========", data.seq, JSON.stringify(bodyText))
+            // log("=========", data.seq, JSON.stringify(bodyText))
             if (msg_result) throw msg_result;
 
             throw  "tracking : " + v_tracking + " callAPIPost : " + ex;
@@ -607,70 +609,74 @@ class Library {
 
         if (!data.out_tab) return result;
 
-        var v_tracking = '';
-        let arrCol = data.out_col.split(',');
-        const out_tabs = data.out_tab.split(',');
-        const tabs = data.tab.split(',');
-        const ismultirows = data.ismultirow == null ? 'f' : data.ismultirow.split(',');
-        let out_tab_cnt = 0;
+        try {
+            var v_tracking = 'updateResult start';
+            let arrCol = data.out_col.split(',');
+            const out_tabs = data.out_tab.split(',');
+            const tabs = data.tab.split(',');
+            const ismultirows = data.ismultirow == null ? 'f' : data.ismultirow.split(',');
+            let out_tab_cnt = 0;
 
-        v_tracking = 'json data parsing0';
-        for (const out_tab of out_tabs) {            
-            let rows = await this.GetJsonResult2(result, out_tab.split('.'));
-            // log("json data parsing0 rows - ", result, out_tab);
-            const tab = tabs[out_tab_cnt];
-            const ismultirow = ismultirows[out_tab_cnt];
-            v_tracking = 'json data parsing1';
-            if (data.colinbody) {
-                //2024.05.14 out_col이 [] 인 경우 배열 통째로 resultData에 저장
-                if (data.out_col !== '{}') {
-                    const cols = data.out_col.split(',')[out_tab_cnt];
-                    const targetJson = await this.GetJsonNode2(bodyText, cols.split('.'));
-                    arrCol = targetJson
+            v_tracking = 'json data parsing0';
+            for (const out_tab of out_tabs) {          
+                let rows = await this.GetJsonResult2(result, out_tab.split('.'));
+                // log("json data parsing0 rows - ", result, out_tab);
+                const tab = tabs[out_tab_cnt];
+                const ismultirow = ismultirows[out_tab_cnt];
+                v_tracking = 'json data parsing1';
+                if (data.colinbody) {
+                    //2024.05.14 out_col이 [] 인 경우 배열 통째로 resultData에 저장
+                    if (data.out_col !== '{}') {
+                        const cols = data.out_col.split(',')[out_tab_cnt];
+                        const targetJson = await this.GetJsonNode2(bodyText, cols.split('.'));
+                        arrCol = targetJson
+                    }
                 }
-            }
-            v_tracking = 'json data parsing2';
-            // log('---------------------', tab, rows);
-            for (const row of rows) {
-                if (row === null) {
-                    continue;
-                };
+                v_tracking = 'json data parsing2';
+                // log('---------------------', tab, rows);
+                for (const row of rows) {
+                    if (row === null) {
+                        continue;
+                    };
 
-                if (arrCol[out_tab_cnt] === '{}') {
-                    await this.addJsonResult(tab, '', '', row, 'addBulk');
-                } else if (arrCol[out_tab_cnt] === '[]') {
-                    await this.addJsonResult(tab, '', '', row, 'add');
-                } else {
-                    let i = 0;
-                    let inputRow = {};
-                    for (const c of arrCol) {
-                        let col = c.toLowerCase();
-                        if (ismultirow == 't') {
-                            inputRow[col] = row[i];
-                        } else {
-                            let val;
-                            if (data.colinbody) {
-                                val = row[i];
+                    if (arrCol[out_tab_cnt] === '{}') {
+                        await this.addJsonResult(tab, '', '', row, 'addBulk');
+                    } else if (arrCol[out_tab_cnt] === '[]') {
+                        await this.addJsonResult(tab, '', '', row, 'add');
+                    } else {
+                        let i = 0;
+                        let inputRow = {};
+                        for (const c of arrCol) {
+                            let col = c.toLowerCase();
+                            if (ismultirow == 't') {
+                                inputRow[col] = row[i];
                             } else {
-                                val = row[c];
+                                let val;
+                                if (data.colinbody) {
+                                    val = row[i];
+                                } else {
+                                    val = row[c];
+                                }
+                                
+                                if (val) {
+                                    await this.addJsonResult(tab, col, val, '', '');
+                                }
                             }
-                            
-                            if (val) {
-                                await this.addJsonResult(tab, col, val, '', '');
-                            }
+                            i++;
                         }
-                        i++;
-                    }
-                    v_tracking = 'json data parsing3';
-                    // log(v_tracking, tab, arrCol, inputRow, row);
-                    if (!this.isJSONEmpty(inputRow)) {
-                        await this.addJsonResult(tab, '', '', inputRow, 'add');
+                        v_tracking = 'json data parsing3';
+                        // log(v_tracking, tab, arrCol, inputRow, row);
+                        if (!this.isJSONEmpty(inputRow)) {
+                            await this.addJsonResult(tab, '', '', inputRow, 'add');
+                        }
                     }
                 }
+                v_tracking = 'json data parsing4';
+                out_tab_cnt++;
+                
             }
-            v_tracking = 'json data parsing4';
-            out_tab_cnt++;
-            
+        } catch (ex) {
+            throw v_tracking + " / " + ex;
         }
     }
 
@@ -791,7 +797,7 @@ class Library {
                     if (this.isValidDate(val)) {
                         val = this.transformDate(val);
                     } 
-                    log('======= ', key, seq, val)
+                    // log('======= ', key, seq, val)
                     this.resultData.arrCharge[seq] = val;
                 }
             }
@@ -1034,7 +1040,7 @@ class Library {
                             await updateResult(result.bat.methodReturn.arguments);
                             bodyText = await updateBodyText(bodyText);
 
-                            if (lowerKey ==='invoice_wb_amt') log("============================invoice_wb_amt", JSON.stringify(bodyText), JSON.stringify(result.bat.methodReturn.arguments));
+                            // if (lowerKey ==='invoice_wb_amt') log("============================invoice_wb_amt", JSON.stringify(bodyText), JSON.stringify(result.bat.methodReturn.arguments));
                             break;
                     }
                 }
@@ -1059,9 +1065,13 @@ class Library {
             const bodyVals = data.upd_body_val.split(',');
 
             v_tracking = 'update Input value in resultData';
+            if (!this.resultData.partnercont) this.resultData.partnercont = [];
             this.resultData.invoice[4] = this.transformDate(stringToDateString(this.resultData.t_hbl_charge_if.invoice_dd,'-'));
             this.resultData.invoice[6] = this.resultData.t_hbl_charge_if.govt_invoice_no;
             this.resultData.invoice[18] = this.resultData.t_hbl_charge_if.billto_id;
+            this.resultData.invoice[19] = this.resultData.partner[2];     //billto_name
+            this.resultData.invoice[20] = this.resultData.partner[5];     //billto_address_no
+            this.resultData.invoice[21] = this.resultData.partnercont[0]; //billto_contact_no
             this.resultData.invoice[33] = this.resultData.t_hbl_charge_if.inv_remark;
             this.resultData.invoice[126] = this.resultData.t_hbl_charge_if.invoice_edi_date;
 
@@ -1123,6 +1133,18 @@ class Library {
             })]);
     }
 
+    async CheckWBStatus(data) {
+        var wbStatus = data.upd_body_col.split(',');
+        var val = await this.GetJsonNode2(this.resultData, data.body.split('.'))
+
+        log("============================================CheckWBStatus", wbStatus, val, data, this.resultData);
+
+        if (!wbStatus.includes(val)) {
+            this.mainData.error = `BL Status가 ${val}입니다.` 
+            throw "";
+        }
+    }
+
     /* [] 일때 loop 돌리기 */
     async updateNodeByPath2(json, path, newValue) {
 
@@ -1156,47 +1178,50 @@ class Library {
     async GetJsonResult2(json, path, result = []) {
     
         // log("=========", json, path, result);
-
-        let firstKey = path[0];
-        let arrPath = path.slice(1);
-        //let result = isParent ? [] : null;
-        let targetJson = json;
-        if (arrPath.length > 0) {    
-            if (firstKey == '[]') {
-                for (const row of targetJson) {                
-                    //2024.07.22 이건 타지는게 없을듯, 확인 후 삭제 필요
-                    await this.GetJsonResult2(row, arrPath, result);
-                } 
-            } else {
-                targetJson = targetJson[firstKey];
-                // if (isParent) {
-                //     result.push(await GetJsonResult2(targetJson, arrPath));
-                // } else {
-                    await this.GetJsonResult2(targetJson, arrPath, result);
-                // }
-            }
-        } else {
-            let row;
-            if (firstKey == '[]') {
-                //2024.07.22 이건 타지는게 없을듯, 확인 후 삭제 필요
-                row = targetJson;
-                result.push(...row);
-            } else {
-                targetJson = targetJson[firstKey];
-
-                if (typeof targetJson[0] === 'object') {
-                    row = targetJson[0];
-                    // log("out firstKey 1", firstKey, row);
+        try {
+            let firstKey = path[0];
+            let arrPath = path.slice(1);
+            //let result = isParent ? [] : null;
+            let targetJson = json;
+            if (arrPath.length > 0) {    
+                if (firstKey == '[]') {
+                    for (const row of targetJson) {                
+                        //2024.07.22 이건 타지는게 없을듯, 확인 후 삭제 필요
+                        await this.GetJsonResult2(row, arrPath, result);
+                    } 
                 } else {
-                    row = targetJson;
-                    // log("out firstKey 2", firstKey, row);
+                    targetJson = targetJson[firstKey];
+                    // if (isParent) {
+                    //     result.push(await GetJsonResult2(targetJson, arrPath));
+                    // } else {
+                        await this.GetJsonResult2(targetJson, arrPath, result);
+                    // }
                 }
+            } else {
+                let row;
+                if (firstKey == '[]') {
+                    //2024.07.22 이건 타지는게 없을듯, 확인 후 삭제 필요
+                    row = targetJson;
+                    result.push(...row);
+                } else {
+                    targetJson = targetJson[firstKey];
 
-                result.push(row);
+                    if (typeof targetJson[0] === 'object') {
+                        row = targetJson[0];
+                        // log("out firstKey 1", firstKey, row);
+                    } else {
+                        row = targetJson;
+                        // log("out firstKey 2", firstKey, row);
+                    }
+
+                    result.push(row);
+                }
             }
+
+            return result;
+        } catch (ex) {
+            return null
         }
-    
-        return result;
         
     }
 

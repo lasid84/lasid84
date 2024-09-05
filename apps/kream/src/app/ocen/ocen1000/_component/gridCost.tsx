@@ -15,9 +15,10 @@ const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
   initData?: any | null;
+  bkData?: any
 };
 
-const GridCost: React.FC<Props> = memo(({ initData }) => {
+const GridCost: React.FC<Props> = ({ initData, bkData }) => {
   const gridRef = useRef<any | null>(null);
   const { dispatch, objState } = useAppContext();
   const { Create } = useUpdateData2(SP_InsertCost, SEARCH_D);
@@ -51,17 +52,8 @@ const GridCost: React.FC<Props> = memo(({ initData }) => {
   useEffect(() => {
     const gridOption: GridOption = {
       colVisible: {
-        col: [
-          "waybill_no",
-          "charge_code",
-          "charge_desc",
-          "invoice_wb_amt",
-          "vendor_id",
-          "vendor_ref_no",
-          "remark",
-          "use_yn",
-        ],
-        visible: true,
+        col: ["bk_id", "uuid", "sort_id", "import_export_ind","type", "use_yn", "create_date", "create_user", "update_date", "update_user" ],
+        visible: false,
       },
       gridHeight: "60vh",
       checkbox: ["use_yn"],
@@ -69,10 +61,10 @@ const GridCost: React.FC<Props> = memo(({ initData }) => {
         invoice_wb_currency_code: initData[19]?.data.map((row: any) => row["curr"]),
         cost_currency_code: initData[19]?.data.map((row: any) => row["curr"]),
       },
-      icon : {
-        icon : IconSelect,
-        //vendor_id : IconSelect
-      },
+      // icon : {
+      //   icon : IconSelect,
+      //   vendor_id : IconSelect
+      // },
       maxWidth: { use_yn: 120 },
       minWidth: {
         use_yn: 70,
@@ -83,7 +75,7 @@ const GridCost: React.FC<Props> = memo(({ initData }) => {
       isAutoFitColData: false,
     };
     setGridOptions(gridOption);
-  }, []);
+  }, [initData, bkData]);
 
   //add - save - update 시 또 add됨
   const onSave = () => {
@@ -110,6 +102,7 @@ const GridCost: React.FC<Props> = memo(({ initData }) => {
       bk_id: objState.MselectedTab,
       use_yn: true,
       type: 'I',
+      waybill_no: bkData?.waybill_no?.split(',').shift()
     });
   };
 
@@ -134,6 +127,6 @@ const GridCost: React.FC<Props> = memo(({ initData }) => {
       </PageBKCargo>
     </>
   );
-});
+};
 
 export default GridCost;

@@ -7,7 +7,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 import { SP_UpdateData } from "@/app/stnd/stnd0005/_component/data";
 import { usePathname } from "next/navigation";
 import { shallow } from "zustand/shallow";
-import { ROW_CHANGED, ROW_TYPE_NEW } from "../grid/ag-grid-enterprise";
+import { ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "../grid/ag-grid-enterprise";
 
 export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?: any) => {
   
@@ -20,7 +20,7 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
     user_id: user_id,
     ipaddr: ipaddr
   }
-  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, { ...option});
+  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, option);
   // log('useGetData', queryNm, searchParam, isLoading)
   return { data, isLoading, isError, refetch, remove }
 };
@@ -64,7 +64,6 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
   const Update = useMutation([path + queryKey], mutationFn, {
     // ...option,
     onSuccess: (res:any, data:any, context:any) => {
-      log("onSuccess : ", data, path, queryKey)
       // queryClient.invalidateQueries([path + queryKey]);
       if (option?.callbacks) {
         option.callbacks.forEach((callback: () => any) => callback());
@@ -80,20 +79,22 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
 
   const Create = useMutation(['key'], mutationFn, {
     onSuccess: (res:any, data:any, context:any) => {
-      // log("onSuccess : ", data, res, context)
-      queryClient.invalidateQueries([path + queryKey])
+      if (option?.callbacks) {
+        option.callbacks.forEach((callback: () => any) => callback());
+      }
+      // queryClient.invalidateQueries([path + queryKey])
       data[ROW_CHANGED] = false;
-      data[ROW_TYPE_NEW] = null;
+      data[ROW_TYPE] = null;
     },
     onMutate: async (data) => {
       data["menu_seq"] = menu_seq;
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;
     },
-    // onError: (err, data, context) => {
-    //   console.log('PLEASE TRY AGAIN')
-    //   return { err, data, context }
-    // }
+    onError: (err, data, context) => {
+      // console.log('PLEASE TRY AGAIN')
+      // return { err, data, context }
+    }
   })
   return {
     Update,

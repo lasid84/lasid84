@@ -256,25 +256,19 @@ export const DropButton: React.FC<ButtonProps> = (props) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
+    
+    if (dataSrc && dataSrc.data && dataSrc.data.length > 0) {
+      setDropdownVisible((prev) => !prev);
+    } 
+  };
+  
+  const handleSelect = (item: any) => {
     var data = {
       menucode: pathName,
       buttontype: id,
     };
     Create.mutate(data);
-
-    if (onClick) onClick(e);
-
-    if (dataSrc && dataSrc.data && dataSrc.data.length > 0) {
-
-      setDropdownVisible((prev) => !prev);
-    } else if (onClick) {
-      onClick(e);
-    }
-  };
-  
-  const handleSelect = (item: any) => {
-    log('item',item)
-    //setSelectedItem(item[dataSrc?.data]);
+    
     setDropdownVisible(false);
     if (onClick) onClick(item); 
   };

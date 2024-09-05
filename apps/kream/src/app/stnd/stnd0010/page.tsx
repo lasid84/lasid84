@@ -10,6 +10,7 @@ import SearchForm from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
 import { TableContext } from "@/components/provider/contextObjectProvider";
 import Grid from './_component/gridMaster';
+import { FormProvider, useForm } from "react-hook-form";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -30,17 +31,35 @@ export default function STND0010() {
     const { objState } = state;
     const { searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen } = objState;
 
+    const methods = useForm({
+        defaultValues: {
+          trans_mode: 'ALL',
+        }
+      });
+    
+      const {
+        handleSubmit,
+        reset,
+        setFocus,
+        setValue,
+        getValues,
+        register,
+        formState: { errors, isSubmitSuccessful },
+      } = methods;
+
     const val = useMemo(() => { return { objState, dispatch } }, [state]);
     const { data: initData } = useGetData('', LOAD, SP_Load, { staleTime: 1000 * 60 * 60 });
 
     return (
         <TableContext.Provider value={val}>
-            <div className={`w-full h-full`}>
-                <SearchForm loadItem={initData} />
-                <div className={`w-full h-[calc(100vh-150px)]`}>
-                    <Grid initData={initData} />
+            <FormProvider {...methods}>
+                <div className={`w-full h-full`}>
+                    <SearchForm loadItem={initData} />
+                    <div className={`w-full h-[calc(100vh-150px)]`}>
+                        <Grid initData={initData} />
+                    </div>
                 </div>
-            </div>
+            </FormProvider>
         </TableContext.Provider>
     );
 }

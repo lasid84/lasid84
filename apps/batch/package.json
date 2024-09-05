@@ -10,11 +10,12 @@
     "lint": "echo 'Add lint script here'"
   },
   "dependencies": {
+    "@repo/kwe-lib": "*",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
     "fs": "0.0.1-security",
     "puppeteer": "^21.5.2",
     "ts-node": "^10.9.1",
-    "@repo/kwe-lib": "*",
-    "body-parser": "^1.20.2",
     "tsup": "^6.0.1"
   },
   "devDependencies": {

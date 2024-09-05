@@ -5,7 +5,7 @@ import { useUserSettings } from "states/useUserSettings"
 import { navigate, getSession, getCookies, getToken, getHeaders } from './serverAction';
 import { toastSuccess, toastWaring } from "components/toast";
 
-const { init, dataCall, postCall, getCall } = require('@repo/kwe-lib/components/api.service');
+const { initAPIService, apiCallPost, init, dataCall, postCall, getCall } = require('@repo/kwe-lib/components/api.service');
 // import { init, dataCall, postCall } from '@repo/kwe-lib/components/api.service';
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { sleep } = require('@repo/kwe-lib/components/sleep');
@@ -43,6 +43,7 @@ export interface returnData {
     textData: string;
   }
 
+
 function initConfig(isAuth: boolean | undefined | null, token:any) {
 
     const config = {
@@ -50,6 +51,7 @@ function initConfig(isAuth: boolean | undefined | null, token:any) {
         url: process.env.NEXT_PUBLIC_API_URL,
         accessToken: token,
         // host: new URL(process.env.NEXT_PUBLIC_API_URL!).host //new URL(process.env.NEXT_PUBLIC_KREAM_URL!).host
+
     }
     return config;
 }
@@ -93,6 +95,7 @@ export async function executFunction(params:exeFuncParams) {
         if (numericData !== 0) {
             toastWaring((numericData + " : " + textData))
             // log("==",numericData + " : " + textData);
+            throw new Error(numericData + " : " + textData);
             return null;
         }
         if (isShowComplete) {
@@ -101,6 +104,7 @@ export async function executFunction(params:exeFuncParams) {
         return cursorData;
     } catch (err) {
         const typedErr = err as Error
+        throw new Error(typedErr.message);
         log("executFunction", typedErr.message);
     } finally {
         // useUserSettings.getState().actions.setData({ loading: "OFF" });
@@ -124,6 +128,19 @@ export async function callUnipass(apiType:string, body:any) {
     };
     return await postCall(config);
 }
+
+// export const callSendEmail = async (params:exeFuncParams, attachments) => {
+//     const session = await getSession();
+//     if (!session) {        
+//         return navigate('/login');
+//     }
+
+//     const client = initAPIService("2");
+//     const params = {
+
+//     }
+//     return await apiCallPost(client, exeFuncParams);
+// }
 
 export async function checkADLogin(params:checkLogin) {
     const initial = await initConfig(false, "");

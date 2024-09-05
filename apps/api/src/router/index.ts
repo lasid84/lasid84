@@ -19,6 +19,7 @@ const v1: Router = Router();
 const authRoutes: Router = Router();
 const checkRoutes: Router = Router();
 const dataRoutes: Router = Router();
+const mailingRoutes: Router = Router();
 
 /**
  * @dev

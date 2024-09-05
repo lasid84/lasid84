@@ -1,18 +1,20 @@
 'use client'
 
-import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import React, { useState, useEffect, Dispatch, useContext, memo, useCallback } from "react";
+import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
-import { MaskedInputField, Input } from 'components/input';
+import { MaskedInputField, Input, TextArea } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { DateInput, DatePicker } from 'components/date'
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
-import { useGetData } from "components/react-query/useMyQuery";
+import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
-import { SP_GetPickupContData, SP_GetCarrierContData } from "./data";
+import { SP_GetPickupContData, SP_GetCarrierContData, SP_SendEmail } from "./data";
+import { SP_GetTransPortData } from "@/app/stnd/stnd0012/_component/data";
 import PicupPlacePopUp from "./popPickupcont"
+import TransportEmailRcvPopup from "./popEmailRcvList"
 import CarrierContPopUp from "./popCarriercont";
 import { Button } from "components/button";
 import dayjs from "dayjs";
@@ -20,6 +22,7 @@ import { SP_GetDetailData } from "@/components/commonForm/customerPickupPlace/_c
 import { SP_GetCYContactData } from "@/components/commonForm/containerYardContact/_component/data";
 import { SP_GetMasterData } from "@/app/ocen/ocen0004/_component/data";
 import CYPlaceContPopUp from './popCyPlaceCont';
+import { TRANPOSRT_EMAIL_LIST_OE } from "@/components/commonForm/mailReceiver/_component/data";
 
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -51,24 +54,15 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   const { data: cyPlaceContData, refetch: cyPlaceContRefetch } = useGetData({ place_code: bkData?.cy_place_code, cont_type: trans_mode + trans_type }, "CYContacotr", SP_GetCYContactData, { enable: true });
   const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
   const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
+  const { data: transportCompData, refetch: transportCompRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "TransportCompany", SP_GetTransPortData, { enable: true });
+
+  const { Create: sendEmail } = useUpdateData2(SP_SendEmail, '');
   
   // const [cyPlace, setCyPlace] = useState<any>()
   const [carriercode, setCarrierCode] = useState<any>()
   const [port, setPort] = useState<any>()
   const [ isRefreshCyCont, setRefreshCyCont ] = useState(false);
-  const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
-
-  const methods = useForm({
-    defaultValues: {
-      doc_close_dd: dayjs().format('YYYYMMDD')
-    }
-  });
-
-  const {
-    handleSubmit,
-    getValues,
-    formState: { errors, isSubmitSuccessful },
-  } = methods;
+  const { getValues } = useFormContext();
 
   useEffect(() => {
     if (loadItem) {
@@ -76,6 +70,10 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
       setPort(loadItem[18]);
     }
   }, [])
+
+  useEffect(() => {
+    log("cyPlaceData", bkData);
+  }, [cyPlaceData])
 
   useEffect(()=> {
     if (isRefreshCyCont && cyPlaceContData && crTaskContData && crSalesContData && bkData) {
@@ -92,21 +90,37 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
 
   const handleButtonClick = (e:any) => {
     switch (e.target.id) {
-      case "pickup_manage":
+      case "btn_pickup_manage":
         dispatch({ isPickupPopupOpen: true });
         break;
       case "cy_manage":
         dispatch({ isCYPopupOpen: true });
         break;
-      case "cy_cont_manage":
+      case "btn_cy_cont_manage":
         dispatch({ isCYContPopupOpen: true });
         break;
       case "carrier_manage":
           dispatch({ isCarrierContPopupOpen: true });
         break;  
+      case "btn_transport_email":
+          dispatch({ isMailRcvPopupOpen: true });
+        break;  
+      case "btn_transport_send_email":
+        sendTransPortEmail();
+        break;
     }
   }
 
+  const sendTransPortEmail = useCallback(async () => {
+    log("sendTransPortEmail", bkData)
+    await sendEmail.mutateAsync({...bkData, pgm_code: TRANPOSRT_EMAIL_LIST_OE + bkData?.transport_company}, {
+      onSuccess(data, variables, context) {
+      },
+    })
+    .catch(() => {});
+  }, []);
+    
+  
   return (
     <div className="w-full">
         <PageContent
@@ -127,11 +141,11 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     isDisplay={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        if (bkData?.carrier_code != value) {
-                          setRefreshCrCont(true);
-                          dispatch({[MselectedTab]: {...bkData, carrier_code:value }});
-                          log("onSelectionChanged carrier_code", id, value);
-                        }
+                        // if (bkData?.carrier_code != value) {
+                        //   setRefreshCrCont(true);
+                        //   dispatch({[MselectedTab]: {...bkData, carrier_code:value }});
+                        //   log("onSelectionChanged carrier_code", id, value);
+                        // }
                       },
                     }}
                   />
@@ -211,19 +225,50 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
             <PageSearch
               right={
                 <>
-                  <Button id={"pickup_manage"} label={"manage_pickup"} onClick={handleButtonClick} width="w-24"   />
+                  <Button id={"btn_pickup_manage"} label={"manage_pickup"} onClick={handleButtonClick} width="w-24" disabled={bkData?.shipper_id ? false : true} />
                   {/* <Button id={"cy_manage"} label={"manage_cy"} onClick={handleButtonClick} width="w-30"   /> */}
-                  <Button id={"cy_cont_manage"} label={"manage_cont_cy"} onClick={handleButtonClick} width="w-24"/>
+                  <Button id={"btn_cy_cont_manage"} label={"manage_cont_cy"} onClick={handleButtonClick} width="w-24"/>
 
                 </>}>
               <>
                 <PicupPlacePopUp callbacks={[pickupRefetch]} />
                 <CYPlaceContPopUp callbacks={[cyPlaceContRefetch]} />
+                <TransportEmailRcvPopup cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
                 <div className="col-start-1 col-end-2"> 
                   <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
                 </div>
                 <MaskedInputField id="pickup_tm" value={bkData?.pickup_tm} options={{ isReadOnly: false, type: 'time' }} />
-                <MaskedInputField id="transport_company" value={bkData?.transport_company} options={{ isReadOnly: false }} />
+                {/* <MaskedInputField id="transport_company" value={bkData?.transport_company} options={{ isReadOnly: false }} /> */}
+                <CustomSelect
+                    id="transport_company"
+                    listItem={transportCompData as gridData}
+                    valueCol={["cust_code"]}
+                    displayCol="cust_nm"
+                    gridOption={{
+                      colVisible: { col: ["cust_code", "cust_nm", "bz_reg_no"], visible: true },
+                    }}
+                    gridStyle={{ width: '800px', height: '300px' }}
+                    style={{ width: '1000px', height: "8px" }}
+                    defaultValue={bkData?.transport_company}
+                    isDisplay={true}
+                    events={{
+                      onSelectionChanged(e, id, value) {
+                        if (!bkData) return;
+                        log("transport_company onChange", bkData, id, value)
+                        var selectedRow = e.api.getSelectedRows()[0];
+                        // bkData.transport_company_nm = selectedRow.cust_nm;
+                        
+                        if (bkData?.transport_company != value) {
+                          dispatch({[MselectedTab]: {...bkData, transport_company:value}});
+                          // log("onSelectionChanged", id, value);
+                        }
+                      },
+                    }}
+                  />
+                <div>                  
+                  <Button id={"btn_transport_email"} label="mail_rcvlist" width="w-20" onClick={handleButtonClick} disabled={bkData?.transport_company ? false : true}/>
+                  <Button id={"btn_transport_send_email"} label="send_email" width="w-20" onClick={handleButtonClick} disabled={bkData?.transport_company ? false : true}/>
+                </div>
                 <div className="col-start-1 col-end-6"><br></br></div>
                 <div className={"col-start-1 col-span-2"}>
                   <CustomSelect
@@ -238,16 +283,19 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     }}
                     gridStyle={{ width: '800px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
+                    // defaultValue={bkData?.pickup_seq}
                     defaultValue={bkData?.pickup_seq}
                     isDisplay={true}
                     events={{
                       onChanged: (e) => {
+                        // log("pickup_seq onChange", e, bkData)
                         if (!bkData) return;
-                        bkData.pickup_nm = e?.pickup_nm;
-                        bkData.pickup_addr = e?.addr;
-                        bkData.pickup_pic_nm = e?.pic_nm;
-                        bkData.pickup_email = e?.email;
-                        bkData.pickup_tel_num = e?.tel_num;
+                        bkData.pickup_nm = !e ? null : e.pickup_nm;
+                        bkData.pickup_addr = !e ? null : e.addr;
+                        bkData.pickup_pic_nm = !e ? null : e.pic_nm;
+                        bkData.pickup_email = !e ? null : e.email;
+                        bkData.pickup_tel_num = !e ? null : e.tel_num;
+                        bkData.pickup_remark = !e ? null : e.remark;
                         dispatch({[MselectedTab]: {...bkData}});
                       },
                     }}
@@ -258,14 +306,15 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <div className={"col-start-1"}><MaskedInputField id="pickup_pic_nm" value={bkData?.pickup_pic_nm} options={{ isReadOnly: true }} /></div>
                 <MaskedInputField id="pickup_email" value={bkData?.pickup_email} options={{ isReadOnly: true }} />
                 <MaskedInputField id="pickup_tel_num" value={bkData?.pickup_tel_num} options={{ isReadOnly: true }} />
-                <div className="col-start-1 col-end-6"><br></br>  </div>
-                <div className={"col-start-1 col-span-2"}>
+                <div className="col-start-1 col-end-6 "><TextArea id="pickup_remark" rows={3} cols={32} value={bkData?.pickup_remark} options={{ isReadOnly: true }} /></div>
+
+                {/* <div className={"col-start-1 col-span-2"}> */}
                   <CustomSelect
                     id="cy_place_code"
                     initText='Select an Container Yard'
                     listItem={cyPlaceData as gridData}
                     valueCol={["place_code", "place_nm"]}
-                    displayCol="place_nm"
+                    displayCol="place_code"
                     gridOption={{
                       colVisible: { col: ["place_code", "place_nm", "area_nm", "addr"], visible: true },
                     }}
@@ -287,8 +336,8 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                       }
                       }}}
                   />
-                </div>
-                {/* <MaskedInputField id="cy_place_code_nm" value={data?.cy_place_code_nm} options={{ isReadOnly: false }} /> */}
+                {/* </div> */}
+                <MaskedInputField id="cy_place_nm" value={bkData?.cy_place_nm} options={{ isReadOnly: true }} />
                 <MaskedInputField id="cy_place_area" value={bkData?.cy_area_nm} options={{ isReadOnly: true }} />
                 <div className="col-span-2"><MaskedInputField id="cy_place_addr" value={bkData?.cy_addr} options={{ isReadOnly: true }} /></div>
 
@@ -304,6 +353,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     }}
                     gridStyle={{ width: '800px', height: '300px' }}
                     style={{ width: '1000px', height: "8px" }}
+                    // defaultValue={bkData?.cy_cont_seq}
                     defaultValue={bkData?.cy_cont_seq}
                     isDisplay={true}
                     // events={{
@@ -333,6 +383,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
               </>
             </PageSearch>
           </div>
+          <div className="col-start-1 col-end-6"> <hr></hr>  </div>
         </PageContent>
       </div>
   );

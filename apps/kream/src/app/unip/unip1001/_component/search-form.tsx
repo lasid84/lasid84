@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect, Dispatch, useContext, memo, useTransition, KeyboardEvent } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import React, { useState, useEffect, Dispatch, useContext, memo, useTransition, KeyboardEvent, useRef } from "react";
+import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { useUserSettings } from "states/useUserSettings";
@@ -12,6 +12,9 @@ import dayjs from "dayjs";
 import { MaskedInputField } from "components/input";
 import { toastError } from "@/components/toast";
 import { useTranslation } from "react-i18next";
+import RadioGroup from "@/components/radio/RadioGroup";
+import Radio from "@/components/radio";
+import RadioGroupField from "@/components/radio/mui/muiRadioGroup";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -29,25 +32,9 @@ const SearchForm = memo(({ loadItem }: any) => {
   const { t } = useTranslation();
   const { dispatch, objState } = useAppContext();
   const { searchParams } = objState;
-
-  // const methods = useForm<FormType>({
-  const methods = useForm({
-    // resolver: zodResolver(formSchema),
-    defaultValues: {
-      blyy: dayjs().year().toString(),
-      blno: ''
-    }
-  });
-
-  const {
-    handleSubmit,
-    reset,
-    setFocus,
-    setValue,
-    getValues,
-    register,
-    formState: { errors, isSubmitSuccessful },
-  } = methods;
+  const { getValues, setFocus, handleSubmit, reset, trigger } = useFormContext();
+  const [ blNoFocus, setBLNoFocus] = useState(false);
+  const [ blyy, setBLYY ] = useState(getValues('blyy'));
 
   useEffect(() => {
     const params = getValues();
@@ -56,9 +43,10 @@ const SearchForm = memo(({ loadItem }: any) => {
 
   const onSearch = () => {
     const params = getValues();
+    log("params", params)
     if (!params.blyy || !params.blno) {
       toastError(t("MSG_0173"));
-      setFocus("blno", { shouldSelect: true });
+      // setFocus("blno", { shouldSelect: true });
       return;
     }
     dispatch({ searchParams: params, isMSearch: true });
@@ -70,26 +58,53 @@ const SearchForm = memo(({ loadItem }: any) => {
     }
   }
 
+  const onReset = async () => {
+    reset();
+    const params = getValues();
+    log("reset params", params)
+    dispatch({ searchParams: params});
+    setBLNoFocus(true);
+  }
+
+  const onChange = () => {
+    
+  }
+
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="flex space-y-1">
         <PageSearchButton
           right={
             <>
               <Button id={"search"} onClick={onSearch} width='w-32'/>
+              <Button id={"reset"} onClick={onReset} width='w-32'/>
             </>
           }>
-          <MaskedInputField id="blyy" label="blyy" value={getValues("blyy")} options={{ textAlign: 'center', inline: true, noLabel: false }} width="w-20" height='h-8' />
-          <div className={"col-span-4"}>
-          <MaskedInputField id="blno" label="house_bl_no" value={searchParams.blno} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' 
+          <div className={"col-span-1 border"}>
+            {/* <RadioGroup id="search_gubn" >
+              <Radio id ="search_gubn1" value="0" label="detail" defaultChecked={getValues('search_gubn')=== "0"}/>
+              <Radio id ="search_gubn2" value="1" label="summary" defaultChecked={getValues('search_gubn')=== "1"} />
+            </RadioGroup> */}
+            <RadioGroupField
+              id="search_gubn"
+              dataSrc={[
+                { value : '0', label:'detail'},
+                { value : '1', label:'summary'}
+              ]}
+            />
+          </div>
+          <MaskedInputField id="blyy"  label="blyy" value={searchParams.blyy} options={{ textAlign: 'center', inline: true, noLabel: false, limit:4 }} width="w-20" height='h-8' />
+          <div className={"col-span-3"}>
+          <MaskedInputField id="blno" label="house_bl_no" value={getValues('blno')} options={{ textAlign: 'center', inline: true, noLabel: false }} height='h-8' isFocus={blNoFocus}
             events={{
-              onKeyDown: handleKeyDown
+              onKeyDown: handleKeyDown,
+              onFocus(e) {
+                  e.target.select();
+                  setBLNoFocus(false);
+              },
             }}
           />
           </div>
         </PageSearchButton>
-      </form>
-    </FormProvider>
+      // </form>
   );
 });
 

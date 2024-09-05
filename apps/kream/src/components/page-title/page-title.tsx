@@ -60,6 +60,7 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
   const [title, setTitle] = useState('');
 
   const navigation = useNavigation((state) => state.navigation);
+  const isReady = useNavigation((state) => state.isReady);
   const router = useRouter();
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
@@ -69,15 +70,19 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
   // const title = getMenuTitle(navigation, menu_seq);
 
   useEffect(() => {
+    log("isReady: ", isReady)
+    if (!isReady) return;
+
     let title = getMenuTitle(navigation, menu_seq) || '';
     setTitle(title)
 
+    log("isReady menu_seq, title: ", menu_seq, title)
     if (menu_seq !== 0 && title === '') {
       setTitle(title)
       toastError("권한이 없습니다.")
       router.replace('/');
     }
-  }, [navigation, menu_seq])
+  }, [isReady, navigation, menu_seq])
 
   return (
     // <div className="w-full">

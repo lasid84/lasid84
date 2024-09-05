@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
+import { useEffect, useReducer, useMemo, useCallback, useRef, useState, memo } from "react";
 import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./_component/data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
@@ -39,10 +39,10 @@ const CustPickupPlace: React.FC<Props> = ({ ref = null, initData, params }) => {
         colVisible: { col: ["cust_code", "pickup_seq", "fax_num", "create_date", "create_user"], visible: false },
         gridHeight: "h-full",
         checkbox: ["use_yn", "def"],
-        minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
+        minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 20, "def": 20 },
         // maxWidth : {"use_yn": 80, "def": 80  },
         editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
-        dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
+        dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno", "remark":"largetext" },
         isAutoFitColData: false,
     };
 
@@ -80,8 +80,8 @@ const CustPickupPlace: React.FC<Props> = ({ ref = null, initData, params }) => {
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow)
-        dispatch({ dSelectedRow: selectedRow });
+        // log("handleSelectionChanged", selectedRow)
+        // dispatch({ dSelectedRow: selectedRow });
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };

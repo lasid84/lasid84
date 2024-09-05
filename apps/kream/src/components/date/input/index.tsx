@@ -68,7 +68,7 @@ export const DateInput: React.FC<InputProps> = (props) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    log("handleChange", e.target.value, getValues());
+    // log("handleChange", e.target.value, getValues());
     setValue(id, e.target.value);
     // setSelectedVal({value:e.value, label:e.label});
     setSelectedVal(e.target.value);

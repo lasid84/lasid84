@@ -2,7 +2,7 @@
 
 
 import React, { useState, useEffect, memo } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
@@ -31,26 +31,11 @@ const SearchForm = memo(({ loadItem }: any) => {
 
   log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
-
-  const methods = useForm({
-    defaultValues: {
-      trans_mode: 'ALL',
-    }
-  });
-
-  const {
-    handleSubmit,
-    reset,
-    setFocus,
-    setValue,
-    getValues,
-    register,
-    formState: { errors, isSubmitSuccessful },
-  } = methods;
-
+  const { getValues } = useFormContext();
+  
   // //Set select box data
   const [transmode, setTransmode] = useState<any>()
-
+  
   useEffect(() => {
     if (loadItem?.length) {
       setTransmode(loadItem[0])
@@ -70,27 +55,23 @@ const SearchForm = memo(({ loadItem }: any) => {
 
   return (
     <>
-      <FormProvider {...methods}>
-        <form className="space-y-1">
-          <PageSearchButton
-            right={
-              <>
-                <Button id={"search"} onClick={onSearch} width="w-32"/>
-                <Button id={"interface"} onClick={onInterface} width="w-32"/>
-              </>
-            }>
+      <PageSearchButton
+        right={
+          <>
+            <Button id={"search"} onClick={onSearch} width="w-32"/>
+            <Button id={"interface"} onClick={onInterface} width="w-32"/>
+          </>
+        }>
 
-            <ReactSelect
-              id="trans_mode" label="trans_mode" dataSrc={transmode as data}
-              options={{
-                keyCol: "trans_mode",
-                displayCol: ['trans_mode', 'trans_detail'],
-                defaultValue: getValues('trans_mode')
-              }}
-            />
-          </PageSearchButton>
-        </form>
-      </FormProvider>
+        <ReactSelect
+          id="trans_mode" label="trans_mode" dataSrc={transmode as data}
+          options={{
+            keyCol: "trans_mode",
+            displayCol: ['trans_mode', 'trans_detail'],
+            defaultValue: getValues('trans_mode')
+          }}
+        />
+      </PageSearchButton>
       <Modal pgm_code={SCRAP_UFSP_PROFILE_PORT}/>
     </>
   );
