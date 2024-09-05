@@ -95,10 +95,8 @@ const CargoFCL = memo(
 
     
     const handleCheckBoxClick = (id : string, val : any) => {
-      const value = val ? 'Y': 'N'
-      const replaced_id = id.split("-").reverse()[0]
-      onValueChange(cargoItem.seq, replaced_id, value, index);
-         
+      const replaced_id = id.split("-")[0]
+      onValueChange(cargoItem.seq, replaced_id, val, index);         
     }
 
     const handleFieldReadOnly = (field: string) => {

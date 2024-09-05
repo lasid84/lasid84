@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
+const { log, error } = require('@repo/kwe-lib/components/logHelper');
 
 export type CheckboxProps = {
   id: string;
@@ -34,12 +35,36 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
   const [ checkVal, setChceckVal ] = useState(false);
 
   //event.target.checked 동작오류로 주석처리
-  // useEffect(() => {
-  //   let isChecked = value === 'Y' ? true : false
-  //   //log('???', value, isChecked)
-  //   setChceckVal(isChecked);
-  //   setValue(id, value);
-  // }, [value])
+  useEffect(() => {
+    //let isChecked = value === 'Y' ? true : false
+    //log('???', value, isChecked)
+    //setChceckVal(isChecked);
+    setValue(id, value);
+  }, [value])
+
+  const  handleKeyDown =  (e:any)=>{
+    try {
+        if(e.key ==="Enter"){          
+        e.preventDefault();  // 기본 엔터 동작을 막음
+        const form = e.target.form.elements;
+        var index = Array.prototype.indexOf.call(form, e.target);
+
+        //필드셋과 버튼은 포커스 제외 - stephen
+        while ((form[index + 1] instanceof HTMLButtonElement) 
+          || (form[index + 1] instanceof HTMLFieldSetElement) 
+          || (form[index + 1].readOnly === true)
+        ) index++;
+
+        // 다음 요소가 input일 경우 포커스 이동
+        if (form[index + 1]) {
+            form[index + 1].focus();
+        }
+        }
+    }catch (ex) {
+      error(ex)
+    }
+
+  }
 
   return (
     <InputWrapper outerClassName={` ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline} >
@@ -53,21 +78,18 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
           checked={checkVal}
           type="checkbox"
           className="items-center w-6 h-6 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"
+          onKeyDown={handleKeyDown}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            if (readOnly) return;            
+            if (readOnly) return;
             setChceckVal(e.target.checked);
-            setValue(id, e.target.checked ? 'Y' : 'N');
+            //setValue(id, e.target.checked ? 'Y' : 'N');
             if (events?.onChange) {
-              //events.onChange(e);
-              events.onChange(id, checkVal)
+              events.onChange(id, e.target.checked ===true ? 'Y' : 'N')
             }
               
           }}
           />
       </div>
-      {/* <div className="space-y-1 text-sm">
-        <div className="block font-medium text-gray-700 shrink-0 whitespace-nowrap">{t(label?label:id)}</div>
-      </div> */}
     </div>
     </InputWrapper>
   );
