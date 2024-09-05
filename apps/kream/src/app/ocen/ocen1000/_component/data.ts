@@ -725,7 +725,7 @@ export const SP_InsertCargo = async (param: any) => {
           , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
           , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
-          , hs_cd 			     , length         , width 			        , height 			
+          , hs_cd 			     , length         , width 			        , height 			        , class:cargo_class
           , weight           , soc            , empty               , temp 
           , vent 			       , un_no 	        , remark              , use_yn 
           , user_id          , ipaddr
@@ -789,7 +789,7 @@ export const SP_InsertCargo = async (param: any) => {
       , temp 
       , vent 			
       , un_no 					
-      , "class"	 //class ????				
+      , cargo_class		
       , volume_factor   
       , commodity_cd 
       , hs_cd 
@@ -822,7 +822,7 @@ export const SP_UpdateCargo = async (param: any) => {
           , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
           , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
-          , hs_cd 			     , length         , width 			        , height 			
+          , hs_cd 			     , length         , width 			        , height 			        , class: cargo_class
           , weight           , soc            , empty               , temp 
           , vent 			       , un_no 	        , remark              , use_yn 
           , user_id          , ipaddr
@@ -885,7 +885,7 @@ export const SP_UpdateCargo = async (param: any) => {
       , temp 
       , vent 			
       , un_no 					
-      , "class"	 //class ????				
+      , cargo_class
       , volume_factor   
       , commodity_cd 
       , hs_cd 

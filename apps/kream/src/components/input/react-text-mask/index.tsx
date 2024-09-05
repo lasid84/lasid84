@@ -48,7 +48,7 @@ type Props = {
   };
 
   events?: {
-    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: ChangeEvent<HTMLInputElement>, dataType?:string) => void;
     onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
     onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
     onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
@@ -155,9 +155,23 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
     setSelectedVal(e?.target?.value);
 
     if (events?.onChange) {
-      events.onChange(e);
+      events.onChange(e, type);
     }
   }
+
+  // const handleChange = (dataType: string) => (e:ChangeEvent<HTMLInputElement>) {
+  //     log("handleChange 고차함수", e?.target?.value)
+
+  //   if (id && !isNotManageSetValue) {
+  //     // log("handleChange in if", id, e?.target?.value.replaceAll(":", ""))
+  //     setValue(id, e?.target?.value.replaceAll(":", ""));
+  //   }
+  //   setSelectedVal(e?.target?.value);
+
+  //   if (events?.onChange) {
+  //     events.onChange(e);
+  //   }
+  // }
 
   function handleFocus(e: FocusEvent<HTMLInputElement>) {
     // log("handleFocus", e.target?.value, getValues(id))

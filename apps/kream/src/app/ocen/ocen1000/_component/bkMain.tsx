@@ -137,7 +137,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       events={{
                         onSelectionChanged: async (e, id, value) => {
                           let selectedRow = await e.api.getSelectedRows()[0];
-                          await dispatch({[MselectedTab]:{...bkData, ...selectedRow}});
+                          await dispatch({[MselectedTab]:{...bkData, ...selectedRow, [ROW_CHANGED]:true}});
                         },
                       }} 
                     />
@@ -205,7 +205,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       onSelectionChanged: (e, id, value) => {
                         if (bkData?.shipper_id != value) {
                             setRefreshShpCont(true);
-                            dispatch({[MselectedTab]: {...bkData, shipper_id:value}});
+                            dispatch({[MselectedTab]: {...bkData, shipper_id:value, [ROW_CHANGED]:true}});
                             // log("onSelectionChanged", id, value);
                         }
                       },
@@ -283,7 +283,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       onSelectionChanged: (e, id, value) => {
                         if (bkData?.carr_shipper_id != value) {
                             setRefreshShpCont(true);
-                            dispatch({[MselectedTab]: {...bkData, carr_shipper_id:value}});
+                            dispatch({[MselectedTab]: {...bkData, carr_shipper_id:value, [ROW_CHANGED]:true}});
                             // log("onSelectionChanged", id, value);
                         }
                       },

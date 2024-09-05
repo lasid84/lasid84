@@ -75,7 +75,7 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
       isAutoFitColData: false,
     };
     setGridOptions(gridOption);
-  }, [initData]);
+  }, [initData, bkData]);
 
   //add - save - update 시 또 add됨
   const onSave = () => {

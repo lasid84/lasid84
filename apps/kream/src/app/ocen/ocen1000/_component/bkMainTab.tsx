@@ -89,7 +89,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         },
       })
     } else {
-      if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val)) {
+      if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};
         Update.mutate(updateData);
