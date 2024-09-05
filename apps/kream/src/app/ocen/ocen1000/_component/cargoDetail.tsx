@@ -60,7 +60,7 @@ export const initialCargo = {
   gross_uom: "",
   measurement: "",
   measurement_uom: "",
-  // dg_yn: false,
+  dg_yn: false,
   length: 0,
   width: 0,
   height: 0,
@@ -84,24 +84,27 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
   const { Create } = useUpdateData2(SP_InsertCargo);
   const { Update } = useUpdateData2(SP_UpdateCargo);
 
-useEffect(()=>{
-  //1. bkData?.cargo.svc_tye 이 변할때, cargo 객체배열 초기화 로직추가?
-  //2. handleDelete 함수 내에서.. bkData.cargo 상태 업데이트 전에, 
-  // db에서 가져온데이터라는 뜻이고(삭제), XXXXX해당item의 __changed 키 항목이 아예 존재하지않는경우
-  //  use_yn='N'로 상태값만 업데이트해서 bkData.cargo에 데이터가 들어있어야한다
-  // 다만 이것은 cargoItem.map 으로 랜더링되면 안된다 (use_yn='N'인 경우)
-
-
-})
 
 const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
-  //log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
-
-  // 그룹으로 기존 항목 필터링 (기존에 seq와 동일한 group 값을 가진 cargo 들을 제거)
-  const filteredCargoList = bkData.cargo.filter((item: any) => item.group !== seq);
-
+  // log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
+  // 그룹으로 기존 항목 필터링 : (기존에 seq와 동일한 group 값을 가지고, piece=null인 cargo 제거) 
+  // 하면 좋겠지만 __ROWTYPE KEY가 존재하지않으면 DB에있는 데이터이므로 item.use_yn='N'업데이트 하고 필터링되지않고 cargo객체에 남아있어야함...
+  
+  
+  const filteredCargoList = bkData.cargo.map((item:any)=>{
+      if(item.group === seq && item.piece === null && !item.__ROWTYPE ){
+          return {...item, use_yn:'N',__changed : true, }
+      }else if(item.group === seq && item.piece === null && item.__ROWTYPE  ){
+        return null
+      }
+      return item
+  })
+  
   const updatedCargoList = filteredCargoList.reduce((acc:any, item:any, i:any) => {
     acc.push(item);
+    
+    // 일치하는 cargo의 piece 업데이트
+    if (item.seq === seq) {item.piece = pieceCount, item.__changed = true}
     if (i === index) {
         const maxSeq = Math.max(...bkData.cargo.map((item: any) => item.seq)); // 최대 seq 값 찾기
         const newCargoItems = Array.from({ length: pieceCount - 1 }, (_, j) => ({
@@ -112,7 +115,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
             group: seq, //group index를 생성
             piece : null,
             isHandlePieceChange: true, // 플래그 추가
-            use_yn : 'Y'
+            use_yn : 'Y',            
         }));
         acc.push(...newCargoItems);
     }

@@ -111,6 +111,13 @@ const CargoFCL = memo(
       onValueChange(cargoItem.seq, replaced_id, value, index);
     };
 
+    const handleCheckBoxClick = (id : string, val : any) => {
+      const value = val ? 'Y': 'N'
+      const replaced_id = id.split("-").reverse()[0]
+      onValueChange(cargoItem.seq, replaced_id, value, index);
+         
+    }
+
     const handleFieldReadOnly = (field: string) => {
       const containerType = bkData?.cargo && bkData?.cargo.container_type;    
       if(containerType){
@@ -370,18 +377,15 @@ const CargoFCL = memo(
                 inline={false}
               />
             </div>
-             {/* selectbox 수정예정 */}
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_measurement_uom`}
-              id="measurement_uom"
-              value={bkData?.cargo?.measurement_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
-            <Checkbox id={`${index}_${bkData?.cargo?.seq}_dg`}
-                      label="dg" value={bkData?.cargo?.dg} />
-            {/* DG 체크박스 추가예정 */}
+
+            {/* DG 체크박스 */}
+            <Checkbox id={`${index}_${bkData?.cargo?.seq}-dg_yn`}
+                      label="dg_yn" 
+                      value={bkData?.cargo?.dg_yn}
+                      options={{inline:false}}
+                      events ={{
+                        onChange : handleCheckBoxClick}}
+            />
           </div>
 
           <div className="flex flex-wrap">
@@ -540,6 +544,7 @@ export const CargoLCL = memo(
       const value = event.target.value;
       onValueChange(cargoItem.seq, id, value, index);
     };
+
 
     return (
       <>
