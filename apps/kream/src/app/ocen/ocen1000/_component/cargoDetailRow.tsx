@@ -73,6 +73,8 @@ const CargoFCL = memo(
     const [grossuom, setGrossuom] = useState<any>()
     const [measurementuom, setMeasurementuom] = useState<any>()
     const [ isDisplay, setDisplay ] = useState(true);
+    const [ container_type_group, setContainerTypeGroup ] = useState();
+    const [ hiddenContainerInfo, setHiddenContainerInfo ] = useState(false);
 
     // useEffect(()=>{
     //   log("=============", index, cargoItem)
@@ -96,27 +98,81 @@ const CargoFCL = memo(
 
     
     const handleCheckBoxClick = (id : string, val : any) => {
-      const replaced_id = id.split("-")[0]
-      onValueChange(cargoItem.seq, replaced_id, val, index);         
+      log("handleCheckBoxClick", cargoItem.seq, id, val, index)
+      onValueChange(cargoItem.seq, id, val, index);         
     }
 
     const handleFieldReadOnly = (field: string) => {
-      const containerType = cargoItem && cargoItem.container_type;    
-      if(containerType){
-        switch (true) {
-          case containerType.includes("OT"): // OPEN TOP
-          //log('?', ["length", "width", "height", "weight"].includes(field))
-            return ["length", "width", "height", "weight"].includes(field)
-          case containerType.includes("FR"): // FLAT RACK
-            return ["length", "width", "height", "weight"].includes(field)
-          case containerType.includes("R"): // REEFER
-            return ["temp", "vent"].includes(field)
-          case containerType.includes("TC"): // TANK
-            return ["soc", "empty"].includes(field)
-          default:
-            return false;
-        }
+      // const containerType = cargoItem && cargoItem.container_type;    
+      // if(!containerType) return;
+      
+      // log("handleFieldReadOnly1", containerType, field);
+      // // if(containerType){
+      //   switch (true) {
+      //     case containerType.includes("OT"): // OPEN TOP
+      //     //log('?', ["length", "width", "height", "weight"].includes(field))
+      //       return ["length", "width", "height", "weight"].includes(field)
+      //     case containerType.includes("FR"): // FLAT RACK
+      //       return ["length", "width", "height", "weight"].includes(field)
+      //     case containerType.includes("R"): // REEFER
+      //       return ["temp", "vent"].includes(field)
+      //     case containerType.includes("TC"): // TANK
+      //       return ["soc", "empty"].includes(field)
+      //     default:
+      //       return false;
+      //   }
+      // }
+
+      const containerType = cargoItem && cargoItem.container_type_group || '';
+      const type_group = cargoItem?.container_type_group;
+      const dg_yn = cargoItem?.dg_yn === 'Y' ? true : false;
+
+      // setContainerTypeGroup(type_group);
+      // switch (type_group) {
+      //   case "DRY":   //Dry
+      //     setHiddenContainerInfo(true);
+      //     return false;
+      //   case "FT":    //Flat Rack
+      //     return ["length", "width", "height", "weight"].includes(field);
+      //   case "OT":    //Open Top
+      //     return ["length", "width", "height", "weight"].includes(field);
+      //   case "REEFER"://REFFER
+      //     return ["temp", "vent"].includes(field);
+      //   case "TC":    //TANK
+      //     return ["soc", "empty"].includes(field);
+      // }
+
+      if (type_group === 'DRY') {
+        if (!hiddenContainerInfo) setHiddenContainerInfo(true);
+        return;
+      } else {
+        if (hiddenContainerInfo) setHiddenContainerInfo(false);
       }
+
+      // log("handleFieldReadOnly1", field, containerType, type_group);
+      switch(field) {
+        case "un_no":
+        case "class":
+          // log("handleFieldReadOnly", dg_yn, field)
+          return dg_yn;
+          break;
+        case "length":
+        case "width":
+        case "height":
+        case "weight":
+          return type_group === "OT" || type_group === "FR";
+          break;
+        case "temp":
+        case "vent":
+          return type_group === "REEFER" && type_group !== "FR";
+        case "soc":
+        case "empty":
+          return type_group === "TC";
+          break;
+        default : 
+          return false;
+      }
+
     };
 
     const handlePieceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,22 +208,24 @@ const CargoFCL = memo(
                 label="container_type"
                 initText="Select.."
                 listItem={containertype as gridData}
-                valueCol={["container_type", "container_type_nm"]}
+                valueCol={["container_type", "container_type_nm", "container_type_group"]}
                 displayCol="container_type_nm"
                 gridOption={{
                   colVisible: {
-                    col: ["container_type", "container_type_nm"],
+                    col: ["container_type", "container_type_nm", "container_type_group"],
                     visible: true,
                   },
                 }}
                 events={{
                   onSelectionChanged: (e, id, value) => {
+                      var selectedRow = e.api.getSelectedRows()[0] as any;
+                      cargoItem.container_type_group = selectedRow?.container_type_group;
                       var id = id
                       var value = value
                       onValueChange(cargoItem.seq, id, value, index);
                   },
                 }}
-                gridStyle={{ width: "400px", height: "200px" }}
+                gridStyle={{ width: "600px", height: "300px" }}
                 style={{ width: "400px", height: "8px" }}
                 defaultValue={cargoItem?.container_type}
                 // isDisplay={isDisplay}
@@ -300,16 +358,7 @@ const CargoFCL = memo(
               width="w-24"
             />
             
-            {/* selectbox 수정예정 */}
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_gross_uom`}
-              id="gross_uom"
-              value={bkData?.cargo?.gross_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
-              <div className="flex w-28">
+            <div className="flex w-28">
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "gross_uom")}
                 label="gross_uom"
@@ -374,26 +423,27 @@ const CargoFCL = memo(
                 inline={false}
               />
             </div>
-             {/* selectbox 수정예정 */}
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_measurement_uom`}
-              id="measurement_uom"
-              value={bkData?.cargo?.measurement_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
             <Checkbox id={getID(index, cargoItem?.seq, "dg_yn")}
                       label="dg" value={cargoItem?.dg_yn} 
-                      options={{inline:false}}
+                      options={{
+                        inline:false,
+                      }}
                       events ={{
                         onChange : handleCheckBoxClick
                         }}/>
-            {/* DG 체크박스 추가예정 */}
           </div>
 
-          <div className="flex flex-wrap">
-            <div className="flex w-10"></div>
+          <div className={`flex flex-wrap ${hiddenContainerInfo ? 'hidden' : ''}`} >
+            <div className="flex w-10">
+              <Checkbox id={getID(index, cargoItem?.seq, "same")}
+                label="same"
+                options={{inline:false}}
+                isDisplay={(cargoItem?.group && cargoItem?.group === cargoItem.seq)}
+                events ={{
+                  onChange : handleCheckBoxClick
+                  }}/>
+            </div>
+            
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_length`}
               id={getID(index, cargoItem?.seq, "length")}

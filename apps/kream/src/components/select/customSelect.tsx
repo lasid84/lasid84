@@ -49,6 +49,22 @@ type Style = {
   height?: string
 }
 
+const useDebounce = (value: any, delay: any) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 function CustomSelect(props: Props) {
   const { dispatch, objState } = useAppContext();
   const { mSelectedRow, selectedobj } = objState
@@ -63,7 +79,7 @@ function CustomSelect(props: Props) {
   // const [isReady, setIsReady] = useState(false);
   const { register, setValue, getValues } = useFormContext();
   const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol = id, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay=true, isDisplayX = true
-    , noLabel = false, lwidth, defaultValue, events
+    , noLabel = false, lwidth, defaultValue:initValue, events
   } = props;
   const customselect = true
   const defaultStyle = {
@@ -80,6 +96,7 @@ function CustomSelect(props: Props) {
   const [displayText, setDisplayText] = useState(initText);
   const [filteredData, setFilteredData] = useState(listItem);
   const [selectedRow, setSelectedRow] = useState<any>();
+  const defaultValue = useDebounce(initValue, 200);
   const [openDirection, setOpenDirection] = useState('down');
 
   // 옵션을 토글하는 함수
@@ -128,7 +145,9 @@ function CustomSelect(props: Props) {
         // gridRef.current.api.ensureIndexVisible(i, 'top');
         // 약간의 딜레이 후에 포커스 설정 (렌더링이 완료될 시간을 줌)
         setTimeout(() => {
+          // log("useEffect in customselect ", gridRef.current.api?.getSelectedRows())
           gridRef.current?.api?.setFocusedCell(i, /*valueCol[0]*/ displayCol);
+          if (gridRef.current?.api.getRowNode(i)) gridRef.current?.api.getRowNode(i).setSelected(true);
         }, 100);
       } else {
 
@@ -138,9 +157,14 @@ function CustomSelect(props: Props) {
 
   useEffect(() => {
     // log("useEffect defaultValue, listItem, valueCol", id, defaultValue)
-    if (listItem?.data) {
+    if (listItem?.data.length) {
 
       if (!defaultValue) {
+        if (gridRef.current) {
+          gridRef.current.api?.deselectAll();
+          // gridRef.current.api?.setFocusedCell(null);
+          // gridRef.current.api.ensureIndexVisible(0);
+        }
         setSelectedValue(null);
         return;
       }
@@ -151,6 +175,15 @@ function CustomSelect(props: Props) {
         if (valueCol?.length) return item[valueCol![0]] === defaultValue
         else return item[displayCol] === defaultValue
       });
+
+      // log("useffect isOpen",  gridRef.current, index)
+
+      if (gridRef.current) {
+        if (index > -1 && gridRef.current.api && gridRef.current.api.getRowNode(index)) {
+          gridRef.current.api.setFocusedCell(index, /*valueCol![0]*/displayCol);
+          gridRef.current.api.getRowNode(index)?.setSelected(true);
+        }
+      }
 
       setSelectedValue(initialData);
       // setDisplayVal(initialData);
@@ -191,6 +224,14 @@ function CustomSelect(props: Props) {
       } else {
         setOpenDirection('down');
       }
+
+      // log("useEffect isOpen getSelectedNodes", gridRef.current?.api.getSelectedNodes()[0]);
+      if (gridRef.current) {
+        if (gridRef.current?.api.getSelectedNodes().length) {
+          var rowIndex = gridRef.current?.api.getSelectedNodes()[0].rowIndex
+          gridRef.current.api.ensureIndexVisible(rowIndex);
+        }
+      }
     }
   }, [isOpen]);
 
@@ -210,7 +251,7 @@ function CustomSelect(props: Props) {
   const handelRowClicked = (param: any) => {
     var selectedRow = { "colId": param.node.id, ...param.node.data }
     gridRef.current.api.getRowNode(param.node.id).setSelected(true);
-    log("==selectedRow", selectedRow)
+    // log("==selectedRow", selectedRow)
     toggleOptions();
     setSelectedValue(selectedRow);
     // setDisplayVal(selectedRow);
@@ -237,13 +278,13 @@ function CustomSelect(props: Props) {
   }
 
   const handleOnGridReady = (param: any) => {
+    setIsGridReady(true);
     // log("handleOnGridReady", id, param, defaultValue);
     // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
   }
 
   const handleComponentStateChanged = (param: any) => {
     // log("handleComponentStateChanged");
-    setIsGridReady(true);
     // onGridReady(param);
     // setIsReady(true);
     if (events?.onComponentStateChanged) events.onComponentStateChanged(param);
@@ -279,7 +320,7 @@ function CustomSelect(props: Props) {
   }
 
   const handleXClick = (e: any) => {
-    log("handleXClick", gridRef, gridRef.current, selectedRow)
+    // log("handleXClick", gridRef, gridRef.current, selectedRow)
     if (selectedRow && gridRef.current && gridRef.current.api?.getSelectedRows()) gridRef.current.api.deselectAll();
     setSelectedValue(null);
     // setDisplayVal(null);
@@ -295,7 +336,7 @@ function CustomSelect(props: Props) {
       switch (key) {
         case "Enter":
           let selectedRow = e.data; //gridRef.current.api.getSelectedRows()[0];
-          log(selectedRow);
+          // log(selectedRow);
           setSelectedValue(selectedRow);
           setIsOpen(false);
           // moveNextComponent();
@@ -402,7 +443,7 @@ function CustomSelect(props: Props) {
             events={{
               onChange(e) {
                 e.preventDefault();
-                log("onChange", e.target.value)
+                // log("onChange", e.target.value)
                 if (!isOpen) setIsOpen(true);
                 handleCustChange(e.target.value);
               },
@@ -419,7 +460,7 @@ function CustomSelect(props: Props) {
 
                     break;
                   case "Enter":
-                    log("??enter")
+                    // log("??enter")
                     moveNextComponent();
                     if (isOpen) setIsOpen(false);
                     break;

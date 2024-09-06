@@ -8,7 +8,7 @@ import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData, SP_GetReportData, SP_UpdateData } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_UpdateCargo, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
@@ -17,6 +17,7 @@ import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
+import { Cargo } from "./cargoDetail";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -36,8 +37,11 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { MselectedTab } = objState;
   const [ref, setRef] = useState(objState.gridRef_m);
   const [ reportType, setReportType ] = useState<string>('');
-  const { Create } = useUpdateData2(SP_CreateData, SEARCH_D);
-  const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
+  const { Create: CreateBKData } = useUpdateData2(SP_CreateData);
+  const { Update: UpdateBKData } = useUpdateData2(SP_UpdateData);
+  const { Create: CreateCargo } = useUpdateData2(SP_InsertCargo);
+  const { Update: UpdateCargo } = useUpdateData2(SP_UpdateCargo);
+
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
 
   const [reporttype, setReporttype] = useState<any>();
@@ -62,15 +66,16 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   const onSearch = () => {}
 
-  const onSave = (param: MouseEventHandler) => {
+  const SaveBkData = async () => {
     let curData = getValues(); 
     let hasData = false;
-    log("onSave", bkData, curData);
-    if (bkData && bkData[ROW_TYPE] === ROW_TYPE_NEW) {
-
+    log("SaveBkData", bkData)
+    
+    
+    if (bkData && bkData[ROW_TYPE] === ROW_TYPE_NEW) {  
+      hasData = true;  
       let newData = {...bkData, ...curData};
-      hasData = true;
-      Create.mutate(newData, {
+      CreateBKData.mutate(newData, {
         onSuccess: (res: any) => {
           let bk_id = res.data[0].bk_id;
           let updatedTab = objState.tab1.map((tab:any) => {
@@ -81,22 +86,55 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
               return tab;
             } else return tab;
           });
-          dispatch({ [MselectedTab]:null, [bk_id]: res.data[0], tab1: updatedTab, MselectedTab: bk_id, isMSearch:true })
-
-          // objState.tab1.push({ cd: bk_id, cd_nm: bk_id }) //발급된 bk_id로 tab update
-          // var filtered = objState.tab1.filter((element: any) => { return element.cd != 'NEW' })
-          // dispatch({ popType: crudType.UPDATE, mSelectedRow: res.data[0], tab1: filtered, MselectedTab: res.data[0].bk_id, })
+          dispatch({ [MselectedTab]:null, /*[bk_id]: res.data[0],*/ tab1: updatedTab, MselectedTab: bk_id })
         },
       })
     } else {
+      log("UpdateBKData", Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val), bkData[ROW_CHANGED])
       if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};
-        Update.mutate(updateData);
+        UpdateBKData.mutate(updateData);
       }
     }
+    
 
-    if (hasData) {
+    return hasData;
+  }
+
+  const SaveCargo = async () => {
+    var hasData = false;
+    if (bkData?.cargo) {
+      bkData.cargo.forEach( async (data: Cargo) => {
+        if (data[ROW_CHANGED]) {
+          hasData = true;
+          try{
+            if (data[ROW_TYPE] === ROW_TYPE_NEW) {
+              await CreateCargo.mutateAsync(data);
+            } else {          //수정
+              await UpdateCargo.mutateAsync(data);
+            }   
+          }catch(error){
+            log("error:", error);
+          }finally{
+            data[ROW_CHANGED] = false;
+          }            
+        }
+      })        
+    }
+
+    return hasData;
+  }
+
+  const onSave = async (param: MouseEventHandler) => {
+    let hasBKData = false;
+    let hasCargoData = false;
+    
+    hasCargoData = await SaveCargo();
+    hasBKData = await SaveBkData();
+
+    if (hasBKData || hasCargoData) {
+      onRefresh();
       toastSuccess('Success.');
     }
   }

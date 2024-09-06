@@ -720,9 +720,9 @@ export const SP_GetCarrierContData = async (searchParam: any) => {
 
 export const SP_InsertCargo = async (param: any) => {
   const Param = param;
-  
+  log("SP_InsertCargo", Param);
   const {  bk_id					   , seq 		        , piece				        , pkg_type 
-          , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
+          , slac_stc 			   , slac_uom			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
           , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
           , hs_cd 			     , length         , width 			        , height 			        , class:cargo_class
@@ -774,7 +774,7 @@ export const SP_InsertCargo = async (param: any) => {
       , container_refno 			
       , seal_no 		
       , slac_stc 
-      , stc_uom 
+      , slac_uom 
       , gross_wt		
       , gross_uom		
       , measurement	 
@@ -817,9 +817,9 @@ export const SP_InsertCargo = async (param: any) => {
 
 export const SP_UpdateCargo = async (param: any) => {
   const Param = param;
-  
+  log("SP_UpdateCargo", Param);
   const {  bk_id					   , seq 		        , piece				        , pkg_type 
-          , slac_stc 			   , stc_uom 			  , container_refno 		, container_type      , seal_no 
+          , slac_stc 			   , slac_uom 			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
           , volume_factor    , volume_wt 			, volume_uom 			    , commodity_cd        , dg_yn 
           , hs_cd 			     , length         , width 			        , height 			        , class: cargo_class
@@ -870,7 +870,7 @@ export const SP_UpdateCargo = async (param: any) => {
       , container_refno 			
       , seal_no 		
       , slac_stc 
-      , stc_uom 
+      , slac_uom 
       , gross_wt		
       , gross_uom		
       , measurement	 

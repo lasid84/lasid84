@@ -70,13 +70,13 @@ const PageTitle: React.FC<PageTitleProps> = memo(({desc, brcmp}) => {
   // const title = getMenuTitle(navigation, menu_seq);
 
   useEffect(() => {
-    log("isReady: ", isReady)
+    // log("isReady: ", isReady)
     if (!isReady) return;
 
     let title = getMenuTitle(navigation, menu_seq) || '';
     setTitle(title)
 
-    log("isReady menu_seq, title: ", menu_seq, title)
+    // log("isReady menu_seq, title: ", menu_seq, title)
     if (menu_seq !== 0 && title === '') {
       setTitle(title)
       toastError("권한이 없습니다.")

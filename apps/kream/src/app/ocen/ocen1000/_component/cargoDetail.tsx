@@ -81,9 +81,6 @@ const CargoDetail: React.FC<Props> = memo(({ initData, bkData, isRefreshCargo })
   const { dispatch, objState } = useAppContext();
   const { MselectedTab } = objState;
 
-  const { Create } = useUpdateData2(SP_InsertCargo);
-  const { Update } = useUpdateData2(SP_UpdateCargo);
-
 useEffect(()=>{
   //1. bkData?.cargo.svc_tye 이 변할때, cargo 객체배열 초기화 로직추가?
   //2. handleDelete 함수 내에서.. bkData.cargo 상태 업데이트 전에, 
@@ -114,6 +111,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
     
     if (i === index) {
         item.piece = pieceCount;
+        item[ROW_CHANGED] = true;
         acc.push(item);
         const maxSeq = Math.max(...bkData.cargo.map((item: any) => item.seq), 0); // 최대 seq 값 찾기
         const newCargoItems = Array.from({ length: pieceCount - 1 }, (_, j) => ({
@@ -141,13 +139,55 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 
 
   const handleChange = (seq: number,id:string, value: string, index : number) => {
-    // log('handleChange..........',seq,id,value,index ) 
-    const replaced_id = id.split("-")[0]
+    const replaced_id = id.split("-")[0];
+    var parentItem : any = {};
     const updatedCargoList = bkData?.cargo.map((item: any, i: number) => {
+      if (item.seq === seq) {
+        parentItem = {...item};
+      }
+
+      if (item.group === seq && item.seq !== seq && item.use_yn === 'Y') {
+        if (replaced_id === 'container_type') {
+          item[replaced_id] = value;
+          item.container_type_group = parentItem.container_type_group;
+          item[ROW_CHANGED] = true;
+        }
+
+        if (replaced_id === 'same') {
+          log("same", id, item, value)
+          if (value === 'Y') {
+            item = {
+              ...parentItem,
+              seq : item.seq,
+              group: item.group,
+              piece:null,
+              pkg_type: item.pkg_type,
+              container_refno: item.container_refno,
+              seal_no: item.seal_no,
+              [ROW_TYPE]: item[ROW_TYPE],
+              [ROW_CHANGED]: true
+            }
+          } else {
+            item = {
+              bk_id: item.bk_id,
+              seq : item.seq,
+              group: item.group,
+              container_type: item.container_type,
+              pkg_type: item.pkg_type,
+              container_refno: item.container_refno,
+              seal_no: item.seal_no,
+              use_yn: item.use_yn,
+              [ROW_TYPE]: item[ROW_TYPE],
+              [ROW_CHANGED]: true
+            }
+          }
+        }
+      }
+
       return item.seq === seq ? { ...item, [replaced_id]: value,  [ROW_CHANGED] : true } : item;
     }
     );
-    //log('handleChange...updatedCargoList', updatedCargoList)
+    // log('handleChange...updatedCargoList', updatedCargoList)
     dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
 
   }
@@ -161,7 +201,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
       
       const newCargo = { ...initialCargo,  bk_id:bkData?.bk_id, seq: maxSeq};
       const newCargoList = bkData.cargo ? [...bkData.cargo, newCargo] : [newCargo]
-      log("newCargoList", newCargoList);
+      // log("newCargoList", newCargoList);
       dispatch({ [MselectedTab]: { ...bkData, cargo: newCargoList } });
     }
   };
@@ -171,12 +211,12 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
   const handleDelete = (seq: number) => {
     if (bkData && bkData.cargo) {
 
-      log("updatedCargoList111", bkData.cargo, seq)
+      // log("updatedCargoList111", bkData.cargo, seq)
         // BKDATA.CARGO 객체 내 __ROWTYPE KEY가 존재하고, 'NEW'면 필터링처리, __ROWTYPE KEY가 존재하지않으면
         // DB에 존재하는 데이터이므로 use_yn ='N'업데이트 처리 하고 updatedCargoList 에 남아있어야함.           
         const updatedCargoList = bkData.cargo.map((item: any) => {
           if (item.seq === seq || (item.group && (item.group === seq))) {  
-              log("in map", item)            
+              // log("in map", item)            
               if(item[ROW_TYPE] && item[ROW_TYPE] === ROW_TYPE_NEW){ 
                 //브라우저상에서만 생성된 CARGO 객체(DB저장X상태)는 리스트에서 제거, 반대의 경우 use_yn='N'업데이트
                 return null 
@@ -191,38 +231,38 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
     
   };
 
-  const onSave = () => {
-    log('onSave.................',bkData?.cargo)
-    const processNodes = async () => {
-      if (bkData?.cargo) {
-        bkData.cargo.forEach( async (data: Cargo) => {
-          if (data[ROW_CHANGED]) {
-            try{
-              if (data[ROW_TYPE] === ROW_TYPE_NEW) {
-                await Create.mutateAsync(data);
-              } else {          //수정
-                await Update.mutateAsync(data);
-              }   
-            }catch(error){
-              log("error:", error);
-            }finally{
-              data[ROW_CHANGED] = false;
-            }            
-          }
-        })        
-      }
-      //toastSuccess("Success.")
-    }    
-    processNodes()
-    .then(() => {
-      dispatch({isMDSearch:true});
-      toastSuccess("Success.")
-      //dispatch({ isDSearch: true }); //maindata refetch?
-    })
-    .catch((error) => {
-      log("node. Error", error);
-    });
-  }
+  // const onSave = () => {
+  //   log('onSave.................',bkData?.cargo)
+  //   const processNodes = async () => {
+  //     if (bkData?.cargo) {
+  //       bkData.cargo.forEach( async (data: Cargo) => {
+  //         if (data[ROW_CHANGED]) {
+  //           try{
+  //             if (data[ROW_TYPE] === ROW_TYPE_NEW) {
+  //               await Create.mutateAsync(data);
+  //             } else {          //수정
+  //               await Update.mutateAsync(data);
+  //             }   
+  //           }catch(error){
+  //             log("error:", error);
+  //           }finally{
+  //             data[ROW_CHANGED] = false;
+  //           }            
+  //         }
+  //       })        
+  //     }
+  //     //toastSuccess("Success.")
+  //   }    
+  //   processNodes()
+  //   .then(() => {
+  //     dispatch({isMDSearch:true});
+  //     toastSuccess("Success.")
+  //     //dispatch({ isDSearch: true }); //maindata refetch?
+  //   })
+  //   .catch((error) => {
+  //     log("node. Error", error);
+  //   });
+  // }
 
   
 
@@ -231,7 +271,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
       right={
         <>
           <Button id="add" onClick={onAdd} width="w-15" label="Add" />
-          <Button id="save" onClick={onSave} width="w-15" label="Save" />
+          {/* <Button id="save" onClick={onSave} width="w-15" label="Save" /> */}
         </>
       }
     >

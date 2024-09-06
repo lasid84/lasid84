@@ -34,12 +34,11 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
   const { inline, noLabel = false } = options
   const [ checkVal, setChceckVal ] = useState(false);
 
-  //event.target.checked 동작오류로 주석처리
   useEffect(() => {
-    //let isChecked = value === 'Y' ? true : false
-    //log('???', value, isChecked)
-    //setChceckVal(isChecked);
-    setValue(id, value);
+    let isChecked = value === 'Y' ? true : false
+    // log('???checkbox', id, value, isChecked)
+    setChceckVal(isChecked);
+    setValue(id, isChecked);
   }, [value])
 
   const  handleKeyDown =  (e:any)=>{
@@ -75,14 +74,17 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
           {...register(id, rules)}
           id={id}
           // name={name?name:id}
-          checked={checkVal}
+          // checked={checkVal}
+          defaultChecked={false}
           type="checkbox"
           className="items-center w-6 h-6 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"
           onKeyDown={handleKeyDown}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (readOnly) return;
+
+            // log("checkBox", e.target.checked, checkVal);
             setChceckVal(e.target.checked);
-            //setValue(id, e.target.checked ? 'Y' : 'N');
+            setValue(id, e.target.checked);
             if (events?.onChange) {
               events.onChange(id, e.target.checked ===true ? 'Y' : 'N')
             }

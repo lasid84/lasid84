@@ -618,7 +618,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onSelectionChanged = (param: SelectionChangedEvent) => {
-    log("onSelectionChanged")
+    // log("onSelectionChanged")
     // const selectedRow = {...param.api.getSelectedRows()[0], [ROW_INDEX]: param.api.getSelectedNodes()[0].rowIndex};
     const selectedRow = param.api.getSelectedRows()[0];
     if (options?.isEditableOnlyNewRow) {
@@ -1063,7 +1063,7 @@ export const JsonToGridData = (arrDataJson:any[], header:string[],headerLine=1) 
     let obj = {"name":v};
     return obj
   });
-  log("JsonToGridData", data);
+  // log("JsonToGridData", data);
   return data;
 }
 
@@ -1082,7 +1082,7 @@ const setRowChange = async (rowNode: IRowNode) => {
     // 특정 행에 클래스 추가
     if (rowNode) {
       const rowElement = document.querySelector(`[row-index="${rowNode.rowIndex}"]`) as HTMLElement;
-      log("setRowChange", rowElement, rowNode.rowIndex)
+      // log("setRowChange", rowElement, rowNode.rowIndex)
       if (rowElement) {
         rowElement.classList.add('changed-row');
       }
