@@ -54,6 +54,7 @@ export default function OCEN1000() {
       isCYContPopupOpen:false,
       isPickupPopupOpen: false,
       isMailRcvPopupOpen:false,
+      isMailSendPopupOpen : false, //send_mail
       isWaybillPopupOpen:false,
       mGridState: {},
       mGridStateInit: null

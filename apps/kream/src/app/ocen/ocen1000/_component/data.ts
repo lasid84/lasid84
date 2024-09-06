@@ -173,10 +173,13 @@ export const SP_CreateData = async (param: any) => {
     , cy_place_code
     , cy_cont_seq
     , carrier_code
+    , carr_shipper_id
+    , carr_cnee_id
     , cr_t_cont_seq
     , cr_s_cont_seq
     , cr_fak
     , cr_nac
+    , carr_bl_type
     , bl_type
     , bill_type
     , incoterms
@@ -233,10 +236,13 @@ export const SP_CreateData = async (param: any) => {
       , "in_cy_place_code"
       , "in_cy_cont_seq"
       , "in_carrier_code"
+      , "carr_shipper_id"
+      , "carr_cnee_id"
       , "in_cr_t_cont_seq"
       , "in_cr_s_cont_seq"
       , "in_cr_fak"
       , "in_cr_nac"
+      , "in_carr_bl_type"
       , "in_bl_type"
       , "in_bill_type"
       , "in_incoterms"
@@ -295,10 +301,13 @@ export const SP_CreateData = async (param: any) => {
       , cy_place_code
       , cy_cont_seq
       , carrier_code
+      , carr_shipper_id
+      , carr_cnee_id
       , cr_t_cont_seq
       , cr_s_cont_seq
       , cr_fak
       , cr_nac
+      , carr_bl_type
       , bl_type
       , bill_type
       , incoterms
@@ -369,10 +378,13 @@ export const SP_UpdateData = async (param: any) => {
     , cy_place_code
     , cy_cont_seq
     , carrier_code
+    , carr_shipper_id
+    , carr_cnee_id
     , cr_t_cont_seq
     , cr_s_cont_seq
     , cr_fak
     , cr_nac
+    , carr_bl_type
     , bl_type
     , bill_type
     , incoterms
@@ -430,10 +442,13 @@ export const SP_UpdateData = async (param: any) => {
       , "in_cy_place_code"
       , "in_cy_cont_seq"
       , "in_carrier_code"
+      , "in_carr_shipper_id"
+      , "in_carr_cnee_id"
       , "in_cr_t_cont_seq"
       , "in_cr_s_cont_seq"
       , "in_cr_fak"
       , "in_cr_nac"
+      , "in_carr_bl_type"
       , "in_bl_type"
       , "in_bill_type"
       , "in_incoterms"
@@ -493,10 +508,13 @@ export const SP_UpdateData = async (param: any) => {
       , cy_place_code
       , cy_cont_seq
       , carrier_code
+      , carr_shipper_id
+      , carr_cnee_id
       , cr_t_cont_seq
       , cr_s_cont_seq
       , cr_fak
       , cr_nac
+      , carr_bl_type
       , bl_type
       , bill_type
       , incoterms
