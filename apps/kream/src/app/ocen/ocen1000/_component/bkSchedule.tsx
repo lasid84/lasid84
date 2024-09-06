@@ -15,6 +15,7 @@ import { SP_GetPickupContData, SP_GetCarrierContData, SP_SendEmail } from "./dat
 import { SP_GetTransPortData } from "@/app/stnd/stnd0012/_component/data";
 import PicupPlacePopUp from "./popPickupcont"
 import TransportEmailRcvPopup from "./popEmailRcvList"
+import TransportEmailSendPopup from "./popEmailSend"
 import CarrierContPopUp from "./popCarriercont";
 import { Button } from "components/button";
 import dayjs from "dayjs";
@@ -61,13 +62,13 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   // const [cyPlace, setCyPlace] = useState<any>()
   const [carriercode, setCarrierCode] = useState<any>()
   const [port, setPort] = useState<any>()
-  const [ isRefreshCyCont, setRefreshCyCont ] = useState(false);
-  const { getValues } = useFormContext();
+  const [ isRefreshCyCont, setRefreshCyCont ] = useState(false)
+  const { getValues } = useFormContext()
 
   useEffect(() => {
     if (loadItem) {
-      setCarrierCode(loadItem[9]);
-      setPort(loadItem[18]);
+      setCarrierCode(loadItem[9])
+      setPort(loadItem[18])
     }
   }, [])
 
@@ -106,7 +107,8 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
           dispatch({ isMailRcvPopupOpen: true });
         break;  
       case "btn_transport_send_email":
-        sendTransPortEmail();
+          //sendTransPortEmail();
+          dispatch({ isMailSendPopupOpen : true })
         break;
     }
   }
@@ -234,6 +236,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <PicupPlacePopUp callbacks={[pickupRefetch]} />
                 <CYPlaceContPopUp callbacks={[cyPlaceContRefetch]} />
                 <TransportEmailRcvPopup cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
+                <TransportEmailSendPopup cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
                 <div className="col-start-1 col-end-2"> 
                   <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
                 </div>

@@ -331,7 +331,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
             /> */}
             <div className={"col-span-1"}>
                 <CustomSelect
-                  id="carrier_bl_type"
+                  id="carr_bl_type"
                   initText='Select a Carrier BL Type'
                   listItem={MblType as gridData}
                   valueCol={["carrier_bl_type", "carrier_bl_type_nm",]}
@@ -341,7 +341,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                   }}
                   gridStyle={{ width: '320px', height: '200px' }}
                   style={{ width: '500px', height: "8px" }}
-                  defaultValue={bkData?.carrier_bl_type}
+                  defaultValue={bkData?.carr_bl_type}
                   isDisplay={true}
                 />
             </div>

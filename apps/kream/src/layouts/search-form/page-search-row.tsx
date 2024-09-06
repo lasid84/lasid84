@@ -188,6 +188,48 @@ export const PageContent: React.FC<PageSearchProps> = ({
   );
 };
 
+// 2분할, PageContentDivided into two layouts
+export const PageContentDivided: React.FC<PageSearchProps> = ({
+  title,
+  left,
+  right,
+  children,
+  addition,
+}) => {
+  return (
+    <>
+      <div className="flex w-full">
+        <div className="w-full rounded-[5px] bg-white border mb-2 mt-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
+          {title}
+          {/*contents*/}
+          <div className="flex w-full px-4 py-1 space-y-2">
+            <div className="flex w-full gap-3 md:grid-cols-3">
+              {children}
+            </div>
+            <div className="flex w-full gap-3 sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+              {addition}
+            </div>
+          </div>
+
+          {/*button*/}
+          <div className="px-1 py-1 w-full border-t border-[#f2f2f2] dark:border-gray-800">
+            <div className="grid w-full grid-cols-2">
+              <div className="flex flex-row gap-2">
+                {left}
+                <span className="ml-auto"></span>
+              </div>
+              <div className="flex flex-row gap-2">
+                <span className="ml-auto"></span>
+                {right}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 //검색조건 2분할(왼쪽:검색조건 오른쪽:버튼)
 export const PageSearchButton: React.FC<PageSearchProps> = ({
   title,

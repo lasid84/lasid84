@@ -13,8 +13,7 @@ import CustomSelect from "components/select/customSelect";
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import GridCargo from "./gridCargo";
 import CargoDetail from "./cargoDetail"
-import { ReactSelect, data } from "@/components/select/react-select2";
-import { Checkbox } from "@/components/checkbox";
+
 // import { useGetData } from './test'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -102,11 +101,13 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
         <div className={"col-span-1"}>
           <CustomSelect
             id="movement_type"
-            initText='Select a BL Type'
+            initText='Select a Movement Type'
             listItem={movementtype as gridData}
             valueCol={["movement_type", "movement_nm",]}
             displayCol="movement_nm"
-            gridOption={{colVisible: { col: ["movement_nm"], visible: true },}}
+            gridOption={{
+              colVisible: { col: ["movement_nm"], visible: true },
+            }}
             gridStyle={{ width: '320px', height: '200px' }}
             style={{ width: '500px', height: "8px" }}
             defaultValue={bkData?.movement_type}
