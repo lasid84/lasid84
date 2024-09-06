@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { InputWrapper } from 'components/wrapper';
+import { Label } from 'components/label';
+const { log, error } = require('@repo/kwe-lib/components/logHelper');
 
 export type CheckboxProps = {
   id: string;
@@ -9,52 +12,85 @@ export type CheckboxProps = {
   value?: "Y" | "N"
   rules?: Record<string, any>;
   readOnly?: boolean;
+  isDisplay ?: boolean;
+  options?:{
+      inline?:boolean;
+      noLabel?: boolean;
+  }
   events?: {
     onClick?: any;
     onChange?: any;
   }
 };
 
-export const Checkbox: React.FC<CheckboxProps> = ({
-  id,
-  // name,
-  label,
-  value,
-  rules = {},
-  events,
-  readOnly = false,
-}) => {
+export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
   const { register, getValues, setValue } = useFormContext();
   const { t } = useTranslation();
+
+  const {
+    id,    // name,
+    label,    value,    isDisplay=true,    rules = {},    options={},    events,    readOnly = false,
+  } = props
+  const { inline, noLabel = false } = options
   const [ checkVal, setChceckVal ] = useState(false);
 
+  //event.target.checked 동작오류로 주석처리
   useEffect(() => {
-    let isChecked = value === 'Y' ? true : false
-    setChceckVal(isChecked);
+    //let isChecked = value === 'Y' ? true : false
+    //log('???', value, isChecked)
+    //setChceckVal(isChecked);
     setValue(id, value);
   }, [value])
 
+  const  handleKeyDown =  (e:any)=>{
+    try {
+        if(e.key ==="Enter"){          
+        e.preventDefault();  // 기본 엔터 동작을 막음
+        const form = e.target.form.elements;
+        var index = Array.prototype.indexOf.call(form, e.target);
+
+        //필드셋과 버튼은 포커스 제외 - stephen
+        while ((form[index + 1] instanceof HTMLButtonElement) 
+          || (form[index + 1] instanceof HTMLFieldSetElement) 
+          || (form[index + 1].readOnly === true)
+        ) index++;
+
+        // 다음 요소가 input일 경우 포커스 이동
+        if (form[index + 1]) {
+            form[index + 1].focus();
+        }
+        }
+    }catch (ex) {
+      error(ex)
+    }
+
+  }
+
   return (
-    <div className="flex items-center space-x-2">
-      <div className="flex items-center h-6">
+    <InputWrapper outerClassName={` ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline} >
+      {!noLabel && <Label id={id} name={label === null ? '' : label} isDisplay={isDisplay} />}
+    <div className="flex w-full p-1 m-1 space-x-3 space-y-2">
+      <div className="flex items-center h-6 justify-stretch">
         <input
           {...register(id, rules)}
           id={id}
           // name={name?name:id}
           checked={checkVal}
           type="checkbox"
-          className="w-4 h-4 text-blue-600 border-gray-300 rounded form-checkbox focus:ring-blue-500"
+          className="items-center w-6 h-6 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"
+          onKeyDown={handleKeyDown}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (readOnly) return;
             setChceckVal(e.target.checked);
-            setValue(id, e.target.checked ? 'Y' : 'N');
-            if (events?.onChange) events.onChange(id, e.target.checked ? 'Y' : 'N');
+            //setValue(id, e.target.checked ? 'Y' : 'N');
+            if (events?.onChange) {
+              events.onChange(id, e.target.checked ===true ? 'Y' : 'N')
+            }
+              
           }}
-        />
-      </div>
-      <div className="space-y-1 text-sm">
-        <div className="block font-medium text-gray-700 shrink-0 whitespace-nowrap">{t(label?label:id)}</div>
+          />
       </div>
     </div>
+    </InputWrapper>
   );
 };

@@ -93,6 +93,13 @@ const CargoFCL = memo(
       }
     }, [loadItem?.length]);
 
+
+    
+    const handleCheckBoxClick = (id : string, val : any) => {
+      const replaced_id = id.split("-")[0]
+      onValueChange(cargoItem.seq, replaced_id, val, index);         
+    }
+
     const handleFieldReadOnly = (field: string) => {
       const containerType = cargoItem && cargoItem.container_type;    
       if(containerType){
@@ -377,7 +384,11 @@ const CargoFCL = memo(
               width="w-24"
             /> */}
             <Checkbox id={getID(index, cargoItem?.seq, "dg_yn")}
-                      label="dg" value={cargoItem?.dg_yn} />
+                      label="dg" value={cargoItem?.dg_yn} 
+                      options={{inline:false}}
+                      events ={{
+                        onChange : handleCheckBoxClick
+                        }}/>
             {/* DG 체크박스 추가예정 */}
           </div>
 
@@ -532,6 +543,8 @@ const CargoLCL = memo(
 
       }
     }, [loadItem?.length]);
+
+
 
     return (
       <>
