@@ -13,6 +13,8 @@ const { log } = require("@repo/kwe-lib/components/logHelper");
 type Props = {
   ref?: any | null;
   initData?: any | null;
+  cust_code?: string;
+  cust_nm?: string;
   callbacks?: Array<() => void>;
 };
 
