@@ -746,7 +746,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
         for (let i = 1; i <= numRowsToAdd; i++) {
           const row = data.slice(i, i + 1)[0];
           // Create row object
-          const rowObject: any = {};
+          const rowObject: any = {
+            use_yn: options?.checkbox?.includes("use_yn") ? true : 'Y'
+          };
           let currentColumn: any = focusedCell!.column;
 
           row.forEach((item) => {
@@ -948,8 +950,9 @@ export const rowAdd = async (
   let rows = Array.isArray(initData) ? initData : [initData];
 
   // log("rowAdd rows : ", rows)
+  let rowCount = 0;
   for (const row of rows) {
-    let rowCount = await gridRef.api.getDisplayedRowCount();
+    rowCount = await gridRef.api.getDisplayedRowCount();
     // let renderedRow = await gridRef.api.getRenderedNodes().length;
     
 
@@ -963,10 +966,10 @@ export const rowAdd = async (
 
     await gridRef.api.applyTransaction({ add: [data] });
     await gridRef.api.setFocusedCell(rowCount, col);
-    await gridRef.api.startEditingCell({
-      rowIndex: rowCount,
-      colkey: col
-    });
+    // await gridRef.api.startEditingCell({
+    //   rowIndex: rowCount,
+    //   colkey: col
+    // });
 
     if (gridRef.api) {
       var rowNode = gridRef.api.getRowNode(rowCount);
@@ -979,6 +982,9 @@ export const rowAdd = async (
     datas.push(data);
     await gridRef.api.ensureIndexVisible(rowCount, 'bottom');
   }
+
+  //이렇게까지 해야하나
+  setTimeout(async ([rowCount, col]) => await gridRef.api.setFocusedCell(rowCount, col), 200, [rowCount, col]);
 
   return datas
 };

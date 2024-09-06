@@ -98,31 +98,29 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
   log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
 
   // 그룹으로 기존 항목 필터링 (기존에 seq와 동일한 group 값을 가진 cargo 들을 제거)
-  const filteredCargoList = bkData.cargo.filter((item: any) => item.group !== seq || item.seq === seq);
+  const filteredCargoList = bkData.cargo.map((item: any) => {
+    if (item.group === seq && item.seq !== seq && item['use_yn'] === 'Y') {
+      item['use_yn'] = 'N';
+      if (item[ROW_TYPE] === ROW_TYPE_NEW) item[ROW_CHANGED] = false;
+      else item[ROW_CHANGED] = true;
+    }
 
-//   // var count = filteredCargoList.length;
-//   // while (count < pieceCount) {
-//   //   filteredCargoList.push({
-//   //     ...initialCargo, 
-//   //     container_type: bkData.cargo[index]?.container_type,
-//   //     piece : null,
-//   //     isHandlePieceChange: true, // 플래그 추가
-//   //   });
-//   // }
-//   // filteredCargoList.filter((_:any,i:number) => i <= pieceCount);
+    return item;
+  });
 
-log('handlePieceChange filteredCargoList..........', filteredCargoList);
+  log('handlePieceChange filteredCargoList..........', filteredCargoList);
 
   const updatedCargoList = filteredCargoList.reduce((acc:any, item:any, i:any) => {
     
     if (i === index) {
         item.piece = pieceCount;
         acc.push(item);
-        const maxSeq = Math.max(...bkData.cargo.map((item: any) => item.seq)); // 최대 seq 값 찾기
+        const maxSeq = Math.max(...bkData.cargo.map((item: any) => item.seq), 0); // 최대 seq 값 찾기
         const newCargoItems = Array.from({ length: pieceCount - 1 }, (_, j) => ({
             ...initialCargo,
             bk_id:bkData?.bk_id,
             container_type: item.container_type,
+            seq: maxSeq + j + 1,
             group: seq, //group index를 생성
             piece : null,
             isHandlePieceChange: true, // 플래그 추가
@@ -143,7 +141,7 @@ log('handlePieceChange filteredCargoList..........', filteredCargoList);
 
 
   const handleChange = (seq: number,id:string, value: string, index : number) => {
-    log('handleChange..........',seq,id,value,index ) 
+    // log('handleChange..........',seq,id,value,index ) 
     const replaced_id = id.split("-")[0]
     const updatedCargoList = bkData?.cargo.map((item: any, i: number) => {
       return item.seq === seq ? { ...item, [replaced_id]: value,  [ROW_CHANGED] : true } : item;
@@ -198,9 +196,9 @@ log('handlePieceChange filteredCargoList..........', filteredCargoList);
     const processNodes = async () => {
       if (bkData?.cargo) {
         bkData.cargo.forEach( async (data: Cargo) => {
-          if (data.__changed) {
+          if (data[ROW_CHANGED]) {
             try{
-              if (data.__ROWTYPE === ROW_TYPE_NEW) {
+              if (data[ROW_TYPE] === ROW_TYPE_NEW) {
                 await Create.mutateAsync(data);
               } else {          //수정
                 await Update.mutateAsync(data);
@@ -208,7 +206,7 @@ log('handlePieceChange filteredCargoList..........', filteredCargoList);
             }catch(error){
               log("error:", error);
             }finally{
-              data.__changed = false;
+              data[ROW_CHANGED] = false;
             }            
           }
         })        
@@ -217,6 +215,7 @@ log('handlePieceChange filteredCargoList..........', filteredCargoList);
     }    
     processNodes()
     .then(() => {
+      dispatch({isMDSearch:true});
       toastSuccess("Success.")
       //dispatch({ isDSearch: true }); //maindata refetch?
     })

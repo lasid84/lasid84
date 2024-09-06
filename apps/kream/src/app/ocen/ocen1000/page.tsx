@@ -144,13 +144,20 @@ export default function OCEN1000() {
     if (detailData) {
       //log('detailData', detailData, ((detailData as string[])[1] as unknown as gridData).data[0])
       // if()
-      dispatch({
-        [objState?.MselectedTab]: {...((detailData as string[])[0] as unknown as gridData).data[0],
-                                    cargo : ((detailData as string[])[1] as unknown as gridData).data,
-                                    cost : ((detailData as string[])[2] as unknown as gridData).data
-        }
+      var data = {
+        ...((detailData as string[])[0] as unknown as gridData).data[0],
+        cargo : ((detailData as string[])[1] as unknown as gridData).data,
+        cost : ((detailData as string[])[2] as unknown as gridData).data
+      }
+
+      dispatch({[objState?.MselectedTab]:data});
+      // dispatch({
+      //   [objState?.MselectedTab]: {...((detailData as string[])[0] as unknown as gridData).data[0],
+      //                               cargo : ((detailData as string[])[1] as unknown as gridData).data,
+      //                               cost : ((detailData as string[])[2] as unknown as gridData).data
+      //   }
         // bkData: (mainData as gridData).data[0]
-    });
+    // });
     }
   }, [detailData])
 

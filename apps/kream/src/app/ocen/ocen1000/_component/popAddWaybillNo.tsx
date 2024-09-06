@@ -34,7 +34,7 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
         dispatch({ isWaybillPopupOpen: false, [bkData?.bk_id]: {...bkData, waybill_no: hbl} });
     }
 
-    const { data, refetch, remove } = useGetData(bkData, '', SP_GetBkHblData, {enabled:true});
+    const { isLoading, data, refetch, remove } = useGetData(bkData, '', SP_GetBkHblData, {enabled:true});
 
     const gridOptions: GridOption = {
         colVisible: { col: ["bk_id"], visible: false },
@@ -52,11 +52,12 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
             remove();
             refetch();
             setWaybillNo(bkData.waybill_no);
-            log("waybill popup bkData: ",bkData, data);
+            log("finish bkData")
         }
     }, [isOpen, bkData]);
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
+        log("handleCellValueChanged", param)
     //     gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
     //         // log("handleCellValueChanged2", param.node.data);
     //         if (!param.node.data.def) return;
@@ -78,7 +79,7 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
         for (const node of api.getRenderedNodes()) {
           let data = node.data;
           gridOptions?.checkbox?.forEach((col) => {
-            data[col] = data[col] ? "Y" : "N";
+            data[col] = (data[col] || data[col] === undefined) ? "Y" : "N";
           });
           
           if (data.use_yn === 'Y') waybillValid.push(data.waybill_no);
@@ -99,7 +100,6 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
 
             await Create.mutateAsync(data, {
             onSuccess(data, variables, context) {
-                log("onSuccess", data)
                 closeModal(waybillValid.join(','));
             },
             })
@@ -107,6 +107,19 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
         }
 
       }, [bkData]);
+
+    const onAdd = () => {
+        rowAdd(gridRef.current, { "use_yn":true })
+    }
+
+    const handleGridReady = (e:any) => {
+        onAdd();
+    }
+
+    const handleCellKeyDown = (e:any) => {
+        log("handleCellKeyDown", e, e.value, e.event.key);
+        if (e.value && e.event.key === 'Enter') onAdd();
+    }
 
     return (
         <DialogBasic
@@ -117,7 +130,7 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
             title={t("Waybill 등록")}
             bottomRight={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn":true })} width='w-15'/>
+                        <Button id={"add"} onClick={onAdd} width='w-15'/>
                         <Button id={"save"} onClick={onSave} width='w-15'/>
                     </>
                 }>
@@ -127,7 +140,9 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
                     listItem={data as gridData}
                     options={gridOptions}
                     event={{
-                        onCellValueChanged: handleCellValueChanged
+                        // onCellValueChanged: handleCellValueChanged,
+                        onGridReady: handleGridReady,
+                        onCellKeyDown: handleCellKeyDown
                     }}
                 />
             </div>

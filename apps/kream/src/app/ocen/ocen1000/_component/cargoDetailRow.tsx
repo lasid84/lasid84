@@ -36,7 +36,7 @@ const CargoDetailRow = (props:Props) => {
     // const replaced_id = id.split("-").reverse()[0]
     var value = event.target.value;
     if ((dataType || '').toLowerCase() === 'number') value = value.replace(/,/g, '');
-    log('CargoDetailRow handleChange', dataType)
+    // log('CargoDetailRow handleChange', dataType)
     onValueChange(cargoItem.seq, id, value, index);
   };
 
@@ -74,13 +74,14 @@ const CargoFCL = memo(
     const [measurementuom, setMeasurementuom] = useState<any>()
     const [ isDisplay, setDisplay ] = useState(true);
 
-    useEffect(()=>{
-      if(cargoItem.isHandlePieceChange || (cargoItem?.group && cargoItem?.group !== cargoItem.seq)){
-        setDisplay(false)
-      }else {
-        setDisplay(true)
-      }
-    },[cargoItem?.isHandlePieceChange])
+    // useEffect(()=>{
+    //   log("=============", index, cargoItem)
+    //   if((!cargoItem.seq || (cargoItem?.group && cargoItem?.group !== cargoItem.seq ))) {
+    //     setDisplay(false)
+    //   }else {
+    //     setDisplay(true)
+    //   }
+    // },[cargoItem?.isHandlePieceChange])
 
     useEffect(() => {
       if (loadItem?.length) {
@@ -133,7 +134,8 @@ const CargoFCL = memo(
                 size="20"
                 label="delete"
                 isLabel={false}
-                isDisplay={isDisplay}
+                // isDisplay={isDisplay}
+                isDisplay={(cargoItem?.group && cargoItem?.group === cargoItem.seq)}
               />
             </InputWrapper>
 
@@ -161,7 +163,8 @@ const CargoFCL = memo(
                 gridStyle={{ width: "400px", height: "200px" }}
                 style={{ width: "400px", height: "8px" }}
                 defaultValue={cargoItem?.container_type}
-                isDisplay={isDisplay}
+                // isDisplay={isDisplay}
+                isDisplay={(cargoItem?.group && cargoItem?.group === cargoItem.seq)}
                 inline={false}
               />
             </div>
@@ -173,7 +176,8 @@ const CargoFCL = memo(
               value={cargoItem?.piece}
               events={{ onChange: handlePieceChange }}
               options={{type:"number", limit:2}}
-              isDisplay={isDisplay}
+              // isDisplay={isDisplay}
+              isDisplay={(cargoItem?.group && cargoItem?.group === cargoItem.seq)}
               width="w-24"
             />
 
