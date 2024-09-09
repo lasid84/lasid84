@@ -139,9 +139,30 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
 
 
   const handleChange = (seq: number,id:string, value: string, index : number) => {
+    // log("handleChange", seq, id, value, index)
     const replaced_id = id.split("-")[0];
     var parentItem : any = {};
     const updatedCargoList = bkData?.cargo.map((item: any, i: number) => {
+      
+      if (replaced_id === 'container_type') {
+        item = {
+          ...item,
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+          soc: null,
+          empty: null,
+          temp: null,
+          vent: null,
+          un_no: null,
+          class:null,
+          volume_factor:null,
+          commodity_cd:null,
+          hs_cd:null
+        }
+      }
+
       if (item.seq === seq) {
         parentItem = {...item};
       }
@@ -172,7 +193,8 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
               bk_id: item.bk_id,
               seq : item.seq,
               group: item.group,
-              container_type: item.container_type,
+              container_type: parentItem.container_type,
+              container_type_group: parentItem.container_type_group,
               pkg_type: item.pkg_type,
               container_refno: item.container_refno,
               seal_no: item.seal_no,

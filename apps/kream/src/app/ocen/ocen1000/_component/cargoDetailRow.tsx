@@ -142,14 +142,14 @@ const CargoFCL = memo(
       //     return ["soc", "empty"].includes(field);
       // }
 
-      if (type_group === 'DRY') {
+      if (type_group === 'DRY' && !dg_yn) {
         if (!hiddenContainerInfo) setHiddenContainerInfo(true);
         return;
       } else {
         if (hiddenContainerInfo) setHiddenContainerInfo(false);
       }
 
-      // log("handleFieldReadOnly1", field, containerType, type_group);
+      log("handleFieldReadOnly1", field, containerType, type_group, !hiddenContainerInfo && !dg_yn);
       switch(field) {
         case "un_no":
         case "class":
@@ -246,15 +246,9 @@ const CargoFCL = memo(
               width="w-24"
             />
 
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_pkg_type`}
-              id="pkg_type"
-              value={bkData?.cargo?.pkg_type}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
-           <div className="flex w-32">              
+           {/*
+            향후 UFS+ 연동시 사용
+            <div className="flex w-32">              
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "pkg_type")}
                 label="pkg_type"
@@ -280,7 +274,7 @@ const CargoFCL = memo(
                 defaultValue={cargoItem?.pkg_type}
                 inline={false}
               />
-            </div>
+            </div> */}
 
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_container_refno`}
@@ -310,16 +304,9 @@ const CargoFCL = memo(
               options={{type:"number"}}
               width="w-24"
             />
-            {/* selectbox 수정예정 */}
-            {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_slac_uom`}
-              id="slac_uom"
-              value={bkData?.cargo?.slac_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
-
+            
+            {/* 
+            향후 UFS+ 연동시 사용
             <div className="flex w-28">              
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "slac_uom")}
@@ -346,7 +333,7 @@ const CargoFCL = memo(
                 defaultValue={cargoItem?.slac_uom}
                 inline={false}
               />
-            </div>
+            </div> */}
 
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_gross_wt`}
@@ -358,6 +345,7 @@ const CargoFCL = memo(
               width="w-24"
             />
             
+            {/* 향후 UFS+ 연동시 사용
             <div className="flex w-28">
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "gross_uom")}
@@ -384,7 +372,7 @@ const CargoFCL = memo(
                 defaultValue={cargoItem?.gross_uom}
                 inline={false}
               />
-            </div>
+            </div> */}
 
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_measurement`}
@@ -395,7 +383,8 @@ const CargoFCL = memo(
               options={{}}
               width="w-24"
             />
-           
+
+            {/* 향후 UFS+ 연동시 사용
              <div className="flex w-28">              
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "measurement_uom")}
@@ -422,14 +411,15 @@ const CargoFCL = memo(
                 defaultValue={cargoItem?.measurement_uom}
                 inline={false}
               />
-            </div>
+            </div> */}
             <Checkbox id={getID(index, cargoItem?.seq, "dg_yn")}
                       label="dg" value={cargoItem?.dg_yn} 
                       options={{
                         inline:false,
                       }}
                       events ={{
-                        onChange : handleCheckBoxClick
+                        onChange : handleCheckBoxClick,
+                        onClick: handleFieldReadOnly("dg_yn")
                         }}/>
           </div>
 
@@ -534,7 +524,9 @@ const CargoFCL = memo(
               options={{isReadOnly : !handleFieldReadOnly("class") }}
               width="w-24"
             />
-            <MaskedInputField
+            
+            {/* 향후 UFS+ 연동시 사용
+             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_volume_factor`}
               id={getID(index, cargoItem?.seq, "volume_factor")}
               label="volume_factor"
@@ -560,7 +552,7 @@ const CargoFCL = memo(
               events={{ onChange: onChange }}
               options={{ isReadOnly :  true }}
               width="w-24"
-            />
+            /> */}
           </div>
         </div>
       </>
@@ -619,6 +611,7 @@ const CargoLCL = memo(
               width="w-24"
             />
 
+              {/* 향후 UFS+ 연동시 사용
               <div className="flex w-32">              
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "pkg_type")}
@@ -645,18 +638,8 @@ const CargoLCL = memo(
                 defaultValue={cargoItem?.pkg_type}
                 inline={false}
               />
-            </div>
+            </div> */}
 
-
-             {/* selectbox 수정예정 */}
-              {/* <MaskedInputField
-              key={`${index}_${bkData?.cargo?.seq}_slac_uom`}
-              id="slac_uom"
-              value={bkData?.cargo?.slac_uom}
-              events={{ onChange: handleChange }}
-              options={{}}
-              width="w-24"
-            /> */}
               <MaskedInputField
               id={getID(index, cargoItem?.seq, "length")}
               label="length"
