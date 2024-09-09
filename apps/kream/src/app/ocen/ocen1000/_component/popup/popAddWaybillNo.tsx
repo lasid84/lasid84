@@ -7,7 +7,7 @@ import Grid, { gridData, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-en
 import { useGetData, useUpdateData2 } from "@/components/react-query/useMyQuery";
 import { GridOption } from "@/components/grid/ag-grid-enterprise";
 import { CellValueChangedEvent, IRowNode } from "ag-grid-community";
-import { SP_GetBkHblData, SP_SaveBkHblData } from "./data";
+import { SP_GetBkHblData, SP_SaveBkHblData } from "../data";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 

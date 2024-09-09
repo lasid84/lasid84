@@ -143,7 +143,8 @@ export default function OCEN1000() {
         var data = {
           ...((newData as string[])[0] as unknown as gridData).data[0],
           cargo : ((newData as string[])[1] as unknown as gridData).data,
-          cost : ((newData as string[])[2] as unknown as gridData).data
+          // cost : ((newData as string[])[2] as unknown as gridData).data
+          cost : ((newData as string[])[2] as unknown as gridData) // grid사용으로 gridData로 맞추기
         }
         log("useEffect detailData", data);
         dispatch({[objState?.MselectedTab]:data})

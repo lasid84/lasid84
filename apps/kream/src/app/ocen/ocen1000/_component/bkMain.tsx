@@ -8,8 +8,8 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
-import ShpContPopUp from "./popShippercont";
-import WabillPopUp from "./popAddWaybillNo"
+import ShpContPopUp from "./popup/popShippercont";
+import WabillPopUp from "./popup/popAddWaybillNo"
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";

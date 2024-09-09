@@ -2,15 +2,7 @@ import DialogBasic from "layouts/dialog/dialog"
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { useEffect, useCallback, useRef, memo, useState } from "react";
 import { useAppContext } from "components/provider/contextObjectProvider"
-import { Button } from "components/button"
 import { useTranslation } from "react-i18next";
-import { PageGrid } from "layouts/grid/grid";
-import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-import { toastSuccess } from "components/toast"
-import {  useUpdateData2 } from "components/react-query/useMyQuery";
-import { LabelGrid } from "@/components/label";
-import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
-import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
 import ShpContModal from 'components/commonForm/customerContact';
 

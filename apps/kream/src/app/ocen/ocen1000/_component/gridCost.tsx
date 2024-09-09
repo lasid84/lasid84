@@ -25,16 +25,16 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
   const { Update } = useUpdateData2(SP_UpdateCost, SEARCH_D);
   const [gridOptions, setGridOptions] = useState<GridOption>();
 
-  const {
-    data: costData,
-    refetch: costRefetch,
-    remove: costRemove,
-  } = useGetData(
-    { bk_no: objState?.MselectedTab },
-    SEARCH_CST,
-    SP_GetCostData,
-    { enabled: true }
-  );
+  // const {
+  //   data: costData,
+  //   refetch: costRefetch,
+  //   remove: costRemove,
+  // } = useGetData(
+  //   { bk_no: objState?.MselectedTab },
+  //   SEARCH_CST,
+  //   SP_GetCostData,
+  //   { enabled: true }
+  // );
 
   // useEffect(() => {
   //   if (objState.isCSTSearch) {
@@ -50,9 +50,11 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
   // },[costData])
 
   useEffect(() => {
+    log("useEffect gridCost", bkData);
     const gridOption: GridOption = {
       colVisible: {
-        col: ["bk_id", "uuid", "sort_id", "import_export_ind","type", "use_yn", "create_date", "create_user", "update_date", "update_user" ],
+        col: ["bk_id", "uuid", "sort_id", "ppc_ind", "cost_currency_code", "invoice_currency_code", "import_export_ind", "invoice_wb_currency_code", "print_ind", "vat_cat_code_ap",
+          "type", "use_yn", "create_date", "create_user", "update_date", "update_user" ],
         visible: false,
       },
       gridHeight: "60vh",
@@ -119,7 +121,7 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
         <>
           <Grid
             gridRef={gridRef}
-            listItem={costData as gridData}
+            listItem={bkData?.cost as gridData}
             options={gridOptions}
             event={{}}
           />

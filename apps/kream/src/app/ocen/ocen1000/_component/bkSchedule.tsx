@@ -13,16 +13,16 @@ import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
 import { SP_GetPickupContData, SP_GetCarrierContData, SP_SendEmail } from "./data";
 import { SP_GetTransPortData } from "@/app/stnd/stnd0012/_component/data";
-import PicupPlacePopUp from "./popPickupcont"
-import TransportEmailRcvPopup from "./popEmailRcvList"
-import TransportEmailSendPopup from "./popEmailSend"
-import CarrierContPopUp from "./popCarriercont";
+import PicupPlacePopUp from "./popup/popPickupcont"
+import TransportEmailRcvPopup from "./popup/popEmailRcvList"
+import TransportEmailSendPopup from "./popup/popEmailSend"
+import CarrierContPopUp from "./popup/popCarriercont";
 import { Button } from "components/button";
 import dayjs from "dayjs";
 import { SP_GetDetailData } from "@/components/commonForm/customerPickupPlace/_component/data";
 import { SP_GetCYContactData } from "@/components/commonForm/containerYardContact/_component/data";
 import { SP_GetMasterData } from "@/app/ocen/ocen0004/_component/data";
-import CYPlaceContPopUp from './popCyPlaceCont';
+import CYPlaceContPopUp from './popup/popCyPlaceCont';
 import { TRANPOSRT_EMAIL_LIST_OE } from "@/components/commonForm/mailReceiver/_component/data";
 
 // import { useGetData } from './test'
