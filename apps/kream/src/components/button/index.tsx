@@ -16,6 +16,10 @@ import { SP_InsertLog } from "@/services/clientAction";
 import { useUpdateData2 } from "../react-query/useMyQuery";
 import { usePathname } from "next/navigation";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { RiMailSendFill } from "react-icons/ri";
+import { RiUserSettingsLine } from "react-icons/ri";
+import { FaTruckPickup } from "react-icons/fa";
+import { LuContainer } from "react-icons/lu";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -88,18 +92,23 @@ const getColor = (label: string, color: string = "") => {
       case "search":
       case "check":
       case "request":
+      case "send":
         c = "sky-fill";
         break;
       case "add":
       case "add_m":
       case "add_d":
       case "new":
+      case "mail_rcvlist":
+      case "manage_pickup":
+      case "manage_cont_cy":
         c = "gray-outline";
         break;
       case "delete":
         c = "light-gray-outline"
         break;
       case "download":
+      case "send_email":  
         c = "sky-outline";
         break;
       case "save":
@@ -169,6 +178,18 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "delete":
       icon = <RiDeleteBinLine size={size} />
+      break;
+    case "send_email":
+      icon = <RiMailSendFill size={size} />
+      break;
+    case "mail_rcvlist":
+      icon = <RiUserSettingsLine size={size} />
+      break;
+    case "manage_pickup":
+      icon = <FaTruckPickup size={size}/>
+      break;
+    case "manage_cont_cy":
+      icon = <LuContainer size={size} />
   }
   return icon;
 };

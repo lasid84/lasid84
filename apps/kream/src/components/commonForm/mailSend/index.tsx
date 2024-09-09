@@ -8,7 +8,7 @@ import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvid
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import { PageGrid } from "layouts/grid/grid";
+import { PageGrid, PagePopupGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "components/toast"
@@ -36,34 +36,16 @@ const MailSend: React.FC<Props> = ({ ref = null, initData, params }) => {
     const { data, refetch, remove } = useGetData({...params}, SEARCH_D, SP_GetDetailData);
 
     const gridOptions: GridOption = {
-        colVisible: { col: ["cust_code", "pickup_seq", "addr", "fax_num", "create_date", "create_user"], visible: false },
+        colVisible: { col: ["cust_code", "pickup_nm","tel_num","pickup_seq","remark", "addr", "fax_num", "create_date", "create_user"], visible: false },
         gridHeight: "h-full",
         checkbox: ["use_yn", "def"],
-        minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 20, "def": 20 },
+        minWidth: { "pic_nm": 100, "addr": 230, "email": 150, "use_yn": 20, "def": 20 },
         // maxWidth : {"use_yn": 80, "def": 80  },
         editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
         dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno", "remark":"largetext" },
         isAutoFitColData: false,
     };
 
-    // useEffect(() => {
-    //     if (true) {
-    //         // log(initData[0].data)
-            
-    //         const gridOption: GridOption = {
-    //             colVisible: { col: ["cust_code", "pickup_seq", "fax_num", "create_date", "create_user"], visible: false },
-    //             gridHeight: "h-full",
-    //             checkbox: ["use_yn", "def"],
-    //             minWidth: { "pickup_nm": 170, "addr": 230, "email": 80, "use_yn": 30, "def": 30 },
-    //             // maxWidth : {"use_yn": 80, "def": 80  },
-    //             editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
-    //             dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno" },
-    //             isAutoFitColData: false,
-    //         };
-
-    //         setGridOptions(gridOption);
-    //     }
-    // }, [])
 
     useEffect(() => {
         remove();
@@ -168,7 +150,7 @@ const MailSend: React.FC<Props> = ({ ref = null, initData, params }) => {
 
     return (
         <>
-            <PageGrid
+            <PagePopupGrid
                 title={
                     <><LabelGrid id={'pickup'} /></>}
                 right={
@@ -186,7 +168,7 @@ const MailSend: React.FC<Props> = ({ ref = null, initData, params }) => {
                         onSelectionChanged: handleSelectionChanged
                     }}
                 />
-            </PageGrid>
+            </PagePopupGrid>
         </>
 
     );
