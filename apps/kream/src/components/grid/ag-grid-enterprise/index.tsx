@@ -634,7 +634,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onRowClicked = (param: RowClickedEvent) => {
-    log("onRowClicked")
+    // log("onRowClicked")
     // return {"colId": param.node.id, ...param.node.data};
 
     if (event?.onRowClicked) event.onRowClicked(param);
@@ -642,13 +642,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
 
   const onRowDoubleClicked = (param: RowDoubleClickedEvent) => {
-    log("onRowDoubleClicked")
+    // log("onRowDoubleClicked")
     if (event?.onRowDoubleClicked) event.onRowDoubleClicked(param);
   }
 
 
   const onCellValueChanged = (param: CellValueChangedEvent) => {
-    log("onCellValueChanged")
+    // log("onCellValueChanged")
     var rowNode = param.node;
     // rowNode.data[ROW_CHANGED] = true;
     rowNode.setData({...rowNode.data, [ROW_CHANGED]:true});

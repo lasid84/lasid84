@@ -12,10 +12,12 @@ export default function Login() {
 
   const router = useRouter();
   const [isReady, setReady] = useState(false);
+  
   var session;
   useEffect(() => {
     const sessionCheck = async () => {
       session = await getSession();
+      log("layout page useEffect", session);
       if (session) router.replace('/dashboard');
       setReady(true);
     };

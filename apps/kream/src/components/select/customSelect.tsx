@@ -67,7 +67,7 @@ const useDebounce = (value: any, delay: any) => {
 
 function CustomSelect(props: Props) {
   const { dispatch, objState } = useAppContext();
-  const { mSelectedRow, selectedobj } = objState
+  const { mSelectedRow, selectedobj, isRefresh } = objState
 
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -104,10 +104,17 @@ function CustomSelect(props: Props) {
     setIsOpen(!isOpen);
     if (!isOpen) {
       setIsGridReady(false);
-
+    } else {
+      // if ()
     }
-
   };
+
+  useEffect(() => {
+    if (isRefresh) {
+      setFilteredData(listItem);
+      // handleXClick(null);
+    }
+  }, [isRefresh])
 
   useEffect(() => {
       // log("listitem useEffect", listItem)
@@ -130,42 +137,42 @@ function CustomSelect(props: Props) {
     };
   }, []);
 
-  useEffect(() => {
-    // log("useEffect isOpen, isGridReady, selectedRow", selectedRow)
-    if (isGridReady && selectedRow ) {
-      var param = selectedRow;
-      if (valueCol?.some(v => param[v])) {
-        var i = -1;
-        for (i = 0; i < filteredData?.data.length; i++) {
-          if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
-        }
-        // log('??', valueCol, displayCol, selectedRow, i, filteredData?.data[i]);
-        if (!gridRef.current) return;
-        if (i < 0) return;
-        // gridRef.current.api.ensureIndexVisible(i, 'top');
-        // 약간의 딜레이 후에 포커스 설정 (렌더링이 완료될 시간을 줌)
-        setTimeout(() => {
-          // log("useEffect in customselect ", gridRef.current.api?.getSelectedRows())
-          gridRef.current?.api?.setFocusedCell(i, /*valueCol[0]*/ displayCol);
-          if (gridRef.current?.api.getRowNode(i)) gridRef.current?.api.getRowNode(i).setSelected(true);
-        }, 100);
-      } else {
+  // useEffect(() => {
+  //   if (id.includes('container_type')) log("useEffect isOpen, isGridReady, selectedRow", selectedRow)
+  //   if (isGridReady && selectedRow) {
+  //     var param = selectedRow;
+  //     if (valueCol?.some(v => param[v])) {
+  //       var i = -1;
+  //       for (i = 0; i < filteredData?.data.length; i++) {
+  //         if (valueCol?.every(v => param[v] === filteredData?.data[i][v])) break;
+  //       }
+  //       // log('??', valueCol, displayCol, selectedRow, i, filteredData?.data[i]);
+  //       if (!gridRef.current) return;
+  //       if (i < 0) return;
+  //       // gridRef.current.api.ensureIndexVisible(i, 'top');
+  //       // 약간의 딜레이 후에 포커스 설정 (렌더링이 완료될 시간을 줌)
+  //       setTimeout(() => {
+  //         // log("useEffect in customselect ", gridRef.current.api?.getSelectedRows())
+  //         gridRef.current?.api?.setFocusedCell(i, /*valueCol[0]*/ displayCol);
+  //         if (gridRef.current?.api.getRowNode(i)) gridRef.current?.api.getRowNode(i).setSelected(true);
+  //       }, 100);
+  //     } else {
 
-      }
-    }
-  }, [isGridReady, selectedRow])
+  //     }
+  //   }
+  // }, [isGridReady, selectedRow])
 
   useEffect(() => {
-    // log("useEffect defaultValue, listItem, valueCol", id, defaultValue)
+    if (id.includes('container_type')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue)
     if (listItem?.data.length) {
-
+      
       if (!defaultValue) {
-        if (gridRef.current) {
-          gridRef.current.api?.deselectAll();
-          // gridRef.current.api?.setFocusedCell(null);
-          // gridRef.current.api.ensureIndexVisible(0);
-        }
-        setSelectedValue(null);
+        // if (gridRef.current) {
+        //   gridRef.current.api?.deselectAll();
+        //   // gridRef.current.api?.setFocusedCell(null);
+        //   // gridRef.current.api.ensureIndexVisible(0);
+        // }
+        // setSelectedValue(null);
         return;
       }
 
@@ -176,14 +183,14 @@ function CustomSelect(props: Props) {
         else return item[displayCol] === defaultValue
       });
 
-      // log("useffect isOpen",  gridRef.current, index)
+      // if (id.includes('container_type')) log("useffect isOpen",  gridRef.current, index, initialData)
 
-      if (gridRef.current) {
-        if (index > -1 && gridRef.current.api && gridRef.current.api.getRowNode(index)) {
-          gridRef.current.api.setFocusedCell(index, /*valueCol![0]*/displayCol);
-          gridRef.current.api.getRowNode(index)?.setSelected(true);
-        }
-      }
+      // if (gridRef.current) {
+      //   if (index > -1 && gridRef.current.api && gridRef.current.api.getRowNode(index)) {
+      //     gridRef.current.api.setFocusedCell(index, /*valueCol![0]*/displayCol);
+      //     gridRef.current.api.getRowNode(index)?.setSelected(true);
+      //   }
+      // }
 
       setSelectedValue(initialData);
       // setDisplayVal(initialData);
@@ -225,11 +232,29 @@ function CustomSelect(props: Props) {
         setOpenDirection('down');
       }
 
-      // log("useEffect isOpen getSelectedNodes", gridRef.current?.api.getSelectedNodes()[0]);
+      // log("useEffect isOpen getSelectedNodes", gridRef.current?.api.getSelectedNodes());
       if (gridRef.current) {
+
+        if (!defaultValue) {
+          // gridRef.current.api.clearFocusedCell(); <- 안먹음
+          return;
+        }
+
+        var rowIndex = 0;
         if (gridRef.current?.api.getSelectedNodes().length) {
-          var rowIndex = gridRef.current?.api.getSelectedNodes()[0].rowIndex
-          gridRef.current.api.ensureIndexVisible(rowIndex);
+          rowIndex = gridRef.current?.api.getSelectedNodes()[0].rowIndex
+          // gridRef.current.api.ensureIndexVisible(rowIndex);
+        } 
+
+        let i = 0;
+        for (; i < filteredData?.data.length; i++) {
+          if (filteredData && filteredData.data[i][valueCol![0]] === defaultValue) break;
+        }
+        // log("=============isOpen", id, rowIndex, i)
+        if (rowIndex !== i && gridRef.current?.api.getRowNode(i)) {
+          // gridRef.current.api.clearFocusedCell();
+          gridRef.current.api.setFocusedCell(i, /*valueCol![0]*/displayCol);
+          gridRef.current.api.getRowNode(i).setSelected(true);
         }
       }
     }
@@ -263,18 +288,10 @@ function CustomSelect(props: Props) {
   const handleSelectionChanged = (param: SelectionChangedEvent) => {
     var selectedRow = param.api.getSelectedRows()[0];
 
-    // log("custom select - handleSelectionChanged", param, id, selectedRow)
-
-    //이걸하면 x 버튼 클릭시 page에서 설정한 이벤트를 안탐
-    // if (selectedRow === undefined) return;
-    // setSelectedValue(selectedRow, false);
-    // setDisplayVal(selectedRow);
-    // setValue(id, selectedRow ? selectedRow[id] : null);
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
       events?.onSelectionChanged(param, id, val);
     }
-
   }
 
   const handleOnGridReady = (param: any) => {
@@ -292,13 +309,15 @@ function CustomSelect(props: Props) {
 
   const setSelectedValue = (row: any, toggle = true) => {
     
-    if (valueCol) valueCol.map((key,i) => {
-      let val = (row && row[key]) ? row[key] : null;
-      if (i === 0) setValue(id, val);
-
-      //거래처 관리 main_cust_code 쪽 문제가 됨(cust_code에 main_cust_code가 표시됨으로 아래 주석)
-      // setValue(key, val);
-    });
+    if (valueCol) {
+      valueCol.map((key,i) => {
+        let val = (row && row[key]) ? row[key] : null;
+        if (i === 0) setValue(id, val);
+        // log("setSelectedValue", id, val, row);
+        //거래처 관리 main_cust_code 쪽 문제가 됨(cust_code에 main_cust_code가 표시됨으로 아래 주석)
+        // setValue(key, val);
+      });
+    }
     else Object.keys(row || {}).map(key => setValue(key, row[key] ? row[key] : null));
 
     setSelectedRow(row);
@@ -315,16 +334,18 @@ function CustomSelect(props: Props) {
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
     }
-    // log("setDisplayVal", displayCol, val, row)
+    // log("setDisplayVal", displayCol, val, row, displayText)
     setDisplayText(val);
   }
 
   const handleXClick = (e: any) => {
     // log("handleXClick", gridRef, gridRef.current, selectedRow)
     if (selectedRow && gridRef.current && gridRef.current.api?.getSelectedRows()) gridRef.current.api.deselectAll();
+
     setSelectedValue(null);
     // setDisplayVal(null);
     setFilteredData(listItem);
+
     setIsOpen(false);
   }
 
@@ -357,6 +378,7 @@ function CustomSelect(props: Props) {
       setFilteredData(listItem);
       return;
     }
+    
     let visible = gridOption?.colVisible?.visible;
     let filterCols = listItem?.fields.map((obj: { [x: string]: any; }) => obj["name"])
       .filter((val: string) => {
@@ -453,10 +475,16 @@ function CustomSelect(props: Props) {
                   case "ArrowDown":
                     // ref2?.current?.focus();
                     e.preventDefault();
-                    // log("onKeyDown", id, gridRef, gridRef.current);
                     if (!isOpen) setIsOpen(true);
-                    gridRef.current.api.setFocusedCell(0, /*valueCol![0]*/displayCol);
-                    gridRef.current.api.getRowNode(0).setSelected(true);
+                    var rowIndex = -1;
+                    if (gridRef.current.api?.getSelectedNodes()[0] && gridRef.current.api?.getSelectedNodes()[0].id) rowIndex = gridRef.current.api?.getSelectedNodes()[0].id;
+                    // // gridRef.current.api.ensureIndexVisible(rowIndex, 'top');
+                    var move = e.key === 'ArrowUp' ? -1 : 1;
+                    log("Arrow", gridRef.current.api?.getSelectedNodes(), rowIndex, isOpen && gridRef.current.api.getRowNode(Number(rowIndex)+move));
+                    if (isOpen && gridRef.current.api.getRowNode(Number(rowIndex)+move)) {
+                      gridRef.current.api.setFocusedCell(Number(rowIndex)+move, /*valueCol![0]*/displayCol);
+                      gridRef.current.api.getRowNode(Number(rowIndex)+move).setSelected(true);
+                    }
 
                     break;
                   case "Enter":

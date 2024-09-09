@@ -60,7 +60,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     useEffect(() => {
         if (objState.isMSearch) {
             mainRefetch();
-            log("mainisSearch", objState.isMSearch);
+            // log("mainisSearch", objState.isMSearch);
             dispatch({ isMSearch: false });
             if (gridRef_m.current) gotoFirstRow(gridRef_m.current)
         }
@@ -74,7 +74,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     
 
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
-        log("handleRowDoubleClicked")
+        // log("handleRowDoubleClicked")
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {

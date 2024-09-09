@@ -72,9 +72,9 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
     }
   }, [])
 
-  useEffect(() => {
-    log("cyPlaceData", bkData);
-  }, [cyPlaceData])
+  // useEffect(() => {
+  //   log("cyPlaceData", bkData);
+  // }, [cyPlaceData])
 
   useEffect(()=> {
     if (isRefreshCyCont && cyPlaceContData && crTaskContData && crSalesContData && bkData) {
@@ -257,7 +257,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     events={{
                       onSelectionChanged(e, id, value) {
                         if (!bkData) return;
-                        log("transport_company onChange", bkData, id, value)
+                        // log("transport_company onChange", bkData, id, value)
                         var selectedRow = e.api.getSelectedRows()[0];
                         // bkData.transport_company_nm = selectedRow.cust_nm;
                         

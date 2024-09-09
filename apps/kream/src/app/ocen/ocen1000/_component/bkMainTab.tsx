@@ -62,7 +62,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   const { getValues } = useFormContext();
 
-  const onRefresh = () => { dispatch({ isMDSearch: true }) }
+  const onRefresh = () => { dispatch({ isRefresh : true, isMDSearch: true }) }
 
   const onSearch = () => {}
 
@@ -90,7 +90,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         },
       })
     } else {
-      log("UpdateBKData", Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val), bkData[ROW_CHANGED])
+      log("UpdateBKData", Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val), bkData[ROW_CHANGED], bkData)
       if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};

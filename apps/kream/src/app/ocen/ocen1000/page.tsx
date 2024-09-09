@@ -40,6 +40,7 @@ export default function OCEN1000() {
       isMDSearch: false,
       isCGOSearch: false,   //Cargo
       isCSTSearch : false,  //Cost
+      isRefresh : false,
       mSelectedRow: {},
       mSelectedCargo: {},
       tab1: [{ cd: "Main", cd_nm: "Main" }],
@@ -135,7 +136,7 @@ export default function OCEN1000() {
 
   useEffect(() => {
     if (objState.isMDSearch) {
-      dispatch({ isMDSearch: false });
+      dispatch({ isRefresh:false, isMDSearch: false });
 
       const fetchDataAsync = async () => {
         const { data: newData } = await detailRefetch(); // refetch 호출 후 응답 대기 

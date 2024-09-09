@@ -17,7 +17,7 @@ export const SP_GetCYContactData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
   const {place_code, cont_type, user_id, ipaddr } = Param;
-  log("SP_GetCYContactData", Param)
+  // log("SP_GetCYContactData", Param)
   const params = {
     inparam : [
         "in_place_code"
