@@ -8,6 +8,7 @@ import { FileUpload } from "components/file-upload";
 import { PageContentDivided } from "layouts/search-form/page-search-row";
 import MailSend from "@/components/commonForm/mailSend";
 import { Checkbox } from "@/components/checkbox";
+import { Button } from "components/button";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -47,11 +48,12 @@ const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
       title={t("Mail")}
       bottomRight={
         <>
-          {/* <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" /> */}
+          <Button id={"send"} onClick={closeModal} width="w-32" />
+          <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />
         </>
       }
     >
-      <div className="flex w-[78rem] h-[32rem] gap-4 ">
+      <div className="flex w-[82rem] h-[32rem] gap-4 ">
         <div className="flex w-1/3 h-full">
           {/* grid */}
           <MailSend
