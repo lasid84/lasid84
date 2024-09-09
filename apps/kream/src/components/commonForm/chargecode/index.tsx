@@ -178,4 +178,4 @@ const ChargeCode: React.FC<Props> = ({ ref = null, initData, params }) => {
     );
 }
 
-export default CustCont;
+export default ChargeCode;
