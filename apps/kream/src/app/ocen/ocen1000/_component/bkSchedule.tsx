@@ -113,14 +113,14 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
     }
   }
 
-  const sendTransPortEmail = useCallback(async () => {
-    log("sendTransPortEmail", bkData)
-    await sendEmail.mutateAsync({...bkData, pgm_code: TRANPOSRT_EMAIL_LIST_OE + bkData?.transport_company}, {
-      onSuccess(data, variables, context) {
-      },
-    })
-    .catch(() => {});
-  }, []);
+  // const sendTransPortEmail = useCallback(async () => {
+  //   log("sendTransPortEmail", bkData)
+  //   await sendEmail.mutateAsync({...bkData, pgm_code: TRANPOSRT_EMAIL_LIST_OE + bkData?.transport_company}, {
+  //     onSuccess(data, variables, context) {
+  //     },
+  //   })
+  //   .catch(() => {});
+  // }, []);
     
   
   return (
@@ -236,7 +236,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <PicupPlacePopUp callbacks={[pickupRefetch]} />
                 <CYPlaceContPopUp callbacks={[cyPlaceContRefetch]} />
                 <TransportEmailRcvPopup cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
-                <TransportEmailSendPopup cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
+                <TransportEmailSendPopup bk_id={bkData?.bk_id} cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
                 <div className="col-start-1 col-end-2"> 
                   <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
                 </div>

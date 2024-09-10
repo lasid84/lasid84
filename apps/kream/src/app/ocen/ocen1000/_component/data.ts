@@ -1,6 +1,6 @@
 
 
-import { executFunction } from "@/services/api.services";
+import { executFunction  } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
 import { FaBullseye } from "react-icons/fa6";
@@ -1058,21 +1058,28 @@ export const SP_UpdateCost = async (param: any) => {
 }
 
 
+
 export const SP_SendEmail = async (param: any) => {
-  
+  // l(in_subject text, in_content text, in_pgm_code text, in_attachment text, i
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  // log("param : ", param)
-  const { pgm_code, bk_id, user_id, ipaddr} = Param;
+   log("param : ", param)
+  const { subject, content, pgm_code,attachment, bk_id, user_id, ipaddr} = Param;
   const params = {
     inparam : [
-      "in_pgm_code"
+     "in_subject"
+    , "in_content"
+    , "in_pgm_code"
+    , "in_attachment"
     , "in_bk_id"
     , "in_user"
     , "in_ipaddr"
     ],
     invalue: [
-      pgm_code
+      subject
+    , content      
+    , pgm_code
+    , attachment
     , bk_id
     , user_id
     , ipaddr
@@ -1110,6 +1117,6 @@ export const SP_GetReportData = async (param: any) => {
     isShowComplete:false,
     }
   
-    const result = await executFunction(params);
-    return result;
+    // const result = await executeReportDownload(params);
+    // return result;
 }
