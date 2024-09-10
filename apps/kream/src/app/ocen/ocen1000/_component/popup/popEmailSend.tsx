@@ -5,26 +5,71 @@ import { MaskedInputField, Input, TextArea } from "components/input";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { useTranslation } from "react-i18next";
 import { FileUpload } from "components/file-upload";
+import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { PageContentDivided } from "layouts/search-form/page-search-row";
 import MailSend from "@/components/commonForm/mailSend";
 import { Checkbox } from "@/components/checkbox";
 import { Button } from "components/button";
+import { SP_GetMailSample } from "components/commonForm/mailSend/_component/data";
+import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
+import { gridData } from "@/components/grid/ag-grid-enterprise";
+import { SP_SendEmail, SP_GetReportData } from "./data";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
-  ref?: any | null;
-  initData?: any | null;
   cust_code?: string;
   cust_nm?: string;
+  bk_id?: string;
+  initData?: any | null;
   callbacks?: Array<() => void>;
+  ref?: any | null;
 };
 
-const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
+type MailSample ={
+  subject : string;
+  content : string;
+  maillist : {};
+  attachment?: {
+    bknote: boolean;
+    deliv_request : boolean;
+    cust_identification : boolean;
+  }
+}
+
+const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initData, callbacks }) => {
   const gridRef = useRef<any | null>(ref);
   const { dispatch, objState } = useAppContext();
   const { isMailSendPopupOpen: isOpen, MselectedTab } = objState;
 
   const { t } = useTranslation();
+  const { data : mailData, refetch: mailRefetch, remove :mailRemove } = useGetData({bk_id: bk_id, cust_code:cust_code}, '', SP_GetMailSample, {enabled:true});
+  const [mailform, setMailForm] = useState<MailSample>({
+    subject:'',
+    content:'',
+    maillist : {},
+    attachment: {
+      bknote:false,
+      deliv_request: false,
+      cust_identification:false,
+    },
+  });
+
+  const { Create: sendEmail } = useUpdateData2(SP_SendEmail, '');
+  const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
+
+  useEffect(() => {
+    mailRefetch()    
+}, [mailRefetch]);
+
+  useEffect(()=>{
+    if(mailData){
+      setMailForm(
+        {...mailform,
+         ...((mailData as string[]) as unknown as gridData).data[0] 
+        })
+    }
+  },[mailData])
+
 
   const closeModal = () => {
     if (callbacks?.length) callbacks?.forEach((callback) => callback());
@@ -36,19 +81,53 @@ const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
     defaultValues: {},
   });
 
-  const { handleSubmit, reset, setFocus } = methods;
+  const { handleSubmit, reset, setFocus, getValues } = methods;
 
-  const handleFileDrop = (data: any[], header: string[]) => {};
+  const handleFileDrop = (data: any[], header: string[]) => {
+    log('data, header', data, header)
+  };
+
+
+  const sendTransPortEmail = useCallback(async () => {
+        // ※ in_type 		
+        // - 0 : 부킹노트
+        // - 1 : 운송요청서
+        // - 2 : 고객발송용
+        // 1.체크된 첨부파일 서버 생성
+        GetReportData.mutateAsync({bk_id:bk_id}, {
+
+        })
+        // 2.업로드파일 서버생성
+
+        // 1,2 서버경로 리턴하여 attachment에 쉼표구분으로 데이터 insert
+        // 3. sendEmail 실행
+        // await sendEmail.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code}, {
+        //   onSuccess(data, variables, context) {
+        //   },
+        // })
+        // .catch(() => {});
+
+
+  }, [mailform, cust_code]);
+    
+
+  const handleCheckBoxClick = (id : string, val : any) => {
+   log('2323', id, val)
+       setMailForm((prevState) => ({
+      ...prevState,
+      [id]: val,
+    }));
+  }
 
   return (
     // <FormProvider{...methods}>
     <DialogBasic
       isOpen={isOpen}
       onClose={closeModal}
-      title={t("Mail")}
+      title={t(TRANPOSRT_EMAIL_LIST_OE)}
       bottomRight={
         <>
-          <Button id={"send"} onClick={closeModal} width="w-32" />
+          <Button id={"send"} onClick={sendTransPortEmail} width="w-32" />
           <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />
         </>
       }
@@ -58,6 +137,8 @@ const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
           {/* grid */}
           <MailSend
             ref={gridRef}
+            pgm_code={TRANPOSRT_EMAIL_LIST_OE + cust_code} 
+            title={cust_nm}
             params={{
               cust_code: objState[MselectedTab]?.shipper_id,
               pickup_type: objState.trans_mode + objState.trans_type,
@@ -71,14 +152,14 @@ const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
             id="subject"
             rows={1}
             cols={32}
-            value={""}
+            value={mailform?.subject||''}
             options={{ isReadOnly: false }}
           />
           <TextArea
             id="content"
             rows={10}
             cols={32}
-            value={""}
+            value={mailform?.content||''}
             options={{ isReadOnly: false }}
           />
           {/* </div> */}
@@ -93,31 +174,31 @@ const Modal: React.FC<Props> = ({ ref = null, initData, callbacks }) => {
               }
               addition={
                 <FileUpload
-                                onFileDrop={handleFileDrop}
-                                isInit={objState.uploadFile_init}
-                                />
+                  onFileDrop={handleFileDrop}
+                  isInit={objState.uploadFile_init}
+                />
               }
             >
               <Checkbox
-                id="DG"
-                label="bknote"
-                value="Y"
+                id="bknote"
+                //label="bknote"
+                value={(mailform?.attachment?.bknote ? "Y" : "N")}
                 options={{ inline: false }}
-                events={{}}
+                events={{onChange: handleCheckBoxClick}}
               />
               <Checkbox
-                id="DG"
-                label="deliv_request"
-                value="Y"
+                id="deliv_request"
+                //label="deliv_request"
+                value={mailform?.attachment?.deliv_request ? "Y" : "N"}
                 options={{ inline: false }}
-                events={{}}
+                events={{onChange: handleCheckBoxClick}}
               />
               <Checkbox
-                id="DG"
-                label="cust_identification"
-                value="Y"
+                id="cust_identification"
+                //label="cust_identification"
+                value={mailform?.attachment?.cust_identification ? "Y" : "N"}
                 options={{ inline: false }}
-                events={{}}
+                events={{onChange: handleCheckBoxClick}}
               />           
                     
             </PageContentDivided>       

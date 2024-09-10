@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef, useState, memo } from "react";
-import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./_component/data";
+import {  SP_GetMailReceiver, SP_SaveData } from "./_component/data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -13,11 +13,15 @@ import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "components/toast"
 import { LabelGrid } from "components/label";
+import { useTranslation } from "react-i18next";
+
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
+    pgm_code: string
     ref?: any | null
+    title?: string
     initData?: any | null
     params: {
         cust_code: string
@@ -25,24 +29,36 @@ type Props = {
     }
 };
 
-const MailSend: React.FC<Props> = ({ ref = null, initData, params }) => {
+const MailSend: React.FC<Props> = ({ ref = null, title, initData, pgm_code, params }) => {
 
     const gridRef = useRef<any | null>(ref);
     const { dispatch, objState } = useAppContext();
-    const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
+    const { Create } = useUpdateData2(SP_SaveData, '');
+    // const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
     // const [gridOptions, setGridOptions] = useState<GridOption>();
+    const [mailform, setMailForm] = useState<any>();
 
-    const { data, refetch, remove } = useGetData({...params}, SEARCH_D, SP_GetDetailData);
+    const { t } = useTranslation();
+
+    // useEffect(() => {
+    //     if (initData) {
+    //         setMailForm(initData[26]);
+    //     }
+    //   }, [initData]);
+
+
+    const { data, refetch, remove } = useGetData({pgm_code: pgm_code}, '', SP_GetMailReceiver, {enabled:false});
+
+
 
     const gridOptions: GridOption = {
-        colVisible: { col: ["cust_code", "pickup_nm","tel_num","pickup_seq","remark", "addr", "fax_num", "create_date", "create_user"], visible: false },
+        colVisible: { col: ["pgm_code", "seq", "create_date", "create_user"], visible: false },
         gridHeight: "h-full",
-        checkbox: ["use_yn", "def"],
-        minWidth: { "pic_nm": 100, "addr": 230, "email": 150, "use_yn": 20, "def": 20 },
-        // maxWidth : {"use_yn": 80, "def": 80  },
-        editable: ["pickup_nm", "addr", "pic_nm", "email", "tel_num", "fax_num", "def", "remark", "use_yn"],
-        dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno", "remark":"largetext" },
+        checkbox: ["use_yn"],
+        minWidth: { "email": 120 },
+        maxWidth : {"use_yn": 80},
+        editable: ["email", "remark", "use_yn"],
+        // dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno", "remark":"largetext" },
         isAutoFitColData: false,
     };
 
@@ -89,70 +105,34 @@ const MailSend: React.FC<Props> = ({ ref = null, initData, params }) => {
         });
     };
 
-    // const onSave = () => {
-    //     var hasData = false;
-    //     gridRef.current.api.forEachNode((node: any) => {
-    //         var data = node.data;
-    //         gridOptions?.checkbox?.forEach((col) => data[col] = data[col] ? 'Y' : 'N');
-    //         if (data.__changed) {
-    //             hasData = true;
-    //             if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-    //                 data.cust_code = params.cust_code;
-    //                 data.pickup_type = params.pickup_type;
-    //                 Create.mutate(data);
-    //             } else { //수정
-    //                 Update.mutate(data);
-    //             }
-    //         }
-    //     });
-    //     // log("onSave", gridRef.current.api, modifiedRows);
-    //     if (hasData) {
-    //         toastSuccess('Success.');
-    //     }
-    // };
 
-    const onSave = () => {
-        const processNodes = async () => {
-          const api = gridRef.current.api;
-          for (const node of api.getRenderedNodes()) {
-            var data = node.data;
-            log("onSave data", node.data);
-            gridOptions?.checkbox?.forEach((col) => {
-              data[col] = data[col] ? "Y" : "N";
-            });
-            if (data.__changed) {
-              try {
-                if (data.__ROWTYPE === ROW_TYPE_NEW) {
-                    data.cust_code = params.cust_code;
-                    data.pickup_type = params.pickup_type;
-                  await Create.mutateAsync(data);
-                } else {
-                  await Update.mutateAsync(data);
-                }
-              } catch (error) {
-                log.error("error:", error);
-              } finally {
-                data.__changed = false;
-              }
-            }
-          }
-        };
-        processNodes()
-          .then(() => {
-            toastSuccess("Success.");
-            dispatch({ isDSearch: true });
-          })
-          .catch((error) => {
-            log.error("node. Error", error);
-          });
-      };
+
+    const onSave = useCallback(async () => {
+      const api = gridRef.current.api;
+      for (const node of api.getRenderedNodes()) {
+        var data = node.data;
+        gridOptions?.checkbox?.forEach((col) => {
+          data[col] = data[col] ? "Y" : "N";
+        });
+  
+        if (data.__changed) {
+            data.pgm_code = pgm_code;
+            await Create.mutateAsync(data, {
+              onSuccess(data, variables, context) {
+                refetch();
+              },
+            })
+            .catch(() => {});
+        }
+      }
+    }, []);
     
 
     return (
         <>
             <PagePopupGrid
                 title={
-                    <><LabelGrid id={'pickup'} /></>}
+                    <><LabelGrid id={t('TRANPOSRT_EMAIL_LIST_OE')} /></>}
                 right={
                     <>
                         <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn":true, "def": false })} width='w-15'/>
