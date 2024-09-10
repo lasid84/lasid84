@@ -4,8 +4,9 @@
 import { useUserSettings } from "states/useUserSettings"
 import { navigate, getSession, getCookies, getToken, getHeaders } from './serverAction';
 import { toastSuccess, toastWaring } from "components/toast";
+import { DataRoutes } from "./api.constants";
 
-const { initAPIService, apiCallPost, init, dataCall, postCall, getCall } = require('@repo/kwe-lib/components/api.service');
+const { initAPIService, apiCallPost, init, dataCall, postCall, getCall, responseBlobPostCall } = require('@repo/kwe-lib/components/api.service');
 // import { init, dataCall, postCall } from '@repo/kwe-lib/components/api.service';
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { sleep } = require('@repo/kwe-lib/components/sleep');
@@ -127,6 +128,20 @@ export async function callUnipass(apiType:string, body:any) {
         url:url        
     };
     return await postCall(config);
+}
+
+export async function executeReportDownload(data:any) {
+    const token = await getToken();
+    let config = await initConfig(null, token);
+    
+    const url = `${config.url}${DataRoutes.BASE}${DataRoutes.URI.FILE_DOWNLOAD}`;
+    
+    config = {
+        ...config,
+        ...data,
+        url:url
+    };
+    return await responseBlobPostCall(config);
 }
 
 // export const callSendEmail = async (params:exeFuncParams, attachments) => {

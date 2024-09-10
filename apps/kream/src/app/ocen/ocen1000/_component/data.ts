@@ -1,6 +1,6 @@
 
 
-import { executFunction } from "@/services/api.services";
+import { executFunction, executeReportDownload } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
 import { FaBullseye } from "react-icons/fa6";
@@ -1105,11 +1105,18 @@ export const SP_GetReportData = async (param: any) => {
     , user_id
     , ipaddr
     ],
-    inproc: 'ocean.f_ocen1000_get_report_data',
+    inproc: 'ocean.f_ocen1000_get_report_data2',
     isShowLoading: false,
     isShowComplete:false,
     }
   
     const result = await executFunction(params);
     return result;
+}
+export const SP_DownloadReport = async (param: any) => {
+  const params = param;
+
+  const result = await executeReportDownload(params);
+  return result;
+
 }
