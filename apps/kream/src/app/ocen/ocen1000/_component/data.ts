@@ -1,6 +1,6 @@
 
 
-import { executFunction, executeReportDownload  } from "@/services/api.services";
+import { executFunction, executeReportDownload } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
 import { FaBullseye } from "react-icons/fa6";
@@ -1117,8 +1117,8 @@ export const SP_GetReportData = async (param: any) => {
     isShowComplete:false,
     }
   
-    // const result = await executeReportDownload(params);
-    // return result;
+    const result = await executFunction(params);
+    return result;
 }
 export const SP_DownloadReport = async (param: any) => {
   const params = param;

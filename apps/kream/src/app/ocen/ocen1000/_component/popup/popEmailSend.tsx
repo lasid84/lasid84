@@ -13,7 +13,7 @@ import { Button } from "components/button";
 import { SP_GetMailSample } from "components/commonForm/mailSend/_component/data";
 import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
-import { SP_SendEmail, SP_GetReportData } from "./data";
+import { SP_SendEmail, SP_GetReportData } from "../data";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
