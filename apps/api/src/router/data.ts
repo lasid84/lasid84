@@ -15,6 +15,7 @@ export default function setUpDataRoutes(routes: Router) {
   routes.post("/limo/data", data.getLimoData);
   routes.post("/external/k-customs/getCargCsclPrgsInfoQry", unipass.getCargCsclPrgsInfoQry);
   routes.get("/external/k-customs/healthcheck", unipass.healthcheck);
+  routes.get("/down2222", unipass.healthcheck);
   
   // 메일 발송
   routes.post("/mailing", mailing.sendMail);
