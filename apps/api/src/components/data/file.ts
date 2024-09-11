@@ -27,21 +27,21 @@ const PdfContentType = "application/pdf";
 const XlsxContentType= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
 type ExcelDataLocation = {
-    [key: string]: {
-        [value: string]: string | number;
-    };
+    [key: string] : string
 };
 
 type FileDownloadRequest = {
     templateType: number,
     fileExtension: number,
     reportData: ExcelDataLocation,
-    fileName: string
+    fileName: string,
+    pageDivide: number
 }
 
 type FileDownloadResponse = {
-    contentType?: string,
-    fileData?: Buffer
+    contentType: string,
+    fileData: Buffer,
+    extension: string
 }
 
 /**
@@ -58,6 +58,8 @@ type FileDownloadResponse = {
  *    #1. 파일 형식 (0. Excel, 1 : pdf)
  * 4. fileName
  *    #1. 다운로드 될 파일 이름.
+ * 5. pageDivide
+ *    #1. 페이지 구분선 추가 열.
  * 
  * [ RESPONSE ]
  * - 사용자가 선택한 파일 형식으로 REPORT 다운로드
@@ -68,8 +70,7 @@ export const fileDownload = async( req : Request, res : Response ) => {
       return res.status(401).json({ errorMessage : "Access token not provided" });
     }
 
-    const request : FileDownloadRequest = req.body
-    let response : FileDownloadResponse;
+    const request : FileDownloadRequest = req.body;
 
     /**
      * @dev
@@ -95,12 +96,32 @@ export const fileDownload = async( req : Request, res : Response ) => {
         await workBook.xlsx.readFile(templateFilePath);
 
         const workSheet = workBook.worksheets[0];
+        const initialPageSetting = workSheet.pageSetup;
 
         for (let location in request.reportData) {
             if (location === "") {
                 continue;
             }
-            workSheet.getCell(location).value = request.reportData[location].value;
+            workSheet.getCell(location).value = request.reportData[location];
+        }
+
+        workSheet.pageSetup = {
+            margins : initialPageSetting.margins,
+            horizontalCentered : true,
+            verticalCentered : true,
+            fitToPage : true,
+            fitToWidth : 1,
+            scale : 100,
+            paperSize : initialPageSetting.paperSize,
+            printArea : initialPageSetting.printArea
+        }
+
+        if (request.pageDivide !== 0 || undefined || null) {
+            const pageBreakRow = workSheet.getRow(request.pageDivide);
+            pageBreakRow.addPageBreak();
+            workSheet.pageSetup.fitToHeight = 2;
+        } else {
+            workSheet.pageSetup.fitToHeight = 1;
         }
 
         const excelBuffer : Buffer = await workBook.xlsx.writeBuffer() as Buffer;
@@ -109,27 +130,29 @@ export const fileDownload = async( req : Request, res : Response ) => {
          * @dev
          * Select response according to fileExtension.
          */
+        let response : FileDownloadResponse;
 
         if (request.fileExtension) {
-            let data = await (libre as any).convertAsync(excelBuffer, '.pdf', undefined);
+            let data = await (libre as any).convertAsync(excelBuffer, 'pdf', undefined);
 
             response = {
                 fileData : data,
-                contentType : PdfContentType
+                contentType : PdfContentType,
+                extension : '.pdf'
             }
         } else {
             response = {
                 fileData : excelBuffer,
-                contentType : XlsxContentType
+                contentType : XlsxContentType,
+                extension : '.xlsx'
             }
         }
 
-        res.set({
-            'Content-Disposition': `\'attachment;  filename=\"${request.fileName}\"`,
-            'Content-Type': `\'${response.contentType}\'`,
-        });
+        res.setHeader('Content-Disposition', 'attachment');
+        res.setHeader('Content-Type', response.contentType);
+        res.attachment(request.fileName + response.extension);
 
-        return res.status(200).send(response.fileData);
+        res.status(200).send(response.fileData);
     } catch (err) {
         return res.status(500).json({ errorMessage : "Error occurs While change excel file value.", error : err });
     }
@@ -186,11 +209,11 @@ export const fileUpload = async( req : Request, res : Response ) => {
  */
 const selectTemplateFile = (templateType:number) : string => {
     switch(templateType) {
-        case 1:
+        case 0:
             return BasePath + "booking_note.xlsx";
-        case 2:
+        case 1:
             return BasePath + "transport_request.xlsx";
-        case 3:
+        case 2:
             return BasePath + "customer_dispatch.xlsx";
         default:
             return ""           

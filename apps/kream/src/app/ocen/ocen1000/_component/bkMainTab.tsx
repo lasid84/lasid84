@@ -8,7 +8,7 @@ import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_InsertCost, SP_UpdateCargo, SP_UpdateCost, SP_UpdateData } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_InsertCost, SP_UpdateCargo, SP_UpdateCost, SP_UpdateData, SP_DownloadReport } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
@@ -32,7 +32,6 @@ export interface typeloadItem {
 }
 
 const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
-  
   const { dispatch, objState } = useAppContext();
   const { MselectedTab, gridRef_cost } = objState;
   const [ref, setRef] = useState(objState.gridRef_m);
@@ -46,6 +45,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { Update:UpdateCost } = useUpdateData2(SP_UpdateCost);
 
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
+  const { Create : Download } = useUpdateData2(SP_DownloadReport, "Download");
 
   const [reporttype, setReporttype] = useState<any>();
 
@@ -196,15 +196,84 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   }
 
   const onDropButtonClick = async (e: any) => {
-    log("onDropButtonClick1", e)
+    const curData = getValues();
+
     if (e === null || e === undefined) return;
     GetReportData.mutateAsync({type: e, bk_id:bkData.bk_id}, {
       onSuccess: (res: any) => {
-        let report_data = res[0].data[0];
-        log("onDropButtonClick2", res.data, report_data);
+
+        let pageDivide;
+        let voccID : any;
+
+        if (res[0] !== undefined) {
+
+          let reportData : any = new Object;
+
+          /**
+           * @Dev
+           * Separate excel cell value from file name, page divide.
+           */
+          for (let [key, value] of Object.entries(res[0].data[0])) {
+            if (value === null || value === undefined) {
+              value = ""
+            }
+
+            switch(key) {
+              case "page_divide":
+                pageDivide = value;
+                break;
+              case "vocc_id":
+                voccID = value;
+                break;
+              default:
+                reportData[key.toUpperCase()] = value;
+            }
+          }
+
+
+          const templateType = Number(e);
+          const fileExtension : Number = Number(curData.search_gubn) || 0;
+
+          const fileName = loadItem[21].data[templateType].report_type_nm.concat("_", voccID);
+
+          const downloadData = {
+              "reportData" : reportData, 
+              "fileExtension" : fileExtension, 
+              "templateType" : templateType, 
+              "fileName" : fileName, 
+              "pageDivide" : pageDivide
+          };
+
+          Download.mutateAsync(downloadData, {
+            onSuccess: async (res: any) => {
+              if (res.data !== undefined || "") {
+                const file = window.URL.createObjectURL(new Blob([res.data], { type: res.headers["content-type"] }));
+
+                let extension;
+                if (!fileExtension) {
+                  extension = '.xlsx';
+                } else {
+                  extension = '.pdf';
+                }
+
+                downloadBlobFile(file, fileName.concat(extension));
+              }
+            }
+          });
+        }
       }
     }
   )};
+
+  function downloadBlobFile(file : string, fileName : string) {
+    const tempElement = document.createElement('a');
+    tempElement.href = file;
+    tempElement.setAttribute("download", fileName);
+    document.body.appendChild(tempElement);
+    tempElement.click();
+    document.body.removeChild(tempElement);
+    window.URL.revokeObjectURL(file);
+  }
 
   return (
     <div className="sticky top-0 z-20 flex w-full pt-10 space-y-1 bg-white">
@@ -218,8 +287,8 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
               <div className={"flex col-span-2"}>
                 <div className ={"flex space-x-1 px-1 mx-1 border rounded-full"}>
                   <RadioGroup label=''>
-                      <Radio id ="search_gubn" name="download" value="0" label="excel"  defaultChecked/>
-                      <Radio id ="search_gubn" name="download" value="1" label="pdf"  />
+                      <Radio id ="search_gubn" name="download" value="0" label="excel" defaultChecked/>
+                      <Radio id ="search_gubn" name="download" value="1" label="pdf" />
                   </RadioGroup>
                 </div>
                 <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />

@@ -7,6 +7,8 @@ import { FaBullseye } from "react-icons/fa6";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
+export const TRANPOSRT_EMAIL_LIST_OE = "TRANPOSRT_EMAIL_LIST_OE";
+
 // export const SP_Load = async (searchParam:any) => {
 //   // unstable_noStore();
 //   const {user_id, ipaddr} = searchParam;
@@ -21,21 +23,48 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 //   return result;
 // }
 
-export const SP_GetMasterData = async (searchParam: any) => {
+
+export const SP_GetMailSample = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const {user_id, ipaddr } = Param;  
+  const { bk_id, user_id, ipaddr } = Param;  
   const params = {
     inparam : [
-        "in_user_id"
+        "in_bk_id"
+      , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-        user_id
+        bk_id
+      , user_id
       , ipaddr
     ],
-    inproc: 'account.f_acct2011_get_cust',
+    inproc: 'ocean.f_ocen1000_get_bk_mail',
+    isShowLoading: true
+    }
+  
+    const result = await executFunction(params);
+    log('mailData result', Param, result)
+    return result![0];
+}
+export const SP_GetMailReceiver = async (searchParam: any) => {
+  // console.log('searchParam', searchParam.queryKey[1])
+  const Param = searchParam.queryKey[1]
+
+  const { pgm_code, user_id, ipaddr } = Param;  
+  const params = {
+    inparam : [
+        "in_pgm_code"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        pgm_code
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'public.f_stnd0013_get_email_rcvlist',
     isShowLoading: true
     }
   
@@ -43,126 +72,34 @@ export const SP_GetMasterData = async (searchParam: any) => {
     return result![0];
 }
 
-export const SP_GetDetailData = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
-  const Param = searchParam.queryKey[1]
-
-  const {cust_code, pickup_type, user_id, ipaddr } = Param;
-  // log("search Detail Data:", Param);
-  
-  const params = {
-    inparam : [
-        "in_cust_code"
-      , "in_pickup_type"
-      , "in_user_id"
-      , "in_ipaddr"
-    ],
-    invalue: [
-        cust_code
-      , pickup_type
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'ocean.f_ocen0003_get_detail',
-    isShowLoading: false
-    }
-  
-    const result = await executFunction(params);
-    // log("search Detail result Data:", result);
-    return result![0];
-}
-
-
-
-
-export const SP_UpdateData = async (param: any) => {
+export const SP_SaveData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
   // log("param : ", param)
-  const {cust_code,pickup_seq,pickup_type,pickup_nm,addr,pic_nm,email,tel_num,fax_num,def,remark,use_yn, user_id, ipaddr } = Param;
+  const { pgm_code, seq, email, remark,use_yn, user_id, ipaddr} = Param;
   const params = {
     inparam : [
-      "in_cust_code"
-    , "in_pickup_seq"
-    , "in_pickup_nm"
-    , "in_addr"
-    , "in_pic_nm"
+      "in_pgm_code"
+    , "in_seq"
     , "in_email"
-    , "in_tel_num"
-    , "in_fax_num"
-    , "in_def"
     , "in_remark"
     , "in_use_yn"
     , "in_user"
     , "in_ipaddr"
     ],
     invalue: [
-      cust_code
-    , pickup_seq
-    , pickup_nm
-    , addr
-    , pic_nm
+      pgm_code
+    , seq
     , email
-    , tel_num
-    , fax_num
-    , def
     , remark
     , use_yn
     , user_id
     , ipaddr
     ],
-    inproc: 'ocean.f_ocen0003_upd_pickup_detail',
+    inproc: 'public.f_stnd0013_ins_email_rcvlist',
     isShowLoading: true,
-    isShowComplete:false,
-    }
-  
-    const result = await executFunction(params);
-    return result![0];
-}
-
-export const SP_InsertData = async (param: any) => {
-  
-  // const Param = searchParam.queryKey[1]
-  const Param = param;
-  // log("param : ", param)
-  const {cust_code,pickup_seq,pickup_type,pickup_nm,addr,pic_nm,email,tel_num,fax_num,def,remark,use_yn, user_id, ipaddr} = Param;
-  const params = {
-    inparam : [
-      "in_cust_code"
-    , "in_pickup_seq"
-    , "in_pickup_type"
-    , "in_pickup_nm"
-    , "in_addr"
-    , "in_pic_nm"
-    , "in_email"
-    , "in_tel_num"
-    , "in_fax_num"
-    , "in_def"
-    , "in_remark"
-    , "in_use_yn"
-    , "in_user"
-    , "in_ipaddr"
-    ],
-    invalue: [
-      cust_code
-    , pickup_seq
-    , pickup_type
-    , pickup_nm
-    , addr
-    , pic_nm
-    , email
-    , tel_num
-    , fax_num
-    , def
-    , remark
-    , use_yn
-    , user_id
-    , ipaddr
-    ],
-    inproc: 'ocean.f_ocen0003_ins_pickup_detail',
-    isShowLoading: true,
-    isShowComplete:false,
+    isShowComplete:true,
     }
   
     const result = await executFunction(params);
