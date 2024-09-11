@@ -2,6 +2,7 @@ import DialogBasic from "layouts/dialog/dialog";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { useEffect, useCallback, useRef, memo, useState } from "react";
 import { MaskedInputField, Input, TextArea } from "components/input";
+import { useFormContext } from "react-hook-form";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { useTranslation } from "react-i18next";
 import { FileUpload } from "components/file-upload";
@@ -14,7 +15,8 @@ import { SP_GetMailSample } from "components/commonForm/mailSend/_component/data
 import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { SP_SendEmail, SP_GetReportData } from "../data";
-import { AnyMxRecord } from "dns";
+import Radio from "components/radio/index"
+import RadioGroup from "components/radio/RadioGroup"
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -24,44 +26,56 @@ type Props = {
   initData?: any | null;
   callbacks?: Array<() => void>;
   ref?: any | null;
+  loadItem?: any| null;
 };
 
 type MailSample = {
   subject: string;
   content: string;
-  attachment: {
+  report: {
     bknote: boolean;
     deliv_request: boolean;
     cust_identification: boolean;
   };
+  attachment:[]
 };
 
 
-const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initData, callbacks }) => {
+const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm, initData, callbacks }) => {
   const gridRef = useRef<any | null>(ref);
   const { dispatch, objState } = useAppContext();
   const { isMailSendPopupOpen: isOpen, MselectedTab } = objState;
 
   const { t } = useTranslation();
   const { data : transMailData, refetch: transMailRefetch, remove :transMailRemove } = useGetData({bk_id: bk_id, cust_code:cust_code}, '', SP_GetMailSample, {enabled:false});
+  const [reports, setReports] = useState<any>()
   const [mailform, setMailForm] = useState<MailSample>({
     subject:'',
     content:'',
-    attachment: {
+    report: {
       bknote:false,
       deliv_request: false,
       cust_identification:false,
     },
+    attachment:[]
   });
 
   const { Create: sendEmail } = useUpdateData2(SP_SendEmail, '');
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
+
+
 
   useEffect(() => {
     if(isOpen){
       transMailRefetch()    
     }
 }, [transMailRefetch,isOpen]);
+
+  useEffect(()=>{
+    if(loadItem){
+      setReports(loadItem[21].data)
+    }
+  },[loadItem])
 
   useEffect(()=>{
     log('bk_id, cust_code', bk_id, cust_code, isOpen, transMailData)
@@ -84,62 +98,13 @@ const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initDat
     //reset();
   };
 
-  const methods = useForm({
-    defaultValues: {},
-  });
 
-  const { handleSubmit, reset, setFocus, getValues } = methods;
+  const { getValues } = useFormContext();
 
   const handleFileDrop = (data: any[], header: string[]) => {
     log('data, header', data, header)
   };
-    
-  const sendTransPortEmail = useCallback(async () => {
 
-    const attachments = [
-      { key: 'bknote', type: 0 },
-      { key: 'deliv_request', type: 1 },
-      { key: 'cust_identification', type: 2 }
-    ];
-    for (const attachment of attachments) {
-      const attachmentValue = mailform?.attachment?.[attachment.key as keyof typeof mailform.attachment] ?? false; // 타입 단언 사용
-
-    //첨부파일(체크박스) 체크된경우
-    if (attachmentValue) {
-        try {
-          await GetReportData.mutateAsync({ type: attachment.type, bk_id: bk_id }, {
-            onSuccess: (data) => {
-              console.log(` 성공 (type: ${attachment.type}):`, data);
-            },
-            onError: (error) => {
-              console.error(` 실패 (type: ${attachment.type}):`, error);
-            }
-          });
-        } catch (error) {
-          log(error)
-        }
-      }
-      
-      // 2.업로드파일 서버생성
-      // 1,2 서버경로 리턴하여 attachment에 key, value 쉼표구분으로 데이터 insert
-      // 3. sendEmail 실행
-      await sendEmail.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code}, {
-        onSuccess(data, variables, context) {
-        },
-      })
-      .catch(() => {});
-
-    }
-
-  }, [mailform, bk_id, GetReportData]);
-
-
-  // const handleCheckBoxClick = (id : string, val : any) => {
-  //      setMailForm((prevState) => ({
-  //     ...prevState,
-  //     [id]: val,
-  //   }));
-  // }
   const handleCheckBoxClick = (id: string, val: any) => {
     log('Checkbox clicked', id, val);
      // 'Y'이면 true, 'N'이면 false로 변환
@@ -147,15 +112,86 @@ const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initDat
     if(booleanVal){
       //val === true ? 'Y'
       setMailForm((prevState) => {
-        const updatedAttachment = {...prevState.attachment,[id]: val};
-        return {...prevState,attachment: updatedAttachment  };
+        const updatedAttachment = {...prevState.report,[id]: val};
+        return {...prevState,report: updatedAttachment  };
       });
     }
   };
   
 
+    
+  const sendTransPortEmail = useCallback(async () => {
+    const curData = getValues();
+
+    log('reports',reports)
+    //const fileExtension : Number = Number(curData.search_gubn) || 0;
+    //let reports = reports
+
+    // [
+    //   { key: 'bknote', type: 0 },
+    //   { key: 'deliv_request', type: 1 },
+    //   { key: 'cust_identification', type: 2 }
+    // ];
+
+    for (const report of reports) {
+      const attachmentValue = mailform?.report?.[report.key as keyof typeof mailform.report] ?? false; // 타입 단언 사용
+
+    //첨부파일(체크박스) 체크된경우
+    if (attachmentValue) {
+        try {
+          await GetReportData.mutateAsync({ type: report.report_type, bk_id: bk_id }, {
+            onSuccess: (res:any) => {
+              console.log(` 성공 (type: ${report.key}):`, res);
+
+              let reportData : any = new Object;
+              let pageDivide;
+              for (let [key, value] of Object.entries(res[0].data[0])) {
+                
+                if (value === null || value === undefined) {value = ""}
+    
+                switch(key) {                
+                  default:
+                    reportData[key.toUpperCase()] = value;
+                }
+              }
+
+              const templateType = Number(report.report_type);
+              const fileExtension : Number = Number(curData.search_gubn) || 0;    
+              const fileName = loadItem[21].data[templateType].report_type_nm
+    
+              const downloadData = {
+                  "reportData" : reportData, 
+                  "fileExtension" : fileExtension, 
+                  "templateType" : templateType, 
+                  "fileName" : fileName, 
+                  "pageDivide" : pageDivide
+              };
+              //mailform.attachment.push(downloadData)
+            },
+            onError: (error) => {
+              console.error(` 실패 (type: ${report.key}):`, error);
+            }
+          });
+        } catch (error) {
+          log(error)
+        }
+      }           
+    }
+    
+    // 2.업로드파일 서버생성
+    // 1,2 서버경로 리턴하여 attachment에 key, value 쉼표구분으로 데이터 insert
+    // 3. sendEmail 실행
+    await sendEmail.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code}, {
+      onSuccess(data, variables, context) {
+      },
+    })
+    .catch(() => {});
+
+  }, [mailform, bk_id, GetReportData]);
+
+
   return (
-    // <FormProvider{...methods}>
+
     <DialogBasic
       isOpen={isOpen}
       onClose={closeModal}
@@ -203,9 +239,7 @@ const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initDat
             {/* <div className='flex w-full'> */}
             <PageContentDivided
               title={
-                <span className="px-1 py-1 text-sm text-blue-500">
-                  첨부파일
-                </span>
+                <span className="px-1 py-1 text-sm text-blue-500">첨부파일</span>
               }
               addition={
                 <FileUpload
@@ -217,32 +251,37 @@ const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initDat
               <Checkbox
                 id="bknote"
                 //label="bknote"
-                value={(mailform?.attachment?.bknote ? "Y" : "N")}
+                value={(mailform?.report?.bknote ? "Y" : "N")}
                 options={{ inline: false }}
                 events={{onChange: handleCheckBoxClick}}
               />
               <Checkbox
                 id="deliv_request"
                 //label="deliv_request"
-                value={mailform?.attachment?.deliv_request ? "Y" : "N"}
+                value={mailform?.report?.deliv_request ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{onChange: handleCheckBoxClick}}
               />
               <Checkbox
                 id="cust_identification"
                 //label="cust_identification"
-                value={mailform?.attachment?.cust_identification ? "Y" : "N"}
+                value={mailform?.report?.cust_identification ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{onChange: handleCheckBoxClick}}
-              />           
-                    
-            </PageContentDivided>       
+              />
+
+              <div className='row-span-1 row-start-2 px-1 mx-1 space-x-1 border rounded-full'>               
+                  <RadioGroup label=''>
+                      <Radio id ="search_gubn" name="download" value="0" label="excel" defaultChecked/>
+                      <Radio id ="search_gubn" name="download" value="1" label="pdf" />
+                  </RadioGroup>
+                </div>
+            </PageContentDivided>      
               
           </div>
         </div>
       </div>
     </DialogBasic>
-    // </FormProvider >
   );
 };
 
