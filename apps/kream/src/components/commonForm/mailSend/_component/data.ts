@@ -25,18 +25,20 @@ export const TRANPOSRT_EMAIL_LIST_OE = "TRANPOSRT_EMAIL_LIST_OE";
 
 
 export const SP_GetMailSample = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
+  //console.log('bk_id, searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const { bk_id, user_id, ipaddr } = Param;  
+  const { bk_id, cust_code, user_id, ipaddr } = Param;  
   const params = {
     inparam : [
         "in_bk_id"
+      , "in_cust_code"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
         bk_id
+      , cust_code
       , user_id
       , ipaddr
     ],
@@ -45,7 +47,7 @@ export const SP_GetMailSample = async (searchParam: any) => {
     }
   
     const result = await executFunction(params);
-    log('mailData result', Param, result)
+    log('bk_id, result', Param, result)
     return result![0];
 }
 export const SP_GetMailReceiver = async (searchParam: any) => {

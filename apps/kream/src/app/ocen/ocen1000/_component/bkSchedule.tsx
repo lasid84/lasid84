@@ -11,7 +11,7 @@ import CustomSelect from "components/select/customSelect";
 import PageSearch from "layouts/search-form/page-search-row";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { SEARCH_D, SEARCH_PKC } from "components/provider/contextArrayProvider";
-import { SP_GetPickupContData, SP_GetCarrierContData, SP_SendEmail } from "./data";
+import { SP_GetPickupContData, SP_GetCarrierContData, SP_SendEmail,SP_GetMailSample } from "./data";
 import { SP_GetTransPortData } from "@/app/stnd/stnd0012/_component/data";
 import PicupPlacePopUp from "./popup/popPickupcont"
 import TransportEmailRcvPopup from "./popup/popEmailRcvList"
@@ -56,7 +56,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
   const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
   const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
   const { data: transportCompData, refetch: transportCompRefetch } = useGetData({ trans_mode:trans_mode, trans_type: trans_type }, "TransportCompany", SP_GetTransPortData, { enable: true });
-
+  // const { data : tranbsMailData, refetch: transMailRefetch, remove : transMailRemove } = useGetData({bk_id: bkData?.bk_id, cust_code:bkData?.transport_company}, 'TransportCompanyMail', SP_GetMailSample, {enabled:true});
   const { Create: sendEmail } = useUpdateData2(SP_SendEmail, '');
   
   // const [cyPlace, setCyPlace] = useState<any>()

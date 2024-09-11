@@ -14,6 +14,7 @@ import { SP_GetMailSample } from "components/commonForm/mailSend/_component/data
 import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { SP_SendEmail, SP_GetReportData } from "../data";
+import { AnyMxRecord } from "dns";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -25,16 +26,16 @@ type Props = {
   ref?: any | null;
 };
 
-type MailSample ={
-  subject : string;
-  content : string;
-  maillist : {};
-  attachment?: {
+type MailSample = {
+  subject: string;
+  content: string;
+  attachment: {
     bknote: boolean;
-    deliv_request : boolean;
-    cust_identification : boolean;
-  }
-}
+    deliv_request: boolean;
+    cust_identification: boolean;
+  };
+};
+
 
 const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initData, callbacks }) => {
   const gridRef = useRef<any | null>(ref);
@@ -42,11 +43,10 @@ const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initDat
   const { isMailSendPopupOpen: isOpen, MselectedTab } = objState;
 
   const { t } = useTranslation();
-  const { data : mailData, refetch: mailRefetch, remove :mailRemove } = useGetData({bk_id: bk_id, cust_code:cust_code}, '', SP_GetMailSample, {enabled:true});
+  const { data : transMailData, refetch: transMailRefetch, remove :transMailRemove } = useGetData({bk_id: bk_id, cust_code:cust_code}, '', SP_GetMailSample, {enabled:false});
   const [mailform, setMailForm] = useState<MailSample>({
     subject:'',
     content:'',
-    maillist : {},
     attachment: {
       bknote:false,
       deliv_request: false,
@@ -58,23 +58,30 @@ const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initDat
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
 
   useEffect(() => {
-    mailRefetch()    
-}, [mailRefetch]);
+    if(isOpen){
+      transMailRefetch()    
+    }
+}, [transMailRefetch,isOpen]);
 
   useEffect(()=>{
-    if(mailData){
-      setMailForm(
-        {...mailform,
-         ...((mailData as string[]) as unknown as gridData).data[0] 
-        })
+    log('bk_id, cust_code', bk_id, cust_code, isOpen, transMailData)
+    if(isOpen && transMailData){
+      // setMailForm(
+        //   {...mailform,
+        //    ...((transMailData as string[]) as unknown as gridData).data[0] 
+        //   })
+        setMailForm((prevMailform) => ({
+          ...prevMailform,
+          ...((transMailData as string[]) as unknown as gridData).data[0],
+        }));
     }
-  },[mailData])
+  },[transMailData,isOpen])
 
 
   const closeModal = () => {
     if (callbacks?.length) callbacks?.forEach((callback) => callback());
     dispatch({ isMailSendPopupOpen: false });
-    reset();
+    //reset();
   };
 
   const methods = useForm({
@@ -86,38 +93,66 @@ const Modal: React.FC<Props> = ({ ref = null, bk_id, cust_code, cust_nm, initDat
   const handleFileDrop = (data: any[], header: string[]) => {
     log('data, header', data, header)
   };
-
-
-  const sendTransPortEmail = useCallback(async () => {
-        // ※ in_type 		
-        // - 0 : 부킹노트
-        // - 1 : 운송요청서
-        // - 2 : 고객발송용
-        // 1.체크된 첨부파일 서버 생성
-        GetReportData.mutateAsync({bk_id:bk_id}, {
-
-        })
-        // 2.업로드파일 서버생성
-
-        // 1,2 서버경로 리턴하여 attachment에 쉼표구분으로 데이터 insert
-        // 3. sendEmail 실행
-        // await sendEmail.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code}, {
-        //   onSuccess(data, variables, context) {
-        //   },
-        // })
-        // .catch(() => {});
-
-
-  }, [mailform, cust_code]);
     
+  const sendTransPortEmail = useCallback(async () => {
 
-  const handleCheckBoxClick = (id : string, val : any) => {
-   log('2323', id, val)
-       setMailForm((prevState) => ({
-      ...prevState,
-      [id]: val,
-    }));
-  }
+    const attachments = [
+      { key: 'bknote', type: 0 },
+      { key: 'deliv_request', type: 1 },
+      { key: 'cust_identification', type: 2 }
+    ];
+    for (const attachment of attachments) {
+      const attachmentValue = mailform?.attachment?.[attachment.key as keyof typeof mailform.attachment] ?? false; // 타입 단언 사용
+
+    //첨부파일(체크박스) 체크된경우
+    if (attachmentValue) {
+        try {
+          await GetReportData.mutateAsync({ type: attachment.type, bk_id: bk_id }, {
+            onSuccess: (data) => {
+              console.log(` 성공 (type: ${attachment.type}):`, data);
+            },
+            onError: (error) => {
+              console.error(` 실패 (type: ${attachment.type}):`, error);
+            }
+          });
+        } catch (error) {
+          log(error)
+        }
+      }
+      
+      // 2.업로드파일 서버생성
+      // 1,2 서버경로 리턴하여 attachment에 key, value 쉼표구분으로 데이터 insert
+      // 3. sendEmail 실행
+      await sendEmail.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code}, {
+        onSuccess(data, variables, context) {
+        },
+      })
+      .catch(() => {});
+
+    }
+
+  }, [mailform, bk_id, GetReportData]);
+
+
+  // const handleCheckBoxClick = (id : string, val : any) => {
+  //      setMailForm((prevState) => ({
+  //     ...prevState,
+  //     [id]: val,
+  //   }));
+  // }
+  const handleCheckBoxClick = (id: string, val: any) => {
+    log('Checkbox clicked', id, val);
+     // 'Y'이면 true, 'N'이면 false로 변환
+    const booleanVal = val === 'Y';
+    if(booleanVal){
+      //val === true ? 'Y'
+      setMailForm((prevState) => {
+        const updatedAttachment = {...prevState.attachment,[id]: val};
+        return {...prevState,attachment: updatedAttachment  };
+      });
+    }
+  };
+  
 
   return (
     // <FormProvider{...methods}>

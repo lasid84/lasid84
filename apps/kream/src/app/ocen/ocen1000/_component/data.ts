@@ -1058,6 +1058,30 @@ export const SP_UpdateCost = async (param: any) => {
 }
 
 
+export const SP_GetMailSample = async (searchParam: any) => {
+  console.log('searchParam', searchParam.queryKey[1])
+  const Param = searchParam.queryKey[1]
+
+  const { bk_id, user_id, ipaddr } = Param;  
+  const params = {
+    inparam : [
+        "in_bk_id"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        bk_id
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_bk_mail',
+    isShowLoading: true
+    }
+  
+    const result = await executFunction(params);
+    log('mailData result', Param, result)
+    return result![0];
+}
 
 export const SP_SendEmail = async (param: any) => {
   // l(in_subject text, in_content text, in_pgm_code text, in_attachment text, i

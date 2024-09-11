@@ -94,6 +94,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
       if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};
+        log('UpdateBKData updateData,,', updateData)
         UpdateBKData.mutate(updateData);
       }
     }
@@ -215,6 +216,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
           Download.mutateAsync(downloadData, {
             onSuccess: async (res: any) => {
+              log('res', res)
               if (res.data !== undefined || "") {
                 const file = window.URL.createObjectURL(new Blob([res.data], { type: res.headers["content-type"] }));
 
@@ -260,7 +262,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                       <Radio id ="search_gubn" name="download" value="1" label="pdf" />
                   </RadioGroup>
                 </div>
-                <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
+                {/* <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} /> */}
                   <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
                   <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
               </div>

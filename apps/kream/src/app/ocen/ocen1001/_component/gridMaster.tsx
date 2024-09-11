@@ -172,7 +172,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
                 title={<> </>}
                 right={
                     <>
-                        <ICONButton id="alarm" disabled={false} size={'24'} />
+                        {/* <ICONButton id="alarm" disabled={false} size={'24'} /> */}
                         <Button id={"gird_new"} label="new" onClick={onGridNew} width="w-20" />
                         <Button id={"grid_save"} label="save" onClick={onGridSave} width="w-20" />
                     </>
