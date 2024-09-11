@@ -102,6 +102,7 @@ const getColor = (label: string, color: string = "") => {
       case "mail_rcvlist":
       case "manage_pickup":
       case "manage_cont_cy":
+      case "save_template":        
         c = "gray-outline";
         break;
       case "delete":
@@ -153,6 +154,7 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
     case "save":
     case "save_m":
     case "save_d":
+    case "":
       icon = <RiSave2Fill size={size} />;
       break;
     case "reset":

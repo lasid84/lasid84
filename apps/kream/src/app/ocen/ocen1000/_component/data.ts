@@ -65,42 +65,42 @@ export const SP_GetMData = async (searchParam: any) => {
   return result
 }
 
-export const SP_GetMasterData = async (searchParam: any) => {
-  const Param = searchParam.queryKey[1]
-  const { no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
+// export const SP_GetMasterData = async (searchParam: any) => {
+//   const Param = searchParam.queryKey[1]
+//   const { no, search_gubn, state, create_user, fr_date, to_date, doc_fr_dt, doc_to_dt, bk_id, cust_code, user_id, ipaddr } = Param;
 
-  const params = {
-    inparam: [
-        "in_fr_date"
-      , "in_to_date"
-      , "in_cust_code"
-      , "in_no"
-      , "in_search_gubn"
-      , "in_state"
-      , "in_create_user"
-      , "in_user_id"
-      , "in_ipaddr"
-    ],
-    invalue: [
-        fr_date
-      , to_date
-      , cust_code
-      , no
-      , search_gubn
-      , state
-      , create_user
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'ocean.f_ocen1000_get_bk_main2',
-    isShowLoading: true
-  }
+//   const params = {
+//     inparam: [
+//         "in_fr_date"
+//       , "in_to_date"
+//       , "in_cust_code"
+//       , "in_no"
+//       , "in_search_gubn"
+//       , "in_state"
+//       , "in_create_user"
+//       , "in_user_id"
+//       , "in_ipaddr"
+//     ],
+//     invalue: [
+//         fr_date
+//       , to_date
+//       , cust_code
+//       , no
+//       , search_gubn
+//       , state
+//       , create_user
+//       , user_id
+//       , ipaddr
+//     ],
+//     inproc: 'ocean.f_ocen1000_get_bk_main2',
+//     isShowLoading: true
+//   }
 
-  const result = await executFunction(params);
-  // log('mainData Result', result)
-  // log('mainData Result?', result![0])
-  return result![0]
-}
+//   const result = await executFunction(params);
+//   // log('mainData Result', result)
+//   // log('mainData Result?', result![0])
+//   return result![0]
+// }
 
 //SP_GetInvoiceMasterContent
 export const SP_GetTransportData = async (searchParam: any) => {
@@ -596,30 +596,6 @@ export const SP_SaveBkHblData = async (searchParam: any) => {
 
   return result![0]
 }
-
-//shipper 담당자data get
-export const SP_GetBkTemplateData = async (searchParam: any) => {
-  const Param = searchParam.queryKey[1]
-  const { user_id, ipaddr } = Param;
-  
-  const params = {
-    inparam: [
-        "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-        user_id
-      , ipaddr
-    ],
-    inproc: 'ocean.f_ocen1000_get_bk_template',
-    isShowLoading: false
-  }
-
-  const result = await executFunction(params);
-  // log('result??',result)
-  return result![0]
-}
-
 
 export const SP_GetCargoData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]

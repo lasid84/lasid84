@@ -19,6 +19,7 @@ interface UserSettingsState {
   dept_cd: string;
   trans_mode: string | undefined;
   trans_type?: string | undefined;
+  terminal?: string | undefined;
   ufs_id:string;
   token:string
   ipaddr:string
@@ -46,6 +47,7 @@ const initialState: UserSettingsState = {
   dept_cd: "",
   trans_mode: "",
   trans_type: "",
+  terminal: "",
   ufs_id: "",
   token: "",
   ipaddr: "",

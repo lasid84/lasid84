@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState, memo } from "react";
-import { SP_CreateData, SP_GetMasterData, SP_UpdateData } from "./data";
+import { SP_CreateTemplateData, SP_GetTemplateData, SP_UpdateData } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -19,24 +19,24 @@ import dayjs from "dayjs";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
-    initData: any | null,
-    mainData: any | null
+    initData: any | null
 }
 
-const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
+const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     // const gridRef = useRef<any | null>(null);
     const { dispatch, objState } = useAppContext();
 
     const [gridRef, setGridRef] = useState(objState.gridRef_m)
+    const [ gridMainData, setGridMainData ] = useState<gridData>();
 
-    // const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetMasterData, { enabled: false });
-    const { Create } = useUpdateData2(SP_CreateData, SEARCH_M);
+    const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetTemplateData, { enabled: true });
+    const { Create } = useUpdateData2(SP_CreateTemplateData, SEARCH_M);
     const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
 
 
     const gridOption: GridOption = {
-        colVisible: { col: ["trans_mode", "trans_type", "orig_department_id","shipper_cont_seq","pickup_seq","cy_cont_seq",
+        colVisible: { col: ["template_id", "trans_mode", "trans_type", "orig_department_id","shipper_cont_seq","pickup_seq","cy_cont_seq",
                             "cr_t_cont_seq","cr_s_cont_seq", "orig_agent_id", "b_agent_id", "ams_yn","ams","cr_fak","cr_nac",
                             "aci_yn","aci","afr_yn","edi_yn","isf_yn","e_manifest_yn","use_yn",
                             "create_user", "update_date", "update_user"], visible: false },
@@ -66,8 +66,15 @@ const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
     //     }
     // }, [objState?.isMSearch]);
 
+    useEffect(() => {
+        if (mainData) {
+            setGridMainData((mainData as any)[0] as gridData);
+        }
+    }, [mainData])
+
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
+        log("handleRowDoubleClicked", selectedRow);
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
                 return element.cd === selectedRow.template_id;
@@ -76,10 +83,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
             }
         }
         dispatch({ 
-            isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
+            isMDSearch: true,
             MselectedTab: selectedRow.template_id,
-            mSelectedRow: selectedRow,
-            [selectedRow.template_id]: selectedRow,
             popType:crudType.UPDATE
         });
         
@@ -121,6 +126,10 @@ const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
             }, 200);
         }
         
+    }
+
+    const onSearch = () => {
+        mainRefetch();
     }
 
     const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
@@ -173,21 +182,20 @@ const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
                 right={
                     <>
                         <ICONButton id="alarm" disabled={false} size={'24'} />
-                        <Button id={"gird_new"} label="new" onClick={onGridNew} width="w-20" />
+                        <Button id={"search"} onClick={onSearch} width="w-20" />
+                        {/* <Button id={"gird_new"} label="new" onClick={onGridNew} width="w-20" /> */}
                         <Button id={"grid_save"} label="save" onClick={onGridSave} width="w-20" />
                     </>
                 }>
                 <Grid
                     gridRef={objState.gridRef_m}
                     loadItem={initData}
-                    listItem={mainData as gridData}
+                    listItem={gridMainData}
                     options={gridOption}
                     event={{
                         onRowDoubleClicked: handleRowDoubleClicked,
                         onRowClicked: handleRowClicked,
                         onSelectionChanged: handleSelectionChanged,
-                        onGridPreDestroyed: handleGridPreDestroyed,
-                        // onStateUpdated: handleStateUpdated
                         onCellValueChanged: handleCellValueChanged
                     }}
                     gridState={objState.mGridState}
@@ -196,43 +204,5 @@ const MasterGrid: React.FC<Props> = memo(({ initData, mainData }) => {
         </>
     );
 });
-
-export const onGridNew1 = async (objState:any, mainData:any) => {
-    log('onBKCopy bkData1', objState, mainData )
-    // var selectedRow = { "colId": param.node.id, ...param.node.data }
-    if (objState.tab1 && objState.gridRef_m) {
-        log('onBKCopy bkData2', objState, mainData )
-        // var tabName = "NEW" + (objState.tab1.reduce((acc:number,v:{cd:string}) => v.cd.includes("NEW") && acc + 1,0)+1);
-        var temp = objState.tab1
-                        .filter((v:{cd:string}) => v.cd.includes("NEW"))
-                        .sort()
-                        .reverse();
-                        
-        var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
-        var tabName = `NEW${tabSeq}`;
-        var rows = await rowAdd(objState.gridRef_m.current, 
-            {   bk_id: tabName,
-                trans_mode: objState.trans_mode,
-                trans_type: objState.trans_Type,
-                bk_dd: dayjs().format('YYYYMMDD'), 
-                use_yn: true
-            });
-        for (const row of rows) {
-            await (mainData as gridData).data.push(row);
-        }
-    
-        setTimeout(() => {                
-            objState.tab1.push({ cd: tabName, cd_nm: tabName })
-            //dispatch({ [tabName] : rows[0] ,MselectedTab: tabName, isMDSearch: true, isCGDSearch : true, popType: crudType.CREATE });
-
-        }, 200);
-
-        return ({
-            data : {temp, tabSeq, tabName, rows              
-            }
-        })
-    }
-    
-}
 
 export default MasterGrid;

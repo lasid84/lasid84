@@ -8,7 +8,7 @@ import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_UpdateCargo, SP_UpdateData } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_InsertCost, SP_UpdateCargo, SP_UpdateCost, SP_UpdateData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
@@ -34,13 +34,16 @@ export interface typeloadItem {
 const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   
   const { dispatch, objState } = useAppContext();
-  const { MselectedTab } = objState;
+  const { MselectedTab, gridRef_cost } = objState;
   const [ref, setRef] = useState(objState.gridRef_m);
+
   const [ reportType, setReportType ] = useState<string>('');
   const { Create: CreateBKData } = useUpdateData2(SP_CreateData);
   const { Update: UpdateBKData } = useUpdateData2(SP_UpdateData);
   const { Create: CreateCargo } = useUpdateData2(SP_InsertCargo);
   const { Update: UpdateCargo } = useUpdateData2(SP_UpdateCargo);
+  const { Create:CreateCost } = useUpdateData2(SP_InsertCost);
+  const { Update:UpdateCost } = useUpdateData2(SP_UpdateCost);
 
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
 
@@ -68,9 +71,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   const SaveBkData = async () => {
     let curData = getValues(); 
-    let hasData = false;
-    log("SaveBkData", bkData)
-    
+    let hasData = false;    
     
     if (bkData && bkData[ROW_TYPE] === ROW_TYPE_NEW) {  
       hasData = true;  
@@ -90,7 +91,6 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         },
       })
     } else {
-      log("UpdateBKData", Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val), bkData[ROW_CHANGED], curData, bkData)
       if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};
@@ -126,14 +126,45 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     return hasData;
   }
 
+  const saveCost = async () => {
+    var hasData = false;
+
+    const allColumns = gridRef_cost?.current?.api.getAllGridColumns();    
+    const checkboxColumns = allColumns.filter((col:any) => col.getColDef().cellDataType === 'boolean')
+                                      .map((col: { colId: any; }) => col.colId);
+    gridRef_cost.current.api.forEachNode(async (node: any) => {
+      
+      // gridOptions?.checkbox?.forEach(
+      //   (col) => (data[col] = data[col] ? "Y" : "N")
+      // );
+      if (node.data[ROW_CHANGED]) {
+        hasData = true;
+        var data = {
+          ...node.data,
+          bk_id: bkData.bk_id
+        };
+        checkboxColumns.forEach((col:string) => (data[col] = data[col] ? 'Y' : 'N'));
+        if (data[ROW_TYPE] === ROW_TYPE_NEW) {
+          await CreateCost.mutateAsync(data);
+        } else {          //수정
+          await UpdateCost.mutateAsync(data);
+        }
+      }
+    });
+    
+    return hasData;
+  }
+
   const onSave = async (param: MouseEventHandler) => {
     let hasBKData = false;
     let hasCargoData = false;
+    let hasCostData = false;
     
+    hasCostData = await saveCost();
     hasCargoData = await SaveCargo();
     hasBKData = await SaveBkData();
 
-    if (hasBKData || hasCargoData) {
+    if (hasBKData || hasCargoData || hasCostData) {
       onRefresh();
       toastSuccess('Success.');
     }

@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState, memo } from "react";
-import { SP_CreateData, SP_GetMasterData, SP_UpdateData } from "./data";
+import { SP_CreateData, SP_GetMData, SP_UpdateData } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -29,7 +29,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { gridRef_m } = objState
     const [ gridMainData, setGridMainData ] = useState<gridData>();
 
-    const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMasterData, { enabled: false });
+    const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMData, { enabled: false });
     const { Create } = useUpdateData2(SP_CreateData, "BKMainData", {callbacks: [mainRefetch]});
     const { Update } = useUpdateData2(SP_UpdateData, "BKMainData", {callbacks: [mainRefetch]});
 
@@ -68,13 +68,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     useEffect(() => {
         if (mainData) {
-            setGridMainData(mainData as gridData);
+            setGridMainData((mainData as any)[0] as gridData);
         }
     }, [mainData])
     
-
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
-        // log("handleRowDoubleClicked")
         var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
@@ -84,11 +82,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             }
         }
         dispatch({ 
-            isMDSearch: true, 
-            isCGOSearch : true, isCSTSearch : true,
+            isMDSearch: true, isCGOSearch : true, isCSTSearch : true,
             MselectedTab: selectedRow.bk_id,
-            // mSelectedRow: selectedRow,
-            // [selectedRow.bk_id]: selectedRow,
             popType:crudType.UPDATE
         });
         

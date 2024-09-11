@@ -140,11 +140,14 @@ export default function OCEN1000() {
 
       const fetchDataAsync = async () => {
         const { data: newData } = await detailRefetch(); // refetch 호출 후 응답 대기 
-        var data = {
+        const cargo = ((newData as string[])[1] as unknown as gridData).data;
+        const cost = ((newData as string[])[2] as unknown as gridData) // grid사용으로 gridData로 맞추기
+        log("cost & cargo : ", cargo, cost)
+        const data = {
           ...((newData as string[])[0] as unknown as gridData).data[0],
-          cargo : ((newData as string[])[1] as unknown as gridData).data,
+          cargo : cargo || [],
           // cost : ((newData as string[])[2] as unknown as gridData).data
-          cost : ((newData as string[])[2] as unknown as gridData) // grid사용으로 gridData로 맞추기
+          cost : cost || []
         }
         log("useEffect detailData", data);
         dispatch({[objState?.MselectedTab]:data})
@@ -152,34 +155,6 @@ export default function OCEN1000() {
       fetchDataAsync(); // useEffect 내에서 비동기 호출
     }
   }, [objState?.isMDSearch]);
-
-  // useEffect(() => {
-  //   if (detailData) {
-  //     //log('detailData', detailData, ((detailData as string[])[1] as unknown as gridData).data[0])
-  //     // if()
-  //     var data = {
-  //       ...((detailData as string[])[0] as unknown as gridData).data[0],
-  //       cargo : ((detailData as string[])[1] as unknown as gridData).data,
-  //       cost : ((detailData as string[])[2] as unknown as gridData).data
-  //     }
-  //     log("useEffect detailData", data);
-  //     dispatch({[objState?.MselectedTab]:data})
-  //     // dispatch({
-  //     //   [objState?.MselectedTab]: {...((detailData as string[])[0] as unknown as gridData).data[0],
-  //     //                               cargo : ((detailData as string[])[1] as unknown as gridData).data,
-  //     //                               cost : ((detailData as string[])[2] as unknown as gridData).data
-  //     //   }
-  //       // bkData: (mainData as gridData).data[0]
-  //     // });
-  //   }
-  // }, [detailData])
-
-  // useEffect(() => {
-  //     if (objState.isCGDSearch) {
-  //         mainRefetch();
-  //         dispatch({ isCGDSearch: false });
-  //     }
-  // }, [objState?.isCGDSearch]);
 
   useEffect(() => {
     if (initData) {
@@ -189,12 +164,8 @@ export default function OCEN1000() {
     }
   }, [initData]);
 
-  // const onSearch = () => {
-  //   log("Page onSearch", getValues())
-  // }
-
   const onSubmit = (data:any) => {
-    console.log('Submitted data:', data);
+    log('Submitted data:', data);
   };
 
   const handleOnClickTab = (code: any) => {
@@ -206,9 +177,7 @@ export default function OCEN1000() {
     if (code.target.id === "Main") {
       dispatch({ MselectedTab: code.target.id });
     } else {
-      let needSearch = objState[code.target.id] ? false : true;
       dispatch({
-        // isMDSearch: needSearch,
         MselectedTab: code.target.id,
       });
     }

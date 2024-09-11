@@ -149,7 +149,7 @@ const CargoFCL = memo(
         if (hiddenContainerInfo) setHiddenContainerInfo(false);
       }
 
-      log("handleFieldReadOnly1", field, containerType, type_group, !hiddenContainerInfo && !dg_yn);
+      // log("handleFieldReadOnly1", field, containerType, type_group, !hiddenContainerInfo && !dg_yn);
       switch(field) {
         case "un_no":
         case "class":

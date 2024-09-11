@@ -163,7 +163,7 @@ function CustomSelect(props: Props) {
   // }, [isGridReady, selectedRow])
 
   useEffect(() => {
-    if (id.includes('container_type')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue)
+    // if (id.includes('container_type')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue)
     if (listItem?.data.length) {
       
       if (!defaultValue) {

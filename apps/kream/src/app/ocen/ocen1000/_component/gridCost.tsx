@@ -19,41 +19,24 @@ type Props = {
 };
 
 const GridCost: React.FC<Props> = ({ initData, bkData }) => {
-  const gridRef = useRef<any | null>(null);
   const { dispatch, objState } = useAppContext();
+  const gridRef = useRef<any | null>();
   const { Create } = useUpdateData2(SP_InsertCost, SEARCH_D);
   const { Update } = useUpdateData2(SP_UpdateCost, SEARCH_D);
   const [gridOptions, setGridOptions] = useState<GridOption>();
 
-  // const {
-  //   data: costData,
-  //   refetch: costRefetch,
-  //   remove: costRemove,
-  // } = useGetData(
-  //   { bk_no: objState?.MselectedTab },
-  //   SEARCH_CST,
-  //   SP_GetCostData,
-  //   { enabled: true }
-  // );
-
-  // useEffect(() => {
-  //   if (objState.isCSTSearch) {
-  //     costRefetch();
-  //     dispatch({ isCSTSearch: false });
-  //   }
-  // }, [objState?.isCSTSearch]);
-
-  // useEffect(()=>{
-  //   if(costData){
-  //     log('costData',costData)
-  //   }
-  // },[costData])
+  useEffect(() => {
+    if (gridRef && gridRef.current){
+      // log("gridRef injection")
+      dispatch({gridRef_cost: gridRef});
+    }      
+  }, [gridRef.current])
 
   useEffect(() => {
-    log("useEffect gridCost", bkData);
+    // log("useEffect gridCost", bkData);
     const gridOption: GridOption = {
       colVisible: {
-        col: ["bk_id", "uuid", "sort_id", "ppc_ind", "cost_currency_code", "invoice_currency_code", "import_export_ind", "invoice_wb_currency_code", "print_ind", "vat_cat_code_ap",
+        col: ["bk_id", "template_id", "seq", "uuid", "sort_id", "ppc_ind", "cost_currency_code", "invoice_currency_code", "import_export_ind", "invoice_wb_currency_code", "print_ind", "vat_cat_code_ap",
           "type", "use_yn", "create_date", "create_user", "update_date", "update_user" ],
         visible: false,
       },
@@ -83,7 +66,10 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
   const onSave = () => {
     var hasData = false;
     gridRef.current.api.forEachNode((node: any) => {
-      var data = node.data;
+      var data = {
+        ...node.data,
+        bk_id: bkData.bk_id
+      };
       gridOptions?.checkbox?.forEach(
         (col) => (data[col] = data[col] ? "Y" : "N")
       );
@@ -114,7 +100,7 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
         right={
           <>
             <Button id={"add"} onClick={handleonClick} width="w-15" />
-            <Button id={"save"} onClick={onSave} width="w-15" />
+            {/* <Button id={"save"} onClick={onSave} width="w-15" /> */}
           </>
         }
       >

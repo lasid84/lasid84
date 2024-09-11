@@ -57,6 +57,9 @@ export const useUpdateData = (model?: string) => {
 export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, option?:any) => {
   const user_id = useUserSettings((state) => state.data.user_id);
   const ipaddr = useUserSettings((state) => state.data.ipaddr);
+  const trans_mode = useUserSettings((state) => state.data.trans_type);
+  const trans_type = useUserSettings((state) => state.data.trans_type);
+  const terminal = useUserSettings((state) => state.data.terminal);
   const menu_seq = useUserSettings((state) => state.data.currentMenu, shallow);
   const queryClient = useQueryClient();
   const path = usePathname() + "/";
@@ -72,6 +75,9 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
     },
     onMutate: async (data) => {
       // log("onMutate : ", queryClient, data);
+      data["trans_mode"] = trans_mode;
+      data["trans_type"] = trans_type;
+      data["terminal"] = terminal;
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;
     },
@@ -87,6 +93,9 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
       data[ROW_TYPE] = null;
     },
     onMutate: async (data) => {
+      data["trans_mode"] = trans_mode;
+      data["trans_type"] = trans_type;
+      data["terminal"] = terminal;
       data["menu_seq"] = menu_seq;
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;

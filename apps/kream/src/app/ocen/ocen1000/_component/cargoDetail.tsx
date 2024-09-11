@@ -92,7 +92,7 @@ useEffect(()=>{
 })
 
 const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
-  log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
+  // log('handlePieceChange..........', bkData?.cargo, seq, pieceCount, index);
 
   // 그룹으로 기존 항목 필터링 (기존에 seq와 동일한 group 값을 가진 cargo 들을 제거)
   const filteredCargoList = bkData.cargo.map((item: any) => {
@@ -105,7 +105,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
     return item;
   });
 
-  log('handlePieceChange filteredCargoList..........', filteredCargoList);
+  // log('handlePieceChange filteredCargoList..........', filteredCargoList);
 
   const updatedCargoList = filteredCargoList.reduce((acc:any, item:any, i:any) => {
     
@@ -118,6 +118,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
             ...initialCargo,
             bk_id:bkData?.bk_id,
             container_type: item.container_type,
+            container_type_group: item.container_type_group,
             seq: maxSeq + j + 1,
             group: seq, //group index를 생성
             piece : null,
@@ -131,7 +132,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
     return acc;
   }, [] as Cargo[]);
 
-  log('handlePieceChange2222..........', updatedCargoList);
+  // log('handlePieceChange2222..........', updatedCargoList);
 
   dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList } });
 };

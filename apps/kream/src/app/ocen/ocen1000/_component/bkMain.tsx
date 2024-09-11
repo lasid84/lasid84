@@ -13,11 +13,13 @@ import WabillPopUp from "./popup/popAddWaybillNo"
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import PageSearch from "layouts/search-form/page-search-row";
 import { Button } from "components/button";
-import { SP_GetBkHblData, SP_GetBkTemplateData, SP_GetCarrierContData, SP_GetShipperContData } from "./data";
+import { SP_GetBkHblData, SP_GetCarrierContData, SP_GetShipperContData } from "./data";
 import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@/components/date/react-datepicker";
 import  HblGrid  from "components/grid/ag-grid-enterprise";
+import { SP_CreateTemplateData, SP_GetTemplateData } from "../../ocen1001/_component/data";
+import { toastSuccess } from "@/components/toast";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const { DateToString } = require("@repo/kwe-lib/components/dataFormatter");
 
@@ -37,7 +39,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   //get shipper cont data
   const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enabled:true});
   const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enabled:true});
-  const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplate", SP_GetBkTemplateData, {enabled:false});
+  const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplateData", SP_GetTemplateData, {enabled:true});
 
   const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
@@ -51,6 +53,8 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const [salesperson, setSalesPerson] = useState<any>()
   const [terminal, setTerminal] = useState<any>()
   const [customsDeclation, setCustomsDeclation] = useState<any>()
+
+  const { Create: CreateTemplate } = useUpdateData2(SP_CreateTemplateData);
 
   useEffect(() => {
     if (loadItem) {
@@ -94,16 +98,30 @@ const BKMain = ({ loadItem, bkData }: Props) => {
     } 
   }, [isRefreshShpCont, bkData]);
 
-  /* TODO */
-  const setBookingState = (id: string) => {
-    const bkState = ["vocc_id", ];
+  const SaveTemplateData = async () => {
+    let templateData = getValues(); 
+    let newData = {
+      ...bkData,
+      ...templateData
+    }
+    log("SaveTemplateData", newData)
+    
+    const userConfirmed = window.confirm(t('MSG_0175')|| ''); //템플릿을 저장하시겠습니까?
+
+    if (userConfirmed) {
+      CreateTemplate.mutate(newData);
+    }
   }
+    
 
   const handleButtonClick = (e:any) => {
     log("handleButtonClick", e.target.id)
     switch (e.target.id) {
       case "shipper_manage":
         dispatch({ isShpContPopUpOpen: true });
+        break;
+      case "btn_save_template":
+        SaveTemplateData();
         break;
     }
   }
@@ -120,11 +138,12 @@ const BKMain = ({ loadItem, bkData }: Props) => {
             <PageSearch
               right={<></>}>
               <>
-                { MselectedTab?.includes("NEW") ?
-                <><CustomSelect
+              { MselectedTab?.includes("NEW") ?
+                <>
+                <CustomSelect
                       id="template_id"
                       initText="Select a Template"
-                      listItem={bkTemplateData as gridData}
+                      listItem={(bkTemplateData as any)[0] as gridData}
                       valueCol={["template_id", "template_nm"]}
                       displayCol="template_nm"
                       gridOption={{
@@ -137,12 +156,30 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       events={{
                         onSelectionChanged: async (e, id, value) => {
                           let selectedRow = await e.api.getSelectedRows()[0];
-                          await dispatch({[MselectedTab]:{...bkData, ...selectedRow, [ROW_CHANGED]:true}});
+                          const cargo = ((bkTemplateData as any)[1] as gridData).data.filter((row: any) => row.template_id === (selectedRow as any).template_id);
+                          const cost = {
+                            data : ((bkTemplateData as string[])[2] as gridData).data.filter((row: any) => row.template_id === (selectedRow as any).template_id),
+                            fields: ((bkTemplateData as string[])[2] as gridData).fields
+                          }
+                          await dispatch({
+                            [MselectedTab]: {
+                              ...bkData, 
+                              ...selectedRow, 
+                              cargo: cargo,
+                              cost: cost,
+                              [ROW_CHANGED]:true
+                            }});
                         },
                       }} 
                     />
-                    <div className="col-span-5"></div></>
-                  : <></> } 
+                  <div className="col-span-5"></div>
+                  </>
+                  : <>
+                      <MaskedInputField id="template_nm" options={{ isReadOnly: false}} value={bkData?.template_nm} /> 
+                      {!bkData?.template_id && <Button id={"btn_save_template"} label={"save_template"} onClick={handleButtonClick} width="w-24"/>}
+                      <div className="col-span-5"></div> 
+                    </>
+                  } 
                   <DatePicker
                     id="bk_dd"
                     value={bkData?.bk_dd}
@@ -153,7 +190,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                     }}/>
                     <MaskedInputField id="vocc_id" value={bkData?.vocc_id} options={{ isReadOnly: false}} />
                     <MaskedInputField id="mwb_no" value={bkData?.mwb_no} options={{ isReadOnly: true}} />
-                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true}} 
+                    <MaskedInputField id="waybill_no" value={bkData?.waybill_no} options={{ isReadOnly: true, myPlaceholder:"Click to add"} } 
                       events={{
                         onClick: handleClickPopUpWaybill
                       }} 
