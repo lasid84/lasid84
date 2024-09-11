@@ -65,7 +65,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   const { getValues } = useFormContext();
 
-  const onRefresh = () => { dispatch({ isRefresh : true, isMDSearch: true }) }
+  const onRefresh = () => { dispatch({ isRefresh : true, isMDSearch: true}) }
 
   const onSearch = () => {}
 
@@ -76,9 +76,11 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     if (bkData && bkData[ROW_TYPE] === ROW_TYPE_NEW) {  
       hasData = true;  
       let newData = {...bkData, ...curData};
-      CreateBKData.mutate(newData, {
+      log("New SaveBkData", bkData, curData, newData);
+      await CreateBKData.mutateAsync(newData, {
         onSuccess: (res: any) => {
           let bk_id = res.data[0].bk_id;
+          bkData.bk_id = bk_id;
           let updatedTab = objState.tab1.map((tab:any) => {
             if (tab.cd === MselectedTab) {
               tab.cd = bk_id;
@@ -94,81 +96,75 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
       if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};
-        UpdateBKData.mutate(updateData);
+        await UpdateBKData.mutateAsync(updateData);
       }
     }
     
-
     return hasData;
   }
 
-  const SaveCargo = async () => {
-    var hasData = false;
+  const SaveCargo = () => {
+    let hasData = false;
+    /* 카고 저장 */
     if (bkData?.cargo) {
       bkData.cargo.forEach( async (data: Cargo) => {
         if (data[ROW_CHANGED]) {
           hasData = true;
-          try{
-            if (data[ROW_TYPE] === ROW_TYPE_NEW) {
-              await CreateCargo.mutateAsync(data);
-            } else {          //수정
-              await UpdateCargo.mutateAsync(data);
-            }   
-          }catch(error){
-            log("error:", error);
-          }finally{
-            data[ROW_CHANGED] = false;
+          var updatedData = {
+            ...data,
+            bk_id: bkData.bk_id
+          };
+
+          if (data[ROW_TYPE] === ROW_TYPE_NEW) {
+            await CreateCargo.mutateAsync(updatedData);
+          } else {          //수정
+            await UpdateCargo.mutateAsync(updatedData);
           }            
         }
       })        
     }
-
     return hasData;
   }
 
-  const saveCost = async () => {
-    var hasData = false;
+  const SaveCost = () => {
+    let hasData = false;
 
+    /* Cost 저장 */
     const allColumns = gridRef_cost?.current?.api.getAllGridColumns();    
     const checkboxColumns = allColumns.filter((col:any) => col.getColDef().cellDataType === 'boolean')
                                       .map((col: { colId: any; }) => col.colId);
     gridRef_cost.current.api.forEachNode(async (node: any) => {
       
-      // gridOptions?.checkbox?.forEach(
-      //   (col) => (data[col] = data[col] ? "Y" : "N")
-      // );
-      if (node.data[ROW_CHANGED]) {
-        hasData = true;
-        var data = {
-          ...node.data,
-          bk_id: bkData.bk_id
-        };
-        checkboxColumns.forEach((col:string) => (data[col] = data[col] ? 'Y' : 'N'));
-        if (data[ROW_TYPE] === ROW_TYPE_NEW) {
-          await CreateCost.mutateAsync(data);
-        } else {          //수정
-          await UpdateCost.mutateAsync(data);
-        }
+    if (node.data[ROW_CHANGED]) {
+      hasData = true;
+      var updatedData = {
+        ...node.data,
+        bk_id: bkData.bk_id
+      };
+      checkboxColumns.forEach((col:string) => (updatedData[col] = updatedData[col] ? 'Y' : 'N'));
+      log("New SaveCostData", updatedData);
+      if (updatedData[ROW_TYPE] === ROW_TYPE_NEW) {
+        await CreateCost.mutateAsync(updatedData);
+      } else {          //수정
+        await UpdateCost.mutateAsync(updatedData);
       }
-    });
-    
+    }
+  });
+
     return hasData;
   }
 
-  const onSave = async (param: MouseEventHandler) => {
-    let hasBKData = false;
-    let hasCargoData = false;
-    let hasCostData = false;
-    
-    hasCostData = await saveCost();
-    hasCargoData = await SaveCargo();
-    hasBKData = await SaveBkData();
+  const onSave = async (param: MouseEventHandler) => {    
+    let hasMainData = await SaveBkData();
+    let hasCargoData = await SaveCargo();
+    let hasCostData = await SaveCost();
 
-    if (hasBKData || hasCargoData || hasCostData) {
-      onRefresh();
+    if (hasMainData || hasCargoData || hasCostData) {      
       toastSuccess('Success.');
+      // setTimeout(() => onRefresh(), 200);
+      onRefresh();
     }
-  }
+  };
   
   const onBKCopy = () => {
     //await BKCopy(objState, bkData)
@@ -179,19 +175,36 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
     var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
     var tabName = `NEW${tabSeq}`;
-    // setTimeout(() => {                
-      objState.tab1.push({ cd: tabName, cd_nm: tabName })      
+    // setTimeout(() => {               
+      objState.tab1.push({ cd: tabName, cd_nm: tabName })    
+      const cargo = bkData.cargo.map((row:any) => {
+        row[ROW_TYPE] = ROW_TYPE_NEW;
+        row[ROW_CHANGED] = true;
+        return row;
+      });  
+      const cost = {
+        fields: [...bkData.cost.fields],
+        data : [...bkData.cost.data.map((row:any) => {
+          row.bk_id = bkData.bk_id;
+          row.waybill_no = '';
+          row[ROW_TYPE] = ROW_TYPE_NEW;
+          row[ROW_CHANGED] = true;
+          return row;
+        })]
+      }
+
       dispatch({ [tabName] : {...bkData, 
         bk_id:'', 
         bk_dd: dayjs().format('YYYYMMDD'),
-        trans_mode: objState.trans_mode,
-        trans_type: objState.trans_type,
         doc_close_dd: dayjs().format('YYYYMMDD'),
         use_yn: 'Y',
         state : 0,
+        cargo: cargo,
+        cost: cost,
         [ROW_CHANGED] : true,
         [ROW_TYPE] : ROW_TYPE_NEW
-      }, MselectedTab: tabName });
+      }, MselectedTab: tabName
+     });
   // }, 200);
   }
 

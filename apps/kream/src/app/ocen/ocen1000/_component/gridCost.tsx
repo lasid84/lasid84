@@ -37,7 +37,7 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
     const gridOption: GridOption = {
       colVisible: {
         col: ["bk_id", "template_id", "seq", "uuid", "sort_id", "ppc_ind", "cost_currency_code", "invoice_currency_code", "import_export_ind", "invoice_wb_currency_code", "print_ind", "vat_cat_code_ap",
-          "type", "use_yn", "create_date", "create_user", "update_date", "update_user" ],
+          "type", "create_date", "create_user", "update_date", "update_user" ],
         visible: false,
       },
       gridHeight: "60vh",

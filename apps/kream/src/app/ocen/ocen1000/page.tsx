@@ -115,6 +115,7 @@ export default function OCEN1000() {
 
   useEffect(() => {
     const params = getMenuParameters(menu_param);
+    log("params", params)
     dispatch({
       trans_mode: params.trans_mode,
       trans_type: params.trans_type,
@@ -140,8 +141,9 @@ export default function OCEN1000() {
 
       const fetchDataAsync = async () => {
         const { data: newData } = await detailRefetch(); // refetch 호출 후 응답 대기 
-        const cargo = ((newData as string[])[1] as unknown as gridData).data;
-        const cost = ((newData as string[])[2] as unknown as gridData) // grid사용으로 gridData로 맞추기
+        log("fetchDataAsync", objState?.MselectedTab, newData);
+        const cargo = (newData as string[])[1] ? ((newData as string[])[1] as gridData).data : [];
+        const cost = ((newData as string[])[2] as gridData) || {} // grid사용으로 gridData로 맞추기
         log("cost & cargo : ", cargo, cost)
         const data = {
           ...((newData as string[])[0] as unknown as gridData).data[0],
@@ -149,7 +151,7 @@ export default function OCEN1000() {
           // cost : ((newData as string[])[2] as unknown as gridData).data
           cost : cost || []
         }
-        log("useEffect detailData", data);
+        // log("useEffect detailData", data);
         dispatch({[objState?.MselectedTab]:data})
       };
       fetchDataAsync(); // useEffect 내에서 비동기 호출

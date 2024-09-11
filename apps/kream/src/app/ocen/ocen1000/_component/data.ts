@@ -194,6 +194,8 @@ export const SP_CreateData = async (param: any) => {
     , e_manifest_yn
     , use_yn
     , remark, user_id, ipaddr } = Param;
+
+    log("SP_CreateData", trans_mode, trans_type)
   const params = {
     inparam: [
       "in_bk_dd"
@@ -236,8 +238,8 @@ export const SP_CreateData = async (param: any) => {
       , "in_cy_place_code"
       , "in_cy_cont_seq"
       , "in_carrier_code"
-      , "carr_shipper_id"
-      , "carr_cnee_id"
+      , "in_carr_shipper_id"
+      , "in_carr_cnee_id"
       , "in_cr_t_cont_seq"
       , "in_cr_s_cont_seq"
       , "in_cr_fak"

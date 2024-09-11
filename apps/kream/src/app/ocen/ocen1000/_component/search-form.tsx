@@ -59,8 +59,8 @@ const SearchForm = ({ loadItem }: any) => {
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
   const {
-    trans_mode,
-    trans_type,
+    // trans_mode,
+    // trans_type,
     fr_date,
     to_date,
     wb_no,
@@ -73,14 +73,14 @@ const SearchForm = ({ loadItem }: any) => {
   } = objState.searchParams;
 
   //사용자 정보
-  const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow);
-  const gTransType = useUserSettings((state) => state.data.trans_type, shallow);
+  // const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow);
+  // const gTransType = useUserSettings((state) => state.data.trans_type, shallow);
   const user_id = useUserSettings((state) => state.data.user_id);
 
   const methods = useForm({
     defaultValues: {
-      trans_mode: trans_mode || gTransMode || "ALL",
-      trans_type: trans_type || gTransType || "ALL",
+      // trans_mode: trans_mode || gTransMode || "ALL",
+      // trans_type: trans_type || gTransType || "ALL",
       fr_date:
         fr_date ||
         dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),

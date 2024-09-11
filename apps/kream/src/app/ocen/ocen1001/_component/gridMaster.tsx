@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState, memo } from "react";
-import { SP_CreateTemplateData, SP_GetTemplateData, SP_UpdateData } from "./data";
+import { SP_CreateTemplateData, SP_GetTemplateData, SP_UpdateTemplateData } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -32,7 +32,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const { data: mainData, refetch: mainRefetch } = useGetData(objState?.searchParams, SEARCH_M, SP_GetTemplateData, { enabled: true });
     const { Create } = useUpdateData2(SP_CreateTemplateData, SEARCH_M);
-    const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
+    const { Update } = useUpdateData2(SP_UpdateTemplateData, SEARCH_M);
 
 
     const gridOption: GridOption = {
