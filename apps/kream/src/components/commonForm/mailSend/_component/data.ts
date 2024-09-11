@@ -45,7 +45,7 @@ export const SP_GetMailSample = async (searchParam: any) => {
     }
   
     const result = await executFunction(params);
-    log('mailData result', Param, result)
+    // log('mailData result', Param, result)
     return result![0];
 }
 export const SP_GetMailReceiver = async (searchParam: any) => {

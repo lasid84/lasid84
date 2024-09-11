@@ -147,9 +147,9 @@ export default function OCEN1000() {
         log("cost & cargo : ", cargo, cost)
         const data = {
           ...((newData as string[])[0] as unknown as gridData).data[0],
-          cargo : cargo || [],
+          cargo : cargo,
           // cost : ((newData as string[])[2] as unknown as gridData).data
-          cost : cost || []
+          cost : cost
         }
         // log("useEffect detailData", data);
         dispatch({[objState?.MselectedTab]:data})

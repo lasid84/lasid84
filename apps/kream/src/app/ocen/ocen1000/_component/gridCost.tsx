@@ -9,7 +9,7 @@ import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
-import { SP_InsertCost, SP_UpdateCost, SP_GetCostData } from "./data";
+import { SP_SaveCostData, SP_GetCostData } from "./data";
 import IconSelect from 'components/grid/ag-grid-enterprise/iconSelect'
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -21,8 +21,8 @@ type Props = {
 const GridCost: React.FC<Props> = ({ initData, bkData }) => {
   const { dispatch, objState } = useAppContext();
   const gridRef = useRef<any | null>();
-  const { Create } = useUpdateData2(SP_InsertCost, SEARCH_D);
-  const { Update } = useUpdateData2(SP_UpdateCost, SEARCH_D);
+
+  // const { Update: SaveCostData } = useUpdateData2(SP_SaveCostData);
   const [gridOptions, setGridOptions] = useState<GridOption>();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
   }, [gridRef.current])
 
   useEffect(() => {
-    // log("useEffect gridCost", bkData);
+    log("useEffect gridCost", bkData?.cost);
     const gridOption: GridOption = {
       colVisible: {
         col: ["bk_id", "template_id", "seq", "uuid", "sort_id", "ppc_ind", "cost_currency_code", "invoice_currency_code", "import_export_ind", "invoice_wb_currency_code", "print_ind", "vat_cat_code_ap",
@@ -62,28 +62,28 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
     setGridOptions(gridOption);
   }, [initData, bkData]);
 
-  //add - save - update 시 또 add됨
-  const onSave = () => {
-    var hasData = false;
-    gridRef.current.api.forEachNode((node: any) => {
-      var data = {
-        ...node.data,
-        bk_id: bkData.bk_id
-      };
-      gridOptions?.checkbox?.forEach(
-        (col) => (data[col] = data[col] ? "Y" : "N")
-      );
-      if (data.__changed) {
-        hasData = true;
-        if (data.__ROWTYPE === ROW_TYPE_NEW) {
-          Create.mutate(data);
-        } else {          //수정
-          Update.mutate(data);
-        }
-      }
-    });
-    if (hasData) toastSuccess("Success.");
-  };
+  // //add - save - update 시 또 add됨
+  // const onSave = () => {
+  //   var hasData = false;
+  //   gridRef.current.api.forEachNode((node: any) => {
+  //     var data = {
+  //       ...node.data,
+  //       bk_id: bkData.bk_id
+  //     };
+  //     gridOptions?.checkbox?.forEach(
+  //       (col) => (data[col] = data[col] ? "Y" : "N")
+  //     );
+  //     if (data.__changed) {
+  //       hasData = true;
+  //       if (data.__ROWTYPE === ROW_TYPE_NEW) {
+  //         Create.mutate(data);
+  //       } else {          //수정
+  //         Update.mutate(data);
+  //       }
+  //     }
+  //   });
+  //   if (hasData) toastSuccess("Success.");
+  // };
 
   const handleonClick = () => {
     rowAdd(gridRef.current, {

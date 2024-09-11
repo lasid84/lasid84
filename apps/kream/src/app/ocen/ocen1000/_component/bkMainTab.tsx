@@ -8,7 +8,7 @@ import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_InsertCost, SP_UpdateCargo, SP_UpdateCost, SP_UpdateData, SP_DownloadReport } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_UpdateCargo, SP_UpdateData, SP_DownloadReport, SP_SaveCostData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
@@ -18,6 +18,7 @@ import RadioGroup from "components/radio/RadioGroup"
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
 import { Cargo } from "./cargoDetail";
+import _ from 'lodash';
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -41,8 +42,9 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { Update: UpdateBKData } = useUpdateData2(SP_UpdateData);
   const { Create: CreateCargo } = useUpdateData2(SP_InsertCargo);
   const { Update: UpdateCargo } = useUpdateData2(SP_UpdateCargo);
-  const { Create:CreateCost } = useUpdateData2(SP_InsertCost);
-  const { Update:UpdateCost } = useUpdateData2(SP_UpdateCost);
+  // const { Create:CreateCost } = useUpdateData2(SP_InsertCost);
+  // const { Update:UpdateCost } = useUpdateData2(SP_UpdateCost);
+  const { Update: SaveCostData } = useUpdateData2(SP_SaveCostData);
 
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
   const { Create : Download } = useUpdateData2(SP_DownloadReport, "Download");
@@ -126,31 +128,30 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     return hasData;
   }
 
-  const SaveCost = () => {
+  const SaveCost = async () => {
     let hasData = false;
 
+    const cost: any[] = [];
     /* Cost 저장 */
     const allColumns = gridRef_cost?.current?.api.getAllGridColumns();    
     const checkboxColumns = allColumns.filter((col:any) => col.getColDef().cellDataType === 'boolean')
                                       .map((col: { colId: any; }) => col.colId);
-    gridRef_cost.current.api.forEachNode(async (node: any) => {
-      
-    if (node.data[ROW_CHANGED]) {
-      hasData = true;
-      var updatedData = {
-        ...node.data,
-        bk_id: bkData.bk_id
-      };
-      checkboxColumns.forEach((col:string) => (updatedData[col] = updatedData[col] ? 'Y' : 'N'));
-      log("New SaveCostData", updatedData);
-      if (updatedData[ROW_TYPE] === ROW_TYPE_NEW) {
-        await CreateCost.mutateAsync(updatedData);
-      } else {          //수정
-        await UpdateCost.mutateAsync(updatedData);
+    await gridRef_cost.current.api.forEachNode(async (node: any) => {
+      if (node.data[ROW_CHANGED]) {
+        hasData = true;
+        var data = {
+          ...node.data,
+          bk_id: bkData.bk_id
+        };
+        await checkboxColumns.forEach((col:string) => (data[col] = data[col] === false ? 'N' : 'Y'));
+        // log("data", data)
+        cost.push(data);
       }
-    }
-  });
+      
+    });
 
+    log("cost", JSON.stringify(cost));
+    await SaveCostData.mutateAsync({jsonData : JSON.stringify(cost)});
     return hasData;
   }
 
@@ -161,13 +162,15 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
     if (hasMainData || hasCargoData || hasCostData) {      
       toastSuccess('Success.');
-      // setTimeout(() => onRefresh(), 200);
-      onRefresh();
+      setTimeout(() => onRefresh(), 200);
+      // onRefresh();
     }
   };
   
   const onBKCopy = () => {
-    //await BKCopy(objState, bkData)
+    // console.log("onBKCopy")
+    // return;
+    
     var temp = objState.tab1
     .filter((v:{cd:string}) => v.cd.includes("NEW"))
     .sort()
@@ -176,24 +179,31 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     var tabSeq = temp.length ? Number(temp[0].cd.replace("NEW",'')) + 1 : 1;
     var tabName = `NEW${tabSeq}`;
     // setTimeout(() => {               
-      objState.tab1.push({ cd: tabName, cd_nm: tabName })    
-      const cargo = bkData.cargo.map((row:any) => {
+      objState.tab1.push({ cd: tabName, cd_nm: tabName }); 
+      const deepCopiedCargo = _.cloneDeep(bkData.cargo);
+      const cargo = deepCopiedCargo.map((row:any) => {
         row[ROW_TYPE] = ROW_TYPE_NEW;
         row[ROW_CHANGED] = true;
+        row.use_yn = 'Y';
         return row;
       });  
+
+      const deepCopiedCost = _.cloneDeep(bkData.cost);
       const cost = {
-        fields: [...bkData.cost.fields],
-        data : [...bkData.cost.data.map((row:any) => {
+        fields: deepCopiedCost.fields,
+        data : deepCopiedCost.data.map((row:any) => {
           row.bk_id = bkData.bk_id;
           row.waybill_no = '';
+          row.use_yn = 'Y';
           row[ROW_TYPE] = ROW_TYPE_NEW;
           row[ROW_CHANGED] = true;
           return row;
-        })]
+        })
       }
 
-      dispatch({ [tabName] : {...bkData, 
+      var newBkData = _.cloneDeep(bkData);
+      newBkData = {
+        ...newBkData,
         bk_id:'', 
         bk_dd: dayjs().format('YYYYMMDD'),
         doc_close_dd: dayjs().format('YYYYMMDD'),
@@ -203,8 +213,10 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         cost: cost,
         [ROW_CHANGED] : true,
         [ROW_TYPE] : ROW_TYPE_NEW
-      }, MselectedTab: tabName
-     });
+      }
+      
+      log("copy", newBkData, tabName);
+      dispatch({ [tabName] : newBkData, MselectedTab: tabName});
   // }, 200);
   }
 

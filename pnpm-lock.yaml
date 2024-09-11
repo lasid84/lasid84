@@ -321,6 +321,9 @@ importers:
       i18next:
         specifier: ^22.5.1
         version: 22.5.1
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       next:
         specifier: 14.1.0
         version: 14.1.0(react-dom@18.3.1)(react@18.3.1)
@@ -403,6 +406,9 @@ importers:
       '@mui/material':
         specifier: ^5.16.7
         version: 5.16.7(@emotion/react@11.13.3)(@types/react@18.3.4)(react-dom@18.3.1)(react@18.3.1)
+      '@types/lodash':
+        specifier: ^4.14.202
+        version: 4.14.202
       '@types/tabulator-tables':
         specifier: ^5.32.1
         version: 5.32.1
