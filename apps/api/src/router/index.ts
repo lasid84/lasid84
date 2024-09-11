@@ -2,9 +2,10 @@ import { Express, Router } from "express";
 
 import setUpAuthRoutes from "./auth";
 import setUpCheckRoutes from "./check";
-
+import setUpFileRoutes from "./file";
 import { healthCheck } from "../components/health-check/health-check";
 import setUpDataRoutes from "./data";
+
 
 /**
  * @dev
@@ -20,6 +21,7 @@ const authRoutes: Router = Router();
 const checkRoutes: Router = Router();
 const dataRoutes: Router = Router();
 const mailingRoutes: Router = Router();
+const fileRoutes: Router = Router();
 
 /**
  * @dev
@@ -32,6 +34,7 @@ export default function setupRoutes(app: Express) {
   app.use("/auth", authRoutes);
   app.use("/check", checkRoutes);
   app.use("/api", dataRoutes);
+  app.use("/file", fileRoutes);
 
   /**
    * @dev
@@ -47,4 +50,7 @@ export default function setupRoutes(app: Express) {
 
   /** Data API */
   setUpDataRoutes(dataRoutes);
+
+  /** File API */
+  setUpFileRoutes(fileRoutes);
 }

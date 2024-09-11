@@ -21,8 +21,16 @@ export const DataRoutes = {
         GET_LIMO_DATA: "/limo/data",
         GET_CARG_CSCL_PRGS_INFO_QRY: "/external/k-customs/getCargCsclPrgsInfoQry",
         HEALTH_CHECK: "/external/k-customs/healthcheck",
-        SEND_MAIL: "/mailing",
-        FILE_DOWNLOAD: "/report-download",
-        FILE_UPLOAD: "/template-upload"
+        SEND_MAIL: "/mailing"
     }
 };
+
+export const FileRoutes = {
+    BASE : "/file",
+    URI : {
+        REPORT_DOWNLOAD: "/report-download",
+        REPORT_UPLOAD: "/template-upload",
+
+        FILE_DOWNLOAD: "/file-upload"
+    }
+}
