@@ -5,7 +5,7 @@ import { MaskedInputField, Input, TextArea } from "components/input";
 import { useFormContext } from "react-hook-form";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { useTranslation } from "react-i18next";
-import { FileUpload } from "components/file-upload";
+import { FileUpload,AttFileUpload } from "components/file-upload";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { PageContentDivided } from "layouts/search-form/page-search-row";
 import MailSend from "@/components/commonForm/mailSend";
@@ -37,8 +37,17 @@ type MailSample = {
     deliv_request: boolean;
     cust_identification: boolean;
   };
-  attachment:[]
+  attachment:Attachment[]
 };
+
+interface Attachment {
+  reportData: any;
+  fileExtension: number;  // fileExtension은 Number가 아닌 number 타입으로 사용해야 합니다.
+  templateType: number;
+  fileName: any;
+  pageDivide?: number | undefined;  // 선택적 값
+}
+
 
 
 const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm, initData, callbacks }) => {
@@ -102,7 +111,18 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
   const { getValues } = useFormContext();
 
   const handleFileDrop = (data: any[], header: string[]) => {
-    log('data, header', data, header)
+    log('file upload -data, header', data, header)
+
+    const downloadData : Attachment= {
+      "reportData" : data, 
+      "fileExtension" : 0, 
+      "templateType" : 0, 
+      "fileName" : data[0].name, 
+      "pageDivide" : 0
+   };
+   mailform.attachment.push(downloadData)  
+    
+
   };
 
   const handleCheckBoxClick = (id: string, val: any) => {
@@ -122,21 +142,10 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
     
   const sendTransPortEmail = useCallback(async () => {
     const curData = getValues();
-
-    log('reports',reports)
-    //const fileExtension : Number = Number(curData.search_gubn) || 0;
-    //let reports = reports
-
-    // [
-    //   { key: 'bknote', type: 0 },
-    //   { key: 'deliv_request', type: 1 },
-    //   { key: 'cust_identification', type: 2 }
-    // ];
-
+    // 1. Get Data
     for (const report of reports) {
       const attachmentValue = mailform?.report?.[report.key as keyof typeof mailform.report] ?? false; // 타입 단언 사용
 
-    //첨부파일(체크박스) 체크된경우
     if (attachmentValue) {
         try {
           await GetReportData.mutateAsync({ type: report.report_type, bk_id: bk_id }, {
@@ -156,17 +165,17 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
               }
 
               const templateType = Number(report.report_type);
-              const fileExtension : Number = Number(curData.search_gubn) || 0;    
-              const fileName = loadItem[21].data[templateType].report_type_nm
+              const fileExtension : number = Number(curData.search_gubn) || 0;    
+              const fileName = loadItem[21].data[templateType-1].report_type_nm
     
-              const downloadData = {
+              const downloadData : Attachment= {
                   "reportData" : reportData, 
                   "fileExtension" : fileExtension, 
                   "templateType" : templateType, 
                   "fileName" : fileName, 
                   "pageDivide" : pageDivide
-              };
-              //mailform.attachment.push(downloadData)
+              };              
+                mailform.attachment.push(downloadData)              
             },
             onError: (error) => {
               console.error(` 실패 (type: ${report.key}):`, error);
@@ -179,8 +188,10 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
     }
     
     // 2.업로드파일 서버생성
-    // 1,2 서버경로 리턴하여 attachment에 key, value 쉼표구분으로 데이터 insert
-    // 3. sendEmail 실행
+
+    // 3. 서버 파일업로드 경로받아 데이터 insert - attachment
+
+    // 4. sendEmail 실행
     await sendEmail.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code}, {
       onSuccess(data, variables, context) {
       },
@@ -242,7 +253,7 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
                 <span className="px-1 py-1 text-sm text-blue-500">첨부파일</span>
               }
               addition={
-                <FileUpload
+                <AttFileUpload
                   onFileDrop={handleFileDrop}
                   isInit={objState.uploadFile_init}
                 />
