@@ -84,7 +84,7 @@ export const fileDownload = async( req : Request, res : Response ) => {
 
     const isExists = fs.existsSync(templateFilePath);
     if (!isExists) {
-        return res.status(500).json({ errorMessage : "Thers's no exists template file." });
+        return res.status(410).json({ errorMessage : "Thers's no exists template file." });
     }
 
     try {
