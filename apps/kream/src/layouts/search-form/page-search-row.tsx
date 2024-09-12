@@ -203,7 +203,7 @@ export const PageContentDivided: React.FC<PageSearchProps> = ({
           {title}
           {/*contents*/}
           <div className="flex w-full px-4 py-1 space-y-2">
-            <div className="flex w-full gap-3 md:grid-cols-3">
+            <div className="flex flex-wrap w-full gap-3 md:grid-cols-3 md:grid-rows-3">
               {children}
             </div>
             <div className="flex w-full gap-3 sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">

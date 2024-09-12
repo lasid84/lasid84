@@ -1055,10 +1055,114 @@ export const SP_SaveCostData = async (param: any) => {
     isShowComplete:false,
     }
 
-    const result = await executFunction(params);
+//     const result = await executFunction(params);
 
 }
 
+export const SP_UpdateCost = async (param: any) => {
+  const Param = param;
+
+  
+    
+//     const {   bk_id					      , waybill_no        , remark              , uuid                       , charge_code 		           , charge_desc				  , sort_id 
+//       , import_export_ind         , ppc_ind   			  , invoice_wb_amt 	  	, invoice_wb_currency_code   , invoice_charge_amt 
+//       , invoice_currency_code		  , actual_cost_amt		, cost_currency_code	, vendor_id		               , vendor_ref_no 
+//       , print_ind                 , vat_cat_code_ap 	, type                , category_code              , use_yn                     , user_id            , ipaddr
+//       } = Param;
+    
+//   const params = {
+//     inparam : [
+//       "in_bk_id"
+//     , "in_waybill_no"
+//     , "in_remark"
+//     , "in_uuid"
+//     , "in_charge_code"
+//     , "in_charge_desc"
+//     , "in_sort_id"
+//     , "in_import_export_ind"
+//     , "in_ppc_ind"
+//     , "in_invoice_wb_amt"
+//     , "in_invoice_wb_currency_code"
+//     , "in_invoice_charge_amt"
+//     , "in_invoice_currency_code"
+//     , "in_actual_cost_amt"
+//     , "in_cost_currency_code"
+//     , "in_vendor_id"
+//     , "in_vendor_ref_no"
+//     , "in_print_ind"
+//     , "in_vat_cat_code_ap"
+//     , "in_type"
+//     , "in_category_code"
+//     , "in_use_yn" 
+//     , "in_user_id"
+//     , "in_ipaddr"
+//     ],
+//     invalue: [
+//        bk_id					            , waybill_no        , remark                , uuid                      , charge_code 		             , charge_desc				  , sort_id 
+//       , import_export_ind         , ppc_ind   			  , invoice_wb_amt 	  	, invoice_wb_currency_code   , invoice_charge_amt 
+//       , invoice_currency_code		  , actual_cost_amt		, cost_currency_code	, vendor_id		               , vendor_ref_no      , print_ind
+//       , vat_cat_code_ap 	        , type              , category_code       , use_yn             , user_id                   , ipaddr
+//     ],
+//     inproc: 'ocean.f_ocen1000_upd_cost_detail',    
+//     isShowLoading: true,
+//     isShowComplete:false,
+//     }
+
+
+//     const result = await executFunction(params);
+
+//     return result![0];
+// }
+
+export const SP_SaveCostData = async (param: any) => {
+  const Param = param;  
+  const { jsonData, user_id, ipaddr } = Param;
+
+  const params = {
+    inparam : [
+        "in_bk_id"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        bk_id
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_bk_mail',
+    isShowLoading: true
+    }
+  
+    const result = await executFunction(params);
+    log('mailData result', Param, result)
+    return result![0];
+}
+
+
+export const SP_GetMailSample = async (searchParam: any) => {
+  console.log('searchParam', searchParam.queryKey[1])
+  const Param = searchParam.queryKey[1]
+
+  const { bk_id, user_id, ipaddr } = Param;  
+  const params = {
+    inparam : [
+        "in_bk_id"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        bk_id
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_bk_mail',
+    isShowLoading: true
+    }
+  
+    const result = await executFunction(params);
+    log('mailData result', Param, result)
+    return result![0];
+}
 
 export const SP_SendEmail = async (param: any) => {
   // l(in_subject text, in_content text, in_pgm_code text, in_attachment text, i
