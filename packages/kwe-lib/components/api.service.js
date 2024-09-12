@@ -161,12 +161,14 @@ const responseBlobPostCall = async (params) => {
                         : await client.post(url, params);
     return response;
   } catch (err) {
-    return {
-      data: {
-        success: false,
-        message: 'Cannot connect to server.. ' + err.name
-      }
+    console.log("err : ", err.response);
+    let error;
+    if (err.response.status === 410) {
+      error = { success : false, errorMessage : "등록된 템플릿 파일이 없습니다."};
+    } else {
+      error =  { success : false, errorMessage : "파일 생성 중 에러가 발생하였습니다."};
     }
+    return error;
   }
 };
 
