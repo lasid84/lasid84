@@ -21,10 +21,18 @@ export const healthcheck = async (req: Request, res: Response) => {
     res.status(200).send("ok");
 }
 
+/* TODO
+    1. 토큰 처리
+    2. 로직 변경(검토)
+      - 관세청 api 호출 후 반환된 데이터를 Front로 그대로 전달
+      - 이후 Front에서 DB 저장 프로시저 호출
+    3. 콜, xml Parsing 모듈화
+*/
+
+
 /**
  ※ 2024.08.05 관세청 유니패스
   1. 화물통관 진행정보
-  2. token 체크
 */
 export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
     const crkyCn = "h260n224d077a263h070x020g0";
@@ -45,6 +53,7 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
     const mblNo = req.body.mblNo as string;
     const hblNo = req.body.hblNo as string;
     const blYy = req.body.blYy;
+    const seaFlghIoprTpcd = req.body.seaFlghIoprTpcd;  //10: 입항, 11:출항
     const user = req.body.user_id;
     const ipaddr = req.body.ipaddr;
 
@@ -70,38 +79,93 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
                 const xmlData: string = response.data;
 
                 // XML 데이터를 JSON으로 변환
-                await parseString(xmlData, (err, result) => {
+                let r = await parseString(xmlData, async (err, result) => {
                     if (err) {
                         res.status(500).send({ error: 'Failed to parse XML' });
                     } else {
                         let msg = result.cargCsclPrgsInfoQryRtnVo.ntceInfo ? result.cargCsclPrgsInfoQryRtnVo.ntceInfo[0] : '';
                         if (!msg.startsWith('[N00')) {
+                            
+                            for (var row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoDtlQryVo) {
+                                if (row.cargTrcnRelaBsopTpcd[0] === '입항보고 제출' || row.cargTrcnRelaBsopTpcd[0] === '입항보고 수리') {
+                                    var dclrNo = row.dclrNo[0];
+                                    var data: any = await retrieveFlghEtprRprtBrkd({ioprSbmtNo:dclrNo});
+                                    for (const key of Object.keys(data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0])) {
+                                        row[key] = data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0][key]
+                                    }
+                                }
+                            }
+                            // log("result", result);
                             jsonResult.push(result);
+                        }
+
+                        const inproc =  "unipass.f_api001_set_data"
+                        const inparam = ["in_data", "in_user", "in_ipaddr"];
+                        const invalue = [JSON.stringify(jsonResult), user, ipaddr];
+                        const result2:resultType = await callFunction(inproc, inparam, invalue) as resultType;
+                        log("!!!!!!!!", JSON.stringify(jsonResult));
+                        if (result2.numericData === 0) {
+                            res.status(200).send({result2});
+                        } else {
+                            res.status(300).send({result2});
                         }
                     }
                 });
-                sleep(100);
-            } 
+            }
+            
         } 
 
-        if (jsonResult.length > 0) {
-            const inproc =  "unipass.f_api001_set_data"
-            const inparam = ["in_data", "in_user", "in_ipaddr"];
-            const invalue = [JSON.stringify(jsonResult), user, ipaddr];
-            const result:resultType = await callFunction(inproc, inparam, invalue) as resultType;
-            log("!!!!!!!!", result, JSON.stringify(jsonResult));
-            if (result.numericData === 0) {
-                res.status(200).send({result});
-            } else {
-                res.status(300).send({result});
-            }
-        } else {
-            res.status(300).send({numericData: -1,
-                textData: 'Not Exist Data', 
-                cursorData: null});
-        }
     } catch (ex) {
         log(ex.message);
     }
     
   }
+
+  /**
+ ※ 2024.09.12 관세청 유니패스
+  1. 입항보고내역조회(항공)
+*/
+export const retrieveFlghEtprRprtBrkd = async (params:any) => {
+    const crkyCn = "g250p204x029y172j040p010u0";
+    const serviceUrl = "/etprRprtQryBrkdQry/retrieveFlghEtprRprtBrkd";
+
+    /* 1. Unipass 서비스 ID
+         - API024
+       
+       2. Request Parameter
+       항목명           항목명          항목크기   항목구분   항목설명
+      ioprSbmtNo    입출항제출번호      12         1         입출항제출번호 또는 선박호출부호 필수입력 
+      shipCallSgn   선박호출부호        12         1         입출항제출번호 또는 선박호출부호 필수입력
+    */
+
+    const ioprSbmtNo = params.ioprSbmtNo;
+    const shipFlgtNm = params.shipFlgtNm;
+    const etprDt = params.etprDt;
+
+    const url = `${unipassUrl}${serviceUrl}?crkyCn=${crkyCn}`
+                        + (ioprSbmtNo ? `&ioprSbmtNo=${ioprSbmtNo}` : '')
+                        + (shipFlgtNm ? `&shipFlgtNm=${shipFlgtNm}` : '')
+                        + (etprDt ? `&etprDt=${etprDt}` : '')
+                        ;
+
+    const response = await getCall({url:url});
+    // log("retrieveFlghEtprRprtBrkd", url, response.data)
+    const xmlData: string = response.data;
+    var jsonResult = {}
+    // XML 데이터를 JSON으로 변환
+    await parseString(xmlData, async (err, result) => {
+        if (err) {
+            jsonResult = { error: 'Failed to parse XML' };
+        } else {
+            let msg = result.flghEtprRprtBrkdQryRtnVo.ntceInfo ? result.flghEtprRprtBrkdQryRtnVo.ntceInfo[0] : '';
+            if (!msg.startsWith('[N00')) {        
+                // log("=================", result)        
+                jsonResult = result
+            } else {
+                jsonResult = {error:msg}
+            }
+        }
+    });
+
+    return jsonResult;
+}

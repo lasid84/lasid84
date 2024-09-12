@@ -44,7 +44,7 @@ function stringToFullDateString(source, delimiter = '-') {
         const min = source.substring(10,12);
         const second = source.substring(12,14);
 
-        return [year, month, day].join(delimiter) + " " + (hour ? [hour, min, second].join(":") : "");
+        return [year, month, day].join(delimiter) + " " + (hour ? [hour, min, second].filter(v => v).join(":") : "");
     };
 };
 

@@ -29,7 +29,7 @@ export const SP_Load = async (searchParam:any) => {
 
 export const SP_GetCustomsData = async (searchParam: any) => {
   
-  var {blyy, blno, user_id, ipaddr } = searchParam.queryKey[1];
+  var {search_gubn, blyy, blno, user_id, ipaddr } = searchParam.queryKey[1];
   
   const body = {
     blYy:blyy,
@@ -46,12 +46,14 @@ export const SP_GetCustomsData = async (searchParam: any) => {
 
   const params = {
     inparam : [
-        "in_blno"
+        "in_type"  //0 : detail, 1: summary
+      , "in_blno"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-        blno
+        search_gubn
+      , blno
       , user_id
       , ipaddr
     ],

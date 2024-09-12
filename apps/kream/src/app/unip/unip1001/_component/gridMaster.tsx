@@ -6,7 +6,7 @@ import { SP_GetCustomsData } from "./data";
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
-import Grid from 'components/grid/ag-grid-enterprise';
+import Grid, { ROW_HIGHLIGHTED } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
@@ -23,21 +23,40 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { dispatch, objState = {} } = useAppContext();
     const { searchParams, isMSearch } = objState;
     const [ gridData, setGridData ] = useState<gridData>();
+    const [ gridOption, setGridOption ] = useState<GridOption>();
 
     const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetCustomsData, { enabled: false });
-    const gridOption: GridOption = {
-        colVisible: { col: ["prgsstts"], visible: false },
-        // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
-        gridHeight: "h-full",
-        // checkbox: ["no"],
-        // editable: ["trans_mode"],
-        dataType: { "prcsdttm": "date" },
-        // isMultiSelect: false,
-        isAutoFitColData: true,
-        // alignLeft: ["major_category", "bill_gr1_nm"],
-        rowSpan: ["rowno", "cargmtno", "mblno", "hblno"],
-        isShowRowNo:false
-    };
+
+    useEffect(() => {
+        switch(searchParams?.search_gubn) {
+            case "0": //detail
+            setGridOption({
+                colVisible: { col: ["prgsstts", ROW_HIGHLIGHTED], visible: false },
+                // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+                gridHeight: "h-full",
+                // checkbox: ["no"],
+                // editable: ["trans_mode"],
+                dataType: { "prcsdttm": "date", "etprdttm":"date"},
+                // isMultiSelect: false,
+                isAutoFitColData: true,
+                // alignLeft: ["major_category", "bill_gr1_nm"],
+                rowSpan: ["rowno", "cargmtno", "mblno", "hblno"],
+                isShowRowNo:false,
+            });
+            break;
+            case "1": //summary
+            setGridOption({
+                colVisible: { col: ["prgsstts"], visible: false },
+                gridHeight: "h-full",
+                dataType: { "prcsdttm": "date" },
+                autoHeightCol: ["summary"],
+                maxWidth: { hblno: 200 },
+                isShowRowNo:false,
+            });
+            break;
+        }
+    }, [searchParams?.search_gubn]);
+    
     /*
         handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
     */

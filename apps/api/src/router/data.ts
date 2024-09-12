@@ -13,10 +13,12 @@ import * as file from "../components/data/file";
 export default function setUpDataRoutes(routes: Router) {
   routes.post("/data", data.getData);
   routes.post("/limo/data", data.getLimoData);
-  routes.post("/external/k-customs/getCargCsclPrgsInfoQry", unipass.getCargCsclPrgsInfoQry);
-  routes.get("/external/k-customs/healthcheck", unipass.healthcheck);
-  routes.get("/down2222", unipass.healthcheck);
   
+  // 관세청 Unipass
+  routes.post("/external/k-customs/getCargCsclPrgsInfoQry", unipass.getCargCsclPrgsInfoQry);  //화물통관 진행정보
+
+  routes.get("/external/k-customs/healthcheck", unipass.healthcheck);
+    
   // 메일 발송
   routes.post("/mailing", mailing.sendMail);
 

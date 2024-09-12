@@ -43,9 +43,9 @@ export async function setI18n(lang:string) {
     // log("objEN", objJP);
     // log("languages", languages);
     languages.data.map((row:any) => {
-        objEN[row.code] = row.eng ? row.eng : row.code;
-        objKO[row.code] = row.kor ? row.kor : row.code;
-        objJP[row.code] = row.jpn ? row.jpn : row.code;
+        objEN[row.code.toLowerCase()] = row.eng ? row.eng : row.code;
+        objKO[row.code.toLowerCase()] = row.kor ? row.kor : row.code;
+        objJP[row.code.toLowerCase()] = row.jpn ? row.jpn : row.code;
     });
     
     // resources = {

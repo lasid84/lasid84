@@ -42,7 +42,8 @@ const { sleep } = require('@repo/kwe-lib/components/sleep');
 
 export const ROW_TYPE = '__ROWTYPE';
 export const ROW_INDEX = '__ROWINDEX';
-export const ROW_CHANGED = '__changed'
+export const ROW_CHANGED = '__changed';
+export const ROW_HIGHLIGHTED = '__highlight';
 export const ROW_TYPE_NEW = 'NEW';
 
 
@@ -109,6 +110,7 @@ export type GridOption = {
   total?: {
     [key: string]: string                 //column : 타입(count, sum, avg), prefix 같은 문구를 넣으려면 custom 형식의 옵션 추가 후 개발 필요
   }
+  autoHeightCol?: string[]
   isShowFilter?: boolean
   isShowFilterBtn?: boolean
   isMultiSelect?: boolean
@@ -293,7 +295,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
           // await delay(100);
           // log("rowClassRules", params, params.data, params.data[ROW_CHANGED]);
           return params.data[ROW_CHANGED];
-        }
+        },
+        "highlighted-row" : (params) => {
+          // await delay(100);
+          // log("rowClassRules", params, params.data, params.data[ROW_HIGHLIGHTED]);
+          return params.data[ROW_HIGHLIGHTED] === 'Y';
+        },
       }
     };
   }, []);
@@ -554,6 +561,17 @@ const ListGrid: React.FC<Props> = memo((props) => {
               // }
             };
           }          
+        }
+
+        if (options?.autoHeightCol?.length) {
+          var arrCols = options.autoHeightCol;
+          if (arrCols.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              autoHeight: true,
+              wrapText:true,
+            }
+         }
         }
 
         cols.push({
