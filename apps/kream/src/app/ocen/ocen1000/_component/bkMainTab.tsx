@@ -19,6 +19,7 @@ import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
 import { Cargo } from "./cargoDetail";
 import _ from 'lodash';
+import { toastError } from 'components/toast';
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -282,6 +283,16 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                 }
 
                 downloadBlobFile(file, fileName.concat(extension));
+              } else {
+                if (res.success !== undefined || null) {
+                  if (res.success === false) {
+                    toastError(res.errorMessage);
+                  } else {
+                    toastError("잠시 후에 다시 시도해주세요.");
+                  }
+                } else {
+                  toastError("잠시 후에 다시 시도해주세요.");
+                }
               }
             }
           });
