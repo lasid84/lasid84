@@ -1035,32 +1035,9 @@ export const SP_GetCostData = async (searchParam: any) => {
 //     return result![0];
 // }
 
-export const SP_SaveCostData = async (param: any) => {
-  const Param = param;  
-  const { jsonData, user_id, ipaddr } = Param;
 
-  const params = {
-    inparam : [
-      "in_jsondata"
-    , "in_user"
-    , "in_ipaddr"
-    ],
-    invalue: [
-      jsonData
-    , user_id
-    , ipaddr
-    ],
-    inproc: 'ocean.f_ocen1000_ins_cost_detail2',
-    isShowLoading: true,
-    isShowComplete:false,
-    }
-
-//     const result = await executFunction(params);
-
-}
-
-export const SP_UpdateCost = async (param: any) => {
-  const Param = param;
+// export const SP_UpdateCost = async (param: any) => {
+//   const Param = param;
 
   
     
@@ -1120,24 +1097,23 @@ export const SP_SaveCostData = async (param: any) => {
 
   const params = {
     inparam : [
-        "in_bk_id"
-      , "in_user"
-      , "in_ipaddr"
+      "in_jsondata"
+    , "in_user"
+    , "in_ipaddr"
     ],
     invalue: [
-        bk_id
-      , user_id
-      , ipaddr
+      jsonData
+    , user_id
+    , ipaddr
     ],
-    inproc: 'ocean.f_ocen1000_get_bk_mail',
-    isShowLoading: true
+    inproc: 'ocean.f_ocen1000_ins_cost_detail2',
+    isShowLoading: true,
+    isShowComplete:false,
     }
-  
-    const result = await executFunction(params);
-    log('mailData result', Param, result)
-    return result![0];
-}
 
+    const result = await executFunction(params);
+
+}
 
 export const SP_GetMailSample = async (searchParam: any) => {
   console.log('searchParam', searchParam.queryKey[1])
@@ -1225,6 +1201,7 @@ export const SP_GetReportData = async (param: any) => {
     const result = await executFunction(params);
     return result;
 }
+
 export const SP_DownloadReport = async (param: any) => {
   const params = param;
 
