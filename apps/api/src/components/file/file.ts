@@ -1,48 +1,17 @@
 import { Request, Response } from "express";
 import path from "node:path";
-import upload from 'express-fileupload'
 import fs from 'fs';
 import { promisify } from 'util';
 
+import upload from 'express-fileupload'
+import Excel from 'exceljs';
 import libre from 'libreoffice-convert';
 (libre as any).convertAsync = promisify(libre.convert);
 
-import Excel from 'exceljs';
+import util from './util';
+import constant from './constant';
 
-/**
- * foundation : 
- * 1. value를 그대로 cell에 대체
- * 2. null, undefined 제거
- * 
- * custom : formula
- * 1. column과 column이 합쳐지는 case + 쉼표 등 특수문자로 구분되어지는 case
- * 2. value 앞 뒤로 fixed text가 붙는 case
- * 3. value 값에 따라 shape가 변환되는 case
- * 4. value 그대로 들어가는 것이 아닌 특정 형식으로 변환되어 들어가는 case
- */
-
-const BasePath = "/src/components/data/upload/";
-
-const PdfContentType = "application/pdf";
-const XlsxContentType= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-type ExcelDataLocation = {
-    [key: string] : string
-};
-
-type FileDownloadRequest = {
-    templateType: number,
-    fileExtension: number,
-    reportData: ExcelDataLocation,
-    fileName: string,
-    pageDivide: number
-}
-
-type FileDownloadResponse = {
-    contentType: string,
-    fileData: Buffer,
-    extension: string
-}
+import { ReportDownloadRequest, ReportDownloadResponse, FileUploadRequest } from './type';
 
 /**
  * @API_DESCRIPTION
@@ -64,19 +33,19 @@ type FileDownloadResponse = {
  * [ RESPONSE ]
  * - 사용자가 선택한 파일 형식으로 REPORT 다운로드
  */
-export const fileDownload = async( req : Request, res : Response ) => {
+export const reportDownload = async( req : Request, res : Response ) => {
     const accessToken = req.headers["authorization"];
     if (!accessToken) {
       return res.status(401).json({ errorMessage : "Access token not provided" });
     }
 
-    const request : FileDownloadRequest = req.body;
+    const request : ReportDownloadRequest = req.body;
 
     /**
      * @dev
      * Select Report File Template.
      */
-    const filePath = selectTemplateFile(request.templateType);
+    const filePath = util.selectTemplateFile(request.templateType);
     if (filePath === "") {
         return res.status(500).json({ errorMessage : "Choose Correct Template Type Number." });
     }
@@ -130,20 +99,20 @@ export const fileDownload = async( req : Request, res : Response ) => {
          * @dev
          * Select response according to fileExtension.
          */
-        let response : FileDownloadResponse;
+        let response : ReportDownloadResponse;
 
         if (request.fileExtension) {
             let data = await (libre as any).convertAsync(excelBuffer, 'pdf', undefined);
 
             response = {
                 fileData : data,
-                contentType : PdfContentType,
+                contentType : constant.PDF_CONTENT_TYPE,
                 extension : '.pdf'
             }
         } else {
             response = {
                 fileData : excelBuffer,
-                contentType : XlsxContentType,
+                contentType : constant.XLSX_CONTENT_TYPE,
                 extension : '.xlsx'
             }
         }
@@ -170,7 +139,7 @@ export const fileDownload = async( req : Request, res : Response ) => {
  * [ RESPONSE ]
  * - 업로드 성공 여부
  */
-export const fileUpload = async( req : Request, res : Response ) => {
+export const reportUpload = async( req : Request, res : Response ) => {
     const accessToken = req.headers["authorization"];
     if (!accessToken) {
       return res.status(401).json({ errorMessage : "Access token not provided" });
@@ -188,7 +157,7 @@ export const fileUpload = async( req : Request, res : Response ) => {
             return res.status(500).json( { errMessage : "Invalid File Name."} )
         }
 
-        const uploadPath = path.join(process.cwd(), BasePath + fileName);
+        const uploadPath = path.join(process.cwd(), constant.BASE_PATH + fileName);
         
         template.mv(uploadPath, function(err) {
             if (err) {
@@ -204,18 +173,42 @@ export const fileUpload = async( req : Request, res : Response ) => {
 };
 
 /**
- * @FUNCTION
- * 템플릿 유형에 따라 사용할 파일 구분을 위한 함수.
+ * @API_DESCRIPTION
+ * [ SUMMARY ]
+ * 서버에 파일을 업로드하기 위한 API
+ * 
+ * [ REQUEST ]
+ * - add_folder_name : 루트 디렉토리에서 추가될 폴더 이름
+ * - files :
+ *    # file_name : 파일 이름
+ *    # file_data : 파일 데이터 ArrayBuffer
+ *    # file_root_dir : 사용할 파일저장소 루트 디렉토리
+ *       (ex : 메일 기능 : MAIL, 템플릿 파일 : TEMPLATE)
+ * 
+ * [ RESPONSE ]
+ * 파일이 업로드 된 경로 배열
  */
-const selectTemplateFile = (templateType:number) : string => {
-    switch(templateType) {
-        case 0:
-            return BasePath + "booking_note.xlsx";
-        case 1:
-            return BasePath + "transport_request.xlsx";
-        case 2:
-            return BasePath + "customer_dispatch.xlsx";
-        default:
-            return ""           
+export const fileUpload = (req: Request, res: Response) => {
+  const accessToken = req.headers["authorization"];
+  if (!accessToken) {
+    return res.status(401).json({ errorMessage : "Access token not provided" });
+  }
+
+  const request : FileUploadRequest = req.body;
+  const filePathResponse = [];
+
+  for (const [key, _] of Object.entries(request.files)) {
+    const fileData = request.files[key];
+    const fileRootDir = "DIRECTORY_ATTACH_".concat(fileData.file_root_dir);
+
+    const filePathTree = [process.env[fileRootDir.toUpperCase()], request.add_folder_name];
+    const filePath = util.uploadFile(filePathTree, fileData);
+    if (filePath === "") {
+        return res.status(500).json({ errorMessage : "Error occurs while file uploading" });
     }
+
+    filePathResponse.push(filePath);
+  }
+
+  return res.json(filePathResponse);
 }

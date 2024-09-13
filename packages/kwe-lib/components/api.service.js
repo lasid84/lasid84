@@ -161,7 +161,6 @@ const responseBlobPostCall = async (params) => {
                         : await client.post(url, params);
     return response;
   } catch (err) {
-    console.log("err : ", err.response);
     let error;
     if (err.response.status === 410) {
       error = { success : false, errorMessage : "등록된 템플릿 파일이 없습니다."};
