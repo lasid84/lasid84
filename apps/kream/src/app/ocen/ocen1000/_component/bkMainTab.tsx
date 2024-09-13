@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import { Cargo } from "./cargoDetail";
 import _ from 'lodash';
 import { toastError } from 'components/toast';
+import StepList, { Steps3, Steps2, Steps1 } from "@/components/stepper/steps";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -336,21 +337,25 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
           //addition={<div className="w-2/12"></div>}
         >
-          <div className={"flex-col col-span-2"}>
-          <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
-          </div>
-          <div className={"flex-col col-span-2"}>
-          <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
-          </div>
-          <div className={"flex-col col-span-2"}>
-          <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
-          <MaskedInputField id="update_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
-          </div>
-          <div className={"flex-col col-span-2"}>
-          <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date'  }} />
-          <MaskedInputField id="update_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.update_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date' }} />
+          <div className="flex flex-col">
+            <div className="flex items-center justify-center w-full">
+              <StepList state="1"/>
+            </div>
+          
+            <div className="flex flex-row">
+              <div className="gap-2 mt-2">
+                <MaskedInputField id="bk_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.bk_id} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+                <MaskedInputField id="vocc_id" lwidth='w-24' width="w-40" height='h-8' value={bkData?.vocc_id} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
+              </div>
+              <div className="gap-2 mt-2">
+                <MaskedInputField id="waybill_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.waybill_no} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+                <MaskedInputField id="mwb_no" lwidth='w-24' width="w-40" height='h-8' value={bkData?.mwb_no} options={{ isReadOnly: true, inline: true, textAlign : 'center'}} />
+              </div>
+              <div className="gap-2 mt-2">
+                <MaskedInputField id="create_user" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_user} options={{ isReadOnly: true, inline: true, textAlign: 'center', }} />
+                <MaskedInputField id="create_date" lwidth='w-24' width="w-40" height='h-8' value={bkData?.create_date} options={{ isReadOnly: true, inline: true, textAlign: 'center', type: 'date'  }} />
+              </div>
+            </div>
           </div>
         </PageBKTabContent>
     </div>

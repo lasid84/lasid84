@@ -181,7 +181,7 @@ const StepList = ({ state }: any) => {
   }));
 
   return (
-    <ol className="items-center w-full space-y-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
+    <ol className="flex items-center w-full space-y-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
       {steps.map((step, index) => (
         <li
           key={index}
@@ -202,13 +202,13 @@ const StepList = ({ state }: any) => {
           </span>
           <span>
             <h3
-              className={`font-medium  leading-tight ${
+              className={`font-xs  leading-tight ${
                 step.active ? "text-blue-600" : "text-gray-700"
               }`}
             >
               {step.title}
             </h3>
-            <p className="text-sm">{step.description}</p>
+            <p className="text-xs">{step.description}</p>
           </span>
         </li>
       ))}

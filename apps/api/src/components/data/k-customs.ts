@@ -78,42 +78,48 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
                 
                 const xmlData: string = response.data;
 
-                // XML 데이터를 JSON으로 변환
-                let r = await parseString(xmlData, async (err, result) => {
-                    if (err) {
-                        res.status(500).send({ error: 'Failed to parse XML' });
-                    } else {
-                        let msg = result.cargCsclPrgsInfoQryRtnVo.ntceInfo ? result.cargCsclPrgsInfoQryRtnVo.ntceInfo[0] : '';
-                        if (!msg.startsWith('[N00')) {
-                            
-                            for (var row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoDtlQryVo) {
-                                if (row.cargTrcnRelaBsopTpcd[0] === '입항보고 제출' || row.cargTrcnRelaBsopTpcd[0] === '입항보고 수리') {
-                                    var dclrNo = row.dclrNo[0];
-                                    var data: any = await retrieveFlghEtprRprtBrkd({ioprSbmtNo:dclrNo});
-                                    for (const key of Object.keys(data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0])) {
-                                        row[key] = data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0][key]
+                const parseStringPromise = (xmlData) => {
+                    return new Promise( (resolve, reject) => {
+                      parseString(xmlData, async (err, result) => {
+                        if (err) {
+                            res.status(500).send({ error: 'Failed to parse XML' });
+                        } else {
+                            let msg = result.cargCsclPrgsInfoQryRtnVo.ntceInfo ? result.cargCsclPrgsInfoQryRtnVo.ntceInfo[0] : '';
+                            if (!msg.startsWith('[N00')) {
+                                
+                                for (var row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoDtlQryVo) {
+                                    if (row.cargTrcnRelaBsopTpcd[0] === '입항보고 제출' || row.cargTrcnRelaBsopTpcd[0] === '입항보고 수리') {
+                                        var dclrNo = row.dclrNo[0];
+                                        var data: any = await retrieveFlghEtprRprtBrkd({ioprSbmtNo:dclrNo});
+                                        for (const key of Object.keys(data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0])) {
+                                            row[key] = data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0][key]
+                                        }
                                     }
                                 }
+                                // log("result", result);
+                                jsonResult.push(result);
                             }
-                            // log("result", result);
-                            jsonResult.push(result);
                         }
+                        resolve(result);
+                      });
+                    });
+                  };
 
-                        const inproc =  "unipass.f_api001_set_data"
-                        const inparam = ["in_data", "in_user", "in_ipaddr"];
-                        const invalue = [JSON.stringify(jsonResult), user, ipaddr];
-                        const result2:resultType = await callFunction(inproc, inparam, invalue) as resultType;
-                        log("!!!!!!!!", JSON.stringify(jsonResult));
-                        if (result2.numericData === 0) {
-                            res.status(200).send({result2});
-                        } else {
-                            res.status(300).send({result2});
-                        }
-                    }
-                });
+                // XML 데이터를 JSON으로 변환
+                let r = await parseStringPromise(xmlData);
             }
-            
         } 
+
+        const inproc =  "unipass.f_api001_set_data"
+        const inparam = ["in_data", "in_user", "in_ipaddr"];
+        const invalue = [JSON.stringify(jsonResult), user, ipaddr];
+        const result2:resultType = await callFunction(inproc, inparam, invalue) as resultType;
+        log("!!!!!!!!", JSON.stringify(jsonResult));
+        if (result2.numericData === 0) {
+            res.status(200).send({result2});
+        } else {
+            res.status(300).send({result2});
+        }
 
     } catch (ex) {
         log(ex.message);
@@ -159,7 +165,7 @@ export const retrieveFlghEtprRprtBrkd = async (params:any) => {
         } else {
             let msg = result.flghEtprRprtBrkdQryRtnVo.ntceInfo ? result.flghEtprRprtBrkdQryRtnVo.ntceInfo[0] : '';
             if (!msg.startsWith('[N00')) {        
-                // log("=================", result)        
+                log("=================", result)        
                 jsonResult = result
             } else {
                 jsonResult = {error:msg}
