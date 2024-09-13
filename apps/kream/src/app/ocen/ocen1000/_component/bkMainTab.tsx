@@ -328,7 +328,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                       <Radio id ="search_gubn" name="download" value="1" label="pdf" />
                   </RadioGroup>
                 </div>
-                <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} />
+                {/* <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} /> */}
                   <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
                   <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
               </div>
