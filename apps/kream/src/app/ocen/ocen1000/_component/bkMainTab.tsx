@@ -40,6 +40,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const [ref, setRef] = useState(objState.gridRef_m);
 
   const [ reportType, setReportType ] = useState<string>('');
+  const [ stateList, setStateList ] = useState<string>('');
   const { Create: CreateBKData } = useUpdateData2(SP_CreateData);
   const { Update: UpdateBKData } = useUpdateData2(SP_UpdateData);
   const { Create: CreateCargo } = useUpdateData2(SP_InsertCargo);
@@ -63,6 +64,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   useEffect(() => {
     if (loadItem?.length) {
       setReporttype(loadItem[21]);
+      setStateList(loadItem[2]);
     }
   }, [loadItem?.length]);
 
@@ -339,7 +341,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         >
           <div className="flex flex-col">
             <div className="flex items-center justify-center w-full">
-              <StepList state="1"/>
+              <StepList stateList={stateList} state={bkData?.state}/>
             </div>
           
             <div className="flex flex-row">

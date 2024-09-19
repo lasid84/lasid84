@@ -1,3 +1,5 @@
+import { log } from '@repo/kwe-lib/components/logHelper';
+
 export type ItemProps = {
   title: string;
   subtitle?: string;
@@ -174,39 +176,52 @@ const initialSteps = [
   { number: 5, title: "선적완료", description: "" },
 ];
 
-const StepList = ({ state }: any) => {
-  const steps = initialSteps.map((step) => ({
-    ...step,
-    active: step.number === parseInt(state),
-  }));
+interface StateList {
+  state : string
+  state_nm: string
+  description: string
+}
+
+const StepList = ({ stateList, state }: any) => {
+  // const steps = initialSteps.map((step) => ({
+  const steps: StateList[] = stateList?.data.map((step:StateList) => {
+    if (step.state === 'ALL' ) return null;
+    return {
+      state: step.state,
+      state_nm:step.state_nm,
+      description: step.description
+    } 
+  }).filter((v: any) => v);
+
+  // log("StepList", stateList, steps, state)
 
   return (
     <ol className="flex items-center w-full space-y-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
-      {steps.map((step, index) => (
+      {steps.map((step:StateList, index:number) => (
         <li
           key={index}
           className={`flex items-center ${
-            step.active
-              ? "text-blue-800 dark:text-blue-500"
+            step.state === state
+              ? "text-blue-800 dark:text-black-500"
               : "text-gray-700 dark:text-gray-400"
-          } space-x-2.5 rtl:space-x-reverse ${step.active ? "animate-pulse" : ""}`}
+          } space-x-2.5 rtl:space-x-reverse ${step.state === state ? "animate-pulse" : ""}`}
         >
           <span
             className={`flex items-center  justify-center w-8 h-8 border ${
-              step.active
-                ? "border-blue-800 dark:border-blue-500"
+              step.state
+                ? "border-blue-800 dark:border-black-500"
                 : "border-gray-500 dark:border-gray-400"
             } rounded-full shrink-0`}
           >
-            {step.number + 1}
+            {step.state}
           </span>
           <span>
             <h3
-              className={`font-xs  leading-tight ${
-                step.active ? "text-blue-600" : "text-gray-700"
+              className={`text-medium  leading-tight ${
+                step.state ? "text-black-600" : "text-gray-700"
               }`}
             >
-              {step.title}
+              {step.state_nm}
             </h3>
             <p className="text-xs">{step.description}</p>
           </span>

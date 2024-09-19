@@ -79,8 +79,6 @@ const SearchForm = ({ loadItem }: any) => {
 
   const methods = useForm({
     defaultValues: {
-      // trans_mode: trans_mode || gTransMode || "ALL",
-      // trans_type: trans_type || gTransType || "ALL",
       fr_date:
         fr_date ||
         dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),
@@ -122,11 +120,25 @@ const SearchForm = ({ loadItem }: any) => {
 
   useEffect(() => {
     if (user_id && objState.isFirstRender) {
-      setValue("create_user", user_id);
+        log("1", user_id)
+        setValue("create_user", user_id);
       onSearch();
+      dispatch({ isFirstRender: false });
     }
-    dispatch({ isFirstRender: false });
-  }, [user_id])
+  }, [user_id]);
+
+
+
+  useEffect(() => {
+    log("useEffect create_user", getValues('create_user'));
+    if (createuser) {
+      if (createuser.data.some((v:any) => v.create_user === user_id)) {
+        setValue("create_user", user_id);
+      } else {
+        setValue("create_user", 'ALL');
+      }
+    }
+  }, [createuser]);
 
   const resetComponent = (search_gubn : number) => {
     if (search_gubn === 0) {

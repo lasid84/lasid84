@@ -1093,7 +1093,7 @@ export const getGridState = (gridRef: {props: any; api: any }) => {
 }
 
 export const gotoFirstRow = (gridRef: {props: any; api: any }) => {
-  if (gridRef?.api) gridRef.api.ensureIndexVisible(0,'top');
+  if (gridRef?.api && gridRef?.api.ensureIndexVisible) gridRef.api.ensureIndexVisible(0,'top');
 }
 
 const setRowChange = async (rowNode: IRowNode) => {

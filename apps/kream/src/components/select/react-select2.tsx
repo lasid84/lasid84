@@ -101,8 +101,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 else label = item[Object.keys(item)[1]];
 
                 if (defaultValue) {
-                     //log("defaultValue : ", defaultValue);
-                     //log("defaultValue1 : ", value);
+                    //  log("defaultValue : ", defaultValue);
+                    //  log("defaultValue1 : ", value);
                     if (value === defaultValue) {
                         setFirstVal(value);
                         setFirstLab(label);
@@ -272,10 +272,11 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         control={control}
                         name={id}
                         rules={rules}
-                        render={({ field: { onChange, /*onKeyDown*/ } }) => {
+                        render={({ field }) => {
                             return (
                                 <div className={`${display} my-react-select-container flex-row ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
+                                        {...field}
                                         ref={ref}
                                         id={id}
                                         classNamePrefix="my-react-select"
@@ -300,11 +301,12 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                         control={control}
                         name={id}
                         rules={rules}
-                        render={({ field: { onChange, /*onKeyDown*/ } }) => {
+                        render={({ field }) => {
                             return (
                                 <div className={`${display} my-react-select-container w-96 inline-block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
+                                        {...field}
                                         classNamePrefix="my-react-select"
                                         value={selectedVal}
                                         isMulti={isMulti}

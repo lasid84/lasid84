@@ -25,6 +25,13 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 // 개발 이력 데이터
 const developmentHistory = [
   {
+    date: '2024-09-13',
+    title: 'Version 0.2.0 Released',
+    description: '1. 개발 진행 중인 내용 <br>' 
+     + '&nbsp;1) 메일 발송 및 메일 템플릿, 첨부파일 관리 기능(운송사, 화주등)<br>'
+     + '&nbsp;2) 마일스톤 자동 생성 기능<br>'
+  },
+  {
     date: '2024-07-25',
     title: 'Version 0.1.0 Released',
     description: '1. Charge Upload <br>' 
@@ -68,9 +75,6 @@ const Home: React.FC = () => {
             <header className="w-full p-4 text-center text-white bg-blue-600">
               <h1 className="text-2xl font-bold">Development History</h1>
             </header>
-            {/* <div>
-              <Checkbox id="ck" onClick={onClick}/>
-            </div> */}
             <main className="flex-grow w-full max-w-4xl p-6">
               <div className="space-y-6">
                 {developmentHistory.map((entry, index) => (
