@@ -14,7 +14,7 @@ import { Button } from "components/button";
 import { SP_GetMailSample } from "components/commonForm/mailSend/_component/data";
 import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
-import { SP_SendEmail, SP_GetReportData } from "../data";
+import { SP_SendEmail, SP_GetReportData, SP_FileUpload } from "../data";
 import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -37,7 +37,9 @@ type MailSample = {
     deliv_request: boolean;
     cust_identification: boolean;
   };
-  attachment:Attachment[]
+  attachment:Attachment[],
+  add_folder_name:string;
+  files : File[]
 };
 
 interface Attachment {
@@ -47,6 +49,15 @@ interface Attachment {
   fileName: any;
   pageDivide?: number | undefined;  // 선택적 값
 }
+
+
+interface File {
+  file_name: string;
+  file_data: any; 
+  file_root_dir : string;
+}
+
+
 
 
 
@@ -66,10 +77,13 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
       deliv_request: false,
       cust_identification:false,
     },
-    attachment:[]
+    attachment:[],
+    add_folder_name:'', //file upload
+    files:[]            //file upload
   });
 
   const { Create: sendEmail } = useUpdateData2(SP_SendEmail, '');
+  const { Create: fileUpload } = useUpdateData2(SP_FileUpload, '');
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
 
 
@@ -110,19 +124,27 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
 
   const { getValues } = useFormContext();
 
-  const handleFileDrop = (data: any[], header: string[]) => {
-    log('file upload -data, header', data, header)
+  const handleFileDrop = async (data: any[], buffer: any[]) => {
+    log('file upload -data, header', data, buffer)
 
-    const downloadData : Attachment= {
-      "reportData" : data, 
-      "fileExtension" : 0, 
-      "templateType" : 0, 
-      "fileName" : data[0].name, 
-      "pageDivide" : 0
-   };
-   mailform.attachment.push(downloadData)  
-    
+    data.forEach((fileData, index) => {
+      const uploadFile = {
+          file_name: fileData.file.name,    // 각 파일의 이름
+          file_data: fileData.file.arrayBuffer,              // 파일 데이터를 저장
+          file_root_dir: 'MAIL',            // 루트 디렉토리 설정
+      };
+  
+      // mailform 객체에 파일 추가
+      mailform.files.push(uploadFile);
+  });
 
+  //  const uploadFile : File = {
+  //   file_name: data[0].file.name, 
+  //   file_data: data[0], 
+  //   file_root_dir : 'MAIL'
+  //   };
+
+   //mailform.files.push(uploadFile)
   };
 
   const handleCheckBoxClick = (id: string, val: any) => {
@@ -187,15 +209,20 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
       }           
     }
 
-    //API : download - upload(경로리턴) 
+    //1. 리포트파일 서버업로드
     // 클라이언트에서 경로 지정해서 전송 - miltiform(buffer에 맞출예정) user_id/파일명 - 
     //executeReportDownload 활용
     
-    // 2.업로드파일 서버생성
-    // 3. 서버 파일업로드 경로받아 데이터 insert - attachment
+    // 2.업로드파일 서버업로드
+    await fileUpload.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code},{
+      onSuccess(data, variables, context) {
+          log('upload data',data)
+      },
+    })
+    .catch(()=>{})    
 
 
-    // 4. sendEmail 실행
+    // 3. sendEmail 실행
     await sendEmail.mutateAsync({...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code}, {
       onSuccess(data, variables, context) {
       },
