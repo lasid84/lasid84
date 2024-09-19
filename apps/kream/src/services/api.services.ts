@@ -4,7 +4,7 @@
 import { useUserSettings } from "states/useUserSettings"
 import { navigate, getSession, getCookies, getToken, getHeaders } from './serverAction';
 import { toastSuccess, toastWaring } from "components/toast";
-import { DataRoutes } from "./api.constants";
+import { DataRoutes, FileRoutes } from "./api.constants";
 
 const { initAPIService, apiCallPost, init, dataCall, postCall, getCall, responseBlobPostCall } = require('@repo/kwe-lib/components/api.service');
 // import { init, dataCall, postCall } from '@repo/kwe-lib/components/api.service';
@@ -134,7 +134,7 @@ export async function executeReportDownload(data:any) {
     const token = await getToken();
     let config = await initConfig(null, token);
     
-    const url = `${config.url}${DataRoutes.BASE}${DataRoutes.URI.FILE_DOWNLOAD}`;
+    const url = `${config.url}${FileRoutes.BASE}${FileRoutes.URI.REPORT_DOWNLOAD}`;
     
     config = {
         ...config,

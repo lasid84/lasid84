@@ -3,7 +3,6 @@ import { Router } from "express";
 import * as data from "../components/data/data";
 import * as unipass from "../components/data/k-customs"
 import * as mailing from "../components/mailing/mailer"
-import * as file from "../components/data/file";
 
 /**
  * @dev
@@ -21,9 +20,4 @@ export default function setUpDataRoutes(routes: Router) {
     
   // 메일 발송
   routes.post("/mailing", mailing.sendMail);
-
-  // Booking Report File Download.
-  routes.post("/report-download", file.fileDownload);
-  // Booking Report Template File Upload.
-  routes.post("/template-upload", file.fileUpload);
 }
