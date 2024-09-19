@@ -3,9 +3,13 @@ const XLSX_CONTENT_TYPE= "application/vnd.openxmlformats-officedocument.spreadsh
 
 const BASE_PATH = "/src/components/data/upload/";
 
+const FILE_REGISTRY_PREFIX = "DIRECTORY_";
+
 export default {
     PDF_CONTENT_TYPE,
     XLSX_CONTENT_TYPE,
 
-    BASE_PATH
+    BASE_PATH,
+
+    FILE_REGISTRY_PREFIX
 }
