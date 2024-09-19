@@ -184,7 +184,7 @@ interface StateList {
 
 const StepList = ({ stateList, state }: any) => {
   // const steps = initialSteps.map((step) => ({
-  const steps: StateList[] = stateList?.data.map((step:StateList) => {
+  const steps: StateList[] = stateList?.data?.map((step:StateList) => {
     if (step.state === 'ALL' ) return null;
     return {
       state: step.state,
@@ -197,7 +197,7 @@ const StepList = ({ stateList, state }: any) => {
 
   return (
     <ol className="flex items-center w-full space-y-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
-      {steps.map((step:StateList, index:number) => (
+      {steps?.map((step:StateList, index:number) => (
         <li
           key={index}
           className={`flex items-center ${
