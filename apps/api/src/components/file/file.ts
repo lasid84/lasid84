@@ -199,7 +199,7 @@ export const fileUpload = (req: Request, res: Response) => {
 
   for (const [key, _] of Object.entries(request.files)) {
     const fileData = request.files[key];
-    const fileRootDir = "DIRECTORY_ATTACH_".concat(fileData.file_root_dir);
+    const fileRootDir = constant.FILE_REGISTRY_PREFIX.concat(fileData.file_root_dir);
 
     const filePathTree = [process.env[fileRootDir.toUpperCase()], request.add_folder_name];
     const filePath = util.uploadFile(filePathTree, fileData);
