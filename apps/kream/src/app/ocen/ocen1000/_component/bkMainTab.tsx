@@ -249,6 +249,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
         if (res[0] !== undefined) {
 
+          let reportDataList : string[] = [];
           let reportData : any = new Object;
 
           /**
@@ -272,17 +273,21 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
             }
           }
 
+          reportDataList.push(reportData);
+          reportDataList.push(reportData);
 
-          const templateType = Number(e);
+          const templateType = [Number(e), Number(e)];
+          const templateTypeList : string[] = [loadItem[21].data[Number(e)].key, loadItem[21].data[Number(e)].key]
           const fileExtension : Number = Number(curData.search_gubn) || 0;
 
-          const fileName = loadItem[21].data[templateType].report_type_nm.concat("_", voccID);
+          const fileName : string[] = [loadItem[21].data[templateType[0]].report_type_nm.concat("_", voccID), loadItem[21].data[templateType[0]].report_type_nm.concat("-", voccID)];
 
           const downloadData = {
-              "reportData" : reportData, 
+              "responseType" : 1,
+              "reportDataList" : reportDataList, 
               "fileExtension" : fileExtension, 
-              "templateType" : templateType, 
-              "fileName" : fileName, 
+              "templateTypeList" : templateTypeList, 
+              "fileNameList" : fileName, 
               "pageDivide" : pageDivide
           };
 
@@ -298,7 +303,9 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                   extension = '.pdf';
                 }
 
-                downloadBlobFile(file, fileName.concat(extension));
+                console.log("response : ", res.data);
+
+                downloadBlobFile(file, fileName[0].concat(extension));
               } else {
                 if (res.success !== undefined || null) {
                   if (res.success === false) {

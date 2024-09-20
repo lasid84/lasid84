@@ -28,17 +28,19 @@ export const SP_GetMailSample = async (searchParam: any) => {
   //console.log('bk_id, searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const { bk_id, cust_code, user_id, ipaddr } = Param;  
+  const { bk_id, cust_code, pgm_code, user_id, ipaddr } = Param;  
   const params = {
     inparam : [
         "in_bk_id"
       , "in_cust_code"
+      , "in_pgm_code"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
         bk_id
       , cust_code
+      , pgm_code
       , user_id
       , ipaddr
     ],

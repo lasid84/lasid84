@@ -164,15 +164,14 @@ export async function executeFileUpload(data:any) {
     const token = await getToken();
     let config = await initConfig(null, token);
     
-    const url = `${config.url}${FileRoutes.BASE}${FileRoutes.URI.FILE_DOWNLOAD}`;
-
+    const url = `${config.url}${FileRoutes.BASE}${FileRoutes.URI.FILE_UPLOAD}`;
+    
     config = {
         ...config,
         ...data,
         url:url
     };
-
-    return await responseBlobPostCall(config);
+    return await postCall(config);
 }
 
 // export const callSendEmail = async (params:exeFuncParams, attachments) => {

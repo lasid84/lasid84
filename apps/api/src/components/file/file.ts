@@ -22,7 +22,7 @@ import { ReportDownloadRequest, ReportDownloadResponse, FileUploadRequest } from
  * 1. reportData
  *    #1. excel Template에 들어갈 위치 및 값
  * 2. templateType => templateName
- *    #1. 템플릿 형식 (1. 부킹노트 2. 운송요청서 3.고객발송용)
+ *    #1. 템플릿 형식 (1. 부킹노트 2. 운송요청서 3. 고객발송용)
  * 3. fileExtension
  *    #1. 파일 형식 (0. Excel, 1 : pdf)
  * 4. fileName
@@ -45,86 +45,85 @@ export const reportDownload = async( req : Request, res : Response ) => {
      * @dev
      * Select Report File Template.
      */
-    const filePath = util.selectTemplateFile(request.templateType);
-    if (filePath === "") {
+    const filePath = util.selectTemplateFile(request.templateTypeList);
+    if (filePath.length === 0) {
         return res.status(500).json({ errorMessage : "Choose Correct Template Type Number." });
     }
-    const templateFilePath = path.join(process.cwd(), filePath);
 
-    const isExists = fs.existsSync(templateFilePath);
-    if (!isExists) {
-        return res.status(410).json({ errorMessage : "Thers's no exists template file." });
+    let responseList = [];
+    for  (let i=0; i<filePath.length; i++) {
+        const isExists = fs.existsSync(filePath[i]);
+        if (!isExists) {
+            return res.status(410).json({ errorMessage : "Thers's no exists template file." });
+        }
+
+        try {
+            /**
+             * @dev
+             * Fill Data to Excel.
+             */
+            const workBook = new Excel.Workbook();
+            await workBook.xlsx.readFile(filePath[i]);
+
+            const workSheet = workBook.worksheets[0];
+            const initialPageSetting = workSheet.pageSetup;
+
+            for (let location in request.reportDataList[i]) {
+                if (location === "") {
+                    continue;
+                }
+                workSheet.getCell(location).value = request.reportDataList[i][location];
+            }
+
+            workSheet.pageSetup = initialPageSetting;
+
+            if (request.pageDivide !== 0 || undefined || null) {
+                const pageBreakRow = workSheet.getRow(request.pageDivide);
+                pageBreakRow.addPageBreak();
+                workSheet.pageSetup.fitToHeight = 2;
+            } else {
+                workSheet.pageSetup.fitToHeight = 1;
+            }
+
+            const excelBuffer : Buffer = await workBook.xlsx.writeBuffer() as Buffer;
+
+            /**
+             * @dev
+             * Select response according to fileExtension.
+             */
+            let response : ReportDownloadResponse;
+
+            if (request.fileExtension) {
+                let data = await (libre as any).convertAsync(excelBuffer, constant.PDF_FILE_EXTENSION, undefined);
+
+                response = {
+                    fileData : data,
+                    contentType : constant.PDF_CONTENT_TYPE,
+                    extension : constant.PDF_FILE_EXTENSION
+                }
+            } else {
+                response = {
+                    fileData : excelBuffer,
+                    contentType : constant.XLSX_CONTENT_TYPE,
+                    extension : constant.XLSX_FILE_EXTENSION
+                }
+            }
+
+            if (request.responseType === 0) {
+                res.setHeader('Content-Disposition', 'attachment');
+                res.setHeader('Content-Type', response.contentType);
+                res.attachment(request.fileNameList[i] + response.extension);
+
+                return res.status(200).send(response.fileData);
+            } else {
+                responseList.push(response);
+            }
+        } catch (err) {
+            return res.status(500).json({ errorMessage : "Error occurs While change excel file value.", error : err });
+        }
     }
 
-    try {
-        /**
-         * @dev
-         * Fill Data to Excel.
-         */
-        const workBook = new Excel.Workbook();
-        await workBook.xlsx.readFile(templateFilePath);
-
-        const workSheet = workBook.worksheets[0];
-        const initialPageSetting = workSheet.pageSetup;
-
-        for (let location in request.reportData) {
-            if (location === "") {
-                continue;
-            }
-            workSheet.getCell(location).value = request.reportData[location];
-        }
-
-        workSheet.pageSetup = {
-            margins : initialPageSetting.margins,
-            horizontalCentered : true,
-            verticalCentered : true,
-            fitToPage : true,
-            fitToWidth : 1,
-            scale : 100,
-            paperSize : initialPageSetting.paperSize,
-            printArea : initialPageSetting.printArea
-        }
-
-        if (request.pageDivide !== 0 || undefined || null) {
-            const pageBreakRow = workSheet.getRow(request.pageDivide);
-            pageBreakRow.addPageBreak();
-            workSheet.pageSetup.fitToHeight = 2;
-        } else {
-            workSheet.pageSetup.fitToHeight = 1;
-        }
-
-        const excelBuffer : Buffer = await workBook.xlsx.writeBuffer() as Buffer;
-
-        /**
-         * @dev
-         * Select response according to fileExtension.
-         */
-        let response : ReportDownloadResponse;
-
-        if (request.fileExtension) {
-            let data = await (libre as any).convertAsync(excelBuffer, 'pdf', undefined);
-
-            response = {
-                fileData : data,
-                contentType : constant.PDF_CONTENT_TYPE,
-                extension : '.pdf'
-            }
-        } else {
-            response = {
-                fileData : excelBuffer,
-                contentType : constant.XLSX_CONTENT_TYPE,
-                extension : '.xlsx'
-            }
-        }
-
-        res.setHeader('Content-Disposition', 'attachment');
-        res.setHeader('Content-Type', response.contentType);
-        res.attachment(request.fileName + response.extension);
-
-        res.status(200).send(response.fileData);
-    } catch (err) {
-        return res.status(500).json({ errorMessage : "Error occurs While change excel file value.", error : err });
-    }
+    return res.status(200).send(responseList);
 }
 
 /**
@@ -195,13 +194,14 @@ export const fileUpload = (req: Request, res: Response) => {
   }
 
   const request : FileUploadRequest = req.body;
+  console.log("request : ", request);
   const filePathResponse = [];
 
   for (const [key, _] of Object.entries(request.files)) {
     const fileData = request.files[key];
-    const fileRootDir = constant.FILE_REGISTRY_PREFIX.concat(fileData.file_root_dir);
+    const fileRootDir = constant.FILE_REGISTRY_PREFIX.concat(fileData.fileRootDIR);
 
-    const filePathTree = [process.env[fileRootDir.toUpperCase()], request.add_folder_name];
+    const filePathTree = [process.env[fileRootDir.toUpperCase()], request.addFolderName];
     const filePath = util.uploadFile(filePathTree, fileData);
     if (filePath === "") {
         return res.status(500).json({ errorMessage : "Error occurs while file uploading" });

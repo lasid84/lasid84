@@ -31,6 +31,6 @@ export const FileRoutes = {
         REPORT_DOWNLOAD: "/report-download",
         REPORT_UPLOAD: "/template-upload",
 
-        FILE_DOWNLOAD: "/file-upload"
+        FILE_UPLOAD: "/file-upload"
     }
 }
