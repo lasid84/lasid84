@@ -33,7 +33,7 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
   }, [gridRef.current])
 
   useEffect(() => {
-    log("useEffect gridCost", bkData?.cost);
+    // log("useEffect gridCost", bkData?.cost);
     const gridOption: GridOption = {
       colVisible: {
         col: ["bk_id", "template_id", "seq", "uuid", "sort_id", "ppc_ind", "cost_currency_code", "invoice_currency_code", "import_export_ind", "invoice_wb_currency_code", "print_ind", "vat_cat_code_ap",

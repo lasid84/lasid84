@@ -59,6 +59,18 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   }, [objState?.gridRef_m])
 
   useEffect(() => {
+    if (bkData) {
+      if (bkData.waybill_no) {
+        bkData.state = '1';
+      }
+
+      if (Number(bkData.state) >= 1 && bkData.invoice_cnt > 0) {
+        bkData.state = '5';
+      }
+      
+      log("bkData.state : ", bkData.state, bkData.invoice_cnt);
+      dispatch({ [MselectedTab]: bkData })      
+    }
   }, [bkData])
 
   useEffect(() => {

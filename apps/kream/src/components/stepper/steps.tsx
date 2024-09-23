@@ -191,7 +191,8 @@ const StepList = ({ stateList, state }: any) => {
       state_nm:step.state_nm,
       description: step.description
     } 
-  }).filter((v: any) => v);
+  }).filter((v: any) => v)
+    .sort((a:any,b:any) => a.state - b.state);
 
   // log("StepList", stateList, steps, state)
 
@@ -213,7 +214,7 @@ const StepList = ({ stateList, state }: any) => {
                 : "border-gray-500 dark:border-gray-400"
             } rounded-full shrink-0`}
           >
-            {step.state}
+            {Number(step.state) + 1}
           </span>
           <span>
             <h3

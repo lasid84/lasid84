@@ -20,6 +20,7 @@ import { RiMailSendFill } from "react-icons/ri";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { FaTruckPickup } from "react-icons/fa";
 import { LuContainer } from "react-icons/lu";
+import { AiOutlineUser } from 'react-icons/ai';
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -102,7 +103,8 @@ const getColor = (label: string, color: string = "") => {
       case "mail_rcvlist":
       case "manage_pickup":
       case "manage_cont_cy":
-      case "save_template":        
+      case "save_template":     
+      case "manage_con":   
         c = "gray-outline";
         break;
       case "delete":
@@ -192,6 +194,8 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "manage_cont_cy":
       icon = <LuContainer size={size} />
+    case "manage_con":
+      icon = <AiOutlineUser size={size} />
   }
   return icon;
 };

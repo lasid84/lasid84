@@ -504,7 +504,7 @@ const CargoFCL = memo(
               value={cargoItem?.vent}
               events={{ onChange: onChange }}
               options={{isReadOnly : !handleFieldReadOnly("vent") }}
-              width="w-24"
+              width="w-35"
             />
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_un_no`}

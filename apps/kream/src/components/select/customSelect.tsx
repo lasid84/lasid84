@@ -77,6 +77,7 @@ function CustomSelect(props: Props) {
   const gridRef = useRef<any | null>(null);
   const inputRef = useRef<any | null>(null);
   // const [isReady, setIsReady] = useState(false);
+  const [isSearching, setSearching ] = useState(false);
   const { register, setValue, getValues } = useFormContext();
   const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol = id, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay=true, isDisplayX = true
     , noLabel = false, lwidth, defaultValue:initValue, events
@@ -93,9 +94,9 @@ function CustomSelect(props: Props) {
     ...gridStyle
   }
   //let initText = 'Select an option';
-  const [displayText, setDisplayText] = useState(initText);
+  const [displayText, setDisplayText] = useState<any>(initText);
   const [filteredData, setFilteredData] = useState(listItem);
-  const [selectedRow, setSelectedRow] = useState<any>();
+  const [selectedRow, setSelectedRow] = useState<any>(null);
   const defaultValue = useDebounce(initValue, 200);
   const [openDirection, setOpenDirection] = useState('down');
 
@@ -163,8 +164,8 @@ function CustomSelect(props: Props) {
   // }, [isGridReady, selectedRow])
 
   useEffect(() => {
-    // if (id.includes('container_type')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue)
-    if (listItem?.data.length) {
+    if (id.includes('cy_place_code')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue, displayText)
+    // if (listItem?.data.length) {
       
       if (!defaultValue) {
         // if (gridRef.current) {
@@ -172,12 +173,13 @@ function CustomSelect(props: Props) {
         //   // gridRef.current.api?.setFocusedCell(null);
         //   // gridRef.current.api.ensureIndexVisible(0);
         // }
-        // setSelectedValue(null);
+        log("custselect defaultValue null", id, isSearching)
+        setSelectedValue(null);
         return;
       }
 
       let index = -1;
-      const initialData = listItem.data.find((item: any, i:number) => {
+      const initialData = listItem?.data.find((item: any, i:number) => {
         index = i;
         if (valueCol?.length) return item[valueCol![0]] === defaultValue
         else return item[displayCol] === defaultValue
@@ -194,7 +196,7 @@ function CustomSelect(props: Props) {
 
       setSelectedValue(initialData);
       // setDisplayVal(initialData);
-    }
+    // }
   }, [defaultValue, listItem])
 
   // useEffect(() => {
@@ -287,21 +289,23 @@ function CustomSelect(props: Props) {
 
   const handleSelectionChanged = (param: SelectionChangedEvent) => {
     var selectedRow = param.api.getSelectedRows()[0];
-
+    // log("handleSelectionChanged", param)
     if(events?.onSelectionChanged){    
       let val = selectedRow ? selectedRow[valueCol![0]] : null;
       events?.onSelectionChanged(param, id, val);
     }
+
+    // if (selectedRow) setSearching(false);
   }
 
   const handleOnGridReady = (param: any) => {
     setIsGridReady(true);
-    // log("handleOnGridReady", id, param, defaultValue);
+    log("handleOnGridReady", id, param, defaultValue);
     // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
   }
 
   const handleComponentStateChanged = (param: any) => {
-    // log("handleComponentStateChanged");
+    log("handleComponentStateChanged");
     // onGridReady(param);
     // setIsReady(true);
     if (events?.onComponentStateChanged) events.onComponentStateChanged(param);
@@ -330,12 +334,14 @@ function CustomSelect(props: Props) {
 
     if (row === undefined) return;
 
-    var val = initText;
+    var val = null;
     if (row) {
       val = displayCol ? row[displayCol] : row[Object.keys(row)[0]];
     }
-    // log("setDisplayVal", displayCol, val, row, displayText)
+
     setDisplayText(val);
+    log("setDisplayVal", displayCol, val, row, displayText)
+    
   }
 
   const handleXClick = (e: any) => {
@@ -370,7 +376,8 @@ function CustomSelect(props: Props) {
     // log("handleCellValueChanged")
   }
 
-  const handleCustChange = (input: string) => {
+  const 
+  handleCustChange = (input: string) => {
 
     let inputVal = input.toString().toUpperCase();
     // log("MaskedInputField onChange", inputVal);
@@ -401,8 +408,10 @@ function CustomSelect(props: Props) {
         return bool;
       })]
     };
-    // log("MaskedInputField onChange2", inputVal, filtered);
+    log("MaskedInputField onChange2", inputVal, filtered);
     setFilteredData(filtered);
+    // if (inputVal) setSearching(true);
+    // else setSearching(false);
   }
 
   const moveNextComponent = () => {
@@ -461,7 +470,7 @@ function CustomSelect(props: Props) {
             visibility: isDisplay ? 'visible' : 'hidden'  
           }}
         >
-          <MaskedInputField id={id} value={displayText} options={{ textAlign: 'center', noLabel: true, isNotManageSetValue: true, isAutoComplete: "off" }} height='h-8'
+          <MaskedInputField id={id} value={displayText} options={{ myPlaceholder: initText, textAlign: 'center', noLabel: true, isNotManageSetValue: true, isAutoComplete: "off" }} height='h-8'
             events={{
               onChange(e) {
                 e.preventDefault();

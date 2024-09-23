@@ -114,6 +114,7 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             isDisplay={true}
           />
         </div>        
+        <MaskedInputField id="commodity" value={bkData?.commodity} options={{ isReadOnly: false }} />
       </PageContent>
 
       <div className="flex flex-row w-full">
