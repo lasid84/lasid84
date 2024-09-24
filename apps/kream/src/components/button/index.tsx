@@ -225,7 +225,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
   const pathName = usePathname();
 
   const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
-    log("button", pathName)
+    // log("button", pathName)
     var data = {
       menucode: pathName,
       buttontype: id,
@@ -356,7 +356,7 @@ export const ICONButton: React.FC<ButtonProps> = (props) => {
   const pathName = usePathname();
 
   const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
-    log("button", pathName)
+    // log("button", pathName)
     var data = {
       menucode: pathName,
       buttontype: id,

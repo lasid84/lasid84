@@ -205,7 +205,7 @@ const StepList = ({ stateList, state }: any) => {
             step.state === state
               ? "text-blue-800 dark:text-black-500"
               : "text-gray-700 dark:text-gray-400"
-          } space-x-2.5 rtl:space-x-reverse ${step.state === state ? "animate-pulse" : ""}`}
+          } space-x-2.5 rtl:space-x-reverse ${step.state === (state||'0') ? "animate-pulse" : ""}`}
         >
           <span
             className={`flex items-center  justify-center w-8 h-8 border ${

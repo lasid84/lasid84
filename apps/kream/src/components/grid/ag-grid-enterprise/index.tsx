@@ -24,7 +24,8 @@ import {
   StateUpdatedEvent,
   RowClassParams,
   RowStyle,
-  RowSpanParams
+  RowSpanParams,
+  DragStoppedEvent
 } from "ag-grid-community";
 
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -36,6 +37,10 @@ import { useTranslation } from 'react-i18next';
 import { Skeleton } from 'components/skeleton/skeleton';
 import { CustomCellRendererProps } from 'ag-grid-react';
 import React from 'react';
+import { useGetData, useUpdateData2 } from '@/components/react-query/useMyQuery';
+import { useUserSettings } from '@/states/useUserSettings';
+import { SP_GetPersonalColInfoData, SP_SetMyColumnInfo } from './_component/data';
+import { usePathname } from 'next/navigation';
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { stringToFullDateString, stringToFullDate, stringToDateString, stringToTime } = require('@repo/kwe-lib/components/dataFormatter.js')
 const { sleep } = require('@repo/kwe-lib/components/sleep');
@@ -49,6 +54,7 @@ export const ROW_TYPE_NEW = 'NEW';
 
 
 type Props = {
+  id?: string;
   gridRef: any
   loadItem?: any | null
   listItem?: gridData
@@ -83,7 +89,6 @@ type GridEvent = {
 }
 
 export type GridOption = {
-  id?: string;
   checkbox?: string[];
   select?: any;
   icon?: any;
@@ -139,9 +144,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   // log("ListGrid", props);
 
   const { t } = useTranslation();
-
-  // const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMData, { enabled: false });
-
+  
   const config = useConfigs((state) => state.config);
 
   // const [colDefs, setColDefs] = useState<cols[]>([]);
@@ -151,10 +154,15 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const [initialState, setInitialState] = useState<GridState>();
   const [currentState, setCurrentState] = useState<GridState>();
 
-
-
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
-  const { listItem, options, customselect = false } = props;
+  const {id = 'grid', listItem, options, customselect = false } = props;
+
+  const [ personalColInfoParam, setPersonalColInfoParam ] = useState<any>(null);
+  // const [ personalColInfo, setPersonalColInfo ] = useState<any>();
+
+  // const path = usePathname();
+  const { data: personalColInfoData, refetch: personalColInfoRefetch } = useGetData(personalColInfoParam, "PersonalColumnInfo", SP_GetPersonalColInfoData, { enabled: true });
+  const { Create: setMyColInfo } = useUpdateData2(SP_SetMyColumnInfo, "MyColumnInfo");
 
   const containerStyle = useMemo(() => "flex-col w-full h-full", []);
   // const gridStyle = useMemo(() => `w-full h-[${options?.gridHeight}]`, []);
@@ -318,9 +326,19 @@ const ListGrid: React.FC<Props> = memo((props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (id /*&& config.collapsed != undefined*/) {
+      setPersonalColInfoParam({
+        // path : path,
+        state: config.collapsed,
+        id : id
+      });
+    }
+  }, [id/*, config.collapsed*/])
+
   //컬럼 세팅
   useEffect(() => {
-    if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0) {
+    if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 && personalColInfoData) {
       let cols: cols[] = [];
 
       //Field {
@@ -332,18 +350,38 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // dataTypeModifier: -1,
       // format: 'text'
       // }
-      let columns = listItem.fields.map((field) => field.name);
-      const dataType = listItem.fields.map((field) => field.format);
-      // log("===================????", columns)
-      columns = [ROW_INDEX].concat(columns)
-      columns.map((col: string, i) => {
+      
+      let columns:any = [];
+      // let columns = listItem.fields.map((field) => field.name);
+      let hasMyColInfo = false;
+      let myColInfo: any[] = [];
+      if ((personalColInfoData as gridData).data.length) {
+        const colInfo = (personalColInfoData as gridData).data;
 
-        var cellOption: any = {};
+        columns = colInfo.map((row:any) => {
+          myColInfo.push(row);
+          return row.col_nm
+        });
+        columns = columns.concat(listItem.fields.filter((field) => !columns.includes(field.name)).map((field => field.name)));
+        
+      } else {
+        columns = listItem.fields.map((field) => field.name);
+      };
+          
+      const dataType = listItem.fields.map((field) => field.format);
+      if (!columns.includes(ROW_INDEX)) columns = [ROW_INDEX].concat(columns);
+
+      columns.map((col: string, i:number) => {
+      // for (let i = 0; i < columns.length; i++) {
+        // const col = columns[i];
+
+        let cellOption: any = {};
 
         if (col === ROW_INDEX) {
           cellOption = {
-            minWidth: 30,
-            maxWidth: 70,
+            // minWidth: 30,
+            // maxWidth: 70,
+            width: 60,
             cellStyle: { textAlign: "center" },
             aggFunc: "count",
             editable: false
@@ -365,9 +403,18 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
+        if (myColInfo[i]?.col_width) {
+          cellOption = {
+            ...cellOption,
+            width: Number(myColInfo[i]?.col_width)
+          }
+        }
+
         //컬럼별 visible 셋팅
         let isHide: boolean = false;
-        if (options?.colVisible) {
+        if (myColInfo[i]?.visible !== undefined) {
+          isHide = !myColInfo[i].visible;
+        } else if (options?.colVisible) {
           const optVisible: boolean = !!options.colVisible["visible"];
           const optCols: string[] = options.colVisible!["col"];
           // if (optVisible) {
@@ -583,7 +630,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
           hide: isHide,
           ...cellOption
         });
+
       });
+      // };
+
       setColDefs(cols);
       setMainData(listItem.data.map((row: any, i: number) => {
         if (options?.checkbox) {
@@ -598,7 +648,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       }));
     }
     // log("colDefs", colDefs);
-  }, [listItem, t]);
+  }, [listItem, t, personalColInfoData]);
 
   useEffect(() => {
     if (options?.gridHeight) {
@@ -719,14 +769,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
   const onColumnResized = (param: ColumnResizedEvent) => {
     // updateRowCount('rowDataUpdated');
-    // log('onColumnResized', param);
+    log('onColumnResized', param);
 
     if (event?.onColumnResized) event.onColumnResized(param);
   }
 
   const onFirstDataRendered = (param: FirstDataRenderedEvent) => {
-    // log('onFirstDataRendered', param);
-    if (options?.isAutoFitColData) autoSizeAll(gridRef.current);
+    if (options?.isAutoFitColData /*&& (personalColInfoData as gridData)?.data.length === 0*/) {
+      autoSizeAll(gridRef.current);
+      log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
+    }
 
     if (event?.onFirstDataRendered) event.onFirstDataRendered(param);
   }
@@ -851,6 +903,27 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // return undefined;
   }
 
+  const onDrageStopped = (param: DragStoppedEvent) => {
+    let colNm: any[] = [];
+    let colWidth: any[] = [];
+    let colVisible: any[] = [];
+    gridRef.current.api.getAllDisplayedColumns().forEach((column: any) => {
+      // log("onDrageStopped", column)
+      colNm.push(column.colId);
+      colWidth.push(column.actualWidth);
+      colVisible.push(column.visible);
+    });
+    let params = {
+      // path : path,
+      state: config.collapsed,
+      id : id,
+      col_nm: colNm.join(','),
+      col_width: colWidth.join(','),
+      col_visible: colVisible.join(',')
+    }
+    setMyColInfo.mutate(params);
+  }
+
   const getRowSpan = (param: RowSpanParams): number => {
     
     const rowIndex = param.node?.rowIndex || 0;
@@ -930,6 +1003,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
               processDataFromClipboard={processDataFromClipboard}
               initialState={initialState}
               onGridPreDestroyed={onGridPreDestroyed}
+              // onColumnMoved={(e) => log("onColumnMoved", e)}
+              onDragStopped={onDrageStopped}
               // onStateUpdated={onStateUpdated}
 
               //↓ 이것들 적용하면 클릭,더블클릭등 이벤트가 발생 안함 - stephen

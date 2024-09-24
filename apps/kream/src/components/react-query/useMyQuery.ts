@@ -17,10 +17,11 @@ export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?
 
   const params = {
     ...searchParam,
+    path: path,
     user_id: user_id,
     ipaddr: ipaddr
   }
-  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, {staleTime: Infinity, ...option});
+  const { isLoading, data, isError, refetch, remove } = useQuery([path + queryNm, {...params}], queryFn, {/*staleTime: Infinity,*/ ...option});
   // log('useGetData', queryNm, searchParam, isLoading)
   return { data, isLoading, isError, refetch, remove }
 };
@@ -80,6 +81,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
       data["terminal"] = terminal;
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;
+      data["path"] = path;
     },
   });
 
@@ -99,6 +101,7 @@ export const useUpdateData2 = (mutationFn: MutationFunction, queryKey?: string, 
       data["menu_seq"] = menu_seq;
       data["user_id"] = user_id;
       data["ipaddr"] = ipaddr;
+      data["path"] = path;
     },
     onError: (err, data, context) => {
       // console.log('PLEASE TRY AGAIN')
