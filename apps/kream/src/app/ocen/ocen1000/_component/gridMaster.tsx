@@ -118,9 +118,10 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     doc_close_dd: dayjs().format('YYYYMMDD'),
                     use_yn: 'Y'
                 });
+
             for (const row of rows) {
-                log("onGridNew", row)
-                await (mainData as gridData).data.push(row);
+                log("onGridNew", row, mainData)
+                await ((mainData as any)[0] as gridData).data.push(row);
             }
         
             setTimeout(() => {                

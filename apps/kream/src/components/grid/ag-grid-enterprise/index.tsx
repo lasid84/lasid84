@@ -83,6 +83,7 @@ type GridEvent = {
 }
 
 export type GridOption = {
+  id?: string;
   checkbox?: string[];
   select?: any;
   icon?: any;
@@ -138,6 +139,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
   // log("ListGrid", props);
 
   const { t } = useTranslation();
+
+  // const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMData, { enabled: false });
 
   const config = useConfigs((state) => state.config);
 

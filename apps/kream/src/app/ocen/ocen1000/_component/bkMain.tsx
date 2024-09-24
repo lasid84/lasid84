@@ -143,7 +143,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 <CustomSelect
                       id="template_id"
                       initText="Select a Template"
-                      listItem={(bkTemplateData as any)[0] as gridData}
+                      listItem={bkTemplateData ? (bkTemplateData as any)[0] as gridData : undefined}
                       valueCol={["template_id", "template_nm"]}
                       displayCol="template_nm"
                       gridOption={{
