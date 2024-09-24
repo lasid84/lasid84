@@ -40,7 +40,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                             "aci_yn","aci","afr_yn","edi_yn","isf_yn","e_manifest_yn","use_yn",
                             "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "h-[calc(100vh-200px)]",
-        minWidth: { "bk_id": 100, "waybill_no": 150, "shipment_status": 40 },
+        minWidth: { "shipment_status": 40 },
         dataType: {
             "executed_on_date": "date", "accounting_date": "date",  "create_date": "date", "bk_dd": "date", "etd": "date", 
             "eta": "date", "final_eta": "date", "doc_close_dd": "date", "cargo_close_dd": "date", "pickup_dd": "date",

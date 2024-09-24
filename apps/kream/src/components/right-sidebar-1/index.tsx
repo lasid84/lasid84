@@ -5,6 +5,9 @@ import Sidebar from "./sidebar";
 import Langs from "./langs";
 import { BaseSyntheticEvent, useRef, useEffect, useState, RefObject, memo } from "react";
 import { useConfigs } from "states/useConfigs";
+import { Button } from "../button";
+import { useUpdateData2 } from "../react-query/useMyQuery";
+import { SP_InitMyColumnInfo } from "../grid/ag-grid-enterprise/_component/data";
 
 const RightSidebar: React.FC = memo(() => {
   const colors: PaletteProps[] = [
@@ -13,9 +16,9 @@ const RightSidebar: React.FC = memo(() => {
   ];
   const items = [{ title: "Background", key: "background" }];
   const config = useConfigs((state) => state.config);
-  const { rightSidebar } = config;
+  const { rightSidebar, collapsed } = config;
 
-
+  const { Create: initMyColInfo } = useUpdateData2(SP_InitMyColumnInfo, "InitMyColumnInfo");
 
   const rightSideBarRef:RefObject<HTMLDivElement> = useRef(null);
   const configActions = useConfigs((state) => state.actions);
@@ -75,6 +78,25 @@ const RightSidebar: React.FC = memo(() => {
               <Colors key={item.key} title={item.title} palettes={colors} />
             ))}
           </div>
+
+          <div className="flex flex-col p-4">
+            <div className="mb-2">
+              <div className="mb-2 text-sm font-bold tracking-wider uppercase">
+                Grid컬럼 초기화
+              </div>
+            </div>
+            <Button id={"reset"}
+              width="w-20"
+              onClick={() => {
+                const param = {
+                  id:'',
+                  state: collapsed
+                }
+                initMyColInfo.mutate(param);
+              }}
+            />
+          </div>
+
         </div>
       </div>
     </div>
