@@ -381,7 +381,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           cellOption = {
             // minWidth: 30,
             // maxWidth: 70,
-            width: 60,
+            width: myColInfo[i]?.col_width ? Number(myColInfo[i]?.col_width) : 60,
             cellStyle: { textAlign: "center" },
             aggFunc: "count",
             editable: false

@@ -36,12 +36,25 @@ export const useConfigs = create<ConfigsStore>( set => ({
     config: initialState,
     actions: {
         setConfig: (payload: Partial<ConfigState>) => {
-            set(state => ({
-                config: {
+            // set(state => ({
+            //     config: {
+            //         ...state.config,
+            //         ...payload
+            //     }
+            // }));
+            set(state => {
+                const newConfig = {
                     ...state.config,
                     ...payload
-                }
-            }));
+                };
+                
+                // Save the new config to localStorage
+                localStorage.setItem('config', JSON.stringify(newConfig));
+                
+                return {
+                    config: newConfig
+                };
+            });
         },
     },
 }));  

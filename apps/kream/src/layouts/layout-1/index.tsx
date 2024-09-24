@@ -36,11 +36,14 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const [menus, isReady] = useNavigation((state) => [state.menu_arr, state.isReady]);
   const navigation = useNavigation((state) => state.navigation);
   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
+  
   const pathname = usePathname();
   const queryParam = useSearchParams();
   const params = queryParam.get('params');
   const router = useRouter();
   const { Create } = useUpdateData2(SP_InsertLog, '');
+  const isClient = typeof window !== 'undefined';
+  const savedConfig = isClient ? localStorage.getItem('config') : null;
   
   // log("app/layouts/layout-1/index.tsx");
 
@@ -54,9 +57,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
   useEffect(() => {
     setCollapsed(config.collapsed)
-  }, [config.collapsed]);
-
-  // const { i18n } = useTranslation();
+  }, [config.collapsed, ]);
 
   useEffect(() => {
     setI18n(config.lang);
@@ -68,13 +69,11 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
 
       const user = useUserSettings.getState().data;
       if (!user.user_id) {
-        log('sessionCheck', user)
         router.replace('/login');
         return;
       }
 
       const session = await getSession();
-      log("layout index session", session);
       if (!session) {
         router.replace('/login');
         return;
@@ -84,12 +83,16 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
     // sessionCheck();
 
     if (!isReady) {
-      return;
       // if (!checkAuth(menus, url, params)) {
       //   log(menus, url, isReady);
       //   toastWaring(url + " 권한이 없습니다.");
       //   router.replace('/');
       // }
+    }
+
+    if (isReady && savedConfig) {
+      const configJson = JSON.parse(savedConfig);
+      setCollapsed(configJson.collapsed);
     }
   }, [isReady])
 
