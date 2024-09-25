@@ -338,6 +338,7 @@ export const SP_CreateData = async (param: any) => {
 //Update BookingNote
 export const SP_UpdateData = async (param: any) => {
   const Param = param;
+
   const {
     bk_id 
     , bk_dd
@@ -1174,6 +1175,7 @@ export const SP_SendEmail = async (param: any) => {
     return result![0];
 }
 
+
 export const SP_GetReportData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
@@ -1201,6 +1203,9 @@ export const SP_GetReportData = async (param: any) => {
     const result = await executFunction(params);
     return result;
 }
+
+
+
 
 export const SP_DownloadReport = async (param: any) => {
   const params = param;

@@ -132,7 +132,7 @@ const MailSend: React.FC<Props> = ({ ref = null, title, initData, pgm_code, para
         <>
             <PagePopupGrid
                 title={
-                    <><LabelGrid id={t('TRANPOSRT_EMAIL_LIST_OE')} /></>}
+                    <><LabelGrid id={t(pgm_code)} /></>}
                 right={
                     <>
                         <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn":true, "def": false })} width='w-15'/>

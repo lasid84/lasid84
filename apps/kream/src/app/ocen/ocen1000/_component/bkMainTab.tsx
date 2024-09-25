@@ -18,6 +18,7 @@ import RadioGroup from "components/radio/RadioGroup"
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
 import { Cargo } from "./cargoDetail";
+import EmailSendPopup from "./popup/popEmailSendcomm"
 import _ from 'lodash';
 import { toastError } from 'components/toast';
 import StepList, { Steps3, Steps2, Steps1 } from "@/components/stepper/steps";
@@ -312,12 +313,20 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     window.URL.revokeObjectURL(file);
   }
 
+  const handleButtonClick = (e:any)=>{
+    if(e.target.id){
+      dispatch({isMailSendPopupOpen : true })
+    }
+  }
+
   return (
     <div className="sticky top-0 z-20 flex w-full pt-10 space-y-1 bg-white">
         <PageBKTabContent
           right={
             <>
               <div className={"flex col-span-2 "}>
+              {/* handleButtonClick btn_transport_send_email*/}
+                <Button id={"btn_send_email"} label="send_email" width="w-24" onClick={handleButtonClick} disabled={false}/>
                 <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} onClick={onDropButtonClick} />
                 <Button id={"save"} onClick={onSave} width="w-24" />
               </div>                
@@ -337,6 +346,8 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
           //addition={<div className="w-2/12"></div>}
         >
+          <EmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
+               
           <div className="flex flex-col">
             <div className="flex items-center justify-center w-full">
               <StepList state="1"/>
