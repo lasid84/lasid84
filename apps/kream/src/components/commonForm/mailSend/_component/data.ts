@@ -74,9 +74,9 @@ export const SP_GetMailSample_comm = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_get_bk_mail2',
     isShowLoading: true
     }
-    log('mailData', params)
+
     const result = await executFunction(params);
-    log('mailData result', params, result)
+
     return result![0];
 }
 
@@ -110,7 +110,7 @@ export const SP_SaveData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("SP_SaveData param : ", param)
+
   const { pgm_code, cust_code,seq, email, remark,use_yn, user_id, ipaddr} = Param;
   const params = {
     inparam : [
@@ -137,7 +137,7 @@ export const SP_SaveData = async (param: any) => {
     isShowLoading: true,
     isShowComplete:true,
     }
-    log('mailSend params????????????',params)
+
     const result = await executFunction(params);
     return result![0];
 }
