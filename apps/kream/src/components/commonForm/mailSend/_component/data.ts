@@ -82,25 +82,26 @@ export const SP_GetMailSample_comm = async (searchParam: any) => {
 
 
 export const SP_GetMailReceiver = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
+  const { pgm_code, cust_code, user_id, ipaddr } = Param;  
 
-  const { pgm_code, user_id, ipaddr } = Param;  
   const params = {
     inparam : [
         "in_pgm_code"
+      , "in_cust_code"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
         pgm_code
+      , cust_code
       , user_id
       , ipaddr
     ],
-    inproc: 'public.f_stnd0013_get_email_rcvlist',
+    inproc: 'public.f_stnd0013_get_email_rcvlist2',
     isShowLoading: true
     }
-  
+
     const result = await executFunction(params);
     return result![0];
 }
@@ -109,11 +110,12 @@ export const SP_SaveData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  // log("param : ", param)
-  const { pgm_code, seq, email, remark,use_yn, user_id, ipaddr} = Param;
+  log("SP_SaveData param : ", param)
+  const { pgm_code, cust_code,seq, email, remark,use_yn, user_id, ipaddr} = Param;
   const params = {
     inparam : [
       "in_pgm_code"
+    , "in_cust_code"
     , "in_seq"
     , "in_email"
     , "in_remark"
@@ -123,6 +125,7 @@ export const SP_SaveData = async (param: any) => {
     ],
     invalue: [
       pgm_code
+    , cust_code
     , seq
     , email
     , remark
@@ -134,7 +137,7 @@ export const SP_SaveData = async (param: any) => {
     isShowLoading: true,
     isShowComplete:true,
     }
-  
+    log('mailSend params????????????',params)
     const result = await executFunction(params);
     return result![0];
 }
