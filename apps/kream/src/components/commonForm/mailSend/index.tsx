@@ -4,15 +4,16 @@
 import { useEffect, useReducer, useMemo, useCallback, useRef, useState, memo } from "react";
 import {  SP_GetMailReceiver, SP_SaveData } from "./_component/data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageGrid, PagePopupGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-import { toastSuccess } from "components/toast"
 import { LabelGrid } from "components/label";
+import {
+    TRANPOSRT_EMAIL_LIST_OE, CUSTOMER_EMAIL_LIST_OE,
+  } from "components/commonForm/mailReceiver/_component/data";
 import { useTranslation } from "react-i18next";
 
 
@@ -29,26 +30,13 @@ type Props = {
     }
 };
 
-const MailSend: React.FC<Props> = ({ ref = null, title, initData, pgm_code, params }) => {
+const MailSend: React.FC<Props> = ({ ref = null, pgm_code, params }) => {
 
+    const { t } = useTranslation();
     const gridRef = useRef<any | null>(ref);
     const { dispatch, objState } = useAppContext();
     const { Create } = useUpdateData2(SP_SaveData, '');
-    // const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
-    // const [gridOptions, setGridOptions] = useState<GridOption>();
-    const [mailform, setMailForm] = useState<any>();
-
-    const { t } = useTranslation();
-
-    // useEffect(() => {
-    //     if (initData) {
-    //         setMailForm(initData[26]);
-    //     }
-    //   }, [initData]);
-
-
-    const { data, refetch, remove } = useGetData({pgm_code: pgm_code}, '', SP_GetMailReceiver, {enabled:false});
-
+    const { data, refetch, remove } = useGetData({pgm_code: pgm_code, cust_code:params.cust_code}, '', SP_GetMailReceiver, {enabled:false});
 
 
     const gridOptions: GridOption = {
@@ -58,10 +46,18 @@ const MailSend: React.FC<Props> = ({ ref = null, title, initData, pgm_code, para
         minWidth: { "email": 120 },
         maxWidth : {"use_yn": 80},
         editable: ["email", "remark", "use_yn"],
-        // dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno", "remark":"largetext" },
         isAutoFitColData: false,
     };
 
+    // pgm_code 기본 값으로 초기화
+    // const [PgmCode, setPgmCode] = useState<string>(TRANPOSRT_EMAIL_LIST_OE);
+
+    // 부모에서 받은 pgm_code가 변경될 때 로컬 상태를 업데이트
+    // useEffect(() => {
+    //     if (pgm_code) {
+    //     setPgmCode(pgm_code);
+    //     }
+    // }, [pgm_code]);
 
     useEffect(() => {
         remove();
@@ -69,11 +65,10 @@ const MailSend: React.FC<Props> = ({ ref = null, title, initData, pgm_code, para
     }, []);
 
     useEffect(() => {
-        if (objState.isDSearch) {
-            refetch();
-          dispatch({ isDSearch: false });
+        if (params.cust_code) {
+        refetch();
         }
-      }, [objState.isDSearch]);
+    }, [params, refetch]);
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
@@ -117,6 +112,7 @@ const MailSend: React.FC<Props> = ({ ref = null, title, initData, pgm_code, para
   
         if (data.__changed) {
             data.pgm_code = pgm_code;
+            data.cust_code = params.cust_code;
             await Create.mutateAsync(data, {
               onSuccess(data, variables, context) {
                 refetch();

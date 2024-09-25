@@ -28,8 +28,8 @@ import RadioGroup from "components/radio/RadioGroup";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
-  cust_code?: string;
-  cust_nm?: string;
+  transport_company?: string;
+  shipper_id?: string;
   bk_id?: string;
   pgm_code?: string;
   initData?: any | null;
@@ -69,8 +69,8 @@ const Modal: React.FC<Props> = ({
   loadItem,
   ref = null,
   bk_id,
-  cust_code,
-  cust_nm,
+  transport_company,
+  shipper_id,
   initData,
   callbacks,
 }) => {
@@ -78,11 +78,13 @@ const Modal: React.FC<Props> = ({
   const { dispatch, objState } = useAppContext();
   const { isMailSendPopupOpen: isOpen, MselectedTab } = objState;
 
+  const { getValues } = useFormContext();
+
   const { t } = useTranslation();
 
-  // gubn 상태 관리
-  const [gubn, setGubn] = useState<number>(0);
+  const [gubn, setGubn] = useState<string>('');
   const [pgmCode, setPgmCode] = useState<string>(TRANPOSRT_EMAIL_LIST_OE);
+  const [custCode, setCustCode] = useState<string>('')
 
 
   //Mail Template Get Data 
@@ -91,7 +93,7 @@ const Modal: React.FC<Props> = ({
     refetch: transMailRefetch,
     remove: transMailRemove,
   } = useGetData(
-    { bk_id: bk_id, cust_code: cust_code, pgm_code: pgmCode },
+    { bk_id: bk_id, cust_code: custCode, pgm_code: pgmCode },
     "",
     SP_GetMailSample_comm,
     {
@@ -120,17 +122,15 @@ const Modal: React.FC<Props> = ({
     "GetReportData"
   );
 
-  // gubn에 따른 데이터 로드
   const loadEmailData = useCallback(() => {
-    //var pgm_code = gubn === 0 ? CUSTOMER_EMAIL_LIST_OE : TRANPOSRT_EMAIL_LIST_OE;
     transMailRefetch();
-  }, [gubn, bk_id, cust_code, transMailRefetch]);
+  }, [gubn, bk_id, custCode, transMailRefetch]);
 
   useEffect(() => {
     if (isOpen) {
       loadEmailData();
     }
-  }, [loadEmailData, isOpen]);
+  }, [loadEmailData, isOpen, pgmCode, gubn]);
 
   useEffect(() => {
     if (loadItem) {
@@ -139,12 +139,8 @@ const Modal: React.FC<Props> = ({
   }, [loadItem]);
 
   useEffect(() => {
-    log("bk_id, cust_code", bk_id, cust_code, isOpen, transMailData);
+    log("bk_id, cust_code", bk_id, custCode, isOpen, transMailData);
     if (isOpen && transMailData) {
-      // setMailForm(
-      //   {...mailform,
-      //    ...((transMailData as string[]) as unknown as gridData).data[0]
-      //   })
       setMailForm((prevMailform) => ({
         ...prevMailform,
         ...(transMailData as string[] as unknown as gridData).data[0],
@@ -152,13 +148,34 @@ const Modal: React.FC<Props> = ({
     }
   }, [transMailData, isOpen]);
 
+  // gubn이 변경될 때 pgmCode 자동 업데이트
+  useEffect(() => {
+    if (gubn === 'transport_company') {
+      setPgmCode(TRANPOSRT_EMAIL_LIST_OE);
+      setCustCode(transport_company||'')
+    } else if (gubn === 'shipper_id') {
+      setPgmCode(CUSTOMER_EMAIL_LIST_OE);
+      setCustCode(shipper_id||'')
+    }
+    // gubn 변경 시 데이터 refetch
+    if (isOpen) {
+      transMailRemove(); // 기존 데이터 제거
+      loadEmailData();    // 새로운 데이터 가져오기
+    }
+  }, [gubn, isOpen, transport_company, shipper_id, transMailRemove, loadEmailData]);
+
+//   // 상태 초기화 또는 리렌더링이 필요한 부분에 해당 useEffect를 추가
+// useEffect(() => {
+//   setGubn('');  // 초기값 설정 또는 리셋 로직
+// }, [isOpen]);  // Modal이 열릴 때 gubn 초기화
+
   const closeModal = () => {
     if (callbacks?.length) callbacks?.forEach((callback) => callback());
     dispatch({ isMailSendPopupOpen: false });
-    //reset();
+    setGubn('');  // 초기값 설정 또는 리셋 로직
+    setCustCode('')
+    setPgmCode(TRANPOSRT_EMAIL_LIST_OE)
   };
-
-  const { getValues } = useFormContext();
 
   const handleFileDrop = async (data: any[], buffer: any[]) => {
     log("file upload -data, header", data, buffer);
@@ -244,7 +261,7 @@ const Modal: React.FC<Props> = ({
     //1. 리포트파일 서버업로드(?)
     await reportUpload
       .mutateAsync(
-        { ...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code },
+        { ...mailform, pgm_code: pgmCode + custCode },
         {
           onSuccess(data, variables, context) {
             log("upload data", data);
@@ -256,7 +273,7 @@ const Modal: React.FC<Props> = ({
     // 2.업로드파일 서버업로드
     await fileUpload
       .mutateAsync(
-        { ...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code },
+        { ...mailform, pgm_code: pgmCode + custCode },
         {
           onSuccess(data, variables, context) {
             log("upload data", data);
@@ -268,7 +285,7 @@ const Modal: React.FC<Props> = ({
     // 3. sendEmail 실행
     await sendEmail
       .mutateAsync(
-        { ...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code },
+        { ...mailform, pgm_code: pgmCode + custCode },
         {
           onSuccess(data, variables, context) {},
         }
@@ -276,17 +293,9 @@ const Modal: React.FC<Props> = ({
       .catch(() => {});
   }, [mailform, bk_id, GetReportData]);
 
-  // gubn이 변경될 때 pgmCode 자동 업데이트
-  useEffect(() => {
-    if (gubn === 0) {
-      setPgmCode(TRANPOSRT_EMAIL_LIST_OE);
-    } else if (gubn === 1) {
-      setPgmCode(CUSTOMER_EMAIL_LIST_OE);
-    }
-  }, [gubn]); // gubn이 변경될 때만 실행
 
   const onChange = (e: any) => {
-    const value = parseInt(e.target.value, 10);
+    const value = e.target.value
     setGubn(value);
   };
 
@@ -297,7 +306,7 @@ const Modal: React.FC<Props> = ({
       title={t(pgmCode)}
       bottomRight={
         <>
-          <Button id={"send"} onClick={sendTransPortEmail} width="w-32" />
+          <Button id={"send"} onClick={sendTransPortEmail} width="w-32" disabled={custCode === ''}/>
           <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />
         </>
       }
@@ -305,15 +314,18 @@ const Modal: React.FC<Props> = ({
       <div className="flex w-[82rem] h-[36rem] gap-4 ">
         <div className="flex w-1/3 h-full">
           {/* grid */}
+          {custCode === "" ? (
+            <div className="p-1 m-1 font-medium text-red-400"> {t(gubn||'transport_company')}{t('MSG_0178')}</div>
+          ) : (
           <MailSend
             ref={gridRef}
-            pgm_code={pgmCode}
-            title={cust_nm}
+            pgm_code={pgmCode}            
             params={{
-              cust_code: objState[MselectedTab]?.shipper_id,
+              cust_code: custCode,           
               pickup_type: objState.trans_mode + objState.trans_type,
             }}
           />
+          )}
         </div>
         <div className="flex-col w-2/3">
           {/* radio group */}
@@ -321,7 +333,7 @@ const Modal: React.FC<Props> = ({
             <Radio
               id="gubn"
               name="gubn"
-              value="0"
+              value="transport_company"
               label="transport_company"
               onChange={onChange}
               defaultChecked
@@ -329,7 +341,7 @@ const Modal: React.FC<Props> = ({
             <Radio
               id="gubn"
               name="gubn"
-              value="1"
+              value="shipper_id"
               label="customer"
               onChange={onChange}
             />
