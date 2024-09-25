@@ -155,7 +155,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const [currentState, setCurrentState] = useState<GridState>();
 
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
-  const {id = 'grid', listItem, options, customselect = false } = props;
+  const {id, listItem, options, customselect = false } = props;
 
   const [ personalColInfoParam, setPersonalColInfoParam ] = useState<any>(null);
   // const [ personalColInfo, setPersonalColInfo ] = useState<any>();

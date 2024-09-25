@@ -13,6 +13,7 @@ export const SP_GetPersonalColInfoData = async (searchParam: any) => {
   if (!searchParam.queryKey[1]) return null;
 
   let { path, id, state, user_id, ipaddr } = searchParam.queryKey[1];
+  if (!id) return;
   state = state ? 'Minimized' : 'Normal';
 
   const params = {

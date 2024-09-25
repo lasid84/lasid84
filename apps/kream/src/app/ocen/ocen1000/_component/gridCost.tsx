@@ -106,6 +106,7 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
       >
         <>
           <Grid
+            id="cost"
             gridRef={gridRef}
             listItem={bkData?.cost as gridData}
             options={gridOptions}

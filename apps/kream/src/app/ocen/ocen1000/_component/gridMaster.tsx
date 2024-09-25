@@ -188,6 +188,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     </>
                 }>
                 <Grid
+                    id="master"
                     gridRef={objState.gridRef_m}
                     loadItem={initData}
                     listItem={gridMainData}//                await ((mainData as string[])[0] as unknown as gridData).data.push(row);
