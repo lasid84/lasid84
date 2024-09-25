@@ -18,7 +18,7 @@ const validExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS"];
 
 // FileUpload 컴포넌트
 interface FileUploadProps {
-    onFileDrop?: (data: any[], header:string[]) => void;
+    onFileDrop?: (data: any[], header:any[]) => void;
     isInit?: boolean;
 }
 
@@ -146,27 +146,37 @@ export const AttFileUpload: React.FC<FileUploadProps> = (props) => {
     
     // 파일을 Dropzone에 드랍했을 때 처리
     const handleFileDrop = useCallback((acceptedFiles: File[]) => {
-        
         const updatedFiles = [...selectedFiles, ...acceptedFiles];
 
-        setSelectedFiles(updatedFiles); // 파일 상태 업데이트
-        
+        // 파일 상태 업데이트
+        setSelectedFiles(updatedFiles);
+
+        // ArrayBuffer 데이터를 함께 저장할 객체 배열
+        const filesWithArrayBuffer: { file: File; arrayBuffer: ArrayBuffer | null }[] = [];
+
         // 파일을 읽고 처리
-        acceptedFiles.forEach((file) => {
+        updatedFiles.forEach((file) => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const arrayBuffer = e.target?.result as ArrayBuffer;
-                console.log('file upload arraybuffer', arrayBuffer);
+                // 파일과 ArrayBuffer 데이터를 함께 저장
+                filesWithArrayBuffer.push({
+                    file: file,
+                    arrayBuffer: arrayBuffer || null,
+                });
+
+                // 모든 파일이 읽힌 후에 처리
+                if (filesWithArrayBuffer.length === acceptedFiles.length) {
+                    if (props.onFileDrop) {
+                        // 최신 파일 목록과 ArrayBuffer 데이터를 전달
+                        props.onFileDrop(filesWithArrayBuffer, []);
+                    }
+                }
             };
+
             reader.readAsArrayBuffer(file);
-            // reader.readAsDataURL(file);
-
         });
-        if (props.onFileDrop) {
-            props.onFileDrop(updatedFiles, []); // 최신 파일 목록을 전달
-        }
-
-    }, []);
+    }, [selectedFiles, props]);
 
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop: handleFileDrop });

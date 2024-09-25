@@ -8,6 +8,8 @@ import { FaBullseye } from "react-icons/fa6";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export const TRANPOSRT_EMAIL_LIST_OE = "TRANPOSRT_EMAIL_LIST_OE";
+export const CUSTOMER_EMAIL_LIST_OE = "CUSTOMER_EMAIL_LIST_OE";
+
 
 // export const SP_Load = async (searchParam:any) => {
 //   // unstable_noStore();

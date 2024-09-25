@@ -1,10 +1,10 @@
 
 
-import { executFunction, executeReportDownload } from "@/services/api.services";
+import { executFunction, executeReportDownload,executeFileUpload,executeReportUpload } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
 import { FaBullseye } from "react-icons/fa6";
-
+import { useUserSettings } from "states/useUserSettings";
 import { toastError } from "components/toast";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 // import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -338,6 +338,7 @@ export const SP_CreateData = async (param: any) => {
 //Update BookingNote
 export const SP_UpdateData = async (param: any) => {
   const Param = param;
+
   const {
     bk_id 
     , bk_dd
@@ -1174,6 +1175,7 @@ export const SP_SendEmail = async (param: any) => {
     return result![0];
 }
 
+
 export const SP_GetReportData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
@@ -1202,10 +1204,41 @@ export const SP_GetReportData = async (param: any) => {
     return result;
 }
 
+
+
+
 export const SP_DownloadReport = async (param: any) => {
   const params = param;
 
   const result = await executeReportDownload(params);
+  return result;
+
+}
+
+
+
+export const SP_ReportUpload = async (param: any) => {
+  const add_folder_name = param.user_id
+  const  params = {
+    ...param,
+    add_folder_name : add_folder_name
+  }
+
+  const result = await executeReportUpload(params);
+  return result;
+
+}
+
+
+export const SP_FileUpload = async (param: any) => {
+  const add_folder_name = param.user_id
+  const  params = {
+    ...param,
+    add_folder_name : add_folder_name
+  }
+  log('fileupload param', params)
+
+  const result = await executeFileUpload(params);
   return result;
 
 }

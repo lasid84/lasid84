@@ -11,10 +11,18 @@ import { PageContentDivided } from "layouts/search-form/page-search-row";
 import MailSend from "@/components/commonForm/mailSend";
 import { Checkbox } from "@/components/checkbox";
 import { Button } from "components/button";
-import { SP_GetMailSample } from "components/commonForm/mailSend/_component/data";
-import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
+import { SP_GetMailSample,SP_GetMailSample_comm } from "components/commonForm/mailSend/_component/data";
+import {
+  TRANPOSRT_EMAIL_LIST_OE,
+  CUSTOMER_EMAIL_LIST_OE,
+} from "components/commonForm/mailReceiver/_component/data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
-import { SP_SendEmail, SP_GetReportData, SP_FileUpload,SP_ReportUpload } from "../data";
+import {
+  SP_SendEmail,
+  SP_GetReportData,
+  SP_FileUpload,
+  SP_ReportUpload,
+} from "../data";
 import Radio from "components/radio/index";
 import RadioGroup from "components/radio/RadioGroup";
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -23,6 +31,7 @@ type Props = {
   cust_code?: string;
   cust_nm?: string;
   bk_id?: string;
+  pgm_code?: string;
   initData?: any | null;
   callbacks?: Array<() => void>;
   ref?: any | null;
@@ -70,13 +79,25 @@ const Modal: React.FC<Props> = ({
   const { isMailSendPopupOpen: isOpen, MselectedTab } = objState;
 
   const { t } = useTranslation();
+
+  // gubn 상태 관리
+  const [gubn, setGubn] = useState<number>(0);
+  const [pgmCode, setPgmCode] = useState<string>(TRANPOSRT_EMAIL_LIST_OE);
+
+
+  //Mail Template Get Data 
   const {
     data: transMailData,
     refetch: transMailRefetch,
     remove: transMailRemove,
-  } = useGetData({ bk_id: bk_id, cust_code: cust_code }, "", SP_GetMailSample, {
-    enabled: false,
-  });
+  } = useGetData(
+    { bk_id: bk_id, cust_code: cust_code, pgm_code: pgmCode },
+    "",
+    SP_GetMailSample_comm,
+    {
+      enabled: false,
+    }
+  );
   const [reports, setReports] = useState<any>();
   const [mailform, setMailForm] = useState<MailSample>({
     subject: "",
@@ -93,17 +114,23 @@ const Modal: React.FC<Props> = ({
 
   const { Create: sendEmail } = useUpdateData2(SP_SendEmail, "");
   const { Create: fileUpload } = useUpdateData2(SP_FileUpload, "");
-  const { Create : reportUpload } = useUpdateData2(SP_ReportUpload, "")
+  const { Create: reportUpload } = useUpdateData2(SP_ReportUpload, "");
   const { Create: GetReportData } = useUpdateData2(
     SP_GetReportData,
     "GetReportData"
   );
 
+  // gubn에 따른 데이터 로드
+  const loadEmailData = useCallback(() => {
+    //var pgm_code = gubn === 0 ? CUSTOMER_EMAIL_LIST_OE : TRANPOSRT_EMAIL_LIST_OE;
+    transMailRefetch();
+  }, [gubn, bk_id, cust_code, transMailRefetch]);
+
   useEffect(() => {
     if (isOpen) {
-      transMailRefetch();
+      loadEmailData();
     }
-  }, [transMailRefetch, isOpen]);
+  }, [loadEmailData, isOpen]);
 
   useEffect(() => {
     if (loadItem) {
@@ -191,7 +218,8 @@ const Modal: React.FC<Props> = ({
 
                 const templateType = Number(report.report_type);
                 const fileExtension: number = Number(curData.search_gubn) || 0;
-                const fileName = loadItem[21].data[templateType - 1].report_type_nm;
+                const fileName =
+                  loadItem[21].data[templateType - 1].report_type_nm;
 
                 const downloadData: Attachment = {
                   reportData: reportData,
@@ -224,7 +252,7 @@ const Modal: React.FC<Props> = ({
         }
       )
       .catch(() => {});
-    
+
     // 2.업로드파일 서버업로드
     await fileUpload
       .mutateAsync(
@@ -248,11 +276,25 @@ const Modal: React.FC<Props> = ({
       .catch(() => {});
   }, [mailform, bk_id, GetReportData]);
 
+  // gubn이 변경될 때 pgmCode 자동 업데이트
+  useEffect(() => {
+    if (gubn === 0) {
+      setPgmCode(TRANPOSRT_EMAIL_LIST_OE);
+    } else if (gubn === 1) {
+      setPgmCode(CUSTOMER_EMAIL_LIST_OE);
+    }
+  }, [gubn]); // gubn이 변경될 때만 실행
+
+  const onChange = (e: any) => {
+    const value = parseInt(e.target.value, 10);
+    setGubn(value);
+  };
+
   return (
     <DialogBasic
       isOpen={isOpen}
       onClose={closeModal}
-      title={t(TRANPOSRT_EMAIL_LIST_OE)}
+      title={t(pgmCode)}
       bottomRight={
         <>
           <Button id={"send"} onClick={sendTransPortEmail} width="w-32" />
@@ -260,12 +302,12 @@ const Modal: React.FC<Props> = ({
         </>
       }
     >
-      <div className="flex w-[82rem] h-[32rem] gap-4 ">
+      <div className="flex w-[82rem] h-[36rem] gap-4 ">
         <div className="flex w-1/3 h-full">
           {/* grid */}
           <MailSend
             ref={gridRef}
-            pgm_code={TRANPOSRT_EMAIL_LIST_OE + cust_code}
+            pgm_code={pgmCode}
             title={cust_nm}
             params={{
               cust_code: objState[MselectedTab]?.shipper_id,
@@ -274,7 +316,25 @@ const Modal: React.FC<Props> = ({
           />
         </div>
         <div className="flex-col w-2/3">
-          {/* TextArea */}
+          {/* radio group */}
+          <RadioGroup label="gubn">
+            <Radio
+              id="gubn"
+              name="gubn"
+              value="0"
+              label="transport_company"
+              onChange={onChange}
+              defaultChecked
+            />
+            <Radio
+              id="gubn"
+              name="gubn"
+              value="1"
+              label="customer"
+              onChange={onChange}
+            />
+          </RadioGroup>
+
           {/* <div className="w-full"> */}
           <TextArea
             id="subject"
