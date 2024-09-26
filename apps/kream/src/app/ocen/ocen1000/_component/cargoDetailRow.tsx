@@ -90,7 +90,7 @@ const CargoFCL = memo(
         setContainertype(loadItem[16]);
         setPkgtype(loadItem[22])
         setSlacuom(loadItem[23])
-        setGrossuom(loadItem[24])
+        setGrossuom(loadItem[22])
         setMeasurementuom(loadItem[25])
       }
     }, [loadItem?.length]);
@@ -345,18 +345,17 @@ const CargoFCL = memo(
               width="w-24"
             />
             
-            {/* 향후 UFS+ 연동시 사용
             <div className="flex w-28">
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "gross_uom")}
                 label="gross_uom"
                 initText="Select.."
                 listItem={grossuom as gridData}
-                valueCol={["gross_uom", "gross_uom_nm"]}
-                displayCol="gross_uom"
+                valueCol={["pkg_type", "pkg_type_nm"]}
+                displayCol="pkg_type"
                 gridOption={{
                   colVisible: {
-                    col: ["gross_uom", "gross_uom_nm"],
+                    col: ["pkg_type", "pkg_type_nm"],
                     visible: true,
                   },
                 }}
@@ -372,7 +371,7 @@ const CargoFCL = memo(
                 defaultValue={cargoItem?.gross_uom}
                 inline={false}
               />
-            </div> */}
+            </div>
 
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_measurement`}
@@ -580,7 +579,7 @@ const CargoLCL = memo(
     useEffect(() => {
       if (loadItem?.length) {
         setPkgtype(loadItem[22])
-        setGrossuom(loadItem[24])
+        setGrossuom(loadItem[22])
         setMeasurementuom(loadItem[25])
 
       }
@@ -683,14 +682,14 @@ const CargoLCL = memo(
               <div className="flex w-28">
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "gross_uom")}
-                label="gorss_uom"
+                label="gross_uom"
                 initText="Select.."
                 listItem={grossuom as gridData}
-                valueCol={["gross_uom", "gross_uom_nm"]}
-                displayCol="gross_uom"
+                valueCol={["pkg_type", "pkg_type_nm"]}
+                displayCol="pkg_type_nm"
                 gridOption={{
                   colVisible: {
-                    col: ["gross_uom", "gross_uom_nm"],
+                    col: ["pkg_type", "pkg_type_nm"],
                     visible: true,
                   },
                 }}
@@ -716,7 +715,7 @@ const CargoLCL = memo(
               options={{type:"number" }}
               width="w-24"
             />
-            {/* selectbox 수정예정 */}
+            
             <div className="flex w-28">              
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "measurement_uom")}

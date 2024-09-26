@@ -141,10 +141,10 @@ export default function OCEN1000() {
 
       const fetchDataAsync = async () => {
         const { data: newData } = await detailRefetch(); // refetch 호출 후 응답 대기 
-        log("fetchDataAsync", objState?.MselectedTab, newData);
+        // log("fetchDataAsync", objState?.MselectedTab, newData);
         const cargo = (newData as string[])[1] ? ((newData as string[])[1] as gridData).data : [];
         const cost = ((newData as string[])[2] as gridData) || {} // grid사용으로 gridData로 맞추기
-        log("cost & cargo : ", cargo, cost)
+        // log("cost & cargo : ", cargo, cost)
         const data = {
           ...((newData as string[])[0] as unknown as gridData).data[0],
           cargo : cargo,

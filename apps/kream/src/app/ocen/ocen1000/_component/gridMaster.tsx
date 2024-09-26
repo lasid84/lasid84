@@ -67,10 +67,18 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     }, [objState?.isMSearch]);
 
     useEffect(() => {
+        if (objState.gridRef_m.current) log("objState.gridRef_m", objState.gridRef_m.current.api.getColumnState());
         if (mainData) {
             setGridMainData((mainData as any)[0] as gridData);
         }
     }, [mainData])
+
+    // useEffect(() => {
+    //     if (objState.mGridState?.columnSizing?.columnSizingModel && gridRef_m.current) {
+    //         const savedState = gridRef_m.current?.api.getColumnState(); 
+    //         gridRef_m.current?.api.applyColumnState({ state: savedState });
+    //     }
+    // }, [])
     
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
@@ -135,7 +143,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
         // let gridState = getGridState(gridRef.current);
-        // log('handleGridPreDestroyed', param.state);
+        log('handleGridPreDestroyed', param.state);
         dispatch({ mGridState:param.state });
     }
 
@@ -187,6 +195,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                         <Button id={"grid_save"} label="save" onClick={onGridSave} width="w-20" />
                     </>
                 }>
+
                 <Grid
                     id="master"
                     gridRef={objState.gridRef_m}

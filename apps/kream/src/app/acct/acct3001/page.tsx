@@ -39,7 +39,7 @@ export default function ACCT3001() {
     useEffect(() => {
         const params = getMenuParameters(menu_param);
         dispatch({ cont_type: params.cont_type });
-        log(params);
+        // log(params);
     }, [menu_param])
 
     return (

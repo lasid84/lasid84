@@ -172,7 +172,7 @@ export default function OCEN1001() {
           // cost : ((newData as string[])[2] as unknown as gridData).data
           cost : cost || []
         }
-        log("useEffect detailData", data);
+        // log("useEffect detailData", data);
         dispatch({[objState?.MselectedTab]:data})
       };
       fetchDataAsync(); // useEffect 내에서 비동기 호출

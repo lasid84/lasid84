@@ -153,6 +153,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const [initialState, setInitialState] = useState<GridState>();
   const [currentState, setCurrentState] = useState<GridState>();
+  const [myColInfo, setColInfo] = useState<any>([]);
 
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
   const {id, listItem, options, customselect = false } = props;
@@ -185,12 +186,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // minWidth: 20,
       filter: 'agTextColumnFilter',
       floatingFilter: options?.isShowFilter === undefined || options?.isShowFilter ? true : false,
-      headerClass: "text-center",
+      // headerClass: "text-center",
       editable: true,
-      // suppressMenu: true,
       // floatingFilterComponentParams: {suppressFilterButton:!options?.isShowFilterBtn ? true : false },
       suppressFloatingFilterButton: !options?.isShowFilterBtn ? true : false,
-      
+      suppressMenu: true, //컬럼명 옆 햄버거 버튼 없앰
     };
   }, []);
 
@@ -338,7 +338,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   //컬럼 세팅
   useEffect(() => {
-    if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 && personalColInfoData) {
+    if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 && personalColInfoData !== undefined) {
       let cols: cols[] = [];
 
       //Field {
@@ -354,23 +354,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
       let columns:any = [];
       // let columns = listItem.fields.map((field) => field.name);
       let hasMyColInfo = false;
-      let myColInfo: any[] = [];
-      if ((personalColInfoData as gridData).data.length) {
+      let myColInfos: any[] = [];
+      if ((personalColInfoData as gridData)?.data.length) {
         const colInfo = (personalColInfoData as gridData).data;
 
         columns = colInfo.map((row:any) => {
-          myColInfo.push(row);
+          myColInfos.push(row);
           return row.col_nm
         });
         columns = columns.concat(listItem.fields.filter((field) => !columns.includes(field.name)).map((field => field.name)));
-        
+        setColInfo(myColInfos);
       } else {
         columns = listItem.fields.map((field) => field.name);
+        setColInfo([]);
       };
           
       const dataType = listItem.fields.map((field) => field.format);
       if (!columns.includes(ROW_INDEX)) columns = [ROW_INDEX].concat(columns);
 
+      // log("grid column setting", columns, myColInfos, personalColInfoData)
+      
       columns.map((col: string, i:number) => {
       // for (let i = 0; i < columns.length; i++) {
         // const col = columns[i];
@@ -381,7 +384,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           cellOption = {
             // minWidth: 30,
             // maxWidth: 70,
-            width: myColInfo[i]?.col_width ? Number(myColInfo[i]?.col_width) : 60,
+            width: myColInfos[i]?.col_width ? Number(myColInfos[i]?.col_width) : 60,
             cellStyle: { textAlign: "center" },
             aggFunc: "count",
             editable: false
@@ -403,24 +406,24 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
-        if (myColInfo[i]?.col_width) {
+        if (myColInfos[i]?.col_width) {
           cellOption = {
             ...cellOption,
-            width: Number(myColInfo[i]?.col_width)
+            width: Number(myColInfos[i]?.col_width)
           }
         }
 
         //컬럼별 visible 셋팅
         let isHide: boolean = false;
-        if (myColInfo[i]?.visible !== undefined) {
-          isHide = !myColInfo[i].visible;
+
+        if (myColInfos.length > 0 || myColInfos[i]?.visible !== undefined) {
+          isHide = (myColInfos[i]?.visible || false) === true ? false : true;
         } else if (options?.colVisible) {
           const optVisible: boolean = !!options.colVisible["visible"];
           const optCols: string[] = options.colVisible!["col"];
           // if (optVisible) {
           isHide = optVisible;
           if (optCols.indexOf(col) > -1) {
-            // log("===", col);
             isHide = !optVisible;
           }
           // }
@@ -646,8 +649,14 @@ const ListGrid: React.FC<Props> = memo((props) => {
           ...row,
         }
       }));
+      personalColInfoRefetch();
+      // if (gridRef.current && props.gridState) {
+        
+      //   const savedState = props.gridState.columnSizing?.columnSizingModel; 
+      //   gridRef.current.api?.applyColumnState({ state: savedState });
+      // }
     }
-    // log("colDefs", colDefs);
+          
   }, [listItem, t, personalColInfoData]);
 
   useEffect(() => {
@@ -657,16 +666,17 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
   }, [options?.gridHeight]);
 
-  useEffect(() => {
-    setInitialState(props.gridState);
-
-    // if (props.gridState) setInitialState(props.gridState);
-    // else gridRef.current ? gridRef.current.api.ensureIndexVisible(0, 'top') : null;
-  }, [props.gridState])
-
-  useEffect(() => {
-    // log("mainData", mainData)
-  }, [mainData])
+  // useEffect(() => {
+  //   if (props.gridState && gridRef.current) {
+  //     setInitialState(props.gridState);
+  //     log("1", props.gridState.columnSizing)
+  //     if (props.gridState.columnSizing?.columnSizingModel ) {
+  //       const savedState = props.gridState.columnSizing?.columnSizingModel; 
+  //       log("2. savedState - ", savedState, gridRef.current.api?.getColumnState());
+  //       gridRef.current.api?.applyColumnState({ state: savedState });
+  //     }
+  //   }
+  // }, [props.gridState, gridRef.current])
 
   const onGridReady = (param: GridReadyEvent) => {
     // log("onGridReady");
@@ -769,13 +779,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
   const onColumnResized = (param: ColumnResizedEvent) => {
     // updateRowCount('rowDataUpdated');
-    log('onColumnResized', param);
+    // log('onColumnResized', param);
 
     if (event?.onColumnResized) event.onColumnResized(param);
   }
 
   const onFirstDataRendered = (param: FirstDataRenderedEvent) => {
-    if (options?.isAutoFitColData /*&& (personalColInfoData as gridData)?.data.length === 0*/) {
+    if (options?.isAutoFitColData && myColInfo.length === 0 /*&& (personalColInfoData as gridData)?.data.length === 0*/) {
       autoSizeAll(gridRef.current);
       log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
     }
@@ -847,7 +857,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   );
 
   const autoSizeAll = (gridApi: any, skipHeader: boolean = false) => {
-
+    return;
     var rowCount = gridApi?.api?.getRenderedNodes().length;
     // log('autoSizeAll called!!!!!!!!', gridApi?.api?.getRenderedNodes(), rowCount);
 
@@ -875,17 +885,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
     log("onCellDoubleClicked", param)
   }
 
-  const onGridPreDestroyed = useCallback(
+  const onGridPreDestroyed = 
     (params: GridPreDestroyedEvent) => {
       const { state } = params;
-      
-      // log("Grid state on destroy (can be persisted)", state);
+      // log("Grid state on destroy (can be persisted)", state, gridRef.current?.api.getColumnState());
       // setInitialState(state);
       setInitialState(state);
 
       if (event?.onGridPreDestroyed) event.onGridPreDestroyed(params);
       
-  },[]);
+  };
 
   const onStateUpdated = useCallback(
     (params: StateUpdatedEvent) => {
@@ -1002,6 +1011,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               // suppressRowClickSelection={true}
               processDataFromClipboard={processDataFromClipboard}
               initialState={initialState}
+              
               onGridPreDestroyed={onGridPreDestroyed}
               // onColumnMoved={(e) => log("onColumnMoved", e)}
               onDragStopped={onDrageStopped}

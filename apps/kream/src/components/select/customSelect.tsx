@@ -106,7 +106,7 @@ function CustomSelect(props: Props) {
     if (!isOpen) {
       setIsGridReady(false);
     } else {
-      // if ()
+      // log("close")
     }
   };
 
@@ -164,40 +164,41 @@ function CustomSelect(props: Props) {
   // }, [isGridReady, selectedRow])
 
   useEffect(() => {
-    if (id.includes('cy_place_code')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue, displayText)
+    // if (id.includes('cy_place_code')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue, displayText)
     // if (listItem?.data.length) {
-      
-      if (!defaultValue) {
+      if (!isOpen) {
+        if (!defaultValue) {
+          // if (gridRef.current) {
+          //   gridRef.current.api?.deselectAll();
+          //   // gridRef.current.api?.setFocusedCell(null);
+          //   // gridRef.current.api.ensureIndexVisible(0);
+          // }
+          // log("custselect defaultValue null", id, isSearching)
+          setSelectedValue(null);
+          return;
+        }
+
+        let index = -1;
+        const initialData = listItem?.data.find((item: any, i:number) => {
+          index = i;
+          if (valueCol?.length) return item[valueCol![0]] === defaultValue
+          else return item[displayCol] === defaultValue
+        });
+
+        // if (id.includes('container_type')) log("useffect isOpen",  gridRef.current, index, initialData)
+
         // if (gridRef.current) {
-        //   gridRef.current.api?.deselectAll();
-        //   // gridRef.current.api?.setFocusedCell(null);
-        //   // gridRef.current.api.ensureIndexVisible(0);
+        //   if (index > -1 && gridRef.current.api && gridRef.current.api.getRowNode(index)) {
+        //     gridRef.current.api.setFocusedCell(index, /*valueCol![0]*/displayCol);
+        //     gridRef.current.api.getRowNode(index)?.setSelected(true);
+        //   }
         // }
-        log("custselect defaultValue null", id, isSearching)
-        setSelectedValue(null);
-        return;
-      }
 
-      let index = -1;
-      const initialData = listItem?.data.find((item: any, i:number) => {
-        index = i;
-        if (valueCol?.length) return item[valueCol![0]] === defaultValue
-        else return item[displayCol] === defaultValue
-      });
-
-      // if (id.includes('container_type')) log("useffect isOpen",  gridRef.current, index, initialData)
-
-      // if (gridRef.current) {
-      //   if (index > -1 && gridRef.current.api && gridRef.current.api.getRowNode(index)) {
-      //     gridRef.current.api.setFocusedCell(index, /*valueCol![0]*/displayCol);
-      //     gridRef.current.api.getRowNode(index)?.setSelected(true);
-      //   }
+        setSelectedValue(initialData);
+        // setDisplayVal(initialData);
       // }
-
-      setSelectedValue(initialData);
-      // setDisplayVal(initialData);
-    // }
-  }, [defaultValue, listItem])
+      }
+  }, [defaultValue, listItem, isOpen])
 
   // useEffect(() => {
   //   log("useEffect defaultValue, listItem, valueCol")
@@ -246,16 +247,17 @@ function CustomSelect(props: Props) {
         if (gridRef.current?.api.getSelectedNodes().length) {
           rowIndex = gridRef.current?.api.getSelectedNodes()[0].rowIndex
           // gridRef.current.api.ensureIndexVisible(rowIndex);
-        } 
+        }
 
         let i = 0;
         for (; i < filteredData?.data.length; i++) {
           if (filteredData && filteredData.data[i][valueCol![0]] === defaultValue) break;
         }
-        // log("=============isOpen", id, rowIndex, i)
+        
         if (rowIndex !== i && gridRef.current?.api.getRowNode(i)) {
           // gridRef.current.api.clearFocusedCell();
-          gridRef.current.api.setFocusedCell(i, /*valueCol![0]*/displayCol);
+          // log("=============isOpen", id, rowIndex, i)
+          // gridRef.current.api.setFocusedCell(i, /*valueCol![0]*/displayCol);
           gridRef.current.api.getRowNode(i).setSelected(true);
         }
       }
@@ -266,6 +268,12 @@ function CustomSelect(props: Props) {
     onChange(selectedRow);
   }, [selectedRow])
 
+  // useEffect(() => {
+  //   log("useEffect fileteredData" , gridRef.current?.api?.getRowNode(0), gridRef.current?.api?.getSelectedRows());
+  //   if (isOpen && gridRef.current && filteredData?.data.length && gridRef.current?.api?.getRowNode(0) && !gridRef.current?.api?.getSelectedRows().length) {
+  //     gridRef.current?.api?.getRowNode(0).setSelected(true);
+  //   }
+  // }, [filteredData, gridRef.current])
 
   const onChange = (row:any) => {
     let event = {
@@ -300,12 +308,12 @@ function CustomSelect(props: Props) {
 
   const handleOnGridReady = (param: any) => {
     setIsGridReady(true);
-    log("handleOnGridReady", id, param, defaultValue);
+    // log("handleOnGridReady", id, param, defaultValue);
     // const initialData = listItem.data.find((item: any) => valueCol?.every(col => item[col] === defaultValue));
   }
 
   const handleComponentStateChanged = (param: any) => {
-    log("handleComponentStateChanged");
+    // log("handleComponentStateChanged");
     // onGridReady(param);
     // setIsReady(true);
     if (events?.onComponentStateChanged) events.onComponentStateChanged(param);
@@ -340,7 +348,7 @@ function CustomSelect(props: Props) {
     }
 
     setDisplayText(val);
-    log("setDisplayVal", displayCol, val, row, displayText)
+    // log("setDisplayVal", displayCol, val, row, displayText)
     
   }
 
@@ -376,8 +384,7 @@ function CustomSelect(props: Props) {
     // log("handleCellValueChanged")
   }
 
-  const 
-  handleCustChange = (input: string) => {
+  const handleCustChange = (input: string) => {
 
     let inputVal = input.toString().toUpperCase();
     // log("MaskedInputField onChange", inputVal);
@@ -385,7 +392,7 @@ function CustomSelect(props: Props) {
       setFilteredData(listItem);
       return;
     }
-    
+    setDisplayText(input);
     let visible = gridOption?.colVisible?.visible;
     let filterCols = listItem?.fields.map((obj: { [x: string]: any; }) => obj["name"])
       .filter((val: string) => {
@@ -408,7 +415,7 @@ function CustomSelect(props: Props) {
         return bool;
       })]
     };
-    log("MaskedInputField onChange2", inputVal, filtered);
+    // log("MaskedInputField onChange2", inputVal, filtered);
     setFilteredData(filtered);
     // if (inputVal) setSearching(true);
     // else setSearching(false);
@@ -489,7 +496,7 @@ function CustomSelect(props: Props) {
                     if (gridRef.current.api?.getSelectedNodes()[0] && gridRef.current.api?.getSelectedNodes()[0].id) rowIndex = gridRef.current.api?.getSelectedNodes()[0].id;
                     // // gridRef.current.api.ensureIndexVisible(rowIndex, 'top');
                     var move = e.key === 'ArrowUp' ? -1 : 1;
-                    log("Arrow", gridRef.current.api?.getSelectedNodes(), rowIndex, isOpen && gridRef.current.api.getRowNode(Number(rowIndex)+move));
+                    // log("Arrow", gridRef.current.api?.getSelectedNodes(), rowIndex, isOpen && gridRef.current.api.getRowNode(Number(rowIndex)+move));
                     if (isOpen && gridRef.current.api.getRowNode(Number(rowIndex)+move)) {
                       gridRef.current.api.setFocusedCell(Number(rowIndex)+move, /*valueCol![0]*/displayCol);
                       gridRef.current.api.getRowNode(Number(rowIndex)+move).setSelected(true);

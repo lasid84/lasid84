@@ -27,7 +27,7 @@ export const authConfig = {
           return Response.redirect(new URL('/', nextUrl));
           // return Response.redirect(new URL('/'));
         } 
-        console.log("1.---------------", isLoggedIn, isLogInPage, auth, nextUrl);
+        // console.log("1.---------------", isLoggedIn, isLogInPage, auth, nextUrl);
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
         // nextUrl.username = auth.user.name;

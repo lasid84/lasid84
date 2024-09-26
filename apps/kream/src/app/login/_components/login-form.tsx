@@ -87,7 +87,7 @@ export default function LoginForm() {
       var user = getValues();
       await login(user);
     } catch (err) {
-      log("login-form err", err);
+      // log("login-form err", err);
       setErrMessage(JSON.stringify(err));
       return;
     } finally {
@@ -100,7 +100,7 @@ export default function LoginForm() {
       e.preventDefault();
       switch (e.currentTarget.id) {
         case "user_id":
-          log("refPW.current", refPW.current)
+          // log("refPW.current", refPW.current)
           // if (refPW.current) refPW.current.focus();
           // if (e.key === "Enter") {
           //   const form = e.target.form;

@@ -130,7 +130,7 @@ const SearchForm = ({ loadItem }: any) => {
 
 
   useEffect(() => {
-    log("useEffect create_user", getValues('create_user'));
+    // log("useEffect create_user", getValues('create_user'));
     if (createuser) {
       if (createuser.data.some((v:any) => v.create_user === user_id)) {
         setValue("create_user", user_id);

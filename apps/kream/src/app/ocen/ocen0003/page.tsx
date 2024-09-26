@@ -45,7 +45,7 @@ const OCEN0003: React.FC = memo(() => {
     useEffect(() => {
         const params = getMenuParameters(menu_param);
         dispatch({ pickup_type: params.pickup_type });
-        log(params);
+        // log(params);
     }, [menu_param])
 
     return (

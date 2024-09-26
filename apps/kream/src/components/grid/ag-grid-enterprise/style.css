@@ -5,9 +5,18 @@
 
 .changed-row {
     background-color: lightyellow !important;
-  }
+}
 
 .highlighted-row {
     color: red !important;
     font-weight: bold;
-  }
+}
+
+.header-center {
+  display: flex;
+  justify-content: center;
+}
+
+.ag-header-cell-label {
+  justify-content: center;  /* Flexbox를 사용해 가운데 정렬 */
+}

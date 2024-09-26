@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@/components/date/react-datepicker";
 import  HblGrid  from "components/grid/ag-grid-enterprise";
+import CarrierContPopUp from "./popup/popCarriercont";
 import { SP_CreateTemplateData, SP_GetTemplateData } from "../../ocen1001/_component/data";
 import { toastSuccess } from "@/components/toast";
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -40,10 +41,13 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   const { data: shipperContData, refetch: shipperContRefetch, remove: shipperContRemove } = useGetData({ shipper_id: bkData?.shipper_id, cont_type: trans_mode + trans_type }, "shipper", SP_GetShipperContData, {enabled:true});
   const { data: bkBlData, refetch: bkBlRefetch, remove: bkBlRemove } = useGetData({ bk_id: bkData?.bk_id}, "bkBl", SP_GetBkHblData, {enabled:true});
   const { data: bkTemplateData, refetch: bkTemplateRefetch, remove: bkTemplateRemove } = useGetData({}, "bkTemplateData", SP_GetTemplateData, {enabled:true});
+  const { data: crTaskContData, refetch: crTaskContRefetch } = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'task' }, "carrier_cont_task", SP_GetCarrierContData, {enable:true});
+  const { data: crSalesContData, refetch: crSalesContRefetch} = useGetData({ carrier_code: bkData?.carrier_code, cont_type: 'sale' }, "carrier_cont_sales", SP_GetCarrierContData, {enable:true});
 
   const [ isRefreshShpCont, setRefreshShpCont ] = useState(false);
   const [ isRefreshCrCont, setRefreshCrCont ] = useState(false);
 
+  const [carriercode, setCarrierCode] = useState<any>()
   const [custcode, setCustcode] = useState<any>()
   const [MblType, setMBLType] = useState<any>()
   const [blType, setBLType] = useState<any>()
@@ -63,6 +67,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       setBLType(loadItem[4]);
       setIncoterms(loadItem[7]);
       setBillType(loadItem[8]);
+      setCarrierCode(loadItem[9])
       setSalesPerson(loadItem[11]);
       setTerminal(loadItem[12]);
       setCustomsDeclation(loadItem[13]);
@@ -98,6 +103,23 @@ const BKMain = ({ loadItem, bkData }: Props) => {
     } 
   }, [isRefreshShpCont, bkData]);
 
+  useEffect(()=> {
+    if (isRefreshCrCont && crTaskContData && crSalesContData && bkData) {
+      setRefreshCrCont(false);
+
+      let defTask = (crTaskContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      let t_cont_seq = defTask ? defTask.cont_seq : null;
+      let defSales = (crSalesContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
+      let s_cont_seq = defSales ? defSales.cont_seq : null;
+
+      log("isRefreshCrCont", t_cont_seq, s_cont_seq)
+      // if (t_cont_seq) {
+        // dispatch({ bkData : { ...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
+        dispatch({ [MselectedTab]: {...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq, [ROW_CHANGED]: true}});
+    } 
+  }, [isRefreshCrCont, bkData, crTaskContData, crSalesContData]);
+
+
   const SaveTemplateData = async () => {
     let templateData = getValues(); 
     let newData = {
@@ -115,7 +137,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
     
 
   const handleButtonClick = (e:any) => {
-    log("handleButtonClick", e.target.id)
+    // log("handleButtonClick", e.target.id)
     switch (e.target.id) {
       case "shipper_manage":
         dispatch({ isShpContPopUpOpen: true });
@@ -123,6 +145,9 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       case "btn_save_template":
         SaveTemplateData();
         break;
+      case "carrier_manage":
+        dispatch({ isCarrierContPopupOpen: true });
+        break;  
     }
   }
 
@@ -352,6 +377,123 @@ const BKMain = ({ loadItem, bkData }: Props) => {
 
             </PageSearch>
           </div>  
+        </PageContent>
+
+        <PageContent
+          title={<span className="px-1 py-1 text-lg font-bold text-blue-500">Carrier</span>}>
+          <div className="col-span-8">
+          <PageSearch
+              right={
+                <>
+                  <Button id={"carrier_manage"} label={"manage_con"} width="w-24" onClick={handleButtonClick} disabled={bkData?.carrier_code ? false : true} />
+                </>}>
+            <CarrierContPopUp initData={loadItem} callbacks={[crTaskContRefetch, crSalesContRefetch]} />
+            <div className={"col-span-2"}>
+              <CustomSelect
+                id="carrier_code"
+                initText='Select a Carrier Code'
+                listItem={carriercode as gridData}
+                valueCol={["carrier_code", "carrier_nm"]}
+                displayCol="carrier_nm"
+                gridOption={{
+                  colVisible: { col: ["carrier_code", "carrier_nm"], visible: true },
+                }}
+                gridStyle={{ width: '600px', height: '300px' }}
+                style={{ width: '1000px', height: "8px" }}
+                defaultValue={bkData?.carrier_code}
+                isDisplay={true}
+                events={{
+                  onSelectionChanged: (e, id, value) => {
+                    if (bkData?.carrier_code != value) {
+                      setRefreshCrCont(true);
+                      dispatch({[MselectedTab]: {...bkData, 
+                        carrier_code:value,
+                        cr_t_cont_seq:null, cr_t_cont_email:null, cr_t_cont_tel_num:null, 
+                        cr_s_cont_seq:null, cr_s_cont_email:null, cr_s_cont_tel_num:null, 
+                      }});
+                      log("onSelectionChanged carrier_code", id, value);
+                    }
+                  },
+                }}
+              />
+            </div>
+
+            <div className="flex col-start-1 col-end-6">
+                <fieldset className="flex w-1/2 p-3 pb-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+                  <legend className="text-base font-bold text-blue-800 ">업무 담당자</legend>
+                  {/* <MaskedInputField id="cr_t_pic_nm" value={mSelectedRow?.cr_t_pic_nm} options={{ isReadOnly: false, }} events={{ onChange: handleMaskedInputChange }} /> */}
+                  <CustomSelect
+                      id="cr_t_cont_seq"
+                      // initText='Select an '
+                      listItem={crTaskContData as gridData}
+                      valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
+                      displayCol="pic_nm"
+                      gridOption={{
+                        colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
+                      }}
+                      gridStyle={{ width: '600px', height: '300px' }}
+                      style={{ width: '500px', height: "8px" }}
+                      defaultValue={bkData?.cr_t_cont_seq}
+                      isDisplay={true}
+                      events={{
+                        // onSelectionChanged: (e, id, value) => {
+                        //   var selectedRow = e.api.getSelectedRows()[0] as any;
+                        //   // setCrTaskContRowData(selectedRow);
+                        //   bkData.cr_t_email = selectedRow.email;
+                        //   bkData.cr_t_tel_num = selectedRow.tel_num;
+                        //   // handleCustomSelectChange(e, id, value);
+                        // }
+                        onChanged(e) {
+                          // log("onChanged cr_t_cont_seq", bkData?.cr_t_cont_seq)
+                          if (!bkData) return;                  
+                          bkData.cr_t_cont_email = e?.email;
+                          bkData.cr_t_cont_tel_num = e?.tel_num;
+                          dispatch({[MselectedTab]: {...bkData}});
+                        },
+                      }}
+                    />
+                    <MaskedInputField id="cr_t_email" value={bkData?.cr_t_cont_email} options={{ isReadOnly: true }} width="w-80"/>
+                    <MaskedInputField id="cr_t_tel_num" value={bkData?.cr_t_cont_tel_num} options={{ isReadOnly: true }} />
+                </fieldset>
+                <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+                  <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
+                  {/* <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} /> */}
+                    <CustomSelect
+                        id="cr_s_cont_seq"
+                        // initText='Select an '
+                        listItem={crSalesContData as gridData}
+                        valueCol={["cont_seq", "pic_nm", "email", "tel_num"]}
+                        displayCol="pic_nm"
+                        gridOption={{
+                          colVisible: { col: ["pic_nm", "email", "tel_num"], visible: true },
+                        }}
+                        gridStyle={{ width: '600px', height: '300px' }}
+                        style={{ width: '100px', height: "8px" }}
+                        defaultValue={bkData?.cr_s_cont_seq}
+                        isDisplay={true}
+                        events={{
+                          // onSelectionChanged: (e, id, value) => {
+                          //   var selectedRow = e.api.getSelectedRows()[0] as any;
+                          //   // setCrSalesContRowData(selectedRow);
+                          //   bkData.cr_s_email = selectedRow.email;
+                          //   bkData.cr_s_tel_num = selectedRow.tel_num;
+                          //   // handleCustomSelectChange(e, id, value);
+                          // }
+                          onChanged(e) {
+                            if (!bkData) return; 
+                            bkData.cr_s_cont_email = e?.email;
+                            bkData.cr_s_cont_tel_num = e?.tel_num;
+                            log("cr_s_cont_seq", e)
+                            dispatch({[MselectedTab]: {...bkData}});
+                          }
+                        }}
+                      />
+                  <MaskedInputField id="cr_s_email" value={bkData?.cr_s_cont_email} options={{ isReadOnly: true }} width="w-80" />
+                  <MaskedInputField id="cr_s_tel_num" value={bkData?.cr_s_cont_tel_num} options={{ isReadOnly: true }} />
+                </fieldset>
+            </div>
+          </PageSearch>
+          </div>
         </PageContent>
 
         <PageContent

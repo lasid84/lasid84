@@ -17,7 +17,7 @@ export default function Login() {
   useEffect(() => {
     const sessionCheck = async () => {
       session = await getSession();
-      log("layout page useEffect", session);
+      // log("layout page useEffect", session);
       if (session) router.replace('/dashboard');
       setReady(true);
     };

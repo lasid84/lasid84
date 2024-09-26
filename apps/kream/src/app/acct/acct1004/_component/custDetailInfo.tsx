@@ -53,7 +53,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
 
 
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-        log("onFormSubmit", param, objState.mSelectedDetail);
+        // log("onFormSubmit", param, objState.mSelectedDetail);
         Update.mutate(param)
     }, [objState.mSelectedDetail]);
 

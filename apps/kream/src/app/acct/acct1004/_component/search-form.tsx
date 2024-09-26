@@ -90,7 +90,7 @@ const SearchForm = memo(({ loadItem }: any) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params);
+    // log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true });
   }
 
