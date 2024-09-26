@@ -367,7 +367,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
           //addition={<div className="w-2/12"></div>}
         >
-          <EmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} transport_company={bkData?.transport_company} shipper_id={bkData?.shipper_id}/>
+          {/* <EmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} transport_company={bkData?.transport_company} shipper_id={bkData?.shipper_id}/> */}
                
           <div className="flex flex-col">
             <div className="flex items-center justify-center w-full">
