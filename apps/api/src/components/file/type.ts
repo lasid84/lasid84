@@ -3,11 +3,13 @@ type ExcelDataLocation = {
 };
 
 type ReportDownloadRequest = {
-    templateType: number,
+    responseType: number,
     fileExtension: number,
-    reportData: ExcelDataLocation,
-    fileName: string,
-    pageDivide: number
+    templateTypeList?: string[],
+    reportDataList?: ExcelDataLocation[],
+    fileNameList?: string[],
+    // 삭제 예정
+    pageDivide?: number,
 }
 
 type ReportDownloadResponse = {
@@ -17,13 +19,13 @@ type ReportDownloadResponse = {
 }
 
 type FileUploadData = {
-    file_name: string,
-    file_data: ArrayBuffer,
-    file_root_dir: string
+    fileName: string,
+    fileData: Buffer,
+    fileRootDIR: string
 }
 
 type FileUploadRequest = {
-    add_folder_name: string,
+    addFolderName: string,
     files: FileUploadData[]
 }
 

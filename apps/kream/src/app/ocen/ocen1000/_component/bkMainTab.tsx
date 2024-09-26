@@ -18,6 +18,7 @@ import RadioGroup from "components/radio/RadioGroup"
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
 import { Cargo } from "./cargoDetail";
+import EmailSendPopup from "./popup/popEmailSendcomm"
 import _ from 'lodash';
 import { toastError } from 'components/toast';
 import StepList, { Steps3, Steps2, Steps1 } from "@/components/stepper/steps";
@@ -248,6 +249,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
         if (res[0] !== undefined) {
 
+          let reportDataList : string[] = [];
           let reportData : any = new Object;
 
           /**
@@ -271,17 +273,21 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
             }
           }
 
+          reportDataList.push(reportData);
+          reportDataList.push(reportData);
 
-          const templateType = Number(e);
+          const templateType = [Number(e), Number(e)];
+          const templateTypeList : string[] = [loadItem[21].data[Number(e)].key, loadItem[21].data[Number(e)].key]
           const fileExtension : Number = Number(curData.search_gubn) || 0;
 
-          const fileName = loadItem[21].data[templateType].report_type_nm.concat("_", voccID);
+          const fileName : string[] = [loadItem[21].data[templateType[0]].report_type_nm.concat("_", voccID), loadItem[21].data[templateType[0]].report_type_nm.concat("-", voccID)];
 
           const downloadData = {
-              "reportData" : reportData, 
+              "responseType" : 1,
+              "reportDataList" : reportDataList, 
               "fileExtension" : fileExtension, 
-              "templateType" : templateType, 
-              "fileName" : fileName, 
+              "templateTypeList" : templateTypeList, 
+              "fileNameList" : fileName, 
               "pageDivide" : pageDivide
           };
 
@@ -297,7 +303,9 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                   extension = '.pdf';
                 }
 
-                downloadBlobFile(file, fileName.concat(extension));
+                console.log("response : ", res.data);
+
+                downloadBlobFile(file, fileName[0].concat(extension));
               } else {
                 if (res.success !== undefined || null) {
                   if (res.success === false) {
@@ -326,12 +334,20 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     window.URL.revokeObjectURL(file);
   }
 
+  const handleButtonClick = (e:any)=>{
+    if(e.target.id){
+      dispatch({isMailSendPopupOpen : true })
+    }
+  }
+
   return (
     <div className="sticky top-0 z-20 flex w-full pt-10 space-y-1 bg-white">
         <PageBKTabContent
           right={
             <>
               <div className={"flex col-span-2 "}>
+              {/* handleButtonClick btn_transport_send_email*/}
+                <Button id={"btn_send_email"} label="send_email" width="w-24" onClick={handleButtonClick} disabled={false}/>
                 <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} onClick={onDropButtonClick} />
                 <Button id={"save"} onClick={onSave} width="w-24" />
               </div>                
@@ -351,6 +367,8 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           bottom={<SubMenuTab loadItem={loadItem} onClickTab={onClickTab} />}
           //addition={<div className="w-2/12"></div>}
         >
+          <EmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} transport_company={bkData?.transport_company} shipper_id={bkData?.shipper_id}/>
+               
           <div className="flex flex-col">
             <div className="flex items-center justify-center w-full">
               <StepList stateList={stateList} state={bkData?.state}/>

@@ -28,17 +28,19 @@ export const SP_GetMailSample = async (searchParam: any) => {
   //console.log('bk_id, searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const { bk_id, cust_code, user_id, ipaddr } = Param;  
+  const { bk_id, cust_code, pgm_code, user_id, ipaddr } = Param;  
   const params = {
     inparam : [
         "in_bk_id"
       , "in_cust_code"
+      , "in_pgm_code"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
         bk_id
       , cust_code
+      , pgm_code
       , user_id
       , ipaddr
     ],
@@ -50,26 +52,58 @@ export const SP_GetMailSample = async (searchParam: any) => {
     log('mailData result', Param, result)
     return result![0];
 }
-export const SP_GetMailReceiver = async (searchParam: any) => {
-  // console.log('searchParam', searchParam.queryKey[1])
+
+export const SP_GetMailSample_comm = async (searchParam: any) => {
+  //console.log('bk_id, searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const { pgm_code, user_id, ipaddr } = Param;  
+  const { bk_id, pgm_code, cust_code, user_id, ipaddr } = Param;  
+  const params = {
+    inparam : [
+        "in_bk_id"
+      , "in_cust_code"
+      , "in_pgm_code"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        bk_id
+      , cust_code
+      , pgm_code
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_bk_mail2',
+    isShowLoading: true
+    }
+
+    const result = await executFunction(params);
+
+    return result![0];
+}
+
+
+export const SP_GetMailReceiver = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1]
+  const { pgm_code, cust_code, user_id, ipaddr } = Param;  
+
   const params = {
     inparam : [
         "in_pgm_code"
+      , "in_cust_code"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
         pgm_code
+      , cust_code
       , user_id
       , ipaddr
     ],
-    inproc: 'public.f_stnd0013_get_email_rcvlist',
+    inproc: 'public.f_stnd0013_get_email_rcvlist2',
     isShowLoading: true
     }
-  
+
     const result = await executFunction(params);
     return result![0];
 }
@@ -78,11 +112,12 @@ export const SP_SaveData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  // log("param : ", param)
-  const { pgm_code, seq, email, remark,use_yn, user_id, ipaddr} = Param;
+
+  const { pgm_code, cust_code,seq, email, remark,use_yn, user_id, ipaddr} = Param;
   const params = {
     inparam : [
       "in_pgm_code"
+    , "in_cust_code"
     , "in_seq"
     , "in_email"
     , "in_remark"
@@ -92,6 +127,7 @@ export const SP_SaveData = async (param: any) => {
     ],
     invalue: [
       pgm_code
+    , cust_code
     , seq
     , email
     , remark
@@ -103,7 +139,7 @@ export const SP_SaveData = async (param: any) => {
     isShowLoading: true,
     isShowComplete:true,
     }
-  
+
     const result = await executFunction(params);
     return result![0];
 }

@@ -1,5 +1,3 @@
-
-
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BiUpload } from "react-icons/bi";
@@ -18,7 +16,7 @@ const validExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS"];
 
 // FileUpload 컴포넌트
 interface FileUploadProps {
-    onFileDrop?: (data: any[], header:string[]) => void;
+    onFileDrop?: (data: any[], header:ArrayBuffer[]) => void;
     isInit?: boolean;
 }
 
@@ -146,28 +144,25 @@ export const AttFileUpload: React.FC<FileUploadProps> = (props) => {
     
     // 파일을 Dropzone에 드랍했을 때 처리
     const handleFileDrop = useCallback((acceptedFiles: File[]) => {
+        setSelectedFiles(acceptedFiles); // 파일 상태 업데이트
         
-        const updatedFiles = [...selectedFiles, ...acceptedFiles];
-
-        setSelectedFiles(updatedFiles); // 파일 상태 업데이트
-        
+        const fileDatas : ArrayBuffer[] = [];
         // 파일을 읽고 처리
         acceptedFiles.forEach((file) => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const arrayBuffer = e.target?.result as ArrayBuffer;
-                console.log('file upload arraybuffer', arrayBuffer);
+                fileDatas.push(arrayBuffer);
+                if (fileDatas.length === acceptedFiles.length) {
+                    if (props.onFileDrop) {
+                        props.onFileDrop(acceptedFiles, fileDatas); // 최신 파일 목록을 전달
+                    }
+                }
             };
+
             reader.readAsArrayBuffer(file);
-            // reader.readAsDataURL(file);
-
         });
-        if (props.onFileDrop) {
-            props.onFileDrop(updatedFiles, []); // 최신 파일 목록을 전달
-        }
-
     }, []);
-
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop: handleFileDrop });
 
