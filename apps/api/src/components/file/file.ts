@@ -66,7 +66,7 @@ export const reportDownload = async( req : Request, res : Response ) => {
             await workBook.xlsx.readFile(filePath[i]);
 
             const workSheet = workBook.worksheets[0];
-            // const initialPageSetting = workSheet.pageSetup;
+            const initialPageSetting = workSheet.pageSetup;
 
             for (let location in request.reportDataList[i]) {
                 if (location === "") {
@@ -76,15 +76,15 @@ export const reportDownload = async( req : Request, res : Response ) => {
                 workSheet.getCell(location).alignment = {...workSheet.getCell(location).alignment, wrapText: true};
             }
 
-            // workSheet.pageSetup = initialPageSetting;
+            workSheet.pageSetup = initialPageSetting;
 
-            // if (request.pageDivide !== 0 || undefined || null) {
-            //     const pageBreakRow = workSheet.getRow(request.pageDivide);
-            //     pageBreakRow.addPageBreak();
-            //     workSheet.pageSetup.fitToHeight = 2;
-            // } else {
-            //     workSheet.pageSetup.fitToHeight = 1;
-            // }
+            if (request.pageDivide !== 0 || undefined || null) {
+                const pageBreakRow = workSheet.getRow(request.pageDivide);
+                pageBreakRow.addPageBreak();
+                workSheet.pageSetup.fitToHeight = 2;
+            } else {
+                workSheet.pageSetup.fitToHeight = 1;
+            }
 
             const excelBuffer : Buffer = await workBook.xlsx.writeBuffer() as Buffer;
 
