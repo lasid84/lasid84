@@ -74,6 +74,8 @@ const btnColor: any = {
     "text-black font-bold bg-white rounded border border-gray-400 hover:bg-gray-100",
   "sky-outline":
     "bg-transparent hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-400  hover:border-transparent rounded",
+  "blue-outline":
+    "bg-transparent hover:bg-sky-600 text-sky-500 hover:text-white border border-sky-500  hover:border-transparent rounded",
   "gray-outline":
     "bg-transparent hover:bg-gray-900/75 text-gray-700/75 hover:text-white border border-gray-700/75  hover:border-transparent rounded dark:border-gray-200/75 dark:text-gray-100 dark:hover:bg-gray-400",
   "green-outline":
@@ -111,8 +113,10 @@ const getColor = (label: string, color: string = "") => {
         c = "light-gray-outline"
         break;
       case "download":
-      case "send_email":  
         c = "sky-outline";
+        break;
+      case "send_email":  
+        c = "blue-outline"
         break;
       case "save":
       case "save_m":
