@@ -76,7 +76,18 @@ export const reportDownload = async( req : Request, res : Response ) => {
                 // workSheet.getCell(location).alignment = {...workSheet.getCell(location).alignment, wrapText: true};
             }
 
-            workSheet.pageSetup = initialPageSetting;
+            // workSheet.pageSetup = initialPageSetting;
+
+            workSheet.pageSetup = {
+                margins : initialPageSetting.margins,
+                horizontalCentered : true,
+                verticalCentered : true,
+                fitToPage : true,
+                fitToWidth : 1,
+                scale : 100,
+                paperSize : initialPageSetting.paperSize,
+                printArea : initialPageSetting.printArea
+            }
 
             if (request.pageDivide !== 0 || undefined || null) {
                 const pageBreakRow = workSheet.getRow(request.pageDivide);
@@ -96,7 +107,7 @@ export const reportDownload = async( req : Request, res : Response ) => {
 
             if (request.fileExtension) {
 
-                 let data = await (libre as any).convertAsync(excelBuffer, constant.PDF_FILE_EXTENSION, undefined);
+                 let data = await (libre as any).convertAsync(excelBuffer, 'pdf', undefined);
 
                 response = {
                     fileData : data,
