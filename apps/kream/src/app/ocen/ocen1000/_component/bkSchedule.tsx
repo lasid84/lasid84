@@ -204,7 +204,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                 <PicupPlacePopUp callbacks={[pickupRefetch]} />
                 <CYPlaceContPopUp callbacks={[cyPlaceContRefetch]} />
                 <TransportEmailRcvPopup cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
-                {/* <TransportEmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/> */}
+                <TransportEmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} cust_code={bkData?.transport_company} cust_nm={bkData?.transport_company_nm}/>
                 <div className="col-start-1 col-end-2"> 
                   <DatePicker id="pickup_dd" value={bkData?.pickup_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />                
                 </div>
@@ -238,7 +238,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                   />
                 <div className="flex w-full pt-3">                  
                   <Button id={"btn_transport_email"} label="mail_rcvlist" width="w-24" onClick={handleButtonClick} disabled={bkData?.transport_company ? false : true}/>
-                  {/* <Button id={"btn_transport_send_email"} label="send_email" width="w-24" onClick={handleButtonClick} disabled={bkData?.transport_company ? false : true}/> */}
+                  <Button id={"btn_transport_send_email"} label="send_email" width="w-24" onClick={handleButtonClick} disabled={bkData?.transport_company ? false : true}/>
                 </div>
                 {/* <div className="col-start-1 col-end-6"><br></br></div> */}
                 <div className={"col-start-1 col-span-2"}>
