@@ -1,6 +1,6 @@
 
 
-import { executFunction, executeReportDownload,executeFileUpload,executeReportUpload } from "@/services/api.services";
+import { executFunction, executeReportDownload } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
 import { FaBullseye } from "react-icons/fa6";
@@ -1120,15 +1120,19 @@ export const SP_GetMailSample = async (searchParam: any) => {
   console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const { bk_id, user_id, ipaddr } = Param;  
+  const { bk_id, cust_code, pgm_code, user_id, ipaddr } = Param;
   const params = {
     inparam : [
         "in_bk_id"
+      , "in_cust_code"
+      , "in_pgm_code"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
         bk_id
+      , cust_code
+      , pgm_code
       , user_id
       , ipaddr
     ],
@@ -1241,4 +1245,11 @@ export const SP_FileUpload = async (param: any) => {
   const result = await executeFileUpload(params);
   return result;
 
+}
+
+export const SP_UploadAttachment = async (param: any) => {
+  const params = param;
+
+  const result = await executeFileUpload(params);
+  return result;
 }

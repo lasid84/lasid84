@@ -151,7 +151,7 @@ const responseBlobPostCall = async (params) => {
         "Content-Type": "application/json",
         "Authorization": `${params.accessToken}`,
       },
-      responseType: 'blob'
+      responseType: 'json'
     }
     const client = axios.create(config);
     client.defaults.timeout = 30000;

@@ -14,9 +14,11 @@ import { Button } from "components/button";
 import { SP_GetMailSample } from "components/commonForm/mailSend/_component/data";
 import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
-import { SP_SendEmail, SP_GetReportData, SP_FileUpload,SP_ReportUpload } from "../data";
-import Radio from "components/radio/index";
-import RadioGroup from "components/radio/RadioGroup";
+import { SP_SendEmail, SP_GetReportData, SP_DownloadReport, SP_UploadAttachment } from "../data";
+import Radio from "components/radio/index"
+import RadioGroup from "components/radio/RadioGroup"
+import { template } from "lodash";
+import { useUserSettings } from "states/useUserSettings";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -47,37 +49,37 @@ interface Attachment {
   fileExtension: number; // fileExtension은 Number가 아닌 number 타입으로 사용해야 합니다.
   templateType: number;
   fileName: any;
-  pageDivide?: number | undefined; // 선택적 값
+  pageDivide?: number | undefined;  // 선택적 값
+};
+
+type FileUploadData = {
+  fileName: string;
+  fileData: Buffer;
+  fileRootDIR: string;
 }
 
-interface File {
-  file_name: string;
-  file_data: any;
-  file_root_dir: string;
+type FileUploadRequest = {
+  addFolderName: string;
+  files: FileUploadData[];
 }
 
-const Modal: React.FC<Props> = ({
-  loadItem,
-  ref = null,
-  bk_id,
-  cust_code,
-  cust_nm,
-  initData,
-  callbacks,
-}) => {
+type ReportDownloadRequest = {
+  responseType: number;
+  fileExtension: number;
+  reportDataList: any;
+  templateTypeList: string[];
+  fileNameList: string[];
+}
+
+const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm, initData, callbacks }) => {
   const gridRef = useRef<any | null>(ref);
   const { dispatch, objState } = useAppContext();
   const { isMailSendPopupOpen: isOpen, MselectedTab } = objState;
 
   const { t } = useTranslation();
-  const {
-    data: transMailData,
-    refetch: transMailRefetch,
-    remove: transMailRemove,
-  } = useGetData({ bk_id: bk_id, cust_code: cust_code }, "", SP_GetMailSample, {
-    enabled: false,
-  });
-  const [reports, setReports] = useState<any>();
+  const user_id = useUserSettings((state) => state.data.user_id);
+  const { data : transMailData, refetch: transMailRefetch, remove :transMailRemove } = useGetData({bk_id: bk_id, cust_code:cust_code}, '', SP_GetMailSample, {enabled:false});
+  const [reports, setReports] = useState<any>()
   const [mailform, setMailForm] = useState<MailSample>({
     subject: "",
     content: "",
@@ -91,19 +93,19 @@ const Modal: React.FC<Props> = ({
     files: [], //file upload
   });
 
-  const { Create: sendEmail } = useUpdateData2(SP_SendEmail, "");
-  const { Create: fileUpload } = useUpdateData2(SP_FileUpload, "");
-  const { Create : reportUpload } = useUpdateData2(SP_ReportUpload, "")
-  const { Create: GetReportData } = useUpdateData2(
-    SP_GetReportData,
-    "GetReportData"
-  );
+  const [templateTypeList, setTemplateTypeList] = useState<string[]>([]);
+  const [attachFileUpload, setAttachFileUpload] = useState<FileUploadData[]>([]);
+
+  const { Create: sendEmail } = useUpdateData2(SP_SendEmail, '');
+  const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
+  const { Create : Download } = useUpdateData2(SP_DownloadReport, "Download");
+  const { Create : Upload } = useUpdateData2(SP_UploadAttachment, "Upload");
 
   useEffect(() => {
     if (isOpen) {
       transMailRefetch();
     }
-  }, [transMailRefetch, isOpen]);
+  }, [transMailRefetch,isOpen]);
 
   useEffect(() => {
     if (loadItem) {
@@ -128,114 +130,163 @@ const Modal: React.FC<Props> = ({
   const closeModal = () => {
     if (callbacks?.length) callbacks?.forEach((callback) => callback());
     dispatch({ isMailSendPopupOpen: false });
-    //reset();
+    setTemplateTypeList([]);
   };
 
   const { getValues } = useFormContext();
 
-  const handleFileDrop = async (data: any[], buffer: any[]) => {
-    log("file upload -data, header", data, buffer);
+  const handleFileDrop = (data: any[], header: ArrayBuffer[]) => {
+    log('file upload -data, header', data, header);
 
-    data.forEach((fileData, index) => {
-      const uploadFile = {
-        file_name: fileData.file.name, // 각 파일의 이름
-        file_data: fileData.file.arrayBuffer, // 파일 데이터를 저장
-        file_root_dir: "MAIL", // 루트 디렉토리 설정
+    const fileUploadRequestArray : FileUploadData[] = [];
+    for (let i=0; i<data.length; i++) {
+      const requestData : FileUploadData = {
+        fileName : data[i].name,
+        fileData : Buffer.from(header[i]),
+        fileRootDIR : "MAIL_ATTACH"
       };
 
-      // mailform 객체에 파일 추가
-      mailform.files.push(uploadFile);
-    });
+      fileUploadRequestArray.push(requestData);
+    }
+    
+    setAttachFileUpload(fileUploadRequestArray);
   };
 
   const handleCheckBoxClick = (id: string, val: any) => {
-    log("Checkbox clicked", id, val);
-    // 'Y'이면 true, 'N'이면 false로 변환
-    const booleanVal = val === "Y";
-    if (booleanVal) {
-      //val === true ? 'Y'
-      setMailForm((prevState) => {
-        const updatedAttachment = { ...prevState.report, [id]: val };
-        return { ...prevState, report: updatedAttachment };
-      });
+    if(val === 'Y'){
+      templateTypeList.push(id);
+      setTemplateTypeList([...templateTypeList]);
+    } else {
+      templateTypeList.splice(templateTypeList.indexOf(id), 1);
+      setTemplateTypeList([...templateTypeList]);
     }
   };
-
+  
   const sendTransPortEmail = useCallback(async () => {
     const curData = getValues();
-    // 1. Get Data
-    for (const report of reports) {
-      const attachmentValue =
-        mailform?.report?.[report.key as keyof typeof mailform.report] ?? false; // 타입 단언 사용
+    console.log("attachFileUpload : ", attachFileUpload);
+    console.log("attachFileUpload.length : ", attachFileUpload.length);
+    /**
+     * @dev
+     * reportType과 templateTypeList index 매칭
+     */
 
-      if (attachmentValue) {
-        try {
-          await GetReportData.mutateAsync(
-            { type: report.report_type, bk_id: bk_id },
-            {
-              onSuccess: (res: any) => {
-                console.log(` 성공 (type: ${report.key}):`, res);
+    const fileUploadRequest : FileUploadRequest = {
+      addFolderName : user_id,
+      files : []
+    };
 
-                let reportData: any = new Object();
-                let pageDivide;
-                for (let [key, value] of Object.entries(res[0].data[0])) {
-                  if (value === null || value === undefined) {
-                    value = "";
-                  }
+    if (templateTypeList.length > 0) {
 
-                  switch (key) {
-                    default:
-                      reportData[key.toUpperCase()] = value;
-                  }
-                }
-
-                const templateType = Number(report.report_type);
-                const fileExtension: number = Number(curData.search_gubn) || 0;
-                const fileName = loadItem[21].data[templateType - 1].report_type_nm;
-
-                const downloadData: Attachment = {
-                  reportData: reportData,
-                  fileExtension: fileExtension,
-                  templateType: templateType,
-                  fileName: fileName,
-                  pageDivide: pageDivide,
-                };
-                mailform.attachment.push(downloadData);
-              },
-              onError: (error) => {
-                console.error(` 실패 (type: ${report.key}):`, error);
-              },
+      let reportList = [];
+        if (reports.length === templateTypeList.length) {
+          reportList.push(reports);
+        } else {
+          for (const report of reports) {
+            for (const template of templateTypeList) {
+              if (report.key === template) {
+                reportList.push(report);
+              }
             }
-          );
-        } catch (error) {
-          log(error);
+          }
         }
-      }
+
+        /**
+         * @dev
+         * 선택한 리포트 템플릿의 data 호출, file upload param 세팅
+         */
+
+        const fileExtension : number = Number(curData.search_gubn) || 0;
+
+        const reportDataList : any = [];
+        const fileNameList : string[] = [];
+        for (const report of reportList) {
+            try {
+              await GetReportData.mutateAsync({ type: (report.report_type-1), bk_id: bk_id }, {
+                onSuccess: (res:any) => {
+                  let reportData : any = new Object;
+                  let pageDivide : any;
+                  let voccID : any;
+
+                  for (let [key, value] of Object.entries(res[0].data[0])) {
+                    if (value === null || value === undefined) {value = ""}
+        
+                    switch(key) {
+                      case "page_divide":
+                        pageDivide = value;
+                        break;
+                      case "vocc_id":
+                        voccID = value;
+                        break;     
+                      default:
+                        reportData[key.toUpperCase()] = value;
+                    }
+                  }
+      
+                  fileNameList.push(report.report_type_nm.concat("-", voccID));
+                  reportDataList.push(reportData);        
+                },
+                onError: (error) => {
+                  console.error(` 실패 (type: ${report.key}):`, error);
+                }
+              });
+            } catch (error) {
+              log(error)
+            }
+        }
+
+        /**
+         * @dev
+         * data To report file API 호출 및 ArrayBuffer response
+         */
+
+        const reportDownloadRequest : ReportDownloadRequest = {
+          responseType : 1,
+          fileExtension : fileExtension,
+          reportDataList : reportDataList,
+          templateTypeList : templateTypeList,
+          fileNameList : fileNameList
+        }
+
+        await Download.mutateAsync(reportDownloadRequest, {
+          onSuccess: (res: any) => {
+            /**
+             * @stage_4
+             * file upload API 호출 및 경로 return
+             */
+            const filesList = [];
+            for (const data of res.data) {
+              const files : FileUploadData = {
+                fileName : "test.xlsx",
+                fileData : data.fileData,
+                fileRootDIR :"MAIL_ATTACH"
+              }
+
+              filesList.push(files);
+            }
+
+            fileUploadRequest.files = filesList;
+          }
+      });
+    } 
+    
+    if (attachFileUpload.length > 0) {
+      const requestList : FileUploadData[] = [...fileUploadRequest.files, ...attachFileUpload]
+      console.log("requestList : ", requestList);
+      fileUploadRequest.files = requestList;
     }
 
-    //1. 리포트파일 서버업로드(?)
-    await reportUpload
-      .mutateAsync(
-        { ...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code },
-        {
-          onSuccess(data, variables, context) {
-            log("upload data", data);
-          },
-        }
-      )
-      .catch(() => {});
-    
-    // 2.업로드파일 서버업로드
-    await fileUpload
-      .mutateAsync(
-        { ...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code },
-        {
-          onSuccess(data, variables, context) {
-            log("upload data", data);
-          },
-        }
-      )
-      .catch(() => {});
+    console.log("fileUploadRequest.files : ", fileUploadRequest.files);
+
+    await Upload.mutateAsync(fileUploadRequest, {
+      onSuccess: async (res:any) => {
+        console.log("res : ", res);
+      }
+    });
+
+    //API : download - upload(경로리턴) 
+    // 클라이언트에서 경로 지정해서 전송 - miltiform(buffer에 맞출예정) user_id/파일명 - 
+    //executeReportDownload 활용
 
     // 3. sendEmail 실행
     await sendEmail

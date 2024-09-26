@@ -8,24 +8,24 @@ import constant from './constant';
  * @FUNCTION
  * 템플릿 유형에 따라 사용할 파일 구분을 위한 함수.
  */
-const selectTemplateFile = (templateType:number) : string => {
-  switch(templateType) {
-    case 0:
-      return constant.BASE_PATH + "booking_note.xlsx";
-    case 1:
-      return constant.BASE_PATH + "transport_request.xlsx";
-    case 2:
-      return constant.BASE_PATH + "customer_dispatch.xlsx";
-    default:
-      return ""           
+const selectTemplateFile = (templateType:string[]) : string[] => {
+  const rootDirEnv = constant.FILE_REGISTRY_PREFIX.concat(constant.TEMPLATE_FILE_REGISTRY);
+  const templateFileRegistryPath = process.env[rootDirEnv.toUpperCase()];
+
+  const typeList = [];
+
+  for (const template of templateType) {
+    typeList.push(path.join(templateFileRegistryPath, template.concat(constant.XLSX_FILE_EXTENSION)))
   }
+
+  return typeList;
 }
 
 /**
  * @FUNCTION
  * 전달된 경로 파일 업로드 함수.
  */
-const insertFileToDirectory = (filePath: string, fileData:ArrayBuffer): boolean => {
+const insertFileToDirectory = (filePath: string, fileData:Buffer): boolean => {
   fs.writeFile(filePath, Buffer.from(fileData))
     .then((_) => {
       return true;
@@ -45,7 +45,7 @@ const treeToPath = (filePathTree: string[]): string => {
     if (filePathTree.length < 2) {
       return "";
     }
-  
+    console.log("filePathTree : ", filePathTree);
     let filePath: string;
     for (let i=0; i<filePathTree.length-1; i++) {
       filePath = path.join(filePathTree[i], filePathTree[i+1]);
@@ -68,18 +68,18 @@ const uploadFile = (filePathTree: string[], file:FileUploadData): string => {
       return "";
     }
 
-    const uploadFilePath = path.join(filePath, file.file_name);
+    const uploadFilePath = path.join(filePath, file.fileName);
   
     fs.access(filePath, fs.constants.F_OK)
       .then((_) => {
-        if(!insertFileToDirectory(uploadFilePath, file.file_data)) {
+        if(!insertFileToDirectory(uploadFilePath, file.fileData)) {
           return "";
         }      
       })
       .catch((_) => {
         fs.mkdir(filePath, { recursive: true })
           .then((_) => {
-              if(!insertFileToDirectory(uploadFilePath, file.file_data)) {
+              if(!insertFileToDirectory(uploadFilePath, file.fileData)) {
                 return "";
               }       
           })
