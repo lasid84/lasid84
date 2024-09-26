@@ -63,7 +63,7 @@ export default function UFSM0003() {
         // log("objState.uploadFile_init", objState.uploadFile_init)
     }, [objState.uploadFile_init])
 
-    const handleFileDrop = (data : any[], header:string[]) => {
+    const handleFileDrop = (data : any[], header:any[]) => {
         
         data = data.map(obj => {
             return {

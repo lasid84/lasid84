@@ -16,7 +16,7 @@ const validExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS"];
 
 // FileUpload 컴포넌트
 interface FileUploadProps {
-    onFileDrop?: (data: any[], header:ArrayBuffer[]) => void;
+    onFileDrop?: (data: any[], header:any[]) => void;
     isInit?: boolean;
 }
 
