@@ -35,9 +35,13 @@ type MailSample = {
   subject: string;
   content: string;
   report: {
-    bknote: boolean;
-    deliv_request: boolean;
-    cust_identification: boolean;
+    // bknote: boolean;
+    // deliv_request: boolean;
+    // cust_identification: boolean;
+    booking_note: boolean;
+    transport_request: boolean;
+    customer_dispatch: boolean;
+    
   };
   attachment: Attachment[];
   add_folder_name: string;
@@ -84,9 +88,12 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
     subject: "",
     content: "",
     report: {
-      bknote: false,
-      deliv_request: false,
-      cust_identification: false,
+      // bknote: false,
+      // deliv_request: false,
+      // cust_identification: false,
+      booking_note: false,
+      transport_request: false,
+      customer_dispatch: false,
     },
     attachment: [],
     add_folder_name: "", //file upload
@@ -156,6 +163,7 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
     if(val === 'Y'){
       templateTypeList.push(id);
       setTemplateTypeList([...templateTypeList]);
+      log('popmailsend', templateTypeList)
     } else {
       templateTypeList.splice(templateTypeList.indexOf(id), 1);
       setTemplateTypeList([...templateTypeList]);
@@ -359,23 +367,23 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
               }
             >
               <Checkbox
-                id="bknote"
+                id="booking_note"
                 //label="bknote"
-                value={mailform?.report?.bknote ? "Y" : "N"}
+                value={mailform?.report?.booking_note ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{ onChange: handleCheckBoxClick }}
               />
               <Checkbox
-                id="deliv_request"
+                id="transport_request"
                 //label="deliv_request"
-                value={mailform?.report?.deliv_request ? "Y" : "N"}
+                value={mailform?.report?.transport_request ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{ onChange: handleCheckBoxClick }}
               />
               <Checkbox
-                id="cust_identification"
+                id="customer_dispatch"
                 //label="cust_identification"
-                value={mailform?.report?.cust_identification ? "Y" : "N"}
+                value={mailform?.report?.customer_dispatch ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{ onChange: handleCheckBoxClick }}
               />
