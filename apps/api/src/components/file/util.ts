@@ -4,21 +4,27 @@ import fs from 'fs/promises';
 import { FileUploadData } from './type';
 import constant from './constant';
 
+import { log } from '@repo/kwe-lib/components/logHelper';
+
 /**
  * @FUNCTION
  * 템플릿 유형에 따라 사용할 파일 구분을 위한 함수.
  */
 const selectTemplateFile = (templateType:string[]) : string[] => {
+  try {
   const rootDirEnv = constant.FILE_REGISTRY_PREFIX.concat(constant.TEMPLATE_FILE_REGISTRY);
   const templateFileRegistryPath = process.env[rootDirEnv.toUpperCase()];
 
   const typeList = [];
-
   for (const template of templateType) {
+    console.log("templateFileRegistryPath", templateFileRegistryPath, template, constant.XLSX_FILE_EXTENSION)
     typeList.push(path.join(templateFileRegistryPath, template.concat(constant.XLSX_FILE_EXTENSION)))
   }
 
   return typeList;
+  } catch (ex) {
+    log("Exception", ex)
+  }
 }
 
 /**

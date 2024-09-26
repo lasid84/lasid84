@@ -66,24 +66,25 @@ export const reportDownload = async( req : Request, res : Response ) => {
             await workBook.xlsx.readFile(filePath[i]);
 
             const workSheet = workBook.worksheets[0];
-            const initialPageSetting = workSheet.pageSetup;
+            // const initialPageSetting = workSheet.pageSetup;
 
             for (let location in request.reportDataList[i]) {
                 if (location === "") {
                     continue;
                 }
                 workSheet.getCell(location).value = request.reportDataList[i][location];
+                workSheet.getCell(location).alignment = {...workSheet.getCell(location).alignment, wrapText: true};
             }
 
-            workSheet.pageSetup = initialPageSetting;
+            // workSheet.pageSetup = initialPageSetting;
 
-            if (request.pageDivide !== 0 || undefined || null) {
-                const pageBreakRow = workSheet.getRow(request.pageDivide);
-                pageBreakRow.addPageBreak();
-                workSheet.pageSetup.fitToHeight = 2;
-            } else {
-                workSheet.pageSetup.fitToHeight = 1;
-            }
+            // if (request.pageDivide !== 0 || undefined || null) {
+            //     const pageBreakRow = workSheet.getRow(request.pageDivide);
+            //     pageBreakRow.addPageBreak();
+            //     workSheet.pageSetup.fitToHeight = 2;
+            // } else {
+            //     workSheet.pageSetup.fitToHeight = 1;
+            // }
 
             const excelBuffer : Buffer = await workBook.xlsx.writeBuffer() as Buffer;
 
@@ -94,7 +95,8 @@ export const reportDownload = async( req : Request, res : Response ) => {
             let response : ReportDownloadResponse;
 
             if (request.fileExtension) {
-                let data = await (libre as any).convertAsync(excelBuffer, constant.PDF_FILE_EXTENSION, undefined);
+
+                 let data = await (libre as any).convertAsync(excelBuffer, constant.PDF_FILE_EXTENSION, undefined);
 
                 response = {
                     fileData : data,
@@ -109,15 +111,17 @@ export const reportDownload = async( req : Request, res : Response ) => {
                 }
             }
 
-            if (request.responseType === 0) {
-                res.setHeader('Content-Disposition', 'attachment');
-                res.setHeader('Content-Type', response.contentType);
-                res.attachment(request.fileNameList[i] + response.extension);
+            // if (request.responseType === 0) {
+            //     res.setHeader('Content-Disposition', 'attachment');
+            //     res.setHeader('Content-Type', response.contentType);
+            //     res.attachment(request.fileNameList[i] + response.extension);
 
-                return res.status(200).send(response.fileData);
-            } else {
+            //     console.log(typeof response.fileData, typeof excelBuffer)
+
+            //     return res.status(200).send(response.fileData);
+            // } else {
                 responseList.push(response);
-            }
+            // }
         } catch (err) {
             return res.status(500).json({ errorMessage : "Error occurs While change excel file value.", error : err });
         }

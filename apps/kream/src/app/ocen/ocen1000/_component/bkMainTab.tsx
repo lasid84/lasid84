@@ -274,16 +274,19 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           }
 
           reportDataList.push(reportData);
-          reportDataList.push(reportData);
 
-          const templateType = [Number(e), Number(e)];
-          const templateTypeList : string[] = [loadItem[21].data[Number(e)].key, loadItem[21].data[Number(e)].key]
+          // const templateType = [Number(e), Number(e)];
+          const templateTypeList : string[] = [loadItem[21].data[Number(e)].key]
+          // const fileExtension : Number = Number(curData.search_gubn) || 0;
+
+          const templateType = Number(e);
           const fileExtension : Number = Number(curData.search_gubn) || 0;
 
-          const fileName : string[] = [loadItem[21].data[templateType[0]].report_type_nm.concat("_", voccID), loadItem[21].data[templateType[0]].report_type_nm.concat("-", voccID)];
+          // const fileName : string[] = [loadItem[21].data[templateType[0]].report_type_nm.concat("_", voccID), loadItem[21].data[templateType[0]].report_type_nm.concat("-", voccID)];
+          const fileName = [loadItem[21].data[templateType].report_type_nm.concat("_", voccID)];
 
           const downloadData = {
-              "responseType" : 1,
+              // "responseType" : 0,
               "reportDataList" : reportDataList, 
               "fileExtension" : fileExtension, 
               "templateTypeList" : templateTypeList, 
@@ -294,7 +297,10 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           Download.mutateAsync(downloadData, {
             onSuccess: async (res: any) => {
               if (res.data !== undefined || "") {
-                const file = window.URL.createObjectURL(new Blob([res.data], { type: res.headers["content-type"] }));
+                const byteArray = new Uint8Array(res.data[0].fileData.data);
+                const file = window.URL.createObjectURL(new Blob([byteArray], { type: 'application/octet-stream' }));
+
+                // const file = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
 
                 let extension;
                 if (!fileExtension) {
@@ -303,8 +309,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                   extension = '.pdf';
                 }
 
-                console.log("response : ", res.data);
-
+                log("res.data4", typeof res.data, typeof res.data.fileData, res.data)
                 downloadBlobFile(file, fileName[0].concat(extension));
               } else {
                 if (res.success !== undefined || null) {
