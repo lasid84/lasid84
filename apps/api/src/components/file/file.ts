@@ -123,7 +123,7 @@ export const reportDownload = async( req : Request, res : Response ) => {
             }
 
             // if (request.responseType === 0) {
-            //     res.setHeader('Content-Disposition', 'attachment');
+                res.setHeader('Content-Disposition', 'attachment');
             //     res.setHeader('Content-Type', response.contentType);
             //     res.attachment(request.fileNameList[i] + response.extension);
 
