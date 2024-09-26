@@ -73,7 +73,7 @@ export const reportDownload = async( req : Request, res : Response ) => {
                     continue;
                 }
                 workSheet.getCell(location).value = request.reportDataList[i][location];
-                workSheet.getCell(location).alignment = {...workSheet.getCell(location).alignment, wrapText: true};
+                // workSheet.getCell(location).alignment = {...workSheet.getCell(location).alignment, wrapText: true};
             }
 
             workSheet.pageSetup = initialPageSetting;
