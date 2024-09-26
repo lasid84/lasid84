@@ -1,6 +1,6 @@
 
 
-import { executFunction, executeReportDownload } from "@/services/api.services";
+import { executFunction, executeReportDownload, executeFileUpload,executeReportUpload } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
 import { FaBullseye } from "react-icons/fa6";
