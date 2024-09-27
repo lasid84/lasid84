@@ -571,7 +571,7 @@ export const SP_GetBkHblData = async (searchParam: any) => {
 
 export const SP_SaveBkHblData = async (searchParam: any) => {
   const Param = searchParam;
-  log("SP_SaveBkHblData", searchParam)
+  // log("SP_SaveBkHblData", searchParam)
   const { bk_id, waybill_no, remark, use_yn, user_id, ipaddr } = Param;
   
   const params = {

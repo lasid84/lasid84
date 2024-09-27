@@ -221,9 +221,10 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
       var newBkData = _.cloneDeep(bkData);
       newBkData = {
         ...newBkData,
-        bk_id:'', 
+        bk_id:'',
         bk_dd: dayjs().format('YYYYMMDD'),
         doc_close_dd: dayjs().format('YYYYMMDD'),
+        waybill_no: null,
         use_yn: 'Y',
         state : 0,
         cargo: cargo,
