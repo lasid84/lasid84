@@ -97,7 +97,8 @@ function CustomSelect(props: Props) {
   const [displayText, setDisplayText] = useState<any>(initText);
   const [filteredData, setFilteredData] = useState(listItem);
   const [selectedRow, setSelectedRow] = useState<any>(null);
-  const defaultValue = useDebounce(initValue, 200);
+  // const [defaultValue, setDefaultValue] = useState<any>(useDebounce(initValue, 200));
+  const [defaultValue, setDefaultValue] = useState<any>(initValue);
   const [openDirection, setOpenDirection] = useState('down');
 
   // 옵션을 토글하는 함수
@@ -164,7 +165,8 @@ function CustomSelect(props: Props) {
   // }, [isGridReady, selectedRow])
 
   useEffect(() => {
-    // if (id.includes('cy_place_code')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue, displayText)
+    if (id.includes('cr_s_cont_seq')) log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue, displayText)
+    // log("useEffect defaultValue, listItem, valueCol", gridRef.current, id, defaultValue, displayText, isOpen)
     // if (listItem?.data.length) {
       if (!isOpen) {
         if (!defaultValue) {
@@ -173,7 +175,7 @@ function CustomSelect(props: Props) {
           //   // gridRef.current.api?.setFocusedCell(null);
           //   // gridRef.current.api.ensureIndexVisible(0);
           // }
-          // log("custselect defaultValue null", id, isSearching)
+          log("custselect defaultValue null", id, isSearching)
           setSelectedValue(null);
           return;
         }
@@ -199,6 +201,10 @@ function CustomSelect(props: Props) {
       // }
       }
   }, [defaultValue, listItem, isOpen])
+
+  useEffect(() => {
+    setDefaultValue(initValue);
+  }, [initValue])
 
   // useEffect(() => {
   //   log("useEffect defaultValue, listItem, valueCol")
@@ -298,11 +304,11 @@ function CustomSelect(props: Props) {
   const handleSelectionChanged = (param: SelectionChangedEvent) => {
     var selectedRow = param.api.getSelectedRows()[0];
     // log("handleSelectionChanged", param)
+    let val = selectedRow ? selectedRow[valueCol![0]] : null;
     if(events?.onSelectionChanged){    
-      let val = selectedRow ? selectedRow[valueCol![0]] : null;
       events?.onSelectionChanged(param, id, val);
     }
-
+    setDefaultValue(val);
     // if (selectedRow) setSearching(false);
   }
 

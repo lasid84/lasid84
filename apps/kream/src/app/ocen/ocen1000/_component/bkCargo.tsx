@@ -103,10 +103,10 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
             id="movement_type"
             initText='Select a Movement Type'
             listItem={movementtype as gridData}
-            valueCol={["movement_type", "movement_nm",]}
+            valueCol={["movement_type", "movement_nm"]}
             displayCol="movement_nm"
             gridOption={{
-              colVisible: { col: ["movement_nm"], visible: true },
+              colVisible: { col: ["movement_type", "movement_nm"], visible: true },
             }}
             gridStyle={{ width: '320px', height: '200px' }}
             style={{ width: '500px', height: "8px" }}

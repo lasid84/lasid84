@@ -93,17 +93,6 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   }, [isRefreshShpCont, shipperContData, bkData])
 
   useEffect(()=> {
-    if (isRefreshCrCont && bkData) {
-      setRefreshCrCont(false);
-
-     
-      // if (t_cont_seq) {
-        // dispatch({ bkData : { ...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
-        dispatch({ [MselectedTab]: {...bkData, [ROW_CHANGED]: true}});
-    } 
-  }, [isRefreshShpCont, bkData]);
-
-  useEffect(()=> {
     if (isRefreshCrCont && crTaskContData && crSalesContData && bkData) {
       setRefreshCrCont(false);
 
@@ -404,14 +393,15 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 isDisplay={true}
                 events={{
                   onSelectionChanged: (e, id, value) => {
+                    log("onSelectionChanged carrier_code0", id, value, bkData?.carrier_code);
                     if (bkData?.carrier_code != value) {
-                      setRefreshCrCont(true);
                       dispatch({[MselectedTab]: {...bkData, 
                         carrier_code:value,
                         cr_t_cont_seq:null, cr_t_cont_email:null, cr_t_cont_tel_num:null, 
                         cr_s_cont_seq:null, cr_s_cont_email:null, cr_s_cont_tel_num:null, 
                       }});
-                      log("onSelectionChanged carrier_code", id, value);
+                      log("onSelectionChanged carrier_code1", id, value);
+                      if (value) setRefreshCrCont(true);
                     }
                   },
                 }}
@@ -481,6 +471,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                           // }
                           onChanged(e) {
                             if (!bkData) return; 
+                            bkData.cr_s_cont_seq = e?.cont_seq ? e?.cont_seq : null;
                             bkData.cr_s_cont_email = e?.email;
                             bkData.cr_s_cont_tel_num = e?.tel_num;
                             log("cr_s_cont_seq", e)

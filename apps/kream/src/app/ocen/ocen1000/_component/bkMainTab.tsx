@@ -272,7 +272,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                 reportData[key.toUpperCase()] = value;
             }
           }
-
+          log("reportData", reportData);
           reportDataList.push(reportData);
 
           // const templateType = [Number(e), Number(e)];
