@@ -1240,7 +1240,6 @@ export const SP_FileUpload = async (param: any) => {
     ...param,
     add_folder_name : add_folder_name
   }
-  log('fileupload param', params)
 
   const result = await executeFileUpload(params);
   return result;

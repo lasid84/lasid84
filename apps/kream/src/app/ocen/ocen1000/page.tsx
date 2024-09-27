@@ -185,6 +185,7 @@ export default function OCEN1000() {
     }
   };
   const MhandleonClickICON = (code: any) => {
+    code.stopPropagation();
     // log("MhandleonClickICON", code)
     let filtered = objState.tab1.filter((element: any) => {
       return element.cd != code.target.id;

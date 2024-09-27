@@ -11,9 +11,6 @@ import { PageGrid, PagePopupGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { LabelGrid } from "components/label";
-import {
-    TRANPOSRT_EMAIL_LIST_OE, CUSTOMER_EMAIL_LIST_OE,
-  } from "components/commonForm/mailReceiver/_component/data";
 import { useTranslation } from "react-i18next";
 
 
