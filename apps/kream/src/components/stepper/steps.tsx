@@ -197,29 +197,29 @@ const StepList = ({ stateList, state }: any) => {
   // log("StepList", stateList, steps, state)
 
   return (
-    <ol className="flex items-center w-full space-y-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
+    <ol className="flex items-center w-full p-1 m-1 space-y-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
       {steps?.map((step:StateList, index:number) => (
         <li
           key={index}
           className={`flex items-center ${
             step.state === state
-              ? "text-blue-800 dark:text-black-500"
-              : "text-gray-700 dark:text-gray-400"
+              ? "text-sm text-blue-700 dark:text-black-500 font-bold"
+              : "text-xs text-gray-400 dark:text-gray-300"
           } space-x-2.5 rtl:space-x-reverse ${step.state === (state||'0') ? "animate-pulse" : ""}`}
         >
           <span
-            className={`flex items-center  justify-center w-8 h-8 border ${
-              step.state
-                ? "border-blue-800 dark:border-black-500"
-                : "border-gray-500 dark:border-gray-400"
+            className={`flex items-center justify-center border ${
+              step.state === state
+                ? "text-sm w-7 h-7 border-blue-700 dark:border-black-500 font-bold"
+                : "text-xs w-6 h-6 border-gray-400 dark:border-gray-300"
             } rounded-full shrink-0`}
           >
             {Number(step.state) + 1}
           </span>
           <span>
             <h3
-              className={`text-medium  leading-tight ${
-                step.state ? "text-black-600" : "text-gray-700"
+              className={`leading-tight ${
+                step.state === state ? "text-sm text-black-600 font-bold" : "text-xs text-gray-500"
               }`}
             >
               {step.state_nm}
