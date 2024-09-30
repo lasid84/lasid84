@@ -42,7 +42,7 @@ const EmailRcvList: React.FC<Props> = ({ initData, callbacks, cust_code, cust_nm
                     </>
                 }>
             <div className="flex flex-col w-[38rem] h-[28rem] gap-4 w-30 ">
-                <PopupEmailRcvList pgm_code={TRANPOSRT_EMAIL_LIST_OE + cust_code} title={cust_nm}/>
+                <PopupEmailRcvList pgm_code={TRANPOSRT_EMAIL_LIST_OE} cust_code={cust_code} title={cust_nm}/>
                 </div>
         </DialogBasic>
     )

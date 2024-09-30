@@ -29,15 +29,17 @@ export const SP_GetMailReceiver = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const { pgm_code, user_id, ipaddr } = Param;  
+  const { pgm_code, cust_code, user_id, ipaddr } = Param;  
   const params = {
     inparam : [
         "in_pgm_code"
+      , "in_cust_code"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
         pgm_code
+      , cust_code
       , user_id
       , ipaddr
     ],

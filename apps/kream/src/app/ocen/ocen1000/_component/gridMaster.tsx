@@ -67,7 +67,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     }, [objState?.isMSearch]);
 
     useEffect(() => {
-        if (objState.gridRef_m.current) log("objState.gridRef_m", objState.gridRef_m.current.api.getColumnState());
+        // if (objState.gridRef_m.current) log("objState.gridRef_m", objState.gridRef_m.current.api.getColumnState());
         if (mainData) {
             setGridMainData((mainData as any)[0] as gridData);
         }
@@ -153,9 +153,10 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleCellValueChanged = (param:CellValueChangedEvent) => {
         let nodeData = param.node.data;
-        // log("handleCellValueChanged1", nodeData);
-        let idx = (mainData as gridData).data.findIndex((row:any) => row["bk_id"] === nodeData["bk_id"]);
-        (mainData as gridData).data[idx] = {...nodeData};
+        log("handleCellValueChanged1", nodeData, mainData);
+        let idx = ((mainData as any)[0] as gridData).data.findIndex((row:any) => row["bk_id"] === nodeData["bk_id"]);
+        
+        ((mainData as any)[0] as gridData).data[idx] = {...nodeData};
     }
 
     const onGridSave = () => {

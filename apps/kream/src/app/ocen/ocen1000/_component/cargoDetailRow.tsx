@@ -298,19 +298,19 @@ const CargoFCL = memo(
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_slac_stc`}
               id={getID(index, cargoItem?.seq, "slac_stc")}
-              label="slac_stc"
+              label="pkg"
               value={cargoItem?.slac_stc}
               events={{ onChange: onChange }}
               options={{type:"number"}}
               width="w-24"
             />
             
-            {/* 
-            향후 UFS+ 연동시 사용
+            
+            {/* 향후 UFS+ 연동시 사용 */}
             <div className="flex w-28">              
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "slac_uom")}
-                label="slac_uom"
+                label="pkg_uom"
                 initText="Select.."
                 listItem={slacuom as gridData}
                 valueCol={["slac_uom", "slac_uom_nm"]}
@@ -333,7 +333,7 @@ const CargoFCL = memo(
                 defaultValue={cargoItem?.slac_uom}
                 inline={false}
               />
-            </div> */}
+            </div>
 
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_gross_wt`}
@@ -345,7 +345,7 @@ const CargoFCL = memo(
               width="w-24"
             />
             
-            <div className="flex w-28">
+            {/* <div className="flex w-28">
               <CustomSelect
                 id={getID(index, cargoItem?.seq, "gross_uom")}
                 label="gross_uom"
@@ -371,7 +371,7 @@ const CargoFCL = memo(
                 defaultValue={cargoItem?.gross_uom}
                 inline={false}
               />
-            </div>
+            </div> */}
 
             <MaskedInputField
               //key={`${index}_${bkData?.cargo?.seq}_measurement`}
@@ -603,7 +603,7 @@ const CargoLCL = memo(
             
             <MaskedInputField
               id={getID(index, cargoItem?.seq, "piece")}
-              label="piece"
+              label="pkg"
               value={cargoItem?.piece}
               events={{ onChange: onChange }}
               options={{ type:"number" }}

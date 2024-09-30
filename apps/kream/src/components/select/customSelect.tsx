@@ -175,7 +175,7 @@ function CustomSelect(props: Props) {
           //   // gridRef.current.api?.setFocusedCell(null);
           //   // gridRef.current.api.ensureIndexVisible(0);
           // }
-          log("custselect defaultValue null", id, isSearching)
+          // log("custselect defaultValue null", id, isSearching)
           setSelectedValue(null);
           return;
         }

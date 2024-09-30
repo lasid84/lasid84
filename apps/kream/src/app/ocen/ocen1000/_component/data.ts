@@ -1208,8 +1208,31 @@ export const SP_GetReportData = async (param: any) => {
     return result;
 }
 
-
-
+export const SP_GetClipBoardData = async (param: any) => {
+  
+  const Param = param.queryKey[1]
+  
+  log("param : ", Param);
+  const { type, bk_id, user_id, ipaddr} = Param;
+  const params = {
+    inparam : [
+      "in_bk_id"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      bk_id
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'ocean.f_ocen1000_get_clipboard_data',
+    isShowLoading: false,
+    isShowComplete:false,
+    }
+  
+    const result = await executFunction(params);
+    return result;
+}
 
 export const SP_DownloadReport = async (param: any) => {
   const params = param;

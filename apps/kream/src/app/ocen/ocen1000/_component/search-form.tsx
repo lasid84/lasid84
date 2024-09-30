@@ -58,19 +58,21 @@ const SearchForm = ({ loadItem }: any) => {
 
   // log("search-form 시작", Date.now());
   const { dispatch, objState } = useAppContext();
+  const { searchParams } = objState;
   const {
     // trans_mode,
     // trans_type,
     fr_date,
     to_date,
-    wb_no,
+    no,
     cust_code,
     state,
     // bk_id,
     // doc_fr_dt,
-    // doc_to_dt,
+
+    create_user,
     search_gubn,
-  } = objState.searchParams;
+  } = searchParams;
 
   //사용자 정보
   // const gTransMode = useUserSettings((state) => state.data.trans_mode, shallow);
@@ -85,10 +87,10 @@ const SearchForm = ({ loadItem }: any) => {
       to_date:
         to_date ||
         dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-      wb_no: wb_no || "", // HWB, MWB, BK_NO
+      no: no || "", // HWB, MWB, BK_NO
       cust_code: cust_code || "",
-      state: "",
-      create_user: user_id,
+      state: state || "",
+      create_user: user_id || "",
       search_gubn: 0,
     },
   });
@@ -116,29 +118,43 @@ const SearchForm = ({ loadItem }: any) => {
       setStatus(loadItem[2]);
     }
     resetComponent(0);
-  }, [loadItem?.length]);
+  }, [loadItem]);
 
   useEffect(() => {
-    if (user_id && objState.isFirstRender) {
-        log("1", user_id)
-        setValue("create_user", user_id);
+    log("curCreateUser", objState.searchParams)
+    if (searchParams?.create_user && objState.isFirstRender) {
       onSearch();
       dispatch({ isFirstRender: false });
     }
-  }, [user_id]);
-
-
+  }, [searchParams?.create_user])
 
   useEffect(() => {
-    // log("useEffect create_user", getValues('create_user'));
-    if (createuser) {
-      if (createuser.data.some((v:any) => v.create_user === user_id)) {
-        setValue("create_user", user_id);
-      } else {
-        setValue("create_user", 'ALL');
-      }
+    log("useEffect userid", user_id, objState.isFirstRender, getValues("create_user"), searchParams)
+    if (user_id && objState.isFirstRender) {
+      dispatch({
+        searchParams: {...searchParams, create_user: user_id}
+      })
     }
-  }, [createuser]);
+  }, [user_id]);
+
+  // useEffect(() => {
+  //   let user = getValues("create_user");
+  //   if (!user) {
+  //     setValue("create_user", user);
+  //   }
+  //   log("useEffect getValues userid", user_id, user, getValues("create_user"))
+  // }, [getValues("create_user")])
+
+  // useEffect(() => {
+  //   if (createuser && !objState.isFirstRender) {
+  //     log("useEffect create_user", getValues('create_user'));
+  //     if (createuser.data.some((v:any) => v.create_user === user_id)) {
+  //       setValue("create_user", user_id);
+  //     } else {
+  //       setValue("create_user", 'ALL');
+  //     }
+  //   }
+  // }, [createuser,objState.isFirstRender]);
 
   const resetComponent = (search_gubn : number) => {
     if (search_gubn === 0) {
@@ -158,6 +174,7 @@ const SearchForm = ({ loadItem }: any) => {
   };
 
   const onReset = () => {
+    dispatch({ searchParams: null});
     resetComponent(0);
   }
   
@@ -197,7 +214,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker
               id="fr_date"
               label="fr_date"
-              value={getValues("fr_date")}
+              value={searchParams?.fr_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -209,7 +226,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker
               id="to_date"
               label="to_date"
-              value={getValues("to_date")}
+              value={searchParams?.to_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -240,7 +257,7 @@ const SearchForm = ({ loadItem }: any) => {
             <MaskedInputField
               id="no"
               label="mwb_hwb_bk"
-              value={wb_no}
+              value={searchParams?.no}
               options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
             />
@@ -258,7 +275,8 @@ const SearchForm = ({ loadItem }: any) => {
                 keyCol: "create_user",
                 displayCol: ["create_user_nm"],
                 inline: true,
-                defaultValue: getValues("create_user"),
+                // defaultValue: getValues("create_user"),
+                defaultValue: searchParams?.create_user
               }}
             />
             <ReactSelect
@@ -272,7 +290,7 @@ const SearchForm = ({ loadItem }: any) => {
                 keyCol: "state",
                 displayCol: ["state", "state_nm"],
                 inline: true,
-                defaultValue: getValues("state"),
+                defaultValue: searchParams?.state,
               }}
             />
           </div>

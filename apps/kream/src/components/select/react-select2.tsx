@@ -1,4 +1,4 @@
-import React, { useRef, FocusEventHandler, KeyboardEventHandler, useEffect, useState } from 'react';
+import React, { useRef, FocusEventHandler, KeyboardEventHandler, useEffect, useState, memo } from 'react';
 import { Controller, useFormContext } from "react-hook-form";
 import { InputActionMeta, default as ReactSelectComponent, MenuProps } from "react-select";
 // import { Label, InputWrapper } from "components/react-hook-form"
@@ -41,7 +41,7 @@ export type ReactSelectProps = {
         dialog?: boolean;               // popup listbox 위치 배치 boolean
         keyCol?: string;                //dataSrc.data의 키 컬럼, null 일시 0번째를 키 컬럼으로 사용
         displayCol?: string[];          //select의 보여질 컬럼, 여러개 시 col + ' ' + col 로 표현, 없을시 키(daraSrc.data의 0번째 컬럼) + ' ' + daraSrc.data의 1번째 컬럼
-        defaultValue?: string;          //초기 선택 값, 빈칸시 첫번째 row
+        defaultValue?: string | null;          //초기 선택 값, 빈칸시 첫번째 row
         placeholder?: string;           //
         isMulti?: boolean;
         inline?: boolean;
@@ -55,7 +55,7 @@ export type ReactSelectProps = {
     events?: event
 };
 
-export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
+export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
     const { control } = useFormContext();
     const { id, label, dataSrc, width, height, lwidth, options = {}, events } = props;
     const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true, isDisplay=true,
@@ -76,6 +76,11 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     const [target, setTarget] = useState(null);
 
     const { register, setValue, getValues } = useFormContext();
+
+
+    useEffect(() => {
+        log("defaultValue123", defaultValue);
+    }, [defaultValue]);
 
     useEffect(() => {
         setList(
@@ -101,36 +106,49 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
                 else label = item[Object.keys(item)[1]];
 
                 if (defaultValue) {
-                    //  log("defaultValue : ", defaultValue);
-                    //  log("defaultValue1 : ", value);
+                    //  if (id === 'create_user') log("reactselect defaultValue : ", defaultValue, value);
+                    //  if (id === 'create_user') log("reactselect  defaultValue1 : ", value);
                     if (value === defaultValue) {
                         setFirstVal(value);
                         setFirstLab(label);
+
+                        setSelectedVal({
+                            label: label,
+                            value: value,
+                        });
+                        setValue(id, value);
                     };
                 } else {
                     if (isMandatory && i === 0) {
                         setFirstVal(value);
                         setFirstLab(label);
+                        setSelectedVal({
+                            label: label,
+                            value: value,
+                        });
+                        setValue(id, value);
                     }
                 }
 
                 return { value: value, label: label };
             }).filter(x => x)
         );
+
+        // log("=============defaultValue", getValue);
     }, [dataSrc, defaultValue]);
 
-    useEffect(() => {
-        //  log("useEffect reactselect2", firstLab, firstVal)
-        if (firstLab && firstVal) {
-            setSelectedVal({
-                label: firstLab,
-                value: firstVal,
-            });
-            setValue(id, firstVal);
-        } else {
-            setValue(id, null);
-        }
-    }, [firstLab, firstVal]);
+    // useEffect(() => {
+    //     //  log("useEffect reactselect2", firstLab, firstVal)
+    //     if (firstLab && firstVal) {
+    //         setSelectedVal({
+    //             label: firstLab,
+    //             value: firstVal,
+    //         });
+    //         setValue(id, firstVal);
+    //     } else {
+    //         setValue(id, null);
+    //     }
+    // }, [firstLab, firstVal]);
 
     useEffect(() => {
         if (delayEnter && isChangeFinish){
@@ -192,7 +210,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
     }
 
     const handleChange = (e: any) => {
-        // log("=-=-=-handleChange", e)
+        log("=-=-=-handleChange", id, e.value)
         setValue(id, e.value);
         setSelectedVal({ id:id, value: e.value, label: e.label });
         let dispCol = displayCol?.length 
@@ -202,7 +220,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
             events.onChange(e,id,e.value);
         }
 
-        // log("handelChange", delayEnter, e);
+        log("=-=-=-handelChange2", getValues("create_user"));
         setisChangeFinish(true);
         // moveNextComponent(target);
         
@@ -324,4 +342,4 @@ export const ReactSelect: React.FC<ReactSelectProps> = (props) => {
             </InputWrapper>
         </>
     );
-};
+});

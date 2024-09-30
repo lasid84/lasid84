@@ -19,12 +19,13 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
   pgm_code: string
+  cust_code?: string
   title?: string
   ref?: any | null
   initData?: any | null
 };
 
-const MailReceiver: React.FC<Props> = ({ ref = null, initData, pgm_code, title }) => {
+const MailReceiver: React.FC<Props> = ({ ref = null, initData, pgm_code, cust_code, title }) => {
 
     const gridRef = useRef<any | null>(ref);
     const { dispatch, objState } = useAppContext();

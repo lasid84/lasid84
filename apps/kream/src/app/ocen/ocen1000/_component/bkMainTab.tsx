@@ -8,7 +8,7 @@ import { MaskedInputField } from 'components/input';
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
-import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_UpdateCargo, SP_UpdateData, SP_DownloadReport, SP_SaveCostData } from './data'; //SP_UpdateData
+import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_UpdateCargo, SP_UpdateData, SP_DownloadReport, SP_SaveCostData, SP_GetClipBoardData } from './data'; //SP_UpdateData
 import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
@@ -22,6 +22,7 @@ import EmailSendPopup from "./popup/popEmailSendcomm"
 import _ from 'lodash';
 import { toastError } from 'components/toast';
 import StepList, { Steps3, Steps2, Steps1 } from "@/components/stepper/steps";
+import { error } from "@repo/kwe-lib/components/logHelper";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -46,12 +47,11 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { Update: UpdateBKData } = useUpdateData2(SP_UpdateData);
   const { Create: CreateCargo } = useUpdateData2(SP_InsertCargo);
   const { Update: UpdateCargo } = useUpdateData2(SP_UpdateCargo);
-  // const { Create:CreateCost } = useUpdateData2(SP_InsertCost);
-  // const { Update:UpdateCost } = useUpdateData2(SP_UpdateCost);
   const { Update: SaveCostData } = useUpdateData2(SP_SaveCostData);
 
   const { Create: GetReportData } = useUpdateData2(SP_GetReportData, 'GetReportData');
   const { Create : Download } = useUpdateData2(SP_DownloadReport, "Download");
+  const { data: clipboardData, refetch: clipboardRefetch, isLoading: isLoadingClipboard } = useGetData({bk_id : bkData?.bk_id}, "ClipBoardData", SP_GetClipBoardData, { enabled: false, staleTime: 0, cacheTime: 0 });
 
   const [reporttype, setReporttype] = useState<any>();
 
@@ -183,6 +183,24 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
       // onRefresh();
     }
   };
+
+  const onClipboard = async () => {
+    const { data } = await clipboardRefetch();
+    // log("clipboardData6", clipboardData, data);
+    const htmlString = ((data as any)[0] as gridData)?.data[0].html;
+
+    try {      
+      const clipboardItem = new ClipboardItem({
+        'text/html': new Blob([htmlString], { type: 'text/html' }),
+      });
+      
+      await navigator.clipboard.write([clipboardItem]);
+      
+      toastSuccess("클립보드에 복사 되었습니다.");
+    } catch (err) {
+      error('클립보드 복사 실패:', err);
+    }
+  }
   
   const onBKCopy = () => {
     // console.log("onBKCopy")
@@ -365,6 +383,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                   </RadioGroup>
                 </div>
                 {/* <ICONButton id="clipboard" disabled={false} onClick={onRefresh} size={'24'} /> */}
+                  <ICONButton id="clipboard" disabled={false} onClick={onClipboard} size={'24'}  />
                   <ICONButton id="bkcopy" disabled={false} onClick={onBKCopy} size={'24'}  />
                   <ICONButton id="refresh" disabled={false} onClick={onRefresh} size={'24'} />
               </div>

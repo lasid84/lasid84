@@ -96,7 +96,8 @@ export const sendMail = async (req: Request, res: Response) => {
                             let filePath = arr;
                             return {
                                 filename: filename,
-                                path: directory + filePath
+                                // path: directory + filePath
+                                path: filePath
                             };
                         });            
             }
@@ -143,7 +144,7 @@ export const sendMail = async (req: Request, res: Response) => {
                 log("mailContent.seq", result, mailContent.seq, errMsg);
             }
 
-            log("==========================mailContent2", mailContent,errMsg,  "host", process.env.SMTP_HOST);
+            // log("==========================mailContent2", mailContent,errMsg,  "host", process.env.SMTP_HOST);
         };
         
         if (errMsgTotal) {
@@ -161,7 +162,8 @@ export const sendMail = async (req: Request, res: Response) => {
 const checkFilesExist = async (filePaths) => {
     for (const filePath of filePaths) {
         try {
-            await fs.promises.access(directory + filePath, fs.constants.F_OK);
+            // await fs.promises.access(directory + filePath, fs.constants.F_OK);
+            await fs.promises.access(filePath, fs.constants.F_OK);
         } catch (err) {
             console.error(`File does not exist: ${directory + filePath}`);
             return false;

@@ -56,7 +56,8 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   
   const [salesperson, setSalesPerson] = useState<any>()
   const [terminal, setTerminal] = useState<any>()
-  const [customsDeclation, setCustomsDeclation] = useState<any>()
+  const [customsDeclation, setCustomsDeclation] = useState<any>();
+  const [isDirect, setDirect] = useState<boolean>(false);
 
   const { Create: CreateTemplate } = useUpdateData2(SP_CreateTemplateData);
 
@@ -222,6 +223,34 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       }}
                     /> */}
                   {/* </div> */}
+                <div className={"col-start-1"}>
+                  <CustomSelect
+                    id="carr_bl_type"
+                    initText='Select a Carrier BL Type'
+                    listItem={MblType as gridData}
+                    valueCol={["carrier_bl_type", "carrier_bl_type_nm",]}
+                    displayCol="carrier_bl_type_nm"
+                    gridOption={{
+                      colVisible: { col: ["carrier_bl_type_nm"], visible: true },
+                    }}
+                    gridStyle={{ width: '320px', height: '200px' }}
+                    style={{ width: '500px', height: "8px" }}
+                    defaultValue={bkData?.carr_bl_type}
+                    isDisplay={true}
+                    events={{
+                      onSelectionChanged(e, id, value) {
+                        if (!bkData) return;
+                        if (value === 'MD') {
+                          setDirect(true);
+                          bkData.carr_shipper_id = bkData.shipper_id;
+                          bkData.carr_cnee_id = bkData.cnee_id;
+                          dispatch({[bkData.bk_id]: bkData});
+                        }
+                        else setDirect(false);
+                      },
+                    }}
+                  />
+                </div>
               </>
             </PageSearch>
           </div>
@@ -256,7 +285,8 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       onSelectionChanged: (e, id, value) => {
                         if (bkData?.shipper_id != value) {
                             setRefreshShpCont(true);
-                            dispatch({[MselectedTab]: {...bkData, shipper_id:value, [ROW_CHANGED]:true}});
+                            if (isDirect) bkData.carr_shipper_id = value;
+                            dispatch({[MselectedTab]: {...bkData, shipper_id:value}});
                             // log("onSelectionChanged", id, value);
                         }
                       },
@@ -283,23 +313,13 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                   style={{ width: '1000px', height: "8px" }}
                   defaultValue={bkData?.cnee_id}
                   isDisplay={true}
+                  events={{
+                    onSelectionChanged(e, id, value) {
+                      if (isDirect) bkData.carr_cnee_id = value;
+                      dispatch({[MselectedTab]: bkData});
+                    },
+                  }}
                 />
-                </div>
-                <div className={"col-span-1"}>
-                  <CustomSelect
-                    id="sales_person"
-                    initText="Select a Salesperson"
-                    listItem={salesperson as gridData}
-                    valueCol={["sales_person", "name"]}
-                    displayCol="name"
-                    gridOption={{
-                      colVisible: { col: ["sales_person", "name"], visible: true },
-                    }}
-                    gridStyle={{ width: '600px', height: '300px' }}
-                    style={{ width: '500px', height: "8px" }}
-                    isDisplay={true}
-                    defaultValue={bkData?.sales_person}
-                  />
                 </div>
                 
               </>
@@ -499,22 +519,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               isMandatory:false
               }} 
             /> */}
-            <div className={"col-span-1"}>
-                <CustomSelect
-                  id="carr_bl_type"
-                  initText='Select a Carrier BL Type'
-                  listItem={MblType as gridData}
-                  valueCol={["carrier_bl_type", "carrier_bl_type_nm",]}
-                  displayCol="carrier_bl_type_nm"
-                  gridOption={{
-                    colVisible: { col: ["carrier_bl_type_nm"], visible: true },
-                  }}
-                  gridStyle={{ width: '320px', height: '200px' }}
-                  style={{ width: '500px', height: "8px" }}
-                  defaultValue={bkData?.carr_bl_type}
-                  isDisplay={true}
-                />
-            </div>
+            
             <div className={"col-span-1"}>
                 <CustomSelect
                   id="bl_type"
@@ -593,15 +598,32 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               isMandatory:false
             }} 
             /> */}
-          <MaskedInputField id="incoterms_remark" value={bkData?.incoterms_remark} options={{ isReadOnly: false }} />
-          <ReactSelect
-            id="customs_declation" dataSrc={customsDeclation as data}
-            options={{
-              keyCol: "customs_declation",
-              displayCol: ['customs_declation', 'customs_declation_nm'],
-              defaultValue: bkData?.customs_declation,
-              isAllYn: false
-            }}/>
+            <MaskedInputField id="incoterms_remark" value={bkData?.incoterms_remark} options={{ isReadOnly: false }} />
+            <ReactSelect
+              id="customs_declation" dataSrc={customsDeclation as data}
+              options={{
+                keyCol: "customs_declation",
+                displayCol: ['customs_declation', 'customs_declation_nm'],
+                defaultValue: bkData?.customs_declation,
+                isAllYn: false
+              }}/>
+
+            <Checkbox id="ams_yn" value={bkData?.ams_yn} />
+            
+            <CustomSelect
+              id="sales_person"
+              initText="Select a Salesperson"
+              listItem={salesperson as gridData}
+              valueCol={["sales_person", "name"]}
+              displayCol="name"
+              gridOption={{
+                colVisible: { col: ["sales_person", "name"], visible: true },
+              }}
+              gridStyle={{ width: '600px', height: '300px' }}
+              style={{ width: '500px', height: "8px" }}
+              isDisplay={true}
+              defaultValue={bkData?.sales_person}
+            />
         </PageContent>
 
         <PageContent>

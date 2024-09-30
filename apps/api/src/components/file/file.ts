@@ -209,7 +209,6 @@ export const fileUpload = (req: Request, res: Response) => {
   }
 
   const request : FileUploadRequest = req.body;
-  console.log("request : ", request);
   const filePathResponse = [];
 
   for (const [key, _] of Object.entries(request.files)) {
@@ -224,6 +223,6 @@ export const fileUpload = (req: Request, res: Response) => {
 
     filePathResponse.push(filePath);
   }
-
+  console.log("request : ", request, filePathResponse);
   return res.json(filePathResponse);
 }
