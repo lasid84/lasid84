@@ -262,11 +262,9 @@ const Modal: React.FC<Props> = ({
          */
 
         const fileExtension : number = Number(curData.search_gubn) || 0;
-
         const reportDataList : any = [];
         const fileNameList : string[] = [];
-        console.log('isArray?', Array.isArray(reportList)); // 배열인지 확인
-        console.log(reportList); // reportList의 실제 값 확인
+        
         for (const report of reportList) {
             try {
               await GetReportData.mutateAsync({ type: (report.report_type-1), bk_id: bk_id }, {
@@ -323,16 +321,6 @@ const Modal: React.FC<Props> = ({
              * file upload API 호출 및 경로 return
              */
             const filesList : FileUploadData[] = [];
-            // for (const data of res.data) {
-            //   log('data', data)
-            //   const files : FileUploadData = {
-            //     fileName : "test.xlsx",
-            //     fileData : data.fileData,
-            //     fileRootDIR :"MAIL_ATTACH"
-            //   }
-
-            //   filesList.push(files);
-            // }
 
             res.data.forEach((data: any, index: number) => {
 
@@ -356,7 +344,6 @@ const Modal: React.FC<Props> = ({
       fileUploadRequest.files = requestList;
     }
 
-    console.log("fileUploadRequest.files : ", fileUploadRequest.files);
 
     await Upload.mutateAsync(fileUploadRequest, {
       onSuccess: async (res:any) => {
@@ -389,7 +376,7 @@ const Modal: React.FC<Props> = ({
       title={t(pgmCode)}
       bottomRight={
         <>
-          <Button id={"send"} onClick={sendTransPortEmail} width="w-32" disabled={custCode === ''}/>
+          <Button id={"send"} onClick={sendTransPortEmail} width="w-32" disabled={custCode === '' || isClicked}/>
           <Button id={"cancel"} onClick={closeModal} icon={null} width="w-32" />
         </>
       }
