@@ -20,11 +20,12 @@ import { gridData } from "@/components/grid/ag-grid-enterprise";
 import {
   SP_SendEmail,
   SP_GetReportData,
-  SP_FileUpload,
-  SP_ReportUpload,
+  SP_DownloadReport,
+  SP_UploadAttachment,
 } from "../data";
 import Radio from "components/radio/index";
 import RadioGroup from "components/radio/RadioGroup";
+import { useUserSettings } from "states/useUserSettings";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -42,9 +43,9 @@ type MailSample = {
   subject: string;
   content: string;
   report: {
-    bknote: boolean;
-    deliv_request: boolean;
-    cust_identification: boolean;
+    booking_note: boolean;
+    transport_request: boolean;
+    customer_dispatch: boolean;
   };
   attachment: Attachment[];
   add_folder_name: string;
@@ -59,10 +60,31 @@ interface Attachment {
   pageDivide?: number | undefined; // 선택적 값
 }
 
+type FileUploadData = {
+  fileName: string;
+  fileData: Buffer;
+  fileRootDIR: string;
+}
+
+
+type FileUploadRequest = {
+  addFolderName: string;
+  files: FileUploadData[];
+}
+
+
 interface File {
   file_name: string;
   file_data: any;
   file_root_dir: string;
+}
+
+type ReportDownloadRequest = {
+  responseType: number;
+  fileExtension: number;
+  reportDataList: any;
+  templateTypeList: string[];
+  fileNameList: string[];
 }
 
 const Modal: React.FC<Props> = ({
@@ -81,11 +103,12 @@ const Modal: React.FC<Props> = ({
   const { getValues } = useFormContext();
 
   const { t } = useTranslation();
+  const user_id = useUserSettings((state) => state.data.user_id);
 
   const [gubn, setGubn] = useState<string>('');
   const [pgmCode, setPgmCode] = useState<string>(TRANPOSRT_EMAIL_LIST_OE);
   const [custCode, setCustCode] = useState<string>('')
-
+  const [isClicked, setIsClicked] = useState(false); // 클릭 여부 상태
 
   //Mail Template Get Data 
   const {
@@ -105,22 +128,29 @@ const Modal: React.FC<Props> = ({
     subject: "",
     content: "",
     report: {
-      bknote: false,
-      deliv_request: false,
-      cust_identification: false,
+      booking_note: false,
+      transport_request: false,
+      customer_dispatch: false,
     },
     attachment: [],
     add_folder_name: "", //file upload
     files: [], //file upload
   });
 
+  
+  const [templateTypeList, setTemplateTypeList] = useState<string[]>([]);
+  const [attachFileUpload, setAttachFileUpload] = useState<FileUploadData[]>([]);
+
   const { Create: sendEmail } = useUpdateData2(SP_SendEmail, "");
-  const { Create: fileUpload } = useUpdateData2(SP_FileUpload, "");
-  const { Create: reportUpload } = useUpdateData2(SP_ReportUpload, "");
   const { Create: GetReportData } = useUpdateData2(
     SP_GetReportData,
     "GetReportData"
   );
+  const { Create : Download } = useUpdateData2(SP_DownloadReport, "Download");
+  const { Create : Upload } = useUpdateData2(SP_UploadAttachment, "Upload");
+
+  // const { Create: fileUpload } = useUpdateData2(SP_FileUpload, "");
+  // const { Create: reportUpload } = useUpdateData2(SP_ReportUpload, "");
 
   const loadEmailData = useCallback(() => {
     transMailRefetch();
@@ -175,122 +205,181 @@ const Modal: React.FC<Props> = ({
     setGubn('');  // 초기값 설정 또는 리셋 로직
     setCustCode('')
     setPgmCode(TRANPOSRT_EMAIL_LIST_OE)
+    setTemplateTypeList([]);
   };
 
-  const handleFileDrop = async (data: any[], buffer: any[]) => {
-    log("file upload -data, header", data, buffer);
+  const handleFileDrop = async (data: any[], header: ArrayBuffer[]) => {
+    log('file upload -data, header', data, header);
 
-    data.forEach((fileData, index) => {
-      const uploadFile = {
-        file_name: fileData.file.name, // 각 파일의 이름
-        file_data: fileData.file.arrayBuffer, // 파일 데이터를 저장
-        file_root_dir: "MAIL", // 루트 디렉토리 설정
+    const fileUploadRequestArray : FileUploadData[] = [];
+    for (let i=0; i<data.length; i++) {
+      const requestData : FileUploadData = {
+        fileName : data[i].name,
+        fileData : Buffer.from(header[i]),
+        fileRootDIR : "MAIL_ATTACH"
       };
 
-      // mailform 객체에 파일 추가
-      mailform.files.push(uploadFile);
-    });
+      fileUploadRequestArray.push(requestData);
+    }
+    
+    setAttachFileUpload(fileUploadRequestArray);
   };
 
   const handleCheckBoxClick = (id: string, val: any) => {
-    log("Checkbox clicked", id, val);
-    // 'Y'이면 true, 'N'이면 false로 변환
-    const booleanVal = val === "Y";
-    if (booleanVal) {
-      //val === true ? 'Y'
-      setMailForm((prevState) => {
-        const updatedAttachment = { ...prevState.report, [id]: val };
-        return { ...prevState, report: updatedAttachment };
-      });
+    if(val === 'Y'){
+      templateTypeList.push(id);
+      setTemplateTypeList([...templateTypeList]);
+      log('popmailsend', templateTypeList)
+    } else {
+      templateTypeList.splice(templateTypeList.indexOf(id), 1);
+      setTemplateTypeList([...templateTypeList]);
     }
   };
 
   const sendTransPortEmail = useCallback(async () => {
     const curData = getValues();
-    // 1. Get Data
-    for (const report of reports) {
-      const attachmentValue =
-        mailform?.report?.[report.key as keyof typeof mailform.report] ?? false; // 타입 단언 사용
+    setIsClicked(true); // 중복클릭방지 state 추가
+    const fileUploadRequest : FileUploadRequest = {
+      addFolderName : user_id,
+      files : []
+    };
 
-      if (attachmentValue) {
-        try {
-          await GetReportData.mutateAsync(
-            { type: report.report_type, bk_id: bk_id },
-            {
-              onSuccess: (res: any) => {
-                console.log(` 성공 (type: ${report.key}):`, res);
+    if (templateTypeList.length > 0) {
 
-                let reportData: any = new Object();
-                let pageDivide;
-                for (let [key, value] of Object.entries(res[0].data[0])) {
-                  if (value === null || value === undefined) {
-                    value = "";
-                  }
-
-                  switch (key) {
-                    default:
-                      reportData[key.toUpperCase()] = value;
-                  }
-                }
-
-                const templateType = Number(report.report_type);
-                const fileExtension: number = Number(curData.search_gubn) || 0;
-                const fileName =
-                  loadItem[21].data[templateType - 1].report_type_nm;
-
-                const downloadData: Attachment = {
-                  reportData: reportData,
-                  fileExtension: fileExtension,
-                  templateType: templateType,
-                  fileName: fileName,
-                  pageDivide: pageDivide,
-                };
-                mailform.attachment.push(downloadData);
-              },
-              onError: (error) => {
-                console.error(` 실패 (type: ${report.key}):`, error);
-              },
+      let reportList = [];
+        if (reports.length === templateTypeList.length) {
+          reportList.push(reports);
+        } else {
+          for (const report of reports) {
+            for (const template of templateTypeList) {
+              if (report.key === template) {
+                reportList.push(report);
+              }
             }
-          );
-        } catch (error) {
-          log(error);
+          }
         }
-      }
+
+        /**
+         * @dev
+         * 선택한 리포트 템플릿의 data 호출, file upload param 세팅
+         */
+
+        const fileExtension : number = Number(curData.search_gubn) || 0;
+
+        const reportDataList : any = [];
+        const fileNameList : string[] = [];
+        console.log('isArray?', Array.isArray(reportList)); // 배열인지 확인
+        console.log(reportList); // reportList의 실제 값 확인
+        for (const report of reportList) {
+            try {
+              log('report?? REPORT. REPORT_TYPE : ', report, report.report_type)
+              await GetReportData.mutateAsync({ type: (report.report_type-1), bk_id: bk_id }, {
+                onSuccess: (res:any) => {
+                  let reportData : any = new Object;
+                  let pageDivide : any;
+                  let voccID : any;
+
+                  for (let [key, value] of Object.entries(res[0].data[0])) {
+                    if (value === null || value === undefined) {value = ""}
+        
+                    switch(key) {
+                      case "page_divide":
+                        pageDivide = value;
+                        break;
+                      case "vocc_id":
+                        voccID = value;
+                        break;     
+                      default:
+                        reportData[key.toUpperCase()] = value;
+                    }
+                  }
+      
+                  fileNameList.push(report.report_type_nm.concat("-", voccID));
+                  reportDataList.push(reportData);        
+
+                  log('GetreportData s fileNameList', fileNameList)
+                },
+                onError: (error) => {
+                  console.error(` 실패 (type: ${report.key}):`, error);
+                }
+              });
+            } catch (error) {
+              log('GetReportData.mutateAsync ERR', error)
+            }
+        }
+
+        /**
+         * @dev
+         * data To report file API 호출 및 ArrayBuffer response
+         */
+
+        const reportDownloadRequest : ReportDownloadRequest = {
+          responseType : 1,
+          fileExtension : fileExtension,
+          reportDataList : reportDataList,
+          templateTypeList : templateTypeList,
+          fileNameList : fileNameList
+        }
+
+        await Download.mutateAsync(reportDownloadRequest, {
+          onSuccess: (res: any) => {
+            /**
+             * @stage_4
+             * file upload API 호출 및 경로 return
+             */
+            const filesList : FileUploadData[] = [];
+            // for (const data of res.data) {
+            //   log('data', data)
+            //   const files : FileUploadData = {
+            //     fileName : "test.xlsx",
+            //     fileData : data.fileData,
+            //     fileRootDIR :"MAIL_ATTACH"
+            //   }
+
+            //   filesList.push(files);
+            // }
+
+            res.data.forEach((data: any, index: number) => {
+              log('data', data);
+
+              // fileNameList와 res.data가 함께 움직임
+              const files: FileUploadData = {
+                fileName: fileNameList[index]+data.extension,  // 각 인덱스에 맞는 파일 이름 할당
+                fileData: data.fileData,
+                fileRootDIR: "MAIL_ATTACH"
+              };
+
+              filesList.push(files);
+            });
+
+            fileUploadRequest.files = filesList;
+          }
+      });
+    } 
+
+    if (attachFileUpload.length > 0) {
+      const requestList : FileUploadData[] = [...fileUploadRequest.files, ...attachFileUpload]
+      fileUploadRequest.files = requestList;
     }
 
-    //1. 리포트파일 서버업로드(?)
-    await reportUpload
-      .mutateAsync(
-        { ...mailform, pgm_code: pgmCode + custCode },
-        {
-          onSuccess(data, variables, context) {
-            log("upload data", data);
-          },
-        }
-      )
-      .catch(() => {});
+    console.log("fileUploadRequest.files : ", fileUploadRequest.files);
 
-    // 2.업로드파일 서버업로드
-    await fileUpload
-      .mutateAsync(
-        { ...mailform, pgm_code: pgmCode + custCode },
-        {
-          onSuccess(data, variables, context) {
-            log("upload data", data);
-          },
-        }
-      )
-      .catch(() => {});
+    await Upload.mutateAsync(fileUploadRequest, {
+      onSuccess: async (res:any) => {
+      
+      mailform.attachment = res.data.map((filePath: string) => filePath).join(',');
+      }
+    });
 
-    // 3. sendEmail 실행
     await sendEmail
       .mutateAsync(
-        { ...mailform, pgm_code: pgmCode + custCode },
+        { ...mailform, pgm_code: pgmCode + '_' +custCode },
         {
           onSuccess(data, variables, context) {},
         }
       )
       .catch(() => {});
+      closeModal()
   }, [mailform, bk_id, GetReportData]);
 
 
@@ -380,23 +469,23 @@ const Modal: React.FC<Props> = ({
               }
             >
               <Checkbox
-                id="bknote"
+                id="booking_note"
                 //label="bknote"
-                value={mailform?.report?.bknote ? "Y" : "N"}
+                value={mailform?.report?.booking_note ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{ onChange: handleCheckBoxClick }}
               />
               <Checkbox
-                id="deliv_request"
+                id="transport_request"
                 //label="deliv_request"
-                value={mailform?.report?.deliv_request ? "Y" : "N"}
+                value={mailform?.report?.transport_request ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{ onChange: handleCheckBoxClick }}
               />
               <Checkbox
-                id="cust_identification"
+                id="customer_dispatch"
                 //label="cust_identification"
-                value={mailform?.report?.cust_identification ? "Y" : "N"}
+                value={mailform?.report?.customer_dispatch ? "Y" : "N"}
                 options={{ inline: false }}
                 events={{ onChange: handleCheckBoxClick }}
               />
