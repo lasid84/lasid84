@@ -69,7 +69,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         bkData.state = '5';
       }
       
-      log("bkData.state : ", bkData.state, bkData.invoice_cnt);
+      // log("bkData.state : ", bkData.state, bkData.invoice_cnt);
       dispatch({ [MselectedTab]: bkData })      
     }
   }, [bkData])
@@ -95,7 +95,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     if (bkData && bkData[ROW_TYPE] === ROW_TYPE_NEW) {  
       hasData = true;  
       let newData = {...bkData, ...curData};
-      log("New SaveBkData", bkData, curData, newData);
+      // log("New SaveBkData", bkData, curData, newData);
       await CreateBKData.mutateAsync(newData, {
         onSuccess: (res: any) => {
           let bk_id = res.data[0].bk_id;
@@ -167,7 +167,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
       
     });
 
-    log("cost", JSON.stringify(cost));
+    // log("cost", JSON.stringify(cost));
     await SaveCostData.mutateAsync({jsonData : JSON.stringify(cost)});
     return hasData;
   }
@@ -251,7 +251,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         [ROW_TYPE] : ROW_TYPE_NEW
       }
       
-      log("copy", newBkData, tabName);
+      // log("copy", newBkData, tabName);
       dispatch({ [tabName] : newBkData, MselectedTab: tabName});
   // }, 200);
   }
@@ -291,7 +291,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                 reportData[key.toUpperCase()] = value;
             }
           }
-          log("reportData", reportData);
+          // log("reportData", reportData);
           reportDataList.push(reportData);
 
           // const templateType = [Number(e), Number(e)];
@@ -328,7 +328,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
                   extension = '.pdf';
                 }
 
-                log("res.data4", typeof res.data, typeof res.data.fileData, res.data)
+                // log("res.data4", typeof res.data, typeof res.data.fileData, res.data)
                 downloadBlobFile(file, fileName[0].concat(extension));
               } else {
                 if (res.success !== undefined || null) {

@@ -22,7 +22,6 @@ const Modal: React.FC<Props> = ({ initData, callbacks }) => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        log("Carrier Modal", MselectedTab, objState, objState[MselectedTab])
     }, [])
 
     const closeModal = () => {

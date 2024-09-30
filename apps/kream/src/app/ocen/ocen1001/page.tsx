@@ -165,7 +165,6 @@ export default function OCEN1001() {
         const { data: newData } = await detailRefetch(); // refetch 호출 후 응답 대기 
         const cargo = ((newData as string[])[1] as unknown as gridData).data;
         const cost = ((newData as string[])[2] as unknown as gridData) // grid사용으로 gridData로 맞추기
-        log("cost & cargo : ", cargo, cost)
         const data = {
           ...((newData as string[])[0] as unknown as gridData).data[0],
           cargo : cargo || [],
@@ -214,7 +213,7 @@ export default function OCEN1001() {
   };
 
   const onSubmit = (data:any) => {
-    log('Submitted data:', data);
+    // log('Submitted data:', data);
   };
 
   return (

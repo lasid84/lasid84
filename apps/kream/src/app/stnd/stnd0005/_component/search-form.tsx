@@ -53,7 +53,6 @@ const SearchForm = memo(({ loadItem }: any) => {
     const onNew = () => {
         const params = getValues();
         dispatch({ searchParams: params, mSelectedRow: null, crudType:crudType.CREATE, isPopUpOpen:true});
-        log("onNew", params);
       }
 
     return (

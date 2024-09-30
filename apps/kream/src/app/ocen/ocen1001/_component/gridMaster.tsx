@@ -74,7 +74,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
-        log("handleRowDoubleClicked", selectedRow);
         if (objState.tab1) {
             if (objState.tab1.findIndex((element: any) => {
                 return element.cd === selectedRow.template_id;
@@ -94,7 +93,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow);
         // console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
         // dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     };

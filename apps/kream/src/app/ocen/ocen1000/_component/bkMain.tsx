@@ -102,7 +102,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       let defSales = (crSalesContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
       let s_cont_seq = defSales ? defSales.cont_seq : null;
 
-      log("isRefreshCrCont", t_cont_seq, s_cont_seq)
+      // log("isRefreshCrCont", t_cont_seq, s_cont_seq)
       // if (t_cont_seq) {
         // dispatch({ bkData : { ...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq}});
         dispatch({ [MselectedTab]: {...bkData, cr_t_cont_seq: t_cont_seq, cr_s_cont_seq: s_cont_seq, [ROW_CHANGED]: true}});
@@ -116,7 +116,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
       ...bkData,
       ...templateData
     }
-    log("SaveTemplateData", newData)
+    // log("SaveTemplateData", newData)
     
     const userConfirmed = window.confirm(t('MSG_0175')|| ''); //템플릿을 저장하시겠습니까?
 
@@ -413,14 +413,14 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                 isDisplay={true}
                 events={{
                   onSelectionChanged: (e, id, value) => {
-                    log("onSelectionChanged carrier_code0", id, value, bkData?.carrier_code);
+                    // log("onSelectionChanged carrier_code0", id, value, bkData?.carrier_code);
                     if (bkData?.carrier_code != value) {
                       dispatch({[MselectedTab]: {...bkData, 
                         carrier_code:value,
                         cr_t_cont_seq:null, cr_t_cont_email:null, cr_t_cont_tel_num:null, 
                         cr_s_cont_seq:null, cr_s_cont_email:null, cr_s_cont_tel_num:null, 
                       }});
-                      log("onSelectionChanged carrier_code1", id, value);
+                      // log("onSelectionChanged carrier_code1", id, value);
                       if (value) setRefreshCrCont(true);
                     }
                   },
@@ -494,7 +494,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                             bkData.cr_s_cont_seq = e?.cont_seq ? e?.cont_seq : null;
                             bkData.cr_s_cont_email = e?.email;
                             bkData.cr_s_cont_tel_num = e?.tel_num;
-                            log("cr_s_cont_seq", e)
+                            // log("cr_s_cont_seq", e)
                             dispatch({[MselectedTab]: {...bkData}});
                           }
                         }}

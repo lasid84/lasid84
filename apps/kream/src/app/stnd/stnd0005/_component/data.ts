@@ -21,7 +21,6 @@ export const SP_Load = async (searchParam: any) => {
     isShowLoading: false
   }
   const result = await executFunction(params);
-  log("STND0005 Load",result);
   return result;
 }
 
@@ -29,7 +28,6 @@ export const SP_GetMasterData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
 
   const { grp_cd, user_id, ipaddr } = Param;
-  log("searchData:", Param);
 
   const params = {
     inparam: [
@@ -56,7 +54,6 @@ export const SP_UpdateData = async (param: any) => {
   console.log('UpdateLogic params', param)
   const Param = param
   const { grp_cd, cd, cd_nm, cd_desc,cd_mgcd1, cd_mgcd2, use_yn, user_id, ipaddr } = Param;
-  log("UpdateLogic searchData:", grp_cd);
 
   const params = {
     // t(in_grp_cd text, in_cd text, in_cd_nm text, in_cd_desc text, in_cd_mgcd1 text, in_cd_mgcd2 text, in_use_yn text, in_user_id text, in_ipaddr text, OUT n_return integer, OUT v_return text, OUT c_return1 refcursor)
@@ -95,8 +92,7 @@ export const SP_InsertData = async (param: any) => {
   console.log('SP_CreateData_params', param)
   const Param = param
   const { grp_cd, cd, cd_nm, cd_desc,cd_mgcd1, cd_mgcd2, use_yn, user_id, ipaddr } = Param;
-  log("searchData:", grp_cd);
-
+  
   const params = {
     // t(in_grp_cd text, in_cd text, in_cd_nm text, in_cd_desc text, in_cd_mgcd1 text, in_cd_mgcd2 text, in_use_yn text, in_user_id text, in_ipaddr text, OUT n_return integer, OUT v_return text, OUT c_return1 refcursor)
 

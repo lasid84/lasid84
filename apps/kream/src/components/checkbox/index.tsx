@@ -36,7 +36,7 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
 
   useEffect(() => {
     let isChecked = value === 'Y' ? true : false
-    log('???checkbox', id, value, isChecked)
+    // log('???checkbox', id, value, isChecked)
     setChceckVal(isChecked);
     setValue(id, isChecked);
   }, [value])

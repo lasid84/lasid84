@@ -88,7 +88,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => {
         reset()
-        log("popup mSelectedRow :", mSelectedRow);
         if (popType === crudType.CREATE) {
             setFocus("trans_mode")
         }

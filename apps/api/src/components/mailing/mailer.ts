@@ -3,7 +3,7 @@ import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 import { Request, Response } from "express";
 import fs from 'fs';
 
-import { log } from '@repo/kwe-lib/components/logHelper';
+import { log, error } from '@repo/kwe-lib/components/logHelper';
 import { callFunction } from '@repo/kwe-lib/components/dbDTOHelper';
 
 interface resultType {
@@ -126,7 +126,7 @@ export const sendMail = async (req: Request, res: Response) => {
                 attachments: attach
             }
 
-            log("==========================mailContent1", mailContent,errMsg,  "host", process.env.SMTP_HOST);
+            // log("==========================mailContent1", mailContent,errMsg,  "host", process.env.SMTP_HOST);
 
             if (!errMsg) {
                 new Promise((resolve, reject) => {
@@ -141,20 +141,20 @@ export const sendMail = async (req: Request, res: Response) => {
                 const inparam = ["in_key", "in_err", "in_user", "in_ipaddr"];
                 const invalue = [mailContent.seq, errMsg, user_id, ipaddr];
                 const result:resultType = await callFunction(inproc, inparam, invalue) as resultType;
-                log("mailContent.seq", result, mailContent.seq, errMsg);
+                // log("mailContent.seq", result, mailContent.seq, errMsg);
             }
 
             // log("==========================mailContent2", mailContent,errMsg,  "host", process.env.SMTP_HOST);
         };
         
         if (errMsgTotal) {
-            log()
+            // log()
             res.status(502).end(errMsgTotal);
         } else {
             res.status(200).send('Success');    
         }
     } catch (ex) {
-        log("sendMail ex: ",ex)
+        error("sendMail ex: ",ex)
         res.status(501).send(ex);
     }
 }

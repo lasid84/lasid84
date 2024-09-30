@@ -53,7 +53,7 @@ const SearchForm: React.FC<Props> = (props) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params);
+    // log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true, mSelectedRow: null });
   }
 
@@ -66,11 +66,11 @@ const SearchForm: React.FC<Props> = (props) => {
           if (data.__changed) {
               hasData = true;
               if (data.__ROWTYPE === ROW_TYPE_NEW) { //신규 추가
-                  log("onSaveContainerYard_NEW", data);
+                  // log("onSaveContainerYard_NEW", data);
                   // data.place_code = objState.mSelectedRow.place_code;
                   // Create.mutate(data);
               } else { //수정
-                  log("onSaveContainerYard_UPD", data);
+                  // log("onSaveContainerYard_UPD", data);
                   // Update.mutate(data);
               }
           }

@@ -78,7 +78,7 @@ const BKCargo = memo(({ loadItem, bkData }: Props) => {
                       }
                     })
                   };         
-                  log("svc_type onSelectionChanged", bkData);
+                  // log("svc_type onSelectionChanged", bkData);
                   dispatch({
                     [MselectedTab] : {
                       ...bkData,

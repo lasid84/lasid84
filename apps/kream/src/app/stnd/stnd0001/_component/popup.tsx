@@ -57,7 +57,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     } = formZodMethods;
 
     useEffect(() => {
-        log("gUserGroupId: ", gUserGroupId)
+        // log("gUserGroupId: ", gUserGroupId)
     }, [gUserGroupId])
 
     useEffect(() => {
@@ -101,7 +101,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => {
         if (mSelectedRow) {
-            log('mSelectedRow?', mSelectedRow)
+            // log('mSelectedRow?', mSelectedRow)
         }
     }, [mSelectedRow])
 

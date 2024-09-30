@@ -176,7 +176,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
         }
 
         if (replaced_id === 'same') {
-          log("same", id, item, value)
+          // log("same", id, item, value)
           if (value === 'Y') {
             item = {
               ...parentItem,

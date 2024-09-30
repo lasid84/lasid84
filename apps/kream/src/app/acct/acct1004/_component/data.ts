@@ -125,7 +125,7 @@ export const SP_UpdateData = async (param: any) => {
 
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("onFormSubmit param : ", param)
+  // log("onFormSubmit param : ", param)
   const { invoice_no, on_board_dd, arrived_dd, user_id, ipaddr } = Param;
   const params = {
     inparam: [

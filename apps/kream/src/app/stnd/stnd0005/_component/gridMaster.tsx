@@ -48,7 +48,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const selectedRow = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow);
         // dispatch({ mSelectedRow: selectedRow, isMSearch: true });
     };
 

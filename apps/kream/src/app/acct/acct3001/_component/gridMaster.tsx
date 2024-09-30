@@ -41,7 +41,7 @@ const MasterGrid: React.FC<Props> = ({ initData }) => {
     const handleRowClicked = (param: RowClickedEvent) => {
         // var data = onRowClicked(param);
         var selectedRow = { "colId": param.node.id, ...param.node.data }
-        log("handleRowClicked", selectedRow)
+        // log("handleRowClicked", selectedRow)
         // dispatch({isDSearch:true});
     };
 

@@ -61,7 +61,6 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
 
     useEffect(() => {
         reset()
-        log("popup mSelectedRow :", mSelectedRow);
         if (popType === crudType.CREATE) {
             setFocus("use_yn")
         }

@@ -1,23 +1,8 @@
 // 'use server'
 'use client'
 
-import { setI18n } from "components/i18n/i18n";
-import { useConfigs } from "states/useConfigs";
-import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import CustomSelect from './_component/test';
-import { FaChevronDown } from "react-icons/fa";
-import { TButtonMove, TButtonHideBlue, TButtonRefresh, TButtonKart, TButtonGrayDisabled, TButtonRedDisabled, TButtonRed } from "@/components/form/button";
-import { Button } from 'components/button';
-import PageContent from "@/layouts/search-form/page-content";
-import { MaskedInputField, Input } from 'components/input';
-import { DateInput, DatePicker } from 'components/date'
 import { FormProvider, useForm } from "react-hook-form";
-import { ReactSelect, data } from "components/select/react-select2";
-import NextDatePicker from "components/date/next-tui-date-picker";
-import MaskedInput from "react-text-mask";
-import createNumberMask from "@/components/input/react-text-mask/createNumberMask";
-import { Checkbox } from 'components/checkbox'
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -71,7 +56,8 @@ const Home: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col items-center min-h-screen bg-gray-100">
+        <div>준비중..</div>
+          {/* <div className="flex flex-col items-center min-h-screen bg-gray-100">
             <header className="w-full p-4 text-center text-white bg-blue-600">
               <h1 className="text-2xl font-bold">Development History</h1>
             </header>
@@ -89,7 +75,7 @@ const Home: React.FC = () => {
                 ))}
               </div>
             </main>
-          </div>
+          </div> */}
         </form>
       </FormProvider>
   );

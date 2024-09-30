@@ -29,7 +29,6 @@ type Props = {
 
 const SearchForm = memo(({ loadItem }: any) => {
 
-  log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
   const { getValues } = useFormContext();
   

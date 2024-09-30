@@ -26,7 +26,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-        log("onFormSubmit", param)
         if (popType === crudType.UPDATE) {
         } else {
         }
@@ -35,7 +34,6 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
 
     useEffect(() => {
         reset()
-        log("popup mSelectedRow :", mSelectedRow);
         if (popType === crudType.CREATE) {
         }
     }, [popType, isOpen])

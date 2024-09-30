@@ -121,7 +121,6 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
   }, [loadItem]);
 
   useEffect(() => {
-    log("bk_id, cust_code", bk_id, cust_code, isOpen, transMailData);
     if (isOpen && transMailData) {
       // setMailForm(
       //   {...mailform,
@@ -143,7 +142,6 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
   const { getValues } = useFormContext();
 
   const handleFileDrop = (data: any[], header: ArrayBuffer[]) => {
-    log('file upload -data, header', data, header);
 
     const fileUploadRequestArray : FileUploadData[] = [];
     for (let i=0; i<data.length; i++) {
@@ -163,7 +161,6 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
     if(val === 'Y'){
       templateTypeList.push(id);
       setTemplateTypeList([...templateTypeList]);
-      log('popmailsend', templateTypeList)
     } else {
       templateTypeList.splice(templateTypeList.indexOf(id), 1);
       setTemplateTypeList([...templateTypeList]);
@@ -172,8 +169,6 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
   
   const sendTransPortEmail = useCallback(async () => {
     const curData = getValues();
-    console.log("attachFileUpload : ", attachFileUpload);
-    console.log("attachFileUpload.length : ", attachFileUpload.length);
     /**
      * @dev
      * reportType과 templateTypeList index 매칭

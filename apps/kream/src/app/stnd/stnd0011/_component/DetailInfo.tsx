@@ -30,7 +30,7 @@ const CustomerDetail: React.FC = () => {
     } = formZodMethods;
 
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
-        log("onFormSubmit", param)
+        // log("onFormSubmit", param)
     }, []);
 
     const handleMaskedInputChange = (e:any) => {

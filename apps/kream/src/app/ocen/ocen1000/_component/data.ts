@@ -193,7 +193,7 @@ export const SP_CreateData = async (param: any) => {
     , use_yn
     , remark, user_id, ipaddr } = Param;
 
-    log("SP_CreateData", trans_mode, trans_type)
+    // log("SP_CreateData", trans_mode, trans_type)
   const params = {
     inparam: [
       "in_bk_dd"
@@ -715,7 +715,7 @@ export const SP_GetCarrierContData = async (searchParam: any) => {
 
 export const SP_InsertCargo = async (param: any) => {
   const Param = param;
-  log("SP_InsertCargo", Param);
+  // log("SP_InsertCargo", Param);
   const {  bk_id					   , seq 		        , piece				        , pkg_type 
           , slac_stc 			   , slac_uom			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
@@ -812,7 +812,7 @@ export const SP_InsertCargo = async (param: any) => {
 
 export const SP_UpdateCargo = async (param: any) => {
   const Param = param;
-  log("SP_UpdateCargo", Param);
+  // log("SP_UpdateCargo", Param);
   const {  bk_id					   , seq 		        , piece				        , pkg_type 
           , slac_stc 			   , slac_uom 			  , container_refno 		, container_type      , seal_no 
           , description		   , measurement		, measurement_uom	    , gross_wt		        , gross_uom       , chargeable_wt          , chargeable_uom
@@ -893,7 +893,7 @@ export const SP_UpdateCargo = async (param: any) => {
     isShowLoading: true,
     isShowComplete:false,
     }
-    log('params',params)
+    // log('params',params)
 
     const result = await executFunction(params);
 
@@ -1139,7 +1139,7 @@ export const SP_GetMailSample = async (searchParam: any) => {
     }
   
     const result = await executFunction(params);
-    log('mailData result', Param, result)
+    // log('mailData result', Param, result)
     return result![0];
 }
 
@@ -1147,7 +1147,7 @@ export const SP_SendEmail = async (param: any) => {
   // l(in_subject text, in_content text, in_pgm_code text, in_attachment text, i
   // const Param = searchParam.queryKey[1]
   const Param = param;
-   log("SP_SendEmail_ param : ", param)
+  //  log("SP_SendEmail_ param : ", param)
   const { subject, content, pgm_code,attachment, bk_id, user_id, ipaddr} = Param;
   const params = {
     inparam : [
@@ -1182,7 +1182,7 @@ export const SP_GetReportData = async (param: any) => {
   
   // const Param = searchParam.queryKey[1]
   const Param = param;
-  log("param : ", param)
+  // log("param : ", param)
   const { type, bk_id, user_id, ipaddr} = Param;
   const params = {
     inparam : [
@@ -1210,7 +1210,7 @@ export const SP_GetClipBoardData = async (param: any) => {
   
   const Param = param.queryKey[1]
   
-  log("param : ", Param);
+  // log("param : ", Param);
   const { type, bk_id, user_id, ipaddr} = Param;
   const params = {
     inparam : [

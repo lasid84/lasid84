@@ -29,7 +29,6 @@ type Props = {
 // export function SearchForm({searchParams, dispatch}) {
 const SearchForm = memo(({ loadItem, carrier_type }: any) => {
 
-  log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
   const { getValues } = useFormContext();
   
@@ -47,7 +46,6 @@ const SearchForm = memo(({ loadItem, carrier_type }: any) => {
 
   const onSearch = () => {
     const params = getValues();
-    log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true });
   }
 

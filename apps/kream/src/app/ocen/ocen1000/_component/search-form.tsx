@@ -121,7 +121,7 @@ const SearchForm = ({ loadItem }: any) => {
   }, [loadItem]);
 
   useEffect(() => {
-    log("curCreateUser", objState.searchParams)
+    // log("curCreateUser", objState.searchParams)
     if (searchParams?.create_user && objState.isFirstRender) {
       onSearch();
       dispatch({ isFirstRender: false });
@@ -129,7 +129,7 @@ const SearchForm = ({ loadItem }: any) => {
   }, [searchParams?.create_user])
 
   useEffect(() => {
-    log("useEffect userid", user_id, objState.isFirstRender, getValues("create_user"), searchParams)
+    // log("useEffect userid", user_id, objState.isFirstRender, getValues("create_user"), searchParams)
     if (user_id && objState.isFirstRender) {
       dispatch({
         searchParams: {...searchParams, create_user: user_id}
@@ -169,7 +169,7 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onSearch = () => {
     const params = getValues();
-    log("onSearch", params);
+    // log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true});
   };
 

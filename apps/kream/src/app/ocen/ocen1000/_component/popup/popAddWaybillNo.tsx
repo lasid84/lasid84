@@ -30,7 +30,6 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
     const closeModal = (hbl:string) => {
         if (callbacks?.length) callbacks?.forEach((callback) => callback());
         
-        log("closeModal", data)
         dispatch({ isWaybillPopupOpen: false, [bkData?.bk_id]: {...bkData, waybill_no: hbl} });
     }
 
@@ -52,12 +51,11 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
             remove();
             refetch();
             setWaybillNo(bkData.waybill_no);
-            log("finish bkData")
         }
     }, [isOpen, bkData]);
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
-        log("handleCellValueChanged", param)
+        // log("handleCellValueChanged", param)
     //     gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
     //         // log("handleCellValueChanged2", param.node.data);
     //         if (!param.node.data.def) return;
@@ -117,7 +115,6 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
     }
 
     const handleCellKeyDown = (e:any) => {
-        log("handleCellKeyDown", e, e.value, e.event.key);
         if (e.value && e.event.key === 'Enter') onAdd();
     }
 

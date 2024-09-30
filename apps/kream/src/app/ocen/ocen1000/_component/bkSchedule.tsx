@@ -74,7 +74,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
     if (isRefreshCyCont && cyPlaceContData && bkData) {
       setRefreshCyCont(false);
       let def = (cyPlaceContData as gridData).data.filter((row:any) => row['def'] === 'Y')[0];
-      log("isRefreshCyCont", def, !def ? null : def?.cont_seq )
+      // log("isRefreshCyCont", def, !def ? null : def?.cont_seq )
       dispatch({ [MselectedTab]: {...bkData, cy_cont_seq: !def ? null : def?.cont_seq }})
     } 
   }, [isRefreshCyCont, cyPlaceContData, bkData])
@@ -295,7 +295,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     isDisplay={true}
                     events={{
                       onSelectionChanged: (e, id, value) => {
-                        log("cy_place_code onSelectionChanged", id, value)
+                        // log("cy_place_code onSelectionChanged", id, value)
                         if (bkData?.cy_place_code != value) {
                           var selectedRow = e.api.getSelectedRows()[0] as any;
                           setRefreshCyCont(true);
@@ -350,7 +350,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
                     //   }
                       events={{
                         onChanged: (e) => {
-                          log("cy_cont_seq onChange:", bkData?.cy_cont_seq)
+                          // log("cy_cont_seq onChange:", bkData?.cy_cont_seq)
                           if (!bkData) return;
                           bkData.cy_cont_pic_nm = e?.pic_nm || null;
                           bkData.cy_cont_email = e?.email|| null;

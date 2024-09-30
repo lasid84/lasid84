@@ -98,7 +98,7 @@ const CargoFCL = memo(
 
     
     const handleCheckBoxClick = (id : string, val : any) => {
-      log("handleCheckBoxClick", cargoItem.seq, id, val, index)
+      // log("handleCheckBoxClick", cargoItem.seq, id, val, index)
       onValueChange(cargoItem.seq, id, val, index);         
     }
 

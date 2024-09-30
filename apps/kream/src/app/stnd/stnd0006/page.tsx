@@ -17,7 +17,6 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export default function STND0006() {
     const menu_param = useUserSettings((state) => state.data.currentParams, shallow);
-    log("STND0006", menu_param)
 
     const gridRef = useRef<any | null>(null);
     const [state, dispatch] = useReducer(reducer, {

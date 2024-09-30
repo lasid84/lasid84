@@ -41,7 +41,7 @@ class Library {
     async startBrowser() {
         try {
         if (!this.browser) {
-            log(this.pgm, " / ", this.idx, " / brower restart")
+            // log(this.pgm, " / ", this.idx, " / brower restart")
             this.browser = await puppeteer.launch(
                 { headless:this.isHeadless, 
                     args:[ '--start-maximized'], // you can also use '--start-fullscreen'

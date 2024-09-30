@@ -64,21 +64,21 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         // const row = onSelectionChanged(param);
         const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow)
+        // log("handleSelectionChanged", selectedRow)
         dispatch({ dSelectedRow: selectedRow });
         // document.querySelector('#selectedRows').innerHTML =
         //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
     };
 
     const handleRowClicked = (param: RowClickedEvent) => {
-        log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
+        // log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
         // const row = onRowClicked(param);
         // var selectedRow = {"colId": param.node.id, ...param.node.data}
         // dispatch({dSelectedRow:selectedRow});
     };
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
-        log("handleCellValueChanged");
+        // log("handleCellValueChanged");
         gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;

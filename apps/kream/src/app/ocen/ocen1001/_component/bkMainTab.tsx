@@ -64,7 +64,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           cargo.push({...data, template_id:bkData.template_id });
         }
       });
-      log("saveCargo", cargo)
+
       if (hasData) await SaveTemplateCargData.mutateAsync({jsonData: JSON.stringify(cargo)});
     }
 

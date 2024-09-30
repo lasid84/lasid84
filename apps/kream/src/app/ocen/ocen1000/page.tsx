@@ -115,7 +115,7 @@ export default function OCEN1000() {
 
   useEffect(() => {
     const params = getMenuParameters(menu_param);
-    log("params", params)
+    // log("params", params)
     dispatch({
       trans_mode: params.trans_mode,
       trans_type: params.trans_type,
@@ -167,7 +167,7 @@ export default function OCEN1000() {
   }, [initData]);
 
   const onSubmit = (data:any) => {
-    log('Submitted data:', data);
+    // log('Submitted data:', data);
   };
 
   const handleOnClickTab = (code: any) => {

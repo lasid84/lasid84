@@ -169,7 +169,6 @@ const Modal: React.FC<Props> = ({
   }, [loadItem]);
 
   useEffect(() => {
-    log("bk_id, cust_code", bk_id, custCode, isOpen, transMailData);
     if (isOpen && transMailData) {
       setMailForm((prevMailform) => ({
         ...prevMailform,
@@ -209,7 +208,6 @@ const Modal: React.FC<Props> = ({
   };
 
   const handleFileDrop = async (data: any[], header: ArrayBuffer[]) => {
-    log('file upload -data, header', data, header);
 
     const fileUploadRequestArray : FileUploadData[] = [];
     for (let i=0; i<data.length; i++) {
@@ -229,7 +227,6 @@ const Modal: React.FC<Props> = ({
     if(val === 'Y'){
       templateTypeList.push(id);
       setTemplateTypeList([...templateTypeList]);
-      log('popmailsend', templateTypeList)
     } else {
       templateTypeList.splice(templateTypeList.indexOf(id), 1);
       setTemplateTypeList([...templateTypeList]);
@@ -272,7 +269,6 @@ const Modal: React.FC<Props> = ({
         console.log(reportList); // reportList의 실제 값 확인
         for (const report of reportList) {
             try {
-              log('report?? REPORT. REPORT_TYPE : ', report, report.report_type)
               await GetReportData.mutateAsync({ type: (report.report_type-1), bk_id: bk_id }, {
                 onSuccess: (res:any) => {
                   let reportData : any = new Object;
@@ -297,7 +293,6 @@ const Modal: React.FC<Props> = ({
                   fileNameList.push(report.report_type_nm.concat("-", voccID));
                   reportDataList.push(reportData);        
 
-                  log('GetreportData s fileNameList', fileNameList)
                 },
                 onError: (error) => {
                   console.error(` 실패 (type: ${report.key}):`, error);
@@ -340,7 +335,6 @@ const Modal: React.FC<Props> = ({
             // }
 
             res.data.forEach((data: any, index: number) => {
-              log('data', data);
 
               // fileNameList와 res.data가 함께 움직임
               const files: FileUploadData = {

@@ -30,7 +30,6 @@ type Props = {
 // export function SearchForm({searchParams, dispatch}) {
 const SearchForm = memo(({ loadItem }: any) => {
 
-  log("search-form 시작", Date.now());
   const { dispatch } = useAppContext();
   const { getValues } = useFormContext();
 
@@ -61,14 +60,12 @@ const SearchForm = memo(({ loadItem }: any) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params, getValues('trans_mode'));
     dispatch({ searchParams: params, isMSearch: true });
   }
 
   const onNew = () => {
     const params = getValues();
     dispatch({ searchParams: params, mSelectedRow: null, crudType: crudType.CREATE, isPopUpOpen: true });
-    log("onNew", params);
   }
   return (
       <PageSearchButton

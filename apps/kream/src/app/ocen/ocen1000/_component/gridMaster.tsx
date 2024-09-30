@@ -101,7 +101,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleSelectionChanged = (param: SelectionChangedEvent) => {
         const selectedRow = param.api.getSelectedRows()[0];
-        log("handleSelectionChanged", selectedRow);
+        // log("handleSelectionChanged", selectedRow);
         // console.log('handleSelectionChanged2', gridRef.current.api.getFirstDisplayedRowIndex())
         // dispatch({ refRow: gridRef.current.api.getFirstDisplayedRowIndex() })
     };
@@ -109,7 +109,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const onGridNew = async () => {
         // var selectedRow = { "colId": param.node.id, ...param.node.data }
         if (objState.tab1) {
-            log("BKCopy__onGridNew objState", objState)
+            // log("BKCopy__onGridNew objState", objState)
             // var tabName = "NEW" + (objState.tab1.reduce((acc:number,v:{cd:string}) => v.cd.includes("NEW") && acc + 1,0)+1);
             var temp = objState.tab1
                             .filter((v:{cd:string}) => v.cd.includes("NEW"))
@@ -128,7 +128,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 });
 
             for (const row of rows) {
-                log("onGridNew", row, mainData)
+                // log("onGridNew", row, mainData)
                 await ((mainData as any)[0] as gridData).data.push(row);
             }
         
@@ -143,7 +143,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleGridPreDestroyed = (param:GridPreDestroyedEvent) => {
         // let gridState = getGridState(gridRef.current);
-        log('handleGridPreDestroyed', param.state);
+        // log('handleGridPreDestroyed', param.state);
         dispatch({ mGridState:param.state });
     }
 
@@ -153,7 +153,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const handleCellValueChanged = (param:CellValueChangedEvent) => {
         let nodeData = param.node.data;
-        log("handleCellValueChanged1", nodeData, mainData);
+        // log("handleCellValueChanged1", nodeData, mainData);
         let idx = ((mainData as any)[0] as gridData).data.findIndex((row:any) => row["bk_id"] === nodeData["bk_id"]);
         
         ((mainData as any)[0] as gridData).data[idx] = {...nodeData};

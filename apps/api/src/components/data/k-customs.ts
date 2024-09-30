@@ -114,7 +114,7 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
         const inparam = ["in_data", "in_user", "in_ipaddr"];
         const invalue = [JSON.stringify(jsonResult), user, ipaddr];
         const result2:resultType = await callFunction(inproc, inparam, invalue) as resultType;
-        log("!!!!!!!!", JSON.stringify(jsonResult));
+        // log("!!!!!!!!", JSON.stringify(jsonResult));
         if (result2.numericData === 0) {
             res.status(200).send({result2});
         } else {
@@ -122,7 +122,7 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
         }
 
     } catch (ex) {
-        log(ex.message);
+        error(ex.message);
     }
     
   }
@@ -165,7 +165,7 @@ export const retrieveFlghEtprRprtBrkd = async (params:any) => {
         } else {
             let msg = result.flghEtprRprtBrkdQryRtnVo.ntceInfo ? result.flghEtprRprtBrkdQryRtnVo.ntceInfo[0] : '';
             if (!msg.startsWith('[N00')) {        
-                log("=================", result)        
+                // log("=================", result)        
                 jsonResult = result
             } else {
                 jsonResult = {error:msg}
