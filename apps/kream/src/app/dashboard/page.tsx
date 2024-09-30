@@ -45,11 +45,11 @@ const Home: React.FC = () => {
   } = methods;
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    // console.log(data);
   };
   
   const onClick = (data: any) => {
-    console.log("onClick", data);
+    // console.log("onClick", data);
     
   }
   

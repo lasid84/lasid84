@@ -31,7 +31,6 @@ const ListGrid: React.FC<Props> = ({
   const [rowData, setRowData] = useState([]);
   const [taxno, setTaxno] = useState('');
   const columns = React.useMemo(() => {
-    console.log('handle empty data', listItem)
     if (listItem === undefined || !listItem || listItem.length === 0) return []; // Handle empty data   
     const firstRow = listItem.data.cursorData[0][0];
 
@@ -121,9 +120,6 @@ const ListGrid: React.FC<Props> = ({
       const selectedNode = selectedNodes[0];
       const columnValue = selectedNode.data[columnId];
 
-      //eslint-disable-next-line
-      console.log(`컬럼 필드 : ${columnId}, 컬럼 값 : ${columnValue}`);
-      console.log(`선택된 컬럼 : ${JSON.stringify(selectedNode.data, null, 2)}`);
     }
   };
 
@@ -141,7 +137,6 @@ const ListGrid: React.FC<Props> = ({
   //Row클릭
   const cellClickedHandler = useCallback((event: any) => {
     const columnId: string = event.column.getColId();
-    console.log('클릭이벤트 데이터 확인', event.data)
     setTaxno(event.data.tax_no)
     // if (columnId === "invoice_no") {
     //   actions.setPopData(event.data);
@@ -154,7 +149,6 @@ const ListGrid: React.FC<Props> = ({
   const selectionChangedHandler = useCallback((event: any) => {
     const selectedRows = gridListRef?.current?.api?.getSelectedRows()
     if (selectedRows && selectedRows.length > 0) {
-      console.log('selectedRow,', selectedRows)
       let invoice_list = ''
       let no = ''
       selectedRows.map((i: any) => {

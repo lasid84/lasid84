@@ -13,8 +13,6 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   const config = useConfigs((state) => state.config);
   const { background, layout, collapsed } = config;
 
-  console.log("/layouts/layout-1/index.tsx");
-
   return (
     <App>
       <Head>

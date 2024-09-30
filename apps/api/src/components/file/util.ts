@@ -17,7 +17,7 @@ const selectTemplateFile = (templateType:string[]) : string[] => {
 
   const typeList = [];
   for (const template of templateType) {
-    console.log("templateFileRegistryPath", templateFileRegistryPath, template, constant.XLSX_FILE_EXTENSION)
+    // console.log("templateFileRegistryPath", templateFileRegistryPath, template, constant.XLSX_FILE_EXTENSION)
     typeList.push(path.join(templateFileRegistryPath, template.concat(constant.XLSX_FILE_EXTENSION)))
   }
 
@@ -51,7 +51,7 @@ const treeToPath = (filePathTree: string[]): string => {
     if (filePathTree.length < 2) {
       return "";
     }
-    console.log("filePathTree : ", filePathTree);
+    // console.log("filePathTree : ", filePathTree);
     let filePath: string;
     for (let i=0; i<filePathTree.length-1; i++) {
       filePath = path.join(filePathTree[i], filePathTree[i+1]);

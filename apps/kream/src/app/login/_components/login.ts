@@ -47,7 +47,7 @@ export const getUserData = (async (userData:userData) => {
       }           
   } catch (err) {
     const typedErr = err as Error;
-    console.error('Error fetching data:', typedErr.message);
+    // console.error('Error fetching data:', typedErr.message);
   } finally {
 
   };

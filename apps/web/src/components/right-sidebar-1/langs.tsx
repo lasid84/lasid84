@@ -26,7 +26,6 @@ const Langs: React.FC = () => {
 
   const selectLangChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
-    console.log('target value', value)
     configActions.setConfig({
       lang: value,
       rightSidebar: false,

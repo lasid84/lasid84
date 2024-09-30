@@ -293,7 +293,7 @@ const Modal: React.FC<Props> = ({
 
                 },
                 onError: (error) => {
-                  console.error(` 실패 (type: ${report.key}):`, error);
+                  // console.error(` 실패 (type: ${report.key}):`, error);
                 }
               });
             } catch (error) {

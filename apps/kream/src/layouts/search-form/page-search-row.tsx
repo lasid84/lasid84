@@ -45,7 +45,6 @@ export const PageTabContent: React.FC<PageSearchProps> = ({
   children,
   addition,
 }) => {
-  console.log("PageTabContent", children);
   return (
     <>
       <div className="flex w-full bg-white dark:bg-gray-900 dark:border-gray-800 dark:text-white">

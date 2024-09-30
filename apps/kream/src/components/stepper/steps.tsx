@@ -25,7 +25,6 @@ export const Steps1: React.FC = () => {
             }`}
             onClick={() => {
               //eslint-disable-next-line
-              console.log(item);
             }}
           >
             <span
@@ -80,7 +79,6 @@ export const Steps2: React.FC = () => {
           }`}
           onClick={() => {
             //eslint-disable-next-line
-            console.log(item);
           }}
         >
           <div className="w-8 shrink-0">
@@ -148,7 +146,6 @@ export const Steps3: React.FC = () => {
             disabled={item.disabled}
             onClick={() => {
               //eslint-disable-next-line
-              console.log(item.title);
             }}
             className={`font-bold uppercase text-xs px-4 py-2 w-full ${
               item.active

@@ -25,7 +25,7 @@ function convertToCommaSeparatedString(data: (string | object | string[])[]): st
         const parsedItem = JSON.parse(item);
         return parsedItem.value; // 객체인 경우 value 값 추출
       } catch (error) {
-        console.error(`Error parsing JSON: ${item}`);
+        // console.error(`Error parsing JSON: ${item}`);
         return item; // 파싱 실패 시 그대로 반환
       }
     } else if (typeof item === 'object' && item !== null) {

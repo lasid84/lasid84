@@ -1115,7 +1115,6 @@ export const SP_SaveCostData = async (param: any) => {
 }
 
 export const SP_GetMailSample = async (searchParam: any) => {
-  console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
   const { bk_id, cust_code, pgm_code, user_id, ipaddr } = Param;

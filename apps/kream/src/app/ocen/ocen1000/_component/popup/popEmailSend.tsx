@@ -230,7 +230,7 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
                   reportDataList.push(reportData);        
                 },
                 onError: (error) => {
-                  console.error(` 실패 (type: ${report.key}):`, error);
+                  // console.error(` 실패 (type: ${report.key}):`, error);
                 }
               });
             } catch (error) {
@@ -275,15 +275,15 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
     
     if (attachFileUpload.length > 0) {
       const requestList : FileUploadData[] = [...fileUploadRequest.files, ...attachFileUpload]
-      console.log("requestList : ", requestList);
+      // console.log("requestList : ", requestList);
       fileUploadRequest.files = requestList;
     }
 
-    console.log("fileUploadRequest.files : ", fileUploadRequest.files);
+    // console.log("fileUploadRequest.files : ", fileUploadRequest.files);
 
     await Upload.mutateAsync(fileUploadRequest, {
       onSuccess: async (res:any) => {
-        console.log("res : ", res);
+        // console.log("res : ", res);
 
       
       mailform.attachment = res.data.map((filePath: string) => filePath).join(',');

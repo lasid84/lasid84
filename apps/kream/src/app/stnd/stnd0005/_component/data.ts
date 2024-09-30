@@ -51,7 +51,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
 
 
 export const SP_UpdateData = async (param: any) => {
-  console.log('UpdateLogic params', param)
+  // console.log('UpdateLogic params', param)
   const Param = param
   const { grp_cd, cd, cd_nm, cd_desc,cd_mgcd1, cd_mgcd2, use_yn, user_id, ipaddr } = Param;
 
@@ -89,7 +89,7 @@ export const SP_UpdateData = async (param: any) => {
 }
 
 export const SP_InsertData = async (param: any) => {
-  console.log('SP_CreateData_params', param)
+  // console.log('SP_CreateData_params', param)
   const Param = param
   const { grp_cd, cd, cd_nm, cd_desc,cd_mgcd1, cd_mgcd2, use_yn, user_id, ipaddr } = Param;
   
@@ -123,6 +123,6 @@ export const SP_InsertData = async (param: any) => {
   }
 
   const result = await executFunction(params);
-  console.log('resultafds',result)
+  // console.log('resultafds',result)
   return result![0];
 }

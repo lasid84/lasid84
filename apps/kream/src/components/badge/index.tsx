@@ -26,7 +26,6 @@ export const Badge: React.FC<BadgeProps> = ({
 
     const handleonClick = () => {
         if (onClick){
-            console.log('hgandleonclick,')
             onClick();
         } 
     }

@@ -61,7 +61,6 @@ export const DateInput: React.FC<InputProps> = (props) => {
     // }
 
     if (events?.onKeyDown) {
-      console.log(!!events?.onKeyDown)
       events.onKeyDown(event);
     }
   }
@@ -74,7 +73,6 @@ export const DateInput: React.FC<InputProps> = (props) => {
     setSelectedVal(e.target.value);
 
     if (events?.onChange) {
-        console.log(!!events?.onChange)
         events.onChange(e);
     }
   };

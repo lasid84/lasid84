@@ -45,7 +45,6 @@ export const useUpdateData = (model?: string) => {
     },
     onMutate: async (data) => { },
     onError: (err, data, context) => {
-      console.log('PLEASE TRY AGAIN')
       return { err, data, context }
     }
   })

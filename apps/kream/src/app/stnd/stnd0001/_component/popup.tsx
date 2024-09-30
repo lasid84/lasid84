@@ -73,7 +73,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     //Refactore by using custom hook
     const onFormSubmit: SubmitHandler<any> = useCallback((param) => {
         if (popType === crudType.UPDATE) {
-            console.log('UpdateLogic', param)
+            // console.log('UpdateLogic', param)
             Update.mutate(param, {
                 onSuccess: (res: any) => {
                     closeModal();

@@ -223,6 +223,5 @@ export const fileUpload = (req: Request, res: Response) => {
 
     filePathResponse.push(filePath);
   }
-  console.log("request : ", request, filePathResponse);
   return res.json(filePathResponse);
 }
