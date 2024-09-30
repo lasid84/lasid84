@@ -1,5 +1,3 @@
-
-
 import { executFunction, executeReportDownload, executeFileUpload,executeReportUpload } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
@@ -1149,7 +1147,7 @@ export const SP_SendEmail = async (param: any) => {
   // l(in_subject text, in_content text, in_pgm_code text, in_attachment text, i
   // const Param = searchParam.queryKey[1]
   const Param = param;
-   log("param : ", param)
+   log("SP_SendEmail_ param : ", param)
   const { subject, content, pgm_code,attachment, bk_id, user_id, ipaddr} = Param;
   const params = {
     inparam : [
@@ -1263,7 +1261,6 @@ export const SP_FileUpload = async (param: any) => {
     ...param,
     add_folder_name : add_folder_name
   }
-  log('fileupload param', params)
 
   const result = await executeFileUpload(params);
   return result;

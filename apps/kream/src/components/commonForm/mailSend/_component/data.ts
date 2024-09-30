@@ -25,7 +25,6 @@ export const TRANPOSRT_EMAIL_LIST_OE = "TRANPOSRT_EMAIL_LIST_OE";
 
 
 export const SP_GetMailSample = async (searchParam: any) => {
-  //console.log('bk_id, searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
   const { bk_id, cust_code, pgm_code, user_id, ipaddr } = Param;  
@@ -54,7 +53,6 @@ export const SP_GetMailSample = async (searchParam: any) => {
 }
 
 export const SP_GetMailSample_comm = async (searchParam: any) => {
-  //console.log('bk_id, searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
   const { bk_id, pgm_code, cust_code, user_id, ipaddr } = Param;  
@@ -82,7 +80,7 @@ export const SP_GetMailSample_comm = async (searchParam: any) => {
     return result![0];
 }
 
-
+//CUST_CODE별 메일수신 list get
 export const SP_GetMailReceiver = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { pgm_code, cust_code, user_id, ipaddr } = Param;  
@@ -100,7 +98,7 @@ export const SP_GetMailReceiver = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'public.f_stnd0013_get_email_rcvlist2',
+    inproc: 'public.f_stnd0013_get_email_rcvlist',
     isShowLoading: true
     }
 

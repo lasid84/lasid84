@@ -289,14 +289,12 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
     await Upload.mutateAsync(fileUploadRequest, {
       onSuccess: async (res:any) => {
         console.log("res : ", res);
+
+      
+      mailform.attachment = res.data.map((filePath: string) => filePath).join(',');
       }
     });
 
-    //API : download - upload(경로리턴) 
-    // 클라이언트에서 경로 지정해서 전송 - miltiform(buffer에 맞출예정) user_id/파일명 - 
-    //executeReportDownload 활용
-
-    // 3. sendEmail 실행
     await sendEmail
       .mutateAsync(
         { ...mailform, pgm_code: TRANPOSRT_EMAIL_LIST_OE + cust_code },
@@ -324,7 +322,7 @@ const Modal: React.FC<Props> = ({loadItem, ref = null, bk_id, cust_code, cust_nm
           {/* grid */}
           <MailSend
             ref={gridRef}
-            pgm_code={TRANPOSRT_EMAIL_LIST_OE + cust_code}
+            pgm_code={TRANPOSRT_EMAIL_LIST_OE}
             title={cust_nm}
             params={{
               cust_code: objState[MselectedTab]?.shipper_id,
