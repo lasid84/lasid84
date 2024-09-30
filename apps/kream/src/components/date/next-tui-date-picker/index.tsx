@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <>
       <TuiDatePicker
-        handleChange={() => }
+        handleChange={() => {}}
         date={new Date('2023-01-01')}
         inputWidth={140}
         fontSize={16}
