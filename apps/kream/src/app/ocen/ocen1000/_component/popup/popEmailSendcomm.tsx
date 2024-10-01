@@ -205,6 +205,7 @@ const Modal: React.FC<Props> = ({
     setCustCode('')
     setPgmCode(TRANPOSRT_EMAIL_LIST_OE)
     setTemplateTypeList([]);
+    setIsClicked(false)
   };
 
   const handleFileDrop = async (data: any[], header: ArrayBuffer[]) => {
@@ -236,6 +237,7 @@ const Modal: React.FC<Props> = ({
   const sendTransPortEmail = useCallback(async () => {
     const curData = getValues();
     setIsClicked(true); // 중복클릭방지 state 추가
+
     const fileUploadRequest : FileUploadRequest = {
       addFolderName : user_id,
       files : []
@@ -244,9 +246,7 @@ const Modal: React.FC<Props> = ({
     if (templateTypeList.length > 0) {
 
       let reportList = [];
-        if (reports.length === templateTypeList.length) {
-          reportList.push(reports);
-        } else {
+
           for (const report of reports) {
             for (const template of templateTypeList) {
               if (report.key === template) {
@@ -254,7 +254,6 @@ const Modal: React.FC<Props> = ({
               }
             }
           }
-        }
 
         /**
          * @dev
@@ -293,7 +292,7 @@ const Modal: React.FC<Props> = ({
 
                 },
                 onError: (error) => {
-                  // console.error(` 실패 (type: ${report.key}):`, error);
+                  log(` 실패 (type: ${report.key}):`, error);
                 }
               });
             } catch (error) {
@@ -324,9 +323,8 @@ const Modal: React.FC<Props> = ({
 
             res.data.forEach((data: any, index: number) => {
 
-              // fileNameList와 res.data가 함께 움직임
               const files: FileUploadData = {
-                fileName: fileNameList[index]+data.extension,  // 각 인덱스에 맞는 파일 이름 할당
+                fileName: fileNameList[index]+data.extension,  
                 fileData: data.fileData,
                 fileRootDIR: "MAIL_ATTACH"
               };
