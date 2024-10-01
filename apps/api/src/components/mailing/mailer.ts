@@ -175,10 +175,10 @@ const checkFilesExist = async (filePaths) => {
 const deleteFiles = async (filePaths) => {
     for (const filePath of filePaths) {
         try {
-            fs.unlinkSync('path/to/file');
-            console.log('파일이 성공적으로 삭제되었습니다.');
+            fs.unlinkSync(filePath);
+            log('파일이 성공적으로 삭제되었습니다.');
           } catch (err) {
-            console.error('파일 삭제 중 에러 발생:', err);
+            error('파일 삭제 중 에러 발생:', err);
           }
     }
     return true;
