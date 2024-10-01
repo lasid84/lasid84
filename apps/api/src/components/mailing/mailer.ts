@@ -143,7 +143,7 @@ export const sendMail = async (req: Request, res: Response) => {
                 const result:resultType = await callFunction(inproc, inparam, invalue) as resultType;
                 // log("mailContent.seq", result, mailContent.seq, errMsg);
             }
-
+            deleteFiles(mailContent.attachment.split(','));
             // log("==========================mailContent2", mailContent,errMsg,  "host", process.env.SMTP_HOST);
         };
         
@@ -168,6 +168,18 @@ const checkFilesExist = async (filePaths) => {
             console.error(`File does not exist: ${directory + filePath}`);
             return false;
         }
+    }
+    return true;
+};
+
+const deleteFiles = async (filePaths) => {
+    for (const filePath of filePaths) {
+        try {
+            fs.unlinkSync('path/to/file');
+            console.log('파일이 성공적으로 삭제되었습니다.');
+          } catch (err) {
+            console.error('파일 삭제 중 에러 발생:', err);
+          }
     }
     return true;
 };
