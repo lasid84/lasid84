@@ -182,7 +182,7 @@ const BKSchedule = memo(({ loadItem, bkData }: any) => {
           <div className="col-start-1 col-end-6"><hr></hr> </div>
 
           <div className="col-start-1 col-end-2">
-            <DatePicker id="doc_close_dd" value={bkData?.doc_close_dd || getValues("doc_close_dd")} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
+            <DatePicker id="doc_close_dd" value={bkData?.doc_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />
           </div>
           <MaskedInputField id="doc_close_tm" value={bkData?.doc_close_tm} options={{ isReadOnly: false, type: 'time' }} width='w-40' />
           <DatePicker id="cargo_close_dd" value={bkData?.cargo_close_dd} options={{ isReadOnly: false, freeStyles: "border-1 border-slate-300" }} />

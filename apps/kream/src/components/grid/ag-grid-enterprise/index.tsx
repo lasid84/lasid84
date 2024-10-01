@@ -415,9 +415,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         //컬럼별 visible 셋팅
         let isHide: boolean = false;
-
-        if (myColInfos.length > 0 || myColInfos[i]?.visible !== undefined) {
-          isHide = (myColInfos[i]?.visible || false) === true ? false : true;
+        // if (col == 'test3') log("colvisible", )
+        if (myColInfos.length > 0) {
+          if (myColInfos[i]) isHide = (myColInfos[i]?.visible || false) === true ? false : true;
         } else if (options?.colVisible) {
           const optVisible: boolean = !!options.colVisible["visible"];
           const optCols: string[] = options.colVisible!["col"];
@@ -913,14 +913,17 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
   const onDrageStopped = (param: DragStoppedEvent) => {
+
+    if (!id) return;
+
     let colNm: any[] = [];
     let colWidth: any[] = [];
     let colVisible: any[] = [];
-    gridRef.current.api.getAllDisplayedColumns().forEach((column: any) => {
+    gridRef.current.api.getColumnState().forEach((column: any) => {
       // log("onDrageStopped", column)
       colNm.push(column.colId);
-      colWidth.push(column.actualWidth);
-      colVisible.push(column.visible);
+      colWidth.push(column.width);
+      colVisible.push(!column.hide);
     });
     let params = {
       // path : path,
@@ -930,6 +933,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       col_width: colWidth.join(','),
       col_visible: colVisible.join(',')
     }
+    // log("onDrage", params, gridRef.current.api.getColumnState());
     setMyColInfo.mutate(params);
   }
 

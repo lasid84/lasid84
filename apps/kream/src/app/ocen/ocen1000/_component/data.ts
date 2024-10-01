@@ -59,7 +59,7 @@ export const SP_GetMData = async (searchParam: any) => {
 
   const result = await executFunction(params);
   // log('mainData Result', result)
-  // log('mainData Result?', result![0])
+  log('mainData Result?', result![0])
   return result
 }
 

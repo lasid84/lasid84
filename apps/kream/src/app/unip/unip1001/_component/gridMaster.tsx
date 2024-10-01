@@ -96,6 +96,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     return (
         <>
             <Grid
+                id="master"
                 gridRef={gridRef}
                 // loadItem={initData}
                 listItem={gridData}
