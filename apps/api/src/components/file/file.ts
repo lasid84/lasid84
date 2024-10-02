@@ -89,7 +89,7 @@ export const reportDownload = async( req : Request, res : Response ) => {
                 printArea : initialPageSetting.printArea
             }
 
-            if (request.pageDivide !== 0 || undefined || null) {
+            if (request.pageDivide !== undefined) {
                 const pageBreakRow = workSheet.getRow(request.pageDivide);
                 pageBreakRow.addPageBreak();
                 workSheet.pageSetup.fitToHeight = 2;
