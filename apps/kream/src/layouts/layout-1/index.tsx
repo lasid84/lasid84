@@ -159,7 +159,7 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
           </div>
           <div className="w-full h-screen text-gray-900 main bg-gray-50 dark:bg-gray-900 dark:text-white">
             <Navbar1 />            
-            <div className="h-[calc(100vh-60px)] overflow-y-auto px-4 ">{children}</div>
+            <div className="h-[calc(100vh-60px)] overflow-y-auto">{children}</div>
           </div>
         </div>
       </div>
