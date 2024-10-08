@@ -1,5 +1,5 @@
 import React, {  useState, } from 'react';
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaSpinner } from "react-icons/fa";
 import { TiPlus } from "react-icons/ti";
 import { RiSaveLine, RiSaveFill, RiSave2Fill } from "react-icons/ri";
 import { MdOutlineAlarm } from "react-icons/md";
@@ -50,6 +50,7 @@ export type ButtonProps = {
   options ? : {
     keyCol ?: string;
   }
+  isCircle? : boolean;
 };
 
 const btnColor: any = {
@@ -107,6 +108,7 @@ const getColor = (label: string, color: string = "") => {
       case "manage_cont_cy":
       case "save_template":     
       case "manage_con":   
+      case "descartes":
         c = "gray-outline";
         break;
       case "delete":
@@ -198,8 +200,22 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "manage_cont_cy":
       icon = <LuContainer size={size} />
+      break;
     case "manage_con":
       icon = <AiOutlineUser size={size} />
+      break;
+    case "descartes":
+      const descartesIcon = () => {
+        return (
+          <>
+        <img 
+            src="/images/descartes.png" 
+            alt="DSG Logo"
+            style={{ width: '60px', height: '24px' }} // MdOutlineAlarm과 같은 크기
+        /></>)
+      };
+      icon = descartesIcon();
+      break;
   }
   return icon;
 };
@@ -222,6 +238,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
     icon,
     onClick,
     width,
+    isCircle,
   } = props;
 
 
@@ -251,10 +268,11 @@ export const Button: React.FC<ButtonProps> = (props) => {
       id={id}
       onClick={handleClick}
       type={type ? type : "button"}
-      disabled={disabled ? true : false}
+      disabled={isCircle ? true : (disabled ? true : false)}
     > 
-      {getIcon(label ? label : id, icon, size ? size : "14")}
-    {isLabel && t((label ? label : id).toLowerCase())}
+      {!isCircle && getIcon(label ? label : id, icon, size ? size : "14")}
+      {!isCircle && isLabel && t((label ? label : id).toLowerCase())}
+      { isCircle && <><FaSpinner className="justify-center w-full animate-spin" size={20} color="#f070f3" /></> }
     </button>
   );
 };

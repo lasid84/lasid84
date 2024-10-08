@@ -112,7 +112,7 @@ export default function LoginForm() {
           break;
         case "password":
           var user = getValues();
-          log("refPW.current", user);
+          // log("refPW.current", user);
           await login(user);
           break;
       }

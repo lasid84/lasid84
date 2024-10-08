@@ -13,8 +13,8 @@ const { sleep } = require('@repo/kwe-lib/components/sleep');
 
 const productionEnv = process.env.NODE_ENV === 'production';
 
-const unipassUrl = "/api/external/k-customs";
 export const unipassAPI001 = "getCargCsclPrgsInfoQry";
+const unipassUrl = "/api/external/k-customs";
 
 type exeFuncParams = {
     inproc: string
@@ -108,7 +108,7 @@ export async function executFunction(params:exeFuncParams) {
         throw new Error(typedErr.message);
         log("executFunction", typedErr.message);
     } finally {
-        // useUserSettings.getState().actions.setData({ loading: "OFF" });
+        useUserSettings.getState().actions.setData({ loading: "OFF" });
     }
 
 };
@@ -128,6 +128,34 @@ export async function callUnipass(apiType:string, body:any) {
         url:url        
     };
     return await postCall(config);
+}
+
+export async function callDescartes(apiType:string, body:any) {
+    /*
+    1. getCargCsclPrgsInfoQry : 화물통관 진행 정보
+    */ 
+    const token = await getToken();
+    let config = await initConfig(null, token);
+
+    let path;
+    switch(apiType) {
+        case "0":
+            path = DataRoutes.URI.GET_DESCARTES_CUSTOMS_INFO;
+            break;
+        default:
+            path = DataRoutes.URI.GET_DESCARTES_CUSTOMS_INFO;
+            break;
+    }
+
+    const url = `${config.url}${DataRoutes.BASE}/${path}`;
+    config = {
+        ...config,
+        ...body,
+        url:url        
+    };
+
+    const result = await postCall(config);
+    return result;
 }
 
 export async function executeReportDownload(data:any) {

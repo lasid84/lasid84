@@ -3,6 +3,7 @@ import { Router } from "express";
 import * as data from "../components/data/data";
 import * as unipass from "../components/data/k-customs"
 import * as mailing from "../components/mailing/mailer"
+import * as descartes from "../components/data/descartes"
 
 /**
  * @dev
@@ -20,4 +21,7 @@ export default function setUpDataRoutes(routes: Router) {
     
   // 메일 발송
   routes.post("/mailing", mailing.sendMail);
+
+  //Descartes
+  routes.post("/external/descartes/customsInfo", descartes.customsInfo);  //미주 선사서류 신고 여부
 }

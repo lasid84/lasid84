@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState, memo } from "react";
-import { SP_CreateData, SP_GetMData, SP_UpdateData } from "./data";
+import { SP_CreateData, SP_GetMData, SP_UpdateData, SP_CallDescartes } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -14,9 +14,12 @@ import { Button, ICONButton } from 'components/button';
 import GridReferences from "@/app/ufsm/ufsm0001/_component/gridReferences";
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
+import { useUserSettings } from "@/states/useUserSettings";
+import { FaSpinner } from "react-icons/fa6";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
+const { addDaysToDate } = require('@repo/kwe-lib/components/dataFormatter');
 
 type Props = {
     initData: any | null
@@ -28,6 +31,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { dispatch, objState } = useAppContext();
     const { gridRef_m } = objState
     const [ gridMainData, setGridMainData ] = useState<gridData>();
+    const [isCircle, setCircle] = useState<boolean>(false)
 
     const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMData, { enabled: false });
     const { Create } = useUpdateData2(SP_CreateData, "BKMainData", {callbacks: [mainRefetch]});
@@ -54,6 +58,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         editable: ["shipper_id", "carrier_code", "bk_dd", "waybill_no", "incoterms", "incoterms_remark", "port_of_loading", "port_of_unloading", "final_dest_port"
             , "pickup_dd", "pickup_tm", "doc_close_dd", "doc_close_tm", "vessel", "etd", "eta", "final_eta", "vocc", "customs_declation", "status", "bk_remark", "shp_remark"
          ],
+         isEditableAll: true,
          checkbox: ["use_yn", "ams_yn", "aci_yn", "afr_yn", "isf_yn", "e_manifest_yn"]
     };
 
@@ -185,13 +190,48 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
     }
 
+    const onGetDescartesData = async () => {
+        var waybill_nos = '';
+        var froms = '';
+        var tos = '';
+
+        for (const row of  ((mainData as any)[0] as gridData).data) {
+            // (async () => {
+                if ((row.ams_yn === 'Y' || row.ams_yn === true) && row.has_ams === 'N') {
+                    // log("mainData222", row.waybill_no, row.bk_dd, row.ams_yn, row.has_ams);
+                    if (!row.waybill_no) continue;
+                    for (const hbl of row.waybill_no.split(',')) {
+                        let from = row.bk_dd;
+                        let to = addDaysToDate(from , 30);
+                        waybill_nos += waybill_nos === '' ? hbl : ',' + hbl;
+                        froms += froms === '' ? from : ',' + from;
+                        tos += tos === '' ? to : ',' + to;
+                    }
+                }
+            // });
+        }
+        if (waybill_nos != '') {
+            const param = {
+                waybill_no: waybill_nos,
+                from: froms,
+                to: tos,
+            }
+            
+            setCircle(true);
+            let result = await SP_CallDescartes(param);
+            setCircle(false);
+        }
+        dispatch({ isMSearch: true });
+    }
+
     return (
         <>
             <PageMGrid2
                 title={<> </>}
                 right={
                     <>
-                        <ICONButton id="alarm" disabled={false} size={'24'} />
+                        <Button id={"descartes"} label="" isLabel={false} onClick={onGetDescartesData} width="w-20" isCircle={isCircle}/>
+                        {/* <ICONButton id="alarm" disabled={false} size={'24'} /> */}
                         <Button id={"gird_new"} label="new" onClick={onGridNew} width="w-20" />
                         <Button id={"grid_save"} label="save" onClick={onGridSave} width="w-20" />
                     </>

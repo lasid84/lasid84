@@ -112,7 +112,26 @@ function getKoreaTime(date = new Date()) {
 
 };
 
+const addDaysToDate  = (dateString, days) => {
+    // dateString을 Date 객체로 변환 (YYYYMMDD 형식)
+    const year = parseInt(dateString.substring(0, 4), 10);
+    const month = parseInt(dateString.substring(4, 6), 10) - 1; // 0-indexed month
+    const day = parseInt(dateString.substring(6, 8), 10);
 
+    // Date 객체 생성
+    const date = new Date(year, month, day);
+
+    // days를 더한 날짜로 설정
+    date.setDate(date.getDate() + days);
+
+    // 새로운 날짜를 YYYYMMDD 형식의 문자열로 반환
+    const newYear = date.getFullYear();
+    const newMonth = String(date.getMonth() + 1).padStart(2, '0'); // month는 0부터 시작하므로 +1
+    const newDay = String(date.getDate()).padStart(2, '0');
+
+    return `${newYear}${newMonth}${newDay}`;
+};
+  
 
 module.exports = {
     textToDate,
@@ -122,5 +141,6 @@ module.exports = {
     stringToFullDate,
     stringToDate,
     getKoreaTime,
-    stringToTime
+    stringToTime,
+    addDaysToDate 
   }

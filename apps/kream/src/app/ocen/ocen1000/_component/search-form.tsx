@@ -117,7 +117,7 @@ const SearchForm = ({ loadItem }: any) => {
       setCreateuser(loadItem[1]);
       setStatus(loadItem[2]);
     }
-    resetComponent(0);
+    if (objState.isFirstRender) resetComponent(0);
   }, [loadItem]);
 
   useEffect(() => {
@@ -165,6 +165,9 @@ const SearchForm = ({ loadItem }: any) => {
       setValue("to_date", dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"));
     }
     trigger()
+    const params = getValues();
+    log("params", params)
+    dispatch({ searchParams: params});
   }
 
   const onSearch = () => {

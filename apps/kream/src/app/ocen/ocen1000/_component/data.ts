@@ -1,4 +1,4 @@
-import { executFunction, executeReportDownload, executeFileUpload,executeReportUpload } from "@/services/api.services";
+import { executFunction, executeReportDownload, executeFileUpload,executeReportUpload, callDescartes } from "@/services/api.services";
 import { MutationFunction } from "@tanstack/react-query";
 import { unstable_noStore } from "next/cache";
 import { FaBullseye } from "react-icons/fa6";
@@ -336,6 +336,7 @@ export const SP_CreateData = async (param: any) => {
 //Update BookingNote
 export const SP_UpdateData = async (param: any) => {
   const Param = param;
+  // log("SP_UpdateData", Param);
 
   const {
     bk_id 
@@ -1270,5 +1271,20 @@ export const SP_UploadAttachment = async (param: any) => {
   const params = param;
 
   const result = await executeFileUpload(params);
+  return result;
+}
+
+
+export const SP_CallDescartes = async (param: any) => {
+  const body = {
+    username: 'kbusan',
+    password: 'kwepus',
+    waybill_no: param.waybill_no,
+    from: param.from,
+    to: param.to
+  }
+  let result = await callDescartes("0", body);
+
+  log("?????????????????", result);
   return result;
 }

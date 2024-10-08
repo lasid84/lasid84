@@ -21,7 +21,8 @@ export const DataRoutes = {
         GET_LIMO_DATA: "/limo/data",
         GET_CARG_CSCL_PRGS_INFO_QRY: "/external/k-customs/getCargCsclPrgsInfoQry",
         HEALTH_CHECK: "/external/k-customs/healthcheck",
-        SEND_MAIL: "/mailing"
+        SEND_MAIL: "/mailing",
+        GET_DESCARTES_CUSTOMS_INFO: "/external/descartes/customsinfo"
     }
 };
 

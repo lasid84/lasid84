@@ -86,18 +86,22 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
                         } else {
                             let msg = result.cargCsclPrgsInfoQryRtnVo.ntceInfo ? result.cargCsclPrgsInfoQryRtnVo.ntceInfo[0] : '';
                             if (!msg.startsWith('[N00')) {
-                                
-                                for (var row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoDtlQryVo) {
-                                    if (row.cargTrcnRelaBsopTpcd[0] === '입항보고 제출' || row.cargTrcnRelaBsopTpcd[0] === '입항보고 수리') {
-                                        var dclrNo = row.dclrNo[0];
-                                        var data: any = await retrieveFlghEtprRprtBrkd({ioprSbmtNo:dclrNo});
-                                        for (const key of Object.keys(data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0])) {
-                                            row[key] = data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0][key]
+                                log("result.cargCsclPrgsInfoQryRtnVo", result.cargCsclPrgsInfoQryRtnVo);
+                                if (result.cargCsclPrgsInfoQryRtnVo.tCnt && result.cargCsclPrgsInfoQryRtnVo.tCnt[0] > 0) {
+                                    for (var row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoDtlQryVo) {
+                                        if (row.cargTrcnRelaBsopTpcd[0] === '입항보고 제출' || row.cargTrcnRelaBsopTpcd[0] === '입항보고 수리') {
+                                            var dclrNo = row.dclrNo[0];
+                                            var data: any = await retrieveFlghEtprRprtBrkd({ioprSbmtNo:dclrNo});
+                                            // log("==========", data);
+                                            if (data.flghEtprRprtBrkdQryRtnVo.tCnt && data.flghEtprRprtBrkdQryRtnVo.tCnt[0] > 0) {
+                                                for (const key of Object.keys(data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0])) {
+                                                    row[key] = data.flghEtprRprtBrkdQryRtnVo.flghEtprRprtBrkdQryVo[0][key]
+                                                }
+                                            }
                                         }
                                     }
+                                    jsonResult.push(result);
                                 }
-                                // log("result", result);
-                                jsonResult.push(result);
                             }
                         }
                         resolve(result);

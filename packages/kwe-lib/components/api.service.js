@@ -47,7 +47,7 @@ const initAPIService = async (config) => {
     headers: {
       "Content-Type": configParam.content_type ? configParam.content_type : "application/json",
       "Authorization": `${configParam.accessToken}`,
-      // "X-Forwarded-Host": configParam.host
+      ...configParam.headers
     },
     // withCredentials: configParam.isAuth ? true : false,
     // withCredentials: true
@@ -191,7 +191,11 @@ const getCall = async (params) => {
   try {
     const client = axios.create();
     client.defaults.timeout = 10000;
-    const response = await client.get(params.url);
+
+    const headers = params.header ? { headers: params.header } : {};
+    const response = await client.get(params.url, {
+      ...headers
+    });
 
     // log("postCall params1 : ", response.data);
 

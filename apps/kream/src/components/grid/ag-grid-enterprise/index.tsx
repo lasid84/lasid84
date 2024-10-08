@@ -105,6 +105,7 @@ export type GridOption = {
   alignRight?: string[],                  //dataType : number면 자동 우측 정렬
   editable?: string[];
   isEditableOnlyNewRow?: boolean,
+  isEditableAll?:boolean,                 // 전체컬럼 editable 설정
   dataType?: { [key: string]: string };   //date, number, text, bizno, largetext
   typeOptions?: {
     [key: string]: {
@@ -433,7 +434,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         const optEditable: string[] = options?.editable ? options?.editable : [];
         cellOption = {
           ...cellOption,
-          editable: optEditable.indexOf(col) > -1
+          editable: options?.isEditableAll ? options?.isEditableAll : optEditable.indexOf(col) > -1
         }
 
         if (options?.colDisable) {
