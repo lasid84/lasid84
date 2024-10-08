@@ -29,7 +29,10 @@
     "nodemailer": "^6.9.14",
     "ts-node": "^10.9.1",
     "tsup": "^6.0.1",
-    "xml2js": "^0.6.2"
+    "xml2js": "^0.6.2",
+    "node-html-parser": "^6.1.13",
+    "form-data": "^4.0.0",
+    "axios": "^1.7.7"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -47,7 +50,6 @@
     "form-data": "^4.0.0",
     "fs": "0.0.1-security",
     "internal-ip": "^8.0.0",
-    "jsdom": "^25.0.1",
     "node-html-parser": "^6.1.13",
     "nodemailer": "^6.9.14",
     "os": "^0.1.2",
