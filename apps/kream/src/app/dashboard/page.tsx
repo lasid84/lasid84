@@ -1,11 +1,10 @@
-// 'use server'
 'use client'
 
-import { useTranslation } from "react-i18next";
-import { FormProvider, useForm } from "react-hook-form";
+import { LOAD } from "components/provider/contextObjectProvider";
+import { SP_Load } from "./_component/data";
+import { useGetData } from "components/react-query/useMyQuery";
 
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import BookmarkTab from "./_component/bookmarkTab";
 
 // 개발 이력 데이터
 const developmentHistory = [
@@ -31,53 +30,10 @@ const developmentHistory = [
 
 
 const Home: React.FC = () => {
-  const { t } = useTranslation();
-  const methods = useForm();
-  const {
-    handleSubmit,
-    reset,
-    setFocus,
-    setValue,
-    getValues,
-    register,
-    control,
-    formState: { errors, isSubmitSuccessful },
-  } = methods;
-
-  const onSubmit = (data: any) => {
-    // console.log(data);
-  };
-  
-  const onClick = (data: any) => {
-    // console.log("onClick", data);
-    
-  }
+  const { data: initData } : any = useGetData("", LOAD, SP_Load, {staleTime: 1000 * 60 * 60});
   
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>준비중..</div>
-          {/* <div className="flex flex-col items-center min-h-screen bg-gray-100">
-            <header className="w-full p-4 text-center text-white bg-blue-600">
-              <h1 className="text-2xl font-bold">Development History</h1>
-            </header>
-            <main className="flex-grow w-full max-w-4xl p-6">
-              <div className="space-y-6">
-                {developmentHistory.map((entry, index) => (
-                  <div key={index} className="p-6 bg-white rounded-lg shadow-md">
-                    <h2 className="text-xl font-semibold text-gray-800">{entry.title}</h2>
-                    <p className="text-sm text-gray-500">{entry.date}</p>
-                    <p 
-                      className="mt-2 text-gray-700"
-                      dangerouslySetInnerHTML={{ __html: entry.description }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </main>
-          </div> */}
-        </form>
-      </FormProvider>
+    <BookmarkTab loadItem={initData} />
   );
 }
 
