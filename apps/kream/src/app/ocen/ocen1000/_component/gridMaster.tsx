@@ -40,7 +40,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
     const gridOption: GridOption = {
         colVisible: { col: ["trans_mode", "trans_type", "orig_department_id","shipper_cont_seq","pickup_seq","cy_cont_seq",
-                            "cr_t_cont_seq","cr_s_cont_seq", "orig_agent_id", "b_agent_id", "ams_yn","ams","cr_fak","cr_nac",
+                            "cr_t_cont_seq","cr_s_cont_seq", "orig_agent_id", "b_agent_id", "ams","cr_fak","cr_nac",
                             "aci_yn","aci","afr_yn","edi_yn","isf_yn","e_manifest_yn","use_yn",
                             "create_user", "update_date", "update_user"], visible: false },
         gridHeight: "h-[calc(100vh-200px)]",
