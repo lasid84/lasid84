@@ -107,7 +107,10 @@ const Layout1: React.FC<Layout1Props> = ({ children }) => {
   }, [userSettings.loading])
 
   useEffect(() => {
-    if (pathname === '/') return;
+    if (pathname === '/' || pathname === '/dashboard') {
+      userSettingsActions?.setData({ currentMenu: 0 });
+      return;
+    }
 
     const getMenuSeq = (menu: NavigationState[], url:string, parent = true) : number | undefined => {
       if (!menu) return;
