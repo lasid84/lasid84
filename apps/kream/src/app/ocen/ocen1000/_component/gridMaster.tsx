@@ -31,11 +31,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const { dispatch, objState } = useAppContext();
     const { gridRef_m } = objState
     const [ gridMainData, setGridMainData ] = useState<gridData>();
-    const [isCircle, setCircle] = useState<boolean>(false)
+    const [ isCircle, setCircle] = useState<boolean>(false)
+    const [ descartesParam, setDescartesParam] = useState();
 
     const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMData, { enabled: false });
     const { Create } = useUpdateData2(SP_CreateData, "BKMainData", {callbacks: [mainRefetch]});
     const { Update } = useUpdateData2(SP_UpdateData, "BKMainData", {callbacks: [mainRefetch]});
+    const { Update: DescartesData } = useUpdateData2(SP_UpdateData, "Descartes", {callbacks: [mainRefetch]});
 
 
     const gridOption: GridOption = {
@@ -214,11 +216,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             const param = {
                 waybill_no: waybill_nos,
                 from: froms,
-                to: tos,
+                to: tos
             }
             
             setCircle(true);
-            let result = await SP_CallDescartes(param);
+            await DescartesData.mutateAsync(param);
             setCircle(false);
         }
         dispatch({ isMSearch: true });
