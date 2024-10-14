@@ -96,7 +96,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     return (
         <>
             <Grid
-                id="master"
+                id={"master_" + searchParams?.search_gubn}
                 gridRef={gridRef}
                 // loadItem={initData}
                 listItem={gridData}
