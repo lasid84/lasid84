@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
     noLabel?: boolean
     isRow?:boolean
     dataSrc: RadioOption[];
+    onClick?: (e: any) => void;
   }
 
   const RadioGroupField: React.FC<RadioGroupFieldProps> = ({ 
@@ -23,10 +24,15 @@ import { useTranslation } from 'react-i18next';
     label,
     noLabel = false,
     isRow = true,
-    dataSrc 
+    dataSrc,
+    onClick
 }) => {
     const { control } = useFormContext();
     const { t } = useTranslation();
+
+    const handleClick = (e:any) => {
+      if (onClick) onClick(e);
+    }
   
     return (
       <FormControl component="fieldset">
@@ -44,6 +50,9 @@ import { useTranslation } from 'react-i18next';
                   // label={option.label}
                   label={<span className="text-sm">{t(option.label)}</span>}
                   className="mr-4"
+                  onClick={() => {
+                    handleClick(option);
+                  }}
                 />
               ))}
             </RadioGroup>

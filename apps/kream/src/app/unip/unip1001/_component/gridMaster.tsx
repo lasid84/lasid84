@@ -56,6 +56,30 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             break;
         }
     }, [searchParams?.search_gubn]);
+
+    // useEffect(() => {
+    //     setGridOption0({
+    //         colVisible: { col: ["prgsstts", ROW_HIGHLIGHTED], visible: false },
+    //         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
+    //         gridHeight: "h-full",
+    //         // checkbox: ["no"],
+    //         // editable: ["trans_mode"],
+    //         dataType: { "prcsdttm": "date", "etprdttm":"date"},
+    //         // isMultiSelect: false,
+    //         isAutoFitColData: true,
+    //         // alignLeft: ["major_category", "bill_gr1_nm"],
+    //         rowSpan: ["rowno", "cargmtno", "mblno", "hblno"],
+    //         isShowRowNo:false,
+    //     });
+    //     setGridOption1({
+    //         colVisible: { col: ["prgsstts"], visible: false },
+    //         gridHeight: "h-full",
+    //         dataType: { "prcsdttm": "date" },
+    //         autoHeightCol: ["summary"],
+    //         maxWidth: { hblno: 200 },
+    //         isShowRowNo:false,
+    //     });
+    // }, []);
     
     /*
         handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
@@ -96,7 +120,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     return (
         <>
             <Grid
-                id={"master_" + searchParams?.search_gubn}
+                id={"master_" + searchParams.search_gubn}
                 gridRef={gridRef}
                 // loadItem={initData}
                 listItem={gridData}

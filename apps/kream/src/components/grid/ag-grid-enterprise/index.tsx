@@ -55,7 +55,7 @@ export const ROW_TYPE_NEW = 'NEW';
 
 type Props = {
   id?: string;
-  gridRef: any
+  gridRef?: any
   loadItem?: any | null
   listItem?: gridData
   options?: GridOption
@@ -141,7 +141,7 @@ type cols = {
   // floatingFilter?: boolean
 }
 
-const ListGrid: React.FC<Props> = memo((props) => {
+const ListGrid: React.FC<Props> = (props) => {
   // log("ListGrid", props);
 
   const { t } = useTranslation();
@@ -163,7 +163,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   // const [ personalColInfo, setPersonalColInfo ] = useState<any>();
 
   // const path = usePathname();
-  const { data: personalColInfoData, refetch: personalColInfoRefetch } = useGetData(personalColInfoParam, "PersonalColumnInfo", SP_GetPersonalColInfoData, { enabled: true });
+  const { data: personalColInfoData, refetch: personalColInfoRefetch } = useGetData(personalColInfoParam, "PersonalColumnInfo", SP_GetPersonalColInfoData, { enabled: true, staleTime : 0 });
   const { Create: setMyColInfo } = useUpdateData2(SP_SetMyColumnInfo, "MyColumnInfo");
 
   const containerStyle = useMemo(() => "flex-col w-full h-full", []);
@@ -181,6 +181,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   //Column Defualt 설정
   const defaultColDef = useMemo(() => {
+    // log("defaultColDef memo???????????????????");
     return {
       // flex: !!options?.flex ? options.flex : 0,
       // flex: options?.isAutoFitColData? 0 : 1,
@@ -193,7 +194,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       suppressFloatingFilterButton: !options?.isShowFilterBtn ? true : false,
       suppressMenu: true, //컬럼명 옆 햄버거 버튼 없앰
     };
-  }, []);
+  }, [options]);
 
   const calculatePinnedBottomData = (target: any) => {
     //**list of columns fo aggregation**
@@ -238,6 +239,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   // let ready = false;
   //Grid Defualt 설정
+  // const gridOptions: GridOptions = useMemo(() => {
   const gridOptions: GridOptions = useMemo(() => {
     return {
       rowHeight: 25,
@@ -315,7 +317,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         },
       }
     };
-  }, []);
+  }, [options]);
 
   const autoSizeStrategy = useMemo<
     | SizeColumnsToFitGridStrategy
@@ -329,6 +331,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   useEffect(() => {
     if (id /*&& config.collapsed != undefined*/) {
+      log("grid id", id);
       setPersonalColInfoParam({
         // path : path,
         state: config.collapsed,
@@ -339,7 +342,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   //컬럼 세팅
   useEffect(() => {
-    if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 && personalColInfoData !== undefined) {
+    log("col setting: ", personalColInfoData);
+    if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 /*&& personalColInfoData !== undefined*/) {
       let cols: cols[] = [];
 
       //Field {
@@ -356,7 +360,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // let columns = listItem.fields.map((field) => field.name);
       let hasMyColInfo = false;
       let myColInfos: any[] = [];
-      if ((personalColInfoData as gridData)?.data.length) {
+      if (id && (personalColInfoData as gridData)?.data.length) {
         const colInfo = (personalColInfoData as gridData).data;
 
         columns = colInfo.map((row:any) => {
@@ -373,7 +377,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       const dataType = listItem.fields.map((field) => field.format);
       if (!columns.includes(ROW_INDEX)) columns = [ROW_INDEX].concat(columns);
 
-      // log("grid column setting", columns, myColInfos, personalColInfoData)
+      log("grid column setting", columns, myColInfos, personalColInfoData)
       
       columns.map((col: string, i:number) => {
       // for (let i = 0; i < columns.length; i++) {
@@ -405,9 +409,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
             flex: 1,
             // width:100
           }
+        } else {
+          cellOption = {
+            ...cellOption,
+            flex: 0,
+            // width:100
+          }
         }
 
         if (myColInfos[i]?.col_width) {
+          // log("width setting", col, myColInfos[i])
           cellOption = {
             ...cellOption,
             width: Number(myColInfos[i]?.col_width)
@@ -650,15 +661,17 @@ const ListGrid: React.FC<Props> = memo((props) => {
           ...row,
         }
       }));
-      personalColInfoRefetch();
+      // personalColInfoRefetch();
+      
       // if (gridRef.current && props.gridState) {
         
       //   const savedState = props.gridState.columnSizing?.columnSizingModel; 
       //   gridRef.current.api?.applyColumnState({ state: savedState });
       // }
+      log("final cols", cols)
     }
           
-  }, [listItem, t, personalColInfoData]);
+  }, [listItem, t, personalColInfoData, options]);
 
   useEffect(() => {
     if (options?.gridHeight) {
@@ -858,7 +871,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
   );
 
   const autoSizeAll = (gridApi: any, skipHeader: boolean = false) => {
-    return;
+    
+    if (id !== undefined) return;
+
     var rowCount = gridApi?.api?.getRenderedNodes().length;
     // log('autoSizeAll called!!!!!!!!', gridApi?.api?.getRenderedNodes(), rowCount);
 
@@ -1032,7 +1047,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       </div>
     </>
   )
-});
+};
 
 export const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; }; column: any; }) => {
   var displayedColumns = params.api.getAllDisplayedColumns();

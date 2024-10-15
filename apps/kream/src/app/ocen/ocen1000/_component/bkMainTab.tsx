@@ -112,7 +112,8 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         },
       })
     } else {
-      if (Object.entries(bkData).some(([key,val]):any => curData[key] && curData[key] != val) || bkData[ROW_CHANGED]) {
+      log("update:", curData, bkData);
+      if (Object.entries(bkData).some(([key,val]):any => curData[key] !== undefined && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};
         await UpdateBKData.mutateAsync(updateData);
@@ -150,7 +151,9 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
     const cost: any[] = [];
     /* Cost 저장 */
-    const allColumns = gridRef_cost?.current?.api.getAllGridColumns();    
+    const allColumns = gridRef_cost?.current?.api.getAllGridColumns();   
+    if (!allColumns) return;
+
     const checkboxColumns = allColumns.filter((col:any) => col.getColDef().cellDataType === 'boolean')
                                       .map((col: { colId: any; }) => col.colId);
     await gridRef_cost.current.api.forEachNode(async (node: any) => {

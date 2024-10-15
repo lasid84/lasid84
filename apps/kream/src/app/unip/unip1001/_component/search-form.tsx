@@ -43,7 +43,6 @@ const SearchForm = memo(({ loadItem }: any) => {
 
   const onSearch = () => {
     const params = getValues();
-    log("params", params)
     if (!params.blyy || !params.blno) {
       toastError(t("MSG_0173"));
       // setFocus("blno", { shouldSelect: true });
@@ -61,7 +60,6 @@ const SearchForm = memo(({ loadItem }: any) => {
   const onReset = async () => {
     reset();
     const params = getValues();
-    log("reset params", params)
     dispatch({ searchParams: params});
     setBLNoFocus(true);
   }
@@ -89,6 +87,11 @@ const SearchForm = memo(({ loadItem }: any) => {
                 { value : '0', label:'detail'},
                 { value : '1', label:'summary'}
               ]}
+              onClick={(e) => {
+                // dispatch({ searchParams: {...searchParams, search_gubn:e.value}});
+                searchParams.search_gubn = e.value
+                //dispatch({ searchParams: searchParams});
+              }}
             />
           </div>
           <MaskedInputField id="blyy"  label="blyy" value={searchParams.blyy} options={{ textAlign: 'center', inline: true, noLabel: false, limit:4 }} width="w-20" height='h-8' />
