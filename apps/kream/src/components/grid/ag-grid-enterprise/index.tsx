@@ -141,7 +141,7 @@ type cols = {
   // floatingFilter?: boolean
 }
 
-const ListGrid: React.FC<Props> = (props) => {
+const ListGrid: React.FC<Props> = memo((props) => {
   // log("ListGrid", props);
 
   const { t } = useTranslation();
@@ -331,7 +331,7 @@ const ListGrid: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (id /*&& config.collapsed != undefined*/) {
-      log("grid id", id);
+      // log("grid id", id);
       setPersonalColInfoParam({
         // path : path,
         state: config.collapsed,
@@ -342,7 +342,7 @@ const ListGrid: React.FC<Props> = (props) => {
 
   //컬럼 세팅
   useEffect(() => {
-    log("col setting: ", personalColInfoData);
+    // log("col setting: ", personalColInfoData);
     if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 /*&& personalColInfoData !== undefined*/) {
       let cols: cols[] = [];
 
@@ -377,7 +377,7 @@ const ListGrid: React.FC<Props> = (props) => {
       const dataType = listItem.fields.map((field) => field.format);
       if (!columns.includes(ROW_INDEX)) columns = [ROW_INDEX].concat(columns);
 
-      log("grid column setting", columns, myColInfos, personalColInfoData)
+      // log("grid column setting", columns, myColInfos, personalColInfoData)
       
       columns.map((col: string, i:number) => {
       // for (let i = 0; i < columns.length; i++) {
@@ -668,10 +668,10 @@ const ListGrid: React.FC<Props> = (props) => {
       //   const savedState = props.gridState.columnSizing?.columnSizingModel; 
       //   gridRef.current.api?.applyColumnState({ state: savedState });
       // }
-      log("final cols", cols)
+      // log("final cols", cols)
     }
           
-  }, [listItem, t, personalColInfoData, options]);
+  }, [listItem, t, personalColInfoData]);
 
   useEffect(() => {
     if (options?.gridHeight) {
@@ -801,7 +801,7 @@ const ListGrid: React.FC<Props> = (props) => {
   const onFirstDataRendered = (param: FirstDataRenderedEvent) => {
     if (options?.isAutoFitColData && myColInfo.length === 0 /*&& (personalColInfoData as gridData)?.data.length === 0*/) {
       autoSizeAll(gridRef.current);
-      log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
+      // log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
     }
 
     if (event?.onFirstDataRendered) event.onFirstDataRendered(param);
@@ -819,7 +819,7 @@ const ListGrid: React.FC<Props> = (props) => {
   //복사붙여넣기시 자동으로 rowAdd
   const processDataFromClipboard = useCallback(
     (params: ProcessDataFromClipboardParams):string[][] | null => {
-      log("processDataFromClipboard1", params);
+      // log("processDataFromClipboard1", params);
       // const data = [...params.data];
 
       const lastIndex = params.api!.getDisplayedRowCount() - 1;
@@ -1047,7 +1047,7 @@ const ListGrid: React.FC<Props> = (props) => {
       </div>
     </>
   )
-};
+});
 
 export const isFirstColumn = (params: { api: { getAllDisplayedColumns: () => any; }; column: any; }) => {
   var displayedColumns = params.api.getAllDisplayedColumns();
@@ -1104,7 +1104,7 @@ export const rowAdd = async (
     }
 
 
-    log('rowAdd', rowCount, col, data);
+    // log('rowAdd', rowCount, col, data);
     datas.push(data);
     await gridRef.api.ensureIndexVisible(rowCount, 'bottom');
   }
