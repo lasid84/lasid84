@@ -680,17 +680,17 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
   }, [options?.gridHeight]);
 
-  // useEffect(() => {
-  //   if (props.gridState && gridRef.current) {
-  //     setInitialState(props.gridState);
-  //     log("1", props.gridState.columnSizing)
-  //     if (props.gridState.columnSizing?.columnSizingModel ) {
-  //       const savedState = props.gridState.columnSizing?.columnSizingModel; 
-  //       log("2. savedState - ", savedState, gridRef.current.api?.getColumnState());
-  //       gridRef.current.api?.applyColumnState({ state: savedState });
-  //     }
-  //   }
-  // }, [props.gridState, gridRef.current])
+  useEffect(() => {
+    if (props.gridState && gridRef.current) {
+      setInitialState(props.gridState);
+      // log("1", props.gridState.columnSizing)
+      if (props.gridState.columnSizing?.columnSizingModel ) {
+        const savedState = props.gridState.columnSizing?.columnSizingModel; 
+        // log("2. savedState - ", savedState, gridRef.current.api?.getColumnState());
+        gridRef.current.api?.applyColumnState({ state: savedState });
+      }
+    }
+  }, [props.gridState, gridRef.current])
 
   const onGridReady = (param: GridReadyEvent) => {
     // log("onGridReady");
@@ -901,10 +901,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
     log("onCellDoubleClicked", param)
   }
 
-  const onGridPreDestroyed = 
-    (params: GridPreDestroyedEvent) => {
+  const onGridPreDestroyed = (params: GridPreDestroyedEvent) => {
       const { state } = params;
-      // log("Grid state on destroy (can be persisted)", state, gridRef.current?.api.getColumnState());
+      log("Grid state on destroy (can be persisted)", state, gridRef.current?.api.getColumnState());
       // setInitialState(state);
       setInitialState(state);
 
@@ -916,7 +915,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     (params: StateUpdatedEvent) => {
       // log("State updated3", params.state, params.state.scroll);
       // setCurrentState(params.state);
-      // setInitialState(params.state);
+      setInitialState(params.state);
       if (event?.onStateUpdated) event.onStateUpdated(params);
   },[]);
 

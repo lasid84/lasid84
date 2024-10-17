@@ -108,7 +108,7 @@ export async function executFunction(params:exeFuncParams) {
         throw new Error(typedErr.message);
         log("executFunction", typedErr.message);
     } finally {
-        useUserSettings.getState().actions.setData({ loading: "OFF" });
+        //useUserSettings.getState().actions.setData({ loading: "OFF" });
     }
 
 };
