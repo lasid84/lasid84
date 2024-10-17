@@ -25,6 +25,7 @@ import BKSchedule from "./_component/bkSchedule";
 import { shallow } from "zustand/shallow";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { FormProvider, useForm } from "react-hook-form";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 const {
@@ -58,7 +59,9 @@ export default function OCEN1000() {
       isMailSendPopupOpen : false, //send_mail
       isWaybillPopupOpen:false,
       mGridState: {},
-      mGridStateInit: null
+      mGridStateInit: null,
+      isSaveMain: false,
+      isSaveDetail: false
     },
   });
   const { objState } = state;
@@ -113,6 +116,17 @@ export default function OCEN1000() {
   //사용자 정보
   const menu_param = useUserSettings((state) => state.data.currentParams,shallow);
 
+  useHotkeys(
+    "ctrl+s",
+    (event) => {
+      event.preventDefault();
+      log("ctrl+s!!!");
+      if (MselectedTab === "Main") dispatch({ isSaveMain: true});
+      else dispatch({ isSaveDetail: true});
+    },
+    { enableOnTags: ['INPUT', 'TEXTAREA', 'SELECT'] } // form 요소에서 단축키 활성화
+  );
+
   useEffect(() => {
     const params = getMenuParameters(menu_param);
     // log("params", params)
@@ -121,19 +135,6 @@ export default function OCEN1000() {
       trans_type: params.trans_type,
     });
   }, [menu_param]);
-
-  // useEffect(() => {
-  //   if (objState.isMSearch) {
-  //     mainRefetch();
-  //     log("mainisSearch", objState.isMSearch);
-  //     dispatch({ isMSearch: false });
-  //     if (initData) {
-  //       if (objState.tab1.length < 1) {
-  //         objState.tab1.push({ cd: "Main", cd_nm: "Main" });
-  //       }
-  //     }
-  //   }
-  // }, [initData]);
 
   useEffect(() => {
     if (objState.isMDSearch) {

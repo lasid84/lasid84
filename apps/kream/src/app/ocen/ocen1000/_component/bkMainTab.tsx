@@ -54,7 +54,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   const { data: clipboardData, refetch: clipboardRefetch, isLoading: isLoadingClipboard } = useGetData({bk_id : bkData?.bk_id}, "ClipBoardData", SP_GetClipBoardData, { enabled: false, staleTime: 0, cacheTime: 0 });
 
   const [reporttype, setReporttype] = useState<any>();
-
+ 
   useEffect(() => {
     setRef(objState.gridRef_m);
   }, [objState?.gridRef_m])
@@ -81,6 +81,12 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     }
   }, [loadItem?.length]);
 
+  useEffect(() => {
+    if (objState.isSaveDetail) {
+        dispatch({ isSaveDetail: false});
+        onSave(null);
+    }
+}, [objState.isSaveDetail]);
 
   const { getValues } = useFormContext();
 
@@ -112,7 +118,6 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         },
       })
     } else {
-      log("update:", curData, bkData);
       if (Object.entries(bkData).some(([key,val]):any => curData[key] !== undefined && curData[key] != val) || bkData[ROW_CHANGED]) {
         hasData = true;
         let updateData = {...bkData, ...curData};
@@ -175,7 +180,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     return hasData;
   }
 
-  const onSave = async (param: MouseEventHandler) => {    
+  const onSave = async (param: MouseEventHandler | null) => {    
     let hasMainData = await SaveBkData();
     let hasCargoData = await SaveCargo();
     let hasCostData = await SaveCost();
@@ -376,7 +381,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
               {/* handleButtonClick btn_transport_send_email*/}
                 <Button id={"btn_send_email"} label="send_email" width="w-24" onClick={handleButtonClick} disabled={false}/>
                 <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} onClick={onDropButtonClick} />
-                <Button id={"save"} onClick={onSave} width="w-24" />
+                <Button id={"save"} onClick={onSave} width="w-24" toolTip="ShortCut: Ctrl+S" />
               </div>                
               <div className={"flex col-span-2"}>
                 <div className ={"flex space-x-1 px-1 mx-1 border rounded-full"}>

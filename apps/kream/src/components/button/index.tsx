@@ -51,6 +51,7 @@ export type ButtonProps = {
     keyCol ?: string;
   }
   isCircle? : boolean;
+  toolTip?: string;
 };
 
 const btnColor: any = {
@@ -239,11 +240,13 @@ export const Button: React.FC<ButtonProps> = (props) => {
     onClick,
     width,
     isCircle,
+    toolTip
   } = props;
 
 
   const { Create } = useUpdateData2(SP_InsertLog, "");
   const pathName = usePathname();
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
     // log("button", pathName)
@@ -259,6 +262,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
   const disabledCss = "disabled:bg-gray-200 hover:bg-gray-300'";
 
   return (
+    <div className="flex w-min-24 group">
     <button
       className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : "w-full"} w-min-24 p-1 text-xs font-medium flex items-center justify-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
@@ -269,11 +273,22 @@ export const Button: React.FC<ButtonProps> = (props) => {
       onClick={handleClick}
       type={type ? type : "button"}
       disabled={isCircle ? true : (disabled ? true : false)}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
     > 
       {!isCircle && getIcon(label ? label : id, icon, size ? size : "14")}
       {!isCircle && isLabel && t((label ? label : id).toLowerCase())}
       { isCircle && <><FaSpinner className="justify-center w-full animate-spin" size={20} color="#f070f3" /></> }
     </button>
+    
+    {showTooltip && toolTip &&
+      <span className="invisible h-8 text-xs origin-bottom text-sky-500 w-35 group-hover:visible group-hover:absolute group-hover:-translate-x-6 group-hover:translate-y-9"
+        style={{ zIndex: 9999 }} 
+      >
+        {toolTip}
+      </span>
+    }
+    </div>
   );
 };
 

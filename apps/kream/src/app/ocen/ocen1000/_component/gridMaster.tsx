@@ -16,6 +16,7 @@ import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
 import { useUserSettings } from "@/states/useUserSettings";
 import { FaSpinner } from "react-icons/fa6";
+import { useHotkeys } from "react-hotkeys-hook";
 
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
@@ -80,12 +81,12 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
     }, [mainData])
 
-    // useEffect(() => {
-    //     if (objState.mGridState?.columnSizing?.columnSizingModel && gridRef_m.current) {
-    //         const savedState = gridRef_m.current?.api.getColumnState(); 
-    //         gridRef_m.current?.api.applyColumnState({ state: savedState });
-    //     }
-    // }, [])
+    useEffect(() => {
+        if (objState.isSaveMain) {
+            dispatch({ isSaveMain: false});
+            onGridSave();
+        }
+    }, [objState.isSaveMain]);
     
     const handleRowDoubleClicked = async (param: RowClickedEvent) => {
         var selectedRow = { "colId": param.node.id, ...param.node.data }
@@ -129,6 +130,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 {   bk_id: tabName,
                     trans_mode: objState.trans_mode,
                     trans_type: objState.trans_type,
+                    svc_type: "FCL",
                     bk_dd: dayjs().format('YYYYMMDD'),
                     doc_close_dd: dayjs().format('YYYYMMDD'),
                     use_yn: 'Y'
@@ -235,7 +237,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                         <Button id={"descartes"} label="" isLabel={false} onClick={onGetDescartesData} width="w-20" isCircle={isCircle}/>
                         {/* <ICONButton id="alarm" disabled={false} size={'24'} /> */}
                         <Button id={"gird_new"} label="new" onClick={onGridNew} width="w-20" />
-                        <Button id={"grid_save"} label="save" onClick={onGridSave} width="w-20" />
+                        <Button id={"grid_save"} label="save" onClick={onGridSave} width="w-20" toolTip="ShortCut: Ctrl+S" />
                     </>
                 }>
 
