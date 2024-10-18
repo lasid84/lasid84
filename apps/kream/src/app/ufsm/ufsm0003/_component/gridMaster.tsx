@@ -41,7 +41,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     const handleRowClicked = useCallback((param: RowClickedEvent) => {
         // var data = onRowClicked(param);
         var selectedRow = {"colId": param.node.id, ...param.node.data}
-        log("handleRowClicked", selectedRow);
+        // log("handleRowClicked", selectedRow);
         // dispatch({mSelectedRow:selectedRow });
       }, []);
 

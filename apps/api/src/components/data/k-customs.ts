@@ -86,7 +86,7 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
                         } else {
                             let msg = result.cargCsclPrgsInfoQryRtnVo.ntceInfo ? result.cargCsclPrgsInfoQryRtnVo.ntceInfo[0] : '';
                             if (!msg.startsWith('[N00')) {
-                                log("result.cargCsclPrgsInfoQryRtnVo", result.cargCsclPrgsInfoQryRtnVo);
+                                // log("result.cargCsclPrgsInfoQryRtnVo", result.cargCsclPrgsInfoQryRtnVo);
                                 if (result.cargCsclPrgsInfoQryRtnVo.tCnt && result.cargCsclPrgsInfoQryRtnVo.tCnt[0] > 0) {
                                     for (var row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoDtlQryVo) {
                                         if (row.cargTrcnRelaBsopTpcd[0] === '입항보고 제출' || row.cargTrcnRelaBsopTpcd[0] === '입항보고 수리') {

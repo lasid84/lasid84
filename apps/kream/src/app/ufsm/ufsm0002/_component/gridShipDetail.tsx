@@ -29,7 +29,7 @@ const ShipmentDetailGrid: React.FC<Props> = ({ loadData }) => {
     };
 
     
-    log('mainData_ufsm0002_shipdetail',loadData)
+    // log('mainData_ufsm0002_shipdetail',loadData)
 
     return (
         <Grid

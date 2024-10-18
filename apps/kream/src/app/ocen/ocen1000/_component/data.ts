@@ -59,7 +59,7 @@ export const SP_GetMData = async (searchParam: any) => {
 
   const result = await executFunction(params);
   // log('mainData Result', result)
-  log('mainData Result?', result![0])
+  // log('mainData Result?', result![0])
   return result
 }
 
@@ -1285,6 +1285,6 @@ export const SP_CallDescartes = async (param: any) => {
   }
   let result = await callDescartes("0", body);
 
-  log("?????????????????", result);
+  // log("?????????????????", result);
   return result;
 }

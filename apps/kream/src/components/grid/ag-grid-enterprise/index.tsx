@@ -903,7 +903,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const onGridPreDestroyed = (params: GridPreDestroyedEvent) => {
       const { state } = params;
-      log("Grid state on destroy (can be persisted)", state, gridRef.current?.api.getColumnState());
+      // log("Grid state on destroy (can be persisted)", state, gridRef.current?.api.getColumnState());
       // setInitialState(state);
       setInitialState(state);
 

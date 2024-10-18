@@ -67,7 +67,7 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch_wbreferences", params);
+    // log("onSearch_wbreferences", params);
     //dispatch({ searchParams: params, isMSearch: true });
   }
 
@@ -83,16 +83,16 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <form onSubmit={handleSubmit(onSearch)} className="space-y-1 w-full">
         <PageContent
-          title={<span className="w-full px-1 py-1 text-blue-500">References</span>}>
+          title={<span className="px-1 py-1 w-full text-blue-500">References</span>}>
           <div className="col-span-6">
             <GridReferences loadData={references} />
           </div>
         </PageContent>
 
         <PageContent
-          title={<span className="w-full px-1 py-1 text-blue-500">Milestones</span>}>
+          title={<span className="px-1 py-1 w-full text-blue-500">Milestones</span>}>
           <div className="col-span-6">
             <GridMilestones loadData={milestones} />
           </div>

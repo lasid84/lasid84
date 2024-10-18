@@ -53,7 +53,7 @@ const CustomerDetail: React.FC = () => {
         const val = getValues(id);
         if (gridRef_m) {
             const rowNode = gridRef_m.current.api.getRowNode((mSelectedRow[ROW_INDEX] -1).toString());
-            log("=========handleTextAreaChange", rowNode, id, val)
+            // log("=========handleTextAreaChange", rowNode, id, val)
             rowNode.setDataValue(id, val);
             dispatch({ mSelectedRow: {...rowNode.data}})
         }

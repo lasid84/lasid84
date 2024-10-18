@@ -56,12 +56,12 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
 
   useEffect(() => {
     if (mainData) {
-      log("mainData_ufsm0002_wbSub", mainData[1].data)
+      // log("mainData_ufsm0002_wbSub", mainData[1].data)
       setData((mainData?.[0] as gridData).data[0])
       setBookedData((mainData?.[1] as gridData))
       setActualData((mainData?.[2] as gridData))
     }
-    log('mainData_ufsm0002_wbSub', bookedData)
+    // log('mainData_ufsm0002_wbSub', bookedData)
   }, [mainData])
 
   const onSearch = () => {
@@ -71,10 +71,10 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
+      <form onSubmit={handleSubmit(onSearch)} className="space-y-1 w-full">
         <PageContent
           title={<span className="px-1 py-1 text-blue-500">Terms</span>}>
-          <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+          <fieldset className="flex col-span-6 p-1 space-x-1 space-y-1 w-full border-2 border-solid dark:border-gray-800">
             <legend className="text-sx">Insurance</legend>
             <MaskedInputField id="type" value={data?.type} options={{ isReadOnly: true }} />
             <MaskedInputField id="insured_value" value={data?.insured_value} options={{ isReadOnly: true }} />
@@ -96,7 +96,7 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
         </PageContent>
 
         <PageContent
-          title={<span className="w-full px-1 py-1 text-blue-500">Routing</span>}>
+          title={<span className="px-1 py-1 w-full text-blue-500">Routing</span>}>
 
           <div className="col-span-6">
             <div>Booked Flight Information</div>

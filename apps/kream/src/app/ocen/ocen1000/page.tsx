@@ -120,7 +120,7 @@ export default function OCEN1000() {
     "ctrl+s",
     (event) => {
       event.preventDefault();
-      log("ctrl+s!!!");
+      // log("ctrl+s!!!");
       if (MselectedTab === "Main") dispatch({ isSaveMain: true});
       else dispatch({ isSaveDetail: true});
     },

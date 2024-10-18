@@ -33,7 +33,7 @@ const GridRoute: React.FC<Props> = memo(({ loadData }) => {
         isAutoFitColData: false,
     };
 
-    log('mainData_ufsm0002_wbSub____',loadData)
+    // log('mainData_ufsm0002_wbSub____',loadData)
 
     return (
         <Grid

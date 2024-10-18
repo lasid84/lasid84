@@ -166,7 +166,7 @@ const SearchForm = ({ loadItem }: any) => {
     }
     trigger()
     const params = getValues();
-    log("params", params)
+    // log("params", params)
     dispatch({ searchParams: params});
   }
 

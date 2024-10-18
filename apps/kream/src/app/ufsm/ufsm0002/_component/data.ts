@@ -64,7 +64,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
 export const SP_GetWBDetailData = async (searchParam: any) => {
   const Param = searchParam.queryKey[1]
   const { wb_no, user_id, ipaddr } = Param;
-  log('ufsm0002 wb_no', wb_no)
+  // log('ufsm0002 wb_no', wb_no)
 
   const params = {
     inparam: [
@@ -81,6 +81,6 @@ export const SP_GetWBDetailData = async (searchParam: any) => {
     isShowLoading: true
   }
   const result = await executFunction(params);
-  log('go home,..', result)
+  // log('go home,..', result)
   return result
 }

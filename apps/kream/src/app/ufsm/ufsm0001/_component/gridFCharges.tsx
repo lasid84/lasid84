@@ -25,7 +25,7 @@ const GridCFharges: React.FC<Props> = memo(({ loadData }) => {
         isAutoFitColData: false,
     };
 
-    log('mainData_ufsm0001_gridfcharge____', loadData)
+    // log('mainData_ufsm0001_gridfcharge____', loadData)
 
     return (
         <Grid

@@ -42,7 +42,7 @@ const SearchForm: React.FC<Props> = (props) => {
   const onSearch = () => {
     // log("onSearch")
     const params = getValues();
-    log("onSearch", params);
+    // log("onSearch", params);
     dispatch({ searchParams: params, isMSearch: true, mSelectedRow: null });
   }
 

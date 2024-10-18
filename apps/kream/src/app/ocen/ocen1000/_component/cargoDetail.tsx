@@ -248,7 +248,7 @@ const handlePieceChange = (seq: number, pieceCount: number, index: number) => {
               }
           } return item;
         })
-        log("updatedCargoList2", updatedCargoList)
+        // log("updatedCargoList2", updatedCargoList)
         dispatch({ [MselectedTab]: { ...bkData, cargo: updatedCargoList.filter((arr: any) => arr) } });
       }      
     
