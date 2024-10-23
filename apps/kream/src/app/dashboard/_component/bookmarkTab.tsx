@@ -1,5 +1,10 @@
 import { useState, memo } from "react";
+
+import { usePathname } from "next/navigation";
 import Image from "next/image";
+
+import { SP_InsertLog } from "../_component/data";
+import { useUpdateData2 } from "@/components/react-query/useMyQuery";
 
 import { IoIosArrowUp } from "react-icons/io";
 
@@ -7,6 +12,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper/modules';
 
 const BookmarkTab = memo(({ loadItem } : any) => {
+    const { Create } = useUpdateData2(SP_InsertLog, "");
+    const pathName = usePathname();
+
     const [isFold, setIsFold] = useState(false);
     const [subjectIndex, setSubjectIndex] = useState(0);
   
@@ -17,6 +25,17 @@ const BookmarkTab = memo(({ loadItem } : any) => {
     const onSubjectButtonClick = (idx : number) => {
       setSubjectIndex(idx);
     };
+
+    const onBookmarkButtonClick = (item : any) => {
+      var data = {
+        menucode: pathName,
+        buttontype: item.cd_nm
+      };
+
+      Create.mutate(data);
+
+      window.open(item.cd, "_blank");
+    }
     
     return (
         <div className={`w-full ${isFold? 'bg-transparent' : 'bg-white'}`}>
@@ -28,7 +47,7 @@ const BookmarkTab = memo(({ loadItem } : any) => {
             <Swiper spaceBetween={0} slidesPerView={9} loop={false} modules={[FreeMode]} wrapperClass={"flex flex-row"} className={`flex-row w-100 bg-white ${isFold? 'hidden' : 'flex'}`}>
             {loadItem && loadItem[1].data.filter((data : any) => data.cd_mgcd2 === loadItem[0].data[subjectIndex].cd).map((item : any, idx : number) => {
               return(
-                <SwiperSlide key={idx} className="swiper-slide flex flex-col items-center py-[26px] cursor-pointer" onClick={() => window.open(item.cd, "_blank")}>
+                <SwiperSlide key={idx} className="swiper-slide flex flex-col items-center py-[26px] cursor-pointer" onClick={() => onBookmarkButtonClick(item)}>
                   <div className="relative overflow-hidden w-[74px] h-[74px] flex justify-center items-center border border-[#225E75] rounded-[50%]"><Image src={"/bookmark/" + item.cd_mgcd1} alt="bookmark" width={48} height={48} /></div>
                   <div className="flex justify-center items-center mt-[1rem] text-xs text-[#696565] text-center whitespace-pre-line">{item.cd_nm.replace("\\n", "\n")}</div>
                 </SwiperSlide>
