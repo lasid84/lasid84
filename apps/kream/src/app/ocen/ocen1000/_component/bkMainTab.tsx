@@ -65,7 +65,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         bkData.state = '1';
       }
 
-      if (bkData.has_ams) {
+      if (bkData.has_ams === 'Y') {
         bkData.state = '4';
       }
 

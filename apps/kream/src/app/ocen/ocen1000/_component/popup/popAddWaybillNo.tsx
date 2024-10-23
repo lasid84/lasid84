@@ -41,13 +41,15 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
         checkbox: ["use_yn"],
         minWidth: { "waybill_no": 120 },
         maxWidth : {"use_yn": 80},
-        editable: ["remark", "use_yn"],
+        editable: ["waybill_no", "remark", "use_yn"],
+        isEditableOnlyNewRow: true,
         // dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno", "remark":"largetext" },
         isAutoFitColData: false,
     };
 
     useEffect(() => {
         if (isOpen && bkData) {
+            if (bkData?.bk_id?.includes("NEW")) return;
             remove();
             refetch();
             setWaybillNo(bkData.waybill_no);
@@ -107,6 +109,8 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
       }, [bkData]);
 
     const onAdd = () => {
+        if (bkData && bkData.bk_id.includes("NEW")) return;
+
         rowAdd(gridRef.current, { "use_yn":true })
     }
 
