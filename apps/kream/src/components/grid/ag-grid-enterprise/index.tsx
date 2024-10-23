@@ -74,6 +74,7 @@ type GridEvent = {
   onRowDoubleClicked ? : (params: RowDoubleClickedEvent) => void;
   onSelectionChanged?: (params: SelectionChangedEvent) => void;
   onCellValueChanged?: (params: CellValueChangedEvent) => void;
+  onCellClicked?: (params: CellClickedEvent) => void;
   onCutStart?: (params: CutStartEvent) => void;
   onCutEnd?: (params: CutEndEvent) => void;
   onPasteStart?: (params: PasteStartEvent) => void;
@@ -383,7 +384,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // for (let i = 0; i < columns.length; i++) {
         // const col = columns[i];
 
-        let cellOption: any = {};
+        let cellOption: any = {
+          tooltipField: col,
+        };
 
         if (col === ROW_INDEX) {
           cellOption = {
@@ -759,6 +762,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   };
 
+  const onCellClicked = (param: CellClickedEvent) => {
+    if (event?.onCellClicked) event.onCellClicked(param);
+  }
+
   const onRowDataUpdated = (param: RowDataUpdatedEvent) => {
     // updateRowCount('rowDataUpdated');
     //log('onRowDataUpdated', param);
@@ -1034,6 +1041,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               onGridPreDestroyed={onGridPreDestroyed}
               // onColumnMoved={(e) => log("onColumnMoved", e)}
               onDragStopped={onDrageStopped}
+              onCellClicked={onCellClicked}
               // onStateUpdated={onStateUpdated}
 
               //↓ 이것들 적용하면 클릭,더블클릭등 이벤트가 발생 안함 - stephen

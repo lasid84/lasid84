@@ -17,18 +17,18 @@
 //     return (
 //       <div className="logo truncate border-b h-[3.75rem] dark:border-[#000000] dark:bg-[#1f2937]">
 //         <Link href="/">
-//           <div className="flex flex-row items-center justify-center dark:hidden">
+//           <div className="flex flex-row justify-center items-center dark:hidden">
 //             <img className={"expanded"} src={`/logos/kwe_logo_bright.png`} alt={""} />
 //             <img className={"collapsed"} src={`/logos/kwe_logo_bright_collapsed.png`} alt={""} />
 //           </div>
-//           <div className="flex flex-row items-center justify-center hidden dark:block">
+//           <div className="flex hidden flex-row justify-center items-center dark:block">
 //             <img className={"expanded"} src={`/logos/kwe_logo_dark.png`} alt={""} />
 //             <img className={"collapsed"} src={`/logos/kwe_logo_dark_collapsed.png`} alt={""} />
 //           </div>
 //         </Link>
 //         <button
 //           onClick={() => configActions!.setConfig({ collapsed: !collapsed })}
-//           className="block ml-auto mr-4 lg:hidden">
+//           className="block mr-4 ml-auto lg:hidden">
 //           {/*<FiMenu size={20} />*/}
 //           <FiX size={20} />
 //         </button>
@@ -45,6 +45,9 @@ import {useLeftSidebar} from "states/useLeftSidebar";
 import Link from "next/link";
 import { useStore } from "zustand";
 import { useUserSettings } from "@/states/useUserSettings";
+import { usePathname } from "next/navigation";
+import { useUpdateData2 } from "../react-query/useMyQuery";
+import { SP_InsertLog } from "@/services/clientAction";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
@@ -54,28 +57,36 @@ const LogoImg: React.FC = () => {
   const {name, collapsed} = useConfigs((state) => state.config);
   const {showLogo} = useLeftSidebar((state) => state.leftSidebar);
   const userSettingsActions = useStore(useUserSettings, (state) => state.actions);
+
+  const { Create } = useUpdateData2(SP_InsertLog, "");
+  const pathName = usePathname();
   // log("logo", showLogo)
   if (showLogo) {
 
     const handleClick = () => {
       userSettingsActions?.setData({currentMenu:0, currentParams:''});
+      var data = {
+        menucode: pathName,
+        action: 'Open'
+      };
+      Create.mutate(data);
     }
 
     return (
       <div className="truncate logo" onClick={handleClick}>
         <Link href="/">
-          <div className="flex flex-row items-center justify-center dark:hidden">
+          <div className="flex flex-row justify-center items-center dark:hidden">
             <img className={"expanded"} src={`/logos/12-removebg-preview.png`} alt={""} />
             <img className={"collapsed"} src={`/logos/kwe_logo_bright_collapsed.png`} alt={""} />
           </div>
-          <div className="flex flex-row items-center justify-center hidden dark:block">
+          <div className="flex hidden flex-row justify-center items-center dark:block">
             <img className={"expanded"} src={`/logos/1-gray-900.png`} alt={""} />
             <img className={"collapsed"} src={`/logos/kwe_logo_dark_collapsed.png`} alt={""} />
           </div>
         </Link>
         <button
           onClick={() => configActions.setConfig({ collapsed: !collapsed, }) }
-          className="block ml-auto mr-4 lg:hidden">
+          className="block mr-4 ml-auto lg:hidden">
           {/* <FiMenu size={20} /> */}
         </button>
       </div>

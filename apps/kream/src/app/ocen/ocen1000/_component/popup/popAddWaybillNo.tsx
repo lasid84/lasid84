@@ -41,7 +41,7 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
         checkbox: ["use_yn"],
         minWidth: { "waybill_no": 120 },
         maxWidth : {"use_yn": 80},
-        editable: ["waybill_no", "remark", "use_yn"],
+        editable: ["remark", "use_yn"],
         // dataType: { "create_date": "date", "vat_rt": "number", "bz_reg_no": "bizno", "remark":"largetext" },
         isAutoFitColData: false,
     };

@@ -142,7 +142,13 @@ const BKMain = ({ loadItem, bkData }: Props) => {
   }
 
   const handleClickPopUpWaybill = () => {
-    dispatch({isWaybillPopupOpen:true});
+
+    log("handleClickPopUpWaybill MselectedTab", MselectedTab);
+    let needSave = false;
+    if (MselectedTab.includes("NEW")) {
+      needSave = true;
+    }
+    dispatch({isWaybillPopupOpen:true, isSaveDetail:needSave});
   }
 
   return (
@@ -429,8 +435,8 @@ const BKMain = ({ loadItem, bkData }: Props) => {
             </div>
 
             <div className="flex col-start-1 col-end-6">
-                <fieldset className="flex w-1/2 p-3 pb-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
-                  <legend className="text-base font-bold text-blue-800 ">업무 담당자</legend>
+                <fieldset className="flex p-3 pb-2 space-x-1 space-y-1 w-1/2 border-2 border-solid dark:border-gray-800">
+                  <legend className="text-base font-bold text-blue-800">업무 담당자</legend>
                   {/* <MaskedInputField id="cr_t_pic_nm" value={mSelectedRow?.cr_t_pic_nm} options={{ isReadOnly: false, }} events={{ onChange: handleMaskedInputChange }} /> */}
                   <CustomSelect
                       id="cr_t_cont_seq"
@@ -465,7 +471,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                     <MaskedInputField id="cr_t_email" value={bkData?.cr_t_cont_email} options={{ isReadOnly: true }} width="w-80"/>
                     <MaskedInputField id="cr_t_tel_num" value={bkData?.cr_t_cont_tel_num} options={{ isReadOnly: true }} />
                 </fieldset>
-                <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
+                <fieldset className="flex p-3 pb-2 ml-2 space-x-1 space-y-1 w-1/2 border-2 border-solid dark:border-gray-800">
                   <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
                   {/* <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} /> */}
                     <CustomSelect
@@ -627,7 +633,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
         </PageContent>
 
         <PageContent>
-          <div className="col-start-1 col-end-6 "><TextArea id="remark" rows={6} cols={32} value={bkData?.remark} options={{ isReadOnly: false }} /></div>
+          <div className="col-start-1 col-end-6"><TextArea id="remark" rows={6} cols={32} value={bkData?.remark} options={{ isReadOnly: false }} /></div>
         </PageContent>
     </div>
   );

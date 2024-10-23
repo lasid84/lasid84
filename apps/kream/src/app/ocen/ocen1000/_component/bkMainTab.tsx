@@ -65,6 +65,10 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
         bkData.state = '1';
       }
 
+      if (bkData.has_ams) {
+        bkData.state = '4';
+      }
+
       if (Number(bkData.state) >= 1 && bkData.invoice_cnt > 0) {
         bkData.state = '5';
       }
@@ -373,18 +377,18 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   }
 
   return (
-    <div className="sticky top-0 z-20 flex w-full pt-10 space-y-1 bg-white">
+    <div className="flex sticky top-0 z-20 pt-10 space-y-1 w-full bg-white">
         <PageBKTabContent
           right={
             <>
-              <div className={"flex col-span-2 "}>
+              <div className={"flex col-span-2"}>
               {/* handleButtonClick btn_transport_send_email*/}
                 <Button id={"btn_send_email"} label="send_email" width="w-24" onClick={handleButtonClick} disabled={false}/>
                 <DropButton id={"download"} width="w-24" dataSrc={reporttype as data} options={{ keyCol :"report_type_nm" }} onClick={onDropButtonClick} />
                 <Button id={"save"} onClick={onSave} width="w-24" toolTip="ShortCut: Ctrl+S" />
               </div>                
               <div className={"flex col-span-2"}>
-                <div className ={"flex space-x-1 px-1 mx-1 border rounded-full"}>
+                <div className ={"flex px-1 mx-1 space-x-1 rounded-full border"}>
                   <RadioGroup label=''>
                       <Radio id ="search_gubn" name="download" value="0" label="excel" defaultChecked/>
                       <Radio id ="search_gubn" name="download" value="1" label="pdf" />
@@ -403,7 +407,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           <EmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} transport_company={bkData?.transport_company} shipper_id={bkData?.shipper_id}/>
                
           <div className="flex flex-col">
-            <div className="flex items-center justify-center w-full">
+            <div className="flex justify-center items-center w-full">
               <StepList stateList={stateList} state={bkData?.state}/>
             </div>
           
