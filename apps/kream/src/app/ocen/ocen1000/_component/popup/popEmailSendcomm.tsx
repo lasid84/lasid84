@@ -107,7 +107,7 @@ const Modal: React.FC<Props> = ({
 
   const [gubn, setGubn] = useState<string>('');
   const [pgmCode, setPgmCode] = useState<string>(TRANPOSRT_EMAIL_LIST_OE);
-  const [custCode, setCustCode] = useState<string>('')
+  const [custCode, setCustCode] = useState<string>(transport_company || '')
   const [isClicked, setIsClicked] = useState(false); // 클릭 여부 상태
 
   //Mail Template Get Data 
@@ -179,23 +179,22 @@ const Modal: React.FC<Props> = ({
 
   // gubn이 변경될 때 pgmCode 자동 업데이트
   useEffect(() => {
-    if (gubn === 'transport_company') {
-      setPgmCode(TRANPOSRT_EMAIL_LIST_OE);
-      setCustCode(transport_company||'')
-    } else if (gubn === 'shipper_id') {
+    if (gubn === 'shipper_id') {
       setPgmCode(CUSTOMER_EMAIL_LIST_OE);
       setCustCode(shipper_id||'')
-    }
+    } else {
+      setPgmCode(TRANPOSRT_EMAIL_LIST_OE);
+      setCustCode(transport_company||'')
+    }   
     // gubn 변경 시 데이터 refetch
     if (isOpen) {
-      transMailRemove(); // 기존 데이터 제거
-      loadEmailData();    // 새로운 데이터 가져오기
+      transMailRemove(); 
+      loadEmailData();    // 새로운 데이터 refetch
     }
   }, [gubn, isOpen, transport_company, shipper_id, transMailRemove, loadEmailData]);
 
-//   // 상태 초기화 또는 리렌더링이 필요한 부분에 해당 useEffect를 추가
 // useEffect(() => {
-//   setGubn('');  // 초기값 설정 또는 리셋 로직
+//   setGubn('');  
 // }, [isOpen]);  // Modal이 열릴 때 gubn 초기화
 
   const closeModal = () => {
@@ -382,7 +381,7 @@ const Modal: React.FC<Props> = ({
       <div className="flex w-[82rem] h-[36rem] gap-4 ">
         <div className="flex w-1/3 h-full">
           {/* grid */}
-          {custCode === "" ? (
+          {custCode === '' ? (
             <div className="p-1 m-1 font-medium text-red-400"> {t(gubn||'transport_company')}{t('MSG_0178')}</div>
           ) : (
           <MailSend
