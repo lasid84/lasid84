@@ -8,6 +8,7 @@ import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { CellClickedEvent } from "ag-grid-community";
 import ChargePopup from "components/commonForm/chargecode";
+import { Label } from "@/components/label";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -138,6 +139,11 @@ const GridCost: React.FC<Props> = ({ initData, bkData }) => {
           <>
             <Button id={"add"} onClick={handleClick} width="w-20" />
             {/* <Button id={"save"} onClick={onSave} width="w-15" /> */}
+          </>
+        }
+        left={
+          <>
+            <Label id={"cost_info"} name={"MSG_0180"} isDisplay={true} textColor="red-400" />
           </>
         }
       >

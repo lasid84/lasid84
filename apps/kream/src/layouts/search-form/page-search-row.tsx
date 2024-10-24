@@ -19,10 +19,10 @@ export const PageBKTabContent: React.FC<PageSearchProps> = ({
     <>
       <div className="flex w-full bg-white dark:bg-gray-900 dark:border-gray-800 dark:text-white">
         <div className="w-full rounded-[5px] mb-1 ">
-          <div className="flex w-full px-4 py-1 space-y-1">
+          <div className="flex px-4 py-1 space-y-1 w-full">
             {addition}
-            <div className="flex w-4/5 gap-1 ">{children}</div>
-            <div className="flex w-1/5 grid-flow-row-dense gap-2 md:flex-row md:grid md:grid-rows-2 md:grid-cols-2 place-items-end">
+            <div className="flex gap-1 w-4/5">{children}</div>
+            <div className="flex grid-flow-row-dense gap-2 place-items-end w-1/5 md:flex-row md:grid md:grid-rows-2 md:grid-cols-2">
               {/* <span className="ml-auto"></span>  */}
               {right}
             </div>
@@ -50,11 +50,11 @@ export const PageTabContent: React.FC<PageSearchProps> = ({
       <div className="flex w-full bg-white dark:bg-gray-900 dark:border-gray-800 dark:text-white">
         <div className="w-full rounded-[5px] mb-1 ">
           {title}
-          <div className="flex w-full px-4 py-1 space-y-1">
-            <div className="flex w-10/12 gap-1 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="flex px-4 py-1 space-y-1 w-full">
+            <div className="flex gap-1 w-10/12 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
-            <div className="flex w-2/12 grid-flow-row-dense gap-2 md:flex-row md:grid md:grid-rows-2 md:grid-cols-2 place-items-end">
+            <div className="flex grid-flow-row-dense gap-2 place-items-end w-2/12 md:flex-row md:grid md:grid-rows-2 md:grid-cols-2">
               {/* <span className="ml-auto"></span>  */}
               {right}
             </div>
@@ -82,13 +82,13 @@ const PageSearch: React.FC<PageSearchProps> = ({
     <>
       <div className="flex w-full">
         <div
-          className={`w-full flex rounded-[5px] ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}
+          className={`flex pr-1 w-full rounded-[5px] ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white`}
         >
           {title}
-          <div className="flex items-end w-10/12 gap-1 justify-self-start md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="flex gap-1 justify-self-start items-end w-10/12 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
             {children}
           </div>
-          <div className="flex flex-row-reverse w-2/12 gap-2 ">
+          <div className="flex flex-row-reverse gap-2 w-2/12">
             {right}
           </div>
         </div>
@@ -109,12 +109,19 @@ export const PageBKCargo: React.FC<PageSearchProps> = ({
     <>
       <div className="flex w-full">
         <div
-          className={`w-full flex rounded-[5px] ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}
+          className={`flex pr-1 w-full rounded-[5px] ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white`}
         >
           {title}
-          <div className="flex items-end w-full gap-1 justify-self-start md:flex-row md:grid">
-            <div className="flex flex-row-reverse w-full gap-2">
+          <div className="flex gap-1 justify-self-start items-end w-full md:flex-row md:grid">
+            {/* <div className="flex-grow gap-2">
+              {left}
+            </div> 
+            <div className="flex flex-row-reverse gap-2">
               {right}
+            </div> */}
+            <div className="flex justify-between items-center w-full">
+              <div className="flex flex-1 items-center">{left}</div>
+              <div className="flex flex-1 justify-end items-center">{right}</div>
             </div>
             {children}
           </div>
@@ -135,12 +142,12 @@ export const PageSearch2: React.FC<PageSearchProps> = ({
   return (
     <>
       <div className="flex-col w-full h-full">
-        <div className="grid flex-col content-end w-full h-1/6 ">
+        <div className="grid flex-col content-end w-full h-1/6">
           <div
-            className={`flex w-full rounded-[5px] justify-between ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}
+            className={`flex justify-between pr-1 w-full rounded-[5px] ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white`}
           >
-            <div className="flex inline gap-2 justify-self-start">{title}</div>
-            <div className="flex inline gap-2 justify-self-end">{right}</div>
+            <div className="inline flex gap-2 justify-self-start">{title}</div>
+            <div className="inline flex gap-2 justify-self-end">{right}</div>
           </div>
         </div>
       </div>
@@ -162,15 +169,15 @@ export const PageContent: React.FC<PageSearchProps> = ({
         <div className="w-full rounded-[5px] bg-white border mb-2 mt-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
           {title}
           {/*contents*/}
-          <div className="flex w-full px-4 py-1 space-y-2">
-            <div className="flex w-full gap-3 sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="flex px-4 py-1 space-y-2 w-full">
+            <div className="flex gap-3 w-full sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
           </div>
 
           {/*button*/}
           <div className="px-1 py-1 w-full border-t border-[#f2f2f2] dark:border-gray-800">
-            <div className="grid w-full grid-cols-2">
+            <div className="grid grid-cols-2 w-full">
               <div className="flex flex-row gap-2">
                 {left}
                 <span className="ml-auto"></span>
@@ -201,18 +208,18 @@ export const PageContentDivided: React.FC<PageSearchProps> = ({
         <div className="w-full rounded-[5px] bg-white border mb-2 mt-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
           {title}
           {/*contents*/}
-          <div className="flex w-full px-4 py-1 space-y-2">
-            <div className="flex flex-wrap w-full gap-3 md:grid-cols-3 md:grid-rows-3">
+          <div className="flex px-4 py-1 space-y-2 w-full">
+            <div className="flex flex-wrap gap-3 w-full md:grid-cols-3 md:grid-rows-3">
               {children}
             </div>
-            <div className="flex w-full gap-3 sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+            <div className="flex gap-3 w-full sm:grid sm:grid-cols-3 md:flex-row md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {addition}
             </div>
           </div>
 
           {/*button*/}
           <div className="px-1 py-1 w-full border-t border-[#f2f2f2] dark:border-gray-800">
-            <div className="grid w-full grid-cols-2">
+            <div className="grid grid-cols-2 w-full">
               <div className="flex flex-row gap-2">
                 {left}
                 <span className="ml-auto"></span>
@@ -243,11 +250,11 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({
         <div className="w-full rounded-[5px] bg-white border mb-2 mt-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
           {title}
           {/*contents*/}
-          <div className="flex w-full px-4 py-1 space-y-2">
-            <div className="flex w-10/12 gap-3 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
+          <div className="flex px-4 py-1 space-y-2 w-full">
+            <div className="flex gap-3 w-10/12 md:flex-row md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5">
               {children}
             </div>
-            <div className="flex flex-row w-2/12 gap-2 place-items-end">
+            <div className="flex flex-row gap-2 place-items-end w-2/12">
               <span className="ml-auto"></span>
               {right}
             </div>
@@ -255,7 +262,7 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({
 
           {/*button*/}
           <div className="px-1 py-1 w-full border-t border-[#f2f2f2] dark:border-gray-700">
-            <div className="grid w-full grid-cols-2">
+            <div className="grid grid-cols-2 w-full">
               <div className="flex flex-row gap-2">
                 {left}
                 <span className="ml-auto"></span>
