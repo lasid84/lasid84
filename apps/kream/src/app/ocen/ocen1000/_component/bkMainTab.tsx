@@ -134,6 +134,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
 
   const SaveCargo = () => {
     let hasData = false;
+    log("SaveCargo", bkData?.cargo, MselectedTab);
     /* 카고 저장 */
     if (bkData?.cargo) {
       bkData.cargo.forEach( async (data: Cargo) => {
@@ -159,6 +160,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
     let hasData = false;
 
     const cost: any[] = [];
+    log("SaveCost", bkData?.cargo, MselectedTab);
     /* Cost 저장 */
     const allColumns = gridRef_cost?.current?.api.getAllGridColumns();   
     if (!allColumns) return;

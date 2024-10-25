@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input, TextArea } from 'components/input';
 import { useAppContext } from "components/provider/contextObjectProvider";
-import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
+import { gridData, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import CustomSelect from "components/select/customSelect";
 import ShpContPopUp from "./popup/popShippercont";
@@ -177,11 +177,16 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                       events={{
                         onSelectionChanged: async (e, id, value) => {
                           let selectedRow = await e.api.getSelectedRows()[0];
-                          const cargo = ((bkTemplateData as any)[1] as gridData).data.filter((row: any) => row.template_id === (selectedRow as any).template_id);
+                          const cargo = ((bkTemplateData as any)[1] as gridData).data
+                                      .filter((row: any) => row.template_id === (selectedRow as any).template_id)
+                                      .map((row:any) => ({...row, [ROW_TYPE]:ROW_TYPE_NEW, [ROW_CHANGED]:true}));
                           const cost = {
-                            data : ((bkTemplateData as string[])[2] as gridData).data.filter((row: any) => row.template_id === (selectedRow as any).template_id),
+                            data : ((bkTemplateData as string[])[2] as gridData).data
+                                      .filter((row: any) => row.template_id === (selectedRow as any).template_id)
+                                      .map((row:any) => ({...row, [ROW_TYPE]:ROW_TYPE_NEW, [ROW_CHANGED]:true})),
                             fields: ((bkTemplateData as string[])[2] as gridData).fields
                           }
+                          log("SaveTemplateData", cargo, cost);
                           await dispatch({
                             [MselectedTab]: {
                               ...bkData, 
@@ -615,6 +620,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
               }}/>
 
             <Checkbox id="ams_yn" value={bkData?.ams_yn} />
+            <MaskedInputField id="ams_code" value={bkData?.ams_code} options={{ isReadOnly: true }} />
             
             <CustomSelect
               id="sales_person"
