@@ -138,7 +138,7 @@ export const TButtonBlueDisabled: React.FC<ButtonProps> = ({
   label,
   onClick,
   disabled = false,
-  type = "submit" || "button",
+  type = "submit",
 }) => {
   const disabledCss = disabled
     ? "bg-gray-200 hover:bg-gray-300"
@@ -148,7 +148,7 @@ export const TButtonBlueDisabled: React.FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`h-[32px] px-4 py-2 text-xs font-bold text-white rounded ${disabledCss}`}>
+      className={`px-4 py-2 text-xs font-bold text-white rounded h-[32px] ${disabledCss}`}>
       {label}
     </button>
   );
@@ -168,7 +168,7 @@ export const TButtonOrangeDisabled: React.FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`h-[32px] px-4 py-2 text-xs font-bold text-white rounded ${disabledCss}`}>
+      className={`px-4 py-2 text-xs font-bold text-white rounded h-[32px] ${disabledCss}`}>
       {label}
     </button>
   );
@@ -188,7 +188,7 @@ export const TButtonGrayDisabled: React.FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`h-[32px] px-4 py-2 text-xs font-bold rounded border border-gray-400 ${disabledCss}`}>
+      className={`px-4 py-2 text-xs font-bold rounded border border-gray-400 h-[32px] ${disabledCss}`}>
       {label}
     </button>
   );
@@ -207,7 +207,7 @@ export const TButtonMove: React.FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`h-[70px] w-[50px] text-xs font-bold text-black rounded border border-gray-200 ${disabledCss}`}>
+      className={`text-xs font-bold text-black rounded border border-gray-200 h-[70px] w-[50px] ${disabledCss}`}>
       <ChevronDownIcon
         className={clsx(
           "w-8 ml-2 duration-300 ease-in-out fill-black",
@@ -238,7 +238,7 @@ export const TButtonRefresh: React.FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`inline-flex justify-center items-center h-[32px] px-4 py-2 text-xs font-bold text-white rounded ${disabledCss}`}>
+      className={`inline-flex justify-center items-center px-4 py-2 text-xs font-bold text-white rounded h-[32px] ${disabledCss}`}>
       {label}
       <RiRefreshLine
         color="#FFFFFF"
@@ -263,7 +263,7 @@ export const TButtonRedDisabled: React.FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
       disabled={disabled}
-      className={`h-[32px] px-4 py-2 text-xs font-bold text-white rounded ${disabledCss}`}>
+      className={`px-4 py-2 text-xs font-bold text-white rounded h-[32px] ${disabledCss}`}>
       {label}
     </button>
   );
