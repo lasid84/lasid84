@@ -158,7 +158,7 @@ export const TButtonOrangeDisabled: React.FC<ButtonProps> = ({
   label,
   onClick,
   disabled = false,
-  type = "submit" || "button",
+  type = "submit",
 }) => {
   const disabledCss = disabled
     ? "bg-gray-200 hover:bg-gray-300"
@@ -178,7 +178,7 @@ export const TButtonGrayDisabled: React.FC<ButtonProps> = ({
   label,
   onClick,
   disabled = false,
-  type = "submit" || "button",
+  type = "submit",
 }) => {
   const disabledCss = disabled
     ? "bg-gray-200 hover:bg-gray-300 text-white"
@@ -253,7 +253,7 @@ export const TButtonRedDisabled: React.FC<ButtonProps> = ({
   label,
   onClick,
   disabled = false,
-  type = "submit" || "button",
+  type = "submit",
 }) => {
   const disabledCss = disabled
     ? "bg-gray-200 hover:bg-gray-300"
