@@ -73,6 +73,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 />
             <Modal
                 loadItem={initData}
+                callbacks={[mainRefetch]}
             />
         </>
             

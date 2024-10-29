@@ -74,7 +74,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                 // log("onSave1", jsonData)
                 await Update.mutateAsync({jsondata:jsonData}, {
                     onSuccess: (res: any) => {
-                        dispatch({ isMSearch: true });
+                        // dispatch({ isMSearch: true });
                         closeModal();
                     },
                 }).catch(err => {});
