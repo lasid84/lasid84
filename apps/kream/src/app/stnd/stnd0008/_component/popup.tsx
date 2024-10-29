@@ -28,12 +28,12 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
     const { Update } = useUpdateData2(SP_UpdateData);
     const { getValues, setValue, reset, setFocus, handleSubmit } = useFormContext();
 
-    const closeModal = () => {
-        dispatch({ isPopUpOpen: false });
+    const closeModal = async () => {
+        dispatch({ isPopUpOpen: false, mSelectedRow: {...mSelectedRow, ...getValues()} });
 
-        if (callbacks?.length) callbacks.forEach((callback: Callback) => callback())
+        // if (callbacks?.length) await callbacks.forEach((callback: Callback) => callback())
 
-        reset();
+        // reset();
     }
 
     //Set select box data
@@ -74,7 +74,6 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                 // log("onSave1", jsonData)
                 await Update.mutateAsync({jsondata:jsonData}, {
                     onSuccess: (res: any) => {
-                        // dispatch({ isMSearch: true });
                         closeModal();
                     },
                 }).catch(err => {});
@@ -88,6 +87,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                     },
                 }).catch(err => {});
             }
+            // dispatch({ isMSearch: true });
         // } catch(err) {
         //     log("catch err", err)
         // }

@@ -1,7 +1,7 @@
 
 'use client';
 
-import {useEffect, useCallback, useRef, memo, } from "react";
+import {useEffect, useCallback, useRef, memo, useState, } from "react";
 import { SP_GetData } from "./data";
 import {  crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_M } from "components/provider/contextObjectProvider";
@@ -20,10 +20,12 @@ type Props = {
 const MasterGrid: React.FC<Props> = memo(({ initData }) => {    
 
     const gridRef = useRef<any | null>(null);
-    const { dispatch, objState = {} } = useAppContext();
-    const { searchParams, isMSearch } = objState;
+    const { dispatch, objState } = useAppContext();
+    const { searchParams, isMSearch, isPopUpOpen, mSelectedRow } = objState;
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:false});
+    const { data, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetData, {enabled:true});
+    const [ mainData, setMainData ] = useState<gridData | null>(null);
+
     const gridOption: GridOption = {
         colVisible: { col : ["cust_nm_chi","corp_reg_no","area_cd","cust_nm_abbr","city_nm","post_no1","post_no2","addr3","bz_kind_cd","home_page_addr","bz_type"], visible:false },
         gridHeight: "h-full",
@@ -58,6 +60,32 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
     }, [isMSearch]);
 
+    useEffect(() => {
+        setMainData(data as gridData);
+    }, [data]);
+
+    useEffect(() => {
+        if (!isPopUpOpen && mainData && mSelectedRow) {
+            const data = mainData.data.map((item: any) => {
+                if (item.cust_code === mSelectedRow.cust_code) {
+                    const result: Record<string, any> = {};
+                    for (const key in item) {
+                        if (typeof mSelectedRow[key] === 'boolean' ) {
+                            result[key] = mSelectedRow[key] ? 'Y' : 'N';
+                        }
+                        else result[key] = mSelectedRow[key];
+                    }
+                    return result;
+                }
+                return item;
+            })
+            setMainData({
+                data : data,
+                fields : mainData?.fields
+            });
+        }
+    }, [isPopUpOpen]);
+
     return (
         <>
             <Grid
@@ -73,7 +101,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 />
             <Modal
                 loadItem={initData}
-                callbacks={[mainRefetch]}
             />
         </>
             
