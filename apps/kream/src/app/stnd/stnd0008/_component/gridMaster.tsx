@@ -44,7 +44,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       const handleRowDoubleClicked = useCallback((param: RowClickedEvent) => {
         // var data = onRowClicked(param);
         var selectedRow = {"colId": param.node.id, ...param.node.data}
-        dispatch({mSelectedRow:selectedRow, isPopUpOpen:true, crudType:crudType.UPDATE});
+        // log("handleRowDoubleClicked", crudType.UPDATE)
+        dispatch({mSelectedRow:selectedRow, isPopUpOpen:true, popType:crudType.UPDATE});
       }, []);
 
     const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {

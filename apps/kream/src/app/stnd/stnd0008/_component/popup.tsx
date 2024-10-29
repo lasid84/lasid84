@@ -22,7 +22,7 @@ type Props = {
 const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
 
     const { dispatch, objState } = useAppContext();
-    const { mSelectedRow, crudType: popType, isPopUpOpen: isOpen, searchParams } = objState;
+    const { mSelectedRow, popType, isPopUpOpen: isOpen, searchParams } = objState;
     const router = usePathname();
     const { Create } = useUpdateData2(SP_InsertCustData);
     const { Update } = useUpdateData2(SP_UpdateData);
@@ -68,16 +68,18 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
 
     const onSave = useCallback(async () => {
         var param = getValues();
-        // log("onFormSubmit", param)
         // try {
             if (popType === crudType.UPDATE) {
-                await Update.mutateAsync(param, {
+                const jsonData = JSON.stringify([param]);
+                // log("onSave1", jsonData)
+                await Update.mutateAsync({jsondata:jsonData}, {
                     onSuccess: (res: any) => {
                         dispatch({ isMSearch: true });
                         closeModal();
                     },
                 }).catch(err => {});
             } else {
+                // log("onSave2", param)
                 await Create.mutateAsync(param, {
                     onSuccess(data, variables, context) {
                         closeModal();
@@ -89,7 +91,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
         // } catch(err) {
         //     log("catch err", err)
         // }
-    }, []);
+    }, [popType]);
 
     return (
         <DialogBasic
