@@ -85,7 +85,18 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
                             res.status(500).send({ error: 'Failed to parse XML' });
                         } else {
                             let msg = result.cargCsclPrgsInfoQryRtnVo.ntceInfo ? result.cargCsclPrgsInfoQryRtnVo.ntceInfo[0] : '';
-                            if (!msg.startsWith('[N00')) {
+                            if (msg.startsWith('[N00')) { //한bl에 여러건 조회 시
+                                // log("여기", result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoQryVo);
+                                for (const row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoQryVo) {
+                                    const cargMtNo = row.cargMtNo[0];
+                                    const url = `${unipassUrl}${serviceUrl}?crkyCn=${crkyCn}&cargMtNo=${cargMtNo}`;
+                                    const response = await getCall({url:url});
+                                    const xmlData: string = response.data;
+                                    const r = await parseStringPromise(xmlData);
+                                    // log("r", r);
+                                    jsonResult.push(r);
+                                }
+                            } else {
                                 // log("result.cargCsclPrgsInfoQryRtnVo", result.cargCsclPrgsInfoQryRtnVo);
                                 if (result.cargCsclPrgsInfoQryRtnVo.tCnt && result.cargCsclPrgsInfoQryRtnVo.tCnt[0] > 0) {
                                     for (var row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoDtlQryVo) {
@@ -118,7 +129,7 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
         const inparam = ["in_data", "in_user", "in_ipaddr"];
         const invalue = [JSON.stringify(jsonResult), user, ipaddr];
         const result2:resultType = await callFunction(inproc, inparam, invalue) as resultType;
-        // log("!!!!!!!!", JSON.stringify(jsonResult));
+        log("!!!!!!!!", JSON.stringify(jsonResult));
         if (result2.numericData === 0) {
             res.status(200).send({result2});
         } else {

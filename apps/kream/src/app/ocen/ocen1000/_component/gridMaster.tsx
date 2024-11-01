@@ -35,7 +35,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const [ isCircle, setCircle] = useState<boolean>(false)
     const [ descartesParam, setDescartesParam] = useState();
 
-    const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMData, { enabled: false });
+    const { data: mainData, refetch: mainRefetch, remove } = useGetData(objState?.searchParams, "BKMainData", SP_GetMData, { enabled: false, staleTime: Infinity });
     const { Create } = useUpdateData2(SP_CreateData, "BKMainData", {callbacks: [mainRefetch]});
     const { Update } = useUpdateData2(SP_UpdateData, "BKMainData", {callbacks: [mainRefetch]});
     const { Update: DescartesData } = useUpdateData2(SP_CallDescartes, "Descartes", {callbacks: [mainRefetch]});
