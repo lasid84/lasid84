@@ -560,7 +560,7 @@ class Library {
                 }
 
                 if (result.errors && result.errors.length) {
-                    msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
+                    const msg_result = result.errors.reduce((acc,obj) => acc += obj.message, '');
                     throw msg_result
                 }
             }
