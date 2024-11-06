@@ -3,8 +3,8 @@
 import { LOAD } from "components/provider/contextObjectProvider";
 import { SP_Load } from "./_component/data";
 import { useGetData } from "components/react-query/useMyQuery";
-
 import BookmarkTab from "./_component/bookmarkTab";
+import InterfaceTab from "./_component/interfaceTab";
 
 // 개발 이력 데이터
 const developmentHistory = [
@@ -28,12 +28,14 @@ const developmentHistory = [
   },
 ];
 
-
 const Home: React.FC = () => {
   const { data: initData } : any = useGetData("", LOAD, SP_Load, {staleTime: 1000 * 60 * 60});
   
   return (
-    <BookmarkTab loadItem={initData} />
+    <div>
+      <BookmarkTab loadItem={initData} />
+      <InterfaceTab />
+    </div>
   );
 }
 
