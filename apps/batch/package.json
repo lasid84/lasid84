@@ -24,6 +24,7 @@
     "@types/body-parser": "^1.19.2",
     "@types/node": "^20.9.5",
     "@types/supertest": "^2.0.12",
+    "basic-ftp": "^5.0.5",
     "supertest": "^6.3.3",
     "tsup": "^6.0.1",
     "typescript": "^5.2.2"

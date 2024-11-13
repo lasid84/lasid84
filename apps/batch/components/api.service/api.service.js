@@ -38,7 +38,6 @@ async function executFunction(inproc, inparam, invalue) {
         token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
         const client = await init({url:url, isAuth:false, accessToken:token});
         
-        // log("executFunction1", iniData, url, token);
         const { cursorData, numericData, textData } = await dataCall(client, inproc,inparam, invalue,'');
 
         // log("============executFunction2", url, inproc,inparam, invalue, numericData, textData, cursorData);
@@ -52,6 +51,7 @@ async function executFunction(inproc, inparam, invalue) {
         return cursorData;
     } catch(ex) {
         return ex;
+        console.log("=====", ex);
     }
 }
 
@@ -73,4 +73,20 @@ async function sendEmail(mailOptions) {
     const result = await apiCallPost(client, params);
 }
 
-module.exports = { executFunction, sendEmail }
+async function insertDBAlertLog(procName, msg, remark) {
+    try {
+        const inparam = ['in_proc_name', 'in_alert', 'in_remark', 'in_userid', 'in_ipaddr'];
+        const invalue = [procName, msg, remark, procName, ''];
+        const inproc = 'f_admn_ins_alertlog'; 
+        const cursorData = await executFunction(inproc, inparam, invalue);
+
+        console.log("insertDBAlertLog", cursorData);
+
+    } catch(ex) {
+        console.log("=====", ex);
+        return ex;
+    }
+}
+
+
+module.exports = { executFunction, sendEmail, insertDBAlertLog}
