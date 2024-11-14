@@ -50,78 +50,82 @@ function init() {
 }
 
 async function startWorker() {
-  let i = 1;
-  log("arrThread", JSON.stringify(_arrThread));
-  for (const thread of _arrThread) {
-    // log("log시작:", thread.headless.toLowerCase() == 'true', _arrThread);
-    // let worker;
-    switch (thread.pgm) {
-      case "SCRAP_UFSP_HBL":
-      case "SCRAP_UFSP_HBL_OP":
-      case "SCRAP_UFSP_MBL":
-      case "SCRAP_UFSP_MBL_OP":
-      case "SCRAP_TEST":
-        const workerScrap = new Worker(ufs_worker_director + '/worker-ufsp-scraping.js'
-              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
-            }});
+  try {
+    let i = 1;
+    
+    for (const thread of _arrThread) {
+      // log("log시작:", thread.headless.toLowerCase() == 'true', _arrThread);
+      // let worker;
+      switch (thread.pgm) {
+        case "SCRAP_UFSP_HBL":
+        case "SCRAP_UFSP_HBL_OP":
+        case "SCRAP_UFSP_MBL":
+        case "SCRAP_UFSP_MBL_OP":
+        case "SCRAP_TEST":
+          const workerScrap = new Worker(ufs_worker_director + '/worker-ufsp-scraping.js'
+                , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'true' ? true : false 
+              }});
 
+            break;
+
+        //대상데이터 분배 처리 쓰레드
+        //DeadLock 발생으로 추가
+        case "SCRAP_UFSP":
+          const workerDist = new Worker(ufs_worker_director + '/worker-data-distributor.js'
+              , { workerData: { threadList : _arrThread, idx: thread.idx, pgm:thread.pgm }});
           break;
-
-      //대상데이터 분배 처리 쓰레드
-      //DeadLock 발생으로 추가
-      case "SCRAP_UFSP":
-        const workerDist = new Worker(ufs_worker_director + '/worker-data-distributor.js'
-            , { workerData: { threadList : _arrThread, idx: thread.idx, pgm:thread.pgm }});
-        break;
-      case "SCRAP_UFSP_CHARGE_UPLOAD":
-        const workerCharge = new Worker(ufs_worker_director + '/worker-ufsp-charge-uploader.js'
-              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'false' ? false : true
-            }});
-        break;
-      case "SCRAP_UFSP_PROFILE_CARRIER":
-          const workerCarrier = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-carrier.js'
+        case "SCRAP_UFSP_CHARGE_UPLOAD":
+          const workerCharge = new Worker(ufs_worker_director + '/worker-ufsp-charge-uploader.js'
+                , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless.toLowerCase() == 'false' ? false : true
+              }});
+          break;
+        case "SCRAP_UFSP_PROFILE_CARRIER":
+            const workerCarrier = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-carrier.js'
+                , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
+                }});
+            break;
+        case "SCRAP_UFSP_PROFILE_CUSTOMER":
+            const workerCustomer = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-customer.js'
+                , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
+                }});
+            break;
+        case "SCRAP_UFSP_PROFILE_PORT":
+          const workerPort = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-port.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
+              }});
+          break;          
+        case "SCRAP_UFSP_CODE_MASTER":
+          const workerCodeMaster = new Worker(ufs_worker_director + '/worker-ufsp-scraping-codemaster.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
+              }});
+          break;  
+        case "SCRAP_UFSP_INVOICING_UPLOAD":
+          const workerInvoicing = new Worker(ufs_worker_director + '/worker-ufsp-invoicing.js'
+          , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
+          }});
+          break;  
+        case "SCRAP_UFSP_PROFILE_CHARGE":
+          const workerProfileCharge = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-chargecode.js'
               , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
               }});
           break;
-      case "SCRAP_UFSP_PROFILE_CUSTOMER":
-          const workerCustomer = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-customer.js'
+        case "BATCH_MAILING":
+          const workerMailing = new Worker(mailing_worker_director + '/worker-mailing.js'
               , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
               }});
           break;
-      case "SCRAP_UFSP_PROFILE_PORT":
-        const workerPort = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-port.js'
-            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
-            }});
-        break;          
-      case "SCRAP_UFSP_CODE_MASTER":
-        const workerCodeMaster = new Worker(ufs_worker_director + '/worker-ufsp-scraping-codemaster.js'
-            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
-            }});
-        break;  
-      case "SCRAP_UFSP_INVOICING_UPLOAD":
-        const workerInvoicing = new Worker(ufs_worker_director + '/worker-ufsp-invoicing.js'
-        , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
-        }});
-        break;  
-      case "SCRAP_UFSP_PROFILE_CHARGE":
-        const workerProfileCharge = new Worker(ufs_worker_director + '/worker-ufsp-scraping-profile-chargecode.js'
-            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
-            }});
-        break;
-      case "BATCH_MAILING":
-        const workerMailing = new Worker(mailing_worker_director + '/worker-mailing.js'
-            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
-            }});
-        break;
-      case "APPLE_EDI_810":
-          const workerAppleEDI810 = new Worker(APPLE_EDI_810_WORKER_DIR + '/810.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
-          break;
-      case "BATCH_HOLIDAY":
-          const workerHoliday = new Worker(arp +"/apps/batch/components/worker/holiday" + '/holiday.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
-          break;
+        case "APPLE_EDI_810":
+            const workerAppleEDI810 = new Worker(APPLE_EDI_810_WORKER_DIR + '/810.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
+            break;
+        case "BATCH_HOLIDAY":
+            const workerHoliday = new Worker(arp +"/apps/batch/components/worker/holiday" + '/holiday.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
+            break;
+      }
+      await sleep(5000);
+      i++;
     }
-    await sleep(5000);
-    i++;
+  } catch (ex) {
+    console.log(ex);
   }
 }
 
