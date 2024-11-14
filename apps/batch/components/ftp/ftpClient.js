@@ -35,6 +35,7 @@ class FtpClient {
         }
     }
 
+    // 2. 파일을 다운 받는 메서드
     async donwloadFile(path, fileName) {
         try {
             const uniqueName = await this.getUniqueLocalFileName(fileName);
@@ -49,7 +50,7 @@ class FtpClient {
         }
     }
 
-    // 2. 파일을 읽는 메서드 (파일을 임시로 다운로드한 후 Buffer로 변환)
+    // 3. 파일을 읽는 메서드(파일 다운 후 read)
     async readFile(fileName) {
         const tempFilePath = "temp_download.txt";
         try {
@@ -66,7 +67,7 @@ class FtpClient {
         }
     }
 
-    // 폴더 내 모든 파일의 이름과 내용을 읽어서 배열로 반환하는 메서드
+    // 4. 폴더 내 모든 파일의 이름과 내용을 읽어서 배열로 반환하는 메서드
     async readAllFilesInFolder(folderPath) {
         const filesContent = [];
         
@@ -85,27 +86,30 @@ class FtpClient {
         }
     }
 
-    // 3. 파일을 다른 위치로 이동하는 메서드
+    /* TODO
+        - 개발 필요
+    */
+    // 5. 파일을 다른 위치로 이동하는 메서드
     async moveFile(sourcePath, destinationPath) {
-        const tempFilePath = "temp_download.txt";
-        try {
-            // 파일을 임시로 다운로드
-            await this.client.downloadTo(tempFilePath, sourcePath);
+        // const tempFilePath = "temp_download.txt";
+        // try {
+        //     // 파일을 임시로 다운로드
+        //     await this.client.downloadTo(tempFilePath, sourcePath);
 
-            // 새 위치에 업로드
-            await this.client.uploadFrom(tempFilePath, destinationPath);
+        //     // 새 위치에 업로드
+        //     await this.client.uploadFrom(tempFilePath, destinationPath);
 
-            console.log(`파일이 ${sourcePath}에서 ${destinationPath}로 이동되었습니다.`);
-        } catch (error) {
-            console.error("파일 이동 실패:", error);
-            throw error;
-        } finally {
-            // await fs.unlink(tempFilePath).catch(() => {}); // 임시 파일 삭제
-            this.resetTimeout();
-        }
+        //     console.log(`파일이 ${sourcePath}에서 ${destinationPath}로 이동되었습니다.`);
+        // } catch (error) {
+        //     console.error("파일 이동 실패:", error);
+        //     throw error;
+        // } finally {
+        //     // await fs.unlink(tempFilePath).catch(() => {}); // 임시 파일 삭제
+        //     this.resetTimeout();
+        // }
     }
 
-    // 3. 파일을 다른 위치로 이동하는 메서드
+    // 6. 파일을 업로드하는 메서드
     async uploadFile(sourcePath, destinationPath) {
         try {
             // 새 위치에 업로드
@@ -120,6 +124,7 @@ class FtpClient {
         }
     }
 
+    // 7. 다운 받은 파일을 삭제하는 메서드
     async removeLocalFile (fileName) {
         try {
             await fs.unlink(fileName).catch(() => {});
@@ -131,6 +136,7 @@ class FtpClient {
         }
     }
 
+    // 8. 원격지의 파일을 삭제하는 메서드
     async removeFile(path) {
         try {
             // 원본 파일 삭제
@@ -143,7 +149,7 @@ class FtpClient {
         }
     }
 
-    // 고유한 파일명을 생성하는 메서드
+    // 9. 고유한 로컬파일명을 생성하는 메서드
     async getUniqueLocalFileName(filePath) {
         let uniquePath = path.normalize(filePath);
         let count = 1;
@@ -164,6 +170,7 @@ class FtpClient {
         return uniquePath;
     }
 
+    // 9. 고유한 원격지파일명을 생성하는 메서드
     async getUniqueRemoteFileName(remoteDir, fileName) {
         const ext = path.extname(fileName);
         const base = path.basename(fileName, ext);
@@ -187,6 +194,7 @@ class FtpClient {
     }
 
     // 타임아웃 리셋 메서드: 연결 시 매번 타임아웃을 초기화
+    // 개발하면서 client.close 누락시 자동으로 close 처리 해주기 위한 timeout
     resetTimeout() {
         this.clearTimeout();
         this.timeout = setTimeout(() => {
@@ -202,7 +210,7 @@ class FtpClient {
         }
     }
 
-    // 3. FTP 연결 종료 메서드
+    // FTP 연결 종료 메서드
     async close() {
         if (this.client && this.isConnected) {
             this.client.close();

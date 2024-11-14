@@ -93,8 +93,6 @@ async function insert810FTPFile() {
                 }      
             }
         }
-
-        console.log("=========" + JSON.stringify(filesContent));
         
         insertEDI810Data(filesContent);
         

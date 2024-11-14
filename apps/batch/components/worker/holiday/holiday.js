@@ -74,7 +74,7 @@ async function setDayInfo(jsonData) {
         const inproc = 'scrap.f_scrp1001_set_dayinfo'; 
         const result = await executFunction(inproc, inparam, invalue);
         // return cursorData[0].data;
-        
+        return result;
     } catch (ex) {
     }
 }
