@@ -24,7 +24,7 @@ function stringToDateString(source, delimiter = '') {
     }
 };
 
-function DateToString(source, delimiter = '') {
+function DateToString(source = new Date(), delimiter = '') {
     if (source) {
         const year = source.getFullYear();
         const month = (source.getMonth() + 1).toString().padStart(2,0);

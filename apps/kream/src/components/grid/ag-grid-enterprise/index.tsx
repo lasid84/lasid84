@@ -57,7 +57,7 @@ type Props = {
   id?: string;
   gridRef?: any
   loadItem?: any | null
-  listItem?: gridData
+  listItem?: gridData | null
   options?: GridOption
   event?: GridEvent
   customselect?: any | null

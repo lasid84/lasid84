@@ -7,7 +7,7 @@ const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHel
 /*
  메일 수신자 설정 화면
 */
-export default function STND0013() {
+export default function STND0014() {
 
     return (<></>)
 }
