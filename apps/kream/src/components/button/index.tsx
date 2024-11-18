@@ -24,6 +24,7 @@ import { AiOutlineUser } from 'react-icons/ai';
 import { RiFileExcel2Line } from "react-icons/ri"; //excel
 import { IoSend } from "react-icons/io5";          //send
 import { FaSignOutAlt } from "react-icons/fa";     //out, extraction
+import { IoMdPrint } from "react-icons/io";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
