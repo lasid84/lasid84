@@ -2,7 +2,7 @@ import DialogBasic from "layouts/dialog/dialog"
 import { Controller, useForm, FormProvider, SubmitHandler, useFieldArray, useFormContext } from "react-hook-form";
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import { crudType, SEARCH_M, useAppContext } from "components/provider/contextObjectProvider"
-import { CUST_TYPE_TRANSPORT, SP_InsertCustData, SP_UpdateData } from './data';
+import { SP_UpdateData } from './data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import CustomSelect from "components/select/customSelect";
 import { useRouter, usePathname } from 'next/navigation'
@@ -24,7 +24,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
     const { dispatch, objState } = useAppContext();
     const { mSelectedRow, popType, isPopUpOpen: isOpen, searchParams } = objState;
     const router = usePathname();
-    const { Create } = useUpdateData2(SP_InsertCustData);
+    //const { Create } = useUpdateData2(SP_InsertCustData);
     const { Update } = useUpdateData2(SP_UpdateData);
     const { getValues, setValue, reset, setFocus, handleSubmit } = useFormContext();
 
@@ -79,13 +79,13 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                 }).catch(err => {});
             } else {
                 // log("onSave2", param)
-                await Create.mutateAsync(param, {
-                    onSuccess(data, variables, context) {
-                        closeModal();
-                    },
-                    onError(error, variables, context) {
-                    },
-                }).catch(err => {});
+                // await Create.mutateAsync(param, {
+                //     onSuccess(data, variables, context) {
+                //         closeModal();
+                //     },
+                //     onError(error, variables, context) {
+                //     },
+                // }).catch(err => {});
             }
             // dispatch({ isMSearch: true });
         // } catch(err) {
@@ -111,9 +111,9 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                         <MaskedInputField
                             id="cust_code"
                             value={mSelectedRow?.cust_code}
-                            options={{
-                                isReadOnly: mSelectedRow?.cust_code === CUST_TYPE_TRANSPORT ? true : (popType === crudType.CREATE ? false : true),
-                            }}
+                            // options={{
+                            //     isReadOnly: mSelectedRow?.cust_code === CUST_TYPE_TRANSPORT ? true : (popType === crudType.CREATE ? false : true),
+                            // }}
                         />
                     </div>
                     <div className="col-span-1">
