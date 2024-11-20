@@ -118,6 +118,8 @@ export type GridOption = {
   total?: {
     [key: string]: string                 //column : 타입(count, sum, avg), prefix 같은 문구를 넣으려면 custom 형식의 옵션 추가 후 개발 필요
   }
+  pinned?: { [key: string]: string },
+
   autoHeightCol?: string[]
   isShowFilter?: boolean
   isShowFilterBtn?: boolean
@@ -127,6 +129,7 @@ export type GridOption = {
   isShowRowNo?: boolean
   rowSpan?: string[]
   isColumnHeaderVisible?: boolean
+  cellClass?: { [key: string]: string | ((params: any) => string) }; 
 };
 
 type cols = {
@@ -572,16 +575,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
-                //icon 셋팅
-                if (options?.icon) {
-                  var arrCols = Object.keys(options.icon);
-                  if (arrCols.indexOf(col) > -1) {
-                    cellOption = {
-                      ...cellOption,
-                      cellRenderer : options.icon[col],
-                  }
-                }        
-              }
+        //icon 셋팅
+        if (options?.icon) {
+          var arrCols = Object.keys(options.icon);
+          if (arrCols.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              cellRenderer : options.icon[col],
+          }
+        }        
+      }
 
         if (options?.minWidth) {
           var arrCols = Object.keys(options.minWidth);
@@ -602,6 +605,44 @@ const ListGrid: React.FC<Props> = memo((props) => {
             };
           }
         }
+        //컬럼고정
+        if (options?.pinned) {
+          var arrCols = Object.keys(options.pinned);
+          if (arrCols.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              pinned: options.pinned[col]
+            };
+          }
+        }
+
+        //cell스타일지정
+        if (options?.cellClass) {
+          const arrCols = Object.keys(options.cellClass);
+          if (arrCols.indexOf(col) > -1) {
+            const classOrFunction = options.cellClass[col];
+        
+            cellOption = {
+              ...cellOption,
+              cellStyle: (params: any) => {
+                 if (typeof classOrFunction === "function") {
+                 ///함수 타입인 경우, 동적으로 스타일 반환
+                  const dynamicClass = classOrFunction(params);
+                  switch (dynamicClass) {
+                    case "bg-red":
+                      return { backgroundColor: "#ffcccc", color: "#900" };
+                    case "bg-green":
+                      return { backgroundColor: "#ccffcc", color: "#090" };
+                    // default:
+                    //   return null;
+                  }
+                }
+                //return null; // 기본값
+              },
+            };
+          }
+        }
+        
 
         //rowSpan
         if (options?.rowSpan?.length) {
