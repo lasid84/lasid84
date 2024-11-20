@@ -10,8 +10,8 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { GrDownload } from "react-icons/gr";
 import { VscSymbolInterface } from "react-icons/vsc";
 import { MdOutlineSyncAlt } from "react-icons/md";
-import { FaClipboardCheck } from "react-icons/fa"; //clipboard
-import { RxCopy } from "react-icons/rx"; //copy
+import { FaClipboardCheck } from "react-icons/fa";  //clipboard
+import { RxCopy } from "react-icons/rx";            //copy
 import { SP_InsertLog } from "@/services/clientAction";
 import { useUpdateData2 } from "../react-query/useMyQuery";
 import { usePathname } from "next/navigation";
@@ -21,6 +21,9 @@ import { RiUserSettingsLine } from "react-icons/ri";
 import { FaTruckPickup } from "react-icons/fa";
 import { LuContainer } from "react-icons/lu";
 import { AiOutlineUser } from 'react-icons/ai';
+import { RiFileExcel2Line } from "react-icons/ri"; //excel
+import { IoSend } from "react-icons/io5";          //send
+import { FaSignOutAlt } from "react-icons/fa";     //out, extraction
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -81,7 +84,9 @@ const btnColor: any = {
   "gray-outline":
     "bg-transparent hover:bg-gray-900/75 text-gray-700/75 hover:text-white border border-gray-700/75  hover:border-transparent rounded dark:border-gray-200/75 dark:text-gray-100 dark:hover:bg-gray-400",
   "green-outline":
-    "bg-transparent hover:bg-green-600/75 text-green-600/75 hover:text-white border border-green-600/75  hover:border-transparent rounded",
+    "bg-transparent hover:bg-green-600/75 text-green-600/75 hover:text-white border border-green-600  hover:border-transparent rounded  dark:border-green-200/75 dark:text-green-100 dark:hover:bg-green-400",
+  "deep-green-outline":
+    "bg-transparent hover:bg-green-800/75 text-green-800/75 hover:text-white border border-green-800  hover:border-transparent rounded  dark:border-green-400/75 dark:text-green-300 dark:hover:bg-green-600",
   "orange-outline":
     "bg-transparent hover:bg-orange-600/75 text-orange-600/75 hover:text-white border border-orange-600/75  hover:border-transparent rounded",
   "red-outline":
@@ -97,7 +102,6 @@ const getColor = (label: string, color: string = "") => {
       case "search":
       case "check":
       case "request":
-      case "send":
         c = "sky-fill";
         break;
       case "add":
@@ -116,6 +120,7 @@ const getColor = (label: string, color: string = "") => {
         c = "light-gray-outline"
         break;
       case "download":
+      case "send":
         c = "sky-outline";
         break;
       case "send_email":  
@@ -132,6 +137,13 @@ const getColor = (label: string, color: string = "") => {
         break;
       case "refresh":
         c = "gray-outline";
+        break;
+      case "upload_excel":
+        c = "green-outline";
+        break;
+      case "extract_hscode":
+        c = "deep-green-outline";
+        break;
       default:
         c = "black";
         break;
@@ -204,6 +216,15 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "manage_con":
       icon = <AiOutlineUser size={size} />
+      break;
+    case "upload_excel":
+      icon = <RiFileExcel2Line size={size} />
+      break;
+    case "send":
+      icon = <IoSend  size={size} />
+      break;
+    case "extract_hscode":
+      icon = <FaSignOutAlt size={size}/>
       break;
     case "descartes":
       const descartesIcon = () => {
