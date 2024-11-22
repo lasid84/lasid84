@@ -17,6 +17,7 @@ import CustomSelect from "components/select/customSelect";
 import { Button } from 'components/button';
 import { gridData } from "components/grid/ag-grid-enterprise";
 import Modal from "components/ufs-interface/popupInterface";
+import PrintPopup from "./popup/waybillPrintPopup";
 import { SCRAP_UFSP_MBL } from "components/ufs-interface/_component/data"
 
 // import { useGetData } from './test'
@@ -69,6 +70,8 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onInterface = () => { dispatch({ crudType: crudType.CREATE, isIFPopUpOpen: true }) }
 
+  const onPrint = () => { dispatch({ crudType: crudType.CREATE, isPrintPopUpOpen: true }); }
+
 
   return (
     <>
@@ -76,6 +79,9 @@ const SearchForm = ({ loadItem }: any) => {
         <PageSearchButton
           right={
             <>
+              <div className={"col-span=1"}>
+                <Button id="print" disabled={false} onClick={onPrint} />
+              </div>
               <div className={"col-span-1"}>
                 <Button id="search" disabled={false} onClick={onSearch} />
               </div>
@@ -131,7 +137,20 @@ const SearchForm = ({ loadItem }: any) => {
           </div>
         </PageSearchButton>
       </form>
+      {
+        /**
+        * @dev
+        * Interface 팝업
+        * */
+      }
       <Modal pgm_code={SCRAP_UFSP_MBL} />
+      {
+        /**
+         * @dev
+         * Waybill 프린트 팝업
+         */
+      }
+      <PrintPopup />
     </>
   );
 };

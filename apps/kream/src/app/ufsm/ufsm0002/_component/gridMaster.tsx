@@ -38,6 +38,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
 
     const handleRowClicked = async (param: RowClickedEvent) => {
+        dispatch({ dSelectedNo: param.node.data.mwb_no });
         // var selectedRow = { "colId": param.node.id, ...param.node.data }
         // if (objState.tab1) {
         //     if (objState.tab1.findIndex((element: any) => {
