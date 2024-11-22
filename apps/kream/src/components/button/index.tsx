@@ -122,6 +122,7 @@ const getColor = (label: string, color: string = "") => {
         break;
       case "download":
       case "send":
+      case "print":
         c = "sky-outline";
         break;
       case "send_email":  
@@ -221,12 +222,16 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
     case "upload_excel":
       icon = <RiFileExcel2Line size={size} />
       break;
+    case "print":
+      icon = <IoMdPrint size={size} />
+      break;
     case "send":
       icon = <IoSend  size={size} />
       break;
     case "extract_hscode":
       icon = <FaSignOutAlt size={size}/>
       break;
+
     case "descartes":
       const descartesIcon = () => {
         return (
