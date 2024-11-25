@@ -28,11 +28,11 @@ module.exports = {
   darkMode: "class",
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    screens: {
-      'notebook': '1563px',
-      'monitor': '1920px'
-    },
     extend: {
+      screens: {
+        'notebook': '1563px',
+        'monitor': '1920px'
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
