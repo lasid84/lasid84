@@ -131,7 +131,53 @@ const addDaysToDate  = (dateString, days) => {
 
     return `${newYear}${newMonth}${newDay}`;
 };
+
+function stringToShortMonthDate(yyyymmdd) {
+    const year = parseInt(yyyymmdd.slice(0, 4), 10);
+    const month = parseInt(yyyymmdd.slice(4, 6), 10) - 1;
+    const day = parseInt(yyyymmdd.slice(6, 8), 10);
   
+    const date = new Date(year, month, day);
+  
+    const monthShort = date.toLocaleString("en-US", { month: "short" });
+  
+    return `${day.toString().padStart(2, "0")}-${monthShort}-${year} 00:00:00`;
+}
+
+const convertCurrentTimeToUFSPFormat = () => {
+    const date = new Date();
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const monthShort = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+  
+    return `${day}-${monthShort}-${year} ${hours}:${minutes}`;
+};
+
+const checkUTCOneDay = (standardDate, targetDate) => {
+    if (!targetDate) {
+        return true;
+    }
+    const stdYear = standardDate.getFullYear();
+    const stdMonth = standardDate.getMonth();
+    const stdDay = standardDate.getDate();
+
+    const tgtYear = targetDate.getFullYear();
+    const tgtMonth = targetDate.getMonth();
+    const tgtDay = targetDate.getDate();
+
+    const oneDay = new Date(tgtYear, tgtMonth, tgtDay + 1);
+
+    return (
+        oneDay.getFullYear() === stdYear
+        &&
+        oneDay.getMonth() === stdMonth
+        &&
+        oneDay.getDate() === stdDay
+    )
+}
 
 module.exports = {
     textToDate,
@@ -142,5 +188,8 @@ module.exports = {
     stringToDate,
     getKoreaTime,
     stringToTime,
-    addDaysToDate 
+    addDaysToDate,
+    stringToShortMonthDate,
+    convertCurrentTimeToUFSPFormat,
+    checkUTCOneDay
   }
