@@ -36,14 +36,14 @@ const WaybillPrintPopup: React.FC = () => {
             position: relative;
             width: 793px;
             height: 1122px;
-        `
+        ` 
         printArea.appendChild(onlyTextPrintArea);
 
         printArea.appendChild(assignInputBox(onlyTextPrintArea, ORIGIN_MODE, inputValues))
 
         const newWindow = window.open("", "_blank", "width=793 height=1122") as Window;
         const printMediaQuery = document.createElement('style');
-        printMediaQuery.innerHTML=`@media print { html, body { width: 793px; height: 1122px; max-height: 1122px; overflow: hidden; margin:0; } header, footer, .no-print { display:none; } } @page{ margin:0; } @font-face { font-family: 'Courier Prime'; src: url('/fonts/CourierPrime-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; } body { font-family: Courier Prime;}`;
+        printMediaQuery.innerHTML = `@media print { html, body { width: 793px; height: 1122px; max-height: 1122px; overflow: hidden; margin:0; } header, footer, .no-print { display:none; } } @page { margin:0; } @font-face { font-family: 'Courier Prime'; src: url('/fonts/CourierPrime-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; } body { font-family: Courier Prime; }`;
 
         const handleAfterPrint = () => {
             newWindow.close();
@@ -54,9 +54,11 @@ const WaybillPrintPopup: React.FC = () => {
         newWindow.document.head.appendChild(printMediaQuery);
         newWindow.document.body.appendChild(onlyTextPrintArea);
 
-        setTimeout(() => {
-            newWindow.print();
-        }, 100);
+        newWindow.document.fonts.ready.then(() => {
+            setTimeout(() => {
+                newWindow.print();
+            }, 1000);
+        });
     }
 
     return (
