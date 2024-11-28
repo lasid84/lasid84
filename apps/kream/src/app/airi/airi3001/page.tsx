@@ -26,9 +26,12 @@ export default function AIRI3001() {
       searchParams: {},
       isMSearch: false,
       mSelectedRow: {},
-      isPopUpOpen: false,
-      isIFPopUpOpen: false,
-      popType: null
+      isDSearch : false,
+      popUp : {
+        popType: null,
+        isPopUpUploadOpen: false,
+        isPopUpOpen: false,
+      },
     },
   });
   const { objState } = state;

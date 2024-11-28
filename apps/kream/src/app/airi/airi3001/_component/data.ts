@@ -58,6 +58,31 @@ export const SP_GetEDIData = async (searchParam: any) => {
   return result![0];
 }
 
+export const SP_GetEDIDetailData = async (searchParam: any) => {  
+  const Param = searchParam.queryKey[1];
+  const {waybill_no, invoice_no, user_id, ipaddr} = Param;
+  
+  const params = {
+    inparam : [
+       "in_no"
+      , "in_invoice_no"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      waybill_no
+      , invoice_no
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi3001_get_detail',
+    isShowLoading: true
+  }
+
+  const result = await executFunction(params);
+  return result![0];
+}
+
 
 export const SP_InsertData = async (searchParam: any) => {  
   const Param = searchParam.queryKey[1];

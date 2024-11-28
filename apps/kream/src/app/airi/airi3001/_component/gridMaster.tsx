@@ -15,7 +15,8 @@ import Grid, { ROW_HIGHLIGHTED,ROW_TYPE_NEW } from "components/grid/ag-grid-ente
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import Switch from "components/switch/index"
-import Modal from "./popup"
+import DetailModal from "./Detail/popup"
+import ExcelUploadModal from "./ExcelUpload/popup"
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -26,7 +27,8 @@ type Props = {
 const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const gridRef = useRef<any | null>(null);
   const { dispatch, objState = {} } = useAppContext();
-  const { searchParams, isMSearch, isPopUpOpen, mSelectedRow } = objState;
+  const { searchParams, isMSearch, popUp } = objState;
+  const { popType, isPopUpOpen, isPopUpUploadOpen} = popUp
   const { Create } = useUpdateData2(SP_InsertData, SEARCH_M);
   const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
   const [gridData, setGridData] = useState<gridData>();
@@ -90,12 +92,16 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     log("handleRowDoubleClicked", selectedRow);
     dispatch({
       mSelectedRow: selectedRow,
+      popUp : { ...popUp, crudType: crudType.UPDATE, isPopUpOpen: true }, //추가
+      isDSearch : true,
       isPopUpOpen: true,
       crudType: crudType.UPDATE,
     });
   };
 
   const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
+    const selectedRow = param.api.getSelectedRows()[0];
+    dispatch({ mSelectedRow: selectedRow });
   }, []);
 
 
@@ -145,13 +151,17 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       });
   };
 
+  const onExcelUpload= () => {
+  //   dispatch({ crudType: crudType.CREATE, isPopUpUploadOpen: true })  }
+     dispatch({ popUp : { ...popUp, crudType: crudType.CREATE, isPopUpUploadOpen: true }, })  
+  }
+
   return (
     <>
       <PageMGrid3
-        title={<><Button id={"upload_excel"} disabled={false}  label='upload_excel' width='w-34' onClick=""  />
+        title={<><Button id={"upload_excel"} onClick = {onExcelUpload} disabled={false}  label='upload_excel' width='w-34' />
                  <Button id={"extract_hscode"}  onClick="" width="w-34" toolTip="ShortCut: Ctrl+S"/></>}
-        right={<><Switch/>
-                 <Button id={"send"} onClick={onSave} width='w-34' /></>}
+        right={<><Switch/><Button id={"send"} onClick={onSave} width='w-34' /></>}
       >
         <Grid
           gridRef={gridRef}
@@ -165,9 +175,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
           }}
         />
       </PageMGrid3>
-      <Modal
-                loadItem={initData}
-            />
+      <DetailModal loadItem={initData}/>
+      <ExcelUploadModal loadItem={initData}/>
     </>
   );
 });
