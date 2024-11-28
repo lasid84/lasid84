@@ -90,7 +90,7 @@ const SearchForm = ({ loadItem }: any) => {
       no: no || "", // HWB, MWB, BK_NO
       cust_code: cust_code || "",
       state: state || "",
-      create_user: user_id || "",
+      create_user: "ALL",
       search_gubn: 0,
     },
   });
@@ -116,9 +116,15 @@ const SearchForm = ({ loadItem }: any) => {
       setCustcode(loadItem[0]);
       setCreateuser(loadItem[1]);
       setStatus(loadItem[2]);
+
+      log("loadItem[1]", loadItem[1], loadItem[1].data.filter((v:any) => v.create_user == user_id).length)
+      if (loadItem[1].data.filter((v:any) => v.create_user == user_id).length) {
+        setValue("create_user", user_id);
+        dispatch({searchParams: {...searchParams, create_user:user_id}});
+      }
     }
     if (objState.isFirstRender) resetComponent(0);
-  }, [loadItem]);
+  }, [loadItem, user_id]);
 
   useEffect(() => {
     // log("curCreateUser", objState.searchParams)
