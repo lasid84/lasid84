@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {  SP_UpdateData, SP_GetEDIData } from './data';
+import { SP_UpdateData, SP_GetEDIDetailData } from "../data";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
+import { useTranslation } from "react-i18next";
 import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import { PageGrid } from "layouts/grid/grid";
@@ -13,7 +14,6 @@ import { Button } from "components/button";
 import {
   CellValueChangedEvent,
   IRowNode,
-  RowClickedEvent,
   SelectionChangedEvent,
 } from "ag-grid-community";
 import { toastSuccess } from "components/toast";
@@ -24,41 +24,32 @@ type Props = {
   ref?: any | null;
   initData?: any | null;
   params: {
-    carrier_code: string;
-    cont_type: string;
+    waybill_no: string;
+    invoice_no: string;
   };
 };
 
 const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
+  const { t } = useTranslation();
   const gridRef = useRef<any | null>(ref);
-  const { dispatch, objState } = useAppContext();
-//   const { Create } = useUpdateData2(SP_InsertData, SEARCH_D);
+  const { dispatch, objState } = useAppContext();  
   const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
   const [gridOptions, setGridOptions] = useState<GridOption>();
-
   const {
-    data: CarrierContData,
-    refetch: CarrierContRefetch,
-    remove: CarrierContRemove,
-  } = useGetData({ ...params }, SEARCH_D, SP_GetEDIData, { enabled: false });
+    data: EDIDetailData,
+    refetch: EDIDetailRefetch,
+    remove: EDIDetailRemove,
+  } = useGetData({ ...params }, SEARCH_D, SP_GetEDIDetailData, { enabled: false });
 
   const gridOption: GridOption = {
     colVisible: {
-      col: ["pic_nm", "email", "tel_num", "fax_num", "remark", "use_yn", "def"],
+      col: ["partnum", "partdesc", "hscode", "coo", "qty", "unitprice","totalunitprice","declnum","currency","declcustomvalue","hkscode","amt01","amt02","amt03","amt04"],
       visible: true,
     },
-    gridHeight: "h-full",
-    checkbox: ["use_yn", "def"],
-    minWidth: { email: 200 },
-    editable: [
-      "pic_nm",
-      "email",
-      "tel_num",
-      "fax_num",
-      "remark",
-      "use_yn",
-      "def",
-    ],
+    gridHeight: "30vh",
+    maxWidth: { partnum : 120, hscode : 120, coo:60, qty:60, unitprice : 100, totalunitprice : 100 },    
+    minWidth: { partnum : 110, hscode : 110, coo:50, qty:50, unitprice : 80, totalunitprice : 80 },
+    editable: [ "declnum","hkscode","currency","declcustomsvalue ","amt01","amt02","amt03","amt04"],
     dataType: { create_date: "date" },
     isAutoFitColData: false,
   };
@@ -66,13 +57,22 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
   useEffect(() => {
     setGridOptions(gridOption);
     // CarrierContRemove();
-    // CarrierContRefetch();
+    EDIDetailRefetch();
   }, []);
 
   useEffect(() => {
     if (objState.isDSearch) {
-    //   CarrierContRefetch();
+      //   CarrierContRefetch();
+      log("grid Data?", EDIDetailData);
+      EDIDetailRefetch();
       dispatch({ isDSearch: false });
+
+       const fetchDataAsync = async() => {
+        const {data: newData } = await EDIDetailRefetch();
+        const detail = (newData as string[])[1]? ((newData as string[])[1] as gridData).data : [];
+        log('grid Data??? - detail', detail, newData)
+      }
+      fetchDataAsync()
     }
   }, [objState.isDSearch]);
 
@@ -92,8 +92,8 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
         node.setDataValue("def", false);
       }
     });
-  }
-  
+  };
+
   const onSave = () => {
     const processNodes = async () => {
       const api = gridRef.current.api;
@@ -106,9 +106,8 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
         if (data.__changed) {
           try {
             if (data.__ROWTYPE === ROW_TYPE_NEW) {
-              data.carrier_code = params.carrier_code;
-              data.cont_type = params.cont_type;
-            //   await Create.mutateAsync(data);
+              data.waybill_no = params.waybill_no;
+              data.invoice_no = params.invoice_no;
             } else {
               await Update.mutateAsync(data);
             }
@@ -135,25 +134,18 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
       <PageGrid
         title={
           <>
-            <LabelGrid id={params.cont_type} />
+            <LabelGrid id={t("detail")} />
           </>
         }
         right={
           <>
-            <Button
-              id={"add"}
-              onClick={() =>
-                rowAdd(gridRef.current, { use_yn: true, def: false })
-              }
-              width="w-15"
-            />
             <Button id={"save"} onClick={onSave} width="w-15" />
           </>
         }
       >
         <Grid
           gridRef={gridRef}
-          listItem={CarrierContData as gridData}
+          listItem={EDIDetailData as gridData}
           options={gridOptions}
           event={{
             onCellValueChanged: handleCellValueChanged,
