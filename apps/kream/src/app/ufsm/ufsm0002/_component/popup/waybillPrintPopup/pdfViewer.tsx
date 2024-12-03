@@ -63,7 +63,7 @@ const PDFViewer = forwardRef<HTMLDivElement, type.PDFViewerProps>(({ pdfPath, sc
             const pdfDocument = await pdfjsLib.getDocument(pdfPath).promise;
             setPDFDocument(pdfDocument);
         } catch (error) {
-
+            console.log(error);
         }
     };
 
@@ -83,7 +83,7 @@ const PDFViewer = forwardRef<HTMLDivElement, type.PDFViewerProps>(({ pdfPath, sc
     }, [PDFDocument, scale]);
 
     return (
-        <div id="printArea" ref={printAreaRef} className="flex justify-center items-center flex-col">
+        <div id="printArea" ref={printAreaRef} className="flex flex-col justify-center items-center">
             <div id="canvasArea" ref={canvasAreaRef} className="h-[710px] monitor:h-[926px] w-full relative overflow-scroll">
             </div>
         </div>
