@@ -21,11 +21,14 @@ const {
 } = require("@repo/kwe-lib/components/menuParameterHelper.js");
 
 export default function AIRI3001() {
+  
   const [state, dispatch] = useReducer(reducer, {
     objState: {
       searchParams: {},
+      excel_data : {},
       isMSearch: false,
       mSelectedRow: {},
+      gridRef_Detail : useRef<any | null>(null),
       isDSearch : false,
       popUp : {
         popType: null,
@@ -35,7 +38,7 @@ export default function AIRI3001() {
     },
   });
   const { objState } = state;
-  const { searchParams, mSelectedRow, crudType, isMSearch, isPopUpOpen } = objState;
+  const { searchParams, mSelectedRow, crudType, isMSearch, gridRef_Detail } = objState;
 
   const val = useMemo(() => {
     return {
@@ -43,6 +46,7 @@ export default function AIRI3001() {
       searchParams,
       mSelectedRow,
       isMSearch,
+      gridRef_Detail,
       dispatch,
     };
   }, [state]);

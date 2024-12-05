@@ -116,6 +116,48 @@ export const SP_InsertData = async (searchParam: any) => {
 }
 
 export const SP_UpdateData = async (param: any) => {  
+
+  const { waybill_no, invoice_no, declnum, mwb_no, exrate, incoterms, decldate, decltime, ccdate, 
+          cctime, totaldeclvalue, totaldeclfltvalue, totaldeclinsvalue, jsonData, user_id, ipaddr } = param;
+  const params = {
+    inparam : [
+        "in_waybill_no"
+      , "in_invoice_no"
+      , "in_declnum"
+      , "in_mwb_no"
+      , "in_exrate"
+      , "in_incoterms"
+      , "in_decldate"
+      , "in_decltime"
+      , "in_ccdate"
+      , "in_cctime"
+      , "in_totaldeclvalue"
+      , "in_totaldeclfltvalue"
+      , "in_totaldeclinsvalue"
+      , "in_jsondata"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      waybill_no, invoice_no, declnum, mwb_no, exrate, incoterms, decldate, decltime, ccdate, 
+      cctime, totaldeclvalue, totaldeclfltvalue, totaldeclinsvalue
+    , jsonData
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'airimp.f_airi3001_upd_edi_data',
+    isShowLoading: true,
+    isShowComplete:false,
+    }
+
+    
+    console.log('param..', params)
+  const result = await executFunction(params);
+
+  return result![0];
+}
+
+export const SP_SendEDI = async (param: any) => {  
   const {waybill_no, invoice_no, user_id , ipaddr} = param;
   const params = {
     inparam : [
@@ -130,9 +172,11 @@ export const SP_UpdateData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi3001_upd_edi_data',
+    inproc: 'airimp.f_airi3001_send_edi858', //send_edi858
     isShowLoading: true
   }
+
+  console.log('params..........',params)
 
   const result = await executFunction(params);
   return result![0];

@@ -21,7 +21,6 @@ import { toastSuccess } from "components/toast";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
-  ref?: any | null;
   initData?: any | null;
   params: {
     waybill_no: string;
@@ -29,10 +28,10 @@ type Props = {
   };
 };
 
-const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
+const DetailGrid: React.FC<Props> = ({  initData, params }) => {
   const { t } = useTranslation();
-  const gridRef = useRef<any | null>(ref);
   const { dispatch, objState } = useAppContext();  
+  const gridRef = useRef<any | null>();
   const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
   const [gridOptions, setGridOptions] = useState<GridOption>();
   const {
@@ -43,16 +42,22 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
 
   const gridOption: GridOption = {
     colVisible: {
-      col: ["partnum", "partdesc", "hscode", "coo", "qty", "unitprice","totalunitprice","declnum","currency","declcustomvalue","hkscode","amt01","amt02","amt03","amt04"],
+      col: ["partnum", "partdesc", "hscode", "coo", "qty", "unitprice","totalunitprice","declnum","decllinenum","currency","declcustomvalue","hkscode","amt01","amt02","amt03","amt04"],
       visible: true,
     },
     gridHeight: "30vh",
     maxWidth: { partnum : 120, hscode : 120, coo:60, qty:60, unitprice : 100, totalunitprice : 100 },    
     minWidth: { partnum : 110, hscode : 110, coo:50, qty:50, unitprice : 80, totalunitprice : 80 },
-    editable: [ "declnum","hkscode","currency","declcustomsvalue ","amt01","amt02","amt03","amt04"],
-    dataType: { create_date: "date" },
+    editable: [ "declnum","hkscode","decllinenum","currency","declcustomsvalue ","amt01","amt02","amt03","amt04"],
+    dataType: { amt01:"number",amt02:"number",amt03:"number",amt04:"number", },
     isAutoFitColData: false,
   };
+
+  useEffect(() => {
+    if (gridRef){
+      dispatch({gridRef_Detail: gridRef});
+    }      
+  }, [gridRef.current])
 
   useEffect(() => {
     setGridOptions(gridOption);
@@ -99,7 +104,6 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
       const api = gridRef.current.api;
       for (const node of api.getRenderedNodes()) {
         var data = node.data;
-        log("onSave data", node.data);
         gridOptions?.checkbox?.forEach((col) => {
           data[col] = data[col] ? "Y" : "N";
         });
@@ -108,9 +112,7 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
             if (data.__ROWTYPE === ROW_TYPE_NEW) {
               data.waybill_no = params.waybill_no;
               data.invoice_no = params.invoice_no;
-            } else {
-              await Update.mutateAsync(data);
-            }
+            } else {}
           } catch (error) {
             log.error("error:", error);
           } finally {
@@ -139,11 +141,12 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
         }
         right={
           <>
-            <Button id={"save"} onClick={onSave} width="w-15" />
+            {/* <Button id={"save"} onClick={onSave} width="w-15" /> */}
           </>
         }
       >
         <Grid
+         id='detail'
           gridRef={gridRef}
           listItem={EDIDetailData as gridData}
           options={gridOptions}

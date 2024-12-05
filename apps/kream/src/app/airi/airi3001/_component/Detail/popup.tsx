@@ -7,37 +7,54 @@ import {
   useFieldArray,
   useFormContext,
 } from "react-hook-form";
-import { useMemo, useState, useEffect, useCallback, memo } from "react";
+import {
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  memo,
+  MouseEventHandler,
+} from "react";
 import {
   crudType,
   SEARCH_M,
   useAppContext,
 } from "components/provider/contextObjectProvider";
-import {  SP_UpdateData } from "../data";
+import {
+  gridData,
+  ROW_CHANGED,
+  ROW_TYPE,
+  ROW_TYPE_NEW,
+} from "components/grid/ag-grid-enterprise";
+import { SP_UpdateData } from "../data";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import CustomSelect from "components/select/customSelect";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "components/button";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
+import { DatePicker } from "@/components/date/react-datepicker";
 import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/badge";
 import DetailGrid from "./popupGrid";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Callback = () => void;
 type Props = {
-  loadItem: any | null;
+  loadItem: any[] | null;
   callbacks?: Callback[];
 };
 
-const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
-  const { dispatch, objState } = useAppContext();  
-  const { popUp, mSelectedRow, searchParams  } = objState;
-  const { crudType: popType, isPopUpOpen : isOpen}  = popUp
+// const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
+const Modal = ({ loadItem }: Props) => {
+  const { dispatch, objState } = useAppContext();
+  const { popUp, mSelectedRow, gridRef_Detail } = objState;
+  const { crudType: popType, isPopUpOpen: isOpen } = popUp;
 
   const { t } = useTranslation();
+  const detail: any[] = [];
   //const { Create } = useUpdateData2(SP_InsertCustData);
   const { Update } = useUpdateData2(SP_UpdateData);
   const { getValues, setValue, reset, setFocus, handleSubmit } =
@@ -46,21 +63,20 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
   const closeModal = async () => {
     dispatch({
       isPopUpOpen: false,
-      popUp : {...popUp, isPopUpOpen: false },
+      popUp: { ...popUp, isPopUpOpen: false },
       mSelectedRow: { ...mSelectedRow, ...getValues() },
     });
   };
 
   //Set select box data
-
+  const [incoterms, setIncoterms] = useState<any>();
   useEffect(() => {
     if (loadItem) {
-         
+      setIncoterms(loadItem[2]);
     }
   }, [loadItem]);
 
   useEffect(() => {
-    // log("=====", loadItem);
     if (loadItem && mSelectedRow && Object.keys(mSelectedRow).length > 0) {
     }
   }, [mSelectedRow, loadItem]);
@@ -72,31 +88,40 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
     }
   }, [popType, isOpen]);
 
-  const onSave = useCallback(async () => {
-    var param = getValues();
-    // try {
-    if (popType === crudType.UPDATE) {
-      const jsonData = JSON.stringify([param]);
-      // log("onSave1", jsonData)
-      await Update.mutateAsync(
-        { jsondata: jsonData },
-        {
-          onSuccess: (res: any) => {
-            closeModal();
-          },
-        }
-      ).catch((err) => {});
-    } else {
-      // log("onSave2", param)
-      // await Create.mutateAsync(param, {
-      //   onSuccess(data, variables, context) {
-      //     closeModal();
-      //   },
-      //   onError(error, variables, context) {},
-      // }).catch((err) => {});
-    }
+  const SaveDetail = async () => {
+    let hasData = false;
+    const allColumns = gridRef_Detail?.current?.api.getAllGridColumns();
+    log("saveDetail? allColumns", allColumns);
+    await gridRef_Detail.current.api.forEachNode((node: any) => {
+      if (node.data[ROW_CHANGED]) {
+        hasData = true;
+        var data = {
+          ...node.data,
+        };
+        log("data", data);
+        detail.push(data);
+      }
+    });
+    return hasData;
+  };
 
-  }, [popType]);
+  const onSave = async (param: MouseEventHandler | null) => {
+    let hasDetailData = await SaveDetail();
+    let curData = getValues();
+    if (popType === crudType.UPDATE) {
+      if (hasDetailData) {
+        await Update.mutateAsync(
+          { ...curData, jsonData: JSON.stringify(detail) },
+          {
+            onSuccess: (res: any) => {
+              //closeModal();
+              //dispatch({ isMSearch: true });
+            },
+          }
+        ).catch((err) => {});
+      }
+    }
+  };
 
   return (
     <DialogBasic
@@ -116,7 +141,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
             <div className="col-span-2 p-4">
               <MaskedInputField
                 id="waybill_no"
-                value={mSelectedRow?.waybill_no}
+                value={objState.mSelectedRow?.waybill_no}
                 options={{
                   isReadOnly: popType === crudType.CREATE ? false : true,
                 }}
@@ -174,7 +199,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                   options={{
                     isReadOnly: popType === crudType.CREATE ? false : true,
                   }}
-                />                
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
@@ -186,12 +211,11 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                 />
                 <MaskedInputField
                   id="netunit"
-                  value={mSelectedRow?.netunit}
+                  value={objState.mSelectedRow?.netunit}
                   options={{
                     isReadOnly: popType === crudType.CREATE ? false : true,
                   }}
                 />
-             
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
@@ -208,7 +232,6 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                     isReadOnly: popType === crudType.CREATE ? false : true,
                   }}
                 />
-             
               </div>
             </div>
             <div className="col-span-2 p-4 ">
@@ -234,20 +257,31 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                     isReadOnly: false,
                   }}
                 />
-                <MaskedInputField
-                  id="incoterms"
-                  value={mSelectedRow?.incoterms}
-                  options={{
-                    isReadOnly: false,
-                  }}
-                />
+                <div className={"col-span-1"}>
+                  <CustomSelect
+                    id="incoterms"
+                    initText="Select a Incoterms"
+                    listItem={incoterms as gridData}
+                    valueCol={["incoterms", "incoterms_nm"]}
+                    displayCol="incoterms_nm"
+                    gridOption={{
+                      colVisible: { col: ["incoterms_nm"], visible: true },
+                    }}
+                    gridStyle={{ width: "220px", height: "200px" }}
+                    style={{ width: "500px", height: "8px" }}
+                    defaultValue={mSelectedRow?.incoterms}
+                    isDisplay={true}
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <MaskedInputField
+                <DatePicker
                   id="decldate"
                   value={mSelectedRow?.decldate}
                   options={{
-                    isReadOnly: false,
+                    inline: false,
+                    textAlign: "center",
+                    freeStyles: "p-1 border-1 border-slate-300",
                   }}
                 />
                 <MaskedInputField
@@ -255,16 +289,19 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                   value={mSelectedRow?.decltime}
                   options={{
                     isReadOnly: false,
+                    type: "time",
                   }}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <MaskedInputField
+                <DatePicker
                   id="ccdate"
                   value={mSelectedRow?.ccdate}
                   options={{
-                    isReadOnly: false,
+                    inline: false,
+                    textAlign: "center",
+                    freeStyles: "p-1 border-1 border-slate-300",
                   }}
                 />
                 <MaskedInputField
@@ -272,6 +309,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                   value={mSelectedRow?.cctime}
                   options={{
                     isReadOnly: false,
+                    type: "time",
                   }}
                 />
               </div>
@@ -318,6 +356,15 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
                 options={{
                   isReadOnly: popType === crudType.CREATE ? false : true,
                 }}
+              />
+            </div>
+            <div className="col-span-2 p-6 ">
+              <Badge
+                size={"md"}
+                name={mSelectedRow?.waybill_no}
+                color="border-sky-500 text-sky-500"
+                rounded
+                outlined
               />
             </div>
           </div>

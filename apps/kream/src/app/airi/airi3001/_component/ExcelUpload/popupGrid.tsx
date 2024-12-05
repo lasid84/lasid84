@@ -29,10 +29,13 @@ type Props = {
   };
 };
 
-const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
+const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
   const { t } = useTranslation();
   const gridRef = useRef<any | null>(ref);
   const { dispatch, objState } = useAppContext();  
+  const {excel_data} = objState;
+  const [ mData, setMData] = useState<gridData>({});
+
   const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
   const [gridOptions, setGridOptions] = useState<GridOption>();
   const {
@@ -43,63 +46,29 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
 
   const gridOption: GridOption = {
     colVisible: {
-      col: ["partnum", "partdesc", "hscode", "coo", "qty", "unitprice","totalunitprice","declnum","currency","declcustomvalue","hkscode","amt01","amt02","amt03","amt04"],
+      col: ["importidentification", "declarationdate", "arrivalport", "dispatchcountry", "hawb", "mawb", "totaldeclvalue", "incoterms", "exchangerate", "transportfee", "insurancefee", "customsclearancedate", "customsclearancetime", "declarationlinenumber", "hazardcode", "currency", "partnumber", "declarationcustomsvalue", "importduties", "localconsumptiontax", "importvatliability", "importdutyrate"],
       visible: true,
     },
-    gridHeight: "30vh",
-    maxWidth: { partnum : 120, hscode : 120, coo:60, qty:60, unitprice : 100, totalunitprice : 100 },    
-    minWidth: { partnum : 110, hscode : 110, coo:50, qty:50, unitprice : 80, totalunitprice : 80 },
-    editable: [ "declnum","hkscode","currency","declcustomsvalue ","amt01","amt02","amt03","amt04"],
-    dataType: { create_date: "date" },
-    isAutoFitColData: false,
+    gridHeight: "40vh",
+    isAutoFitColData: true,
   };
 
   useEffect(() => {
     setGridOptions(gridOption);
-    // CarrierContRemove();
     EDIDetailRefetch();
   }, []);
 
-  useEffect(() => {
-    if (objState.isDSearch) {
-      //   CarrierContRefetch();
-      log("grid Data?", EDIDetailData);
-      EDIDetailRefetch();
-      dispatch({ isDSearch: false });
 
-       const fetchDataAsync = async() => {
-        const {data: newData } = await EDIDetailRefetch();
-        const detail = (newData as string[])[1]? ((newData as string[])[1] as gridData).data : [];
-        log('grid Data??? - detail', detail, newData)
-      }
-      fetchDataAsync()
-    }
-  }, [objState.isDSearch]);
+  const handleSelectionChanged = (param: SelectionChangedEvent) => {  };
 
-  const handleSelectionChanged = (param: SelectionChangedEvent) => {
-    // const selectedRow = param.api.getSelectedRows()[0];
-    // log("handleSelectionChanged", selectedRow)
-    // dispatch({ dSelectedRow: selectedRow });
-  };
-
-  const handleCellValueChanged = (param: CellValueChangedEvent) => {
-    log("handleCellValueChanged");
-    gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
-      if (!param.node.data.def) return;
-      if (node.id === param.node.id) return;
-
-      if (node.data.def === true) {
-        node.setDataValue("def", false);
-      }
-    });
-  };
+  const handleCellValueChanged = (param: CellValueChangedEvent) => {  };
 
   const onSave = () => {
     const processNodes = async () => {
       const api = gridRef.current.api;
       for (const node of api.getRenderedNodes()) {
         var data = node.data;
-        log("onSave data", node.data);
+        log("onSave excel upload data", node.data);
         gridOptions?.checkbox?.forEach((col) => {
           data[col] = data[col] ? "Y" : "N";
         });
@@ -129,12 +98,17 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
       });
   };
 
+useEffect(() => {
+     log("excel_data", excel_data);
+    if (Object.keys(excel_data).length) setMData(excel_data);
+}, [excel_data]);
+
   return (
     <>
       <PageGrid
         title={
           <>
-            <LabelGrid id={t("detail")} />
+            <LabelGrid id={t("excel_upload_result")} />
           </>
         }
         right={
@@ -145,7 +119,7 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
       >
         <Grid
           gridRef={gridRef}
-          listItem={EDIDetailData as gridData}
+          listItem={mData as gridData}
           options={gridOptions}
           event={{
             onCellValueChanged: handleCellValueChanged,
@@ -157,4 +131,4 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
   );
 };
 
-export default DetailGrid;
+export default ExcelUploadGrid;

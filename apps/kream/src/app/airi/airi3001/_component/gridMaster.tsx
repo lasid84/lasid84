@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useRef, memo, useState } from "react";
-import { SP_GetEDIData, SP_InsertData, SP_UpdateData } from "./data";
+import { SP_GetEDIData, SP_InsertData, SP_UpdateData, SP_SendEDI } from "./data";
 import {
   crudType,
   useAppContext,
@@ -30,7 +30,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const { searchParams, isMSearch, popUp } = objState;
   const { popType, isPopUpOpen, isPopUpUploadOpen} = popUp
   const { Create } = useUpdateData2(SP_InsertData, SEARCH_M);
-  const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
+  const { Update } = useUpdateData2(SP_SendEDI, SEARCH_M);
   const [gridData, setGridData] = useState<gridData>();
   const {
     data: mainData,
@@ -104,8 +104,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     dispatch({ mSelectedRow: selectedRow });
   }, []);
 
-
-
   useEffect(() => {
     if (isMSearch) {
       mainRefetch();
@@ -113,41 +111,55 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     }
   }, [isMSearch]);
 
-  useEffect(() => {
-    setGridData(mainData as gridData);
-  }, [mainData]);
+
+  const handleSwitchClick = (checked:boolean) => {
+    if (!gridRef.current) return;
+  
+    const api = gridRef.current.api;
+    api.forEachNode((node:any) => {
+      const data = node.data;
+      data.ready = checked; // 모든 row의 ready 상태 업데이트
+      data.__changed = true;
+      node.setDataValue("ready", checked ? "Y" : "N"); // ag-Grid 셀 업데이트
+    });  
+    api.refreshCells(); // 그리드 새로고침
+  };
+
 
   const onSave = () => {
     const processNodes = async () => {
+      if (!gridRef.current) return;  
       const api = gridRef.current.api;
-      for (const node of api.getRenderedNodes()) {
-        var data = node.data;
-        log("onSave data", node.data);
-        gridOptions?.checkbox?.forEach((col) => {
-          data[col] = data[col] ? "Y" : "N";
-        });
+      
+      api.forEachNode(async (node: any) => {
+        const data = node.data;
         if (data.__changed) {
+          gridOptions?.checkbox?.forEach((col) => {
+            data[col] = data[col] ? "Y" : "N"; // checkbox 컬럼 상태 업데이트
+          });  
           try {
             if (data.__ROWTYPE === ROW_TYPE_NEW) {
-              await Create.mutateAsync(data);
+              await Create.mutateAsync(data); 
             } else {
+              log('data...', data)
               await Update.mutateAsync(data);
             }
           } catch (error) {
-            log("error:", error);
+            log("Error:", error);
           } finally {
-            data.__changed = false;
+            data.__changed = false; 
           }
         }
-      }
+      });
     };
+  
     processNodes()
       .then(() => {
         toastSuccess("Success.");
         dispatch({ isMSearch: true });
       })
       .catch((error) => {
-        log.error("node. Error", error);
+        log.error("Error processing nodes", error);
       });
   };
 
@@ -161,12 +173,12 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       <PageMGrid3
         title={<><Button id={"upload_excel"} onClick = {onExcelUpload} disabled={false}  label='upload_excel' width='w-34' />
                  <Button id={"extract_hscode"}  onClick="" width="w-34" toolTip="ShortCut: Ctrl+S"/></>}
-        right={<><Switch/><Button id={"send"} onClick={onSave} width='w-34' /></>}
+        right={<><Switch  onClick={handleSwitchClick}/><Button id={"send"} onClick={onSave} width='w-34' /></>}
       >
         <Grid
           gridRef={gridRef}
           // loadItem={initData}
-          listItem={gridData}
+          listItem={mainData as gridData}
           options={gridOptions}
           event={{
             onRowDoubleClicked: handleRowDoubleClicked,
