@@ -1,38 +1,29 @@
 type PDFViewerProps = {
     pdfPath: string;
     scale?: number;
-    setInputValues: React.Dispatch<React.SetStateAction<Map<string, string>>>;
+    handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    handleViewPort: (viewPort: ViewPort) => void;
     detailData: any;
+    locationData: any;
 };
 
-type InputLocation = {
-    id: string;
-    element: string;
-    top: string;
-    left: string;
-    width: string;
-    spellcheck?: boolean | undefined;
-    rows?: number | undefined;
-    fontSize?: string | undefined;
-    textAlign?: string | undefined;
-    dataDirectory?: number | undefined;
-    data_id?: string | undefined;
+type ViewPort = {
+    width: number;
+    height: number;
 };
 
-type CommonStyle = {
-    position: string;
-    borderWidth: string;
-    background: string;
-    fontSize: string;
-    lineHeight: string
-    resize: string;
-    overflow: string;
-    textAlign: string;
-    fontFamily: string;
-};
+type assignLocationParam = {
+    container: HTMLDivElement;
+    mode: string;
+    locationData: any;
+    inputValues?: Map<string, string>;
+    viewPort?: ViewPort;
+    handleInputChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    detailData?: any;
+}
 
 export type {
     PDFViewerProps,
-    InputLocation,
-    CommonStyle
+    ViewPort,
+    assignLocationParam
 }
