@@ -3,19 +3,14 @@ import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 import 'pdfjs-dist/web/pdf_viewer.css';
 import * as type from './types/type';
 import { SCALEUP_MODE } from './types/constant';
-import { assignInputBox } from './common';
+import { assignInputBox } from './utils';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/service/pdf.worker.mjs";
 
-const PDFViewer = forwardRef<HTMLDivElement, type.PDFViewerProps>(({ pdfPath, scale=1.5, setInputValues, detailData }, printAreaRef) => {
+const PDFViewer = forwardRef<HTMLDivElement, type.PDFViewerProps>(({ pdfPath, scale=1.5, detailData, locationData, handleInputChange, handleViewPort }, printAreaRef) => {
     const canvasAreaRef = useRef<HTMLDivElement>(null);
 
     const [PDFDocument, setPDFDocument] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { id, value } = e.target;
-        setInputValues((prevState) => prevState.set( id, value ));
-    };
 
     const renderPage = async (pageIDX: number): Promise<HTMLDivElement | null> => {
         if (!PDFDocument || !canvasAreaRef.current)
@@ -27,6 +22,8 @@ const PDFViewer = forwardRef<HTMLDivElement, type.PDFViewerProps>(({ pdfPath, sc
 
         const page = await PDFDocument.getPage(pageIDX);
         const viewport = page.getViewport({ scale });
+        
+        handleViewPort((viewport as type.ViewPort));
 
         const canvas = Object.assign(document.createElement('canvas'),{
             width: viewport.width,
@@ -44,7 +41,14 @@ const PDFViewer = forwardRef<HTMLDivElement, type.PDFViewerProps>(({ pdfPath, sc
             await page.render(renderContext).promise;
         }
 
-        const resultPageContainer = assignInputBox(canvasArea, SCALEUP_MODE, null, handleInputChange, detailData);
+        const param: type.assignLocationParam = {
+            container: canvasArea,
+            mode: SCALEUP_MODE,
+            locationData: locationData,
+            handleInputChange: handleInputChange,
+            detailData: detailData
+        };
+        const resultPageContainer = assignInputBox(param);
         
         return resultPageContainer;
     }
@@ -72,7 +76,7 @@ const PDFViewer = forwardRef<HTMLDivElement, type.PDFViewerProps>(({ pdfPath, sc
             canvasAreaRef.current!.innerHTML = '';
             selectPages();
         }
-    }
+    };
 
     useEffect(() => {
         loadingPDF();
