@@ -54,7 +54,7 @@ export const ROW_TYPE_NEW = 'NEW';
 
 
 type Props = {
-  id?: string;
+  id: string;
   gridRef?: any
   loadItem?: any | null
   listItem?: gridData | null
@@ -381,7 +381,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       const dataType = listItem.fields.map((field) => field.format);
       if (!columns.includes(ROW_INDEX)) columns = [ROW_INDEX].concat(columns);
 
-      // log("grid column setting", columns, myColInfos, personalColInfoData)
+      log("grid column setting", columns, myColInfos, personalColInfoData)
       
       columns.map((col: string, i:number) => {
       // for (let i = 0; i < columns.length; i++) {
@@ -975,7 +975,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // return undefined;
   }
 
-  const onDrageStopped = (param: DragStoppedEvent) => {
+  const onDrageStopped = async (param: DragStoppedEvent) => {
 
     if (!id) return;
 
@@ -997,7 +997,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
       col_visible: colVisible.join(',')
     }
     // log("onDrage", params, gridRef.current.api.getColumnState());
-    setMyColInfo.mutate(params);
+    await setMyColInfo.mutateAsync(params)
+                  .then(() => personalColInfoRefetch());
+
   }
 
   const getRowSpan = (param: RowSpanParams): number => {

@@ -43,7 +43,7 @@ export const SP_SetMyColumnInfo = async (searchParam: any) => {
     isShowLoading: false
   }
   const result = await executFunction(params);
-  return result?.length ? result[0] : null;
+  return result?.length ? result : null;
 }
 
 
