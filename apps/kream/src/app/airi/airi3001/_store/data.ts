@@ -27,15 +27,16 @@ export const SP_Load = async (searchParam:any) => {
   return result;
 }
 
-export const SP_GetEDIData = async (searchParam: any) => {  
-  const Param = searchParam.queryKey[1];
-  const {fr_date, to_date, search_gubn, no, state, user_id, ipaddr} = Param;
-  
+export const SP_GetAppleMainData = async (searchParam: any) => {
+  console.log('searchParam', searchParam)  
+  //const Param = searchParam.queryKey[1];
+  const {fr_date, to_date, search_gubn, no, state} = searchParam;
+  //user_id, ipaddr
   const params = {
     inparam : [
        "in_fr_date"
       , "in_to_date"
-      , "in_gubn"  //0 : 810, 1: 858
+      , "in_gubn"  //0 : 810수신일, 1: 858송신일 
       , "in_no"
       , "in_state"
       , "in_user"
@@ -47,20 +48,21 @@ export const SP_GetEDIData = async (searchParam: any) => {
       , search_gubn
       , no
       , state
-      , user_id
-      , ipaddr
+      , ''
+      , ''
     ],
     inproc: 'airimp.f_airi3001_get_data',
     isShowLoading: true
   }
 
   const result = await executFunction(params);
+  console.log('result',result)
   return result![0];
 }
 
 export const SP_GetEDIDetailData = async (searchParam: any) => {  
-  const Param = searchParam.queryKey[1];
-  const {waybill_no, invoice_no, user_id, ipaddr} = Param;
+  // const Param = searchParam.queryKey[1];
+  const {waybill_no, invoice_no, user_id, ipaddr} = searchParam;
   
   const params = {
     inparam : [

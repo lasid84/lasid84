@@ -22,6 +22,7 @@ import dayjs from "dayjs";
 import { Button } from "components/button";
 import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
+import { Store } from "../_store/store";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -41,16 +42,19 @@ type Props = {
 
 const SearchForm = ({ loadItem }: any) => {
 
-  const { dispatch, objState } = useAppContext();
   const { getValues, handleSubmit, reset } = useFormContext();
-  const { searchParams } = objState;
-  const {
-    fr_date,
-    to_date,
-    search_gubn,
-    no,
-    state,
-  } = searchParams;
+  // const { dispatch, objState } = useAppContext();
+  // const { getValues, handleSubmit, reset } = useFormContext();
+  // const { searchParams } = objState;
+  // const {
+  //   fr_date,
+  //   to_date,
+  //   search_gubn,
+  //   no,
+  //   state,
+  // } = searchParams;
+  const state = Store((state) => state);
+  const actions = Store((state) => state.actions);
 
   // //Set select box data
   const [status, setStatus] = useState<any>();
@@ -62,34 +66,50 @@ const SearchForm = ({ loadItem }: any) => {
   }, [loadItem]);
 
 
-  useEffect(() => {
-    const params = getValues();
-    dispatch({ searchParams: params, isMSearch: true });
-  }, [])
+  // useEffect(() => {
+  //   const params = getValues();
+  //   dispatch({ searchParams: params, isMSearch: true });
+  // }, [])
 
-  const onSearch = () => {
-    const params = getValues();
-    dispatch({ searchParams: params, isMSearch: true});
-  };
+  // const onSearch = () => {
+  //   const params = getValues();
+  //   dispatch({ searchParams: params, isMSearch: true});
+  // };
 
-  function handleKeyDown(e: KeyboardEvent) {
-    if (e.key === "Enter") {
-      onSearch();
-    }
-  }
+  // function handleKeyDown(e: KeyboardEvent) {
+  //   if (e.key === "Enter") {
+  //     onSearch();
+  //   }
+  // }
 
-  const onReset = () => {
-    reset();
-    const params = getValues();
-    dispatch({ searchParams: params});
+  // const onReset = () => {
+  //   reset();
+  //   const params = getValues();
+  //   dispatch({ searchParams: params});
 
-  }
+  // }
   
-  const onChange = (e: any) => {
-    const value = parseInt(e.target.value, 10);
-    searchParams.search_gubn = value
+  // const onChange = (e: any) => {
+  //   const value = parseInt(e.target.value, 10);
+  //   searchParams.search_gubn = value
+  // }
+
+  useEffect(()=>{
+    onSearch()
+  },[])
+
+  const onSearch = () =>{
+    const params = getValues()
+    // dispatch({ searchParams: params, isMSearch: true});
+    log("onSeach", params)
+    actions.getAppleDatas(params)
   }
 
+  const onReset = () =>{}
+
+  function handleKeyDown(e:KeyboardEvent) {}
+
+  const onChange = () => {}
 
   return (
       <div>
@@ -117,7 +137,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker
               id="fr_date"
               label="fr_date"
-              value={searchParams?.fr_date}
+              value={state.searchParams?.fr_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -129,7 +149,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker
               id="to_date"
               label="to_date"
-              value={searchParams?.to_date}
+              value={state.searchParams?.to_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -143,7 +163,7 @@ const SearchForm = ({ loadItem }: any) => {
             <MaskedInputField
               id="no"
               label="mwb_hwb"
-              value={searchParams?.no}
+              value={state.searchParams?.no}
               options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
               events={{
@@ -168,7 +188,7 @@ const SearchForm = ({ loadItem }: any) => {
                 keyCol: "state",
                 displayCol: ["state_nm"],
                 inline: true,
-                defaultValue: searchParams?.state,
+                defaultValue: state.searchParams?.state,
               }}
             />
           </div>

@@ -26,7 +26,7 @@ import {
   ROW_TYPE,
   ROW_TYPE_NEW,
 } from "components/grid/ag-grid-enterprise";
-import { SP_UpdateData } from "../data";
+import { SP_UpdateData } from "../../_store/data";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import CustomSelect from "components/select/customSelect";
 import { useRouter, usePathname } from "next/navigation";
@@ -37,6 +37,7 @@ import { DatePicker } from "@/components/date/react-datepicker";
 import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/badge";
+import { Store } from "../../_store/store";
 import DetailGrid from "./popupGrid";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
@@ -49,22 +50,20 @@ type Props = {
 
 // const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
 const Modal = ({ loadItem }: Props) => {
-  const { dispatch, objState } = useAppContext();
-  const { popUp, mSelectedRow, gridRef_Detail } = objState;
-  const { crudType: popType, isPopUpOpen: isOpen } = popUp;
-
   const { t } = useTranslation();
   const detail: any[] = [];
-  //const { Create } = useUpdateData2(SP_InsertCustData);
-  const { Update } = useUpdateData2(SP_UpdateData);
-  const { getValues, setValue, reset, setFocus, handleSubmit } =
-    useFormContext();
+
+  const { getValues,  reset, setFocus, } =  useFormContext();
+  const mainSelectedRow = Store((state)=>state.mainSelectedRow)
+  const popup = Store((state)=>state.popup)
+  const state = Store((state)=>state)
+  const actions = Store((state)=>state.actions)
+
 
   const closeModal = async () => {
-    dispatch({
-      isPopUpOpen: false,
-      popUp: { ...popUp, isPopUpOpen: false },
-      mSelectedRow: { ...mSelectedRow, ...getValues() },
+    actions.updatePopup({
+      popType: 'U',
+      isPopupOpen: false,
     });
   };
 
@@ -77,57 +76,61 @@ const Modal = ({ loadItem }: Props) => {
   }, [loadItem]);
 
   useEffect(() => {
-    if (loadItem && mSelectedRow && Object.keys(mSelectedRow).length > 0) {
+    if (loadItem && mainSelectedRow && Object.keys(mainSelectedRow).length > 0) {
     }
-  }, [mSelectedRow, loadItem]);
+  }, [mainSelectedRow, loadItem]);
 
   useEffect(() => {
     reset();
-    if (popType === crudType.CREATE) {
+    if (state.popup.popType === crudType.CREATE) {
       setFocus("use_yn");
     }
-  }, [popType, isOpen]);
+  }, [state.popup.popType, state.popup.isOpen]);
 
   const SaveDetail = async () => {
     let hasData = false;
-    const allColumns = gridRef_Detail?.current?.api.getAllGridColumns();
+    // const allColumns = state.gridRef_Detail?.current?.api.getAllGridColumns();
+    const allColumns = state.detailDatas
     log("saveDetail? allColumns", allColumns);
-    await gridRef_Detail.current.api.forEachNode((node: any) => {
-      if (node.data[ROW_CHANGED]) {
-        hasData = true;
-        var data = {
-          ...node.data,
-        };
-        log("data", data);
-        detail.push(data);
-      }
-    });
+    // await state.gridRef_Detail.current.api.forEachNode((node: any) => {
+    //   if (node.data[ROW_CHANGED]) {
+    //     hasData = true;
+    //     var data = {
+    //       ...node.data,
+    //     };
+    //     log("data", data);
+    //     detail.push(data);
+    //   }
+    // });
+
     return hasData;
   };
 
   const onSave = async (param: MouseEventHandler | null) => {
     let hasDetailData = await SaveDetail();
     let curData = getValues();
-    if (popType === crudType.UPDATE) {
+    console.log('curData', curData, state.popup.popType)
+    if (state.popup.popType === crudType.UPDATE) {
       if (hasDetailData) {
-        await Update.mutateAsync(
-          { ...curData, jsonData: JSON.stringify(detail) },
-          {
-            onSuccess: (res: any) => {
-              //closeModal();
-              //dispatch({ isMSearch: true });
-            },
-          }
-        ).catch((err) => {});
+        // await Update.mutateAsync(
+        //   { ...curData, jsonData: JSON.stringify(detail) },
+        //   {
+        //     onSuccess: (res: any) => {
+        //       //closeModal();
+        //       //dispatch({ isMSearch: true });
+        //     },
+        //   }
+        // ).catch((err) => {});
+        // await actions.updateAppleDatas({...curData, jsonData : JSON.stringify(state.detailDatas)})
       }
     }
   };
 
   return (
     <DialogBasic
-      isOpen={isOpen!}
+      isOpen={state.popup.isPopupOpen!}
       onClose={closeModal}
-      title={t("MSG_0185") + (popType === crudType.CREATE ? "등록" : "수정")}
+      title={t("MSG_0185") + (state.popup.popType === crudType.CREATE ? "등록" : "수정")}
       bottomRight={
         <>
           <Button id={"save"} onClick={onSave} width="w-32" />
@@ -141,95 +144,95 @@ const Modal = ({ loadItem }: Props) => {
             <div className="col-span-2 p-4">
               <MaskedInputField
                 id="waybill_no"
-                value={objState.mSelectedRow?.waybill_no}
+                value={mainSelectedRow?.waybill_no}
                 options={{
-                  isReadOnly: popType === crudType.CREATE ? false : true,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
               />
               <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
                   id="invoice_no"
-                  value={mSelectedRow?.invoice_no}
+                  value={mainSelectedRow?.invoice_no}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
                 <MaskedInputField
                   id="invoice_dd"
-                  value={mSelectedRow?.invoice_dd}
+                  value={mainSelectedRow?.invoice_dd}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
               </div>
 
               <MaskedInputField
                 id="portent"
-                value={mSelectedRow?.portent}
+                value={mainSelectedRow?.portent}
                 options={{
-                  isReadOnly: popType === crudType.CREATE ? false : true,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
               />
               <MaskedInputField
                 id="shippername"
-                value={mSelectedRow?.shippername}
+                value={mainSelectedRow?.shippername}
                 options={{
-                  isReadOnly: popType === crudType.CREATE ? false : true,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
               />
               <MaskedInputField
                 id="soldto"
-                value={mSelectedRow?.soldto}
+                value={mainSelectedRow?.soldto}
                 options={{
-                  isReadOnly: popType === crudType.CREATE ? false : true,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
               />
 
               <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
                   id="grosswt"
-                  value={mSelectedRow?.grosswt}
+                  value={mainSelectedRow?.grosswt}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
                 <MaskedInputField
                   id="grossunit"
-                  value={mSelectedRow?.grossunit}
+                  value={mainSelectedRow?.grossunit}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
                   id="netwt"
-                  value={mSelectedRow?.netwt}
+                  value={mainSelectedRow?.netwt}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
                 <MaskedInputField
                   id="netunit"
-                  value={objState.mSelectedRow?.netunit}
+                  value={mainSelectedRow?.netunit}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
                   id="measurement"
-                  value={mSelectedRow?.measurement}
+                  value={mainSelectedRow?.measurement}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
                 <MaskedInputField
                   id="measureunit"
-                  value={mSelectedRow?.measureunit}
+                  value={mainSelectedRow?.measureunit}
                   options={{
-                    isReadOnly: popType === crudType.CREATE ? false : true,
+                    isReadOnly: popup.popType === crudType.CREATE ? false : true,
                   }}
                 />
               </div>
@@ -237,14 +240,14 @@ const Modal = ({ loadItem }: Props) => {
             <div className="col-span-2 p-4 ">
               <MaskedInputField
                 id="declnum"
-                value={mSelectedRow?.declnum}
+                value={mainSelectedRow?.declnum}
                 options={{
                   isReadOnly: false,
                 }}
               />
               <MaskedInputField
                 id="mwb_no"
-                value={mSelectedRow?.mwb_no}
+                value={mainSelectedRow?.mwb_no}
                 options={{
                   isReadOnly: false,
                 }}
@@ -252,7 +255,7 @@ const Modal = ({ loadItem }: Props) => {
               <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
                   id="exrate"
-                  value={mSelectedRow?.exrate}
+                  value={mainSelectedRow?.exrate}
                   options={{
                     isReadOnly: false,
                   }}
@@ -269,7 +272,7 @@ const Modal = ({ loadItem }: Props) => {
                     }}
                     gridStyle={{ width: "220px", height: "200px" }}
                     style={{ width: "500px", height: "8px" }}
-                    defaultValue={mSelectedRow?.incoterms}
+                    defaultValue={mainSelectedRow?.incoterms}
                     isDisplay={true}
                   />
                 </div>
@@ -277,7 +280,7 @@ const Modal = ({ loadItem }: Props) => {
               <div className="grid grid-cols-2 gap-4">
                 <DatePicker
                   id="decldate"
-                  value={mSelectedRow?.decldate}
+                  value={mainSelectedRow?.decldate}
                   options={{
                     inline: false,
                     textAlign: "center",
@@ -286,7 +289,7 @@ const Modal = ({ loadItem }: Props) => {
                 />
                 <MaskedInputField
                   id="decltime"
-                  value={mSelectedRow?.decltime}
+                  value={mainSelectedRow?.decltime}
                   options={{
                     isReadOnly: false,
                     type: "time",
@@ -297,7 +300,7 @@ const Modal = ({ loadItem }: Props) => {
               <div className="grid grid-cols-2 gap-4">
                 <DatePicker
                   id="ccdate"
-                  value={mSelectedRow?.ccdate}
+                  value={mainSelectedRow?.ccdate}
                   options={{
                     inline: false,
                     textAlign: "center",
@@ -306,7 +309,7 @@ const Modal = ({ loadItem }: Props) => {
                 />
                 <MaskedInputField
                   id="cctime"
-                  value={mSelectedRow?.cctime}
+                  value={mainSelectedRow?.cctime}
                   options={{
                     isReadOnly: false,
                     type: "time",
@@ -315,21 +318,21 @@ const Modal = ({ loadItem }: Props) => {
               </div>
               <MaskedInputField
                 id="totaldeclvalue"
-                value={mSelectedRow?.totaldeclvalue}
+                value={mainSelectedRow?.totaldeclvalue}
                 options={{
                   isReadOnly: false,
                 }}
               />
               <MaskedInputField
                 id="totaldeclfltvalue"
-                value={mSelectedRow?.totaldeclfltvalue}
+                value={mainSelectedRow?.totaldeclfltvalue}
                 options={{
                   isReadOnly: false,
                 }}
               />
               <MaskedInputField
                 id="totaldeclinsvalue"
-                value={mSelectedRow?.totaldeclinsvalue}
+                value={mainSelectedRow?.totaldeclinsvalue}
                 options={{
                   isReadOnly: false,
                 }}
@@ -338,30 +341,30 @@ const Modal = ({ loadItem }: Props) => {
             <div className="col-span-2 p-4 ">
               <MaskedInputField
                 id="receivedatetime"
-                value={mSelectedRow?.receivedatetime}
+                value={mainSelectedRow?.receivedatetime}
                 options={{
-                  isReadOnly: popType === crudType.CREATE ? false : true,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
               />
               <MaskedInputField
                 id="updatetime"
-                value={mSelectedRow?.updatetime}
+                value={mainSelectedRow?.updatetime}
                 options={{
-                  isReadOnly: popType === crudType.CREATE ? false : true,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
               />
               <MaskedInputField
                 id="senddatetime"
-                value={mSelectedRow?.senddatetime}
+                value={mainSelectedRow?.senddatetime}
                 options={{
-                  isReadOnly: popType === crudType.CREATE ? false : true,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
               />
             </div>
             <div className="col-span-2 p-6 ">
               <Badge
                 size={"md"}
-                name={mSelectedRow?.waybill_no}
+                name={mainSelectedRow?.status_name}
                 color="border-sky-500 text-sky-500"
                 rounded
                 outlined
@@ -371,8 +374,8 @@ const Modal = ({ loadItem }: Props) => {
           <div className="h-full col-span-3">
             <DetailGrid
               params={{
-                waybill_no: objState.mSelectedRow?.waybill_no,
-                invoice_no: objState.mSelectedRow?.invoice_no,
+                waybill_no: mainSelectedRow?.waybill_no,
+                invoice_no: mainSelectedRow?.invoice_no,
               }}
             />
           </div>

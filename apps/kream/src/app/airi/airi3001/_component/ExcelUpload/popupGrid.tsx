@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SP_UpdateData, SP_GetEDIDetailData } from "../data";
+import { SP_UpdateData, SP_GetEDIDetailData } from "../../_store/data";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -32,8 +32,8 @@ type Props = {
 const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
   const { t } = useTranslation();
   const gridRef = useRef<any | null>(ref);
-  const { dispatch, objState } = useAppContext();  
-  const {excel_data} = objState;
+  // const { dispatch, objState } = useAppContext();  
+  // const {excel_data} = objState;
   const [ mData, setMData] = useState<gridData>({});
 
   const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
@@ -91,17 +91,17 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
     processNodes()
       .then(() => {
         toastSuccess("Success.");
-        dispatch({ isDSearch: true });
+        // dispatch({ isDSearch: true });
       })
       .catch((error) => {
         log.error("node. Error", error);
       });
   };
 
-useEffect(() => {
-     log("excel_data", excel_data);
-    if (Object.keys(excel_data).length) setMData(excel_data);
-}, [excel_data]);
+// useEffect(() => {
+//      log("excel_data", excel_data);
+//     if (Object.keys(excel_data).length) setMData(excel_data);
+// }, [excel_data]);
 
   return (
     <>

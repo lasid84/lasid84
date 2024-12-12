@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useRef, memo, useState } from "react";
-import { SP_GetEDIData, SP_InsertData, SP_UpdateData, SP_SendEDI } from "./data";
-import {
-  crudType,
-  useAppContext,
-} from "components/provider/contextObjectProvider";
-import { SEARCH_M } from "components/provider/contextObjectProvider";
+import { crudType, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import {toastSuccess} from "components/toast"
 import { PageMGrid3, PageGrid } from "layouts/grid/grid";
@@ -15,6 +10,7 @@ import Grid, { ROW_HIGHLIGHTED,ROW_TYPE_NEW } from "components/grid/ag-grid-ente
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import Switch from "components/switch/index"
+import { Store } from "../_store/store";
 import DetailModal from "./Detail/popup"
 import ExcelUploadModal from "./ExcelUpload/popup"
 
@@ -26,17 +22,19 @@ type Props = {
 
 const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const gridRef = useRef<any | null>(null);
-  const { dispatch, objState = {} } = useAppContext();
-  const { searchParams, isMSearch, popUp } = objState;
-  const { popType, isPopUpOpen, isPopUpUploadOpen} = popUp
-  const { Create } = useUpdateData2(SP_InsertData, SEARCH_M);
-  const { Update } = useUpdateData2(SP_SendEDI, SEARCH_M);
-  const [gridData, setGridData] = useState<gridData>();
-  const {
-    data: mainData,
-    refetch: mainRefetch,
-    remove: mainRemove,
-  } = useGetData(searchParams, SEARCH_M, SP_GetEDIData, { enabled: true });
+  const state = Store((state=>state));
+  const actions = Store((state)=>state.actions);
+  // const { dispatch, objState = {} } = useAppContext();
+  // const { searchParams, isMSearch, popUp } = objState;
+  // const { popType, isPopUpOpen, isPopUpUploadOpen} = popUp
+  // const { Create } = useUpdateData2(SP_InsertData, SEARCH_M);
+  // const { Update } = useUpdateData2(SP_SendEDI, SEARCH_M);
+  // const [gridData, setGridData] = useState<gridData>();
+  // const {
+  //   data: mainData,
+  //   refetch: mainRefetch,
+  //   remove: mainRemove,
+  // } = useGetData(searchParams, SEARCH_M, SP_GetEDIData, { enabled: true });
 
 
   const gridOptions: GridOption = {
@@ -84,32 +82,37 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   */
   const handleRowClicked = useCallback((param: RowClickedEvent) => {
     var selectedRow = {"colId": param.node.id, ...param.node.data}
-    dispatch({mSelectedRow:selectedRow});
+    // dispatch({mSelectedRow:selectedRow});
   }, []);
 
   const handleRowDoubleClicked = (param: RowClickedEvent) => {
     var selectedRow = { colId: param.node.id, ...param.node.data };
     log("handleRowDoubleClicked", selectedRow);
-    dispatch({
-      mSelectedRow: selectedRow,
-      popUp : { ...popUp, crudType: crudType.UPDATE, isPopUpOpen: true }, //추가
-      isDSearch : true,
-      isPopUpOpen: true,
-      crudType: crudType.UPDATE,
+    actions.setMainSelectedRow(selectedRow)
+    actions.updatePopup({
+      popType: 'U',
+      isPopupOpen: true,
     });
+    // dispatch({
+    //   mSelectedRow: selectedRow,
+    //   popUp : { ...popUp, crudType: crudType.UPDATE, isPopUpOpen: true }, //추가
+    //   isDSearch : true,
+    //   isPopUpOpen: true,
+    //   crudType: crudType.UPDATE,
+    // });
   };
 
   const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
     const selectedRow = param.api.getSelectedRows()[0];
-    dispatch({ mSelectedRow: selectedRow });
+    // dispatch({ mSelectedRow: selectedRow });
   }, []);
 
-  useEffect(() => {
-    if (isMSearch) {
-      mainRefetch();
-      dispatch({ isMSearch: false });
-    }
-  }, [isMSearch]);
+  // useEffect(() => {
+  //   if (isMSearch) {
+  //     mainRefetch();
+  //     dispatch({ isMSearch: false });
+  //   }
+  // }, [isMSearch]);
 
 
   const handleSwitchClick = (checked:boolean) => {
@@ -139,10 +142,10 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
           });  
           try {
             if (data.__ROWTYPE === ROW_TYPE_NEW) {
-              await Create.mutateAsync(data); 
+              // await Create.mutateAsync(data); 
             } else {
               log('data...', data)
-              await Update.mutateAsync(data);
+              // await Update.mutateAsync(data);
             }
           } catch (error) {
             log("Error:", error);
@@ -156,7 +159,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     processNodes()
       .then(() => {
         toastSuccess("Success.");
-        dispatch({ isMSearch: true });
+        // dispatch({ isMSearch: true });
       })
       .catch((error) => {
         log.error("Error processing nodes", error);
@@ -164,8 +167,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   };
 
   const onExcelUpload= () => {
-  //   dispatch({ crudType: crudType.CREATE, isPopUpUploadOpen: true })  }
-     dispatch({ popUp : { ...popUp, crudType: crudType.CREATE, isPopUpUploadOpen: true }, })  
+    actions.updatePopup({
+      popType: 'U',
+      isPopupUploadOpen: true,
+    });
+
   }
 
   return (
@@ -178,7 +184,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         <Grid
           gridRef={gridRef}
           // loadItem={initData}
-          listItem={mainData as gridData}
+          listItem={state.mainDatas as gridData}
           options={gridOptions}
           event={{
             onRowDoubleClicked: handleRowDoubleClicked,
@@ -187,7 +193,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
           }}
         />
       </PageMGrid3>
-      <DetailModal loadItem={initData}/>
+      <DetailModal loadItem={initData}/> 
       <ExcelUploadModal loadItem={initData}/>
     </>
   );

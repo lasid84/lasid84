@@ -10,10 +10,9 @@ import {
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import {
   crudType,
-  SEARCH_M,
   useAppContext,
 } from "components/provider/contextObjectProvider";
-import { SP_UpdateData, SP_SendEDI } from "../data";
+import { SP_UpdateData, SP_SendEDI } from "../../_store/data";
 import { FileUpload } from "components/file-upload";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import CustomSelect from "components/select/customSelect";
@@ -30,6 +29,7 @@ import { MaskedInputField } from "@/components/input/react-text-mask";
 import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import ExcelUploadGrid from "./popupGrid";
+import { Store } from "../../_store/store";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -40,67 +40,68 @@ type Props = {
 };
 
 const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
-  const { dispatch, objState } = useAppContext();
-  const { popUp, mSelectedRow, excel_data  } = objState;
-  const { crudType: popType, isPopUpUploadOpen : isOpen} = popUp
-
   const { t } = useTranslation();
+  // const { dispatch, objState } = useAppContext();
+  // const { popUp, mSelectedRow, excel_data  } = objState;
+  // const { crudType: popType, isPopUpUploadOpen : isOpen} = popUp
   //const { Create } = useUpdateData2(SP_InsertCustData);
-  const { Update : SendEDI } = useUpdateData2(SP_SendEDI);
-  const { Update } = useUpdateData2(SP_UpdateData);
-  const { getValues, setValue, reset, setFocus, handleSubmit } =
-    useFormContext();
+  // const { Update : SendEDI } = useUpdateData2(SP_SendEDI);
+  // const { Update } = useUpdateData2(SP_UpdateData);
+  const { getValues, setValue, reset, setFocus, handleSubmit } =    useFormContext();
+  const mainSelectedRow = Store((state)=>state.mainSelectedRow)
+  const popup = Store((state)=>state.popup)
+  const state = Store((state)=>state)
+  const actions = Store((state)=>state.actions)
 
   const closeModal = async () => {
-    dispatch({
-      popUp : {...popUp, isPopUpUploadOpen: false },
+    actions.updatePopup({
+      popType: 'U',
+      isPopupUploadOpen: false,
     });
-    // if (callbacks?.length) await callbacks.forEach((callback: Callback) => callback())
-    // reset();
   };
 
 
 
   useEffect(() => {
     // log("=====", loadItem);
-    if (loadItem && mSelectedRow && Object.keys(mSelectedRow).length > 0) {
+    if (loadItem && mainSelectedRow && Object.keys(mainSelectedRow).length > 0) {
     }
-  }, [mSelectedRow, loadItem]);
+  }, [mainSelectedRow, loadItem]);
 
   useEffect(() => {
     reset();
-    if (popType === crudType.CREATE) {
+    if (state.popup.popType === crudType.CREATE) {
       setFocus("use_yn");
     }
-  }, [popType, isOpen]);
+  }, [state.popup.popType, state.popup.isOpen]);
 
   const onSave = useCallback(async () => {
     var param = getValues();
-    log("params", param, excel_data)
-    if (popType === crudType.UPDATE) {
+    log("params", param, state.excel_data)
+    if (popup.popType === crudType.UPDATE) {
       const jsonData = JSON.stringify([param]);
        log("onSave1", jsonData)
-      await Update.mutateAsync( //send 858 edi
-        { jsondata: jsonData },
-        {
-          onSuccess: (res: any) => {
-            closeModal();
-          },
-        }
-      ).catch((err:any) => {});
+      // await Update.mutateAsync( //send 858 edi
+      //   { jsondata: jsonData },
+      //   {
+      //     onSuccess: (res: any) => {
+      //       closeModal();
+      //     },
+      //   }
+      // ).catch((err:any) => {});
     } else {
       const jsonData = JSON.stringify([param]);
        log("onSave3333 c", jsonData)
-      await Update.mutateAsync( //send 858 edi
-        { jsondata: jsonData },
-        {
-          onSuccess: (res: any) => {
-            closeModal();
-          },
-        }
-      ).catch((err:any) => {});
+      // await Update.mutateAsync( //send 858 edi
+      //   { jsondata: jsonData },
+      //   {
+      //     onSuccess: (res: any) => {
+      //       closeModal();
+      //     },
+      //   }
+      // ).catch((err:any) => {});
     }
-  }, [popType]);
+  }, [popup.popType]);
 
   // const handleFileDrop = (data: any[], header: any[]) => {
   //   console.log('header', header)
@@ -207,16 +208,16 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
     const mappedHeader = mappingConfig.map(({ key }) => key);  
     const gridData = JsonToGridData(mappedData, mappedHeader, 2);  
 
-    dispatch({ excel_data: gridData });
+    // dispatch({ excel_data: gridData });
   };
   
 
 
   return (
     <DialogBasic
-      isOpen={isOpen!}
+      isOpen={popup.isPopupUploadOpen!}
       onClose={closeModal}
-      title={t("MSG_0186") + (popType === crudType.CREATE ? "등록" : "수정")}
+      title={t("MSG_0186") + (popup.popType === crudType.CREATE ? "등록" : "수정")}
       bottomRight={
         <>
           <Button id={"save"} onClick={onSave} width="w-32" />
@@ -230,12 +231,12 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
             <div className="w-full p-4">
               <FileUpload
                 onFileDrop={handleFileDrop}
-                isInit={objState.uploadFile_init}
+                isInit={state.uploadFile_init}
               />
                 <ExcelUploadGrid
                   params={{
-                    waybill_no: objState.mSelectedRow?.waybill_no,
-                    invoice_no: objState.mSelectedRow?.invoice_no,
+                    waybill_no: mainSelectedRow?.waybill_no,
+                    invoice_no: mainSelectedRow?.invoice_no,
                   }}
                 />
             </div>
