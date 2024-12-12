@@ -97,6 +97,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 <Button id="save" onClick={onSave} width="w-20" />
             </div>
             <Grid
+                id="gridMaster"
                 gridRef={gridRef}
                 listItem={mainData}
                 options={gridOption}

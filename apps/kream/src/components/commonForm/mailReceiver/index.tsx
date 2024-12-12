@@ -129,6 +129,7 @@ const MailReceiver: React.FC<Props> = ({ ref = null, initData, pgm_code, cust_co
                 </>
             }>
             <Grid
+                id="index"
                 gridRef={gridRef}
                 listItem={data as gridData}
                 options={gridOptions}

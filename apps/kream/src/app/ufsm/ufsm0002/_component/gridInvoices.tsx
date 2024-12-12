@@ -31,6 +31,7 @@ const GridInvoices: React.FC<Props> = memo(({ loadData }) => {
 
     return (
         <Grid
+            id="gridInvoices"
             gridRef={gridRef}
             listItem={loadData as gridData}
             options={gridOption}

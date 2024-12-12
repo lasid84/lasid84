@@ -144,6 +144,7 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
         }
       >
         <Grid
+          id="popupGrid"
           gridRef={gridRef}
           listItem={EDIDetailData as gridData}
           options={gridOptions}

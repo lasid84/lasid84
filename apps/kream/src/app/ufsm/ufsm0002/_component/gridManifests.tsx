@@ -30,6 +30,7 @@ const GridManifests: React.FC<Props> = memo(({ loadData }) => {
 
     return (
         <Grid
+            id="gridManifests"
             gridRef={gridRef}
             listItem={loadData as gridData}
             options={gridOption}
