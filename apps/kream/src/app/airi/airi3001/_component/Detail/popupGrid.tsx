@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SP_UpdateData, SP_GetEDIDetailData } from "../data";
+import { SP_UpdateData, SP_GetEDIDetailData } from "../../_store/data";
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
@@ -16,12 +16,12 @@ import {
   IRowNode,
   SelectionChangedEvent,
 } from "ag-grid-community";
+import { Store } from "../../_store/store";
 import { toastSuccess } from "components/toast";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
-  ref?: any | null;
   initData?: any | null;
   params: {
     waybill_no: string;
@@ -29,48 +29,63 @@ type Props = {
   };
 };
 
-const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
+const DetailGrid: React.FC<Props> = ({  initData, params }) => {
   const { t } = useTranslation();
-  const gridRef = useRef<any | null>(ref);
+  const gridRef = useRef<any | null>();
   const { dispatch, objState } = useAppContext();  
-  const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
+  // const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
   const [gridOptions, setGridOptions] = useState<GridOption>();
-  const {
-    data: EDIDetailData,
-    refetch: EDIDetailRefetch,
-    remove: EDIDetailRemove,
-  } = useGetData({ ...params }, SEARCH_D, SP_GetEDIDetailData, { enabled: false });
+  // const {
+  //   data: EDIDetailData,
+  //   refetch: EDIDetailRefetch,
+  //   remove: EDIDetailRemove,
+  // } = useGetData({ ...params }, SEARCH_D, SP_GetEDIDetailData, { enabled: false });
+
+  const state = Store((state=>state));
+  const actions = Store((state)=>state.actions);
 
   const gridOption: GridOption = {
     colVisible: {
-      col: ["partnum", "partdesc", "hscode", "coo", "qty", "unitprice","totalunitprice","declnum","currency","declcustomvalue","hkscode","amt01","amt02","amt03","amt04"],
+      col: ["partnum", "partdesc", "hscode", "coo", "qty", "unitprice","totalunitprice","declnum","decllinenum","currency","declcustomvalue","hkscode","amt01","amt02","amt03","amt04"],
       visible: true,
     },
     gridHeight: "30vh",
     maxWidth: { partnum : 120, hscode : 120, coo:60, qty:60, unitprice : 100, totalunitprice : 100 },    
     minWidth: { partnum : 110, hscode : 110, coo:50, qty:50, unitprice : 80, totalunitprice : 80 },
-    editable: [ "declnum","hkscode","currency","declcustomsvalue ","amt01","amt02","amt03","amt04"],
-    dataType: { create_date: "date" },
+    editable: [ "declnum","hkscode","decllinenum","currency","declcustomsvalue ","amt01","amt02","amt03","amt04"],
+    dataType: { amt01:"number",amt02:"number",amt03:"number",amt04:"number", },
     isAutoFitColData: false,
   };
 
   useEffect(() => {
+    if (gridRef?.current){
+      //console.log('gridRef.current', gridRef.current)
+      //  actions.setState({ gridRef_Detail: gridRef.current?.api });
+    }      
+  }, [gridRef.current])
+
+  useEffect(() => {
     setGridOptions(gridOption);
-    // CarrierContRemove();
-    EDIDetailRefetch();
+    onSearch(params)
   }, []);
+
+  const onSearch = (params:any) =>{
+    // dispatch({ searchParams: params, isMSearch: true});
+    log("onSeach", params)
+    actions.getAppleDetailDatas(params)
+  }
 
   useEffect(() => {
     if (objState.isDSearch) {
       //   CarrierContRefetch();
-      log("grid Data?", EDIDetailData);
-      EDIDetailRefetch();
-      dispatch({ isDSearch: false });
+      // log("grid Data?", EDIDetailData);
+      // EDIDetailRefetch();
+      // dispatch({ isDSearch: false });
 
        const fetchDataAsync = async() => {
-        const {data: newData } = await EDIDetailRefetch();
-        const detail = (newData as string[])[1]? ((newData as string[])[1] as gridData).data : [];
-        log('grid Data??? - detail', detail, newData)
+        // const {data: newData } = await EDIDetailRefetch();
+        // const detail = (newData as string[])[1]? ((newData as string[])[1] as gridData).data : [];
+        // log('grid Data??? - detail', detail, newData)
       }
       fetchDataAsync()
     }
@@ -83,41 +98,43 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
   };
 
   const handleCellValueChanged = (param: CellValueChangedEvent) => {
-    log("handleCellValueChanged");
+    
     gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
+      console.log('node.data확인', node.data)
       if (!param.node.data.def) return;
       if (node.id === param.node.id) return;
-
+      
       if (node.data.def === true) {
         node.setDataValue("def", false);
       }
     });
+    if(gridRef.current){
+      log("handleCellValueChanged", gridRef.current);      
+      actions.setDetailData(gridRef.current.props.rowData);
+    }
   };
 
   const onSave = () => {
     const processNodes = async () => {
       const api = gridRef.current.api;
-      for (const node of api.getRenderedNodes()) {
-        var data = node.data;
-        log("onSave data", node.data);
-        gridOptions?.checkbox?.forEach((col) => {
-          data[col] = data[col] ? "Y" : "N";
-        });
-        if (data.__changed) {
-          try {
-            if (data.__ROWTYPE === ROW_TYPE_NEW) {
-              data.waybill_no = params.waybill_no;
-              data.invoice_no = params.invoice_no;
-            } else {
-              await Update.mutateAsync(data);
-            }
-          } catch (error) {
-            log.error("error:", error);
-          } finally {
-            data.__changed = false;
-          }
-        }
-      }
+      // for (const node of api.getRenderedNodes()) {
+      //   var data = node.data;
+      //   gridOptions?.checkbox?.forEach((col) => {
+      //     data[col] = data[col] ? "Y" : "N";
+      //   });
+      //   if (data.__changed) {
+      //     try {
+      //       if (data.__ROWTYPE === ROW_TYPE_NEW) {
+      //         data.waybill_no = params.waybill_no;
+      //         data.invoice_no = params.invoice_no;
+      //       } else {}
+      //     } catch (error) {
+      //       log.error("error:", error);
+      //     } finally {
+      //       data.__changed = false;
+      //     }
+      //   }
+      // }
     };
     processNodes()
       .then(() => {
@@ -139,13 +156,14 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
         }
         right={
           <>
-            <Button id={"save"} onClick={onSave} width="w-15" />
+            {/* <Button id={"save"} onClick={onSave} width="w-15" /> */}
           </>
         }
       >
         <Grid
+         id='detail'
           gridRef={gridRef}
-          listItem={EDIDetailData as gridData}
+          listItem={state.detailDatas as gridData}
           options={gridOptions}
           event={{
             onCellValueChanged: handleCellValueChanged,

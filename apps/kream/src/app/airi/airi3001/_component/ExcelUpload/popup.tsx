@@ -10,10 +10,9 @@ import {
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import {
   crudType,
-  SEARCH_M,
   useAppContext,
 } from "components/provider/contextObjectProvider";
-import { SP_UpdateData } from "../data";
+import { SP_UpdateData, SP_SendEDI } from "../../_store/data";
 import { FileUpload } from "components/file-upload";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import CustomSelect from "components/select/customSelect";
@@ -29,7 +28,8 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
-import DetailGrid from "../Detail/popupGrid";
+import ExcelUploadGrid from "./popupGrid";
+import { Store } from "../../_store/store";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -40,98 +40,184 @@ type Props = {
 };
 
 const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
-  const { dispatch, objState } = useAppContext();
-  const { popUp, mSelectedRow, searchParams  } = objState;
-  const { crudType: popType, isPopUpUploadOpen : isOpen} = popUp
-
   const { t } = useTranslation();
+  // const { dispatch, objState } = useAppContext();
+  // const { popUp, mSelectedRow, excel_data  } = objState;
+  // const { crudType: popType, isPopUpUploadOpen : isOpen} = popUp
   //const { Create } = useUpdateData2(SP_InsertCustData);
-  const { Update } = useUpdateData2(SP_UpdateData);
-  const { getValues, setValue, reset, setFocus, handleSubmit } =
-    useFormContext();
+  // const { Update : SendEDI } = useUpdateData2(SP_SendEDI);
+  // const { Update } = useUpdateData2(SP_UpdateData);
+  const { getValues, setValue, reset, setFocus, handleSubmit } =    useFormContext();
+  const mainSelectedRow = Store((state)=>state.mainSelectedRow)
+  const popup = Store((state)=>state.popup)
+  const state = Store((state)=>state)
+  const actions = Store((state)=>state.actions)
 
   const closeModal = async () => {
-    dispatch({
-      //isPopUpOpen: false,
-      popUp : {...popUp, isPopUpUploadOpen: false },
-      //mSelectedRow: { ...mSelectedRow, ...getValues() },
+    actions.updatePopup({
+      popType: 'U',
+      isPopupUploadOpen: false,
     });
-
-    // if (callbacks?.length) await callbacks.forEach((callback: Callback) => callback())
-
-    // reset();
   };
 
-  //Set select box data
 
-  useEffect(() => {
-    if (loadItem) {
-    }
-  }, [loadItem]);
 
   useEffect(() => {
     // log("=====", loadItem);
-    if (loadItem && mSelectedRow && Object.keys(mSelectedRow).length > 0) {
+    if (loadItem && mainSelectedRow && Object.keys(mainSelectedRow).length > 0) {
     }
-  }, [mSelectedRow, loadItem]);
+  }, [mainSelectedRow, loadItem]);
 
   useEffect(() => {
     reset();
-    if (popType === crudType.CREATE) {
+    if (state.popup.popType === crudType.CREATE) {
       setFocus("use_yn");
     }
-  }, [popType, isOpen]);
+  }, [state.popup.popType, state.popup.isOpen]);
 
   const onSave = useCallback(async () => {
     var param = getValues();
-    // try {
-    if (popType === crudType.UPDATE) {
+    log("params", param, state.excel_data)
+    if (popup.popType === crudType.UPDATE) {
       const jsonData = JSON.stringify([param]);
-      // log("onSave1", jsonData)
-      await Update.mutateAsync(
-        { jsondata: jsonData },
-        {
-          onSuccess: (res: any) => {
-            closeModal();
-          },
-        }
-      ).catch((err) => {});
+       log("onSave1", jsonData)
+      // await Update.mutateAsync( //send 858 edi
+      //   { jsondata: jsonData },
+      //   {
+      //     onSuccess: (res: any) => {
+      //       closeModal();
+      //     },
+      //   }
+      // ).catch((err:any) => {});
     } else {
-
-      // await Create.mutateAsync(param, {
-      //   onSuccess(data, variables, context) {
-      //     closeModal();
-      //   },
-      //   onError(error, variables, context) {},
-      // }).catch((err) => {});
+      const jsonData = JSON.stringify([param]);
+       log("onSave3333 c", jsonData)
+      // await Update.mutateAsync( //send 858 edi
+      //   { jsondata: jsonData },
+      //   {
+      //     onSuccess: (res: any) => {
+      //       closeModal();
+      //     },
+      //   }
+      // ).catch((err:any) => {});
     }
-    // dispatch({ isMSearch: true });
-    // } catch(err) {
-    //     log("catch err", err)
-    // }
-  }, [popType]);
+  }, [popup.popType]);
 
+  // const handleFileDrop = (data: any[], header: any[]) => {
+  //   console.log('header', header)
+  //   const mappedData = data.map((row) => {  
+  //     const keys = Object.keys(row);  
+  //     return {
+  //       importidentification: row[keys[10]], 
+  //       declarationdate: row[keys[31]],      
+  //       arrivalport: row[keys[37]],          
+  //       dispatchcountry: row[keys[43]],      
+  //       hawb: row[keys[47]],                 
+  //       mawb: row[keys[48]],                 
+  //       totaldeclvalue: row[keys[53]],       
+  //       incoterms: row[keys[57]],          
+  //       exchangerate: row[keys[60]],        
+  //       transportfee: row[keys[64]],      
+  //       insurancefee: row[keys[67]],       
+  //       customsclearancedate: row[keys[94]], 
+  //       customsclearancetime: new Date().toLocaleTimeString("en-GB", { hour12: false }).replace(/:/g, ""), // HHMMSS
+  //       declarationlinenumber: row[keys[112]],
+  //       hazardcode: row[keys[117]],           
+  //       currency: "KRW",                    
+  //       partnumber: row[keys[173]],         
+  //       declarationcustomsvalue: row[keys[118]], 
+  //       importduties: row[keys[124]],       
+  //       localconsumptiontax: row[keys[130]],
+  //       importvatliability: row[keys[143]],  
+  //       importdutyrate: row[keys[121]],      
+  //     }
+  //   })
+  //   const mappedHeader = [
+  //     "importidentification", // importidentification
+  //     "declarationdate",          // declarationdate
+  //     "arrivalport",            // arrivalport
+  //     "dispatchcountry",        // dispatchcountry
+  //     "hawb",           // hawb
+  //     "mawb",    // mawb
+  //     "totaldeclvalue",    // totaldeclvalue
+  //     "incoterms",          // incoterms
+  //     "exchangerate",          // exchangerate
+  //     "transportfee",          // transportfee
+  //     "insurancefee",          // insurancefee
+  //     "customsclearancedate",          // customsclearancedate
+  //     "customsclearancetime",          // customsclearancetime
+  //     "declarationlinenumber",            // declarationlinenumber
+  //     "hazardcode",          // hazardcode
+  //     "currency",          // currency
+  //     "partnumber",          // partnumber
+  //     "declarationcustomsvalue",  // declarationcustomsvalue
+  //     "importduties",              // importduties
+  //     "localconsumptiontax",            // localconsumptiontax
+  //     "importvatliability",            // importvatliability
+  //     "importdutyrate",              // importdutyrate
+  //   ];
+  
+    
+  
+  //   const gridData = JsonToGridData(mappedData, header, 2);
+  //   console.log('excel data', gridData);     
+  //   dispatch({ excel_data: gridData });
+  // };
+  
   const handleFileDrop = (data: any[], header: any[]) => {
-    data = data.map((obj) => {
-      return {
-        [ROW_TYPE]: ROW_TYPE_NEW,
-        ...obj,
-      };
+    const mappingConfig = [
+      { key: "importidentification", index: 10 },
+      { key: "declarationdate", index: 31 },
+      { key: "arrivalport", index: 37 },
+      { key: "dispatchcountry", index: 43 },
+      { key: "hawb", index: 47 },
+      { key: "mawb", index: 48 },
+      { key: "totaldeclvalue", index: 53 },
+      { key: "incoterms", index: 57 },
+      { key: "exchangerate", index: 60 },
+      { key: "transportfee", index: 64 },
+      { key: "insurancefee", index: 67 },
+      { key: "customsclearancedate", index: 94 },
+      { key: "customsclearancetime", dynamic: () => 
+        new Date().toLocaleTimeString("en-GB", { hour12: false }).replace(/:/g, "") },
+      { key: "declarationlinenumber", index: 112 },
+      { key: "hazardcode", index: 117 },
+      { key: "currency", default: "KRW" },
+      { key: "partnumber", index: 173 },
+      { key: "declarationcustomsvalue", index: 118 },
+      { key: "importduties", index: 124 },
+      { key: "localconsumptiontax", index: 130 },
+      { key: "importvatliability", index: 143 },
+      { key: "importdutyrate", index: 121 },
+    ];
+  
+    const mappedData = data.map((row) => {
+      const keys = Object.keys(row) as (keyof typeof row)[];
+      return mappingConfig.reduce((acc, { key, index, default: defaultValue, dynamic }) => {
+        if (dynamic) {
+          acc[key] = dynamic();
+        } else if (index !== undefined && keys[index]) {
+          acc[key] = row[keys[index]] ?? defaultValue;
+        } else {
+          acc[key] = defaultValue ?? null; // index가 잘못된 경우 null로 대체
+        }
+        return acc;
+      }, {} as Record<string, any>);
     });
-    var gridData = JsonToGridData(data, header, 2);
-    dispatch({ excel_data: gridData });
-    // Create.mutate({excel_data:data}, {
-    //     onSuccess: (res: any) => {
-    //         dispatch({ isMSearch: true });
-    //     }
-    // });
+  
+    const mappedHeader = mappingConfig.map(({ key }) => key);  
+    const gridData = JsonToGridData(mappedData, mappedHeader, 2);  
+
+    // dispatch({ excel_data: gridData });
   };
+  
+
 
   return (
     <DialogBasic
-      isOpen={isOpen!}
+      isOpen={popup.isPopupUploadOpen!}
       onClose={closeModal}
-      title={t("MSG_0186") + (popType === crudType.CREATE ? "등록" : "수정")}
+      title={t("MSG_0186") + (popup.popType === crudType.CREATE ? "등록" : "수정")}
       bottomRight={
         <>
           <Button id={"save"} onClick={onSave} width="w-32" />
@@ -145,12 +231,12 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
             <div className="w-full p-4">
               <FileUpload
                 onFileDrop={handleFileDrop}
-                isInit={objState.uploadFile_init}
+                isInit={state.uploadFile_init}
               />
-                <DetailGrid
+                <ExcelUploadGrid
                   params={{
-                    waybill_no: objState.mSelectedRow?.waybill_no,
-                    invoice_no: objState.mSelectedRow?.invoice_no,
+                    waybill_no: mainSelectedRow?.waybill_no,
+                    invoice_no: mainSelectedRow?.invoice_no,
                   }}
                 />
             </div>
