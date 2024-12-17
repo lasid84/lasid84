@@ -73,6 +73,7 @@ const GridCharges: React.FC<Props> = memo(({ loadData }) => {
                 <></>
             </PageSearch>
             <Grid
+                id="gridCharges"
                 gridRef={gridRef}
                 listItem={loadData as gridData}
                 options={gridOption}

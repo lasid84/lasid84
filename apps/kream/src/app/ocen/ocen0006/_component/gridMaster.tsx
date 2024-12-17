@@ -77,6 +77,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
         <>
             <PageMGrid>
                 <Grid
+                    id="gridMaster"
                     gridRef={gridRef}
                     listItem={mainData as gridData}
                     options={gridOption}

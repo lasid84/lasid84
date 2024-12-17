@@ -27,6 +27,7 @@ const GridMilestones: React.FC<Props> = memo(({ loadData }) => {
 
     return (
         <Grid
+            id="gridMilestones"
             gridRef={gridRef}
             listItem={loadData as gridData}
             options={gridOption}

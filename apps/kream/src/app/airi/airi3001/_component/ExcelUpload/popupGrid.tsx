@@ -118,6 +118,7 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
         }
       >
         <Grid
+          id="popupGrid"
           gridRef={gridRef}
           listItem={mData as gridData}
           options={gridOptions}

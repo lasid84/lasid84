@@ -28,6 +28,7 @@ const ShipmentDetailGrid: React.FC<Props> = ({ loadData }) => {
 
     return (
         <Grid
+            id="gridShipDetail"
             gridRef={gridRef}
             listItem={loadData as gridData}
             options={gridOption}

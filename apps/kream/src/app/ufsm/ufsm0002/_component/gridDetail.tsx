@@ -111,6 +111,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
         <>
             <div className="space-y-1">
                 <Grid
+                    id="gridDetail"
                     gridRef={gridRef}
                     loadItem={initData}
                     // listItem={detailData as gridData}

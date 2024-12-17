@@ -137,6 +137,7 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
                 }>
             <div className="flex flex-col w-[38rem] h-[28rem] gap-4 w-30 ">
                 <Grid
+                    id="popAddWayBillNo"
                     gridRef={gridRef}
                     listItem={data as gridData}
                     options={gridOptions}

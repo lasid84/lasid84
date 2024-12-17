@@ -164,6 +164,7 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
                     </>
                 }>
                 <Grid
+                    id="index"
                     gridRef={gridRef}
                     listItem={data as gridData}
                     options={gridOptions}

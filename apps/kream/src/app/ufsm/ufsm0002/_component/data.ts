@@ -84,3 +84,26 @@ export const SP_GetWBDetailData = async (searchParam: any) => {
   // log('go home,..', result)
   return result
 }
+
+export const SP_GetPrintLocationData = async (searchParam: any) => {
+  const Param = searchParam.queryKey[1];
+  const { type, user_id, ipaddr } = Param;
+
+  const params = {
+    inparam: [
+      "in_type"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      type
+      , user_id
+      , ipaddr
+    ],
+    inproc : 'public.f_document_get_print_location',
+    isShhowLoading: false
+  };
+  const result = await executFunction(params);
+
+  return result;
+}

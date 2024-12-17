@@ -564,6 +564,7 @@ function CustomSelect(props: Props) {
         >
           { isDisplay &&
           <Grid
+            id="customSelect"
             customselect={customselect}
             gridRef={gridRef}
             listItem={filteredData}

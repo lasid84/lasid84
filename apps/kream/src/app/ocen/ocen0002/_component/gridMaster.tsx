@@ -81,6 +81,7 @@ const MasterGrid: React.FC<Props> = ({ }) => {
                     </>
                 }>
                 <Grid
+                    id="gridMaster"
                     gridRef={gridRef}
                     listItem={mainData as gridData}
                     options={gridOption}

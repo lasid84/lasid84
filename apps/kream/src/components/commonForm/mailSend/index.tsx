@@ -133,6 +133,7 @@ const MailSend: React.FC<Props> = ({ ref = null, pgm_code, params }) => {
                     </>
                 }>
                 <Grid
+                    id="index"
                     gridRef={gridRef}
                     listItem={data as gridData}
                     options={gridOptions}

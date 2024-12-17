@@ -30,7 +30,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
 
     const gridOption: GridOption = {
-        colVisible: { col: ["day_of_week", "leap_month", "lucky_day", "use_yn"], visible: false },
+        colVisible: { col: ["use_yn"], visible: false },
         editable: ["day_nm", "day_off", "remark"],
         gridHeight: "h-full",
         checkbox: ["day_off"],
@@ -97,6 +97,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                 <Button id="save" onClick={onSave} width="w-20" />
             </div>
             <Grid
+                id="gridMaster"
                 gridRef={gridRef}
                 listItem={mainData}
                 options={gridOption}

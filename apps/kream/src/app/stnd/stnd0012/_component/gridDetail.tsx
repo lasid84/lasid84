@@ -125,6 +125,7 @@ const DetailGrid: React.FC<Props> = ({ initData }) => {
                     </>
                 }>
                 <Grid
+                    id="gridDetail"
                     gridRef={gridRef}
                     listItem={detailData as gridData}
                     options={gridOptions}

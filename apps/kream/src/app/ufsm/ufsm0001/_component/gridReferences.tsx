@@ -27,6 +27,7 @@ const GridReferences: React.FC<Props> = memo(({ loadData }) => {
 
     return (
         <Grid
+            id="gridReferences"
             gridRef={gridRef}
             listItem={loadData as gridData}
             options={gridOption}
