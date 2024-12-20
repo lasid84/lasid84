@@ -1,19 +1,30 @@
 import Switch from "react-switch";
 import {getColor} from "utils/colors";
+import { useState } from "react";
 
 
-const SwitchGrid: React.FC = () => {
+type SwitchGridProps = {
+  onSwitchClick?: (checked:boolean) => void; // 상위에서 전달받는 클릭 이벤트 핸들러
+};
+
+const SwitchGrid: React.FC<SwitchGridProps> = ({ onSwitchClick }) => {
+  const [collapsed, setCollapsed] = useState(false); // 상태 관리
+
+
+  const handleSwitchChange = (checked: boolean) => {
+    setCollapsed(checked); // 로컬 상태 업데이트
+    if (onSwitchClick) {
+      onSwitchClick(checked); // 상위 컴포넌트에 상태 전달
+    }
+  };
     const onColor = `blue-200`;
     const onHandleColor = `blue-500`;
     const offColor = `gray-200`;
     const offHandleColor = "white";
     
-    //const {collapsed} = {};
-    const collapsed =false //BOOLEAN
     return (
       <Switch
-        onChange={() => {       
-        }}
+        onChange={handleSwitchChange} // 스위치 상태 변경 처리
         checked={collapsed}
         onColor={getColor(onColor)}
         onHandleColor={getColor(onHandleColor)}

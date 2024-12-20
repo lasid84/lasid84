@@ -182,7 +182,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         right={<><Switch  onClick={handleSwitchClick}/><Button id={"send"} onClick={onSave} width='w-34' /></>}
       >
         <Grid
-          id="gridMaster"
+          id="master"
           gridRef={gridRef}
           // loadItem={initData}
           listItem={state.mainDatas as gridData}
