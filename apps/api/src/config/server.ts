@@ -29,7 +29,7 @@ export default function serverConfig(app: Express) {
 
     .use(bodyParser.urlencoded({ extended: true }))
 
-    .use(bodyParser.json({ limit: "50mb" }))
+    .use(bodyParser.json({ limit: "100mb" }))
 
     .use(bodyParser.text({ type: 'application/xml' }))
 

@@ -18,11 +18,13 @@ const validExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS"];
 interface FileUploadProps {
     onFileDrop?: (data: any[], header:any[]) => void;
     isInit?: boolean;
+    headerRow?: number;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = (props) => {
     const { t } = useTranslation();
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const {headerRow = 1} = props;
     // const [data, setData] = useState<any[]>([]);
 
     useEffect(() => {
@@ -47,28 +49,45 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                 const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header : 1}); //모든 데이터 가져옴
 
                 // 모든 셀의 주소 가져오기
+                const columnNames = jsonData[headerRow - 1] as string[]; // 헤더 행 추출
+                
                 const cellAddresses = Object.keys(worksheet);
 
                 // 첫 번째 행의 셀 주소만 필터링
-                const firstRowAddresses = cellAddresses.filter(address => address.match(/^[A-Z]+1$/));
+                // const firstRowAddresses = cellAddresses.filter(address => address.match(/^[A-Z]+1$/));
 
                 // 첫 번째 행의 셀 주소를 순회하면서 컬럼명 추출
-                const columnNames = firstRowAddresses.map(address => worksheet[address].v);
+                // const columnNames = firstRowAddresses.map(address => worksheet[address].v);
 
-                jsonData.forEach((row:any) => {
-                    Object.keys(row).forEach((key) => {
-                    // if (XLSX.SSF.is_date(row[key])) {
-                    //     row[key] = XLSX.SSF.to_general(row[key]);
-                    // }
-                        if (row[key] instanceof Date) {
-                            row[key] = DateToString(getKoreaTime(row[key]));
+                // 헤더 이후의 데이터 추출
+                const data = jsonData.slice(headerRow).map((row) => {
+                    const rowArray = row as any[]; // row를 배열로 캐스팅
+                    const rowObject: Record<string, any> = {};
+                    columnNames.forEach((col, index) => {
+                        if (rowArray[index] instanceof Date) {
+                            rowObject[col] = DateToString(getKoreaTime(rowArray[index]));
+                        } else {
+                            rowObject[col] = rowArray[index];
                         }
                     });
+                    return rowObject;
                 });
-                if (props.onFileDrop) props.onFileDrop(jsonData, columnNames);
+                if (props.onFileDrop) props.onFileDrop(data, columnNames);
+
+                // jsonData.forEach((row:any) => {
+                //     Object.keys(row).forEach((key) => {
+                //     // if (XLSX.SSF.is_date(row[key])) {
+                //     //     row[key] = XLSX.SSF.to_general(row[key]);
+                //     // }
+                //         if (row[key] instanceof Date) {
+                //             row[key] = DateToString(getKoreaTime(row[key]));
+                //         }
+                //     });
+                // });
+                // if (props.onFileDrop) props.onFileDrop(jsonData, columnNames);
             };
             reader.readAsArrayBuffer(file);
 
@@ -112,8 +131,8 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
             <div
                 className={
                     isDragActive
-                    ? "flex-grow border-2 border-dashed border-blue-600"
-                    : "flex-grow border-2 border-dashed border-gray-200"
+                    ? "flex-grow border-2 border-blue-600 border-dashed"
+                    : "flex-grow border-2 border-gray-200 border-dashed"
             }>
             {!!selectedFiles && selectedFiles.length > 0 ? (
                 <div className="flex flex-col items-start p-8">
@@ -122,7 +141,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                 ))}
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center w-full p-2">
+                <div className="flex flex-col justify-center items-center p-2 w-full">
                 <input {...getInputProps()} accept=".xlsx, .xls" /*multiple*/ />
                 <BiUpload size={60} className="stroke-current" />
                 <p className="pt-2">{t('MSG_0165')}</p>
@@ -171,8 +190,8 @@ export const AttFileUpload: React.FC<FileUploadProps> = (props) => {
             <div
                 className={
                     isDragActive
-                    ? "flex-grow border-2 border-dashed border-blue-600"
-                    : "flex-grow border-2 border-dashed border-gray-200"
+                    ? "flex-grow border-2 border-blue-600 border-dashed"
+                    : "flex-grow border-2 border-gray-200 border-dashed"
             }>
             {!!selectedFiles && selectedFiles.length > 0 ? (
                 <div className="flex flex-col items-start p-8">
@@ -181,7 +200,7 @@ export const AttFileUpload: React.FC<FileUploadProps> = (props) => {
                 ))}
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center w-full p-2">
+                <div className="flex flex-col justify-center items-center p-2 w-full">
                 <input {...getInputProps()} accept=".xlsx, .xls" /*multiple*/ />
                 <BiUpload size={60} className="stroke-current" />
                 <p className="pt-2">{t('MSG_0165')}</p>

@@ -89,7 +89,7 @@ export async function executFunction(params:exeFuncParams) {
         }
 
         const returnData:returnData = await dataCall(client, inproc,inparam, invalue, config);
-        const { cursorData, numericData, textData } = returnData;
+        const { cursorData = [], numericData, textData } = returnData;
 
         // log("====================================returnData : ", inproc, returnData);
 
