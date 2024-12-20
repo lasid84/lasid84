@@ -5,7 +5,7 @@ const { executFunction } = require('../../api.service/api.service.js');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 const FtpClient = require('../../ftp/ftpClient');
 
-const interval = 1 * 60 * 1000;
+const interval = 5 * 60 * 1000;
 let onExcute = false;
 let ftpPath = {};
 const pgm = workerData.pgm;
