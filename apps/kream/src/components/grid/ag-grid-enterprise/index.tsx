@@ -91,7 +91,9 @@ type GridEvent = {
 
 export type GridOption = {
   checkbox?: string[];
-  select?: any;
+  select?: {
+    [key: string]: string[]; 
+  };
   icon?: any;
   colVisible?: {
     col: string[]
@@ -159,6 +161,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const [initialState, setInitialState] = useState<GridState>();
   const [currentState, setCurrentState] = useState<GridState>();
   const [myColInfo, setColInfo] = useState<any>([]);
+
+  const gridInfo_Refresh = useConfigs((state) => state.config.gridInfo_Refresh);
+  const configActions = useConfigs((state) => state.actions);
 
   const [gridStyle, setGridStyle] = useState({ height: "100%" });
   const {id, listItem, options, customselect = false } = props;
@@ -231,11 +236,18 @@ const ListGrid: React.FC<Props> = memo((props) => {
         }
       });
       if (target[element] && type === "count") target[element] = `${target[element].toString()}${t("ea")}`;
-      // else if (target[element] && type === "sum") target[element] = `${numberFormatter(target[element].toString())}`;
+      // else if (target[element] && type === "sum") target[element] = `${numberFormatter(target[element])}`;
+      else if (target[element] && type === "sum") {
+        target[element] = new Intl.NumberFormat('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+          }).format(target[element]).replace(/,/g, ''); 
+      }
       else if (target[element] && type === "avg" && rowCnt) target[element] = `${target[element] / rowCnt}`;
+      // else if (target[element] && type === "sum" && rowCnt) target[element] = ``;
 
     })
-    //console.log(target);
+    // console.log(target);
     return target;
   }
 
@@ -298,6 +310,19 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
         if (event?.onComponentStateChanged) event.onComponentStateChanged(e);
 
+        let result: any = {};
+
+        gridRef?.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
+          result[item.colId] = null;
+        });
+
+        let pinnedBottomData = calculatePinnedBottomData(result);
+        // log("============onComponentStateChanged", pinnedBottomData)
+
+        if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
+          gridRef?.current.api.setPinnedBottomRowData([pinnedBottomData]);
+        }
+
       },
       // getRowClass(params) {
       //     log("getRowClass", params, params.data, params.data.__changed);
@@ -334,19 +359,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }, []);
 
   useEffect(() => {
-    if (id /*&& config.collapsed != undefined*/) {
-      // log("grid id", id);
+    if (id) {
       setPersonalColInfoParam({
         // path : path,
         state: config.collapsed,
         id : id
       });
     }
-  }, [id/*, config.collapsed*/])
+  }, [id])
+
+  useEffect(() => {
+    if (gridInfo_Refresh) {
+      personalColInfoRefetch();
+      if (gridRef.current) autoSizeAll(gridRef.current);
+      configActions.setConfig({ gridInfo_Refresh: false });
+    }
+    
+  }, [gridInfo_Refresh])
 
   //컬럼 세팅
   useEffect(() => {
-    // log("col setting: ", personalColInfoData);
     if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 /*&& personalColInfoData !== undefined*/) {
       let cols: cols[] = [];
 
@@ -419,17 +451,16 @@ const ListGrid: React.FC<Props> = memo((props) => {
           cellOption = {
             ...cellOption,
             flex: 0,
-            // width:100
+            // width:200
           }
         }
-
-        if (myColInfos[i]?.col_width) {
-          // log("width setting", col, myColInfos[i])
+        
+        // if (myColInfos[i]?.col_width) {
           cellOption = {
             ...cellOption,
-            width: Number(myColInfos[i]?.col_width)
+            width: Number(myColInfos[i]?.col_width) || 100
           }
-        }
+        // }
 
         //컬럼별 visible 셋팅
         let isHide: boolean = false;
@@ -692,7 +723,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
       });
       // };
-
       setColDefs(cols);
       setMainData(listItem.data.map((row: any, i: number) => {
         if (options?.checkbox) {
@@ -705,6 +735,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           ...row,
         }
       }));
+      
       // personalColInfoRefetch();
       
       // if (gridRef.current && props.gridState) {
@@ -739,18 +770,18 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const onGridReady = (param: GridReadyEvent) => {
     // log("onGridReady");
 
-    let result: any = {};
+    // let result: any = {};
 
-    gridRef?.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
-      result[item.colId] = null;
-    });
+    // gridRef?.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
+    //   result[item.colId] = null;
+    // });
 
-    let pinnedBottomData = calculatePinnedBottomData(result);
-    // log("============onGridReady", pinnedBottomData)
+    // let pinnedBottomData = calculatePinnedBottomData(result);
+    // // log("============onGridReady", pinnedBottomData)
 
-    if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
-      gridRef?.current.api.setPinnedBottomRowData([pinnedBottomData]);
-    }
+    // if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
+    //   gridRef?.current.api.setPinnedBottomRowData([pinnedBottomData]);
+    // }
 
     if (event?.onGridReady) event.onGridReady(param);
 

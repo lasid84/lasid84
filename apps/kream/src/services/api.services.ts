@@ -96,7 +96,7 @@ export async function executFunction(params:exeFuncParams) {
         if (numericData !== 0) {
             toastWaring((numericData + " : " + textData))
             // log("==",numericData + " : " + textData);
-            throw new Error(numericData + " : " + textData);
+            // throw new Error(numericData + " : " + textData);
             return null;
         }
         if (isShowComplete) {

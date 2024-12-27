@@ -44,8 +44,10 @@ const SearchForm = ({ loadItem }: any) => {
   
   const { getValues, handleSubmit, reset } = useFormContext();
   
+  const state = useCommonStore((state) => state);
   const searchParams = useCommonStore((state) => state.searchParams);
-  const { resetStore, getAppleDatas } = useCommonStore((state) => state.actions);
+  
+  const { setState, resetSearchParam, getAppleDatas } = useCommonStore((state) => state.actions);
 
   useEffect(() => {
     onSearch();
@@ -63,7 +65,8 @@ const SearchForm = ({ loadItem }: any) => {
   }
 
   const onReset = () => {
-    resetStore();
+    resetSearchParam();
+    setState({mainDatas:{...state.mainDatas, data:[]}})
   }
   
   const onChange = (e: any) => {
@@ -98,6 +101,15 @@ const SearchForm = ({ loadItem }: any) => {
                 freeStyles: "p-1 border-1 border-slate-300",
               }}
               lwidth="w-20"
+              height="h-8"
+            />
+          </div>
+          <div className={"col-span-2"}>
+            <MaskedInputField
+              id="no"
+              label="waybill_no"
+              value={searchParams?.no}
+              options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
             />
           </div>

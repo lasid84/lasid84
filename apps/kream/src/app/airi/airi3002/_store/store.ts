@@ -1,89 +1,9 @@
-// import { SP_GetAppleMainData, SP_GetLoad, SP_SaveAirTracker } from "./data";
-// import { gridData } from "@/components/grid/ag-grid-enterprise";
-// import dayjs from "dayjs";
-// import { createStore } from "@/states/createStore";
-
-// interface StoreState {
-//     searchParams: Record<string, any>;
-//     loadDatas: gridData[] | null;
-//     mainDatas: gridData | null;
-//     mainSelectedRow: Record<string, any> | null;
-//     popup: Record<string, any>;
-    
-// }
-
-// interface StoreActions {
-//     actions: {
-//         getLoad: () => Promise<any> | undefined;
-//         getAppleDatas: (params: any) => Promise<any> | undefined;
-//         insAirTracker: (params: any) => Promise<any> | undefined;
-//         resetStore: () => void;
-//         // setPopup: (popup: Partial<StoreState['popup']>) => void; 
-//         setState: (newState: Partial<StoreState>) => void;
-        
-//     }
-// }
-
-// type Store = (set: any) => (StoreState & StoreActions);
-// // type Store = (set: any) => StoreState & {
-// //     actions: StoreActions;
-// // };
-
-// const initValue: StoreState = {
-//     searchParams: {
-//         fr_date: dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),
-//         to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-//         search_gubn: 0,
-//         no: '', // HWB, MWB
-//         state:  'ALL',
-//     },
-//     loadDatas: null,
-//     mainDatas: null,
-//     mainSelectedRow: null,
-//     popup: {},
-// }
-
-// const setinitValue: Store = (set : any) => ({
-//     ...initValue,
-//     actions: {
-//         getLoad: async () => {
-//             const result = await SP_GetLoad();
-//             set({ loadDatas: result });
-//             return result;
-//         },
-//         getAppleDatas: async (params: any) => {
-//             const result = await SP_GetAppleMainData(params);
-//             set({ mainDatas: result });
-//             return result;
-//         },
-//         insAirTracker: async (params: any) => {
-//             const result = await SP_SaveAirTracker(params);
-//             // set({ mainDatas: result });
-//             return result;
-//         },
-//         resetStore: async () => {
-//             set((state: any) => ({
-//                 ...initValue,
-//                 actions: state.actions,
-//             }));
-//         },
-//         // setPopup: (popup: any) => set((state: any) => ({ 
-//         //     popup: { ...state.popup, ...popup } 
-//         // })),
-//         setState: (newState: Partial<StoreState>) => set((state: StoreState) => ({
-//             ...state,
-//             ...newState,
-//         })),
-//     },
-// })
-
-// export const useCommonStore = createStore<StoreState & StoreActions>(setinitValue);
-
-
-import { SP_GetAppleMainData, SP_GetLoad, SP_SaveAirTracker } from "./data";
+import { SP_GetAppleMainData, SP_GetLoad, SP_SaveAirTracker, SP_SaveP5S1, SP_SetAppleMainData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 import { createStore } from "@/states/createStore";
+import { toastError } from "components/toast";
+import { t } from "i18next";
 
 // StoreState 정의
 interface StoreState {
@@ -98,7 +18,9 @@ interface StoreState {
 interface StoreActions {
     getLoad: () => Promise<any[]> | undefined;
     getAppleDatas: (params: any) => Promise<any>;
-    insAirTracker: (params: any) => Promise<void>;
+    setAppleDatas: (params: any) => Promise<any>;
+    insExcelData: (params: any) => Promise<void>;
+    resetSearchParam: () => void;
     resetStore: () => void;
     setState: (newState: Partial<StoreState>) => void;
 }
@@ -111,7 +33,7 @@ type Store = StoreState & {
 // initValue 정의
 const initValue: StoreState = {
     searchParams: {
-        fr_date: dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),
+        fr_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
         to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
         search_gubn: 0,
         no: '', // HWB, MWB
@@ -123,9 +45,8 @@ const initValue: StoreState = {
     popup: {},
 };
 
-// setinitValue 함수에서 actions의 타입을 StoreActions로 정확히 맞추기
+
 const setinitValue = (set: any) => {
-    // actions 객체 생성
     const actions: StoreActions = {
         getLoad: async () => {
             const result = await SP_GetLoad();
@@ -134,14 +55,27 @@ const setinitValue = (set: any) => {
         },
         getAppleDatas: async (params: any) => {
             const result = await SP_GetAppleMainData(params);
-            set({ mainDatas: result });
+            set({ mainDatas: result, searchParams:params });
             return result;
         },
-        insAirTracker: async (params: any) => {
-            const result = await SP_SaveAirTracker(params);
-            // 상태 업데이트는 필요 시 추가
-            // set({ mainDatas: result });
-            return result;
+        setAppleDatas: async (params: any) => {
+            const result = await SP_SetAppleMainData(params);
+            // set({ mainDatas: result, searchParams:params });
+            // return result;
+        },
+        insExcelData: async (params: any) => {
+            let result;
+
+            if (params.file.name.toLowerCase().includes("p5s1")) {
+                result = await SP_SaveP5S1(params);
+            } else if (params.file.name.toLowerCase().includes("air tracker")) {
+                result = await SP_SaveAirTracker(params);
+            } else {
+                toastError(t("MSG_0190")); //KWE Daily Air Tracker와 P5S1 파일만 업로드하세요
+            }
+        },
+        resetSearchParam: () => {
+            set({ searchParams: {...initValue.searchParams}});
         },
         resetStore: () => {
             set({ ...initValue });
@@ -152,10 +86,9 @@ const setinitValue = (set: any) => {
         })),
     };
 
-    // actions 객체가 StoreActions 타입에 맞는지 체크하고, Store 반환
     return {
         ...initValue,
-        actions, // actions는 이제 StoreActions 타입에 맞게 설정됨
+        actions,
     } as Store;
 };
 

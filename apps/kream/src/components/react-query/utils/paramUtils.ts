@@ -2,7 +2,7 @@ import { useUserSettings } from '@/states/useUserSettings';
 
 export const paramsUtils = (Params: any = {}) => {
     const userInfo = useUserSettings.getState().data;
-
+    
     let cols = ["user_id", "ipaddr"];
 
     for (let col of cols) {

@@ -15,7 +15,6 @@ export const SP_GetLoad = async () => {
   }
 
   const result = await queryClient("SP_GetLoad", params);
-  log("SP_GetLoad", result);
   return result;
 }
 
@@ -25,27 +24,23 @@ export const SP_GetAppleMainData = async (searchParams: any) => {
   
   const params = {
     inparam : [
-       "in_fr_date"
+        "in_fr_date"
       , "in_to_date"
-      , "in_gubn"  //0 : 810, 1: 858
       , "in_no"
-      , "in_state"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      fr_date
+        fr_date
       , to_date
-      , search_gubn
       , no
-      , state
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi3001_get_data',
+    inproc: 'airimp.f_airi3002_get_data',
     isShowLoading: true
   }
-  const result = await queryClient("SP_GetAppleMainData", params);
+  const result = await queryClient("SP_GetPreInfoMainData", params);
   
   return result[0];
 }
@@ -71,5 +66,53 @@ export const SP_SaveAirTracker = async (param: any) => {
 
     // log("SP_InsAirTracker", params);
     const result = await queryClient("SP_InsAirTracker", params);
+    return result;
+}
 
+export const SP_SaveP5S1 = async (param: any) => {
+  const { jsonData, user_id, ipaddr } = paramsUtils(param);
+
+  const params = {
+    inparam : [
+      "in_jsondata"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      jsonData
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'airimp.f_airi3002_ins_p5s1',
+    isShowLoading: true,
+    isShowComplete:true,
+    }
+
+    // log("SP_InsAirTracker", params);
+    const result = await queryClient("SP_SaveP5S1", params);
+    return result;
+}
+
+export const SP_SetAppleMainData = async (param: any) => {
+  const { jsonData, user_id, ipaddr } = paramsUtils(param);
+
+  const params = {
+    inparam : [
+      "in_jsondata"
+    , "in_user"
+    , "in_ipaddr"
+    ],
+    invalue: [
+      jsonData
+    , user_id
+    , ipaddr
+    ],
+    inproc: 'airimp.f_airi3002_upd_data',
+    isShowLoading: true,
+    isShowComplete:true,
+    }
+
+    // log("SP_InsAirTracker", params);
+    const result = await queryClient("SP_SetAppleMainData", params);
+    // return result;
 }

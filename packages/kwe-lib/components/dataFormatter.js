@@ -34,6 +34,19 @@ function DateToString(source = new Date(), delimiter = '') {
     };
 };
 
+function DateToFullString(source = new Date(), delimiter = '') {
+    if (source) {
+        const year = source.getFullYear();
+        const month = (source.getMonth() + 1).toString().padStart(2,0);
+        const day = (source.getDate()).toString().padStart(2,0);
+        const hours = source.getHours().toString().padStart(2, '0');
+        const minutes = source.getMinutes().toString().padStart(2, '0');
+        const seconds = source.getSeconds().toString().padStart(2, '0');
+
+        return [year, month, day].join(delimiter) + ' ' + [hours, minutes, seconds].join(':');
+    };
+};
+
 function stringToFullDateString(source, delimiter = '-') {
     if (source) {
         source = source.replace(/[-\/]/g, '');
@@ -137,6 +150,7 @@ module.exports = {
     textToDate,
     stringToDateString,
     DateToString,
+    DateToFullString,
     stringToFullDateString,
     stringToFullDate,
     stringToDate,
@@ -144,3 +158,7 @@ module.exports = {
     stringToTime,
     addDaysToDate 
   }
+
+
+
+//   getKoreaTime('2024-10-10');

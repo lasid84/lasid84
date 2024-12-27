@@ -1,36 +1,15 @@
 import DialogBasic from "layouts/dialog/dialog";
-import {
-  Controller,
-  useForm,
-  FormProvider,
-  SubmitHandler,
-  useFieldArray,
-  useFormContext,
-} from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
 import {
   crudType,
-  SEARCH_M,
-  useAppContext,
 } from "components/provider/contextObjectProvider";
 // import { SP_UpdateData } from "../../_store/data";
 import { FileUpload } from "components/file-upload";
-import { useUpdateData2 } from "components/react-query/useMyQuery";
-import CustomSelect from "components/select/customSelect";
-import { useRouter, usePathname } from "next/navigation";
 import { Button } from "components/button";
-import {
-  gridData,
-  JsonToGridData,
-  ROW_TYPE,
-  ROW_TYPE_NEW,
-} from "@/components/grid/ag-grid-enterprise";
-import { ReactSelect, data } from "@/components/select/react-select2";
-import { MaskedInputField } from "@/components/input/react-text-mask";
-import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
-import DetailGrid from "../Detail/popupGrid";
 import { useCommonStore } from "../../_store/store";
+import { useUserSettings } from "@/states/useUserSettings";
 
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -92,8 +71,25 @@ const Modal: React.FC<Props> = () => {
     // // }
   }, [popType]);
 
-  const handleFileDrop = (data: any[], header: any[]) => {
-    const filter = (state.loadDatas ?? [])[0].data as [];
+  const handleFileDrop = (data: any[], header: any[], file:any) => {
+
+    const headerRow = ((state.loadDatas ?? [])[2].data as [])
+                        .filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["header"] || 1; 
+
+    const columnNames = data[headerRow - 1] as string[]; // 헤더 행 추출
+
+    // 헤더 이후의 데이터 추출
+    data = data.slice(headerRow).map((row) => {
+        const rowArray = row as any[]; // row를 배열로 캐스팅
+        const rowObject: Record<string, any> = {};
+        columnNames.forEach((col: string, index: number) => rowObject[col] = rowArray[index]);
+        
+        return rowObject;
+    });
+    
+    const filter = file.name.toLowerCase().includes("p5s1")
+                  ? (state.loadDatas ?? [])[1].data as [] : (state.loadDatas ?? [])[0].data as [];
+
     if (filter?.length) {
       const groupedFilter = filter.reduce<Record<string, any[]>>((acc, { key, value }) => {
         acc[key] = acc[key] || [];
@@ -113,29 +109,15 @@ const Modal: React.FC<Props> = () => {
         });
       });
     }
-    
-    // data = data.map((obj) => {
-    //   return {
-    //     [ROW_TYPE]: ROW_TYPE_NEW,
-    //     ...obj,
-    //   };
-    // });
-    // var gridData = JsonToGridData(data, header, 2);
-    // dispatch({ excel_data: gridData });
-    // // Create.mutate({excel_data:data}, {
-    // //     onSuccess: (res: any) => {
-    // //         dispatch({ isMSearch: true });
-    // //     }
-    // // });
-
-    actions.insAirTracker({jsonData: JSON.stringify(data)});
+    console.log(data[10]);
+    actions.insExcelData({jsonData: JSON.stringify(data), file: file});
   };
 
   return (
     <DialogBasic
       isOpen={isPopUpUploadOpen}
       onClose={closeModal}
-      title={t("MSG_0186") + (popType === crudType.CREATE ? "등록" : "수정")}
+      title={t("upload_excel")}
       bottomRight={
         <>
           <Button id={"save"} onClick={onSave} width="w-32" />
@@ -149,7 +131,8 @@ const Modal: React.FC<Props> = () => {
             <div className="w-full p-4">
               <FileUpload
                 onFileDrop={handleFileDrop}
-                headerRow={4}
+                isReturnRawData={true}
+                // headerRow={4}
                 // isInit={objState.uploadFile_init}
               />
                 {/* <DetailGrid

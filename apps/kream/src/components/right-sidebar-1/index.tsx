@@ -87,12 +87,16 @@ const RightSidebar: React.FC = memo(() => {
             </div>
             <Button id={"reset"}
               width="w-20"
-              onClick={() => {
+              onClick={async () => {
                 const param = {
                   id:'',
                   state: collapsed
                 }
-                initMyColInfo.mutate(param);
+                initMyColInfo.mutateAsync(param)
+                  .then(() => {
+                    configActions.setConfig({ gridInfo_Refresh: true });
+                  })
+                ;
               }}
             />
           </div>
