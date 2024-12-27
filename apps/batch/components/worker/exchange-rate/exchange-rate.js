@@ -35,7 +35,7 @@ const startInsertExchangeRateData = async () => {
         if (enterTime > standardKSTTime
             && checkUTCOneDay(standardKSTTime, ufsp.lastExcute)
         ) {
-            const teams = new Teams("EXCHANGE RATE BATCH");
+            const teams = new Teams("EXCHANGE_RATE_BATCH");
 
             /**
              * @SECTION

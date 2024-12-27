@@ -30,6 +30,7 @@ class Library {
     resultData = {};
     mainData = {};
     id = null;
+    ufsId = null;
     
     constructor({ pgm, type, terminal, idx, isHeadless }) {
         this.pgm = pgm;
@@ -193,6 +194,7 @@ class Library {
                     }
                 }
                 // log("loginByApi", id, this.resultData)
+                this.ufsId = acctInfo["id"];
                 this.id = id;
                 
                 await this.startScript(scripts);

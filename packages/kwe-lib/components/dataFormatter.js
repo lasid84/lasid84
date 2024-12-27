@@ -169,6 +169,19 @@ const convertCurrentTimeToUFSPFormat = () => {
     return `${day}-${monthShort}-${year} ${hours}:${minutes}`;
 };
 
+const convertCurrentTimeToSFSPFormatSecond = () => {
+    const date = new Date();
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const monthShort = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const second = date.getSeconds().toString().padStart(2, "0");
+  
+    return `${day}-${monthShort}-${year} ${hours}:${minutes}:${second}`;
+}
+
 const checkUTCOneDay = (standardDate, targetDate) => {
     if (!targetDate) {
         return true;
@@ -211,6 +224,7 @@ module.exports = {
     addDaysToDate,
     stringToShortMonthDate,
     convertCurrentTimeToUFSPFormat,
+    convertCurrentTimeToSFSPFormatSecond,
     checkUTCOneDay
   }
 
