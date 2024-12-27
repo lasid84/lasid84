@@ -25,11 +25,10 @@ const excuteState = {
 
 const startInsertExchangeRateData = async () => {
     const enterTime = getKoreaTime();
-    const enterTimeHours = enterTime.getUTCHours();
-    const enterTimeMinutes = enterTime.getUTCMinutes();
 
-    if (enterTimeHours >= 8
-        && enterTimeMinutes >= 30 
+    const standardTime = getKoreaTime().setHours(8,30,0,0);
+
+    if (enterTime.getTime() >= standardTime
         && checkUTCOneDay(enterTime, ufsp.lastExcute)
     ) {
         const teams = new Teams("EXCHANGE RATE BATCH");
