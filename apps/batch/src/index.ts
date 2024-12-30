@@ -13,6 +13,8 @@ dotenv.config();
 const ufs_worker_director = arp + '/apps/batch/components/worker/ufs';
 const mailing_worker_director = arp + '/apps/batch/components/worker/mailing';
 const APPLE_EDI_810_WORKER_DIR = arp + '/apps/batch/components/worker/appleEDI';
+const EXCHANGE_RATE_WORKER_DIR = arp + '/apps/batch/components/worker/exchange-rate';
+
 let _arrThread:any = [];
 
 function init() {
@@ -119,6 +121,11 @@ async function startWorker() {
             break;
         case "BATCH_HOLIDAY":
             const workerHoliday = new Worker(arp +"/apps/batch/components/worker/holiday" + '/holiday.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
+            break;
+        case "EXCHANGE_RATE":
+            const workerExchangeRate = new Worker(EXCHANGE_RATE_WORKER_DIR + '/exchange-rate.js'
+              , { workerData: { idx: thread.idx, pgm:thread.pgm, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
+              }});
             break;
       }
       await sleep(5000);
