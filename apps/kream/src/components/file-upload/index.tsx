@@ -47,7 +47,10 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                 const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                const jsonData = XLSX.utils.sheet_to_json(worksheet,{  
+                    defval: null, // 빈 값을 null로 처리
+                    raw: false // (선택사항) 값들을 문자열로 변환
+                });
 
                 // 모든 셀의 주소 가져오기
                 const cellAddresses = Object.keys(worksheet);
@@ -60,6 +63,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
 
                 jsonData.forEach((row:any) => {
                     Object.keys(row).forEach((key) => {
+                      
                     // if (XLSX.SSF.is_date(row[key])) {
                     //     row[key] = XLSX.SSF.to_general(row[key]);
                     // }

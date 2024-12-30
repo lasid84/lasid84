@@ -1,18 +1,19 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { RefObject } from 'react';
-import { SP_GetAppleMainData, SP_GetEDIDetailData } from "./data";
+import { SP_GetDTDMainData, SP_GetEDIDetailData, SP_SaveData, SP_SaveUploadData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 import { SP_UpdateData } from "@/app/acct/acct1004/_component/data";
 
 interface StoreState {
     searchParams: Record<string, any>;
+    uiData: Record <string, any>;
     mainDatas: gridData | null;
     detailDatas : gridData ;
     uploadFile_init : false
     excel_data : {}
-    gridRef_Detail : RefObject<{
+    gridRef_Main : RefObject<{
         api: {
           getAllGridColumns: () => any[];
         };
@@ -20,7 +21,8 @@ interface StoreState {
     mainSelectedRow: Record<string, any> | null;
     popup: Record<string, any>;
     actions: {
-        getAppleDatas: (params: any) => Promise<any> | undefined;
+        setExcelDatas : (params: any) => Promise<any> | undefined;
+        getDTDDatas: (params: any) => Promise<any> | undefined;
         getAppleDetailDatas: (params: any) => Promise<any> | undefined;
         updateAppleDatas : (params:any) => Promise<any> | undefined;
         setPopup: (popup: Partial<StoreState['popup']>) => void; 
@@ -28,34 +30,51 @@ interface StoreState {
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
         setMainSelectedRow : (row:any) => void;
         setDetailData: (data: any[]) => void;
+        saveData : (data:SaveDataArgs)=> Promise<any>;
+        saveUploadData : (data:SaveDataArgs)=>void;
+        updateData : (data:SaveDataArgs) =>void;
         updateRowData: (rowIndex: number, updatedRow: any) => void;
     }
 }
 
 type Store = (set: any) => StoreState;
+type SaveDataArgs = {
+    jsondata: string; 
+    settlement_date? : string;
+  };
 const initValue: Store = (set : any) => ({
     searchParams: {
-        fr_date: dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),
-        to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-        search_gubn: 0,
-        no: '', // HWB, MWB
+        date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+        no: '', // HWB, 
         state:  'ALL',
-    },    
+    },
+    uiData : {
+        settlement_date : dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+    },
     mainDatas: { data: {}, fields:{} },
     detailDatas : {data:{}, fields:{} },
     mainSelectedRow: null,
-    excel_data :{},
+    excel_data :{ data: {}, fields:{} },
     uploadFile_init : false,
-    gridRef_Detail : null,
+    gridRef_Main : null,
     popup: {
         popType : null,
         isPopupUploadOpen : false,
         isPopupOpen : false,
     },
     actions: {
-        getAppleDatas: async (params: any) => {
-
-            const result = await SP_GetAppleMainData(params);
+        setExcelDatas: async (uploadData: any) => {
+            console.log('__________________params1111',uploadData)
+            set({excel_data: uploadData})           
+            return uploadData;
+        },
+        updateExcelDatas: async (uploadData: any) => {
+            console.log('__________________params',uploadData)
+            set({excel_data: uploadData})
+            return uploadData;
+        },
+        getDTDDatas: async (params: any) => {
+            const result = await SP_GetDTDMainData(params);
             set({ mainDatas: result });
             return result;
         },
@@ -84,6 +103,47 @@ const initValue: Store = (set : any) => ({
         }))},
         setMainSelectedRow: (row:any) =>{
             set((state:StoreState) => ({ ...state, mainSelectedRow: row }))
+        },
+        saveUploadData: async (params: any) => {
+            try {
+                const result = await SP_SaveUploadData(params); // API 호출
+                set((state: StoreState) => ({
+                    ...state,
+                    mainDatas: { ...state.mainDatas, ...params },
+                }));
+                console.log("Data saved successfully", result);
+                return result
+            } catch (error) {
+                console.error("Error saving data:", error);
+            }
+        },
+        saveData: async (params: any) :Promise<any> => { //undefined
+            try {
+                console.log("savedata params", params);
+                const result = await SP_SaveData(params); // API 호출
+                set((state: StoreState) => ({
+                    ...state,
+                    mainDatas: { ...state.mainDatas, ...params },
+                }));
+                console.log("Data saved successfully", result);
+                
+                return result
+            } catch (error) {
+                console.error("Error saving data:", error);
+                return error;
+            }            
+        },
+        updateData : async (params : any ) => {
+            try {
+                const result = await SP_SaveData(params); // API 호출
+                set((state: StoreState) => ({
+                    ...state,
+                    mainDatas: { ...state.mainDatas, ...params },
+                }));
+                console.log("Data saved successfully", result);
+            } catch (error) {
+                console.error("Error saving data:", error);
+            }
         },
         updateMainSelectedRow : (row:any)=>{
             set((state:StoreState) => ({ ...state, mainSelectedRow: row }))

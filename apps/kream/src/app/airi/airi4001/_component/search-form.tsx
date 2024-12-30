@@ -43,20 +43,9 @@ type Props = {
 const SearchForm = ({ loadItem }: any) => {
 
   const { getValues, handleSubmit, reset } = useFormContext();
-  // const { dispatch, objState } = useAppContext();
-  // const { getValues, handleSubmit, reset } = useFormContext();
-  // const { searchParams } = objState;
-  // const {
-  //   fr_date,
-  //   to_date,
-  //   search_gubn,
-  //   no,
-  //   state,
-  // } = searchParams;
   const state = Store((state) => state);
   const actions = Store((state) => state.actions);
 
-  // //Set select box data
   const [status, setStatus] = useState<any>();
 
   useEffect(() => {
@@ -65,51 +54,19 @@ const SearchForm = ({ loadItem }: any) => {
     }    
   }, [loadItem]);
 
-
-  // useEffect(() => {
-  //   const params = getValues();
-  //   dispatch({ searchParams: params, isMSearch: true });
-  // }, [])
-
-  // const onSearch = () => {
-  //   const params = getValues();
-  //   dispatch({ searchParams: params, isMSearch: true});
-  // };
-
-  // function handleKeyDown(e: KeyboardEvent) {
-  //   if (e.key === "Enter") {
-  //     onSearch();
-  //   }
-  // }
-
-  // const onReset = () => {
-  //   reset();
-  //   const params = getValues();
-  //   dispatch({ searchParams: params});
-
-  // }
-  
-  // const onChange = (e: any) => {
-  //   const value = parseInt(e.target.value, 10);
-  //   searchParams.search_gubn = value
-  // }
-
   useEffect(()=>{
     onSearch()
   },[])
 
   const onSearch = () =>{
     const params = getValues()
-    // dispatch({ searchParams: params, isMSearch: true});
     log("onSeach", params)
-    actions.getAppleDatas(params)
+    actions.getDTDDatas(params)
   }
 
   const onReset = () =>{}
 
   function handleKeyDown(e:KeyboardEvent) {}
-
-  const onChange = () => {}
 
   return (
       <div>
@@ -126,18 +83,12 @@ const SearchForm = ({ loadItem }: any) => {
           }
         >
 
-          <div className={"col-span-1 border"}>
-            <RadioGroup label="search_gubn" >
-              <Radio id ="search_gubn" name="search_gubn" value="0" label="810_receive_dd" onChange={onChange} defaultChecked/>
-              <Radio id ="search_gubn" name="search_gubn" value="1" label="858_send_dd" onChange={onChange} />              
-            </RadioGroup>
-          </div>
 
           <div className={"col-span-1"}>
             <DatePicker
-              id="fr_date"
-              label="fr_date"
-              value={state.searchParams?.fr_date}
+              id="date"
+              label="date"
+              value={state.searchParams?.date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -146,19 +97,8 @@ const SearchForm = ({ loadItem }: any) => {
               lwidth="w-20"
               height="h-8"
             />
-            <DatePicker
-              id="to_date"
-              label="to_date"
-              value={state.searchParams?.to_date}
-              options={{
-                inline: true,
-                textAlign: "center",
-                freeStyles: "border-1 border-slate-300",
-              }}
-              lwidth="w-20"
-              height="h-8"
-            />
           </div>
+
           <div className={"col-span-2"}>           
             <MaskedInputField
               id="no"
@@ -175,11 +115,10 @@ const SearchForm = ({ loadItem }: any) => {
             />
           </div>
 
-          <div className={"col-span-1"}>
-           
+          <div className={"col-span-1"}>           
             <ReactSelect
-              id="state"
-              label="state"
+              id="create_user"
+              label="create_user"
               dataSrc={status as data}
               width="w-96"
               lwidth="w-20"
