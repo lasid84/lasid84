@@ -9,6 +9,13 @@ const FETCH_API_JSON = "JSON";
 
 /**
  * @dev
+ * file_upload api constants
+ */
+const FILE_UPLOAD_URL = "/file/file-upload";
+const FILE_TYPE_MAIL = "MAIL_ATTACH"
+
+/**
+ * @dev
  * 환율 정보 메일 발송용 엑셀 파일 업로드 경로.
  */
 const EXCHANGE_FILE_PATH = "exchange-rate";
@@ -82,6 +89,9 @@ module.exports = {
     EXCHANGE_RATE_HANA_PGM,
 
     FETCH_API_JSON,
+
+    FILE_UPLOAD_URL,
+    FILE_TYPE_MAIL,
 
     EXCHANGE_FILE_PATH,
     EXCHANGE_FILE_EXTENSION,
