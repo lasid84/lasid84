@@ -41,6 +41,7 @@ import { useGetData, useUpdateData2 } from '@/components/react-query/useMyQuery'
 import { useUserSettings } from '@/states/useUserSettings';
 import { SP_GetPersonalColInfoData, SP_SetMyColumnInfo } from './_component/data';
 import { usePathname } from 'next/navigation';
+import { bgColor } from './types/constant';
 const { log } = require('@repo/kwe-lib/components/logHelper');
 const { stringToFullDateString, stringToFullDate, stringToDateString, stringToTime } = require('@repo/kwe-lib/components/dataFormatter.js')
 const { sleep } = require('@repo/kwe-lib/components/sleep');
@@ -89,6 +90,8 @@ type GridEvent = {
   onStateUpdated?: (params: StateUpdatedEvent) => void
 }
 
+export type bgColor = keyof typeof bgColor;
+
 export type GridOption = {
   checkbox?: string[];
   select?: {
@@ -131,7 +134,7 @@ export type GridOption = {
   isShowRowNo?: boolean
   rowSpan?: string[]
   isColumnHeaderVisible?: boolean
-  cellClass?: { [key: string]: string | ((params: any) => string) }; 
+  cellClass?: { [key in bgColor]: string | ((params: any) => string) }; 
 };
 
 type cols = {
@@ -413,7 +416,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       const dataType = listItem.fields.map((field) => field.format);
       if (!columns.includes(ROW_INDEX)) columns = [ROW_INDEX].concat(columns);
 
-      log("grid column setting", columns, myColInfos, personalColInfoData)
+      // log("grid column setting", columns, myColInfos, personalColInfoData)
       
       columns.map((col: string, i:number) => {
       // for (let i = 0; i < columns.length; i++) {
@@ -659,14 +662,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
                  if (typeof classOrFunction === "function") {
                  ///함수 타입인 경우, 동적으로 스타일 반환
                   const dynamicClass = classOrFunction(params);
-                  switch (dynamicClass) {
-                    case "bg-red":
-                      return { backgroundColor: "#ffcccc", color: "#900" };
-                    case "bg-green":
-                      return { backgroundColor: "#ccffcc", color: "#090" };
-                    // default:
-                    //   return null;
-                  }
+                  return bgColor[dynamicClass] || null;
                 }
                 //return null; // 기본값
               },

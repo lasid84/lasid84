@@ -47,7 +47,7 @@ const SearchForm = ({ loadItem }: any) => {
   const state = useCommonStore((state) => state);
   const searchParams = useCommonStore((state) => state.searchParams);
   
-  const { setState, resetSearchParam, getAppleDatas } = useCommonStore((state) => state.actions);
+  const { setState, resetSearchParam, getAppleDatas, getLoad } = useCommonStore((state) => state.actions);
 
   useEffect(() => {
     onSearch();
@@ -66,6 +66,7 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onReset = () => {
     resetSearchParam();
+    getLoad();
     setState({mainDatas:{...state.mainDatas, data:[]}})
   }
   
@@ -111,6 +112,11 @@ const SearchForm = ({ loadItem }: any) => {
               value={searchParams?.no}
               options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
+              events={{
+                onKeyDown(e) {
+                    if (e.key === "Enter" ) onSearch();
+                },
+              }}
             />
           </div>
         </PageSearchButton>

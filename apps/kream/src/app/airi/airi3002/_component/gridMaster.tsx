@@ -6,7 +6,7 @@ import {
 } from "components/provider/contextObjectProvider";
 import { PageMGrid3, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from "components/button";
-import Grid, { ROW_HIGHLIGHTED,ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
+import Grid, { ROW_HIGHLIGHTED,ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import Switch from "components/switch/index"
 import { useCommonStore } from "../_store/store";
@@ -30,14 +30,19 @@ const MasterGrid: React.FC<Props> = memo(() => {
   const actions = useCommonStore((state) => state.actions);
   const { getValues } = useFormContext();
 
-  // const { Create } = useUpdateData2(SP_InsertData, SEARCH_M);
-  // const { Update } = useUpdateData2(SP_UpdateData, SEARCH_M);
-
+  const [ isUniPassCircle, setUniPassCircle] = useState<boolean>(false)
   const arrTransportType = loadDatas ? loadDatas[3].data?.map((row: any) => row['type_nm']) : [];
+
+  const cellStyles = (params:any) => {
+    let transport_type = params.data.transport_type;
+    let color = transport_type === "FG" ? "bg-lightskyblue" :
+                transport_type === "AC" ? "bg-steelblue" : "bg-beige";
+    return color;
+  }
   
   const gridOptions: GridOption = {
     gridHeight: "h-full",
-    checkbox: ["chk"],
+    checkbox: ["chk", "use_yn"],
     pinned : {
       // waybill_no : "left",
       // create_date : "right",
@@ -51,57 +56,19 @@ const MasterGrid: React.FC<Props> = memo(() => {
       chargeable_weight: { isAllowDecimal: true, decimalLimit:1},
     }, 
     total: { transport_type_nm:"count", num_pieces:"sum" , gross_weight:"sum", chargeable_weight:"sum" },
-    select: { transport_type_nm: arrTransportType },
+    // select: { transport_type_nm: arrTransportType },
     isShowRowNo:false,
     isAutoFitColData: true,
     isMultiSelect: false,
     // isEditableAll:true,
-    editable: ["transport_type_nm", "delivery_request_dd", "reason"],
+    editable: ["transport_type_nm", "delivery_request_dd", "reason", "use_yn"],
     rowSpan: ["origin"],
     cellClass: {
-      send: (params) => {
-        return params.value != 'N' ? "bg-green" : "bg-red";
-      },
+      transport_type_nm: cellStyles,
+      waybill_no: cellStyles,
+      mwb_no: cellStyles,
     },
   };
-
-  /*
-    handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
-  */
-  // const handleRowClicked = useCallback((param: RowClickedEvent) => {
-  //   var selectedRow = {"colId": param.node.id, ...param.node.data}
-  //   dispatch({mSelectedRow:selectedRow});
-  // }, []);
-
-  // const handleRowDoubleClicked = (param: RowClickedEvent) => {
-  //   var selectedRow = { colId: param.node.id, ...param.node.data };
-  //   log("handleRowDoubleClicked", selectedRow);
-  //   dispatch({
-  //     mSelectedRow: selectedRow,
-  //     popUp : { ...popUp, crudType: crudType.UPDATE, isPopUpOpen: true }, //추가
-  //     isDSearch : true,
-  //     isPopUpOpen: true,
-  //     crudType: crudType.UPDATE,
-  //   });
-  // };
-
-  // const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
-  //   const selectedRow = param.api.getSelectedRows()[0];
-  //   dispatch({ mSelectedRow: selectedRow });
-  // }, []);
-
-
-
-  // useEffect(() => {
-  //   if (isMSearch) {
-  //     mainRefetch();
-  //     dispatch({ isMSearch: false });
-  //   }
-  // }, [isMSearch]);
-
-  // useEffect(() => {
-  //   setGridData(mainData as gridData);
-  // }, [mainData]);
 
   const onSave = async () => {
     
@@ -135,8 +102,26 @@ const MasterGrid: React.FC<Props> = memo(() => {
       }
   };
 
-  const onDelete = () => {
+  const onGetUniPass = async () => {
 
+    setUniPassCircle(true);
+    let waybills = [];
+    const api = gridRef.current.api;
+    for (const node of api.getRenderedNodes()) {
+      var data = node.data;
+      waybills.push(data.waybill_no)
+    }
+
+    if (!waybills.length) return;
+
+    const params = {
+      blyy: getValues()["fr_date"].substring(0,4),
+      blno: waybills.join(' '),
+    }
+    await actions.getUnipassData(params);
+    await actions.getAppleDatas(getValues());
+
+    setUniPassCircle(false);
   }
 
   const onExcelUpload= () => {
@@ -148,14 +133,13 @@ const MasterGrid: React.FC<Props> = memo(() => {
       <PageMGrid3
         title={<>
                 <Button id={"upload_excel"} onClick = {onExcelUpload} disabled={false}  label='upload_excel' width='w-34' />
-                 {/* <Button id={"extract_hscode"}  onClick="" width="w-34" toolTip="ShortCut: Ctrl+S"/> */}
+                <Button id={"btn_unipass"} label="unipass"  onClick={onGetUniPass} width="w-34" isCircle={isUniPassCircle} />
               </>
               }
         right={
             <>
               {/* <Switch/> */}
               <Button id={"save"} onClick={onSave} width='w-34' />
-              <Button id={"delete"} onClick={onDelete} width='w-34' />
             </>}
       >
         <Grid
@@ -164,9 +148,6 @@ const MasterGrid: React.FC<Props> = memo(() => {
           listItem={maindDatas}
           options={gridOptions}
           event={{
-            // onRowDoubleClicked: handleRowDoubleClicked,
-            // onRowClicked: handleRowClicked,
-            // onSelectionChanged: handleSelectionChanged,
           }}
         />
       </PageMGrid3>

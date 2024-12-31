@@ -229,6 +229,7 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       icon = <IoSend  size={size} />
       break;
     case "extract_hscode":
+    case "unipass":
       icon = <FaSignOutAlt size={size}/>
       break;
 

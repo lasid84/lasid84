@@ -73,14 +73,17 @@ const Modal: React.FC<Props> = () => {
 
   const handleFileDrop = (data: any[], header: any[], file:any) => {
 
-    const headerRow = ((state.loadDatas ?? [])[2].data as [])
-                        .filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["header"] || 1; 
+    const fileOptions = ((state.loadDatas ?? [])[2].data as []);
+    const headerRow = fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["header"] || 1; 
+
 
     const columnNames = data[headerRow - 1] as string[]; // 헤더 행 추출
+    const existsBL = new Set(((state.loadDatas ?? [])[4].data as []).map(item => Object.values(item)[0]));
+    const existsBLKey = fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["bl_col"] || null;
 
     // 헤더 이후의 데이터 추출
     data = data.slice(headerRow).map((row) => {
-        const rowArray = row as any[]; // row를 배열로 캐스팅
+        const rowArray = row as any[];
         const rowObject: Record<string, any> = {};
         columnNames.forEach((col: string, index: number) => rowObject[col] = rowArray[index]);
         
@@ -98,7 +101,14 @@ const Modal: React.FC<Props> = () => {
       }, {});
       
       data = data.filter((row) => {
+
+        if (existsBLKey && row[existsBLKey]) {
+          const cleanedValue = row[existsBLKey].replace(/[\t\n\r ]/g, "");
+          if (existsBL.has(cleanedValue)) return false; 
+        }        
+
         return Object.entries(groupedFilter).every(([key, values]) => {
+          
           if (values.length > 1) {
             // 같은 키에 여러 값이 있으면 OR 조건
             return values.includes(row[key]);
@@ -109,8 +119,25 @@ const Modal: React.FC<Props> = () => {
         });
       });
     }
-    console.log(data[10]);
-    actions.insExcelData({jsonData: JSON.stringify(data), file: file});
+
+    actions.insExcelData({jsonData: JSON.stringify(data), file: file})
+            .then(async (response : {[key:string]:any}[] | undefined ) => {
+              if (response) {
+                const blForInipass = response[0].data.reduce((acc: string, row: { [key: string]: string; }) => acc + ' ' + row["blforunipass"], '');
+                // log("blForInipass", blForInipass);
+                if (blForInipass) {
+                  const params = {
+                    blyy:response[0].data[0]["blyy"],
+                    blno:blForInipass,
+                  }
+                  await actions.getUnipassData(params);
+                  await actions.getAppleDatas(getValues());
+                  await actions.getLoad();
+                  closeModal();
+                }
+              }
+            });
+
   };
 
   return (
@@ -120,14 +147,14 @@ const Modal: React.FC<Props> = () => {
       title={t("upload_excel")}
       bottomRight={
         <>
-          <Button id={"save"} onClick={onSave} width="w-32" />
+          {/* <Button id={"save"} onClick={onSave} width="w-32" /> */}
           <Button id={"cancel"} onClick={closeModal} width="w-32" />
         </>
       }
     >
       <form>
         <div className="w-full gap-4 md:gap-8">
-          <div className="flex w-[70vw] h-[70vh] p-1 border rounded-lg  mx-auto">
+          {/* <div className="flex w-[70vw] h-[70vh] p-1 border rounded-lg  mx-auto"> */}
             <div className="w-full p-4">
               <FileUpload
                 onFileDrop={handleFileDrop}
@@ -142,7 +169,7 @@ const Modal: React.FC<Props> = () => {
                   }}
                 /> */}
             </div>
-          </div>
+          {/* </div> */}
         </div>
       </form>
     </DialogBasic>
