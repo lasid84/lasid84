@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 
-import requestIp from "request-ip";
-
 import { checkAccount } from "@repo/kwe-lib/components/ldapHelper";
 import { dataContainer } from "@repo/kwe-lib/components/dataContainer";
 import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
@@ -20,7 +18,6 @@ export const login = async (req: Request & { user_nm?: string }, res: Response) 
     //패스워드 암호처리, 복구 필요
     // log("========",req);
     const { user_id, password } = req.body;
-    const ipaddr = requestIp.getClientIp(req);
 
     if (user_id === "") {
       return res.json({ success: false, message: "Input ID", token: "", userData: "" });
@@ -39,7 +36,6 @@ export const login = async (req: Request & { user_nm?: string }, res: Response) 
         dc = await callFunction(params.inproc, params.inparam, params.invalue);
         if (dc.getNumericData() === 0) {
           req.user_nm = userObject;
-          dc.getCursorData()[0].data[0].ipaddr = ipaddr + "W";
           // 인증 성공시 처리
           res.json({
             success: true,
