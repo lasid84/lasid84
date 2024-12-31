@@ -26,10 +26,11 @@ const excuteState = {
 const startInsertExchangeRateData = async () => {
     const enterTime = getKoreaTime();
 
-    const standardTime = getKoreaTime().setHours(8,30,0,0);
+    const standardUTCTime = getKoreaTime().setHours(8,30,0,0);
+    const standardKSTTime = new Date(standardUTCTime + (9 * 60 * 60 * 1000));
 
-    if (enterTime.getTime() >= standardTime
-        && checkUTCOneDay(enterTime, ufsp.lastExcute)
+    if (enterTime > standardKSTTime
+        && checkUTCOneDay(standardKSTTime, ufsp.lastExcute)
     ) {
         const teams = new Teams("EXCHANGE RATE BATCH");
 
@@ -260,6 +261,7 @@ const startInsertExchangeRateData = async () => {
              * @dev
              * 일일 중복 DB 등록 시 완료 처리 해야함.
              */
+            ufsp.lastExcute = getKoreaTime();
             teams.sendMessage(process8, "일일 환율 등록 중복", false);
             return;
         } else {
@@ -389,11 +391,13 @@ const startInsertExchangeRateData = async () => {
          */
         const process12 = "환율 데이터 파일 업로드 및 메일 발송";
 
-        const uploadFileDirectory = path.join(process.env.DIRECTORY_MAIL_ATTACH, constant.EXCHANGE_FILE_PATH);
-        const uploadFilePath = path.join(uploadFileDirectory, todayDateArray[0].concat(constant.EXCHANGE_FILE_EXTENSION));
+        const fileUploadResult = await external.uploadFile(constant.EXCHANGE_FILE_PATH, todayDateArray[1].concat(constant.EXCHANGE_FILE_EXTENSION), resultBuffer, constant.FILE_TYPE_MAIL)
+            .catch(ex => {
+                teams.sendMessage(process12, ex, false);
+                return;
+            });
 
-        const fileUploadResult = common.checkDirectory(uploadFileDirectory, uploadFilePath, resultBuffer);
-        if (fileUploadResult === "") {
+        if (!fileUploadResult) {
             // TEAMS
             teams.sendMessage(process12, "파일 업로드에 실패하였습니다.", false);
             return;
@@ -406,7 +410,7 @@ const startInsertExchangeRateData = async () => {
             attachment: fileUploadResult
         };
 
-        const sendMailResult = await repository.sendExchangeRateResultMail(mailOption)
+        await repository.sendExchangeRateResultMail(mailOption)
             .catch(ex => {
                 // TEAMS
                 teams.sendMessage(process12, ex, false);
