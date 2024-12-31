@@ -1,5 +1,5 @@
 const { getScriptAPI } = require("./repository");
-const { EXCHANGE_RATE_SHINHAN_PGM, EXCHANGE_RATE_HANA_PGM, FETCH_API_JSON } = require("../types/constant");
+const { EXCHANGE_RATE_SHINHAN_PGM, EXCHANGE_RATE_HANA_PGM, FETCH_API_JSON, FILE_UPLOAD_URL } = require("../types/constant");
 
 /**
  * @Function
@@ -37,14 +37,50 @@ const getHanaExchangeRate = async (todayDateString, todayDate) => {
 
 /**
  * @Function
- * Summary : API Fetch 함수.
+ * Summary : 첨부파일 file registry upload 함수.
+ */
+const uploadFile = async (folderName, fileName, fileData, fileType) => {
+    try {
+        const url = process.env.API_URL + FILE_UPLOAD_URL;
+
+        const request = {
+            addFolderName : folderName,
+            files : [
+                {
+                    fileName: fileName,
+                    fileData: fileData,
+                    fileRootDIR: fileType
+                }
+            ]
+        };
+
+        const option = {
+            method: "POST",
+            body: JSON.stringify(request),
+            headers: {
+                'Authorization': `Bearer `,
+                'Content-Type': 'application/json'
+            }
+        };
+        
+        let response = await internalFetchAPI(url, option);
+
+        return response[0];
+    } catch (ex) {
+        throw ex;
+    }
+}
+
+/**
+ * @Function
+ * Summary : 외부 API Fetch 함수.
  */
 const fetchAPI = async (apiInfo, request, type) => {
     try {
         let response;
 
         if (request) {
-            response = await fetch(apiInfo.url, { method: apiInfo.method, body: JSON.stringify(request) } );
+            response = await fetch(apiInfo.url, { method: apiInfo.method, body: JSON.stringify(request) });
         } else {
             response = await fetch(apiInfo.url, { method: apiInfo.method } );
         }
@@ -56,6 +92,20 @@ const fetchAPI = async (apiInfo, request, type) => {
         }
 
         return returnValue;
+    } catch (ex) {
+        throw ex;
+    }
+}
+
+/**
+ * @Function
+ * Summary : 내부 API Fetch 함수.
+ */
+const internalFetchAPI = async (url, option) => {
+    try {
+        let response = await fetch(url, option);
+
+        return await response.json();
     } catch (ex) {
         throw ex;
     }
@@ -79,5 +129,6 @@ const addJSONData = (data, value) => {
 
 module.exports = {
     getShinhanExchangeRate,
-    getHanaExchangeRate
+    getHanaExchangeRate,
+    uploadFile
 } 

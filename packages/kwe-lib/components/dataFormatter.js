@@ -173,13 +173,19 @@ const checkUTCOneDay = (standardDate, targetDate) => {
     if (!targetDate) {
         return true;
     }
-    const stdYear = standardDate.getFullYear();
-    const stdMonth = standardDate.getMonth();
-    const stdDay = standardDate.getDate();
+    /**
+     * @dev
+     * getKoreaTime()에서 9시간을 미리 당겼기 때문에
+     * 로컬 시간 기준(9시간+)으로 조회하는 getFullYear가 아닌
+     * getUTCFullYear 사용.
+     */
+    const stdYear = standardDate.getUTCFullYear();
+    const stdMonth = standardDate.getUTCMonth();
+    const stdDay = standardDate.getUTCDate();
 
-    const tgtYear = targetDate.getFullYear();
-    const tgtMonth = targetDate.getMonth();
-    const tgtDay = targetDate.getDate();
+    const tgtYear = targetDate.getUTCFullYear();
+    const tgtMonth = targetDate.getUTCMonth();
+    const tgtDay = targetDate.getUTCDate();
 
     const oneDay = new Date(tgtYear, tgtMonth, tgtDay + 1);
 
