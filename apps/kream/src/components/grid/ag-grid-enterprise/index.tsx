@@ -683,18 +683,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 "show-cell": "value !== undefined",
               },
               cellDataType: false
-              // cellClassRules: {
-              //   'cell-span': "value !== ''"
-              // },
-              // cellRenderer: (params: any) => {
-              //   if (params.node.rowSpan === 1) {
-              //     return params.value;
-              //   }
-              //   if (params.node.rowIndex > 0 && params.value === params.data.field1 && gridRef.current.api.getRowNode(params.node.rowIndex - 1).data[col] === params.value) {
-              //     return '';
-              //   }
-              //   return params.value;
-              // }
             };
           }          
         }
@@ -1068,7 +1056,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       }
     }
     return (
-        <div>
+      <div style={{ position: 'relative', zIndex: 'auto' }}>
             <div className="show-name">{params.value}</div>
             {/* <div className="presenter-name">{params.value.presenter}</div> */}
         </div>
