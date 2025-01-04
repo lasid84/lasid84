@@ -50,6 +50,13 @@ export const colors = {
     pastelGray: "#D3D3D3",
     transparent: "rgba(0, 0, 0, 0)", // 완전히 투명
     semiTransparent: "rgba(255, 255, 255, 0.5)", // 반투명
+    lightivory: "#FFFFCC",
+    lightpink: "#F2DCDB",
+    lightcyan: "#DAEEF3",
+    lightbeige: "#DDD9C4",
+    lightlavender: "#E4DFEC",
+    lightgreenbright: "#F5F8EC",
+    lightorange: "#FDE9D9"
   };
   
 
@@ -76,6 +83,12 @@ export const bgColor : Record<string, { backgroundColor: string; color: string }
     "bg-pastelCream": { backgroundColor: colors.pastelCream, color: colors.pastelGray },  
     "bg-transparent": { backgroundColor: colors.transparent, color: colors.pastelGray },
     "bg-semiTransparent": { backgroundColor: colors.semiTransparent, color: colors.pastelGray },
-  
+    "bg-lightivory": { backgroundColor: colors.lightivory, color: colors.black },
+    "bg-lightpink": { backgroundColor: colors.lightpink, color: colors.black },
+    "bg-lightcyan": { backgroundColor: colors.lightcyan, color: colors.black },
+    "bg-lightbeige": { backgroundColor: colors.lightbeige, color: colors.black },
+    "bg-lightlavender": { backgroundColor: colors.lightlavender, color: colors.black },
+    "bg-lightgreenbright": { backgroundColor: colors.lightgreenbright, color: colors.black },
+    "bg-lightorange": { backgroundColor: colors.lightorange, color: colors.blue }
   };
   
