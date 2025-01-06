@@ -159,10 +159,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
               />
             </div>
             <div className="w-full p-4">
-              <FileUpload
-                onFileDrop={handleFileDrop}
-                isInit={state.uploadFile_init}
-              />
+
               <ExcelUploadGrid
                 params={{
                   waybill_no: mainSelectedRow?.waybill_no,

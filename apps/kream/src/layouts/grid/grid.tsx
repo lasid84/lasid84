@@ -162,11 +162,7 @@ export const PageMGrid4: React.FC<PageSearchProps> = ({
   return (
     <>
       <div className={`flex-col w-full h-full`}>
-        <div className={`w-full h-full`}>
-          <div className={`flex-row h-10 flex w-full rounded-[5px] justify-between ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1`}>
-            <div className="flex gap-2 justify-self-start">{title}</div>
-            <div className="flex content-end gap-2 justify-self-end">{right}</div>
-          </div>
+        <div className={`w-full h-full`}> 
            {/* 부모 flex container 추가 */}
           <div className="flex w-full h-[calc(100vh-250px)] max-h-[calc(100vh-250px)] gap-2">
             {/* 좌측 children */}
@@ -175,6 +171,9 @@ export const PageMGrid4: React.FC<PageSearchProps> = ({
             </div>
             {/* 우측 rightchildren */}
             <div className="flex-row w-1/5 h-full P-2">
+            <div className="flex content-end gap-2 justify-self-end">
+              {right}
+              </div>
               {rightchildren}
             </div>
           </div>
