@@ -1,6 +1,6 @@
 const Decimal = require("decimal.js");
 
-const { stringToShortMonthDate } = require("@repo/kwe-lib/components/dataFormatter");
+const { stringToShortMonthDate, DateToFullString } = require("@repo/kwe-lib/components/dataFormatter");
 
 const addOneDay = (yyyymmdd) => {
     const year = parseInt(yyyymmdd.slice(0, 4), 10);
@@ -68,6 +68,45 @@ const setUSFPRow = (rateData, rate) => {
     row[18] = "ALL";
 
     return row;
+};
+
+const setUFSPOriginRow = (data) => {
+    const resultData = JSON.parse(JSON.stringify(data));
+
+    resultData[2] = convertInsertToUpdateTimeFormat(data[2]);
+    resultData[3] = convertInsertToUpdateTimeFormat(data[3]);
+    resultData[5] = convertInsertToUpdateTimeFormat(data[5]);
+    resultData[12] = convertInsertToUpdateTimeFormat(data[12]);
+    return resultData;
+}
+
+const setUFSPUpdateRow = (rateData, data, index) => {
+    const resultData = JSON.parse(JSON.stringify(data));
+
+    const frddMonthDay = rateData.fr_dd.slice(4,8);
+    const revertDay = index + frddMonthDay;
+    resultData[2] = stringToShortMonthDate(revertDay);
+    resultData[3] = stringToShortMonthDate(revertDay);
+    resultData[5] = convertInsertToUpdateTimeFormat(DateToFullString(new Date(), "/"));
+    resultData[12] = convertInsertToUpdateTimeFormat(DateToFullString(new Date(), "/"));
+
+    return resultData;
+}
+
+const convertInsertToUpdateTimeFormat = (insertDate) => {
+    const [date, time] = insertDate.split(" ");
+
+    const dateObject = new Date(date);
+
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+    }).format(dateObject);
+
+    const [month, day, year] = formattedDate.replace(",", "").split(" ");
+
+    return `${day}-${month}-${year} ${time}`;
 }
 
 module.exports = {
@@ -75,5 +114,7 @@ module.exports = {
     subOneDay,
     checkLastHoliday,
     divideStringValue,
-    setUSFPRow
+    setUSFPRow,
+    setUFSPOriginRow,
+    setUFSPUpdateRow
 }
