@@ -11,6 +11,7 @@ interface ConfigState {
     rightSidebar: boolean;
     background: string;
     lang: string;
+    gridInfo_Refresh: boolean
 }
   
 // Define the initial state using that type
@@ -23,6 +24,7 @@ const initialState: ConfigState = {
     rightSidebar: false,
     background: "light",
     lang: "KOR",
+    gridInfo_Refresh: false
 };
 
 type ConfigsStore = {

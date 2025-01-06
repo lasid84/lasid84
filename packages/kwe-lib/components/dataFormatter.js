@@ -34,6 +34,19 @@ function DateToString(source = new Date(), delimiter = '') {
     };
 };
 
+function DateToFullString(source = new Date(), delimiter = '') {
+    if (source) {
+        const year = source.getFullYear();
+        const month = (source.getMonth() + 1).toString().padStart(2,0);
+        const day = (source.getDate()).toString().padStart(2,0);
+        const hours = source.getHours().toString().padStart(2, '0');
+        const minutes = source.getMinutes().toString().padStart(2, '0');
+        const seconds = source.getSeconds().toString().padStart(2, '0');
+
+        return [year, month, day].join(delimiter) + ' ' + [hours, minutes, seconds].join(':');
+    };
+};
+
 function stringToFullDateString(source, delimiter = '-') {
     if (source) {
         source = source.replace(/[-\/]/g, '');
@@ -131,16 +144,76 @@ const addDaysToDate  = (dateString, days) => {
 
     return `${newYear}${newMonth}${newDay}`;
 };
+
+function stringToShortMonthDate(yyyymmdd) {
+    const year = parseInt(yyyymmdd.slice(0, 4), 10);
+    const month = parseInt(yyyymmdd.slice(4, 6), 10) - 1;
+    const day = parseInt(yyyymmdd.slice(6, 8), 10);
   
+    const date = new Date(year, month, day);
+  
+    const monthShort = date.toLocaleString("en-US", { month: "short" });
+  
+    return `${day.toString().padStart(2, "0")}-${monthShort}-${year} 00:00:00`;
+}
+
+const convertCurrentTimeToUFSPFormat = () => {
+    const date = new Date();
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const monthShort = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+  
+    return `${day}-${monthShort}-${year} ${hours}:${minutes}`;
+};
+
+const checkUTCOneDay = (standardDate, targetDate) => {
+    if (!targetDate) {
+        return true;
+    }
+    /**
+     * @dev
+     * getKoreaTime()에서 9시간을 미리 당겼기 때문에
+     * 로컬 시간 기준(9시간+)으로 조회하는 getFullYear가 아닌
+     * getUTCFullYear 사용.
+     */
+    const stdYear = standardDate.getUTCFullYear();
+    const stdMonth = standardDate.getUTCMonth();
+    const stdDay = standardDate.getUTCDate();
+
+    const tgtYear = targetDate.getUTCFullYear();
+    const tgtMonth = targetDate.getUTCMonth();
+    const tgtDay = targetDate.getUTCDate();
+
+    const oneDay = new Date(tgtYear, tgtMonth, tgtDay + 1);
+
+    return (
+        oneDay.getFullYear() === stdYear
+        &&
+        oneDay.getMonth() === stdMonth
+        &&
+        oneDay.getDate() === stdDay
+    )
+}
 
 module.exports = {
     textToDate,
     stringToDateString,
     DateToString,
+    DateToFullString,
     stringToFullDateString,
     stringToFullDate,
     stringToDate,
     getKoreaTime,
     stringToTime,
-    addDaysToDate 
+    addDaysToDate,
+    stringToShortMonthDate,
+    convertCurrentTimeToUFSPFormat,
+    checkUTCOneDay
   }
+
+
+
+//   getKoreaTime('2024-10-10');

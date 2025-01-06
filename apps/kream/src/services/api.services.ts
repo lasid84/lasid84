@@ -89,14 +89,15 @@ export async function executFunction(params:exeFuncParams) {
         }
 
         const returnData:returnData = await dataCall(client, inproc,inparam, invalue, config);
-        const { cursorData, numericData, textData } = returnData;
-
         // log("====================================returnData : ", inproc, returnData);
+        const { cursorData = [], numericData, textData } = returnData;
+
+        
 
         if (numericData !== 0) {
             toastWaring((numericData + " : " + textData))
             // log("==",numericData + " : " + textData);
-            throw new Error(numericData + " : " + textData);
+            // throw new Error(numericData + " : " + textData);
             return null;
         }
         if (isShowComplete) {
@@ -104,9 +105,10 @@ export async function executFunction(params:exeFuncParams) {
         }
         return cursorData;
     } catch (err) {
+        log("executFunction", err);
         const typedErr = err as Error
         throw new Error(typedErr.message);
-        log("executFunction", typedErr.message);
+        
     } finally {
         //useUserSettings.getState().actions.setData({ loading: "OFF" });
     }

@@ -9,6 +9,8 @@ dotenv.config();
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
+const ipv4 = "0.0.0.0";
+
 const app: express.Express = express();
 
 /**
@@ -46,8 +48,8 @@ setupRoutes(app);
  * TODO
  * Port env 설정으로 이관 예정
  */
-const port = process.env.PORT;
+const port = Number(process.env.PORT);
 
-app.listen(port, () => {
+app.listen(port, ipv4, () => {
   log("server start port : ", port);
 });

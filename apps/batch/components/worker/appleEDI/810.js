@@ -5,7 +5,7 @@ const { executFunction } = require('../../api.service/api.service.js');
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 const FtpClient = require('../../ftp/ftpClient');
 
-const interval = 1 * 60 * 1000;
+let interval = 5 * 60 * 1000;
 let onExcute = false;
 let ftpPath = {};
 const pgm = workerData.pgm;
@@ -26,6 +26,8 @@ async function setConfig() {
             user: ftpinfo.id,
             password: ftpinfo.pw,
         }
+
+        if (ftpinfo.interval) interval = ftpinfo.interval;
         
         ftpPath = {
             targetPath: ftpinfo.target_path, // /810FF_KREAM/

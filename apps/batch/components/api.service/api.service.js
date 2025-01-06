@@ -88,5 +88,22 @@ async function insertDBAlertLog(procName, msg, remark) {
     }
 }
 
+async function orderAPIExecution(type, params) {
+    await initService();
+    try {
+        token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
+    } catch(ex) {
+        return ex;
+    }
 
-module.exports = { executFunction, sendEmail, insertDBAlertLog}
+    var config = {
+        type: type,
+        token: token,
+        baseURL: url
+    };
+    const client = await initAPIService(config);
+    
+    return await apiCallPost(client, params);
+}
+
+module.exports = { executFunction, sendEmail, insertDBAlertLog, orderAPIExecution }
