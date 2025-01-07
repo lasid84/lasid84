@@ -1,6 +1,6 @@
 import React, {  useState, } from 'react';
 import { FaSearch, FaSpinner } from "react-icons/fa";
-import { TiPlus } from "react-icons/ti";
+import { TiMinus, TiPlus } from "react-icons/ti";
 import { RiSaveLine, RiSaveFill, RiSave2Fill } from "react-icons/ri";
 import { MdOutlineAlarm } from "react-icons/md";
 import { useTranslation } from "react-i18next";
@@ -135,6 +135,8 @@ const getColor = (label: string, color: string = "") => {
         break;
       case "cancel":
       case "reset":
+      case "plus":
+      case "minus":
         c = "gray";
         break;
       case "refresh":
@@ -144,6 +146,7 @@ const getColor = (label: string, color: string = "") => {
         c = "green-outline";
         break;
       case "extract_hscode":
+      case "unipass":
         c = "deep-green-outline";
         break;
       default:
@@ -232,7 +235,12 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
     case "unipass":
       icon = <FaSignOutAlt size={size}/>
       break;
-
+    case "plus":
+      icon = <TiPlus size={size} />;
+      break;
+    case "minus":
+      icon = <TiMinus size={size} />;
+      break;
     case "descartes":
       const descartesIcon = () => {
         return (

@@ -1,5 +1,5 @@
 
-import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, useState, KeyboardEvent, useRef, forwardRef, useImperativeHandle, Ref, RefCallback } from 'react';
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
@@ -56,14 +56,14 @@ type Props = {
   }
 };
 
-export const MaskedInputField: React.FC<Props> = (props: Props) => {
-  // const MaskedInputField = forwardRef<HTMLInputElement, Props>((props, ref) => {
+// export const MaskedInputField: React.FC<Props> = (props: Props) => {
+export const MaskedInputField = forwardRef((props:Props, focusRef) => {
   const { control, setValue, setFocus, getValues } = useFormContext();
   const { t } = useTranslation();
   // if (!control) return null;
   const localRef = useRef<HTMLInputElement | null>(null);
 
-  const { id, label, value = '', width, lwidth, height, options = {}, events, isFocus=false, isDisplay=true,  } = props;
+  const { id, label, value = '', width, lwidth, height, options = {}, events, isFocus=false, isDisplay=true } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
     freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
@@ -203,14 +203,15 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
           render={({ field }) => (
             <MaskedInput
               {...field}
-              id={id}
+              id={id} 
+              ref={mergeRefs(field.ref, focusRef)}
               type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}
               className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
                 focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-100 
                 dark:bg-gray-900 dark:text-white dark:border-gray-700
-                ${freeStyles}
                 text-${textAlign}
+                ${freeStyles}
                 `)}
               mask={type === 'password' ? false : mask!}
               {...(isNotManageSetValue ? { value: selectedVal } : {})}
@@ -229,15 +230,16 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
               onFocus={(e: any) => { handleFocus(e); }}
               onClick={(e: any) => { handleClick(e); }}
               autoComplete={isAutoComplete}
-              render={(textMaskRef, props) => (
-                <input
-                  {...props}
-                  ref={(node:HTMLInputElement) => {
-                    textMaskRef(node); // Keep this so the component can still function
-                    localRef.current = node as HTMLInputElement; // Copy the ref for yourself
-                  }}
-                />
-              )}
+              // render={(textMaskRef, props) => (
+              //   <input
+              //     {...props}
+              //     ref={(node:HTMLInputElement) => {
+              //       textMaskRef(node); // Keep this so the component can still function
+              //       localRef.current = node as HTMLInputElement; // Copy the ref for yourself
+              //       // parentRef.current = node as HTMLInputElement; // Copy the ref for parent
+              //     }}
+              //   />
+              // )}
             />
           )}
         />
@@ -245,7 +247,7 @@ export const MaskedInputField: React.FC<Props> = (props: Props) => {
       </div>
     </InputWrapper>
   );
-};
+});
 
 
 
@@ -391,3 +393,15 @@ function getMask(type: string = "", options: any = {}): Partial<MaskedInputProps
   }
 }
 
+export function mergeRefs<T>(...refs: Array<Ref<T> | undefined>): RefCallback<T> {
+  return (value: T) => {
+    refs.forEach(ref => {
+      if (typeof ref === 'function') {
+        ref(value);
+      } else if (ref != null) {
+        // @ts-ignore
+        ref.current = value;
+      }
+    });
+  };
+}

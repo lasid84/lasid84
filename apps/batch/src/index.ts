@@ -128,7 +128,7 @@ async function startWorker() {
               }});
             break;
       }
-      await sleep(5000);
+      await sleep(2000);
       i++;
     }
   } catch (ex) {

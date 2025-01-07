@@ -11,6 +11,7 @@ import { IoCalendarNumberOutline } from "react-icons/io5";
 import MaskedInput, { Mask, MaskedInputProps, conformToMask} from 'react-text-mask';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe'
 import './index.css';
+import { Button } from '@/components/button';
 
 
 const { stringToDate, stringToDateString, DateToString } = require('@repo/kwe-lib/components/dataFormatter');
@@ -41,6 +42,7 @@ type Props = {
     rules?: Record<string, any>;
     noLabel?:boolean;
     isDisplay? : boolean;     //사용자 권한에 따른 display 여부
+    isShowButton?: boolean;   //날짜조정 버튼
   };
 
   events?: {
@@ -60,7 +62,8 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
     const { dateFormat = 'yyyy-MM-dd', myPlaceholder, inline = false, noLabel = false,
             isReadOnly = false,
             textAlign = "left", bgColor, fontSize = "13px", fontWeight = "normal",
-            freeStyles = '', radius = 'none', isDisplay=true
+            freeStyles = '', radius = 'none', isDisplay=true,
+            isShowButton = false
     } = options;
     let { rules } = options;
 
@@ -76,16 +79,16 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
 
     }
 
-    useEffect(() => {
-        if (selectedVal || selectedVal === null) {
-            setValue(id, DateToString(selectedVal));
-        }
-    }, [selectedVal]);
+    // useEffect(() => {
+    //     if (selectedVal || selectedVal === null) {
+    //         setValue(id, DateToString(selectedVal));
+    //     }
+    // }, [selectedVal]);
 
     useEffect(() => {
         if (value || value === null) {
             var date = stringToDate(value);
-            //log('value rendering,,,,', date, DateToString(date))
+            // log('value rendering,,,,', date, DateToString(date))
             setSelectedVal(date);
             setValue(id, DateToString(date));
         }
@@ -162,10 +165,22 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
         //log("Calendar opened");
     };
 
+    const handleDayChange = (days: number) => {
+        if (selectedVal) {
+          const newDate = new Date(selectedVal);
+          newDate.setDate(newDate.getDate() + days);
+          setSelectedVal(newDate);
+          if (events?.onChange) {
+            events.onChange(undefined, id, newDate);
+          }
+        }
+      };
+
     return (
         <InputWrapper outerClassName="" inline={inline}>
             {!noLabel && <Label id={id} name={label} lwidth={lwidth} isDisplay={isDisplay}/>}
             {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
+            <div className="flex items-center gap-1">
                 <Controller
                     control={control}
                     name={id}
@@ -216,7 +231,23 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
                             </ReactDatePicker>
                     )}
                 />
-            {/* </div> */}
+                {isShowButton &&
+                <>
+                    <Button
+                        id='btnLeft'
+                        label='minus'
+                        isLabel={false}
+                        onClick={() => handleDayChange(-1)}
+                    />
+                    <Button
+                        id='btnRight'
+                        label='plus'
+                        isLabel={false}
+                        onClick={() => handleDayChange(1)}
+                    />
+                </>
+                }
+            </div>
         </InputWrapper>
     )
 });

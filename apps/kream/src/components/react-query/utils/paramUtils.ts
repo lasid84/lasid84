@@ -1,8 +1,8 @@
 import { useUserSettings } from '@/states/useUserSettings';
+import { usePathname } from 'next/navigation';
 
 export const paramsUtils = (Params: any = {}) => {
     const userInfo = useUserSettings.getState().data;
-    
     let cols = ["user_id", "ipaddr"];
 
     for (let col of cols) {
@@ -12,5 +12,6 @@ export const paramsUtils = (Params: any = {}) => {
             // }
         }
     }
+
     return Params;
   };

@@ -6,8 +6,10 @@ import Langs from "./langs";
 import { BaseSyntheticEvent, useRef, useEffect, useState, RefObject, memo } from "react";
 import { useConfigs } from "states/useConfigs";
 import { Button } from "../button";
-import { useUpdateData2 } from "../react-query/useMyQuery";
-import { SP_InitMyColumnInfo } from "../grid/ag-grid-enterprise/_component/data";
+import { useCommonStore } from "./store/store";
+import GridSettingModal from "./popup/gridSetting";
+import { usePathname } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
 
 const RightSidebar: React.FC = memo(() => {
   const colors: PaletteProps[] = [
@@ -18,12 +20,29 @@ const RightSidebar: React.FC = memo(() => {
   const config = useConfigs((state) => state.config);
   const { rightSidebar, collapsed } = config;
 
-  const { Create: initMyColInfo } = useUpdateData2(SP_InitMyColumnInfo, "InitMyColumnInfo");
+
 
   const rightSideBarRef:RefObject<HTMLDivElement> = useRef(null);
   const configActions = useConfigs((state) => state.actions);
 
   const [translate, setTranslate] = useState("translate-x-64");
+
+  const actions = useCommonStore((state) => state.actions);
+  const path = usePathname() + "/";
+
+  const methods = useForm({
+      defaultValues: {
+      },
+  });
+  
+  const {
+    formState: { errors, isSubmitSuccessful },
+  } = methods;
+  
+  useEffect(() => {
+    if (path) actions.getLoad(path);
+  }, [path]);
+
   useEffect(() => {
     rightSidebar ? setTranslate("translate-x-0") : setTranslate("translate-x-64");
   }, [rightSidebar]);
@@ -45,8 +64,9 @@ const RightSidebar: React.FC = memo(() => {
     }
   }, [rightSideBarRef])
 
-
   return (
+    <FormProvider {...methods} >
+    <form className="flex space-y-1">
     <div ref={rightSideBarRef}
       className={`bg-white text-gray-900 text-sm w-[230px] transform transition duration-300 ease-in-out shadow fixed top-0 bottom-0 h-screen overflow-hidden z-[99] right-0 ${translate}`}>
       <div className="absolute top-0 bottom-0 left-0 h-full overflow-x-auto">
@@ -82,21 +102,13 @@ const RightSidebar: React.FC = memo(() => {
           <div className="flex flex-col p-4">
             <div className="mb-2">
               <div className="mb-2 text-sm font-bold tracking-wider uppercase">
-                Grid컬럼 초기화
+                Grid컬럼 설정
               </div>
             </div>
             <Button id={"reset"}
               width="w-20"
               onClick={async () => {
-                const param = {
-                  id:'',
-                  state: collapsed
-                }
-                initMyColInfo.mutateAsync(param)
-                  .then(() => {
-                    configActions.setConfig({ gridInfo_Refresh: true });
-                  })
-                ;
+                actions.setGridSettingPopUp(true);
               }}
             />
           </div>
@@ -104,6 +116,9 @@ const RightSidebar: React.FC = memo(() => {
         </div>
       </div>
     </div>
+    <GridSettingModal />
+    </form>
+    </FormProvider>
   );
 });
 

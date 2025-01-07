@@ -100,11 +100,13 @@ const SearchForm = ({ loadItem }: any) => {
                 inline: true,
                 textAlign: "center",
                 freeStyles: "p-1 border-1 border-slate-300",
+                isShowButton: true,
               }}
               lwidth="w-20"
               height="h-8"
             />
           </div>
+          
           <div className={"col-span-2"}>
             <MaskedInputField
               id="no"

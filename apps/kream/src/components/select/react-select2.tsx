@@ -78,9 +78,9 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
     const { register, setValue, getValues } = useFormContext();
 
 
-    useEffect(() => {
-        log("defaultValue123", defaultValue);
-    }, [defaultValue]);
+    // useEffect(() => {
+    //     log("defaultValue123", defaultValue);
+    // }, [defaultValue]);
 
     useEffect(() => {
         setList(
@@ -210,7 +210,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
     }
 
     const handleChange = (e: any) => {
-        log("=-=-=-handleChange", id, e.value)
+        // log("=-=-=-handleChange", id, e.value)
         setValue(id, e.value);
         setSelectedVal({ id:id, value: e.value, label: e.label });
         let dispCol = displayCol?.length 
@@ -220,7 +220,6 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
             events.onChange(e,id,e.value);
         }
 
-        log("=-=-=-handelChange2", getValues("create_user"));
         setisChangeFinish(true);
         // moveNextComponent(target);
         

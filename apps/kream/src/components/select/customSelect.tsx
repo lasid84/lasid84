@@ -1,4 +1,4 @@
-import React, { ChangeEvent, KeyboardEventHandler, memo, useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
+import React, { ChangeEvent, forwardRef, KeyboardEventHandler, memo, useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
 import Grid, { GridOption, gridData } from '@/components/grid/ag-grid-enterprise';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
@@ -16,6 +16,7 @@ const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Props = {
   id: string              // 식별값, valueCol 사용시 의미 없음
+  parentRef?: any;
   initText?: string           //initText..
   label?: string           // 컴포넌트 라벨, null 시 id 값으로 표시
   listItem?: gridData     // 메인 데이터
@@ -65,7 +66,8 @@ const useDebounce = (value: any, delay: any) => {
   return debouncedValue;
 };
 
-function CustomSelect(props: Props) {
+// function CustomSelect(props: Props) {
+const CustomSelect = forwardRef((props: Props, focusRef) => {
   const { dispatch, objState } = useAppContext();
   const { mSelectedRow, selectedobj, isRefresh } = objState
 
@@ -483,7 +485,7 @@ function CustomSelect(props: Props) {
             visibility: isDisplay ? 'visible' : 'hidden'  
           }}
         >
-          <MaskedInputField id={id} value={displayText} options={{ myPlaceholder: initText, textAlign: 'center', noLabel: true, isNotManageSetValue: true, isAutoComplete: "off" }} height='h-8'
+          <MaskedInputField id={id} ref={focusRef} value={displayText} options={{ myPlaceholder: initText, textAlign: 'center', noLabel: true, isNotManageSetValue: true, isAutoComplete: "off" }} height='h-8'
             events={{
               onChange(e) {
                 e.preventDefault();
@@ -568,7 +570,7 @@ function CustomSelect(props: Props) {
             customselect={customselect}
             gridRef={gridRef}
             listItem={filteredData}
-            options={{ ...gridOption, gridHeight: defaultGridStyle.height, isSelectRowAfterRender: isSelectRowAfterRender }}
+            options={{ ...gridOption, gridHeight: defaultGridStyle.height, isSelectRowAfterRender: isSelectRowAfterRender, isNoSaveColInfo:true }}
             event={{
               // onCellValueChanged: handleCellValueChanged,
               onSelectionChanged: handleSelectionChanged,
@@ -585,7 +587,7 @@ function CustomSelect(props: Props) {
       </InputWrapper>
     </>
   );
-}
+});
 
 export default memo(CustomSelect
       // , (prevProps:Props, nextProps:Props)=> {

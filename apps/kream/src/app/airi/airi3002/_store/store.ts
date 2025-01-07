@@ -33,15 +33,17 @@ type Store = StoreState & {
     actions: StoreActions;
 };
 
+const getInitialSearchParams = () => ({
+    fr_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+    to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+    search_gubn: 0,
+    no: '', // HWB, MWB
+    state: 'ALL',
+});
+
 // initValue 정의
 const initValue: StoreState = {
-    searchParams: {
-        fr_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-        to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-        search_gubn: 0,
-        no: '', // HWB, MWB
-        state: 'ALL',
-    },
+    searchParams: getInitialSearchParams(),
     loadDatas: null,
     mainDatas: null,
     mainSelectedRow: null,
@@ -81,17 +83,31 @@ const setinitValue = (set: any) => {
             return result;
         },
         getUnipassData: async (params: {blyy:string, blno:string}) => {
-            const body = {
-                blYy:params.blyy,
-                hblNo:params.blno,
-                user_id: useUserSettings.getState().data.user_id
-              }
-              
-              let result = await callUnipass(unipassAPI001, body);
-
-              if (result.status !== 200) {
-                toastError(result);
-              }
+            
+            //1000개 BL로 쪼개서 unipass 호출
+            const arrBLNo = params.blno.split(" ");
+            const groupedArray = arrBLNo.reduce<string[]>((acc, curr, index) => {
+                if (index % 1000 === 0) {
+                  acc.push(curr); // 새로운 그룹 시작
+                } else {
+                  acc[acc.length - 1] += ` ${curr}`; // 현재 그룹에 추가
+                }
+                return acc;
+              }, []);            
+            
+            groupedArray.forEach(async blno => {
+                const body = {
+                    blYy:params.blyy,
+                    hblNo:blno,
+                    user_id: useUserSettings.getState().data.user_id
+                  }
+                  
+                  let result = await callUnipass(unipassAPI001, body);
+    
+                  if (result.status !== 200) {
+                    toastError(result);
+                  }
+            });
         },
         resetSearchParam: () => {
             set({ searchParams: {...initValue.searchParams}});

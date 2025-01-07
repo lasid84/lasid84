@@ -91,15 +91,15 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="space-y-1 w-full">
+      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageContent
-          title={<span className="px-1 py-1 w-full text-blue-500">Shipment Details & Freight</span>}>
-          <div className="flex col-span-6 w-full">
+          title={<span className="w-full px-1 py-1 text-blue-500">Shipment Details & Freight</span>}>
+          <div className="flex w-full col-span-6">
             <ShipmentDetailGrid loadData={shipmentDetail} />
           </div>
-          <fieldset className="flex col-span-6 p-1 space-x-1 space-y-1 w-full border-2 border-solid dark:border-gray-800">
+          <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
             <legend className="text-sx">Total</legend>
-            <MaskedInputField id="num_pieces" value={data?.num_pieces} options={{ isReadOnly: true }} width="w-36" />
+            <MaskedInputField id="num_pieces" value={data?.num_pieces} options={{ type: "number", textAlign: 'right', isReadOnly: true }} width="w-36" />
             <MaskedInputField id="packaging_form_code" value={data?.packaging_form_code} options={{ isReadOnly: true }} width="w-14" />
             <MaskedInputField id="total_volume" value={data?.total_volume} options={{ isReadOnly: true }} width="w-36" />
             <MaskedInputField id="volume_uom_code" value={data?.volume_uom_code} options={{ isReadOnly: true }} width="w-12" />
@@ -113,11 +113,11 @@ const WBShipmentDetails = memo(({ loadItem, mainData }: any) => {
         </PageContent>
 
         <PageContent
-          title={<span className="px-1 py-1 w-full text-blue-500">Freight Charge</span>}>
+          title={<span className="w-full px-1 py-1 text-blue-500">Freight Charge</span>}>
           <div className="col-span-6">
             <GridFCharges loadData={freightCharge} />
           </div>
-          <div className="flex col-span-1 w-full">
+          <div className="flex w-full col-span-1">
 
           </div>
         </PageContent>

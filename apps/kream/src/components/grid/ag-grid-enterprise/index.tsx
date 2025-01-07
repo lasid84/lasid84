@@ -132,6 +132,8 @@ export type GridOption = {
   isAutoFitColData?: boolean
   isSelectRowAfterRender?: boolean
   isShowRowNo?: boolean
+  isNoSaveColInfo?: boolean               //개인별 컬럼너비 저장 여부
+
   rowSpan?: string[]
   isColumnHeaderVisible?: boolean
   cellClass?: { [key in bgColor]: string | ((params: any) => string) }; 
@@ -175,7 +177,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   // const [ personalColInfo, setPersonalColInfo ] = useState<any>();
 
   // const path = usePathname();
-  const { data: personalColInfoData, refetch: personalColInfoRefetch } = useGetData(personalColInfoParam, "PersonalColumnInfo", SP_GetPersonalColInfoData, { enabled: true, staleTime : 0 });
+  const { data: personalColInfoData, refetch: personalColInfoRefetch } = useGetData(personalColInfoParam, "PersonalColumnInfo", SP_GetPersonalColInfoData, { enabled: true });
   const { Create: setMyColInfo } = useUpdateData2(SP_SetMyColumnInfo, "MyColumnInfo");
 
   const containerStyle = useMemo(() => "flex-col w-full h-full", []);
@@ -205,6 +207,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       // floatingFilterComponentParams: {suppressFilterButton:!options?.isShowFilterBtn ? true : false },
       suppressFloatingFilterButton: !options?.isShowFilterBtn ? true : false,
       suppressMenu: true, //컬럼명 옆 햄버거 버튼 없앰
+      resizable:true,
     };
   }, [options]);
 
@@ -320,7 +323,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
         });
 
         let pinnedBottomData = calculatePinnedBottomData(result);
-        // log("============onComponentStateChanged", pinnedBottomData)
 
         if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
           gridRef?.current.api.setPinnedBottomRowData([pinnedBottomData]);
@@ -363,6 +365,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   useEffect(() => {
     if (id) {
+      // log("useEffect id")
       setPersonalColInfoParam({
         // path : path,
         state: config.collapsed,
@@ -373,6 +376,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   useEffect(() => {
     if (gridInfo_Refresh) {
+      // log("useEffect gridInfo_Refresh")
       personalColInfoRefetch();
       if (gridRef.current) autoSizeAll(gridRef.current);
       configActions.setConfig({ gridInfo_Refresh: false });
@@ -380,9 +384,42 @@ const ListGrid: React.FC<Props> = memo((props) => {
     
   }, [gridInfo_Refresh])
 
+  // const prevListItemRef = useRef<gridData | null>(null);
+  // const prevTRef = useRef<typeof t>();
+  // const prevPersonalColInfoDataRef = useRef<gridData | undefined>();
+
   //컬럼 세팅
   useEffect(() => {
+
+    // // 이전 렌더의 값과 현재 렌더의 값을 비교
+    // if (prevListItemRef.current !== listItem) {
+    //   console.log('listItem이 변경되었습니다:', {
+    //     from: prevListItemRef.current,
+    //     to: listItem
+    //   });
+    // }
+
+    // if (prevTRef.current !== t) {
+    //   console.log('t가 변경되었습니다:', {
+    //     from: prevTRef.current,
+    //     to: t
+    //   });
+    // }
+
+    // if (prevPersonalColInfoDataRef.current !== personalColInfoData) {
+    //   console.log('personalColInfoData가 변경되었습니다:', {
+    //     from: prevPersonalColInfoDataRef.current,
+    //     to: personalColInfoData
+    //   });
+    // }
+
     if (Array.isArray(listItem?.fields) && listItem?.fields.length > 0 /*&& personalColInfoData !== undefined*/) {
+      // console.log("??????", id)
+
+      // prevListItemRef.current = listItem;
+      // prevTRef.current = t;
+      // prevPersonalColInfoDataRef.current = personalColInfoData as gridData | undefined;
+
       let cols: cols[] = [];
 
       //Field {
@@ -444,7 +481,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
           return;
         }
 
-        if (!options?.isAutoFitColData) {
+        if (!options?.isAutoFitColData && myColInfos.length === 0) {
           cellOption = {
             ...cellOption,
             flex: 1,
@@ -458,12 +495,11 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
         
-        // if (myColInfos[i]?.col_width) {
-          cellOption = {
-            ...cellOption,
-            width: Number(myColInfos[i]?.col_width) || 100
-          }
-        // }
+
+        cellOption = {
+          ...cellOption,
+          width: Number(myColInfos[i]?.col_width) || 100
+        }
 
         //컬럼별 visible 셋팅
         let isHide: boolean = false;
@@ -711,7 +747,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       setMainData(listItem.data.map((row: any, i: number) => {
         if (options?.checkbox) {
           options?.checkbox.map((col) => {
-            if (row[col]) row[col] = row[col] === 'Y' ? true : false
+            if (row[col]) row[col] = (row[col] === 'Y' || row[col] === true) ? true : false
           })
         }
         return {
@@ -742,14 +778,14 @@ const ListGrid: React.FC<Props> = memo((props) => {
   useEffect(() => {
     if (props.gridState && gridRef.current) {
       setInitialState(props.gridState);
-      // log("1", props.gridState.columnSizing)
+      log("1", props.gridState.columnSizing)
       if (props.gridState.columnSizing?.columnSizingModel ) {
         const savedState = props.gridState.columnSizing?.columnSizingModel; 
         // log("2. savedState - ", savedState, gridRef.current.api?.getColumnState());
         gridRef.current.api?.applyColumnState({ state: savedState });
       }
     }
-  }, [props.gridState, gridRef.current])
+  }, [props.gridState, gridRef?.current])
 
   const onGridReady = (param: GridReadyEvent) => {
     // log("onGridReady");
@@ -864,7 +900,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const onFirstDataRendered = (param: FirstDataRenderedEvent) => {
     if (options?.isAutoFitColData && myColInfo.length === 0 /*&& (personalColInfoData as gridData)?.data.length === 0*/) {
       autoSizeAll(gridRef.current);
-      // log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
+      log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
     }
 
     if (event?.onFirstDataRendered) event.onFirstDataRendered(param);
@@ -994,6 +1030,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
     if (!id) return;
 
+    if (options?.isNoSaveColInfo) return;
+
     let colNm: any[] = [];
     let colWidth: any[] = [];
     let colVisible: any[] = [];
@@ -1013,7 +1051,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
     // log("onDrage", params, gridRef.current.api.getColumnState());
     await setMyColInfo.mutateAsync(params)
-                  .then(() => personalColInfoRefetch());
+                  .then(async () => await personalColInfoRefetch());
 
   }
 
