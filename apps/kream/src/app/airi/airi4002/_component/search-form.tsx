@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
 import React, {
   useState,
   useEffect,
@@ -10,15 +9,9 @@ import { FormProvider, SubmitHandler, useFormContext } from "react-hook-form";
 import PageSearch, {
   PageSearchButton,
 } from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
 import { MaskedInputField, Input } from "components/input";
-import {
-  crudType,
-  useAppContext,
-} from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
-import { DateInput, DatePicker } from "components/date";
-import dayjs from "dayjs";
+import { DatePicker } from "components/date";
 import { Button } from "components/button";
 import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
@@ -42,7 +35,7 @@ type Props = {
 
 const SearchForm = ({ loadItem }: any) => {
 
-  const { getValues, handleSubmit, reset } = useFormContext();
+  const { getValues } = useFormContext();
   const state = Store((state) => state);
   const actions = Store((state) => state.actions);
 
@@ -60,13 +53,16 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onSearch = () =>{
     const params = getValues()
-    log("onSeach", params)
-    actions.getDTDDatas(params)
+    log("params onSeach", params)
+    actions.getTransportDatas(params)
   }
 
   const onReset = () =>{}
 
   function handleKeyDown(e:KeyboardEvent) {}
+  
+  const onChange = () => {}
+
 
   return (
       <div>
@@ -82,16 +78,34 @@ const SearchForm = ({ loadItem }: any) => {
             </>
           }
         >
+           <div className={"col-span-1 border"}>
+            <RadioGroup label="search_gubn" >
+              <Radio id ="search_gubn" name="search_gubn" value="0" label="delivery_request_dd" onChange={onChange} defaultChecked/>
+              <Radio id ="search_gubn" name="search_gubn" value="1" label="unload_dd" onChange={onChange} />              
+            </RadioGroup>
+          </div>
 
           <div className={"col-span-1"}>
             <DatePicker
-              id="date"
-              label="settlement_date"
-              value={state.searchParams?.date}
+              id="fr_date"
+              label="fr_date"
+              value={state.searchParams?.fr_date}
               options={{
                 inline: true,
                 textAlign: "center",
                 freeStyles: "p-1 border-1 border-slate-300",
+              }}
+              lwidth="w-20"
+              height="h-8"
+            />
+             <DatePicker
+              id="to_date"
+              label="to_date"
+              value={state.searchParams?.to_date}
+              options={{
+                inline: true,
+                textAlign: "center",
+                freeStyles: "border-1 border-slate-300",
               }}
               lwidth="w-20"
               height="h-8"

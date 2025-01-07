@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { RefObject } from 'react';
-import { SP_GetDTDMainData, SP_GetEDIDetailData, SP_SaveData, SP_SaveUploadData } from "./data";
+import { SP_GetTransportData, SP_GetEDIDetailData, SP_SaveData, SP_SaveUploadData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 import { SP_UpdateData } from "@/app/acct/acct1004/_component/data";
@@ -40,7 +40,7 @@ interface StoreState {
     popup: Record<string, any>;
     actions: {
         setExcelDatas : (params: any) => Promise<any> | undefined;
-        getDTDDatas: (params: any) => Promise<any> | undefined;
+        getTransportDatas: (params: any) => Promise<any> | undefined;
         getAppleDetailDatas: (params: any) => Promise<any> | undefined;
         updateAppleDatas : (params:any) => Promise<any> | undefined;
         setPopup: (popup: Partial<StoreState['popup']>) => void; 
@@ -62,8 +62,10 @@ type SaveDataArgs = {
   };
 const initValue: Store = (set : any) => ({
     searchParams: {
-        date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-        no: '', // HWB, 
+        fr_date: dayjs().subtract(5, "days").startOf("days").format("YYYYMMDD"),
+        to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+        search_gubn : 0,
+        no: '', // HWB, MWB
         state:  'ALL',
     },
     uiData : {
@@ -91,8 +93,8 @@ const initValue: Store = (set : any) => ({
             set({excel_data: uploadData})
             return uploadData;
         },
-        getDTDDatas: async (params: any) => {
-            const result = await SP_GetDTDMainData(params);
+        getTransportDatas: async (params: any) => {
+            const result = await SP_GetTransportData(params);
             set({ mainDatas: result });
             return result;
         },
