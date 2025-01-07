@@ -6,6 +6,7 @@ export type PageSearchProps = {
   left?: React.ReactNode;
   right?: React.ReactNode;
   addition?: React.ReactNode;
+  rightchildren?: React.ReactNode;
 };
 //Grid (label, button, grid)-- right:md:grid md:grid-cols-2
 export const PageGrid: React.FC<PageSearchProps> = ({
@@ -142,6 +143,39 @@ export const PageMGrid3: React.FC<PageSearchProps> = ({
           </div>
           <div className="P-2 flex w-full h-[calc(100vh-250px)] max-h-[calc(100vh-250px)] gap-2 justify-self-start">
             {children}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+//Grid (label, button, Mgrid) , AIRI4001
+export const PageMGrid4: React.FC<PageSearchProps> = ({
+  title,
+  left,
+  right,
+  children,
+  rightchildren,  
+  addition,
+}) => {
+  return (
+    <>
+      <div className={`flex-col w-full h-full`}>
+        <div className={`w-full h-full`}> 
+           {/* 부모 flex container 추가 */}
+          <div className="flex w-full h-[calc(100vh-250px)] max-h-[calc(100vh-250px)] gap-2">
+            {/* 좌측 children */}
+            <div className="flex-row w-4/5 h-full P-2">
+              {children}
+            </div>
+            {/* 우측 rightchildren */}
+            <div className="flex-row w-1/5 h-full P-2">
+            <div className="flex content-end gap-2 justify-self-end">
+              {right}
+              </div>
+              {rightchildren}
+            </div>
           </div>
         </div>
       </div>

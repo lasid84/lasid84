@@ -18,8 +18,8 @@ export const SP_Load = async (searchParam:any) => {
   const {user_id, ipaddr} = searchParam;
   const params = {
     inparam: ["in_user", "in_ipaddr"],
-    invalue: [ 'EDI810', ''],
-    inproc: 'airimp.f_airi3001_load',
+    invalue: [ '', ''],
+    inproc: 'airimp.f_airi4001_load',
     isShowLoading: false
   }
   // log("Acct2003Load", p);
@@ -27,36 +27,32 @@ export const SP_Load = async (searchParam:any) => {
   return result;
 }
 
-export const SP_GetAppleMainData = async (searchParam: any) => {
-  console.log('searchParam', searchParam)  
+export const SP_GetDTDMainData = async (searchParam: any) => {
+  console.log('SP_GetDTDMainData', searchParam)  
   //const Param = searchParam.queryKey[1];
-  const {fr_date, to_date, search_gubn, no, state} = searchParam;
+  const {date,  no, create_date} = searchParam;
   //user_id, ipaddr
   const params = {
     inparam : [
-       "in_fr_date"
-      , "in_to_date"
-      , "in_gubn"  //0 : 810수신일, 1: 858송신일 
+       "in_date"
       , "in_no"
-      , "in_state"
+      , "in_create_user"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      fr_date
-      , to_date
-      , search_gubn
+      date
       , no
-      , state
+      , create_date
       , ''
       , ''
     ],
-    inproc: 'airimp.f_airi3001_get_data',
+    inproc: 'airimp.f_airi4001_get_dtd_list',
     isShowLoading: true
   }
 
   const result = await executFunction(params);
-  console.log('result',result)
+  console.log('f_airi3003_get_dtd_list',result)
   return result![0];
 }
 
@@ -86,76 +82,103 @@ export const SP_GetEDIDetailData = async (searchParam: any) => {
 }
 
 
-export const SP_InsertData = async (searchParam: any) => {  
-  const Param = searchParam.queryKey[1];
-  const {fr_date, to_date, search_gubn, no, state, user_id, ipaddr} = Param;
+export const SP_SaveData = async (param: any) => {  
+  //throw new Error("Test error from SP_SaveData"); // 에러 강제 발생
+  const {jsondata, settlement_date, user_id, ipaddr} = param;
   
   const params = {
     inparam : [
-       "in_fr_date"
-      , "in_to_date"
-      , "in_gubn"  //0 : 810, 1: 858
-      , "in_no"
-      , "in_state"
+       "in_jsondata"
+      , "in_settlement_date"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      fr_date
-      , to_date
-      , search_gubn
-      , no
-      , state
+      jsondata
+      , settlement_date
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi3001_get_data',
+    inproc: 'airimp.f_airi4001_ins_dtd',
+    isShowLoading: true
+  }
+
+  const result = await executFunction(params);  
+  return result!;
+}
+
+// export const SP_SaveData = async (param: any) => {  
+
+//   const {jsondata, user_id, ipaddr} = param;
+  
+//   const params = {
+//     inparam : [
+//        "in_jsondata"
+//       , "in_user"
+//       , "in_ipaddr"
+//     ],
+//     invalue: [
+//       jsondata
+//       , user_id
+//       , ipaddr
+//     ],
+//     inproc: 'airimp.f_airi4001_ins_dtd',
+//     isShowLoading: true
+//   }
+
+//   const result = await executFunction(params);
+  
+//   log('executefunction result', result)
+//   return result!;
+// }
+
+
+
+export const SP_SaveUploadData = async (param: any) => {  
+
+  const {jsondata, settlement_date, user_id, ipaddr} = param;
+  log('jsondata+settlement_data', jsondata, settlement_date)
+  const params = {
+    inparam : [
+       "in_jsondata"
+      , "in_settlement_date"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      jsondata
+      , settlement_date
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi4001_ins_upload_dtd',
     isShowLoading: true
   }
 
   const result = await executFunction(params);
-  return result![0];
+  return result!;
 }
 
 export const SP_UpdateData = async (param: any) => {  
 
-  const { waybill_no, invoice_no, declnum, mwb_no, exrate, incoterms, decldate, decltime, ccdate, 
-          cctime, totaldeclvalue, totaldeclfltvalue, totaldeclinsvalue, jsonData, user_id, ipaddr } = param;
+  const {jsondata, user_id, ipaddr} = param;
+  
   const params = {
     inparam : [
-        "in_waybill_no"
-      , "in_invoice_no"
-      , "in_declnum"
-      , "in_mwb_no"
-      , "in_exrate"
-      , "in_incoterms"
-      , "in_decldate"
-      , "in_decltime"
-      , "in_ccdate"
-      , "in_cctime"
-      , "in_totaldeclvalue"
-      , "in_totaldeclfltvalue"
-      , "in_totaldeclinsvalue"
-      , "in_jsondata"
+       "in_jsondata"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      waybill_no, invoice_no, declnum, mwb_no, exrate, incoterms, decldate, decltime, ccdate, 
-      cctime, totaldeclvalue, totaldeclfltvalue, totaldeclinsvalue
-    , jsonData
-    , user_id
-    , ipaddr
+      jsondata
+      , user_id
+      , ipaddr
     ],
-    inproc: 'airimp.f_airi3001_upd_edi_data',
-    isShowLoading: true,
-    isShowComplete:false,
-    }
+    inproc: 'airimp.f_airi4001_upd_dtd',
+    isShowLoading: true
+  }
 
-    
-    console.log('param..', params)
   const result = await executFunction(params);
-
   return result![0];
 }
 
