@@ -66,7 +66,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     actions.updatePopup({
       isPopupUploadOpen: false,
     });
-    actions.getDTDDatas(params);
+   // actions.getTransportDatas(params);
   }, [popup.popType, excelData]);
 
   const handleFileDrop = (data: any[], header: any[]) => {

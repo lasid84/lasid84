@@ -96,6 +96,18 @@ const SearchForm = ({ loadItem }: any) => {
               lwidth="w-20"
               height="h-8"
             />
+            <DatePicker
+              id="to_date"
+              label="to_date"
+              value={state.searchParams?.to_date}
+              options={{
+                inline: true,
+                textAlign: "center",
+                freeStyles: "border-1 border-slate-300",
+              }}
+              lwidth="w-20"
+              height="h-8"
+            />
           </div>
           <div className={"col-span-2"}>           
             <MaskedInputField

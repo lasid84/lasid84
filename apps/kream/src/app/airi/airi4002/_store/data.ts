@@ -27,32 +27,34 @@ export const SP_Load = async (searchParam:any) => {
   return result;
 }
 
-export const SP_GetDTDMainData = async (searchParam: any) => {
-  console.log('SP_GetDTDMainData', searchParam)  
-  //const Param = searchParam.queryKey[1];
-  const {date,  no, create_date} = searchParam;
-  //user_id, ipaddr
+export const SP_GetTransportData = async (searchParam: any) => {
+  const {fr_date, to_date, search_gubn,  no, user_id, ipaddr} = searchParam;
+
   const params = {
     inparam : [
-       "in_date"
+        "in_fr_date"
+      , "in_to_date"
+      , "in_gubn"
       , "in_no"
-      , "in_create_user"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      date
+        fr_date
+      , to_date
+      , search_gubn
       , no
-      , create_date
-      , ''
-      , ''
+      , user_id
+      , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_get_dtd_list',
+    inproc: 'airimp.f_airi4002_get_data',
     isShowLoading: true
   }
 
+  console.log('params',params)
+
   const result = await executFunction(params);
-  console.log('f_airi3003_get_dtd_list',result)
+  console.log('f_airi4002_get_data',result)
   return result![0];
 }
 
@@ -99,9 +101,10 @@ export const SP_SaveData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_ins_dtd',
+    inproc: 'airimp.f_airi4002_ins_dtd',
     isShowLoading: true
   }
+  console.log('parpams',params)
 
   const result = await executFunction(params);  
   return result!;

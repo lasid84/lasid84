@@ -394,13 +394,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         dtd.push(data);
       }
     });
-    log("dtd list", dtd);
     if (hasData) {
       const result = await actions.saveData({
         jsondata: JSON.stringify(dtd),
         settlement_date: state.uiData.settlement_date,
       });
-      log("result", result);
       if (result) {
         toastSuccess("success");
         actions.getDTDDatas(state.searchParams);
@@ -418,13 +416,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         title={<></>}
         right={
           <>
-            <Button
-              id={"upload_excel"}
-              onClick={onExcelUpload}
-              disabled={false}
-              label="upload_excel"
-              width="w-34"
-            />
             <Button
               id={"upload_excel"}
               onClick={onExcelUpload}
@@ -698,7 +689,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     events={{
                       onChange: handleChange,
                     }}
-                    //TODO - DatePicker change 이벤트 생성
+                   
                     options={{
                       inline: false,
                       textAlign: "center",
@@ -727,7 +718,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       </PageMGrid4>
       <DetailModal loadItem={initData} />
       <ExcelUploadModal loadItem={initData} />
-      <Transport loadItem={initData} />
+      {/* <Transport loadItem={initData} /> */}
     </>
   );
 });
