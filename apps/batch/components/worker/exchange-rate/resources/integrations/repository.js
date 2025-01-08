@@ -99,7 +99,7 @@ const setExchangeRateIFData = async (currenyList) => {
 
         const cursorData = await executFunction(params.inproc, params.inparam, params.invalue);
 
-        return cursorData;
+        return cursorData[0].data[0].result;
     } catch (ex) {
         throw ex;
     }
@@ -123,11 +123,27 @@ const sendExchangeRateResultMail = async (mailOption) => {
     }
 };
 
+/**
+ * @Function
+ * Summary : UFSP 환율 등록 에러 상황 원복 스크립트 조회 함수.
+ */
+const getUFSPExchangeRateRevertScript = async() => {
+    const REVERT_PGM_CODE = "EXCHANGE_RATE_REVERT";
+
+    const inparam = ['in_pgm_code', 'in_user_id', 'in_ipaddr'];
+    const invalue = [REVERT_PGM_CODE, '', ''];
+    const inproc = 'scrap.f_scrp0002_get_script_api'; 
+    const cursorData = await executFunction(inproc, inparam, invalue);
+
+    return cursorData[1].data;
+}
+
 module.exports = {
     getScriptAPI,
     getHolidayDate,
     getCurrencyInfo,
     registerExchangeRateOnDB,
     setExchangeRateIFData,
-    sendExchangeRateResultMail
+    sendExchangeRateResultMail,
+    getUFSPExchangeRateRevertScript
 }

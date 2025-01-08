@@ -180,6 +180,10 @@ class Library {
                 const acctInfo = cursorData[0].data[0];
                 const scripts = cursorData[1].data;
 
+                if (!acctInfo) {
+                    throw "Expired or non-existence ID";
+                }
+
                 for (const [key, val] of Object.entries(acctInfo)) {
                     if (key === 'pw') {
                         await this.addJsonResult(acctInfo.tab, key, decrypt(val), '');
@@ -188,9 +192,9 @@ class Library {
                     }
                 }
                 // log("loginByApi", id, this.resultData)
-                await this.startScript(scripts);
-
                 this.id = id;
+                
+                await this.startScript(scripts);
             }
 
         } catch (ex) {
@@ -548,6 +552,11 @@ class Library {
 
             //로그인 에러
             if (result && result.success === false) {
+                const inparam = ['in_ufs_id', 'in_user_id', 'in_ipaddr'];
+                const invalue = [this.id, '', ''];
+                const inproc = 'scrap.f_scrp0001_set_expired_login_id';
+                await executFunction(inproc, inparam, invalue);
+                
                 this.mainData['error'] = result.error;
                 throw result.error;
             }
