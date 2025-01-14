@@ -1,17 +1,10 @@
 
 
 import { toastError } from "@/components/toast";
-import { executFunction, callUnipass, unipassAPI001 } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
-
-interface cursorData {
-  cursorData: {}[]
-}
+import { DataRoutes } from "@/services/api.constants";
+// import { executeKREAMFunction, unipassAPI001 } from "@/services/api.services";
+import { executeKREAMFunction, callUnipass } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 export const SP_Load = async (searchParam:any) => {
   // unstable_noStore();
@@ -23,7 +16,7 @@ export const SP_Load = async (searchParam:any) => {
     isShowLoading: false
   }
   // log("Acct2003Load", p);
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -37,7 +30,7 @@ export const SP_GetCustomsData = async (searchParam: any) => {
     user_id:user_id
   }
 
-  let result = await callUnipass(unipassAPI001, body);
+  let result = await callUnipass(DataRoutes.URI.GET_CARG_CSCL_PRGS_INFO_QRY, body);
   
   if (result.status !== 200) {
     blno = null;
@@ -61,7 +54,7 @@ export const SP_GetCustomsData = async (searchParam: any) => {
     isShowLoading: true
   }
 
-  result = await executFunction(params);
-  return result[0];
+  let result2 = await executeKREAMFunction(params);
+  return result2?.[0];
 
 }

@@ -11,7 +11,7 @@ import { useUpdateData2 } from "components/react-query/useMyQuery";
 import {toastSuccess} from "components/toast"
 import { SP_InsertCharge } from "./data";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     loadData: gridData

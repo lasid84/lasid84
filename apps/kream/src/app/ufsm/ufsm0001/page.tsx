@@ -6,7 +6,6 @@ import { SP_Load, SP_GetMasterData, SP_GetWBDetailData } from "./_component/data
 import { reducer, TableContext } from "components/provider/contextObjectProvider";
 import { LOAD, SEARCH_MD } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
-import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
@@ -22,7 +21,7 @@ import { shallow } from "zustand/shallow";
 import { FormProvider, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 export default function UFSM0001() {
 

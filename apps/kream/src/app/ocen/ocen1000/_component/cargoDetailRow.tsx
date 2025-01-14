@@ -3,17 +3,12 @@
 import { memo, useEffect, useState } from "react";
 import { MaskedInputField } from "components/input";
 import type { gridData } from "components/grid/ag-grid-enterprise";
-import { SP_GetCargoData } from "./data";
-import { SEARCH_CGD } from "components/provider/contextArrayProvider";
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { Button } from "components/button";
-import { useAppContext } from "components/provider/contextObjectProvider";
-import { SP_InsertCargo, SP_UpdateCargo } from "./data";
 import { InputWrapper } from "components/wrapper";
 import CustomSelect from "components/select/customSelect";
-import { ReactSelect, data } from "@/components/select/react-select2";
-const { log, error } = require("@repo/kwe-lib/components/logHelper");
 import { Checkbox } from "@/components/checkbox";
+
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   loadItem: any,

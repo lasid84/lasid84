@@ -11,7 +11,7 @@ import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import { Button } from "@/components/button";
 import { toastSuccess } from "@/components/toast";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     initData?: any | null;

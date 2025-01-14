@@ -1,10 +1,8 @@
 
 'use client';
 
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { SEARCH_MD, TableContext, reducer } from "components/provider/contextObjectProvider";
 import { useEffect, useReducer, useMemo, useCallback, memo } from "react";
-import { SP_CreateIFData, SP_GetIFData } from "./_component/data";
 import SearchForm from "./_component/search-form";
 import MasterGrid from './_component/gridMaster';
 import { FileUpload } from "components/file-upload";
@@ -12,8 +10,7 @@ import { gridData, JsonToGridData, ROW_TYPE, ROW_TYPE_NEW } from "@/components/g
 import { FormProvider, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export default function UFSM0003() {

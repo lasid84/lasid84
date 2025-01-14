@@ -13,15 +13,13 @@ import {
   RowClickedEvent,
   SelectionChangedEvent,
 } from "ag-grid-community";
-import dayjs from "dayjs";
 import { Store, AmountInputOptions_g } from "../_store/store";
 import DetailModal from "./Detail/popup";
 import { DatePicker } from "components/date";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import ExcelUploadModal from "./ExcelUpload/popup";
-import Transport from "./Transport/popup";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   initData?: any | null;

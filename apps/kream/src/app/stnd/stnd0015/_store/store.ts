@@ -1,11 +1,9 @@
 import { SP_GetLoad, SP_GetMainData, SP_SetMainData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
-import dayjs from "dayjs";
 import { createStore } from "@/states/createStore";
 import { useUserSettings } from "@/states/useUserSettings";
-import { RefObject, useRef } from "react";
-import { AgGridReact } from "ag-grid-react";
-const { getMenuParameters } = require("@repo/kwe-lib/components/menuParameterHelper.js");
+
+import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 // StoreState 정의
 interface StoreState {

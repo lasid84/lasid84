@@ -2,12 +2,10 @@
 
 import { Fragment, useEffect, memo } from "react";
 import { useNavigation, setNavigationData } from "states/useNavigation";
-import Title from "components/left-sidebar-1/title";
 import Item from "components/left-sidebar-1/item";
 import LogoImg from "components/left-sidebar-1/logo-img";
-import { useUserSettings } from "states/useUserSettings";
-import { useSession } from 'next-auth/react';
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 interface Props {
     Children?: JSX.Element | JSX.Element[]

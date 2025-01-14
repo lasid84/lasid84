@@ -21,10 +21,9 @@ import { DatePicker } from "@/components/date/react-datepicker";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/badge";
 import { Store } from "../../_store/store";
-// import PopupWithArrows from "@/components/popupArrows/index"
 import Amount from "./popupAmount";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {

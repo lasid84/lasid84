@@ -17,12 +17,10 @@ import { SP_GetBkHblData, SP_GetCarrierContData, SP_GetShipperContData } from ".
 import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@/components/date/react-datepicker";
-import  HblGrid  from "components/grid/ag-grid-enterprise";
 import CarrierContPopUp from "./popup/popCarriercont";
 import { SP_CreateTemplateData, SP_GetTemplateData } from "../../ocen1001/_component/data";
-import { toastSuccess } from "@/components/toast";
-const { log } = require("@repo/kwe-lib/components/logHelper");
-const { DateToString } = require("@repo/kwe-lib/components/dataFormatter");
+
+import { log, error, DateToString } from '@repo/kwe-lib-new';
 
 type Props = {
   // onSubmit: SubmitHandler<any>;
@@ -440,7 +438,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
             </div>
 
             <div className="flex col-start-1 col-end-6">
-                <fieldset className="flex p-3 pb-2 space-x-1 space-y-1 w-1/2 border-2 border-solid dark:border-gray-800">
+                <fieldset className="flex w-1/2 p-3 pb-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
                   <legend className="text-base font-bold text-blue-800">업무 담당자</legend>
                   {/* <MaskedInputField id="cr_t_pic_nm" value={mSelectedRow?.cr_t_pic_nm} options={{ isReadOnly: false, }} events={{ onChange: handleMaskedInputChange }} /> */}
                   <CustomSelect
@@ -476,7 +474,7 @@ const BKMain = ({ loadItem, bkData }: Props) => {
                     <MaskedInputField id="cr_t_email" value={bkData?.cr_t_cont_email} options={{ isReadOnly: true }} width="w-80"/>
                     <MaskedInputField id="cr_t_tel_num" value={bkData?.cr_t_cont_tel_num} options={{ isReadOnly: true }} />
                 </fieldset>
-                <fieldset className="flex p-3 pb-2 ml-2 space-x-1 space-y-1 w-1/2 border-2 border-solid dark:border-gray-800">
+                <fieldset className="flex w-1/2 p-3 pb-2 ml-2 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
                   <legend className="text-base font-bold text-blue-800">영업 담당자</legend>
                   {/* <MaskedInputField id="cr_s_pic_nm" value={mSelectedRow?.cr_s_pic_nm} options={{ isReadOnly: false }} /> */}
                     <CustomSelect

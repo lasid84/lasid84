@@ -1,13 +1,13 @@
 'use client'
 
 import { MutationFunction, UseMutationOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnyCnameRecord } from "dns";
 import { useUserSettings } from "states/useUserSettings";
-const { log } = require('@repo/kwe-lib/components/logHelper');
 import { SP_UpdateData } from "@/app/stnd/stnd0005/_component/data";
 import { usePathname } from "next/navigation";
 import { shallow } from "zustand/shallow";
 import { ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "../grid/ag-grid-enterprise";
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export const useGetData = (searchParam: any, queryNm: any, queryFn: any, option?: any) => {
   

@@ -1,17 +1,8 @@
 
 
-import { toastError } from "@/components/toast";
-import { executFunction, callUnipass, unipassAPI001 } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
-
-interface cursorData {
-  cursorData: {}[]
-}
+// import { executeKREAMFunction, callUnipass, unipassAPI001 } from "@/services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 export const SP_Load = async (searchParam:any) => {
   // unstable_noStore();
@@ -23,7 +14,7 @@ export const SP_Load = async (searchParam:any) => {
     isShowLoading: false
   }
   // log("Acct2003Load", p);
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -53,7 +44,7 @@ export const SP_GetTransportData = async (searchParam: any) => {
 
   console.log('params',params)
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   console.log('f_airi4002_get_data',result)
   return result![0];
 }
@@ -79,7 +70,7 @@ export const SP_GetEDIDetailData = async (searchParam: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -106,7 +97,7 @@ export const SP_SaveData = async (param: any) => {
   }
   console.log('parpams',params)
 
-  const result = await executFunction(params);  
+  const result = await executeKREAMFunction(params);  
   return result!;
 }
 
@@ -129,7 +120,7 @@ export const SP_SaveData = async (param: any) => {
 //     isShowLoading: true
 //   }
 
-//   const result = await executFunction(params);
+//   const result = await executeKREAMFunction(params);
   
 //   log('executefunction result', result)
 //   return result!;
@@ -158,7 +149,7 @@ export const SP_SaveUploadData = async (param: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result!;
 }
 
@@ -181,7 +172,7 @@ export const SP_UpdateData = async (param: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -206,6 +197,6 @@ export const SP_SendEDI = async (param: any) => {
 
   console.log('params..........',params)
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }

@@ -16,22 +16,28 @@ importers:
         version: link:packages/typescript-config
       '@turbo/gen':
         specifier: ^1.11.3
-        version: 1.11.3(@types/node@20.17.6)(typescript@5.7.2)
+        version: 1.11.3(@types/node@20.17.6)(typescript@5.7.3)
       prettier:
         specifier: ^3.2.4
         version: 3.2.4
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.1(@types/node@20.17.6)(typescript@5.7.3)
       turbo:
         specifier: latest
         version: 1.11.3
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
 
   apps/api:
     dependencies:
       '@auth/core':
         specifier: ^0.25.1
         version: 0.25.1(nodemailer@6.9.14)
-      '@repo/kwe-lib':
+      '@repo/kwe-lib-new':
         specifier: '*'
-        version: link:../../packages/kwe-lib
+        version: link:../../packages/kwe-lib-new
       '@repo/ui':
         specifier: '*'
         version: link:../../packages/ui
@@ -77,18 +83,27 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
+      ldapjs:
+        specifier: ^3.0.6
+        version: 3.0.6
       libreoffice-convert:
         specifier: ^1.6.0
         version: 1.6.0
       morgan:
         specifier: ^1.10.0
         version: 1.10.0
+      mysql2:
+        specifier: ^3.12.0
+        version: 3.12.0
       node-html-parser:
         specifier: ^6.1.13
         version: 6.1.13
       nodemailer:
         specifier: ^6.9.14
         version: 6.9.14
+      pg:
+        specifier: ^8.13.1
+        version: 8.13.1
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@20.12.4)(typescript@5.3.3)
@@ -120,12 +135,18 @@ importers:
       '@types/helmet':
         specifier: ^4.0.0
         version: 4.0.0
+      '@types/ldapjs':
+        specifier: ^3.0.6
+        version: 3.0.6
       '@types/morgan':
         specifier: ^1.9.5
         version: 1.9.9
       '@types/node':
         specifier: ^20.5.9
         version: 20.12.4
+      '@types/pg':
+        specifier: ^8.11.10
+        version: 8.11.10
       '@types/supertest':
         specifier: ^2.0.12
         version: 2.0.16
@@ -419,7 +440,7 @@ importers:
         version: 11.1.14
       tailwindcss:
         specifier: ^3.4.14
-        version: 3.4.14
+        version: 3.4.14(ts-node@10.9.1)
       text-mask-addons:
         specifier: ^3.8.0
         version: 3.8.0
@@ -799,7 +820,7 @@ importers:
         version: 4.16.2
       tailwindcss:
         specifier: ^3.4.1
-        version: 3.4.1
+        version: 3.4.1(ts-node@10.9.1)
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -850,7 +871,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       tailwindcss:
         specifier: 3.3.3
-        version: 3.3.3
+        version: 3.3.3(ts-node@10.9.1)
       typescript:
         specifier: ^4.7.4
         version: 4.9.5
@@ -1001,15 +1022,18 @@ importers:
       '@types/node':
         specifier: ^22.10.5
         version: 22.10.5
+      axios:
+        specifier: ^1.7.9
+        version: 1.7.9
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
-      mysql2:
-        specifier: ^3.12.0
-        version: 3.12.0
-      pg:
-        specifier: ^8.13.1
-        version: 8.13.1
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
       tsup:
         specifier: ^6.0.1
         version: 6.7.0(ts-node@10.9.1)(typescript@5.7.2)
@@ -1017,9 +1041,12 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
     devDependencies:
-      '@types/pg':
-        specifier: ^8.11.10
-        version: 8.11.10
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
+      '@types/jsonwebtoken':
+        specifier: ^9.0.6
+        version: 9.0.6
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@22.10.5)(typescript@5.7.2)
@@ -3732,14 +3759,17 @@ packages:
 
   /@ldapjs/asn1@1.2.0:
     resolution: {integrity: sha512-KX/qQJ2xxzvO2/WOvr1UdQ+8P5dVvuOLk/C9b1bIkXxZss8BaR28njXdPgFCpj5aHaf1t8PmuVnea+N9YG9YMw==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dev: false
 
   /@ldapjs/asn1@2.0.0:
     resolution: {integrity: sha512-G9+DkEOirNgdPmD0I8nu57ygQJKOOgFEMKknEuQvIHbGLwP3ny1mY+OTUYLCbCaGJP4sox5eYgBJRuSUpnAddA==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dev: false
 
   /@ldapjs/attribute@1.0.0:
     resolution: {integrity: sha512-ptMl2d/5xJ0q+RgmnqOi3Zgwk/TMJYG7dYMC0Keko+yZU6n+oFM59MjQOUht5pxJeS4FWrImhu/LebX24vJNRQ==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dependencies:
       '@ldapjs/asn1': 2.0.0
       '@ldapjs/protocol': 1.2.1
@@ -3748,6 +3778,7 @@ packages:
 
   /@ldapjs/change@1.0.0:
     resolution: {integrity: sha512-EOQNFH1RIku3M1s0OAJOzGfAohuFYXFY4s73wOhRm4KFGhmQQ7MChOh2YtYu9Kwgvuq1B0xKciXVzHCGkB5V+Q==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dependencies:
       '@ldapjs/asn1': 2.0.0
       '@ldapjs/attribute': 1.0.0
@@ -3755,6 +3786,7 @@ packages:
 
   /@ldapjs/controls@2.1.0:
     resolution: {integrity: sha512-2pFdD1yRC9V9hXfAWvCCO2RRWK9OdIEcJIos/9cCVP9O4k72BY1bLDQQ4KpUoJnl4y/JoD4iFgM+YWT3IfITWw==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dependencies:
       '@ldapjs/asn1': 1.2.0
       '@ldapjs/protocol': 1.2.1
@@ -3762,6 +3794,7 @@ packages:
 
   /@ldapjs/dn@1.1.0:
     resolution: {integrity: sha512-R72zH5ZeBj/Fujf/yBu78YzpJjJXG46YHFo5E4W1EqfNpo1UsVPqdLrRMXeKIsJT3x9dJVIfR6OpzgINlKpi0A==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dependencies:
       '@ldapjs/asn1': 2.0.0
       process-warning: 2.3.1
@@ -3769,6 +3802,7 @@ packages:
 
   /@ldapjs/filter@2.1.1:
     resolution: {integrity: sha512-TwPK5eEgNdUO1ABPBUQabcZ+h9heDORE4V9WNZqCtYLKc06+6+UAJ3IAbr0L0bYTnkkWC/JEQD2F+zAFsuikNw==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dependencies:
       '@ldapjs/asn1': 2.0.0
       '@ldapjs/protocol': 1.2.1
@@ -3777,6 +3811,7 @@ packages:
 
   /@ldapjs/messages@1.3.0:
     resolution: {integrity: sha512-K7xZpXJ21bj92jS35wtRbdcNrwmxAtPwy4myeh9duy/eR3xQKvikVycbdWVzkYEAVE5Ce520VXNOwCHjomjCZw==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dependencies:
       '@ldapjs/asn1': 2.0.0
       '@ldapjs/attribute': 1.0.0
@@ -3790,6 +3825,7 @@ packages:
 
   /@ldapjs/protocol@1.2.1:
     resolution: {integrity: sha512-O89xFDLW2gBoZWNXuXpBSM32/KealKCTb3JGtJdtUQc7RjAk8XzrRgyz02cPAwGKwKPxy0ivuC7UP9bmN87egQ==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dev: false
 
   /@lit-labs/ssr-dom-shim@1.1.2:
@@ -3820,7 +3856,7 @@ packages:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.6.0
+      semver: 7.6.3
       tar: 6.2.0
     transitivePeerDependencies:
       - encoding
@@ -4634,7 +4670,7 @@ packages:
     peerDependencies:
       tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
     dependencies:
-      tailwindcss: 3.4.1
+      tailwindcss: 3.4.1(ts-node@10.9.1)
     dev: true
 
   /@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.14):
@@ -4642,7 +4678,7 @@ packages:
     peerDependencies:
       tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
     dependencies:
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.14(ts-node@10.9.1)
     dev: false
 
   /@tailwindcss/forms@0.5.7(tailwindcss@3.3.3):
@@ -4651,7 +4687,7 @@ packages:
       tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.3.3
+      tailwindcss: 3.3.3(ts-node@10.9.1)
     dev: false
 
   /@tailwindcss/forms@0.5.7(tailwindcss@3.4.1):
@@ -4660,7 +4696,7 @@ packages:
       tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.4.1
+      tailwindcss: 3.4.1(ts-node@10.9.1)
     dev: true
 
   /@tailwindcss/forms@0.5.9(tailwindcss@3.4.14):
@@ -4669,7 +4705,7 @@ packages:
       tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1 || >= 4.0.0-alpha.20'
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.14(ts-node@10.9.1)
     dev: false
 
   /@tailwindcss/typography@0.5.10(tailwindcss@3.4.1):
@@ -4681,7 +4717,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.1
+      tailwindcss: 3.4.1(ts-node@10.9.1)
     dev: true
 
   /@tailwindcss/typography@0.5.15(tailwindcss@3.4.14):
@@ -4693,7 +4729,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.14(ts-node@10.9.1)
     dev: false
 
   /@tanstack/match-sorter-utils@8.19.4:
@@ -4858,7 +4894,7 @@ packages:
       - typescript
     dev: true
 
-  /@turbo/gen@1.11.3(@types/node@20.17.6)(typescript@5.7.2):
+  /@turbo/gen@1.11.3(@types/node@20.17.6)(typescript@5.7.3):
     resolution: {integrity: sha512-cHGRj7Jn7Hw1cA7NuwWYfYdhEliQX4LuSfEB9L1m8ifGkHalU3bbYXcehzLThmckpGpUQGnXYx0UtVudbQ42HA==}
     hasBin: true
     dependencies:
@@ -4870,7 +4906,7 @@ packages:
       minimatch: 9.0.3
       node-plop: 0.26.3
       proxy-agent: 6.3.1
-      ts-node: 10.9.1(@types/node@20.17.6)(typescript@5.7.2)
+      ts-node: 10.9.1(@types/node@20.17.6)(typescript@5.7.3)
       update-check: 1.5.4
       validate-npm-package-name: 5.0.0
     transitivePeerDependencies:
@@ -4944,6 +4980,10 @@ packages:
     resolution: {integrity: sha512-8CGDvrBj1zgo2qE+oS3pOCyYNqCPryMWY2bGfwA0dcfopWGgxs+78df0Rs3rc9THP4JkOhLsAa+15VdpAqkcUA==}
     dependencies:
       '@types/node': 20.17.6
+    dev: true
+
+  /@types/crypto-js@4.2.2:
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
     dev: true
 
   /@types/d3-array@3.2.1:
@@ -5090,7 +5130,12 @@ packages:
     resolution: {integrity: sha512-/5hndP5dCjloafCXns6SZyESp3Ldq7YjH3zwzwczYnjxIT0Fqzk5ROSYVGfFyczIue7IUEj8hkvLbPoLQ18vQw==}
     dependencies:
       '@types/node': 20.17.6
-    dev: false
+
+  /@types/ldapjs@3.0.6:
+    resolution: {integrity: sha512-E2Tn1ltJDYBsidOT9QG4engaQeQzRQ9aYNxVmjCkD33F7cIeLPgrRDXAYs0O35mK2YDU20c/+ZkNjeAPRGLM0Q==}
+    dependencies:
+      '@types/node': 20.17.6
+    dev: true
 
   /@types/lodash@4.14.202:
     resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
@@ -5183,7 +5228,7 @@ packages:
     resolution: {integrity: sha512-LczQUW4dbOQzsH2RQ5qoeJ6qJPdrcM/DcMLoqWQkMLMsq83J5lAX3LXjdkWdpscFy67JSOWDnh7Ny/sPFykmkg==}
     dependencies:
       '@types/node': 20.17.6
-      pg-protocol: 1.6.0
+      pg-protocol: 1.7.0
       pg-types: 4.0.2
     dev: true
 
@@ -5191,7 +5236,7 @@ packages:
     resolution: {integrity: sha512-O2xNmXebtwVekJDD+02udOncjVcMZQuTEQEMpKJ0ZRf5E7/9JJX3izhKUcUifBkyKpljyUM6BTgy2trmviKlpw==}
     dependencies:
       '@types/node': 20.17.6
-      pg-protocol: 1.6.0
+      pg-protocol: 1.7.0
       pg-types: 2.2.0
     dev: false
 
@@ -5434,7 +5479,7 @@ packages:
       graphemer: 1.4.0
       ignore: 5.3.2
       natural-compare: 1.4.0
-      semver: 7.6.0
+      semver: 7.6.3
       ts-api-utils: 1.0.2(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -5463,7 +5508,7 @@ packages:
       graphemer: 1.4.0
       ignore: 5.3.2
       natural-compare: 1.4.0
-      semver: 7.6.0
+      semver: 7.6.3
       ts-api-utils: 1.0.2(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
@@ -5679,7 +5724,7 @@ packages:
       debug: 4.3.6(supports-color@9.4.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.6.0
+      semver: 7.6.3
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -5700,7 +5745,7 @@ packages:
       debug: 4.3.6(supports-color@9.4.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.6.0
+      semver: 7.6.3
       tsutils: 3.21.0(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
@@ -5721,7 +5766,7 @@ packages:
       debug: 4.3.6(supports-color@9.4.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.6.0
+      semver: 7.6.3
       ts-api-utils: 1.0.2(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -5742,7 +5787,7 @@ packages:
       debug: 4.3.6(supports-color@9.4.0)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.6.0
+      semver: 7.6.3
       ts-api-utils: 1.0.2(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
@@ -5785,7 +5830,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@4.9.5)
       eslint: 8.54.0
       eslint-scope: 5.1.1
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5805,7 +5850,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@4.9.5)
       eslint: 8.56.0
       eslint-scope: 5.1.1
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5825,7 +5870,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.2.2)
       eslint: 8.57.1(supports-color@9.4.0)
       eslint-scope: 5.1.1
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5844,7 +5889,7 @@ packages:
       '@typescript-eslint/types': 6.11.0
       '@typescript-eslint/typescript-estree': 6.11.0(typescript@4.9.5)
       eslint: 8.54.0
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5863,7 +5908,7 @@ packages:
       '@typescript-eslint/types': 6.11.0
       '@typescript-eslint/typescript-estree': 6.11.0(typescript@5.2.2)
       eslint: 8.57.1(supports-color@9.4.0)
-      semver: 7.6.0
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -6209,11 +6254,6 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: false
-
-  /acorn@8.11.3:
-    resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
 
   /acorn@8.12.1:
     resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
@@ -6750,6 +6790,16 @@ packages:
       - debug
     dev: false
 
+  /axios@1.7.9:
+    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
+    dependencies:
+      follow-redirects: 1.15.6
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axobject-query@3.1.1:
     resolution: {integrity: sha512-goKlv8DZrK9hUh975fnHzhNIO4jUnFCfv/dszV5VwUGDFjI6vQ2VwoyjYjYNEbBE8AH87TduWP5uyDR1D+Iteg==}
     dependencies:
@@ -7058,7 +7108,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.6.0
+      semver: 7.6.3
     dev: true
 
   /bundle-name@3.0.0:
@@ -8378,7 +8428,7 @@ packages:
       glob: 10.3.10
       ora: 5.4.1
       tslib: 2.6.2
-      typescript: 5.6.3
+      typescript: 5.7.2
       yargs: 17.7.2
     dev: false
 
@@ -9765,7 +9815,7 @@ packages:
       read-pkg-up: 7.0.1
       regexp-tree: 0.1.27
       regjsparser: 0.10.0
-      semver: 7.6.0
+      semver: 7.6.3
       strip-indent: 3.0.0
     dev: true
 
@@ -9789,7 +9839,7 @@ packages:
       read-pkg-up: 7.0.1
       regexp-tree: 0.1.27
       regjsparser: 0.10.0
-      semver: 7.6.0
+      semver: 7.6.3
       strip-indent: 3.0.0
     dev: true
 
@@ -11870,7 +11920,7 @@ packages:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.6.0
+      semver: 7.6.3
 
   /jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
@@ -11994,6 +12044,7 @@ packages:
 
   /ldapjs@3.0.6:
     resolution: {integrity: sha512-3F+0XCO6e9wo8OrnnFFKIiqn7fH92Kc7QIzZieHP1or/5mN27ossUECqc2MTU6zXxI9J+3FzvvMyeaAK0n3JJw==}
+    deprecated: This package has been decomissioned. See https://github.com/ldapjs/node-ldapjs/blob/8ffd0bc9c149088a10ec4c1ec6a18450f76ad05d/README.md
     dependencies:
       '@ldapjs/asn1': 2.0.0
       '@ldapjs/attribute': 1.0.0
@@ -13105,7 +13156,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.15.1
-      semver: 7.6.0
+      semver: 7.6.3
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -13776,10 +13827,10 @@ packages:
 
   /pg-protocol@1.6.0:
     resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==}
+    dev: false
 
   /pg-protocol@1.7.0:
     resolution: {integrity: sha512-hTK/mE36i8fDDhgDFjy6xNOG+LCorxLG3WO17tku+ij6sVHXh1jQUJ8hYAnRhNla4QVD2H8er/FOjc/+EgC6yQ==}
-    dev: false
 
   /pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
@@ -13960,7 +14011,7 @@ packages:
       ts-node: 10.9.1(@types/node@22.10.5)(typescript@5.7.2)
       yaml: 1.10.2
 
-  /postcss-load-config@4.0.2(postcss@8.4.48):
+  /postcss-load-config@4.0.2(postcss@8.4.48)(ts-node@10.9.1):
     resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
     engines: {node: '>= 14'}
     peerDependencies:
@@ -13974,6 +14025,7 @@ packages:
     dependencies:
       lilconfig: 3.1.2
       postcss: 8.4.48
+      ts-node: 10.9.1(@types/node@20.17.6)(typescript@5.7.3)
       yaml: 2.5.0
 
   /postcss-nested@5.0.6(postcss@8.4.33):
@@ -15510,12 +15562,12 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+    dev: true
 
   /semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
     hasBin: true
-    dev: true
 
   /send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
@@ -16268,7 +16320,7 @@ packages:
     resolution: {integrity: sha512-DsmaZqEmlQS/NL5ZJbVtoaeYjJgofEFp+2er7+uwKerGwd/E2rZbeQgux4+Ab1dxNJcbptiX7oUiTwogOnUdgQ==}
     dev: true
 
-  /tailwindcss@3.3.3:
+  /tailwindcss@3.3.3(ts-node@10.9.1):
     resolution: {integrity: sha512-A0KgSkef7eE4Mf+nKJ83i75TMyq8HqY3qmFIJSWy8bNt0v1lG7jUcpGpoTFxAwYcWOphcTBLPPJg+bDfhDf52w==}
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -16290,7 +16342,7 @@ packages:
       postcss: 8.4.48
       postcss-import: 15.1.0(postcss@8.4.48)
       postcss-js: 4.0.1(postcss@8.4.48)
-      postcss-load-config: 4.0.2(postcss@8.4.48)
+      postcss-load-config: 4.0.2(postcss@8.4.48)(ts-node@10.9.1)
       postcss-nested: 6.0.1(postcss@8.4.48)
       postcss-selector-parser: 6.0.13
       resolve: 1.22.8
@@ -16299,7 +16351,7 @@ packages:
       - ts-node
     dev: false
 
-  /tailwindcss@3.4.1:
+  /tailwindcss@3.4.1(ts-node@10.9.1):
     resolution: {integrity: sha512-qAYmXRfk3ENzuPBakNK0SRrUDipP8NQnEY6772uDhflcQz5EhRdD7JNZxyrFHVQNCwULPBn6FNPp9brpO7ctcA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -16321,7 +16373,7 @@ packages:
       postcss: 8.4.48
       postcss-import: 15.1.0(postcss@8.4.48)
       postcss-js: 4.0.1(postcss@8.4.48)
-      postcss-load-config: 4.0.2(postcss@8.4.48)
+      postcss-load-config: 4.0.2(postcss@8.4.48)(ts-node@10.9.1)
       postcss-nested: 6.0.1(postcss@8.4.48)
       postcss-selector-parser: 6.0.15
       resolve: 1.22.8
@@ -16330,7 +16382,7 @@ packages:
       - ts-node
     dev: true
 
-  /tailwindcss@3.4.14:
+  /tailwindcss@3.4.14(ts-node@10.9.1):
     resolution: {integrity: sha512-IcSvOcTRcUtQQ7ILQL5quRDg7Xs93PdJEk1ZLbhhvJc7uj/OAhYOnruEiwnGgBvUtaUAJ8/mhSw1o8L2jCiENA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -16352,7 +16404,7 @@ packages:
       postcss: 8.4.48
       postcss-import: 15.1.0(postcss@8.4.48)
       postcss-js: 4.0.1(postcss@8.4.48)
-      postcss-load-config: 4.0.2(postcss@8.4.48)
+      postcss-load-config: 4.0.2(postcss@8.4.48)(ts-node@10.9.1)
       postcss-nested: 6.2.0(postcss@8.4.48)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.8
@@ -16616,7 +16668,7 @@ packages:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.11.4
-      acorn: 8.11.3
+      acorn: 8.12.1
       acorn-walk: 8.2.0
       arg: 4.1.3
       create-require: 1.1.1
@@ -16646,7 +16698,7 @@ packages:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.12.4
-      acorn: 8.11.3
+      acorn: 8.12.1
       acorn-walk: 8.2.0
       arg: 4.1.3
       create-require: 1.1.1
@@ -16677,7 +16729,7 @@ packages:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.17.6
-      acorn: 8.11.3
+      acorn: 8.12.1
       acorn-walk: 8.2.0
       arg: 4.1.3
       create-require: 1.1.1
@@ -16688,7 +16740,7 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /ts-node@10.9.1(@types/node@20.17.6)(typescript@5.7.2):
+  /ts-node@10.9.1(@types/node@20.17.6)(typescript@5.7.3):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -16708,16 +16760,15 @@ packages:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 20.17.6
-      acorn: 8.11.3
+      acorn: 8.12.1
       acorn-walk: 8.2.0
       arg: 4.1.3
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.7.2
+      typescript: 5.7.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: true
 
   /ts-node@10.9.1(@types/node@22.10.5)(typescript@5.7.2):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
@@ -17084,9 +17135,15 @@ packages:
     resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /typescript@5.7.2:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  /typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
 

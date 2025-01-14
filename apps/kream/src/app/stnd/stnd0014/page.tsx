@@ -12,8 +12,7 @@ import Grid from './_component/gridMaster';
 import { shallow } from "zustand/shallow";
 import { FormProvider, useForm } from "react-hook-form";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { DateToString } =  require('@repo/kwe-lib/components/dataFormatter');
+import { log, error, DateToString } from '@repo/kwe-lib-new';
 
 
 export default function STND0014() {

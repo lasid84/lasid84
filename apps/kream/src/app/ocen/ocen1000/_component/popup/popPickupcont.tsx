@@ -5,7 +5,7 @@ import { useAppContext } from "components/provider/contextObjectProvider"
 import { useTranslation } from "react-i18next";
 import CustPickupPlace from "@/components/commonForm/customerPickupPlace";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     ref?: any | null;

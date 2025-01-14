@@ -1,16 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SP_UpdateData, SP_GetEDIDetailData } from "../../_store/data";
 import { useAppContext } from "components/provider/contextObjectProvider";
-import { SEARCH_D } from "components/provider/contextArrayProvider";
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { useTranslation } from "react-i18next";
 import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import { PageGrid } from "layouts/grid/grid";
 import { LabelGrid } from "@/components/label";
-import { Button } from "components/button";
 import {
   CellValueChangedEvent,
   IRowNode,
@@ -19,7 +15,7 @@ import {
 import { Store } from "../../_store/store";
 import { toastSuccess } from "components/toast";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   initData?: any | null;
@@ -141,8 +137,8 @@ const DetailGrid: React.FC<Props> = ({  initData, params }) => {
         toastSuccess("Success.");
         dispatch({ isDSearch: true });
       })
-      .catch((error) => {
-        log.error("node. Error", error);
+      .catch((err) => {
+        error("node. Error", err);
       });
   };
 

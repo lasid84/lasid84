@@ -1,7 +1,7 @@
 
 import PageTitle from "components/page-title/page-title";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log } from '@repo/kwe-lib-new';
 
 
 export default function Page() {

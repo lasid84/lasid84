@@ -7,8 +7,8 @@ import  {PageSearch2}  from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { crudType, useAppContext } from "@/components/provider/contextObjectProvider";
 import { ROW_TYPE_NEW } from "@/components/grid/ag-grid-enterprise";
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

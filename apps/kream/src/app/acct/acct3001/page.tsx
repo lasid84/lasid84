@@ -13,8 +13,7 @@ import CustomerDetail from './_component/custDetailInfo';
 import { useUserSettings } from "@/states/useUserSettings";
 import { shallow } from "zustand/shallow";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper')
+import { log, getMenuParameters } from '@repo/kwe-lib-new';
 
 
 export default function ACCT3001() {
@@ -38,7 +37,7 @@ export default function ACCT3001() {
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
-        dispatch({ cont_type: params.cont_type });
+        dispatch({ cont_type: (params as { cont_type: string }).cont_type });
         // log(params);
     }, [menu_param])
 

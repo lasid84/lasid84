@@ -1,12 +1,9 @@
 
 
-import { executFunction } from "@/services/api.services";
+// import { executeKREAMFunction } from "@/services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-
-interface cursorData {
-  cursorData: {}[]
-}
 
 //SP_GetInvoiceMasterContent
 export const SP_GetIFData = async (searchParam: any) => {
@@ -30,7 +27,7 @@ export const SP_GetIFData = async (searchParam: any) => {
     inproc: 'ufsm.f_ufsm0003_get_if_data',
     isShowLoading: true
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   // log("SP_GetIFData", result)
   return result![0]
 }
@@ -57,7 +54,7 @@ export const SP_CreateIFData = async (param: any) => {
     isShowComplete: true,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }
 
@@ -79,6 +76,6 @@ export const SP_GetExcelFormData = async (param: any) => {
     isShowComplete: false,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }

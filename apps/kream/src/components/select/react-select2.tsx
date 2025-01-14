@@ -1,13 +1,11 @@
 import React, { useRef, FocusEventHandler, KeyboardEventHandler, useEffect, useState, memo } from 'react';
 import { Controller, useFormContext } from "react-hook-form";
 import { InputActionMeta, default as ReactSelectComponent, MenuProps } from "react-select";
-// import { Label, InputWrapper } from "components/react-hook-form"
 import { InputWrapper } from "components/wrapper"
 import { Label } from "components/label"
-import clsx from 'clsx';
 import './custom-select-style.css';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 export type data = {
     data?: {}[],

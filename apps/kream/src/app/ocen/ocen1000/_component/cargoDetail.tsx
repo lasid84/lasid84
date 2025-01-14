@@ -1,18 +1,13 @@
 "use client";
 
 import { useRef, memo, useEffect, useState } from "react";
-import type { gridData } from "components/grid/ag-grid-enterprise";
 import { PageBKCargo } from "layouts/search-form/page-search-row";
-import { SP_GetCargoData } from "./data";
-import { SEARCH_CGD } from "components/provider/contextArrayProvider";
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { Button } from "components/button";
 import { useAppContext } from "components/provider/contextObjectProvider";
-import { toastSuccess } from "components/toast";
-import { SP_InsertCargo, SP_UpdateCargo } from "./data";
 import CargoDetailRow from "./cargoDetailRow"
-const { log, error } = require("@repo/kwe-lib/components/logHelper");
 import { ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from 'components/grid/ag-grid-enterprise';
+
+import { log, error } from '@repo/kwe-lib-new';
 
 
 type Props = {

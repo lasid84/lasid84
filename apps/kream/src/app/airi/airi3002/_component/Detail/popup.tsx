@@ -13,18 +13,12 @@ import {
   SEARCH_M,
   useAppContext,
 } from "components/provider/contextObjectProvider";
-// import {  SP_UpdateData } from "../data";
-import { useUpdateData2 } from "components/react-query/useMyQuery";
-import CustomSelect from "components/select/customSelect";
-import { useRouter, usePathname } from "next/navigation";
 import { Button } from "components/button";
-import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
-import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import DetailGrid from "./popupGrid";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {
@@ -111,8 +105,8 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
       }
     >
       <form>
-        <div className="gap-4 w-full md:gap-8">
-          <div className="flex p-1 w-full rounded-lg border">
+        <div className="w-full gap-4 md:gap-8">
+          <div className="flex w-full p-1 border rounded-lg">
             <div className="col-span-2 p-4">
               <MaskedInputField
                 id="waybill_no"
@@ -321,7 +315,7 @@ const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
               />
             </div>
           </div>
-          <div className="col-span-3 h-full">
+          <div className="h-full col-span-3">
             <DetailGrid
               params={{
                 waybill_no: objState.mSelectedRow?.waybill_no,

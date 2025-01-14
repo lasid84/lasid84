@@ -4,7 +4,7 @@ import clsx from "clsx"
 import { InputWrapper } from "components/wrapper";
 import { Label } from "components/label";
 
-const { log } = require('@repo/kwe-lib/components/logHelper')
+import { log, error } from '@repo/kwe-lib-new';
 
 export type TextareaProps = {
   id: string;

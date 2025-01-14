@@ -2,7 +2,7 @@
 import { HTMLInputTypeAttribute } from "react";
 import { useFormContext } from "react-hook-form";
 
-const { toStringByFormatting } = require('@repo/kwe-lib/components/dateHelper');
+import { log, error, DateToString } from '@repo/kwe-lib-new';
 
 export type InputProps = {
   id: string;
@@ -53,7 +53,7 @@ export const Input: React.FC<InputProps> = ({
   if (type === "date") {
     // valueAsdate = false로 변경 (yyyy/mm/dd format read)
     rules = { valueAsDate: false };
-    currentValue = value ? value : toStringByFormatting(new Date(), '-');
+    currentValue = value ? value : DateToString(new Date(), '-');
   }
   if (readOnly && !notAppliedReadOnlyCss) {
     readOnlyCss = "read-only:bg-gray-100";

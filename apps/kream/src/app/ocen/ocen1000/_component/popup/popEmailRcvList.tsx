@@ -1,14 +1,12 @@
 import DialogBasic from "layouts/dialog/dialog"
-import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { useEffect, useCallback, useRef, memo, useState } from "react";
 import { useAppContext } from "components/provider/contextObjectProvider"
-import { Button } from "components/button"
 import { useTranslation } from "react-i18next";
 
 import PopupEmailRcvList from 'components/commonForm/mailReceiver';
 import { TRANPOSRT_EMAIL_LIST_OE } from "components/commonForm/mailReceiver/_component/data";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     cust_code: string;

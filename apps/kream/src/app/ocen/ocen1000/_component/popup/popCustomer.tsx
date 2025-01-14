@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import ShpContModal from 'components/commonForm/customerContact';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     initData?: any | null;

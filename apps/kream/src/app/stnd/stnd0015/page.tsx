@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef, memo, RefObject } from "react";
-import { useUserSettings } from "states/useUserSettings";
 import SearchForm from "./_component/search-form"
 import Grid from './_component/gridMaster';
 import { FormProvider, useForm } from "react-hook-form";
@@ -9,9 +8,7 @@ import { useCommonStore } from "./_store/store";
 import DetailInfo from "./_component/DetailInfo";
 import { AgGridReact } from "ag-grid-react";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { DateToString } =  require('@repo/kwe-lib/components/dataFormatter');
-const { getMenuParameters } = require("@repo/kwe-lib/components/menuParameterHelper.js");
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export default memo(function STND0015() {

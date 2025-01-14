@@ -1,11 +1,10 @@
 'use client'
 
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { setI18n } from 'components/i18n/i18n';
 import { useTranslation } from 'react-i18next';
 import { useConfigs } from 'states/useConfigs';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 export type LayoutProps = {
   children: React.ReactNode;

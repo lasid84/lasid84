@@ -1,9 +1,8 @@
 import pg from 'pg';
-import { QueryResult, QueryResultRow } from 'pg';
 import { DBConnector } from './baseConnector';
+import { log } from '@repo/kwe-lib-new';
 
 const { Pool } = pg;
-type PoolType = typeof Pool;
 
 export class PostgreSQLConnector extends DBConnector {
   private static instance: PostgreSQLConnector;
@@ -26,7 +25,12 @@ export class PostgreSQLConnector extends DBConnector {
   }
 
   async connect(): Promise<void> {
-    console.log('PostgreSQL connection pool initialized');
+    log('PostgreSQL connection pool initialized');
+  }
+
+  // 클라이언트를 반환하는 메서드
+  async getClient(): Promise<any> {
+    return await this.pool.connect();
   }
 
   async query<T>(sql: string, params?: any[]): Promise<T> {

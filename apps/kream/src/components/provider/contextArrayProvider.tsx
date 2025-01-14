@@ -1,6 +1,6 @@
 import { ReactPropTypes, createContext, useContext } from "react";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 export const SEARCH_M = 'SEARCH_M'
 export const SEARCH_D = 'SEARCH_D'

@@ -3,15 +3,12 @@
 import { useEffect, useCallback, useRef, memo, useState, RefObject, forwardRef, MutableRefObject, } from "react";
 import Grid, { ROW_CHANGED } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-import { Button } from "@/components/button";
-import { PageMGrid3 } from "@/layouts/grid/grid";
 import { useCommonStore } from "../_store/store";
-import { useFormContext } from "react-hook-form";
 import { SelectionChangedEvent } from "ag-grid-community";
 import { use } from "i18next";
 import { AgGridReact } from "ag-grid-react";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   // gridRef: RefObject<AgGridReact>

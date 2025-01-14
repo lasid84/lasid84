@@ -10,7 +10,6 @@ import { useState } from 'react'
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
-import { useSearchParams } from 'next/navigation'
 import WBMain from "./_component/wbMain";
 import WBSub from "./_component/wbSub";
 import WBMainTab from "./_component/wbMainTab"
@@ -23,8 +22,7 @@ import { shallow } from "zustand/shallow";
 import { FormProvider, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export default function UFSM0002() {

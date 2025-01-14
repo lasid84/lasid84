@@ -3,8 +3,11 @@ import nodemailer, { SendMailOptions, Transporter } from 'nodemailer';
 import { Request, Response } from "express";
 import fs from 'fs';
 
-import { log, error } from '@repo/kwe-lib/components/logHelper';
-import { callFunction } from '@repo/kwe-lib/components/dbDTOHelper';
+// import { log, error } from '@repo/kwe-lib/components/logHelper';
+// import { callFunction } from '@repo/kwe-lib/components/dbDTOHelper';
+
+import { executePostgresProcedure } from 'components/db'
+import { log, error } from "@repo/kwe-lib-new";
 
 interface resultType {
     numericData: number,
@@ -140,7 +143,7 @@ export const sendMail = async (req: Request, res: Response) => {
                 const inproc =  "public.f_batch01_set_sendemail"
                 const inparam = ["in_key", "in_err", "in_user", "in_ipaddr"];
                 const invalue = [mailContent.seq, errMsg, user_id, ipaddr];
-                const result:resultType = await callFunction(inproc, inparam, invalue) as resultType;
+                const result:resultType = await executePostgresProcedure(process.env.KREAM_DB_CONNSTR, inproc, inparam, invalue) as resultType;
                 // log("mailContent.seq", result, mailContent.seq, errMsg);
             }
             deleteFiles(mailContent.attachment.split(','));

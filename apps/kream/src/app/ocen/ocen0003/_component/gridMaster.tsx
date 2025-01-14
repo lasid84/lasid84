@@ -14,7 +14,7 @@ import Modal from "components/ufs-interface/popupInterface";
 import { SCRAP_UFSP_PROFILE_CUSTOMER } from "components/ufs-interface/_component/data"
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     // initData: any | null;

@@ -22,11 +22,9 @@ import "css/ag-grid/ag-theme-material.css";
 import "css/vendors/ReactToastify.css";
 
 import  Layout from 'layouts/page'
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { Suspense } from "react";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log } from '@repo/kwe-lib-new';
 
 
 const inter = Inter({ subsets: ["latin"] });

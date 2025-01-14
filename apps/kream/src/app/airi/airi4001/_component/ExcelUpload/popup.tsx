@@ -10,7 +10,8 @@ import { useTranslation } from "react-i18next";
 import ExcelUploadGrid from "./popupGrid";
 import { Store } from "../../_store/store";
 import { toastError, toastSuccess } from "@/components/toast";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {

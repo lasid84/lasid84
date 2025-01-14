@@ -4,8 +4,10 @@ import dayjs from "dayjs";
 import { createStore } from "@/states/createStore";
 import { toastError } from "components/toast";
 import { t } from "i18next";
-import { callUnipass, unipassAPI001 } from "@/services/api.services";
+import { callUnipass } from "@/services/api/apiClient";
 import { useUserSettings } from "@/states/useUserSettings";
+import { DataRoutes } from "@/services/api.constants";
+import { log } from "@repo/kwe-lib-new";
 
 // StoreState 정의
 interface StoreState {
@@ -60,6 +62,7 @@ const setinitValue = (set: any) => {
             return result;
         },
         getAppleDatas: async (params: any) => {
+            log("getAppleDatas", params);
             const result = await SP_GetAppleMainData(params);
             set({ mainDatas: result, searchParams:params });
             return result;
@@ -102,8 +105,8 @@ const setinitValue = (set: any) => {
                     user_id: useUserSettings.getState().data.user_id
                   }
                   
-                  let result = await callUnipass(unipassAPI001, body);
-    
+                  let result = await callUnipass(DataRoutes.URI.GET_CARG_CSCL_PRGS_INFO_QRY, body);
+                  
                   if (result.status !== 200) {
                     toastError(result);
                   }

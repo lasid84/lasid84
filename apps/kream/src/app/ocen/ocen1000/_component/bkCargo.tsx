@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input, TextArea } from "components/input";
 import {
@@ -11,11 +10,9 @@ import {
 } from "components/provider/contextObjectProvider";
 import CustomSelect from "components/select/customSelect";
 import { gridData, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
-import GridCargo from "./gridCargo";
 import CargoDetail from "./cargoDetail"
 
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   loadItem: any[];

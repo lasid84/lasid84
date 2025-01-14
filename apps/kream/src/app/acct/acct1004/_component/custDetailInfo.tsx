@@ -12,7 +12,7 @@ import { SP_UpdateData } from "./data";
 import { DateInput, DatePicker } from 'components/date'
 import { Button } from 'components/button';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log } from '@repo/kwe-lib-new';
 
 
 export interface typeloadItem {

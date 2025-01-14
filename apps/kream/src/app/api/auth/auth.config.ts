@@ -1,8 +1,6 @@
-import { request } from 'http';
+
 import type { NextAuthConfig, Session } from 'next-auth';
-import type { AdapterUser } from "@auth/core/adapters";
-import type { JWT } from "@auth/core/jwt";
-const {log} = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
  
 export const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,

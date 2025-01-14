@@ -2,7 +2,6 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef } from "react";
-import { useUserSettings } from "states/useUserSettings";
 import { SP_Load, SP_GetData } from "./_component/data";
 import { PageState, reducer } from "components/provider/contextObjectProvider";
 import { LOAD } from "components/provider/contextObjectProvider";
@@ -12,7 +11,7 @@ import { TableContext } from "@/components/provider/contextObjectProvider";
 import Grid from './_component/gridMaster';
 import { FormProvider, useForm } from "react-hook-form";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export default function STND0010() {

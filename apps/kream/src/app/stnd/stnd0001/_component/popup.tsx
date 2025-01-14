@@ -9,9 +9,8 @@ import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { ReactSelect, data } from "@/components/select/react-select2"
 import { ReactMultiSelect } from "@/components/select/react-multi-select"
 import { MaskedInputField } from "@/components/input/react-text-mask";
-const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     loadItem: any | null

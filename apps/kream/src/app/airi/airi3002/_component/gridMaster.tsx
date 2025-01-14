@@ -8,15 +8,13 @@ import { PageMGrid3, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from "components/button";
 import Grid, { ROW_HIGHLIGHTED,ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
-import Switch from "components/switch/index"
 import { useCommonStore } from "../_store/store";
 import ExcelUploadModal from "./ExcelUpload/popup"
-import { shallow } from "zustand/shallow";
 import { toast } from "react-toastify";
 import { t } from "i18next";
 import { useFormContext } from "react-hook-form";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error, sleep } from '@repo/kwe-lib-new';
 
 type Props = {
   initData?: any | null;
@@ -106,21 +104,26 @@ const MasterGrid: React.FC<Props> = memo(() => {
 
     setUniPassCircle(true);
     let waybills = [];
+    let blyySet = new Set<number>();
     const api = gridRef.current.api;
     for (const node of api.getRenderedNodes()) {
       var data = node.data;
-      waybills.push(data.waybill_no)
+      if (!data.eta_icn) waybills.push(data.waybill_no);
+      blyySet.add((new Date(data.etd_1flight)).getFullYear());
     }
-
-    if (!waybills.length) return;
-
-    const params = {
-      blyy: getValues()["fr_date"].substring(0,4),
-      blno: waybills.join(' '),
+    
+    if (waybills.length) {
+      const params = {
+        blyy: Math.min(...blyySet) || getValues()["fr_date"].substring(0,4),
+        blno: waybills.join(' '),
+      }
+      log("params",params)
+      await actions.getUnipassData(params)
+        .then(async () => {
+          sleep(200);
+          actions.getAppleDatas(getValues());
+        });
     }
-    await actions.getUnipassData(params);
-    await actions.getAppleDatas(getValues());
-
     setUniPassCircle(false);
   }
 

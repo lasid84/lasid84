@@ -1,8 +1,10 @@
 
 
-import { executFunction } from "@/services/api.services";
+// import { executFunction } from "@/services/api.services";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
+
 
 export const SCRAP_UFSP_HBL = 'SCRAP_UFSP_HBL';                           //(House BL 다운)
 export const SCRAP_UFSP_MBL = 'SCRAP_UFSP_MBL';                           //(Master BL 다운)
@@ -36,6 +38,6 @@ export const SP_CreateIFData = async (param: any) => {
     isShowComplete:true,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }

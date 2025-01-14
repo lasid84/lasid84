@@ -2,13 +2,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
-import { useAppContext } from "components/provider/contextObjectProvider";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     loadData: gridData

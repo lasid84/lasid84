@@ -11,12 +11,10 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { CellValueChangedEvent, GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent, StateUpdatedEvent } from "ag-grid-community";
 import { PageMGrid2, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from 'components/button';
-import GridReferences from "@/app/ufsm/ufsm0001/_component/gridReferences";
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
 
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     initData: any | null

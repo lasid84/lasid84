@@ -3,7 +3,7 @@ import {useConfigs} from "states/useConfigs";
 import {useLeftSidebar} from "states/useLeftSidebar";
 import Link from "next/link";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 const Logo: React.FC = () => {
   const configActions = useConfigs((state) => state.actions);

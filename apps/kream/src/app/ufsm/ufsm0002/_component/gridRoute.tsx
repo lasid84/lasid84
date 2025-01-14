@@ -2,16 +2,10 @@
 'use client';
 
 import { useEffect, useRef, memo } from "react";
-import { SP_GetMasterData } from "./data";
-import { useAppContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
-import { useGetData } from "components/react-query/useMyQuery";
 import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     loadData: gridData

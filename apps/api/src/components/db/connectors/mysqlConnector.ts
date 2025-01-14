@@ -1,7 +1,9 @@
 import mysql from 'mysql2/promise';
 import { DBConnector } from './baseConnector';
+import { log } from '@repo/kwe-lib-new';
 
 export class MySQLConnector extends DBConnector {
+  
   private static instance: MySQLConnector;
   private pool: mysql.Pool;
 
@@ -10,6 +12,16 @@ export class MySQLConnector extends DBConnector {
     this.pool = mysql.createPool({
       uri: connStr,
       connectionLimit: 10,
+      typeCast: (field, next) => {
+        if (field.type === 'VAR_STRING' || field.type === 'STRING') {
+          return field.string(); // 문자열 반환
+        }
+        if (field.type === 'TINY' || field.type === 'SHORT' || field.type === 'LONG') {
+          const value = field.string();
+          return value === null ? null : Number(value); // 숫자로 변환
+        }
+        return next(); // 기본 변환 사용
+      },
       ...options,
     });
   }
@@ -22,12 +34,17 @@ export class MySQLConnector extends DBConnector {
   }
 
   async connect(): Promise<void> {
-    console.log('MySQL connection pool initialized');
+    log('MySQL connection pool initialized');
   }
 
-  async query<T>(sql: string, params?: any[]): Promise<T> {
-    const rows = await this.pool.query<mysql.RowDataPacket[] | mysql.ResultSetHeader>(sql, params);
-    return rows as T; // 반환값을 명시적으로 T로 캐스팅
+  async getClient(): Promise<any> {
+    return await this.pool.getConnection();
+  }
+
+  async query(sql: string, params?: any[]): Promise<any> {
+    const rows = await this.pool.query(sql, params);
+    
+    return rows;
   }
 
   async disconnect(): Promise<void> {

@@ -1,8 +1,9 @@
 import {useConfigs} from "states/useConfigs";
-import { useTranslation } from "react-i18next";
-import { executFunction } from "services/api.services";
+// import { executeKREAMFunction } from "services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
+
 import { useUserSettings } from "states/useUserSettings";
-const { log } = require('@repo/kwe-lib/components/logHelper');
 
 type Option = {
   key: string;
@@ -21,7 +22,7 @@ export const SP_UpdateData = async (Param: any) => {
     inproc: 'public.f_admn_set_lang'
     }
   
-    await executFunction(params);
+    await executeKREAMFunction(params);
 }
 
 const Langs: React.FC = () => {

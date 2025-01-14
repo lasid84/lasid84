@@ -8,8 +8,7 @@ import { Button } from "components/button"
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { Translation, useTranslation } from "react-i18next";
 
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     pgm_code: string;

@@ -26,21 +26,16 @@ import {
   ROW_TYPE,
   ROW_TYPE_NEW,
 } from "components/grid/ag-grid-enterprise";
-import { SP_UpdateData } from "../../_store/data";
-import { useUpdateData2 } from "components/react-query/useMyQuery";
 import CustomSelect from "components/select/customSelect";
-import { useRouter, usePathname } from "next/navigation";
 import { Button } from "components/button";
-import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { DatePicker } from "@/components/date/react-datepicker";
-import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/badge";
 import { Store } from "../../_store/store";
 import DetailGrid from "./popupGrid";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {

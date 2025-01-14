@@ -1,11 +1,9 @@
 
 
-import { executFunction } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-import { FaBullseye } from "react-icons/fa6";
+// import { executeKREAMFunction } from "@/services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
 
 export const TRANPOSRT_EMAIL_LIST_OE = "TRANPOSRT_EMAIL_LIST_OE";
 
@@ -19,7 +17,7 @@ export const TRANPOSRT_EMAIL_LIST_OE = "TRANPOSRT_EMAIL_LIST_OE";
 //     isShowLoading: false
 //   }
 //   // log("Acct2003Load", p);
-//   const result = await executFunction(params);
+//   const result = await executeKREAMFunction(params);
 //   return result;
 // }
 
@@ -47,7 +45,7 @@ export const SP_GetMailSample = async (searchParam: any) => {
     isShowLoading: true
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     log('mailData result', Param, result)
     return result![0];
 }
@@ -75,7 +73,7 @@ export const SP_GetMailSample_comm = async (searchParam: any) => {
     isShowLoading: true
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
     return result![0];
 }
@@ -102,7 +100,7 @@ export const SP_GetMailReceiver = async (searchParam: any) => {
     isShowLoading: true
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }
 
@@ -138,6 +136,6 @@ export const SP_SaveData = async (param: any) => {
     isShowComplete:true,
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }

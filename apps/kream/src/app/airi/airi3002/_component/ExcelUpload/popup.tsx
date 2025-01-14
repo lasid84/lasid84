@@ -1,17 +1,13 @@
 import DialogBasic from "layouts/dialog/dialog";
 import { useFormContext } from "react-hook-form";
 import { useMemo, useState, useEffect, useCallback, memo } from "react";
-import {
-  crudType,
-} from "components/provider/contextObjectProvider";
 // import { SP_UpdateData } from "../../_store/data";
 import { FileUpload } from "components/file-upload";
 import { Button } from "components/button";
 import { useTranslation } from "react-i18next";
 import { useCommonStore } from "../../_store/store";
-import { useUserSettings } from "@/states/useUserSettings";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {
@@ -35,43 +31,7 @@ const Modal: React.FC<Props> = () => {
     actions.setState({popup:{...state.popup, isPopUpUploadOpen:false}});
   };
 
-  // useEffect(() => {
-  //   reset();
-  //   if (popType === crudType.CREATE) {
-  //     setFocus("use_yn");
-  //   }
-  // }, [popType, isOpen]);
-
-  const onSave = useCallback(async () => {
-    var param = getValues();
-    // // try {
-    // if (popType === crudType.UPDATE) {
-    //   const jsonData = JSON.stringify([param]);
-    //   // log("onSave1", jsonData)
-    //   await Update.mutateAsync(
-    //     { jsondata: jsonData },
-    //     {
-    //       onSuccess: (res: any) => {
-    //         closeModal();
-    //       },
-    //     }
-    //   ).catch((err) => {});
-    // } else {
-
-    //   // await Create.mutateAsync(param, {
-    //   //   onSuccess(data, variables, context) {
-    //   //     closeModal();
-    //   //   },
-    //   //   onError(error, variables, context) {},
-    //   // }).catch((err) => {});
-    // }
-    // // dispatch({ isMSearch: true });
-    // // } catch(err) {
-    // //     log("catch err", err)
-    // // }
-  }, [popType]);
-
-  const handleFileDrop = (data: any[], header: any[], file:any) => {
+  const handleFileDrop = async (data: any[], header: any[], file:any) => {
 
     const fileOptions = ((state.loadDatas ?? [])[2].data as []);
     const headerRow = fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["header"] || 1; 
@@ -119,7 +79,7 @@ const Modal: React.FC<Props> = () => {
         });
       });
     }
-
+    log("file", file);
     actions.insExcelData({jsonData: JSON.stringify(data), file: file})
             .then(async (response : {[key:string]:any}[] | undefined ) => {
               if (response) {
@@ -130,7 +90,7 @@ const Modal: React.FC<Props> = () => {
                     blyy:response[0].data[0]["blyy"],
                     blno:blForInipass,
                   }
-                  await actions.getUnipassData(params);
+                  // await actions.getUnipassData(params);
                   await actions.getAppleDatas(getValues());
                   await actions.getLoad();
                   closeModal();

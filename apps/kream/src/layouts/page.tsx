@@ -10,10 +10,8 @@ import { ToastContainer } from "react-toastify";
 import { toastConfig } from "@/configs/toast.config";
 import { useHotkeys } from "react-hotkeys-hook";
 import  AuthProvider  from 'components/provider/AuthProvider'
-// import 'components/i18n/i18n';
 
-
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export type LayoutProps = {
   children: React.ReactNode;

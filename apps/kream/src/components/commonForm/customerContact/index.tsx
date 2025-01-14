@@ -14,7 +14,7 @@ import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent
 import { toastSuccess } from "components/toast"
 import { LabelGrid } from "components/label";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     ref?: any | null
@@ -134,8 +134,8 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
                 } else {
                   await Update.mutateAsync(data);
                 }
-              } catch (error) {
-                log.error("error:", error);
+              } catch (err) {
+                error("error:", err);
               } finally {
                 data.__changed = false;
               }
@@ -147,8 +147,8 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
             toastSuccess("Success.");
             dispatch({ isDSearch: true });
           })
-          .catch((error) => {
-            log.error("node. Error", error);
+          .catch((err) => {
+            error("node. Error", err);
           });
       };
 

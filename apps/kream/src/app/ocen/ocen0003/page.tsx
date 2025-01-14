@@ -13,8 +13,7 @@ import { useUserSettings } from "@/states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import  CustPickupPlace from "components/commonForm/customerPickupPlace";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
+import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 
 type Props = {
@@ -44,7 +43,7 @@ const OCEN0003: React.FC = memo(() => {
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
-        dispatch({ pickup_type: params.pickup_type });
+        dispatch({ pickup_type: (params as {pickup_type:string}).pickup_type });
         // log(params);
     }, [menu_param])
 

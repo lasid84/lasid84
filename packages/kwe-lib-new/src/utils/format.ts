@@ -1,3 +1,4 @@
+type inputType = Date | null | undefined;
 
 export const stringToDateString = (source: string, delimiter = '') => {
     if (source) {
@@ -8,15 +9,13 @@ export const stringToDateString = (source: string, delimiter = '') => {
 
         return [year, month, day].join(delimiter);
     }
-
-    return '';
 };
 
 /**
  * @dev
  * Return the date string in the format of 'YYYYMMDD' with delimiter (YYYY + delimiter + MM + delimiter + DD).
  */
-export const DateToString = (source = new Date(), delimiter = '') => {
+export const DateToString = (source: inputType = new Date(), delimiter = '') => {
     if (source) {
         const year = source.getFullYear();
         const month = (source.getMonth() + 1).toString().padStart(2,'0');
@@ -30,7 +29,7 @@ export const DateToString = (source = new Date(), delimiter = '') => {
  * @dev
  * Return the date string in the format of 'YYYYMMDD HHMMSS' with delimiter
  */
-export const DateToFullString = (source = new Date(), delimiter = '') => {
+export const DateToFullString = (source: inputType = new Date(), delimiter = '') => {
     if (source) {
         const year = source.getFullYear();
         const month = (source.getMonth() + 1).toString().padStart(2,'0');
@@ -93,9 +92,10 @@ export const stringToDate = (source: string, delimiter = '-') => {
         try {
             return new Date([year, month, day].join(delimiter));
         } catch (e) {
-            return null;
+            return;
         }
     }
+
 };
 
 /**
@@ -111,7 +111,7 @@ export const stringToTime = (source: string, delimiter = ':') => {
         try {
             return hour + delimiter + min + (sec ? delimiter + sec : "");
         } catch (e) {
-            return null;
+            return;
         }
     }
 };

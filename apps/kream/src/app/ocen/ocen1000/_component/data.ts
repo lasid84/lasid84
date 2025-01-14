@@ -1,12 +1,8 @@
-import { executFunction, executeReportDownload, executeFileUpload,executeReportUpload, callDescartes } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-import { FaBullseye } from "react-icons/fa6";
-import { useUserSettings } from "states/useUserSettings";
+// import { executeKREAMFunction, executeReportDownload, executeFileUpload,executeReportUpload, callDescartes } from "@/services/api.services";
 import { toastError } from "components/toast";
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
+
+import { executeKREAMFunction, executeReportDownload, executeFileUpload, executeReportUpload, callDescartes } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 interface cursorData {
   cursorData: {}[]
@@ -21,7 +17,7 @@ export const SP_Load = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_load',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -57,7 +53,7 @@ export const SP_GetMData = async (searchParam: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   // log('mainData Result', result)
   // log('mainData Result?', result![0])
   return result
@@ -94,7 +90,7 @@ export const SP_GetMData = async (searchParam: any) => {
 //     isShowLoading: true
 //   }
 
-//   const result = await executFunction(params);
+//   const result = await executeKREAMFunction(params);
 //   // log('mainData Result', result)
 //   // log('mainData Result?', result![0])
 //   return result![0]
@@ -122,7 +118,7 @@ export const SP_GetTransportData = async (searchParam: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0]
 }
@@ -329,7 +325,7 @@ export const SP_CreateData = async (param: any) => {
     isShowLoading: true,
     isShowComplete: false,
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0];
 }
@@ -538,7 +534,7 @@ export const SP_UpdateData = async (param: any) => {
     isShowLoading: true,
     isShowComplete: false,
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -563,7 +559,7 @@ export const SP_GetBkHblData = async (searchParam: any) => {
     isShowLoading: false
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0]
 }
@@ -594,7 +590,7 @@ export const SP_SaveBkHblData = async (searchParam: any) => {
     isShowLoading: false
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0]
 }
@@ -617,7 +613,7 @@ export const SP_GetCargoData = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_get_cargo',
     isShowLoading: true
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   //log('getCargo?', result)
 
   return result![0];
@@ -647,7 +643,7 @@ export const SP_GetPickupContData = async (searchParam: any) => {
     isShowLoading: false
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
     return result![0];
 }
@@ -678,7 +674,7 @@ export const SP_GetShipperContData = async (searchParam: any) => {
       isShowLoading: false
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
     return result![0]
   }
@@ -709,7 +705,7 @@ export const SP_GetCarrierContData = async (searchParam: any) => {
       isShowLoading: false
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0]
   }
 }
@@ -799,7 +795,7 @@ export const SP_InsertCargo = async (param: any) => {
     isShowComplete:false,
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
     return result![0];
 }
@@ -896,7 +892,7 @@ export const SP_UpdateCargo = async (param: any) => {
     }
     // log('params',params)
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
     return result![0];
 }
@@ -921,7 +917,7 @@ export const SP_GetCostData = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_get_cost',
     isShowLoading: true
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0];
   
@@ -975,7 +971,7 @@ export const SP_GetCostData = async (searchParam: any) => {
 //     isShowComplete:false,
 //     }
 
-//     const result = await executFunction(params);
+//     const result = await executeKREAMFunction(params);
 
 //     return result![0];
 // }
@@ -1030,7 +1026,7 @@ export const SP_GetCostData = async (searchParam: any) => {
 //     }
 
 
-//     const result = await executFunction(params);
+//     const result = await executeKREAMFunction(params);
 
 //     return result![0];
 // }
@@ -1086,7 +1082,7 @@ export const SP_GetCostData = async (searchParam: any) => {
 //     }
 
 
-//     const result = await executFunction(params);
+//     const result = await executeKREAMFunction(params);
 
 //     return result![0];
 // }
@@ -1111,7 +1107,7 @@ export const SP_SaveCostData = async (param: any) => {
     isShowComplete:false,
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
 }
 
@@ -1138,7 +1134,7 @@ export const SP_GetMailSample = async (searchParam: any) => {
     isShowLoading: true
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     // log('mailData result', Param, result)
     return result![0];
 }
@@ -1173,7 +1169,7 @@ export const SP_SendEmail = async (param: any) => {
     isShowComplete:true,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }
 
@@ -1202,7 +1198,7 @@ export const SP_GetReportData = async (param: any) => {
     isShowComplete:false,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result;
 }
 
@@ -1228,7 +1224,7 @@ export const SP_GetClipBoardData = async (param: any) => {
     isShowComplete:false,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result;
 }
 

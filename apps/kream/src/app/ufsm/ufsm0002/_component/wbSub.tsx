@@ -2,19 +2,13 @@
 
 import React, { useState, useEffect, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { ErrorMessage } from "components/react-hook-form/error-message";
 import {PageContent} from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
-import { shallow } from "zustand/shallow";
 import { MaskedInputField } from 'components/input';
 import GridRoute from './gridRoute';
 import { SEARCH_MD, useAppContext } from "components/provider/contextObjectProvider";
-import { useGetData } from "@/components/react-query/useMyQuery";
-// import { SP_GetWBSubData } from "./data"
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []
@@ -71,10 +65,10 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="space-y-1 w-full">
+      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageContent
           title={<span className="px-1 py-1 text-blue-500">Terms</span>}>
-          <fieldset className="flex col-span-6 p-1 space-x-1 space-y-1 w-full border-2 border-solid dark:border-gray-800">
+          <fieldset className="flex w-full col-span-6 p-1 space-x-1 space-y-1 border-2 border-solid dark:border-gray-800">
             <legend className="text-sx">Insurance</legend>
             <MaskedInputField id="type" value={data?.type} options={{ isReadOnly: true }} />
             <MaskedInputField id="insured_value" value={data?.insured_value} options={{ isReadOnly: true }} />
@@ -96,7 +90,7 @@ const WBSub = memo(({ loadItem, mainData }: any) => {
         </PageContent>
 
         <PageContent
-          title={<span className="px-1 py-1 w-full text-blue-500">Routing</span>}>
+          title={<span className="w-full px-1 py-1 text-blue-500">Routing</span>}>
 
           <div className="col-span-6">
             <div>Booked Flight Information</div>

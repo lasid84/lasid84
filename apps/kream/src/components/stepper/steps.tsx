@@ -1,4 +1,4 @@
-import { log } from '@repo/kwe-lib/components/logHelper';
+import { log, error } from '@repo/kwe-lib-new';
 
 export type ItemProps = {
   title: string;

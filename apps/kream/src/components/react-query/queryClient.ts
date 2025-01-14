@@ -1,13 +1,15 @@
 // QueryClient 인스턴스를 전역으로 관리하는 파일 생성
-import { executFunction } from '@/services/api.services'
+// import { executFunction } from '@/services/api.services'
 import { useUserSettings } from '@/states/useUserSettings';
 // import { usePathname } from 'next/navigation';
 import { QueryClient } from '@tanstack/react-query'
+import { executeKREAMFunction, executeTMSFunction } from '@/services/api/apiClient';
 
 
 export const queryClient = async (key: string, Params: any, options: any = {}): Promise<any[]> => {  
     // const path = usePathname() + "/";
     const { user_id, ipaddr } = useUserSettings.getState().data;
+    const { schema = 'kream'} = options
     
     const queryClient = new QueryClient({
         defaultOptions: {
@@ -34,10 +36,11 @@ export const queryClient = async (key: string, Params: any, options: any = {}): 
             return cachedData
         }
 
-        const data = await queryClient.fetchQuery({
+        const data = await queryClient.fetchQuery<any>({
             queryKey,
             queryFn: async () => {
-                const result = await executFunction(param)
+                const result = schema == 'kream' 
+                        ? await executeKREAMFunction(param) : await executeTMSFunction(param)
                 return result
             },
         });

@@ -5,14 +5,8 @@ import { z } from 'zod';
 
 //자격공급자 추가
 import Credentials from 'next-auth/providers/credentials';
-import { JWT } from 'next-auth/jwt';
-
-// import { sql } from '@vercel/postgres';
-// import type { User } from '@/app/lib/definitions';
-// import bcrypt from 'bcrypt';
-
-const {postCall, executFunction} = require('@repo/kwe-lib/components/api.service.js');
-const {log} = require('@repo/kwe-lib/components/logHelper');
+// const {postCall, executFunction} = require('@repo/kwe-lib/components/api.service.js');
+import { log, error } from '@repo/kwe-lib-new';
  
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,

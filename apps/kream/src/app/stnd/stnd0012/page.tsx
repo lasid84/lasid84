@@ -12,8 +12,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import PopUpInterFace from "components/ufs-interface/popupInterface";
 import { SCRAP_UFSP_PROFILE_CUSTOMER } from "@/components/ufs-interface/_component/data";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export default function STND0012() {

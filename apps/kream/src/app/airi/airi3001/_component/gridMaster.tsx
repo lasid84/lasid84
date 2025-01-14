@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useCallback, useRef, memo, useState } from "react";
-import { crudType, SEARCH_M } from "components/provider/contextObjectProvider";
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import {toastSuccess} from "components/toast"
 import { PageMGrid3, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from "components/button";
@@ -14,7 +12,7 @@ import { Store } from "../_store/store";
 import DetailModal from "./Detail/popup"
 import ExcelUploadModal from "./ExcelUpload/popup"
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   initData?: any | null;
@@ -161,8 +159,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         toastSuccess("Success.");
         // dispatch({ isMSearch: true });
       })
-      .catch((error) => {
-        log.error("Error processing nodes", error);
+      .catch((err) => {
+        error("Error processing nodes", err);
       });
   };
 

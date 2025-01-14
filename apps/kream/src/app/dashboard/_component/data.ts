@@ -1,4 +1,5 @@
-import { executFunction } from "@/services/api.services";
+import { executeKREAMFunction, executeTMSFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 export const SP_Load = async (searchParam: any) => {
     const { user_id, ipaddr } = searchParam;
@@ -10,7 +11,7 @@ export const SP_Load = async (searchParam: any) => {
       isShowLoading: false
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result;
 };
 
@@ -36,5 +37,20 @@ export const SP_InsertLog = async (param: any) => {
     isShowLoading: false,
     isShowComplete:false,
     }
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 };
+
+// export const SP_TMS_DATA = async () => {
+  
+//   const params = {
+//     inparam: ["in_type","in_nations","in_fr_dt","in_to_dt","in_office", "in_user_id", "in_ipaddr"],
+//     invalue: ['','HK,MY,CN,US','20241101','20241231','I','', ''],
+//     inproc: 'aic.P_AIRI1001_GET_REPORT_DATA',
+//     isShowLoading: false,
+//     isShowComplete: true
+//   }
+
+//   const result = await executeTMSFunction(params);
+//   log("result", result);
+//   return result;
+// };

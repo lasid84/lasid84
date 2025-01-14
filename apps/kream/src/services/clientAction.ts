@@ -1,5 +1,7 @@
-import { log } from "@repo/kwe-lib/components/logHelper";
-import { executFunction } from "./api.services";
+// import { executFunction } from "./api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
+
 
 export const SP_InsertLog = async (param: any) => {
   
@@ -23,5 +25,5 @@ export const SP_InsertLog = async (param: any) => {
       isShowLoading: false,
       isShowComplete:false,
       }
-      const result = await executFunction(params);
+      const result = await executeKREAMFunction(params);
   }

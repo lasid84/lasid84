@@ -1,16 +1,13 @@
 'use client'
 
-import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
-import { useUserSettings } from "states/useUserSettings";
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { shallow } from "zustand/shallow";
 import { ReactSelect, data } from "@/components/select/react-select2";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

@@ -3,7 +3,7 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { useCallback } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 const CustomerDetail: React.FC = () => {
 

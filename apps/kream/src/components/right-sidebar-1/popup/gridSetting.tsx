@@ -1,28 +1,16 @@
 import DialogBasic from "layouts/dialog/dialog";
-import { useFormContext } from "react-hook-form";
 import { useMemo, useState, useEffect, useCallback, memo, useRef } from "react";
-import {
-  crudType,
-} from "components/provider/contextObjectProvider";
-// import { SP_UpdateData } from "../../_store/data";
-import { FileUpload } from "components/file-upload";
 import { Button } from "components/button";
 import { useTranslation } from "react-i18next";
 import { useCommonStore } from "../store/store";
-import { useUserSettings } from "@/states/useUserSettings";
 import Grid, { gridData, GridOption } from "components/grid/ag-grid-enterprise";
-import { usePathname } from "next/navigation";
-import { boolean } from "zod";
 import CustomSelect from "@/components/select/customSelect";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { SP_InitMyColumnInfo } from "components/grid/ag-grid-enterprise/_component/data";
 import { useConfigs } from "@/states/useConfigs";
-import { toast } from "react-toastify";
-import { PageGrid } from "@/layouts/grid/grid";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
-type Callback = () => void;
 type Props = {
 };
 

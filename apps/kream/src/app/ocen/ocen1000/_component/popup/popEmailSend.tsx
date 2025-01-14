@@ -1,5 +1,4 @@
 import DialogBasic from "layouts/dialog/dialog";
-import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { useEffect, useCallback, useRef, memo, useState } from "react";
 import { MaskedInputField, Input, TextArea } from "components/input";
 import { useFormContext } from "react-hook-form";
@@ -17,9 +16,9 @@ import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { SP_SendEmail, SP_GetReportData, SP_DownloadReport, SP_UploadAttachment } from "../data";
 import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
-import { template } from "lodash";
 import { useUserSettings } from "states/useUserSettings";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   cust_code?: string;

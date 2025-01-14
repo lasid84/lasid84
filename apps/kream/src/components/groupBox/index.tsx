@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-const { log } = require('@repo/kwe-lib/components/logHelper')
+
+import { log } from '@repo/kwe-lib-new';
 
 export const GroupBox = ({ title, children }: { title: string; children: React.ReactNode }) => {
 

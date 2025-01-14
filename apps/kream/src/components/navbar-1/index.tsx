@@ -4,14 +4,13 @@ import { FiSettings, FiMenu, FiUser, FiExternalLink } from "react-icons/fi";
 import { useConfigs } from "states/useConfigs";
 import { useEffect, useState, useMemo, memo } from "react";
 import { useUserSettings } from "states/useUserSettings";
-// import { useSession, signIn, signOut } from 'next-auth/react';
 import PageTitle from "components/page-title/page-title";
 import { logOut } from "@/services/serverAction";
-import {signOut} from "next-auth/react";
 import { shallow } from "zustand/shallow";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "next/navigation";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 function Navbar() {
   const config = useConfigs((state) => state.config);
@@ -65,7 +64,7 @@ function Navbar() {
           <button
             className="flex items-center justify-center h-[3.7rem] mx-4"
             onClick={() => {
-              localStorage.removeItem('USER_SETTINGS')
+              localStorage.removeItem('KREAMToken');
               // signOut({ callbackUrl: "/login" });
               logOut();
               // signOut({

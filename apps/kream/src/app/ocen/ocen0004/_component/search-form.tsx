@@ -1,20 +1,17 @@
 'use client'
 
-import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
-import { ErrorMessage } from "components/react-hook-form/error-message";
 import  {PageSearch2}  from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
-import { useUserSettings } from "states/useUserSettings";
 import { SEARCH_M, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { SP_InsertMaster, SP_UpdateMaster } from "./data";
 import { toastSuccess } from "@/components/toast";
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

@@ -1,13 +1,8 @@
 
 
-import { executFunction } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-import { FaBullseye } from "react-icons/fa6";
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
+// import { executeKREAMFunction } from "@/services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 interface cursorData {
   cursorData: {}[]
@@ -22,7 +17,7 @@ export const SP_Load = async (searchParam: any) => {
     inproc: 'account.f_acct1004_load',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -57,7 +52,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
     inproc: 'account.f_acct1004_get_master',
     isShowLoading: true
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0]
 }
 
@@ -90,7 +85,7 @@ export const SP_GetInvoiceMasterContent = async (searchParam: any) => {
     inproc: 'account.f_acct1004_get_master',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0]
 }
 
@@ -116,7 +111,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
     isShowLoading: false
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -149,7 +144,7 @@ export const SP_UpdateData = async (param: any) => {
     isShowComplete: true,
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -191,6 +186,6 @@ export const SP_InsertData = async (param: any) => {
     isShowComplete: false,
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }

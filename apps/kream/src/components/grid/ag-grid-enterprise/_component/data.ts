@@ -1,12 +1,9 @@
 
 
-import { executFunction, executeReportDownload } from "@/services/api.services";
+// import { executeKREAMFunction, executeReportDownload } from "@/services/api.services";
+import { executeKREAMFunction, executeReportDownload } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-
-interface cursorData {
-  cursorData: {}[]
-}
 
 export const SP_GetPersonalColInfoData = async (searchParam: any) => {
   // unstable_noStore();
@@ -24,7 +21,7 @@ export const SP_GetPersonalColInfoData = async (searchParam: any) => {
     inproc: 'public.f_admn_get_column_width',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result?.length ? result[0] : null;
 }
 
@@ -42,7 +39,7 @@ export const SP_SetMyColumnInfo = async (searchParam: any) => {
     inproc: 'public.f_admn_set_column_width4',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result?.length ? result : null;
 }
 
@@ -62,6 +59,6 @@ export const SP_InitMyColumnInfo = async (searchParam: any) => {
     isShowLoading: true,
     isShowComplete: true
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result?.length ? result[0] : null;
 }

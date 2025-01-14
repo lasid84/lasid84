@@ -2,17 +2,14 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback } from "react";
-import { SP_Load, SP_GetMasterData, SP_GetDetailData } from "./_component/data";
 import { PageState, reducer, TableContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvider";
 import SearchForm from "./_component/search-form"
-import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
 // import DetailGrid from './_component/gridDetail';
 import ContactGrid from 'components/commonForm/carrierContact';
 import DetailInfo from './_component/DetailInfo';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export default function OCEN0001() {

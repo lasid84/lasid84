@@ -4,10 +4,9 @@ import { InputActionMeta, default as ReactSelectComponent } from "react-select";
 import { MultiValue, SingleValue, ActionMeta } from 'react-select';
 import { InputWrapper } from "components/wrapper";
 import { Label } from "components/label";
-import clsx from 'clsx';
 import './custom-select-style.css';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 interface MyOptionType {
     value: string;

@@ -1,6 +1,5 @@
 'use client';
 
-import Head from "next/head";
 import { useConfigs } from "states/useConfigs";
 import Navbar1 from "components/navbar-1";
 import LeftSidebar1 from "components/left-sidebar-1";
@@ -17,10 +16,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getSession } from "services/serverAction";
 import { SP_InsertLog  } from "services/clientAction";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
-import { shallow } from "zustand/shallow";
 import { useStore } from "zustand";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export type Layout1Props = {
   children: React.ReactNode;

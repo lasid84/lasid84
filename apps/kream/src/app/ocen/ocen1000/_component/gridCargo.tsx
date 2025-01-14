@@ -16,7 +16,7 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { toastSuccess } from "components/toast";
 import { SP_InsertCargo, SP_UpdateCargo } from "./data";
 
-const { log, error } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   initData?: any | null;
@@ -144,8 +144,8 @@ const GridCargo: React.FC<Props> = memo(({ initData, svcType }) => {
             } else {
               await Update.mutateAsync(Mdata);
             }
-          } catch (error) {
-            log.error("error:", error);
+          } catch (err) {
+            error("error:", err);
           } finally {
             Mdata.__changed = false;
           }

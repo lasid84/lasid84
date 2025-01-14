@@ -2,19 +2,13 @@
 'use client';
 
 import { useEffect, useReducer, useMemo, useCallback, useRef, useState } from "react";
-// import { SP_GetDetailData, SP_InsertData, SP_UpdateData } from "./data";
 import { PageState, State, crudType, reducer, useAppContext } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import Grid, { isFirstColumn, getFirstColumn } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
-
-import { TButtonBlue } from "components/form";
 import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import {toastSuccess} from "components/toast"
-import { Anonymous_Pro } from "next/font/google";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     initData?: any | null;

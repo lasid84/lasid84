@@ -4,8 +4,8 @@ import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-ro
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "components/button"
 import { crudType, useAppContext } from "components/provider/contextObjectProvider";
-import { ReactSelect, data } from "@/components/select/react-select2";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
     cursorData: []
