@@ -6,10 +6,7 @@ import MasterGrid from "./_component/gridMaster";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCommonStore } from "./_store/store";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
-const {
-  getMenuParameters,
-} = require("@repo/kwe-lib/components/menuParameterHelper.js");
+import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 export default function AIRI3002() {
 

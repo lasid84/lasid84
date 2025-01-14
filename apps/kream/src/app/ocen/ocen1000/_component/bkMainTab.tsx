@@ -9,7 +9,6 @@ import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextO
 import { ReactSelect, data } from "@/components/select/react-select2";
 import SubMenuTab, { tab } from "components/tab/tab"
 import { SP_CreateData, SP_GetReportData, SP_InsertCargo, SP_UpdateCargo, SP_UpdateData, SP_DownloadReport, SP_SaveCostData, SP_GetClipBoardData } from './data'; //SP_UpdateData
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, rowAdd, ROW_TYPE, ROW_TYPE_NEW, ROW_CHANGED } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton, DropButton } from 'components/button';
@@ -22,9 +21,8 @@ import EmailSendPopup from "./popup/popEmailSendcomm"
 import _ from 'lodash';
 import { toastError } from 'components/toast';
 import StepList, { Steps3, Steps2, Steps1 } from "@/components/stepper/steps";
-import { error } from "@repo/kwe-lib/components/logHelper";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []
@@ -379,7 +377,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
   }
 
   return (
-    <div className="flex sticky top-0 z-20 pt-10 space-y-1 w-full bg-white">
+    <div className="sticky top-0 z-20 flex w-full pt-10 space-y-1 bg-white">
         <PageBKTabContent
           right={
             <>
@@ -409,7 +407,7 @@ const BKMainTab = memo(({ loadItem, bkData, onClickTab }: any) => {
           <EmailSendPopup loadItem={loadItem} bk_id={bkData?.bk_id} transport_company={bkData?.transport_company} shipper_id={bkData?.shipper_id}/>
                
           <div className="flex flex-col">
-            <div className="flex justify-center items-center w-full">
+            <div className="flex items-center justify-center w-full">
               <StepList stateList={stateList} state={bkData?.state}/>
             </div>
           

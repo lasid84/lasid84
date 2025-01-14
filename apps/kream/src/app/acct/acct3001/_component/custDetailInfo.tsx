@@ -3,7 +3,7 @@ import { useAppContext } from "components/provider/contextObjectProvider";
 import { useCallback } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log } from '@repo/kwe-lib-new';
 
 const CustomerDetail: React.FC = () => {    
 
@@ -34,7 +34,7 @@ const CustomerDetail: React.FC = () => {
     return (
         <FormProvider{...formZodMethods}>
             <form onSubmit={handleSubmit(onFormSubmit)}>
-                <div className="flex flex-col gap-2 p-5 md:grid md:grid-cols-2 border rounded">
+                <div className="flex flex-col gap-2 p-5 border rounded md:grid md:grid-cols-2">
                     {/* <TInput 
                         label="cust_code" 
                         id="cust_code" 

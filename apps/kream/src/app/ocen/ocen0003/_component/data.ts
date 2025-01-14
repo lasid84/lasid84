@@ -1,13 +1,8 @@
 
 
-import { executFunction } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-import { FaBullseye } from "react-icons/fa6";
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
+// import { executFunction } from "@/services/api.services";
+import { executeKREAMFunction } from 'services/api/apiClient'
+import { log, error } from '@repo/kwe-lib-new';
 
 interface cursorData {
   cursorData: {}[]
@@ -23,7 +18,7 @@ export const SP_Load = async (searchParam:any) => {
     isShowLoading: false
   }
   // log("Acct2003Load", p);
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -45,6 +40,6 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: true
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }

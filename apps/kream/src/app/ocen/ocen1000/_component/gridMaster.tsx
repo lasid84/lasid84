@@ -4,23 +4,16 @@
 import { useEffect, useState, memo } from "react";
 import { SP_CreateData, SP_GetMData, SP_UpdateData, SP_CallDescartes } from "./data";
 import { useAppContext, crudType } from "components/provider/contextObjectProvider";
-import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import Grid, { getGridState, gotoFirstRow, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { CellValueChangedEvent, GridPreDestroyedEvent, RowClickedEvent, SelectionChangedEvent, StateUpdatedEvent } from "ag-grid-community";
 import { PageMGrid2, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from 'components/button';
-import GridReferences from "@/app/ufsm/ufsm0001/_component/gridReferences";
 import { toastSuccess } from "@/components/toast";
 import dayjs from "dayjs";
-import { useUserSettings } from "@/states/useUserSettings";
-import { FaSpinner } from "react-icons/fa6";
-import { useHotkeys } from "react-hotkeys-hook";
 
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { addDaysToDate } = require('@repo/kwe-lib/components/dataFormatter');
+import { log, error, addDaysToDate } from '@repo/kwe-lib-new';
 
 type Props = {
     initData: any | null

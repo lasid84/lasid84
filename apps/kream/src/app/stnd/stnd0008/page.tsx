@@ -10,7 +10,7 @@ import { TableContext } from "@/components/provider/contextObjectProvider";
 import Grid from './_component/gridMaster';
 import { FormProvider, useForm } from "react-hook-form";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 export default function STND0008() {
 

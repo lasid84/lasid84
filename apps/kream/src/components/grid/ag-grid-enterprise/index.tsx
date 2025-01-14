@@ -2,10 +2,7 @@
 
 import { AgGridReact } from 'ag-grid-react'; // AG Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
-// import "ag-grid-community/styles/ag-theme-quartz.css";
-// import "ag-grid-community/styles/ag-theme-material.css"; // Optional Theme applied to the grid
 import "./style.css";
-// import "ag-grid-community/styles/ag-theme-quartz.css" // Optional Theme applied to the grid
 import 'ag-grid-enterprise';
 import { useConfigs } from "states/useConfigs";
 import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -31,28 +28,22 @@ import {
 import { LicenseManager } from 'ag-grid-enterprise'
 LicenseManager.setLicenseKey(process.env.NEXT_PUBLIC_AG_GRID_LICENSE!);
 
-import { crudType, useAppContext } from "components/provider/contextProvider";
 import { useTranslation } from 'react-i18next';
 
 import { Skeleton } from 'components/skeleton/skeleton';
 import { CustomCellRendererProps } from 'ag-grid-react';
 import React from 'react';
 import { useGetData, useUpdateData2 } from '@/components/react-query/useMyQuery';
-import { useUserSettings } from '@/states/useUserSettings';
 import { SP_GetPersonalColInfoData, SP_SetMyColumnInfo } from './_component/data';
-import { usePathname } from 'next/navigation';
 import { bgColor } from './types/constant';
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { stringToFullDateString, stringToFullDate, stringToDateString, stringToTime } = require('@repo/kwe-lib/components/dataFormatter.js')
-const { sleep } = require('@repo/kwe-lib/components/sleep');
+
+import { log, error, stringToFullDateString, stringToTime, sleep } from '@repo/kwe-lib-new';
 
 export const ROW_TYPE = '__ROWTYPE';
 export const ROW_INDEX = '__ROWINDEX';
 export const ROW_CHANGED = '__changed';
 export const ROW_HIGHLIGHTED = '__highlight';
 export const ROW_TYPE_NEW = 'NEW';
-
-
 
 type Props = {
   id: string;

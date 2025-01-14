@@ -10,20 +10,13 @@ import {
   LOAD,
   SEARCH_M,
 } from "components/provider/contextObjectProvider";
-import { useState } from "react";
 import { useGetData } from "components/react-query/useMyQuery";
-import { useUserSettings } from "states/useUserSettings";
-import { shallow } from "zustand/shallow";
 import SearchForm from "./_component/search-form";
 import MasterGrid from "./_component/gridMaster";
 import { FormProvider, useForm } from "react-hook-form";
 import dayjs from "dayjs";
-import { Button } from "@/components/button";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
-const {
-  getMenuParameters,
-} = require("@repo/kwe-lib/components/menuParameterHelper.js");
+import { log, error } from '@repo/kwe-lib-new';
 
 export default function UNIP1001() {
 

@@ -4,8 +4,7 @@ import clsx from "clsx"
 import { InputWrapper } from "components/wrapper";
 import { Label } from "components/label";
 
-const { DateToString, stringToDateString } = require('@repo/kwe-lib/components/dataFormatter');
-const { log } = require('@repo/kwe-lib/components/logHelper')
+import { log, error, DateToString, stringToDateString } from '@repo/kwe-lib-new';
 
 export type InputProps = {
   id: string;
@@ -35,7 +34,7 @@ export type event = {
 export const DateInput: React.FC<InputProps> = (props) => {
   const { register, setValue, getValues } = useFormContext();
 
-  const { id, label, value, width, height,  options = {}, events } = props;
+  const { id, label, value = '', width, height,  options = {}, events } = props;
   const { placeholder, inline = false, rules = {}, noLabel = false, readOnly} = options;
 
   const [selectedVal, setSelectedVal] = useState(stringToDateString(value) || DateToString(new Date()));

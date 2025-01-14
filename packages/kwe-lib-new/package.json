@@ -1,0 +1,32 @@
+{
+  "name": "@repo/kwe-lib-new",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "dev": "echo 'Add dev script here'",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "test": "echo 'Add test script here'",
+    "lint": "echo 'Add lint script here'"
+  },
+  "dependencies": {
+    "@types/node": "^22.10.5",
+    "axios": "^1.7.9",
+    "cross-env": "^7.0.3",
+    "crypto-js": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "tsup": "^6.0.1",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "ts-node": "^10.9.1"
+  }
+}

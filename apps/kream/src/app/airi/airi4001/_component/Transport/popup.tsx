@@ -2,7 +2,6 @@ import DialogBasic from "layouts/dialog/dialog";
 import { useFormContext } from "react-hook-form";
 import { useEffect, useCallback } from "react";
 import { crudType } from "components/provider/contextObjectProvider";
-import { FileUpload } from "components/file-upload";
 import { Button } from "components/button";
 import { JsonToGridData } from "@/components/grid/ag-grid-enterprise";
 import { DateInput, DatePicker } from "components/date";
@@ -10,7 +9,8 @@ import { useTranslation } from "react-i18next";
 import ExcelUploadGrid from "./popupGrid";
 import { Store } from "../../_store/store";
 import { toastError, toastSuccess } from "@/components/toast";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {

@@ -3,7 +3,8 @@ import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
-const { log, error } = require('@repo/kwe-lib/components/logHelper');
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export type CheckboxProps = {
   id: string;

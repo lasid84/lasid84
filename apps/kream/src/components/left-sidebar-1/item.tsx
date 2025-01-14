@@ -6,7 +6,8 @@ import type { NavigationState } from "states/useNavigation";
 import { useTranslation } from "react-i18next";
 import { useStore } from "utils/zustand";
 import { useUserSettings } from "states/useUserSettings";
-const { log } = require('@repo/kwe-lib/components/logHelper');
+
+import { log, error } from '@repo/kwe-lib-new';
 
 
 const Item: React.FC<NavigationState> = ({ menu_seq, url, icon, title, badge, items, menu_param }) => {

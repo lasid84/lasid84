@@ -8,8 +8,7 @@ import { gridData } from "components/grid/ag-grid-enterprise";
 import GridReferences from "./gridReferences";
 import GridMilestones from "./gridMilestones";
 
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

@@ -13,8 +13,7 @@ import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent
 import { LabelGrid } from "components/label";
 import { useTranslation } from "react-i18next";
 
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     pgm_code: string

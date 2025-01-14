@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 type OptionProps = {
   label: string;

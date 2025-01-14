@@ -4,7 +4,8 @@ import fs from 'fs/promises';
 import { FileUploadData } from './type';
 import constant from './constant';
 
-import { log } from '@repo/kwe-lib/components/logHelper';
+// import { log } from '@repo/kwe-lib/components/logHelper';
+import { log, error } from "@repo/kwe-lib-new";
 
 /**
  * @FUNCTION

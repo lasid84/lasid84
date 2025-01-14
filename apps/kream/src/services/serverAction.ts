@@ -5,8 +5,7 @@ import { auth, signOut } from '@/app/api/auth/auth';
 import { redirect, RedirectType } from 'next/navigation';
 import { decode } from "next-auth/jwt";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { signJwtAccessToken, verifyJwt } = require('@repo/kwe-lib/components/jsonWebToken');
+import { log, error, signJwtAccessToken } from '@repo/kwe-lib-new';
 
  
 export async function navigate(url: string) {
@@ -29,12 +28,8 @@ export async function logOut() {
 export async function getCookies() {
     // log(cookies().getAll());
     const sessionToken = cookies().get('authjs.session-token')?.value;
-    // const decoded = await decode({
-    //     salt: 'authjs.session-token',
-    //     token: sessionToken,
-    //     secret: process.env.NEXTAUTH_SECRET!
-    // });
-    return cookies().get('authjs.session-token')?.value;
+
+    return sessionToken;
     
 };
 

@@ -10,7 +10,7 @@ import { Button } from "components/button";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     loadItem: any | null

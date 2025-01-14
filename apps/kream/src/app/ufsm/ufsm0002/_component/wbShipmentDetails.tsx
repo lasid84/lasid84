@@ -8,12 +8,9 @@ import { MaskedInputField, Input } from 'components/input';
 import ShipmentDetailGrid from "./gridShipDetail"
 import GridFCharges from "./gridFCharges"
 import { useAppContext } from "components/provider/contextObjectProvider";
-import dayjs from 'dayjs'
 import { gridData } from "components/grid/ag-grid-enterprise";
 
-
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

@@ -15,7 +15,7 @@ import { Button, ICONButton } from 'components/button';
 import { Badge } from "@/components/badge";
 import { SCRAP_UFSP_MBL, SP_CreateIFData } from "components/ufs-interface/_component/data"
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export interface returnData {

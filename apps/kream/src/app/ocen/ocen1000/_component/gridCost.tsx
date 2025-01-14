@@ -10,7 +10,7 @@ import { CellClickedEvent } from "ag-grid-community";
 import ChargePopup from "components/commonForm/chargecode";
 import { Label } from "@/components/label";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   initData?: any | null;

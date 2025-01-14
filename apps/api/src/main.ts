@@ -7,7 +7,7 @@ import loggerMiddleware from "./helpers/log/logger";
 import dotenv from 'dotenv';
 dotenv.config();
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log } from '@repo/kwe-lib-new'
 
 const ipv4 = "0.0.0.0";
 

@@ -12,7 +12,7 @@ import { MaskedInputField } from 'components/input';
 import { InputWrapper } from "components/wrapper"
 
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   id: string              // 식별값, valueCol 사용시 의미 없음

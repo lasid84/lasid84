@@ -11,7 +11,9 @@ import * as descartes from "../components/data/descartes"
  */
 
 export default function setUpDataRoutes(routes: Router) {
-  routes.post("/data", data.getData);
+  // routes.post("/data", data.getData);
+  routes.post("/data", data.getKREAMData);
+  routes.post("/data/tms", data.getTMSData);
   routes.post("/limo/data", data.getLimoData);
   
   // 관세청 Unipass

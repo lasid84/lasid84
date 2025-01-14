@@ -1,7 +1,8 @@
 
 import { paramsUtils } from "@/components/react-query/utils/paramUtils";
 import { queryClient } from "@/components/react-query/queryClient";
-const { log } = require('@repo/kwe-lib/components/logHelper');
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export const SP_GetGridSettingLoad = async (param: any) => {  
 

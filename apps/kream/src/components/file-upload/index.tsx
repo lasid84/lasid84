@@ -2,18 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BiUpload } from "react-icons/bi";
 import * as XLSX from 'xlsx-js-style';
-import * as ExcelJS from 'exceljs';
-// import { ParsingOptions, SSF } from "xlsx";
-
 import { toastError } from "components/toast";
 import { useTranslation } from "react-i18next";
-import { gridData } from "../grid/ag-grid-enterprise";
-import { useUserSettings } from "@/states/useUserSettings";
-import { CircularProgress } from "@mui/material";
 import LoadingComponent from "../loading/loading";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
-const { getKoreaTime, DateToString, DateToFullString } = require("@repo/kwe-lib/components/dataFormatter.js");
+import { log, error } from '@repo/kwe-lib-new';
 
 const validExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS"];
 
@@ -39,7 +32,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
     }, [props.isInit])
     
     // 파일을 Dropzone에 드랍했을 때 처리
-    const handleFileDrop = useCallback((files: any) => {
+    const handleFileDrop = useCallback(async (files: any) => {
         
         if (!checkValidFileExt()) {
             const errMsg =  t('MSG_0164'); //"업로드 가능한 파일 타입이 아닙니다.\n";
@@ -57,7 +50,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
         for (const file of files) {
             if (file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = async (e) => {
                     try {
                         const arrayBuffer = e.target?.result as ArrayBuffer;
                         const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
@@ -97,7 +90,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                                 return rowObject;
                             });
                         }
-                        if (props.onFileDrop) props.onFileDrop(data, columnNames, file);
+                        if (props.onFileDrop) await props.onFileDrop(data, columnNames, file);
 
                     } catch (err) {
 

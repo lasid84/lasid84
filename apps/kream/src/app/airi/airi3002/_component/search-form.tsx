@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
 import React, {
   useState,
   useEffect,
@@ -10,37 +9,14 @@ import { FormProvider, SubmitHandler, useFormContext } from "react-hook-form";
 import PageSearch, {
   PageSearchButton,
 } from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
 import { MaskedInputField, Input } from "components/input";
-import {
-  crudType,
-  useAppContext,
-} from "components/provider/contextObjectProvider";
-import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from "components/date";
-import dayjs from "dayjs";
 import { Button } from "components/button";
-import Radio from "components/radio/index"
-import RadioGroup from "components/radio/RadioGroup"
 import { useCommonStore } from "../_store/store";
-const { log } = require("@repo/kwe-lib/components/logHelper");
 
-export interface returnData {
-  cursorData: [];
-  numericData: number;
-  textData: string;
-}
+import { log, error } from '@repo/kwe-lib-new';
 
-export interface typeloadItem {
-  data: {} | undefined;
-}
-
-type Props = {
-  onSubmit: SubmitHandler<any>;
-  loadItem: typeloadItem;
-};
-
-const SearchForm = ({ loadItem }: any) => {
+const SearchForm = () => {
   
   const { getValues, handleSubmit, reset } = useFormContext();
   
@@ -91,7 +67,7 @@ const SearchForm = ({ loadItem }: any) => {
           }
         >
           
-          <div className={"col-span-1"}>
+          <div className={"col-span-2"}>
             <DatePicker
               id="fr_date"
               label="fr_date"
@@ -104,6 +80,7 @@ const SearchForm = ({ loadItem }: any) => {
               }}
               lwidth="w-20"
               height="h-8"
+              // width="w-200"
             />
           </div>
           

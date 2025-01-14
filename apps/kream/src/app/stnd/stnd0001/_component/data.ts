@@ -1,10 +1,11 @@
 
 
-import { executFunction } from "@/services/api.services";
+// import { executeKREAMFunction } from "@/services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
+import { decrypt, encrypt } from '@repo/kwe-lib-new';
 
-const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
+// const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
 
 
 interface cursorData {
@@ -51,7 +52,7 @@ export const SP_Load = async (searchParam: any) => {
     inproc: 'public.f_stnd0001_load',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -73,7 +74,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -127,6 +128,6 @@ export const SP_UpdateData = async (param: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }

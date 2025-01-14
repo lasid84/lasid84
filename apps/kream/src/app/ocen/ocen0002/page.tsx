@@ -8,14 +8,12 @@ import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextObjectProvi
 import SearchForm from "./_component/search-form"
 import { useGetData } from "components/react-query/useMyQuery";
 import MasterGrid from './_component/gridMaster';
-// import DetailGrid from './_component/gridDetail';
 import CustCont from 'components/commonForm/customerContact';
 import DetailInfo from './_component/DetailInfo';
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
+import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 
 export default function OCEN0002() {
@@ -41,7 +39,7 @@ export default function OCEN0002() {
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
-        dispatch({ cont_type: params.cont_type });
+        dispatch({ cont_type:(params as {cont_type: string}).cont_type });
     }, [menu_param])
 
     return (

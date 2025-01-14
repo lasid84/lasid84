@@ -19,11 +19,9 @@ import {
 } from "ag-grid-community";
 import { Store, AmountInputOptions_g } from "../_store/store";
 import { DatePicker } from "components/date";
-import DetailModal from "./Detail/popup";
 import Switch from "components/switch/index";
-import ExcelUploadModal from "./ExcelUpload/popup";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   initData?: any | null;

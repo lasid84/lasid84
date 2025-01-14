@@ -1,13 +1,11 @@
 'use client'
 
-import { useTranslation } from "react-i18next";
 import React, { useState, memo, useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import PageSearch, {PageSearchButton} from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { DatePicker } from "components/date";
-import dayjs from 'dayjs'
 import { downloadExcel } from "components/file-upload";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { SP_CreateIFData, SP_GetExcelFormData } from "./data";
@@ -16,7 +14,7 @@ import RadioGroup from "@/components/radio/RadioGroup";
 import Radio from "@/components/radio";
 import { toastError } from "@/components/toast";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 const ExcelFormFileName = "Charge Upload Form.xlsx";
 

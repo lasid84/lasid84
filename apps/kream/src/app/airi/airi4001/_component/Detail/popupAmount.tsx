@@ -1,6 +1,5 @@
 "use client";
 
-import { useFormContext } from "react-hook-form";
 import { useRef, useEffect } from "react";
 import {
   crudType,
@@ -10,7 +9,8 @@ import { MaskedInputField } from "@/components/input/react-text-mask";
 import { Store, AmountInputOptions } from "../../_store/store";
 import { Input } from "@mui/material";
 import { DTDLabel,DTDLabel2 } from "@/components/label/index";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   loadItem?: any | null;

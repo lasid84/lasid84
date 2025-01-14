@@ -8,7 +8,7 @@ import { crudType, useAppContext } from "components/provider/contextObjectProvid
 import { DatePicker } from "@/components/date/react-datepicker";
 import RadioGroupField from "@/components/radio/mui/muiRadioGroup";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

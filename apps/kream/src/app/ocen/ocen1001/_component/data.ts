@@ -1,18 +1,9 @@
 
 
-import { executFunction } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-import { FaBullseye } from "react-icons/fa6";
-
-import { toastError } from "components/toast";
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
-
-interface cursorData {
-  cursorData: {}[]
-}
+// import { executeKREAMFunction } from "@/services/api.services";
+import { toastError } from "@/components/toast";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 export const SP_Load = async (searchParam: any) => {
   // unstable_noStore();
@@ -23,7 +14,7 @@ export const SP_Load = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_load',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -39,7 +30,7 @@ export const SP_GetTemplateData = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1001_get_bk_template',
     isShowLoading: true
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result;
 }
@@ -255,7 +246,7 @@ export const SP_CreateTemplateData = async (param: any) => {
     isShowLoading: true,
     isShowComplete: true,
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0];
 }
@@ -457,7 +448,7 @@ export const SP_UpdateTemplateData = async (param: any) => {
     isShowComplete: false,
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -481,7 +472,7 @@ export const SP_GetBkHblData = async (searchParam: any) => {
     isShowLoading: false
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0]
 }
@@ -506,7 +497,7 @@ export const SP_GetCargoData = async (searchParam: any) => {
     inproc: 'ocean.f_ocen1000_get_cargo',
     isShowLoading: true
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0];
 }
@@ -535,7 +526,7 @@ export const SP_GetPickupContData = async (searchParam: any) => {
     isShowLoading: false
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
     return result![0];
 }
@@ -566,7 +557,7 @@ export const SP_GetShipperContData = async (searchParam: any) => {
       isShowLoading: false
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
     return result![0]
   }
@@ -597,7 +588,7 @@ export const SP_GetCarrierContData = async (searchParam: any) => {
       isShowLoading: false
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0]
   }
 }
@@ -622,7 +613,7 @@ export const SP_SaveTemplateCostData = async (param: any) => {
     isShowComplete:false,
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
 }
 
@@ -646,6 +637,6 @@ export const SP_SaveTemplateCargoData = async (param: any) => {
     isShowComplete:false,
     }
 
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
 
 }

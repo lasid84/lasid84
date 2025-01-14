@@ -11,9 +11,8 @@ import {
   CellValueChangedEvent,
   SelectionChangedEvent,
 } from "ag-grid-community";
-import { toastSuccess } from "components/toast";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   ref?: any | null;

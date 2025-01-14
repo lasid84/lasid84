@@ -26,7 +26,8 @@ import {
 import Radio from "components/radio/index";
 import RadioGroup from "components/radio/RadioGroup";
 import { useUserSettings } from "states/useUserSettings";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   transport_company?: string;

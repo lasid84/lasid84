@@ -13,8 +13,7 @@ import DetailInfo from './_component/DetailInfo';
 import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
+import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 
 export default function OCEN0006() {
@@ -41,7 +40,7 @@ export default function OCEN0006() {
 
     useEffect(() => {
         const params = getMenuParameters(menu_param);
-        dispatch({ cont_type: params.cont_type });
+        dispatch({ cont_type: (params as {cont_type:string}).cont_type });
     }, [menu_param])
 
     return (

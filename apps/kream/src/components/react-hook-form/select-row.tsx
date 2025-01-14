@@ -1,5 +1,6 @@
 import { useFormContext } from "react-hook-form";
-const { log } = require('@repo/kwe-lib/components/logHelper');
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface SelectOptionProps {
   key: any;

@@ -14,8 +14,7 @@ import { useUserSettings } from "states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { FormProvider, useForm } from "react-hook-form";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-const { getMenuParameters } = require('@repo/kwe-lib/components/menuParameterHelper.js');
+import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 
 export default function STND0011() {

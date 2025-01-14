@@ -1,12 +1,11 @@
 'use client'
 
 import LoginForm from "@/app/login/_components/login-form";
-import AuthSession from "@/components/provider/AuthProvider";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { log } from '@repo/kwe-lib/components/logHelper';
+import { log, error } from '@repo/kwe-lib-new';
 
 export default function Login() {
 

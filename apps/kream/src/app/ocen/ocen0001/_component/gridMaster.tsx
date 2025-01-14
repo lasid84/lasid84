@@ -10,11 +10,10 @@ import Grid from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageMGrid } from "layouts/grid/grid";
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
-import { Button } from 'components/button'
 import Modal from "components/ufs-interface/popupInterface"
 import { SCRAP_UFSP_PROFILE_CARRIER } from "components/ufs-interface/_component/data"
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     // initData: any | null;

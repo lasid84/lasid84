@@ -22,7 +22,7 @@ import type { NextRequest } from 'next/server'
 
 import { NextResponse } from "next/server";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log } from '@repo/kwe-lib-new';
 
 // the list of all allowed origins
 const allowedOrigins = [
@@ -42,7 +42,7 @@ export function middleware(req:NextRequest) {
 
     // if the origin is an allowed one,
     // add it to the 'Access-Control-Allow-Origin' header
-    // log("origin", origin)
+    log("origin", origin)
     if (allowedOrigins.includes(origin)) {
       res.headers.append('Access-Control-Allow-Origin', origin);
     }

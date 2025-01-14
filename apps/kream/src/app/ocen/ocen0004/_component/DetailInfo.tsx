@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ReactSelect, data } from "components/select/react-select2";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     initData?: any | null;

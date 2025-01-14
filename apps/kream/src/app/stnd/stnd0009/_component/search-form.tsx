@@ -9,7 +9,7 @@ import Modal from "components/ufs-interface/popupInterface";
 import { SCRAP_UFSP_PROFILE_CARRIER } from "components/ufs-interface/_component/data"
 import { ReactSelect, data } from "@/components/select/react-select2";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

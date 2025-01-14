@@ -4,19 +4,16 @@
 import React, { useState, useEffect, useCallback, memo } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { PageTabContent } from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
-import { shallow } from "zustand/shallow";
 import { MaskedInputField, Input } from 'components/input';
 import { useAppContext } from "components/provider/contextObjectProvider";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
-import { Badge } from "@/components/badge";
 import SubMenuTab, { tab, WBMenuTab } from "components/tab/tab"
 import { SP_CreateIFData, SCRAP_UFSP_HBL } from 'components/ufs-interface/_component/data';
 import { useUpdateData2 } from "components/react-query/useMyQuery";
+import { Badge } from "@/components/badge";
 
-
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

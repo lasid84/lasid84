@@ -8,8 +8,7 @@ import { gridData } from "components/grid/ag-grid-enterprise";
 import GridReferences from "./gridReferences";
 import GridMilestones from "./gridMilestones";
 
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []
@@ -83,16 +82,16 @@ const WBReference = memo(({ loadItem, mainData }: any) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSearch)} className="space-y-1 w-full">
+      <form onSubmit={handleSubmit(onSearch)} className="w-full space-y-1">
         <PageContent
-          title={<span className="px-1 py-1 w-full text-blue-500">References</span>}>
+          title={<span className="w-full px-1 py-1 text-blue-500">References</span>}>
           <div className="col-span-6">
             <GridReferences loadData={references} />
           </div>
         </PageContent>
 
         <PageContent
-          title={<span className="px-1 py-1 w-full text-blue-500">Milestones</span>}>
+          title={<span className="w-full px-1 py-1 text-blue-500">Milestones</span>}>
           <div className="col-span-6">
             <GridMilestones loadData={milestones} />
           </div>

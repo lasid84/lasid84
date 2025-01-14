@@ -1,9 +1,9 @@
-import { executFunction } from "@/services/api.services";
+// import { executeKREAMFunction } from "@/services/api.services";
 import i18n, { ResourceStore } from "i18next";
 import { initReactI18next } from "react-i18next";
-import { getSession } from 'services/serverAction';
-import Backend from 'i18next-xhr-backend';
-const { log } = require('@repo/kwe-lib/components/logHelper');
+
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 var resources = {};
 const SP_GetData = async () => {
@@ -25,7 +25,7 @@ const SP_GetData = async () => {
       isShowLoading: false
     }
     
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }
 

@@ -1,17 +1,9 @@
 
 
-import { executFunction } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
-import { FaBullseye } from "react-icons/fa6";
+// import { executeKREAMFunction } from "@/services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import axios, { AxiosResponse } from "axios";
-
-interface cursorData {
-  cursorData: {}[]
-}
 
 export const SP_GetCYContactData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
@@ -35,7 +27,7 @@ export const SP_GetCYContactData = async (searchParam: any) => {
     isShowLoading: false,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }
 
@@ -81,7 +73,7 @@ export const SP_UpdateCYCont = async (param: any) => {
     isShowComplete:false,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }
 
@@ -127,6 +119,6 @@ export const SP_InsertCYCont = async (param: any) => {
     isShowComplete:false,
     }
   
-    const result = await executFunction(params);
+    const result = await executeKREAMFunction(params);
     return result![0];
 }

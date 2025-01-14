@@ -1,15 +1,17 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-
-import { log, error } from "@repo/kwe-lib/components/logHelper";
 import { parseString } from 'xml2js';
-import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
 
-const { getCall } = require("@repo/kwe-lib/components/api.service");
-const { sleep } = require("@repo/kwe-lib/components/sleep");
+import { executePostgresProcedure } from 'components/db'
+import { log, error } from "@repo/kwe-lib-new";
+import { ProcedureResult } from "@repo/kwe-lib-new";
+import { createApiClient } from '@repo/kwe-lib-new'
 
 const unipassUrl = "https://unipass.customs.go.kr:38010/ext/rest";
 
+
+const apiClient = createApiClient({
+    baseURL: unipassUrl
+});
 
 interface resultType {
     numericData: number,
@@ -74,10 +76,9 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
                         + (blYy ? `&blYy=${blYy}` : '')
                         ;
 
-                const response = await getCall({url:url});
-                
+                const response = await apiClient.get(url);
                 const xmlData: string = response.data;
-
+                log(url, xmlData)
                 const parseStringPromise = (xmlData) => {
                     return new Promise( (resolve, reject) => {
                       parseString(xmlData, async (err, result) => {
@@ -90,7 +91,7 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
                                 for (const row of result.cargCsclPrgsInfoQryRtnVo.cargCsclPrgsInfoQryVo) {
                                     const cargMtNo = row.cargMtNo[0];
                                     const url = `${unipassUrl}${serviceUrl}?crkyCn=${crkyCn}&cargMtNo=${cargMtNo}`;
-                                    const response = await getCall({url:url});
+                                    const response = await apiClient.get(url);
                                     const xmlData: string = response.data;
                                     const r = await parseStringPromise(xmlData);
                                     // log("r", r);
@@ -128,8 +129,7 @@ export const getCargCsclPrgsInfoQry = async (req: Request, res: Response) => {
         const inproc =  "unipass.f_api001_set_data"
         const inparam = ["in_data", "in_user", "in_ipaddr"];
         const invalue = [JSON.stringify(jsonResult), user, ipaddr];
-        const result2:resultType = await callFunction(inproc, inparam, invalue) as resultType;
-        log("!!!!!!!!", JSON.stringify(jsonResult));
+        const result2:resultType = await executePostgresProcedure(process.env.KREAM_DB_CONNSTR, inproc, inparam, invalue) as resultType;
         if (result2.numericData === 0) {
             res.status(200).send({result2});
         } else {
@@ -169,7 +169,7 @@ export const retrieveFlghEtprRprtBrkd = async (params:any) => {
                         + (etprDt ? `&etprDt=${etprDt}` : '')
                         ;
 
-    const response = await getCall({url:url});
+    const response = await apiClient.get(url);
     // log("retrieveFlghEtprRprtBrkd", url, response.data)
     const xmlData: string = response.data;
     var jsonResult = {}

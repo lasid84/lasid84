@@ -1,17 +1,13 @@
 // 'use server';
+'use client'
 
 // import { signIn } from '@/app/api/auth/auth';
-import { AuthError, User } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import { z } from 'zod';
 import { unstable_noStore as noStore } from 'next/cache';
-import { returnData, checkADLogin,  executFunction } from 'services/api.services';
-// const { returnData, checkADLogin,  executFunction } = require('services/api.services');
 
-import { handlers } from '@/app/api/auth/auth';
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// const { postCall,  executFunction } = require("@repo/kwe-lib/components/api.service");
+import { checkADLogin, executeKREAMFunction } from '@/services/api/apiClient';
+import { log } from '@repo/kwe-lib-new';
 
 
 export type UserFormProps = {
@@ -40,7 +36,7 @@ export const getUserData = (async (userData:userData) => {
         inproc: 'public.f_admn_get_userauth',
         isLoginPage: true
       }
-      const cursorData:any = await executFunction(params);  
+      const cursorData:any = await executeKREAMFunction(params);  
       // log("====", cursorData[0])
       if (cursorData !== null) {   
           return cursorData![0];
@@ -63,7 +59,9 @@ export async function Login(
         password: formData.password
       };
       console.log("?@@?")
-      const {data} = await checkADLogin(param)
+      const response = await checkADLogin(param)
+      const { data, headers} = response;
+
       if (!data.success) {
         return ({
           data: null,
@@ -71,8 +69,6 @@ export async function Login(
           success: false
         });
       }
-      // const userData:any = await getUserData({user_id: formData.user_id, user_nm: data.user_nm});
-      
       if (data.data !== null ) {
         await signIn('credentials', {
           ...data.userData[0],
@@ -80,7 +76,8 @@ export async function Login(
           redirect:false
         });
 
-        // localStorage.setItem("user_id", userData[0].user_id);
+        const token = data['KREAMToken'];
+        localStorage.setItem('KREAMToken', token);
 
         return ({
           data: {...data.userData[0]},

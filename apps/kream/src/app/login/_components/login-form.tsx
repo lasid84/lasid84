@@ -13,7 +13,7 @@ import { Login } from "@/app/login/_components/login";
 import { FaSpinner } from "react-icons/fa";
 import { useConfigs } from "states/useConfigs";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 export type FormProps = {
   user_id: string;

@@ -2,10 +2,10 @@
 import { create } from 'zustand';
 import { useUserSettings } from "states/useUserSettings";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
-// const { executFunction } = require('services/api.services');
+// import { executFunction } from 'services/api.services';
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
-import { executFunction } from 'services/api.services';
 
 //DEFAULT
 import { MdOutlineWidthNormal } from "react-icons/md"
@@ -117,7 +117,7 @@ async function getMenuList(userInfo: any) {
     isShowLoading: false
   };
   // log('params', params)
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   if (!result) return { navigationData: undefined, menuArr: undefined };
   const menus = (result[0] as gridData);
 

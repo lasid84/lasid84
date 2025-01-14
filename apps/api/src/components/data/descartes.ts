@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
-import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
+// import { callFunction } from "@repo/kwe-lib/components/dbDTOHelper";
 import axios, { AxiosResponse } from 'axios';
 import FormData from 'form-data';
 import { parse } from 'node-html-parser';
 
-const { log, error } = require("@repo/kwe-lib/components/logHelper");
-const { getCall } = require("@repo/kwe-lib/components/api.service");
-const { sleep } = require("@repo/kwe-lib/components/sleep");
+import { log, error } from '@repo/kwe-lib-new';
+import { executePostgresProcedure } from 'components/db'
+
+// const { log, error } = require("@repo/kwe-lib/components/logHelper");
+// const { getCall } = require("@repo/kwe-lib/components/api.service");
+// const { sleep } = require("@repo/kwe-lib/components/sleep");
 
 interface resultType {
     numericData: number,
@@ -190,7 +193,7 @@ export const customsInfo = async (req: Request, res: Response) => {
             const inproc =  "ocean.f_ocen1000_set_descartest_data"
             const inparam = ["in_jsondata", "in_user", "in_ipaddr"];
             const invalue = [JSON.stringify(resultData["data"]), user_id, ipaddr];
-            const result:resultType = await callFunction(inproc, inparam, invalue) as resultType;
+            const result:resultType = await executePostgresProcedure(process.env.KREAM_DB_CONNSTR, inproc, inparam, invalue) as resultType;
         }
         
         res.status(200).send(resultData.summary);

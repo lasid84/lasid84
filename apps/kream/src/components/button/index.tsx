@@ -26,7 +26,7 @@ import { IoSend } from "react-icons/io5";          //send
 import { FaSignOutAlt } from "react-icons/fa";     //out, extraction
 import { IoMdPrint } from "react-icons/io";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 export type data = {
   data?: {}[],

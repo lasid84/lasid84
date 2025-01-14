@@ -16,7 +16,8 @@ import { Button } from "components/button";
 import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
 import { Store } from "../_store/store";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: [];

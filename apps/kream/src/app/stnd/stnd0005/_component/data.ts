@@ -1,15 +1,8 @@
 
 
-import { executFunction } from "@/services/api.services";
-import { unstable_noStore } from "next/cache";
-
-
-const { log } = require('@repo/kwe-lib/components/logHelper');
-
-
-interface cursorData {
-  cursorData: {}[]
-}
+// import { executeKREAMFunction } from "@/services/api.services";
+import { executeKREAMFunction } from "@/services/api/apiClient";
+import { log } from '@repo/kwe-lib-new';
 
 export const SP_Load = async (searchParam: any) => {
   // unstable_noStore();
@@ -20,7 +13,7 @@ export const SP_Load = async (searchParam: any) => {
     inproc: 'public.f_stnd0005_load',
     isShowLoading: false
   }
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result;
 }
 
@@ -44,7 +37,7 @@ export const SP_GetMasterData = async (searchParam: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
 
   return result![0];
 }
@@ -84,7 +77,7 @@ export const SP_UpdateData = async (param: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   return result![0];
 }
 
@@ -122,7 +115,7 @@ export const SP_InsertData = async (param: any) => {
     isShowLoading: true
   }
 
-  const result = await executFunction(params);
+  const result = await executeKREAMFunction(params);
   // console.log('resultafds',result)
   return result![0];
 }

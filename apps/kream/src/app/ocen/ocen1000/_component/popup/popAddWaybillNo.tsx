@@ -9,7 +9,7 @@ import { GridOption } from "@/components/grid/ag-grid-enterprise";
 import { CellValueChangedEvent, IRowNode } from "ag-grid-community";
 import { SP_GetBkHblData, SP_SaveBkHblData } from "../data";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     bkData: any;

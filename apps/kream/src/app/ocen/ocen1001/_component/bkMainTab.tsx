@@ -1,21 +1,19 @@
 'use client'
 
-
 import React, { useCallback, useState, useEffect, Dispatch, useContext, memo } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import { PageBKTabContent } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input } from 'components/input';
-import { useGetData } from "components/react-query/useMyQuery";
 import { SEARCH_MD, crudType, useAppContext } from "components/provider/contextObjectProvider";
 import SubMenuTab, { tab } from "components/tab/tab"
 import {  SP_SaveTemplateCargoData, SP_SaveTemplateCostData, SP_UpdateTemplateData } from './data';
-import { LOAD, SEARCH_M, SEARCH_D } from "components/provider/contextArrayProvider";
 import { useUpdateData2 } from "components/react-query/useMyQuery";
 import { gridData, ROW_CHANGED, ROW_TYPE, ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
 import { Button, ICONButton } from 'components/button';
 import { toastSuccess } from "@/components/toast";
 import { Cargo } from "../../ocen1000/_component/cargoDetail";
-const { log } = require("@repo/kwe-lib/components/logHelper");
+
+import { log, error } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

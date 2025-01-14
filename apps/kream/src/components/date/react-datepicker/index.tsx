@@ -1,21 +1,16 @@
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/locale'; //한국어 설정
 import { Controller, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { KeyboardEventHandler, SyntheticEvent, forwardRef, memo, useEffect, useState } from 'react';
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
 import clsx from 'clsx';
-import { IoCalendarNumberOutline } from "react-icons/io5";
 import MaskedInput, { Mask, MaskedInputProps, conformToMask} from 'react-text-mask';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe'
 import './index.css';
 import { Button } from '@/components/button';
 
-
-const { stringToDate, stringToDateString, DateToString } = require('@repo/kwe-lib/components/dataFormatter');
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error, stringToDate, stringToDateString, DateToString } from '@repo/kwe-lib-new';
 
 
 type Props = {
@@ -79,11 +74,11 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
 
     }
 
-    // useEffect(() => {
-    //     if (selectedVal || selectedVal === null) {
-    //         setValue(id, DateToString(selectedVal));
-    //     }
-    // }, [selectedVal]);
+    useEffect(() => {
+        if (selectedVal || selectedVal === null) {
+            setValue(id, DateToString(selectedVal));
+        }
+    }, [selectedVal]);
 
     useEffect(() => {
         if (value || value === null) {
@@ -142,7 +137,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
       }
     
     function handelChange(date: Date | null, e: any): void {
-        //log("handelChange", e?.target, date);
+        // log("handelChange", e?.target, date);
 
         // if (date) { 
             setSelectedVal(date);

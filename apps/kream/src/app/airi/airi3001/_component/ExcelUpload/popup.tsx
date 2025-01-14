@@ -12,11 +12,7 @@ import {
   crudType,
   useAppContext,
 } from "components/provider/contextObjectProvider";
-import { SP_UpdateData, SP_SendEDI } from "../../_store/data";
 import { FileUpload } from "components/file-upload";
-import { useUpdateData2 } from "components/react-query/useMyQuery";
-import CustomSelect from "components/select/customSelect";
-import { useRouter, usePathname } from "next/navigation";
 import { Button } from "components/button";
 import {
   gridData,
@@ -24,14 +20,11 @@ import {
   ROW_TYPE,
   ROW_TYPE_NEW,
 } from "@/components/grid/ag-grid-enterprise";
-import { ReactSelect, data } from "@/components/select/react-select2";
-import { MaskedInputField } from "@/components/input/react-text-mask";
-import { Checkbox } from "@/components/checkbox";
 import { useTranslation } from "react-i18next";
 import ExcelUploadGrid from "./popupGrid";
 import { Store } from "../../_store/store";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {

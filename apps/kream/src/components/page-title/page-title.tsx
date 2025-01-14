@@ -2,15 +2,13 @@
 
 import { NavigationState, useNavigation } from "states/useNavigation";
 import { memo, useState, useEffect } from "react";
-import {FiPlus} from "react-icons/fi";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
-import { navigate } from "services/serverAction";
 import { useUserSettings } from "@/states/useUserSettings";
 import { shallow } from "zustand/shallow";
 import { toastError } from "../toast";
-// import Breadcrumb,{ BreadcrumbItemProps } from  "@repo/ui/src/breadcrumb/breadcrumb"; 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+
+import { log, error } from '@repo/kwe-lib-new';
 
 
 export type PageTitleProps = {
@@ -18,27 +16,6 @@ export type PageTitleProps = {
   // brcmp?: BreadcrumbItemProps[];
   brcmp?:any;
 };
-
-// function getMenuTitle(menu: NavigationState[], url:string, menu_param:string|null, parent = true):string|undefined {
-//   if (!menu) return '';
-//   var title;
-//   for (var obj of menu) {
-//     if (obj.items.length > 0) {
-//       title = getMenuTitle(obj.items, url, menu_param, false);
-//       // log('tlte', title)
-//       if (title) return title;
-//     } else {
-//       // log("title", obj, menu, url, menu_param);
-//       if (obj.url === url && obj.menu_param === (menu_param || '')) return obj.title;
-//       // else return undefined;
-//     }
-//   }
-
-//   if (!title && parent && (url !== "/dashboard" && url !== "/")) {
-//     log("==page-title", menu, url);
-//     // navigate("/not-found")
-//   }
-// }
 
 function getMenuTitle(menu: NavigationState[], menu_seq: number):string|undefined {
   if (!menu) return '';

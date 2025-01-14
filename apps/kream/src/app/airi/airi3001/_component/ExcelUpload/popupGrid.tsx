@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SP_UpdateData, SP_GetEDIDetailData } from "../../_store/data";
-import { useAppContext } from "components/provider/contextObjectProvider";
 import { SEARCH_D } from "components/provider/contextArrayProvider";
 import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { useTranslation } from "react-i18next";
@@ -18,7 +17,7 @@ import {
 } from "ag-grid-community";
 import { toastSuccess } from "components/toast";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   ref?: any | null;
@@ -80,8 +79,8 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
             } else {
               await Update.mutateAsync(data);
             }
-          } catch (error) {
-            log.error("error:", error);
+          } catch (err) {
+            error("error:", err);
           } finally {
             data.__changed = false;
           }
@@ -93,8 +92,8 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
         toastSuccess("Success.");
         // dispatch({ isDSearch: true });
       })
-      .catch((error) => {
-        log.error("node. Error", error);
+      .catch((err) => {
+        error("node. Error", err);
       });
   };
 

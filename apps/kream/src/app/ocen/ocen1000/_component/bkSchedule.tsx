@@ -15,18 +15,13 @@ import { SP_GetPickupContData, SP_GetCarrierContData, SP_SendEmail,SP_GetMailSam
 import { SP_GetTransPortData } from "@/app/stnd/stnd0012/_component/data";
 import PicupPlacePopUp from "./popup/popPickupcont"
 import TransportEmailRcvPopup from "./popup/popEmailRcvList"
-import TransportEmailSendPopup from "./popup/popEmailSend"
 import { Button } from "components/button";
-import dayjs from "dayjs";
 import { SP_GetDetailData } from "@/components/commonForm/customerPickupPlace/_component/data";
 import { SP_GetCYContactData } from "@/components/commonForm/containerYardContact/_component/data";
 import { SP_GetMasterData } from "@/app/ocen/ocen0004/_component/data";
 import CYPlaceContPopUp from './popup/popCyPlaceCont';
-import { TRANPOSRT_EMAIL_LIST_OE } from "@/components/commonForm/mailReceiver/_component/data";
 
-// import { useGetData } from './test'
-const { log } = require("@repo/kwe-lib/components/logHelper");
-const { DateToString } = require("@repo/kwe-lib/components/dataFormatter");
+import { log, error, DateToString } from '@repo/kwe-lib-new';
 
 export interface returnData {
   cursorData: []

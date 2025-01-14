@@ -11,7 +11,7 @@ import { ReactSelect, data } from "@/components/select/react-select2";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { Checkbox } from "@/components/checkbox";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {

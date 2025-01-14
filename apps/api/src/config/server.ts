@@ -37,7 +37,12 @@ export default function serverConfig(app: Express) {
 
     .use(json())
 
-    .use(cors())
+    // .use(cors())
+
+    .use(cors({
+      origin: 'http://localhost:3000',  // 허용할 클라이언트 출처 명시
+      credentials: true,                // 자격 증명 허용
+    }))
 
     .use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 }}))
 

@@ -10,8 +10,8 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { RowClickedEvent, RowDoubleClickedEvent, SelectionChangedEvent } from "ag-grid-community"
 import Modal from './popup';
 import { PopType } from "@/utils/modal";
-const { decrypt, encrypt } = require('@repo/kwe-lib/components/cryptoJS.js');
-const { log } = require('@repo/kwe-lib/components/logHelper');
+
+import { log, error, decrypt } from '@repo/kwe-lib-new';
 
 type Props = {
     initData?: any | null;

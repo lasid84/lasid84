@@ -13,7 +13,7 @@ import { Button } from 'components/button'
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import Modal from "components/ufs-interface/popupInterface";
 
-const { log } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
     // initData: any | null;

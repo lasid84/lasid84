@@ -3,15 +3,13 @@ import React, { ChangeEvent, KeyboardEventHandler, FocusEvent, memo, useEffect, 
 import { useFormContext, Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import MaskedInput, { Mask, MaskedInputProps, conformToMask } from 'react-text-mask';
-import { SlMagnifierAdd } from "react-icons/sl";
 import { FcExpand } from "react-icons/fc";
-// import  conformToMask from './conformToMask'
 import { InputWrapper } from 'components/wrapper';
 import { Label } from 'components/label';
 import clsx from 'clsx';
 import createNumberMask from './createNumberMask';
 
-const { log, error } = require('@repo/kwe-lib/components/logHelper');
+import { log, error } from '@repo/kwe-lib-new';
 
 
 type Props = {

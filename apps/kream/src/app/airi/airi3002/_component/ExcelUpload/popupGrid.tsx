@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-// import { SP_UpdateData, SP_GetEDIDetailData } from "../data";
 import { useAppContext } from "components/provider/contextObjectProvider";
-import { SEARCH_D } from "components/provider/contextArrayProvider";
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { useTranslation } from "react-i18next";
 import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
@@ -16,9 +13,8 @@ import {
   IRowNode,
   SelectionChangedEvent,
 } from "ag-grid-community";
-import { toastSuccess } from "components/toast";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
+import { log, error } from '@repo/kwe-lib-new';
 
 type Props = {
   ref?: any | null;

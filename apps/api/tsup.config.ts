@@ -4,6 +4,6 @@ export default defineConfig((options: Options) => ({
   entryPoints: ["src/main.ts"],
   clean: false,
   dts: true,
-  format: ["cjs"],
+  format: ["esm"],
   ...options,
 }));

@@ -27,10 +27,7 @@ import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { FormProvider, useForm } from "react-hook-form";
 import { useHotkeys } from "react-hotkeys-hook";
 
-const { log } = require("@repo/kwe-lib/components/logHelper");
-const {
-  getMenuParameters,
-} = require("@repo/kwe-lib/components/menuParameterHelper.js");
+import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 export default function OCEN1000() {
   const [selectedTab, setselectedTab] = useState<string>("NM");

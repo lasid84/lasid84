@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
     "lib": ["ES2015"],
-    "module": "CommonJS",
+    "module": "ESNext",
     "esModuleInterop": true,
     "outDir": "./dist",
     "allowJs": true,
     "sourceMap": true,
+    "paths": {
+        "@/*": [
+          "./src/*"
+        ],
+        "components/*": [
+        "./src/components/*"
+        ],
+      },
   },
   "exclude": ["node_modules", "dist"],
   "extends": "@repo/typescript-config/base.json",
