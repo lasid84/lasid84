@@ -40,7 +40,7 @@ export default function serverConfig(app: Express) {
     // .use(cors())
 
     .use(cors({
-      origin: 'http://localhost:3000',  // 허용할 클라이언트 출처 명시
+      origin: ['http://localhost:3000', 'http://dev-kream.web.kwe.co.kr', 'http://10.33.63.174', 'https://kream-web.kwe.co.kr'],  // 허용할 클라이언트 출처 명시
       credentials: true,                // 자격 증명 허용
     }))
 
