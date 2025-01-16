@@ -265,7 +265,7 @@ const startInsertExchangeRateData = async () => {
                     throw "error";
                 });
 
-            if (registerExchangeRateOnDBResult.length !== 0) {
+            if (registerExchangeRateOnDBResult && registerExchangeRateOnDBResult.length !== 0) {
                 /**
                  * @dev
                  * 일일 중복 DB 등록 시 완료 처리 해야함.
