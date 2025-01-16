@@ -41,7 +41,7 @@ export async function getToken() {
         token: sessionToken,
         secret: process.env.NEXTAUTH_SECRET!
     });
-    if (!decoded?.email) return null;
+    if (!decoded?.email) return redirect(process.env.NEXT_PUBLIC_KREAM_URL + "/login");
 
     const token = signJwtAccessToken({user_id:decoded?.email, user_nm:decoded?.name});
     return token;

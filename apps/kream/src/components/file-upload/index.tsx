@@ -8,7 +8,7 @@ import LoadingComponent from "../loading/loading";
 
 import { log, error } from '@repo/kwe-lib-new';
 
-const validExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS"];
+const defaulValidExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS", ".csv", ".CSV"];
 
 // FileUpload 컴포넌트
 interface FileUploadProps {
@@ -16,12 +16,13 @@ interface FileUploadProps {
     isInit?: boolean;
     headerRow?: number;
     isReturnRawData?: boolean; //가공되기전 엑셀데이터 그대로 리턴
+    validExtensions?: []
 }
 
 export const FileUpload: React.FC<FileUploadProps> = (props) => {
     const { t } = useTranslation();
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const {headerRow = 1, isReturnRawData = false} = props;
+    const {headerRow = 1, isReturnRawData = false, validExtensions = defaulValidExtensions} = props;
     // const [data, setData] = useState<any[]>([]);
 
     const [isLoading, setIsLoading] = useState(false);

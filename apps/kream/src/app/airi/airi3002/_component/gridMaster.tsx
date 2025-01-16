@@ -59,7 +59,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     isAutoFitColData: true,
     isMultiSelect: false,
     // isEditableAll:true,
-    editable: ["transport_type_nm", "delivery_request_dd", "reason", "use_yn"],
+    editable: ["delivery_request_dd", "reason", "use_yn"],
     rowSpan: ["origin"],
     cellClass: {
       transport_type_nm: cellStyles,
@@ -117,7 +117,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
         blyy: Math.min(...blyySet) || getValues()["fr_date"].substring(0,4),
         blno: waybills.join(' '),
       }
-      log("params",params)
+      
       await actions.getUnipassData(params)
         .then(async () => {
           sleep(200);

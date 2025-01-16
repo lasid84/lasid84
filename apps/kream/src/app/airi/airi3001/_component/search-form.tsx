@@ -29,73 +29,28 @@ export interface typeloadItem {
   data: {} | undefined;
 }
 
-type Props = {
-  onSubmit: SubmitHandler<any>;
-  loadItem: typeloadItem;
-};
-
-const SearchForm = ({ loadItem }: any) => {
+const SearchForm = () => {
 
   const { getValues, handleSubmit, reset } = useFormContext();
-  // const { dispatch, objState } = useAppContext();
-  // const { getValues, handleSubmit, reset } = useFormContext();
-  // const { searchParams } = objState;
-  // const {
-  //   fr_date,
-  //   to_date,
-  //   search_gubn,
-  //   no,
-  //   state,
-  // } = searchParams;
-  const state = Store((state) => state);
+  
+  const {searchParams, loadDatas} = Store((state) => state);
   const actions = Store((state) => state.actions);
 
   // //Set select box data
   const [status, setStatus] = useState<any>();
 
   useEffect(() => {
-    if (loadItem?.length) {
-      setStatus(loadItem[1]);
+    if (loadDatas?.length) {
+      setStatus(loadDatas[1]);
     }    
-  }, [loadItem]);
-
-
-  // useEffect(() => {
-  //   const params = getValues();
-  //   dispatch({ searchParams: params, isMSearch: true });
-  // }, [])
-
-  // const onSearch = () => {
-  //   const params = getValues();
-  //   dispatch({ searchParams: params, isMSearch: true});
-  // };
-
-  // function handleKeyDown(e: KeyboardEvent) {
-  //   if (e.key === "Enter") {
-  //     onSearch();
-  //   }
-  // }
-
-  // const onReset = () => {
-  //   reset();
-  //   const params = getValues();
-  //   dispatch({ searchParams: params});
-
-  // }
-  
-  // const onChange = (e: any) => {
-  //   const value = parseInt(e.target.value, 10);
-  //   searchParams.search_gubn = value
-  // }
+  }, [loadDatas]);
 
   useEffect(()=>{
-    onSearch()
+    onSearch();
   },[])
 
   const onSearch = () =>{
     const params = getValues()
-    // dispatch({ searchParams: params, isMSearch: true});
-    log("onSeach", params)
     actions.getAppleDatas(params)
   }
 
@@ -131,7 +86,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker
               id="fr_date"
               label="fr_date"
-              value={state.searchParams?.fr_date}
+              value={searchParams?.fr_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -143,7 +98,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker
               id="to_date"
               label="to_date"
-              value={state.searchParams?.to_date}
+              value={searchParams?.to_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -157,7 +112,7 @@ const SearchForm = ({ loadItem }: any) => {
             <MaskedInputField
               id="no"
               label="mwb_hwb"
-              value={state.searchParams?.no}
+              value={searchParams?.no}
               options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
               events={{
@@ -174,7 +129,7 @@ const SearchForm = ({ loadItem }: any) => {
             <ReactSelect
               id="state"
               label="state"
-              dataSrc={status as data}
+              dataSrc={status}
               width="w-96"
               lwidth="w-20"
               height="8px"
@@ -182,7 +137,7 @@ const SearchForm = ({ loadItem }: any) => {
                 keyCol: "state",
                 displayCol: ["state_nm"],
                 inline: true,
-                defaultValue: state.searchParams?.state,
+                defaultValue: searchParams?.state,
               }}
             />
           </div>

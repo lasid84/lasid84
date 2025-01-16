@@ -9,11 +9,12 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Store } from "./_store/store"; //STORE 적용
 
 import { log, getMenuParameters } from '@repo/kwe-lib-new';
+import { useEffect } from "react";
 
 export default function AIRI3001() {
  
   const searchParams = Store((state) => state.searchParams);
-  const { data: initData } = useGetData("", LOAD, SP_Load, {staleTime: 1000 * 60 * 60,});
+  const { getLoad } = Store((state) => state.actions);
   
   const methods = useForm({
     defaultValues: {
@@ -25,14 +26,18 @@ export default function AIRI3001() {
     formState: { errors, isSubmitSuccessful },
   } = methods;
 
+  useEffect(() => {
+      getLoad();
+  }, []);
+
   return (
 
       <FormProvider {...methods}>
         <form className="flex space-y-1">
           <div className={`w-full h-full`}>
-            <SearchForm loadItem={initData} />            
+            <SearchForm />            
             <div className={`w-full flex-row h-[calc(100vh-150px)]`}>
-              <MasterGrid initData={initData} />
+              <MasterGrid />
             </div>
           </div>
         </form>

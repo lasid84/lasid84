@@ -39,53 +39,45 @@ import { log } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {
-  loadItem: any[] | null;
   callbacks?: Callback[];
 };
 
 // const Modal: React.FC<Props> = ({ loadItem, callbacks }) => {
-const Modal = ({ loadItem }: Props) => {
+const Modal = ({ }: Props) => {
   const { t } = useTranslation();
   const detail: any[] = [];
 
   const { getValues,  reset, setFocus, } =  useFormContext();
-  const mainSelectedRow = Store((state)=>state.mainSelectedRow)
-  const popup = Store((state)=>state.popup)
-  const state = Store((state)=>state)
+  const { popup, loadDatas, mainSelectedRow, detailDatas } = Store((state)=>state)
   const actions = Store((state)=>state.actions)
 
 
   const closeModal = async () => {
     actions.updatePopup({
       popType: 'U',
-      isPopupOpen: false,
+      isPopupDetailOpen: false,
     });
   };
 
   //Set select box data
   const [incoterms, setIncoterms] = useState<any>();
   useEffect(() => {
-    if (loadItem) {
-      setIncoterms(loadItem[2]);
+    if (loadDatas?.length) {
+      setIncoterms(loadDatas[2]);
     }
-  }, [loadItem]);
-
-  useEffect(() => {
-    if (loadItem && mainSelectedRow && Object.keys(mainSelectedRow).length > 0) {
-    }
-  }, [mainSelectedRow, loadItem]);
+  }, [loadDatas]);
 
   useEffect(() => {
     reset();
-    if (state.popup.popType === crudType.CREATE) {
+    if (popup.popType === crudType.CREATE) {
       setFocus("use_yn");
     }
-  }, [state.popup.popType, state.popup.isOpen]);
+  }, [popup.popType, popup.isOpen]);
 
   const SaveDetail = async () => {
     let hasData = false;
     // const allColumns = state.gridRef_Detail?.current?.api.getAllGridColumns();
-    const allColumns = state.detailDatas
+    const allColumns = detailDatas
     log("saveDetail? allColumns", allColumns);
     // await state.gridRef_Detail.current.api.forEachNode((node: any) => {
     //   if (node.data[ROW_CHANGED]) {
@@ -104,8 +96,8 @@ const Modal = ({ loadItem }: Props) => {
   const onSave = async (param: MouseEventHandler | null) => {
     let hasDetailData = await SaveDetail();
     let curData = getValues();
-    console.log('curData', curData, state.popup.popType)
-    if (state.popup.popType === crudType.UPDATE) {
+    console.log('curData', curData, popup.popType)
+    if (popup.popType === crudType.UPDATE) {
       if (hasDetailData) {
         // await Update.mutateAsync(
         //   { ...curData, jsonData: JSON.stringify(detail) },
@@ -123,9 +115,9 @@ const Modal = ({ loadItem }: Props) => {
 
   return (
     <DialogBasic
-      isOpen={state.popup.isPopupOpen!}
+      isOpen={popup.isPopupDetailOpen}
       onClose={closeModal}
-      title={t("MSG_0185") + (state.popup.popType === crudType.CREATE ? "등록" : "수정")}
+      title={t("MSG_0185") + (popup.popType === crudType.CREATE ? "등록" : "수정")}
       bottomRight={
         <>
           <Button id={"save"} onClick={onSave} width="w-32" />

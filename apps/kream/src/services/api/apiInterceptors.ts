@@ -4,18 +4,21 @@ import { log } from "@repo/kwe-lib-new";
 import { AxiosInstance } from "axios";
 import { getToken } from "../serverAction";
 import { logOut } from "@/services/serverAction";
+// import { redirect } from "next/dist/server/api-utils";
+// import { redirect, RedirectType } from 'next/navigation';
+import Router from 'next/router';
 
 export const setupAxiosInterceptors = (apiClient: AxiosInstance) => {
     apiClient.interceptors.request.use(
         async (request) => {
-          const token = await getToken();  //쿠키에서 가져오게끔
+          const token = await getToken();  //쿠키에서 가져오게끔 변경 예정
           // const token = localStorage.getItem('KREAMToken');
-        //    리다이렉트 /login
+        
           if (token) {
             request.headers = request.headers || {};
             request.headers.Authorization = `${token}`;
           } 
-      
+                
           const { isShowLoading } = request.data;
           // log("interceptor 시작", request, isShowLoading);
           if (isShowLoading) {

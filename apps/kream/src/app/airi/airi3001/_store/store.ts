@@ -1,15 +1,16 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { RefObject } from 'react';
-import { SP_GetAppleMainData, SP_GetEDIDetailData } from "./data";
+import { SP_GetAppleMainData, SP_GetEDIDetailData, SP_GetExcelCustomsData, SP_InsExcelCustomsData, SP_Load } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
-import { SP_UpdateData } from "@/app/acct/acct1004/_component/data";
 
 interface StoreState {
     searchParams: Record<string, any>;
+    loadDatas: gridData[] | null;
     mainDatas: gridData | null;
     detailDatas : gridData ;
+    excelDatas: gridData | null;
     uploadFile_init : false
     excel_data : {}
     gridRef_Detail : RefObject<{
@@ -20,9 +21,12 @@ interface StoreState {
     mainSelectedRow: Record<string, any> | null;
     popup: Record<string, any>;
     actions: {
+        getLoad: () => Promise<any>;
         getAppleDatas: (params: any) => Promise<any> | undefined;
         getAppleDetailDatas: (params: any) => Promise<any> | undefined;
         updateAppleDatas : (params:any) => Promise<any> | undefined;
+        getExcelCustomsData: (params:any) => Promise<any[]> | undefined;
+        insExcelCustomsData: (params:any) => Promise<any> | undefined;
         setPopup: (popup: Partial<StoreState['popup']>) => void; 
         setState: (newState: Partial<StoreState>) => void;
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
@@ -33,28 +37,36 @@ interface StoreState {
 }
 
 type Store = (set: any) => StoreState;
+
+const getInitialSearchParams = () => ({
+    fr_date: dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),
+    to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+    search_gubn: 0,
+    no: '', // HWB, MWB
+    state:  'ALL',
+});
+
 const initValue: Store = (set : any) => ({
-    searchParams: {
-        fr_date: dayjs().subtract(3, "days").startOf("days").format("YYYYMMDD"),
-        to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-        search_gubn: 0,
-        no: '', // HWB, MWB
-        state:  'ALL',
-    },    
-    mainDatas: { data: {}, fields:{} },
-    detailDatas : {data:{}, fields:{} },
+    searchParams: getInitialSearchParams(),
+    mainDatas: { data: [], fields:[] },
+    loadDatas: null,
+    detailDatas : {data:[], fields:[] },
+    excelDatas: {data:[], fields:[] },
     mainSelectedRow: null,
     excel_data :{},
     uploadFile_init : false,
     gridRef_Detail : null,
     popup: {
-        popType : null,
         isPopupUploadOpen : false,
-        isPopupOpen : false,
+        isPopupDetailOpen : false,
     },
     actions: {
+        getLoad: async () => {
+            const result = await SP_Load();
+            set({ loadDatas: result });
+            return result;
+        },
         getAppleDatas: async (params: any) => {
-
             const result = await SP_GetAppleMainData(params);
             set({ mainDatas: result });
             return result;
@@ -67,6 +79,14 @@ const initValue: Store = (set : any) => ({
         updateAppleDatas : async (params:any) => {
             console.log('updateAppleDatas params', params)
         },
+        getExcelCustomsData : async (params : any) => {
+            const result = await SP_GetExcelCustomsData(params);
+            set({ excelDatas : result[0]});
+            return result;
+        },
+        insExcelCustomsData : async (params : any) => {
+            const result = await SP_InsExcelCustomsData(params);
+        },
         setPopup: (popup: any) => {
             set((state: any) => ({             
                 popup: { ...state.popup, popup } 
@@ -77,7 +97,6 @@ const initValue: Store = (set : any) => ({
             popup: { ...state.popup, ...updates }, // 기존 popup 상태에 updates 병합
         })),
         setState: (newState: Partial<StoreState>) => {
-            console.log('newState', newState)
             set((state: StoreState) => ({
             ...state,
             ...newState,

@@ -22,34 +22,22 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const gridRef = useRef<any | null>(null);
   const state = Store((state=>state));
   const actions = Store((state)=>state.actions);
-  // const { dispatch, objState = {} } = useAppContext();
-  // const { searchParams, isMSearch, popUp } = objState;
-  // const { popType, isPopUpOpen, isPopUpUploadOpen} = popUp
-  // const { Create } = useUpdateData2(SP_InsertData, SEARCH_M);
-  // const { Update } = useUpdateData2(SP_SendEDI, SEARCH_M);
-  // const [gridData, setGridData] = useState<gridData>();
-  // const {
-  //   data: mainData,
-  //   refetch: mainRefetch,
-  //   remove: mainRemove,
-  // } = useGetData(searchParams, SEARCH_M, SP_GetEDIData, { enabled: true });
-
-
+  
   const gridOptions: GridOption = {
     gridHeight: "h-full",
-    minWidth: {
-      waybill_no: 150,
-      invoice_no: 150,
-      senddatetime: 180,
-      invoice_dd : 120,
-      create_date: 180,
-    },
-    maxWidth: {
-      waybill_no: 170,
-      invoice_no: 170,
-      senddatetime: 200,
-      send: 100,
-    },
+    // minWidth: {
+    //   waybill_no: 150,
+    //   invoice_no: 150,
+    //   senddatetime: 180,
+    //   invoice_dd : 120,
+    //   create_date: 180,
+    // },
+    // maxWidth: {
+    //   waybill_no: 170,
+    //   invoice_no: 170,
+    //   senddatetime: 200,
+    //   send: 100,
+    // },
     pinned : {
       waybill_no : "left",
       invoice_no : "left",
@@ -85,7 +73,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
   const handleRowDoubleClicked = (param: RowClickedEvent) => {
     var selectedRow = { colId: param.node.id, ...param.node.data };
-    log("handleRowDoubleClicked", selectedRow);
     actions.setMainSelectedRow(selectedRow)
     actions.updatePopup({
       popType: 'U',
@@ -104,14 +91,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const selectedRow = param.api.getSelectedRows()[0];
     // dispatch({ mSelectedRow: selectedRow });
   }, []);
-
-  // useEffect(() => {
-  //   if (isMSearch) {
-  //     mainRefetch();
-  //     dispatch({ isMSearch: false });
-  //   }
-  // }, [isMSearch]);
-
 
   const handleSwitchClick = (checked:boolean) => {
     if (!gridRef.current) return;
@@ -192,8 +171,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
           }}
         />
       </PageMGrid3>
-      <DetailModal loadItem={initData}/> 
-      <ExcelUploadModal loadItem={initData}/>
+      <DetailModal/> 
+      <ExcelUploadModal/>
     </>
   );
 });

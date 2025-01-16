@@ -1,9 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SP_UpdateData, SP_GetEDIDetailData } from "../../_store/data";
-import { SEARCH_D } from "components/provider/contextArrayProvider";
-import { useGetData, useUpdateData2 } from "components/react-query/useMyQuery";
 import { useTranslation } from "react-i18next";
 import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
@@ -18,6 +15,9 @@ import {
 import { toastSuccess } from "components/toast";
 
 import { log, error } from '@repo/kwe-lib-new';
+import { Store } from "../../_store/store";
+import { useFormContext } from "react-hook-form";
+import { toast } from "react-toastify";
 
 type Props = {
   ref?: any | null;
@@ -30,31 +30,36 @@ type Props = {
 
 const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
   const { t } = useTranslation();
+  const { getValues, handleSubmit, reset } = useFormContext();
   const gridRef = useRef<any | null>(ref);
-  // const { dispatch, objState } = useAppContext();  
-  // const {excel_data} = objState;
-  const [ mData, setMData] = useState<gridData>({});
 
-  const { Update } = useUpdateData2(SP_UpdateData, SEARCH_D);
-  const [gridOptions, setGridOptions] = useState<GridOption>();
-  const {
-    data: EDIDetailData,
-    refetch: EDIDetailRefetch,
-    remove: EDIDetailRemove,
-  } = useGetData({ ...params }, SEARCH_D, SP_GetEDIDetailData, { enabled: false });
-
+  const { excelDatas } = Store((state) => state);
+  const actions = Store((state) => state.actions);
+  
   const gridOption: GridOption = {
-    colVisible: {
-      col: ["importidentification", "declarationdate", "arrivalport", "dispatchcountry", "hawb", "mawb", "totaldeclvalue", "incoterms", "exchangerate", "transportfee", "insurancefee", "customsclearancedate", "customsclearancetime", "declarationlinenumber", "hazardcode", "currency", "partnumber", "declarationcustomsvalue", "importduties", "localconsumptiontax", "importvatliability", "importdutyrate"],
-      visible: true,
+    // colVisible: {
+    //   col: ["importidentification", "declarationdate", "arrivalport", "dispatchcountry", "hawb", "mawb", "totaldeclvalue", "incoterms", "exchangerate", "transportfee", "insurancefee", "customsclearancedate", "customsclearancetime", "declarationlinenumber", "hazardcode", "currency", "partnumber", "declarationcustomsvalue", "importduties", "localconsumptiontax", "importvatliability", "importdutyrate"],
+    //   visible: true,
+    // },
+    dataType: {
+      decldate: "date", ccdate: "date", cctime: "time",
+      totaldeclvalue: "number", exrate:"number", totaldeclfltvalue: "number", totaldeclinsvalue: "number",
+      declcustomsvalue: "number", import_duties: "number", local_consumption_tax: "number", import_vat_liability: "number", import_duty_rate: "number",
     },
-    gridHeight: "40vh",
+    gridHeight: "45vh",
     isAutoFitColData: true,
+    cellClass: {
+      match_m: (params) => {
+        return params.value == 'HD가능' ? 'bg-green' : 'bg-red';
+      },
+      match_d: (params) => {
+        return params.value == 'DT가능' ? "bg-green" : "bg-red";
+      },
+    },
   };
 
   useEffect(() => {
-    setGridOptions(gridOption);
-    EDIDetailRefetch();
+    
   }, []);
 
 
@@ -62,45 +67,25 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
 
   const handleCellValueChanged = (param: CellValueChangedEvent) => {  };
 
-  const onSave = () => {
-    const processNodes = async () => {
-      const api = gridRef.current.api;
-      for (const node of api.getRenderedNodes()) {
-        var data = node.data;
-        log("onSave excel upload data", node.data);
-        gridOptions?.checkbox?.forEach((col) => {
-          data[col] = data[col] ? "Y" : "N";
-        });
-        if (data.__changed) {
-          try {
-            if (data.__ROWTYPE === ROW_TYPE_NEW) {
-              data.waybill_no = params.waybill_no;
-              data.invoice_no = params.invoice_no;
-            } else {
-              await Update.mutateAsync(data);
-            }
-          } catch (err) {
-            error("error:", err);
-          } finally {
-            data.__changed = false;
-          }
-        }
-      }
-    };
-    processNodes()
-      .then(() => {
-        toastSuccess("Success.");
-        // dispatch({ isDSearch: true });
-      })
-      .catch((err) => {
-        error("node. Error", err);
-      });
-  };
+  const onSave = async () => {
+          const api = gridRef.current.api;
+          const changedDatas = [];
 
-// useEffect(() => {
-//      log("excel_data", excel_data);
-//     if (Object.keys(excel_data).length) setMData(excel_data);
-// }, [excel_data]);
+          for (const node of api.getRenderedNodes()) {
+            var data = node.data;
+            gridOption?.checkbox?.forEach((col) => {
+              data[col] = data[col] ? "Y" : "N";
+            });
+            changedDatas.push(data);
+          }
+          if (changedDatas.length > 0) {
+            log("onSvae", JSON.stringify(changedDatas))
+            // await actions.insExcelCustomsData({jsonData: JSON.stringify(changedDatas)});
+            // await actions.getAppleDatas(getValues());
+          } else {
+            toast(t("msg_0006"));  //변경 내역이 없습니다.
+          }
+  };
 
   return (
     <>
@@ -119,8 +104,8 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
         <Grid
           id="popupGrid"
           gridRef={gridRef}
-          listItem={mData as gridData}
-          options={gridOptions}
+          listItem={excelDatas}
+          options={gridOption}
           event={{
             onCellValueChanged: handleCellValueChanged,
             onSelectionChanged: handleSelectionChanged,

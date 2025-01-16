@@ -105,7 +105,7 @@ const RightSidebar: React.FC = memo(() => {
                 Grid컬럼 설정
               </div>
             </div>
-            <Button id={"reset"}
+            <Button id={"setting"}
               width="w-20"
               onClick={async () => {
                 actions.setGridSettingPopUp(true);

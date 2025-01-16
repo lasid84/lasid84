@@ -1,6 +1,6 @@
 import { toastSuccess, toastWaring } from "@/components/toast";
 
-import { log } from '@repo/kwe-lib-new';
+import { log, signJwtAccessToken } from '@repo/kwe-lib-new';
 import { createApiClient } from '@repo/kwe-lib-new'
 import { ProcedureResult } from '@repo/kwe-lib-new';
 import { setupAxiosInterceptors } from "./apiInterceptors";
@@ -23,6 +23,11 @@ const apiClient = createApiClient({
 setupAxiosInterceptors(apiClient);
 
 export async function checkADLogin(params: { user_id: string; password: string; }) {
+  //로그인 할땐 토큰이 없어 인터셉터 없는 axios 객체 사용.. 구조 수정 필요
+  const apiClient = createApiClient({
+    baseURL: process.env.NEXT_PUBLIC_KREAM_API_URL
+  });
+  
   return await apiClient.post(AuthRoutes.URI.LOGIN, params);
 }
 
