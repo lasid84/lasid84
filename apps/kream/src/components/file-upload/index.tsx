@@ -159,7 +159,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                 <p className="pt-2">{t('MSG_0165')}</p>
                 </div>
             )} */}
-            <input {...(isLoading ? {} : getInputProps())} accept=".xlsx, .xls" />
+            <input {...(isLoading ? {} : getInputProps())} accept={validExtensions.join(",")} />
             {!!selectedFiles && selectedFiles.length > 0 ? (
                 <div className="flex flex-col items-start p-8">
                     {selectedFiles.map((file: any) => (

@@ -79,11 +79,11 @@ const Modal: React.FC<Props> = () => {
         });
       });
     }
-    log("file", file);
+    // log("file", file, JSON.stringify(data));
     actions.insExcelData({jsonData: JSON.stringify(data), file: file})
             .then(async (response : {[key:string]:any}[] | undefined ) => {
               if (response) {
-                const blForInipass = response[0].data.reduce((acc: string, row: { [key: string]: string; }) => acc + ' ' + row["blforunipass"], '');
+                const blForInipass = response[0]?.data?.reduce((acc: string, row: { [key: string]: string; }) => acc + ' ' + row["blforunipass"], '');
                 // log("blForInipass", blForInipass);
                 if (blForInipass) {
                   const params = {

@@ -32,6 +32,8 @@ const getInitialSearchParams = () => {
     const { currentParams } = useUserSettings.getState().data;
     const { trans_mode, trans_type} = getMenuParameters(currentParams);
     
+    log("trans_mode, trans_type", currentParams, trans_mode, trans_type)
+
     return {
         search_cust_code: null,
         trans_mode: trans_mode,
