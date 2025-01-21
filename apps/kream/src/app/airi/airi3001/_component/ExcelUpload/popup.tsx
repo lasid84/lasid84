@@ -104,7 +104,7 @@ const Modal: React.FC<Props> = ({ }) => {
   //   dispatch({ excel_data: gridData });
   // };
   
-  const handleFileDrop = (data: any[], header: any[]) => {
+  const handleFileDrop = (data: any[], header?: any[]) => {
     // const mappingConfig = [
     //   { key: "importidentification", index: 10 },
     //   { key: "declarationdate", index: 31 },

@@ -1,5 +1,5 @@
 import { log, error } from '@';
-import * as ExcelJS from 'exceljs';
+import ExcelJS from 'exceljs/dist/exceljs.min.js';
 import Papa, { ParseResult, ParseError } from 'papaparse';
 
 type Options = {

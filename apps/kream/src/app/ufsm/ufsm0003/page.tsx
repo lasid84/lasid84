@@ -60,7 +60,7 @@ export default function UFSM0003() {
         // log("objState.uploadFile_init", objState.uploadFile_init)
     }, [objState.uploadFile_init])
 
-    const handleFileDrop = (data : any[], header:any[]) => {
+    const handleFileDrop = (data : any[], header?:any[]) => {
         
         data = data.map(obj => {
             return {
@@ -68,7 +68,7 @@ export default function UFSM0003() {
                 ...obj
             }
         })
-        var gridData = JsonToGridData(data, header, 2);
+        var gridData = JsonToGridData(data, header!, 2);
         dispatch({excel_data: gridData});
         // Create.mutate({excel_data:data}, {
         //     onSuccess: (res: any) => {

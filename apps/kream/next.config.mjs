@@ -10,6 +10,12 @@ const nextConfig = {
 	      allowedOrigins: ["dev-kream.web.kwe.co.kr", "dev-api-kream.web.kwe.co.kr", "localhost:3000", "kream-web.kwe.co.kr", "api-kream-web.kwe.co.kr"]
 	    }
 	  },
+    webpack: (config, { isServer }) => {
+      if (isServer) {
+        config.externals.push('exceljs/dist/exceljs.min.js');
+      }
+      return config;
+    },
     transpilePackages: ['debug', 'supports-color', 'follow-redirects'],
 };
 export default nextConfig;

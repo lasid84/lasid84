@@ -70,7 +70,7 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     actions.getDTDDatas(params);
   }, [popup.popType, excelData]);
 
-  const handleFileDrop = (data: any[], header: any[]) => {
+  const handleFileDrop = (data: any[], header?: any[]) => {
     log("excel upload data", data);
     //TODO - NOT KWE WAYBILL- CNEE ID, NAME 어떻게 관리할건지? 고민필요
     const mappingConfig = [
