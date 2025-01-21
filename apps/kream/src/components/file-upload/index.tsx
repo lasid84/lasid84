@@ -13,7 +13,7 @@ const defaulValidExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS", ".csv",
 
 // FileUpload 컴포넌트
 interface FileUploadProps {
-    onFileDrop?: (data: any[], header?: any[], file?: any) => void;
+    onFileDrop?: (data: any[], header?:any[], file?: any) => void;
     isInit?: boolean;
     headerRow?: number;
     isReturnRawData?: boolean; //가공되기전 엑셀데이터 그대로 리턴

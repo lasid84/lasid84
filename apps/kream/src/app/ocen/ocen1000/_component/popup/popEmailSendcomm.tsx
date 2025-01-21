@@ -208,13 +208,13 @@ const Modal: React.FC<Props> = ({
     setIsClicked(false)
   };
 
-  const handleFileDrop = async (data: any[], header?: ArrayBuffer[]) => {
+  const handleFileDrop = async (data: any[], header: ArrayBuffer[]) => {
 
     const fileUploadRequestArray : FileUploadData[] = [];
     for (let i=0; i<data.length; i++) {
       const requestData : FileUploadData = {
         fileName : data[i].name,
-        fileData : Buffer.from(header![i]),
+        fileData : Buffer.from(header[i]),
         fileRootDIR : "MAIL_ATTACH"
       };
 
