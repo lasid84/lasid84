@@ -1,21 +1,23 @@
 import { log, error } from '@';
 import * as ExcelJS from 'exceljs';
 import Papa, { ParseResult, ParseError } from 'papaparse';
+import * as XLSX from 'xlsx';
+import readXlsxFile from 'read-excel-file';
 
 type Options = {
     fileExtension?: string
 }
 
-export const readFile = async (arrayBuffer: ArrayBuffer, options?: Options) => {
+export const readFile = async (file: File, options?: Options) => {
     try {
         
         const { fileExtension = '' } = options || {};
         
         let excelDatas: any[] = [];
         if (fileExtension.toUpperCase() === 'CSV') {
-            excelDatas = await parseCSV(arrayBuffer) || [];
+            excelDatas = await parseCSV(file) || [];
         } else {
-            excelDatas = await parseExcel(arrayBuffer) || [];
+            excelDatas = await parseExcelByReadExcel(file);
         }       
 
         return excelDatas;
@@ -25,12 +27,14 @@ export const readFile = async (arrayBuffer: ArrayBuffer, options?: Options) => {
     }
 }
 
-
-const parseExcel = async (arrayBuffer: ArrayBuffer) => {
+/* 
+  1. xlsx 읽히지만 브라우저환경에서 안돌아감(eval 문이 포함되어 있어서 그런듯)
+*/
+const parseExcelbyExcelJS = async (arrayBuffer: ArrayBuffer) => {
     try {
         const workbook = new ExcelJS.Workbook();
 
-        await workbook.xlsx.load(arrayBuffer);      
+        await workbook.xlsx.load(arrayBuffer);
 
         // 첫 번째 워크시트 가져오기
         const worksheet = workbook.worksheets[0];
@@ -65,16 +69,37 @@ const parseExcel = async (arrayBuffer: ArrayBuffer) => {
     }
 }
 
+/* 
+  1. xlsx, csv 모두 읽을 수 있으나 chrom 132.0.6834.84 버전에서 대용량 파일 읽은 오류
+     (row수는 맞으나 내용이 안읽혀옴)
+*/
+const parseExcelByxlsx = async (arrayBuffer: ArrayBuffer) => {
+
+  const workbook = await XLSX.read(arrayBuffer, { type: 'array', raw:true });
+  const firstSheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[firstSheetName];
+  const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1, raw:true});
+  return jsonData;
+};
+
+/* 
+  1. xlsx 읽기만 됨
+*/
+const parseExcelByReadExcel = async (file: File) => {
+  const excelRows = await readXlsxFile(file);
+  return excelRows
+}
+
 /**
- * @param arrayBuffer - CSV 파일 데이터가 담긴 ArrayBuffer
- * @returns CSV 데이터가 담긴 객체 배열을 Promise로 반환
+ * 1. CSV만 읽힘
  */
-const parseCSV = (arrayBuffer: ArrayBuffer): Promise<any[]> => {
-    return new Promise((resolve, reject) => {
+const parseCSV = (file: File): Promise<any[]> => {
+    return new Promise(async (resolve, reject) => {
       try {
         // ArrayBuffer를 문자열로 디코딩
-        const csvString = new TextDecoder().decode(arrayBuffer);
-        Papa.parse(csvString as any, {
+        // const csvString = new TextDecoder().decode(arrayBuffer);
+        const csvString = await file.text();
+        Papa.parse( csvString as any, {
           header: false,           // 첫 줄을 헤더로 간주하여 객체로 반환
           dynamicTyping: true,     // 자동으로 데이터 타입 변환
           skipEmptyLines: false,   // 빈 줄 건너뛰기

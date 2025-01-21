@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import LoadingComponent from "../loading/loading";
 
 import { readFile } from '@repo/kwe-lib-new';
+// import { processExcel } from 'services/serverAction';
 import { log, error } from '@repo/kwe-lib-new';
 
 const defaulValidExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS", ".csv", ".CSV"];
@@ -22,7 +23,7 @@ interface FileUploadProps {
 
 export const FileUpload: React.FC<FileUploadProps> = (props) => {
     const { t } = useTranslation();
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const {headerRow = 1, isReturnRawData = false, validExtensions = defaulValidExtensions} = props;
     // const [data, setData] = useState<any[]>([]);
 
@@ -34,7 +35,7 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
     }, [props.isInit])
     
     // 파일을 Dropzone에 드랍했을 때 처리
-    const handleFileDrop = useCallback(async (files: any) => {
+    const handleFileDrop = useCallback(async (files: File[]) => {
         
         if (!checkValidFileExt()) {
             const errMsg =  t('MSG_0164'); //"업로드 가능한 파일 타입이 아닙니다.\n";
@@ -51,35 +52,20 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
         
         for (const file of files) {
             if (file) {
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        const extension = file.name.substring(file.name.lastIndexOf('.') + 1);
-                        const arrayBuffer = e.target?.result as ArrayBuffer;
-                        const excelDatas = await readFile(arrayBuffer, { fileExtension: extension }) || [];
+                try {
+                    const excelDatas = await readFile(file) || [];
+                    
+                    if (props.onFileDrop) await props.onFileDrop(excelDatas, [] , file);
+                } catch(err) {
+                    error("err", err);
+                } finally {
+                    processedFiles += 1;
+                    setProgress(Math.round((processedFiles / totalFiles) * 100));
 
-                        // log("excelDatas", excelDatas, excelDatas[4][25])
-
-                        if (props.onFileDrop) await props.onFileDrop(excelDatas, [] , file);
-
-                    } catch (err) {
-                        error("err", err);
-                    } finally {
-                        processedFiles += 1;
-                        setProgress(Math.round((processedFiles / totalFiles) * 100));
-
-                        if (processedFiles === totalFiles) {
-                            setIsLoading(false);
-                        }
+                    if (processedFiles === totalFiles) {
+                        setIsLoading(false);
                     }
-                };
-
-                reader.onerror = () => {
-                    toastError(t("MSG_0188")); //파일을 읽는 중 오류가 발생했습니다.
-                    setIsLoading(false);
-                };
-
-                reader.readAsArrayBuffer(file);
+                }
             }
         }
     }, []);

@@ -41,8 +41,6 @@ const Modal: React.FC<Props> = () => {
     const fileOptions: FileOption[]  = ((state.loadDatas ?? [])[2].data as []);
     const headerRow = fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["header"] || 1; 
 
-    log("handleFileDrop", data, headerRow, data[headerRow - 1]);
-
     const columnNames = data[headerRow - 1] as string[]; // 헤더 행 추출
     const existsDBKey = new Set(((state.loadDatas ?? [])[4].data as []).map(item => Object.values(item)[0]));
     const existsExcelKey = (fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["key_col"]).split(',') || [];
@@ -51,7 +49,13 @@ const Modal: React.FC<Props> = () => {
     data = data.slice(headerRow).map((row:any) => {
         const rowArray = row as any[];
         const rowObject: Record<string, any> = {};
-        columnNames.forEach((col: string, index: number) => rowObject[col] = rowArray[index]);
+        columnNames.forEach((col: string, index: number) => {
+          if (rowArray[index] instanceof Date) {
+            rowObject[col] = rowArray[index].toISOString();
+          } else {
+            rowObject[col] = rowArray[index]
+          }
+        });
         
         return rowObject;
     });
@@ -77,8 +81,6 @@ const Modal: React.FC<Props> = () => {
 
       return acc;
     }, {});
-
-    log("existsDBKey", existsDBKey, groupedFilter, data)
 
     data = data.filter((row:any) => {
 
@@ -108,7 +110,6 @@ const Modal: React.FC<Props> = () => {
         }
       });
     });
-    
     actions.insExcelData({jsonData: JSON.stringify(data), file: file})
             .then(async (response : {[key:string]:any}[] | undefined ) => {
               if (response) {

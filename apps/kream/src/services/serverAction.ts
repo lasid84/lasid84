@@ -59,3 +59,11 @@ export async function getHeaders() {
 //     return ip;
 // };
 
+
+// import { readFile, parseExcelByxlsx } from '@repo/kwe-lib-new';
+// // readFile 함수는 ExcelJS를 사용하여 ArrayBuffer를 처리하는 공용 함수입니다.
+
+// export async function processExcel(arrayBuffer: string) {
+//   const excelDatas = await readFile(arrayBuffer) || [];
+//   return excelDatas;
+// }
