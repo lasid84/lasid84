@@ -1,5 +1,5 @@
 import { log, error } from '@';
-import * as ExcelJS from 'exceljs';
+// import * as ExcelJS from 'exceljs';
 import Papa, { ParseResult, ParseError } from 'papaparse';
 import * as XLSX from 'xlsx';
 import readXlsxFile from 'read-excel-file';
@@ -29,45 +29,46 @@ export const readFile = async (file: File, options?: Options) => {
 
 /* 
   1. xlsx 읽히지만 브라우저환경에서 안돌아감(eval 문이 포함되어 있어서 그런듯)
+  2. 브라우저 환경에서 exceljs 임포트시 문제로 제외
 */
-const parseExcelbyExcelJS = async (arrayBuffer: ArrayBuffer) => {
-    try {
-        const workbook = new ExcelJS.Workbook();
+// const parseExcelbyExcelJS = async (arrayBuffer: ArrayBuffer) => {
+//     try {
+//         const workbook = new ExcelJS.Workbook();
 
-        await workbook.xlsx.load(arrayBuffer);
+//         await workbook.xlsx.load(arrayBuffer);
 
-        // 첫 번째 워크시트 가져오기
-        const worksheet = workbook.worksheets[0];
+//         // 첫 번째 워크시트 가져오기
+//         const worksheet = workbook.worksheets[0];
 
-        /* 규격화된 양식이 있으면 추가 */
+//         /* 규격화된 양식이 있으면 추가 */
 
-        const excelDatas: any[] = [];
-        worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-            const rowTexts:any = [];
-            row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+//         const excelDatas: any[] = [];
+//         worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+//             const rowTexts:any = [];
+//             row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
                 
-                if (cell.value instanceof Date) {
-                    // log("cell.numFmt", cell, cell.value, cell.value.toISOString(), " / ", cell.value.toUTCString(), " / ", cell.value.toDateString(), " / ", cell.value.toString()
-                    // , " / ", cell.value.toLocaleDateString());
+//                 if (cell.value instanceof Date) {
+//                     // log("cell.numFmt", cell, cell.value, cell.value.toISOString(), " / ", cell.value.toUTCString(), " / ", cell.value.toDateString(), " / ", cell.value.toString()
+//                     // , " / ", cell.value.toLocaleDateString());
 
-                    // 날짜는  2024-11-19T00:00:00.000Z 포맷으로 전달(엑셀에 있는 시간 그대로)
-                    rowTexts[colNumber - 1] = cell.value.toISOString();
-                } else {
-                    rowTexts[colNumber - 1] = cell.value;
-                }
-              });
-            excelDatas.push(rowTexts);
+//                     // 날짜는  2024-11-19T00:00:00.000Z 포맷으로 전달(엑셀에 있는 시간 그대로)
+//                     rowTexts[colNumber - 1] = cell.value.toISOString();
+//                 } else {
+//                     rowTexts[colNumber - 1] = cell.value;
+//                 }
+//               });
+//             excelDatas.push(rowTexts);
 
 
-            // excelDatas.push(row.values);
-        });
+//             // excelDatas.push(row.values);
+//         });
 
-        return excelDatas;
+//         return excelDatas;
 
-    } catch (err) {
-        error("err", err);
-    }
-}
+//     } catch (err) {
+//         error("err", err);
+//     }
+// }
 
 /* 
   1. xlsx, csv 모두 읽을 수 있으나 chrom 132.0.6834.84 버전에서 대용량 파일 읽은 오류
