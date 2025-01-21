@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
     isRow?:boolean
     dataSrc: RadioOption[];
     onClick?: (e: any) => void;
+    onChange?: (e: any) => void;
   }
 
   const RadioGroupField: React.FC<RadioGroupFieldProps> = ({ 
@@ -25,7 +26,8 @@ import { useTranslation } from 'react-i18next';
     noLabel = false,
     isRow = true,
     dataSrc,
-    onClick
+    onClick,
+    onChange
 }) => {
     const { control } = useFormContext();
     const { t } = useTranslation();
@@ -34,6 +36,10 @@ import { useTranslation } from 'react-i18next';
       if (onClick) onClick(e);
     }
   
+    function handleChange(e: RadioOption) {
+      if (onChange) onChange(e);
+    }
+
     return (
       <FormControl component="fieldset">
         {!noLabel && <FormLabel component="legend" className="justify-center block text-xs font-medium text-gray-500/75 dark:text-gray-200 whitespace-nowrap">{t(label?label:id)}</FormLabel>}
@@ -52,6 +58,9 @@ import { useTranslation } from 'react-i18next';
                   className="mr-4"
                   onClick={() => {
                     handleClick(option);
+                  }}
+                  onChange={() => {
+                    handleChange(option)
                   }}
                 />
               ))}

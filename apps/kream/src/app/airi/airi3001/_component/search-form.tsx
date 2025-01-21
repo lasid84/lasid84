@@ -56,7 +56,11 @@ const SearchForm = () => {
 
   const onReset = () =>{}
 
-  function handleKeyDown(e:KeyboardEvent) {}
+  const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        onSearch();
+      }
+    }
 
   const onChange = () => {}
 

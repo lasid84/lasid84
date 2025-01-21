@@ -871,13 +871,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
   const onPasteStart = (param: PasteStartEvent) => {
     // updateRowCount('rowDataUpdated');
-    log('onPasteStart', param);
+    // log('onPasteStart', param);
 
     if (event?.onPasteStart) event.onPasteStart(param);
   }
   const onPasteEnd = (param: PasteEndEvent) => {
     // updateRowCount('rowDataUpdated');
-    log('onPasteEnd', param);
+    // log('onPasteEnd', param);
 
     if (event?.onPasteEnd) event.onPasteEnd(param);
   }
@@ -891,7 +891,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   const onFirstDataRendered = (param: FirstDataRenderedEvent) => {
     if (options?.isAutoFitColData && myColInfo.length === 0 /*&& (personalColInfoData as gridData)?.data.length === 0*/) {
       autoSizeAll(gridRef.current);
-      log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
+      // log('onFirstDataRendered', param, (personalColInfoData as gridData)?.data.length);
     }
 
     if (event?.onFirstDataRendered) event.onFirstDataRendered(param);

@@ -38,7 +38,7 @@ type Store = StoreState & {
 const getInitialSearchParams = () => ({
     fr_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
     to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-    search_gubn: 0,
+    search_gubn: '0',
     no: '', // HWB, MWB
     state: 'ALL',
 });
@@ -57,12 +57,10 @@ const setinitValue = (set: any) => {
     const actions: StoreActions = {
         getLoad: async () => {
             const result = await SP_GetLoad();
-            console.log("load");
             set({ loadDatas: result });
             return result;
         },
         getAppleDatas: async (params: any) => {
-            log("getAppleDatas", params);
             const result = await SP_GetAppleMainData(params);
             set({ mainDatas: result, searchParams:params });
             return result;

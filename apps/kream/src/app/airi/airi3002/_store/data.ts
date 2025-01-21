@@ -24,14 +24,16 @@ export const SP_GetAppleMainData = async (searchParams: any) => {
   
   const params = {
     inparam : [
-        "in_fr_date"
+        "in_search_gubn"
+      , "in_fr_date"
       , "in_to_date"
       , "in_no"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-        fr_date
+        search_gubn
+      , fr_date
       , to_date
       , no
       , user_id

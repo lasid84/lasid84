@@ -117,6 +117,7 @@ export const SP_InsExcelCustomsData = async (Params: any) => {
     ],
     inproc: 'airimp.f_airi3001_ins_excel_customs',
     isShowLoading: true,
+    isShowComplete: true
   }
 
   const result = await queryClient("SP_InsExcelCustomsData", params);

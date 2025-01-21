@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useCommonStore } from "../../_store/store";
 
 import { log, error } from '@repo/kwe-lib-new';
+import { FileOptions } from "buffer";
 
 type Callback = () => void;
 type Props = {
@@ -31,18 +32,23 @@ const Modal: React.FC<Props> = () => {
     actions.setState({popup:{...state.popup, isPopUpUploadOpen:false}});
   };
 
-  const handleFileDrop = async (data: any[], header: any[], file:any) => {
-
-    const fileOptions = ((state.loadDatas ?? [])[2].data as []);
+  const handleFileDrop = async (data: any, header?: any[], file?:any) => {
+    type FileOption = {
+      file_nm: string,
+      header: number,
+      key_col: string
+    }
+    const fileOptions: FileOption[]  = ((state.loadDatas ?? [])[2].data as []);
     const headerRow = fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["header"] || 1; 
 
+    log("handleFileDrop", data, headerRow, data[headerRow - 1]);
 
     const columnNames = data[headerRow - 1] as string[]; // 헤더 행 추출
-    const existsBL = new Set(((state.loadDatas ?? [])[4].data as []).map(item => Object.values(item)[0]));
-    const existsBLKey = fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["bl_col"] || null;
-
+    const existsDBKey = new Set(((state.loadDatas ?? [])[4].data as []).map(item => Object.values(item)[0]));
+    const existsExcelKey = (fileOptions.filter((row:any) => file.name.toLowerCase().includes(row.file_nm))[0]["key_col"]).split(',') || [];
+    
     // 헤더 이후의 데이터 추출
-    data = data.slice(headerRow).map((row) => {
+    data = data.slice(headerRow).map((row:any) => {
         const rowArray = row as any[];
         const rowObject: Record<string, any> = {};
         columnNames.forEach((col: string, index: number) => rowObject[col] = rowArray[index]);
@@ -53,33 +59,56 @@ const Modal: React.FC<Props> = () => {
     const filter = file.name.toLowerCase().includes("p5s1")
                   ? (state.loadDatas ?? [])[1].data as [] : (state.loadDatas ?? [])[0].data as [];
 
-    if (filter?.length) {
-      const groupedFilter = filter.reduce<Record<string, any[]>>((acc, { key, value }) => {
-        acc[key] = acc[key] || [];
-        acc[key].push(value);
-        return acc;
-      }, {});
-      
-      data = data.filter((row) => {
-
-        if (existsBLKey && row[existsBLKey]) {
-          const cleanedValue = row[existsBLKey].replace(/[\t\n\r ]/g, "");
-          if (existsBL.has(cleanedValue)) return false; 
-        }        
-
-        return Object.entries(groupedFilter).every(([key, values]) => {
-          
-          if (values.length > 1) {
-            // 같은 키에 여러 값이 있으면 OR 조건
-            return values.includes(row[key]);
-          } else {
-            // 같은 키에 하나의 값만 있으면 = 조건
-            return row[key] === values[0];
-          }
-        });
-      });
+    
+    type GroupedFilter = {
+      [key: string]: {
+        values: string[];
+        isSame: boolean[];
+      };
     }
-    // log("file", file, JSON.stringify(data));
+    const groupedFilter:GroupedFilter = filter.reduce((acc:any, row:any) => {
+      const {col_nm, value, issame} = row;
+
+      if (!acc[col_nm]) acc[col_nm] = { values:[value], isSame: [issame]};
+      else {
+        acc[col_nm].values.push(value);
+        acc[col_nm].isSame.push(issame);
+      }
+
+      return acc;
+    }, {});
+
+    log("existsDBKey", existsDBKey, groupedFilter, data)
+
+    data = data.filter((row:any) => {
+
+      /* 1. 이미 DB에 insert된 bl + dn 제외 */
+      if (existsDBKey.size > 0) {
+        const keyData = existsExcelKey.reduce((acc, col_nm) => {
+          const value = row[col_nm] ? String(row[col_nm]) : '';
+          return acc + value.replace(/[\t\n\r ]/g, '');
+        }, '');
+        
+        if (existsDBKey.has(keyData)) return false; 
+      }
+
+      /* 2. 필터조건 처리 */
+      return Object.entries(groupedFilter).every(([key, filterObj]:any) => {
+        
+        const { values, isSame } = filterObj;
+        if (values.length > 1) {
+          const idx = values.indexOf(row[key]);
+          // 같은 키에 여러 값이 있으면 OR 조건
+          return idx > -1 ? isSame[idx] == 'Y' : false;
+        } else {
+          if (row[key] === undefined) return true;
+
+          // 같은 키에 하나의 값만 있으면 = 조건
+          return isSame[0] === 'Y' ? (row[key] === values[0]) : ((row[key] ?? '') !== values[0])
+        }
+      });
+    });
+    
     actions.insExcelData({jsonData: JSON.stringify(data), file: file})
             .then(async (response : {[key:string]:any}[] | undefined ) => {
               if (response) {

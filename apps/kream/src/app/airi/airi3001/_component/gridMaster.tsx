@@ -46,15 +46,17 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       senddatetime : "right",
       ready : "right",
     },
-    editable : ["ready"],
-    checkbox: ["ready"],
-    dataType: { create_date: "date", senddatetime: "date" , invoice_dd : "date"},
+    editable : ["chk"],
+    checkbox: ["chk"],
+    dataType: { create_date: "date", senddatetime: "date" , invoice_dd : "date",
+      invoicevalue: "number"
+    },
     isMultiSelect: true,
     total: {
       invoice_no:"count", waybill_no:"count" ,invoicevalue:"sum",
     },
     isAutoFitColData: true,
-    rowSpan: ["rowno", "cargmtno", "mblno", "hblno"],
+    // rowSpan: ["rowno", "cargmtno", "mblno", "hblno"],
     isShowRowNo: false,  
     cellClass: {
       send: (params) => {
@@ -100,7 +102,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       const data = node.data;
       data.ready = checked; // 모든 row의 ready 상태 업데이트
       data.__changed = true;
-      node.setDataValue("ready", checked ? "Y" : "N"); // ag-Grid 셀 업데이트
+      node.setDataValue("chk", checked ? "Y" : "N"); // ag-Grid 셀 업데이트
     });  
     api.refreshCells(); // 그리드 새로고침
   };

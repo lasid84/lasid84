@@ -49,7 +49,7 @@ const executeFunction = async (url: string, params:exeFuncParams) => {
         toastSuccess(numericData + " : " + textData);
     }
 
-    return cursorData;
+    return cursorData || [];
 }
 
 export const executeKREAMFunction = async (params:exeFuncParams) => {

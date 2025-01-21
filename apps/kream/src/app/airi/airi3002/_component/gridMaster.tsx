@@ -15,6 +15,7 @@ import { t } from "i18next";
 import { useFormContext } from "react-hook-form";
 
 import { log, error, sleep } from '@repo/kwe-lib-new';
+import { useHotkeys } from "react-hotkeys-hook";
 
 type Props = {
   initData?: any | null;
@@ -29,7 +30,6 @@ const MasterGrid: React.FC<Props> = memo(() => {
   const { getValues } = useFormContext();
 
   const [ isUniPassCircle, setUniPassCircle] = useState<boolean>(false)
-  const arrTransportType = loadDatas ? loadDatas[3].data?.map((row: any) => row['type_nm']) : [];
 
   const cellStyles = (params:any) => {
     let transport_type = params.data.transport_type;
@@ -47,7 +47,9 @@ const MasterGrid: React.FC<Props> = memo(() => {
       // send : "right",
     },
     colVisible: { col : ["transport_id"], visible:false },
-    dataType: { create_date: "date", pickup_dd: "date", delivery_request_dd:"date", revised_edd : "date"
+    dataType: { 
+        create_date: "date", pickup_dd: "date", delivery_request_dd:"date", revised_edd : "date"
+      , sla: "date"
       , num_pieces:"number" , gross_weight:"number", chargeable_weight:"number" },
     typeOptions: {
       gross_weight: { isAllowDecimal: true, decimalLimit:1},
@@ -59,7 +61,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     isAutoFitColData: true,
     isMultiSelect: false,
     // isEditableAll:true,
-    editable: ["delivery_request_dd", "reason", "use_yn"],
+    editable: ["delivery_request_dd", "revised_edd", "reason", "use_yn"],
     rowSpan: ["origin"],
     cellClass: {
       transport_type_nm: cellStyles,
@@ -67,6 +69,15 @@ const MasterGrid: React.FC<Props> = memo(() => {
       mwb_no: cellStyles,
     },
   };
+
+  useHotkeys(
+    "ctrl+s",
+    (event) => {
+      event.preventDefault();
+      onSave();
+    },
+    { enableOnTags: ['INPUT', 'TEXTAREA', 'SELECT'] } // form 요소에서 단축키 활성화
+  );
 
   const onSave = async () => {
     
@@ -142,7 +153,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
         right={
             <>
               {/* <Switch/> */}
-              <Button id={"save"} onClick={onSave} width='w-34' />
+              <Button id={"save"} onClick={onSave} width='w-34' toolTip= "ctrl+s" />
             </>}
       >
         <Grid

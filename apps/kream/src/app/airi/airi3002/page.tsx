@@ -7,6 +7,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useCommonStore } from "./_store/store";
 
 import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
+import { useHotkeys } from "react-hotkeys-hook";
 
 export default function AIRI3002() {
 
@@ -24,7 +25,7 @@ export default function AIRI3002() {
 
   useEffect(() => {
     getLoad();
-  }, [])
+  }, []);
 
   return (
     <FormProvider {...methods} >

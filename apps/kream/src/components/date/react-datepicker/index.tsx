@@ -175,7 +175,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
         <InputWrapper outerClassName="" inline={inline}>
             {!noLabel && <Label id={id} name={label} lwidth={lwidth} isDisplay={isDisplay}/>}
             {/* <div className={clsx(`block ${defWidth} ${defHeight} disabled:bg-gray-300 bg-white flex-grow-1 focus:border-blue-500 focus:ring-0 text-[13px] rounded read-only:bg-gray-100`)}> */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 min-w-100">
                 <Controller
                     control={control}
                     name={id}
@@ -183,7 +183,7 @@ export const DatePicker: React.FC<Props> = memo((props:Props) => {
                     render={({ field }) => (
                         <ReactDatePicker
                             id={id}
-                            className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 ${bgColor} flex-grow-1
+                            className={clsx(`form-input block ${defWidth} ${defHeight} disabled:bg-gray-300 ${bgColor} flex-grow-1 min-w-[100px]
                                     focus:border-blue-500 focus:ring-0 text-[${fontSize}] font-${fontWeight} rounded-${radius} read-only:bg-gray-100 text-${textAlign}
                                     dark:bg-gray-900 dark:text-white dark:border-gray-700
                                     ${freeStyles}

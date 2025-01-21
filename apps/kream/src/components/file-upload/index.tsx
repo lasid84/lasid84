@@ -6,13 +6,14 @@ import { toastError } from "components/toast";
 import { useTranslation } from "react-i18next";
 import LoadingComponent from "../loading/loading";
 
+import { readFile } from '@repo/kwe-lib-new';
 import { log, error } from '@repo/kwe-lib-new';
 
 const defaulValidExtensions = [".xlsx", ".xls", ".csv", ".XLSX", ".XLS", ".csv", ".CSV"];
 
 // FileUpload 컴포넌트
 interface FileUploadProps {
-    onFileDrop?: (data: any[], header:any[], file?: any) => void;
+    onFileDrop?: (data: any[], header?:any[], file?: any) => void;
     isInit?: boolean;
     headerRow?: number;
     isReturnRawData?: boolean; //가공되기전 엑셀데이터 그대로 리턴
@@ -53,48 +54,16 @@ export const FileUpload: React.FC<FileUploadProps> = (props) => {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     try {
+                        const extension = file.name.substring(file.name.lastIndexOf('.') + 1);
                         const arrayBuffer = e.target?.result as ArrayBuffer;
-                        const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
-                        const sheetName = workbook.SheetNames[0];
-                        const worksheet = workbook.Sheets[sheetName];
-                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header : 1, raw: false}); //모든 데이터 가져옴
-                        let data;
-                        let columnNames:any = [];
+                        const excelDatas = await readFile(arrayBuffer, { fileExtension: extension }) || [];
 
-                        if (isReturnRawData) {
-                            data = jsonData;
-                        } else {
-                            // 모든 셀의 주소 가져오기
-                            columnNames = jsonData[headerRow - 1] as string[]; // 헤더 행 추출
-                            
-                            const cellAddresses = Object.keys(worksheet);
+                        // log("excelDatas", excelDatas, excelDatas[4][25])
 
-                            // 첫 번째 행의 셀 주소만 필터링
-                            // const firstRowAddresses = cellAddresses.filter(address => address.match(/^[A-Z]+1$/));
-
-                            // 첫 번째 행의 셀 주소를 순회하면서 컬럼명 추출
-                            // const columnNames = firstRowAddresses.map(address => worksheet[address].v);
-
-                            // 헤더 이후의 데이터 추출
-                            data = jsonData.slice(headerRow).map((row) => {
-                                const rowArray = row as any[]; // row를 배열로 캐스팅
-                                const rowObject: Record<string, any> = {};
-                                columnNames.forEach((col: string, index: number) => {
-                                    // if (rowArray[index] instanceof Date) {
-                                    //     // log("============", rowArray[index], getKoreaTime(rowArray[index]))
-                                    //     rowObject[col] = getKoreaTime(rowArray[index]);
-                                    // } else {
-                                        rowObject[col] = rowArray[index];
-                                    // }
-                                });
-                                
-                                return rowObject;
-                            });
-                        }
-                        if (props.onFileDrop) await props.onFileDrop(data, columnNames, file);
+                        if (props.onFileDrop) await props.onFileDrop(excelDatas, [] , file);
 
                     } catch (err) {
-
+                        error("err", err);
                     } finally {
                         processedFiles += 1;
                         setProgress(Math.round((processedFiles / totalFiles) * 100));

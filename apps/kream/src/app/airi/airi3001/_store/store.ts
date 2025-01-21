@@ -4,6 +4,7 @@ import { RefObject } from 'react';
 import { SP_GetAppleMainData, SP_GetEDIDetailData, SP_GetExcelCustomsData, SP_InsExcelCustomsData, SP_Load } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
+import { log } from "@repo/kwe-lib-new";
 
 interface StoreState {
     searchParams: Record<string, any>;
@@ -85,6 +86,7 @@ const initValue: Store = (set : any) => ({
             return result;
         },
         insExcelCustomsData : async (params : any) => {
+            log("insExcelCustomsData", params);
             const result = await SP_InsExcelCustomsData(params);
         },
         setPopup: (popup: any) => {

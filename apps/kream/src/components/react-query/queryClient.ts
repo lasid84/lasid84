@@ -4,6 +4,7 @@ import { useUserSettings } from '@/states/useUserSettings';
 // import { usePathname } from 'next/navigation';
 import { QueryClient } from '@tanstack/react-query'
 import { executeKREAMFunction, executeTMSFunction } from '@/services/api/apiClient';
+import { log } from '@repo/kwe-lib-new';
 
 
 export const queryClient = async (key: string, Params: any, options: any = {}): Promise<any[]> => {  

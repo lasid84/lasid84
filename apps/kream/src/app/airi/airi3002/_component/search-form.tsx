@@ -15,10 +15,11 @@ import { Button } from "components/button";
 import { useCommonStore } from "../_store/store";
 
 import { log, error } from '@repo/kwe-lib-new';
+import RadioGroupField from "@/components/radio/mui/muiRadioGroup";
 
 const SearchForm = () => {
   
-  const { getValues, handleSubmit, reset } = useFormContext();
+  const { getValues, handleSubmit, reset, setValue } = useFormContext();
   
   const state = useCommonStore((state) => state);
   const searchParams = useCommonStore((state) => state.searchParams);
@@ -27,14 +28,14 @@ const SearchForm = () => {
 
   useEffect(() => {
     onSearch();
-  }, [])
+  }, []);
 
   const onSearch = () => {
     const params = getValues();
     getAppleDatas(params);
   };
 
-  function handleKeyDown(e: KeyboardEvent) {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       onSearch();
     }
@@ -43,15 +44,10 @@ const SearchForm = () => {
   const onReset = () => {
     resetSearchParam();
     getLoad();
+    reset();
     setState({mainDatas:{...state.mainDatas, data:[]}})
   }
   
-  const onChange = (e: any) => {
-    const value = parseInt(e.target.value, 10);
-    searchParams.search_gubn = value
-  }
-
-
   return (
       <div>
         <PageSearchButton
@@ -67,7 +63,21 @@ const SearchForm = () => {
           }
         >
           
-          <div className={"col-span-2"}>
+          <div className={"col-span-1 border"}>
+            <RadioGroupField
+              id="search_gubn"
+              dataSrc={[
+                { value : '0', label:'general'},
+                { value : '1', label:'set_request_dd'}
+              ]}
+              onChange={(e) => {
+                setValue("search_gubn", e.value);
+                onSearch(); 
+              }}
+            />
+          </div>
+
+          <div className={"col-span-1"}>
             <DatePicker
               id="fr_date"
               label="fr_date"
@@ -92,9 +102,7 @@ const SearchForm = () => {
               options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
               events={{
-                onKeyDown(e) {
-                    if (e.key === "Enter" ) onSearch();
-                },
+                onKeyDown: handleKeyDown
               }}
             />
           </div>

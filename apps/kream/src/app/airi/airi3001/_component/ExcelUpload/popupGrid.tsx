@@ -58,33 +58,32 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
     },
   };
 
-  useEffect(() => {
-    
-  }, []);
-
-
-  const handleSelectionChanged = (param: SelectionChangedEvent) => {  };
-
-  const handleCellValueChanged = (param: CellValueChangedEvent) => {  };
+  const closeModal = async () => {
+    actions.updatePopup({
+      isPopupUploadOpen: false,
+    });
+    actions.setState({excelDatas:{data:[], fields:[]}});
+  };
 
   const onSave = async () => {
-          const api = gridRef.current.api;
-          const changedDatas = [];
+    const api = gridRef.current.api;
+    const changedDatas = [];
 
-          for (const node of api.getRenderedNodes()) {
-            var data = node.data;
-            gridOption?.checkbox?.forEach((col) => {
-              data[col] = data[col] ? "Y" : "N";
-            });
-            changedDatas.push(data);
-          }
-          if (changedDatas.length > 0) {
-            log("onSvae", JSON.stringify(changedDatas))
-            // await actions.insExcelCustomsData({jsonData: JSON.stringify(changedDatas)});
-            // await actions.getAppleDatas(getValues());
-          } else {
-            toast(t("msg_0006"));  //변경 내역이 없습니다.
-          }
+    for (const node of api.getRenderedNodes()) {
+      var data = node.data;
+      gridOption?.checkbox?.forEach((col) => {
+        data[col] = data[col] ? "Y" : "N";
+      });
+      changedDatas.push(data);
+    }
+    if (changedDatas.length > 0) {
+      // log("onSvae", JSON.stringify(changedDatas))
+      await actions.insExcelCustomsData({jsonData: JSON.stringify(changedDatas)});
+      // await actions.getAppleDatas(getValues());
+      closeModal();
+    } else {
+      toast(t("msg_0006"));  //변경 내역이 없습니다.
+    }
   };
 
   return (
@@ -107,8 +106,6 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
           listItem={excelDatas}
           options={gridOption}
           event={{
-            onCellValueChanged: handleCellValueChanged,
-            onSelectionChanged: handleSelectionChanged,
           }}
         />
       </PageGrid>
