@@ -125,79 +125,29 @@ export const SP_InsExcelCustomsData = async (Params: any) => {
 
 }
 
-// export const SP_InsertData = async (searchParam: any) => {  
-//   const Param = searchParam.queryKey[1];
-//   const {fr_date, to_date, search_gubn, no, state, user_id, ipaddr} = Param;
+export const SP_GetExtractHSCode = async (param: any) => {  
+  const {keys, user_id , ipaddr} = paramsUtils(param);
+  const params = {
+    inparam : [
+        "in_keys"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+        keys
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi3001_get_hscode', //send_edi858
+    isShowLoading: true
+  }
   
-//   const params = {
-//     inparam : [
-//        "in_fr_date"
-//       , "in_to_date"
-//       , "in_gubn"  //0 : 810, 1: 858
-//       , "in_no"
-//       , "in_state"
-//       , "in_user"
-//       , "in_ipaddr"
-//     ],
-//     invalue: [
-//       fr_date
-//       , to_date
-//       , search_gubn
-//       , no
-//       , state
-//       , user_id
-//       , ipaddr
-//     ],
-//     inproc: 'airimp.f_airi3001_get_data',
-//     isShowLoading: true
-//   }
-
-//   const result = await executeKREAMFunction(params);
-//   return result![0];
-// }
-
-// export const SP_UpdateData = async (param: any) => {  
-
-//   const { waybill_no, invoice_no, declnum, mwb_no, exrate, incoterms, decldate, decltime, ccdate, 
-//           cctime, totaldeclvalue, totaldeclfltvalue, totaldeclinsvalue, jsonData, user_id, ipaddr } = param;
-//   const params = {
-//     inparam : [
-//         "in_waybill_no"
-//       , "in_invoice_no"
-//       , "in_declnum"
-//       , "in_mwb_no"
-//       , "in_exrate"
-//       , "in_incoterms"
-//       , "in_decldate"
-//       , "in_decltime"
-//       , "in_ccdate"
-//       , "in_cctime"
-//       , "in_totaldeclvalue"
-//       , "in_totaldeclfltvalue"
-//       , "in_totaldeclinsvalue"
-//       , "in_jsondata"
-//       , "in_user"
-//       , "in_ipaddr"
-//     ],
-//     invalue: [
-//       waybill_no, invoice_no, declnum, mwb_no, exrate, incoterms, decldate, decltime, ccdate, 
-//       cctime, totaldeclvalue, totaldeclfltvalue, totaldeclinsvalue
-//     , jsonData
-//     , user_id
-//     , ipaddr
-//     ],
-//     inproc: 'airimp.f_airi3001_upd_edi_data',
-//     isShowLoading: true,
-//     isShowComplete:false,
-//     }
-
-//   const result = await executeKREAMFunction(params);
-
-//   return result![0];
-// }
+  const result = await queryClient("SP_GetExtractHSCode", params);
+  return result;
+}
 
 export const SP_SendEDI = async (param: any) => {  
-  const {waybill_no, invoice_no, user_id , ipaddr} = param;
+  const {waybill_no, invoice_no, user_id , ipaddr} = paramsUtils(param);
   const params = {
     inparam : [
        "in_waybill_no"
@@ -215,6 +165,6 @@ export const SP_SendEDI = async (param: any) => {
     isShowLoading: true
   }
   
-  const result = await executeKREAMFunction(params);
+  const result = await queryClient("SP_SendEDI", params);
   return result![0];
 }

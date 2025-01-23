@@ -10,12 +10,13 @@ let onExcute = false;
 let ftpPath = {};
 const pgm = workerData.pgm;
 const idx = workerData.idx;
+let ftpClient;
 
 async function setConfig() {
     try {
 
         const inparam = ['in_user', 'in_ipaddr'];
-        const invalue = ['EDI810', ''];
+        const invalue = [pgm, ''];
         const inproc = 'airimp.f_airi3001_load'; 
         const result = await executFunction(inproc, inparam, invalue);
 
@@ -112,7 +113,6 @@ const setInterval = () => {
     setTimeout(() => {
         try {
             if (!onExcute) {
-                log("========start APPLE EDI 810")
                 insert810FTPFile();
                 setEDI810Data();
             }

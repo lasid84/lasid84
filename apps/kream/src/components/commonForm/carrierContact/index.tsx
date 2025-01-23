@@ -18,6 +18,7 @@ import {
   CellValueChangedEvent,
   IRowNode,
   RowClickedEvent,
+  RowNode,
   SelectionChangedEvent,
 } from "ag-grid-community";
 import { toastSuccess } from "components/toast";
@@ -87,7 +88,6 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
   };
 
   const handleCellValueChanged = (param: CellValueChangedEvent) => {
-    log("handleCellValueChanged");
     gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
       if (!param.node.data.def) return;
       if (node.id === param.node.id) return;
@@ -101,9 +101,13 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
   const onSave = () => {
     const processNodes = async () => {
       const api = gridRef.current.api;
-      for (const node of api.getRenderedNodes()) {
+      const nodes: RowNode[] = [];
+      api.forEachNode((node: RowNode) => {
+        nodes.push(node);
+      });
+
+      for (const node of nodes) {
         var data = node.data;
-        log("onSave data", node.data);
         gridOptions?.checkbox?.forEach((col) => {
           data[col] = data[col] ? "Y" : "N";
         });
@@ -124,6 +128,7 @@ const DetailGrid: React.FC<Props> = ({ ref = null, initData, params }) => {
         }
       }
     };
+
     processNodes()
       .then(() => {
         toastSuccess("Success.");

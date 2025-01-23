@@ -4,15 +4,16 @@ import { useEffect, useCallback, useRef, memo, useState } from "react";
 import {toastSuccess} from "components/toast"
 import { PageMGrid3, PageGrid } from "layouts/grid/grid";
 import { Button, ICONButton } from "components/button";
-import Grid, { ROW_HIGHLIGHTED,ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
+import Grid, { ROW_CHANGED, ROW_HIGHLIGHTED,ROW_TYPE_NEW } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
-import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { CellClickedEvent, CellValueChangedEvent, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 import Switch from "components/switch/index"
 import { Store } from "../_store/store";
 import DetailModal from "./Detail/popup"
 import ExcelUploadModal from "./ExcelUpload/popup"
 
 import { log, error } from '@repo/kwe-lib-new';
+import { useHotkeys } from "react-hotkeys-hook";
 
 type Props = {
   initData?: any | null;
@@ -25,19 +26,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   
   const gridOptions: GridOption = {
     gridHeight: "h-full",
-    // minWidth: {
-    //   waybill_no: 150,
-    //   invoice_no: 150,
-    //   senddatetime: 180,
-    //   invoice_dd : 120,
-    //   create_date: 180,
-    // },
-    // maxWidth: {
-    //   waybill_no: 170,
-    //   invoice_no: 170,
-    //   senddatetime: 200,
-    //   send: 100,
-    // },
     pinned : {
       waybill_no : "left",
       invoice_no : "left",
@@ -62,8 +50,21 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       send: (params) => {
         return params.value != 'N' ? "bg-green" : "bg-red";
       },
+      chk: (params) => {
+          return params.data.ready !== 'Y' ? '.disabled-checkbox' : ''
+      }
     },
+    notManageRowChange: true
   };
+
+  useHotkeys(
+      "ctrl+s",
+      (event) => {
+        event.preventDefault();
+        onSave();
+      },
+      { enableOnTags: ['INPUT', 'TEXTAREA', 'SELECT'] } // form 요소에서 단축키 활성화
+    );
 
   /*
     handleSelectionChanged보다 handleRowClicked이 먼저 호출됨
@@ -80,13 +81,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       popType: 'U',
       isPopupOpen: true,
     });
-    // dispatch({
-    //   mSelectedRow: selectedRow,
-    //   popUp : { ...popUp, crudType: crudType.UPDATE, isPopUpOpen: true }, //추가
-    //   isDSearch : true,
-    //   isPopUpOpen: true,
-    //   crudType: crudType.UPDATE,
-    // });
   };
 
   const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
@@ -100,49 +94,51 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const api = gridRef.current.api;
     api.forEachNode((node:any) => {
       const data = node.data;
-      data.ready = checked; // 모든 row의 ready 상태 업데이트
-      data.__changed = true;
-      node.setDataValue("chk", checked ? "Y" : "N"); // ag-Grid 셀 업데이트
+      if (data.ready === 'Y') {
+        data.chk = checked; // 모든 row의 ready 상태 업데이트
+        data.__changed = true;
+      }
     });  
     api.refreshCells(); // 그리드 새로고침
   };
 
 
   const onSave = () => {
-    const processNodes = async () => {
-      if (!gridRef.current) return;  
-      const api = gridRef.current.api;
+    log("onSave", )
+    // const processNodes = async () => {
+    //   if (!gridRef.current) return;  
+    //   const api = gridRef.current.api;
       
-      api.forEachNode(async (node: any) => {
-        const data = node.data;
-        if (data.__changed) {
-          gridOptions?.checkbox?.forEach((col) => {
-            data[col] = data[col] ? "Y" : "N"; // checkbox 컬럼 상태 업데이트
-          });  
-          try {
-            if (data.__ROWTYPE === ROW_TYPE_NEW) {
-              // await Create.mutateAsync(data); 
-            } else {
-              log('data...', data)
-              // await Update.mutateAsync(data);
-            }
-          } catch (error) {
-            log("Error:", error);
-          } finally {
-            data.__changed = false; 
-          }
-        }
-      });
-    };
+    //   api.forEachNode(async (node: any) => {
+    //     const data = node.data;
+    //     if (data.__changed) {
+    //       gridOptions?.checkbox?.forEach((col) => {
+    //         data[col] = data[col] ? "Y" : "N"; // checkbox 컬럼 상태 업데이트
+    //       });  
+    //       try {
+    //         if (data.__ROWTYPE === ROW_TYPE_NEW) {
+    //           // await Create.mutateAsync(data); 
+    //         } else {
+    //           log('data...', data)
+    //           // await Update.mutateAsync(data);
+    //         }
+    //       } catch (error) {
+    //         log("Error:", error);
+    //       } finally {
+    //         data.__changed = false; 
+    //       }
+    //     }
+    //   });
+    // };
   
-    processNodes()
-      .then(() => {
-        toastSuccess("Success.");
-        // dispatch({ isMSearch: true });
-      })
-      .catch((err) => {
-        error("Error processing nodes", err);
-      });
+    // processNodes()
+    //   .then(() => {
+    //     toastSuccess("Success.");
+    //     // dispatch({ isMSearch: true });
+    //   })
+    //   .catch((err) => {
+    //     error("Error processing nodes", err);
+    //   });
   };
 
   const onExcelUpload= () => {
@@ -153,12 +149,39 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
   }
 
+  const onExtractHSCode = () => {
+    
+    if (!gridRef.current) return;  
+    const api = gridRef.current.api;
+    
+    let keys: string[] = [];
+    api.forEachNode(async (node: any) => {
+      const data = node.data;
+
+      keys.push(data["waybill_no"] + data["invoice_no"]);
+    });
+
+    actions.getExtractHSCode({
+      keys: keys.join(' '),
+    });
+  }
+
+  function handelCellValueChanged(params: CellValueChangedEvent<any, any>): void {
+    const data = params.node.data;
+    // log(data)
+    if (data.ready === 'N' && data.chk === true) {
+      params.node.setDataValue("chk", false);
+    }
+  }
+
   return (
     <>
       <PageMGrid3
         title={<><Button id={"upload_excel"} onClick = {onExcelUpload} disabled={false}  label='upload_excel' width='w-34' />
-                 <Button id={"extract_hscode"}  onClick="" width="w-34" toolTip="ShortCut: Ctrl+S"/></>}
-        right={<><Switch  onClick={handleSwitchClick}/><Button id={"send"} onClick={onSave} width='w-34' /></>}
+                 <Button id={"extract_hscode"}  onClick={onExtractHSCode} width="w-34" /></>}
+        right={<>
+          <Switch  onClick={handleSwitchClick}/>
+          <Button id={"send"} onClick={onSave} width='w-34' toolTip="ShortCut: Ctrl+S" /></>}
       >
         <Grid
           id="gridMaster"
@@ -170,6 +193,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             onRowDoubleClicked: handleRowDoubleClicked,
             onRowClicked: handleRowClicked,
             onSelectionChanged: handleSelectionChanged,
+            onCellValueChanged: handelCellValueChanged
           }}
         />
       </PageMGrid3>

@@ -17,6 +17,7 @@ class FtpClient {
     constructor(config) {
         this.config = {...config, secure:false};
         // this.client.ftp.verbose = true; // 디버깅용 로깅 활성화
+        // this.client.ftp.encoding = 'utf8';
     }
 
     // 1. FTP 서버에 접속하는 메서드

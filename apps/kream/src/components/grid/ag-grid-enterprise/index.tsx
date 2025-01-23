@@ -128,6 +128,8 @@ export type GridOption = {
   rowSpan?: string[]
   isColumnHeaderVisible?: boolean
   cellClass?: { [key in bgColor]: string | ((params: any) => string) }; 
+
+  notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
 };
 
 type cols = {
@@ -828,11 +830,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }
 
 
-  const onCellValueChanged = (param: CellValueChangedEvent) => {
+  const onCellValueChanged = async (param: CellValueChangedEvent) => {
     // log("onCellValueChanged")
     var rowNode = param.node;
     // rowNode.data[ROW_CHANGED] = true;
-    rowNode.setData({...rowNode.data, [ROW_CHANGED]:true});
+    if (!options?.notManageRowChange) {
+      await rowNode.setData({...rowNode.data, [ROW_CHANGED]:true});
+    }
     // setRowChange(param.node);
 
     // const rowElement = document.querySelector(`[row-index="${rowNode.rowIndex}"]`) as HTMLElement;

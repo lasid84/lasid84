@@ -12,7 +12,7 @@ dotenv.config();
 
 const ufs_worker_director = arp + '/apps/batch/components/worker/ufs';
 const mailing_worker_director = arp + '/apps/batch/components/worker/mailing';
-const APPLE_EDI_810_WORKER_DIR = arp + '/apps/batch/components/worker/appleEDI';
+const APPLE_EDI_WORKER_DIR = arp + '/apps/batch/components/worker/appleEDI';
 const EXCHANGE_RATE_WORKER_DIR = arp + '/apps/batch/components/worker/exchange-rate';
 
 let _arrThread:any = [];
@@ -117,8 +117,11 @@ async function startWorker() {
               }});
           break;
         case "APPLE_EDI_810":
-            const workerAppleEDI810 = new Worker(APPLE_EDI_810_WORKER_DIR + '/810.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
+            const workerAppleEDI810 = new Worker(APPLE_EDI_WORKER_DIR + '/810.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
             break;
+        case "APPLE_EDI_858":
+          const workerAppleEDI858 = new Worker(APPLE_EDI_WORKER_DIR + '/858.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
+          break;
         case "BATCH_HOLIDAY":
             const workerHoliday = new Worker(arp +"/apps/batch/components/worker/holiday" + '/holiday.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
             break;

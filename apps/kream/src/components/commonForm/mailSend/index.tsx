@@ -9,7 +9,7 @@ import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageGrid, PagePopupGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
-import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { CellValueChangedEvent, IRowNode, RowClickedEvent, RowNode, SelectionChangedEvent } from "ag-grid-community";
 import { LabelGrid } from "components/label";
 import { useTranslation } from "react-i18next";
 
@@ -83,9 +83,9 @@ const MailSend: React.FC<Props> = ({ ref = null, pgm_code, params }) => {
     };
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
-        log("handleCellValueChanged");
+        // log("handleCellValueChanged");
         gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
-            log("handleCellValueChanged2", param.node.data);
+            // log("handleCellValueChanged2", param.node.data);
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
 
@@ -100,7 +100,13 @@ const MailSend: React.FC<Props> = ({ ref = null, pgm_code, params }) => {
 
     const onSave = useCallback(async () => {
       const api = gridRef.current.api;
-      for (const node of api.getRenderedNodes()) {
+      const nodes: RowNode[] = [];
+                  
+        api.forEachNode((node: RowNode) => {
+            nodes.push(node);
+        });
+
+      for (const node of nodes) {
         var data = node.data;
         gridOptions?.checkbox?.forEach((col) => {
           data[col] = data[col] ? "Y" : "N";

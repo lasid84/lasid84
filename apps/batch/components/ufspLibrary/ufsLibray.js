@@ -30,6 +30,7 @@ class Library {
     resultData = {};
     mainData = {};
     id = null;
+    
     constructor({ pgm, type, terminal, idx, isHeadless }) {
         this.pgm = pgm;
         this.terminal = terminal;

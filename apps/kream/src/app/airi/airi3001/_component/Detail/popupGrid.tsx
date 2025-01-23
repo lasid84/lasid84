@@ -96,7 +96,6 @@ const DetailGrid: React.FC<Props> = ({  initData, params }) => {
   const handleCellValueChanged = (param: CellValueChangedEvent) => {
     
     gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
-      console.log('node.data확인', node.data)
       if (!param.node.data.def) return;
       if (node.id === param.node.id) return;
       
@@ -105,7 +104,6 @@ const DetailGrid: React.FC<Props> = ({  initData, params }) => {
       }
     });
     if(gridRef.current){
-      log("handleCellValueChanged", gridRef.current);      
       actions.setDetailData(gridRef.current.props.rowData);
     }
   };

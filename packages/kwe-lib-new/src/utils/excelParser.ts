@@ -27,6 +27,11 @@ export const readFile = async (file: File, options?: Options) => {
     }
 }
 
+// SheetJS를 사용한 JSON 배열을 Excel 파일로 변환 및 다운로드 함수
+export const exportJsonToExcel = (jsonArray: any, fileName = 'output.xlsx') => {
+    exportJsonToExcelByxlsx(jsonArray, fileName);
+}
+
 /* 
   1. xlsx 읽히지만 브라우저환경에서 안돌아감(eval 문이 포함되어 있어서 그런듯)
   2. 브라우저 환경에서 exceljs 임포트시 문제로 제외
@@ -116,3 +121,12 @@ const parseCSV = (file: File): Promise<any[]> => {
       }
     });
   }
+
+const exportJsonToExcelByxlsx = (jsonArray: any, fileName: string) => {
+
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.json_to_sheet(jsonArray);
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  XLSX.writeFile(workbook, fileName);
+
+}

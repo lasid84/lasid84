@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { RefObject } from 'react';
-import { SP_GetAppleMainData, SP_GetEDIDetailData, SP_GetExcelCustomsData, SP_InsExcelCustomsData, SP_Load } from "./data";
+import { SP_GetAppleMainData, SP_GetEDIDetailData, SP_GetExcelCustomsData, SP_GetExtractHSCode, SP_InsExcelCustomsData, SP_Load } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
+
+import { exportJsonToExcel } from "@repo/kwe-lib-new";
 import { log } from "@repo/kwe-lib-new";
 
 interface StoreState {
@@ -28,6 +30,7 @@ interface StoreState {
         updateAppleDatas : (params:any) => Promise<any> | undefined;
         getExcelCustomsData: (params:any) => Promise<any[]> | undefined;
         insExcelCustomsData: (params:any) => Promise<any> | undefined;
+        getExtractHSCode: (params:any) => Promise<any> | undefined;
         setPopup: (popup: Partial<StoreState['popup']>) => void; 
         setState: (newState: Partial<StoreState>) => void;
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
@@ -86,8 +89,11 @@ const initValue: Store = (set : any) => ({
             return result;
         },
         insExcelCustomsData : async (params : any) => {
-            log("insExcelCustomsData", params);
             const result = await SP_InsExcelCustomsData(params);
+        },
+        getExtractHSCode: async (params : any) => {
+            const result = await SP_GetExtractHSCode(params);
+            exportJsonToExcel(result[0].data)
         },
         setPopup: (popup: any) => {
             set((state: any) => ({             

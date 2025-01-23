@@ -10,7 +10,7 @@ import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
-import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { CellValueChangedEvent, IRowNode, RowClickedEvent, RowNode, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "components/toast"
 
 import { log, error } from '@repo/kwe-lib-new';
@@ -86,7 +86,7 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
         // log("handleCellValueChanged");
         gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
-            log("handleCellValueChanged2", param.column.getColId(), node.id, param.node.id, node.id === param.node.id, node.data.def, param.data.def);
+            // log("handleCellValueChanged2", param.column.getColId(), node.id, param.node.id, node.id === param.node.id, node.data.def, param.data.def);
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
 
@@ -130,7 +130,13 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
     const onSave = () => {
         const processNodes = async () => {
           const api = gridRef.current.api;
-          for (const node of api.getRenderedNodes()) {
+          const nodes: RowNode[] = [];
+            
+          api.forEachNode((node: RowNode) => {
+            nodes.push(node);
+          });
+
+          for (const node of nodes) {
             var data = node.data;
             gridOptions?.checkbox?.forEach((col) => {
               data[col] = data[col] ? "Y" : "N";

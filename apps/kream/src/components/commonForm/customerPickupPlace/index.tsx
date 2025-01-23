@@ -10,7 +10,7 @@ import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
-import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { CellValueChangedEvent, IRowNode, RowClickedEvent, RowNode, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "components/toast"
 import { LabelGrid } from "components/label";
 
@@ -87,16 +87,16 @@ const CustPickupPlace: React.FC<Props> = ({ ref = null, initData, params }) => {
     };
 
     const handleRowClicked = (param: RowClickedEvent) => {
-        log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
+        // log("detail selectionchange1", objState.mSelectedRow, objState.isMSearch);
         // const row = onRowClicked(param);
         // var selectedRow = {"colId": param.node.id, ...param.node.data}
         // dispatch({dSelectedRow:selectedRow});
     };
 
     const handleCellValueChanged = (param: CellValueChangedEvent) => {
-        log("handleCellValueChanged");
+        // log("handleCellValueChanged");
         gridRef.current.api.forEachNode((node: IRowNode, i: number) => {
-            log("handleCellValueChanged2", param.node.data);
+            // log("handleCellValueChanged2", param.node.data);
             if (!param.node.data.def) return;
             if (node.id === param.node.id) return;
 
@@ -132,7 +132,12 @@ const CustPickupPlace: React.FC<Props> = ({ ref = null, initData, params }) => {
     const onSave = () => {
         const processNodes = async () => {
           const api = gridRef.current.api;
-          for (const node of api.getRenderedNodes()) {
+          const nodes: RowNode[] = [];
+                      
+          api.forEachNode((node: RowNode) => {
+            nodes.push(node);
+          });
+          for (const node of nodes) {
             var data = node.data;
             log("onSave data", node.data);
             gridOptions?.checkbox?.forEach((col) => {

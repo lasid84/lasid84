@@ -10,6 +10,7 @@ import { Button } from "components/button";
 import {
   CellValueChangedEvent,
   IRowNode,
+  RowNode,
   SelectionChangedEvent,
 } from "ag-grid-community";
 import { toastSuccess } from "components/toast";
@@ -45,6 +46,7 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
       decldate: "date", ccdate: "date", cctime: "time",
       totaldeclvalue: "number", exrate:"number", totaldeclfltvalue: "number", totaldeclinsvalue: "number",
       declcustomsvalue: "number", import_duties: "number", local_consumption_tax: "number", import_vat_liability: "number", import_duty_rate: "number",
+      seq: "number"
     },
     gridHeight: "45vh",
     isAutoFitColData: true,
@@ -67,19 +69,16 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
 
   const onSave = async () => {
     const api = gridRef.current.api;
-    const changedDatas = [];
-
-    for (const node of api.getRenderedNodes()) {
+    const changedDatas:any[] = [];
+    await api.forEachNode((node:RowNode) => {
       var data = node.data;
       gridOption?.checkbox?.forEach((col) => {
         data[col] = data[col] ? "Y" : "N";
       });
       changedDatas.push(data);
-    }
+    })
     if (changedDatas.length > 0) {
-      // log("onSvae", JSON.stringify(changedDatas))
       await actions.insExcelCustomsData({jsonData: JSON.stringify(changedDatas)});
-      // await actions.getAppleDatas(getValues());
       closeModal();
     } else {
       toast(t("msg_0006"));  //변경 내역이 없습니다.

@@ -16,6 +16,7 @@ import { useFormContext } from "react-hook-form";
 
 import { log, error, sleep } from '@repo/kwe-lib-new';
 import { useHotkeys } from "react-hotkeys-hook";
+import { RowNode } from "ag-grid-community";
 
 type Props = {
   initData?: any | null;
@@ -82,8 +83,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
   const onSave = async () => {
     
       const api = gridRef.current.api;
-      const changedDatas = [];
-      for (const node of api.getRenderedNodes()) {
+      const changedDatas:any = [];
+      await api.forEachNode((node:RowNode) => {
         var data = node.data;
         gridOptions?.checkbox?.forEach((col) => {
           data[col] = data[col] ? "Y" : "N";
@@ -91,7 +92,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
         if (data.__changed) {
           if (!data.delivery_request_dd) {
             toast(t("MSG_0191"));  //요청일은 필수 값입니다.
-            break;
+            return;
           }
 
           try {
@@ -102,7 +103,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
             data.__changed = false;
           }
         }
-      }
+      });
+      
       if (changedDatas.length > 0) {
         await actions.setAppleDatas({jsonData: JSON.stringify(changedDatas)});
         await actions.getAppleDatas(getValues());

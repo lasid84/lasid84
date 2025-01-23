@@ -17,6 +17,7 @@ import { toastSuccess } from "components/toast";
 import { SP_InsertCargo, SP_UpdateCargo } from "./data";
 
 import { log, error } from '@repo/kwe-lib-new';
+import { RowNode } from "ag-grid-community";
 
 type Props = {
   initData?: any | null;
@@ -126,10 +127,15 @@ const GridCargo: React.FC<Props> = memo(({ initData, svcType }) => {
   //   }
   // }, [objState?.isCGOSearch]);
 
-  const onSave = () => {
-    const processNodes = async () => {
+  const onSave = async () => {
       const api = gridRef.current.api;
-      for (const node of api.getRenderedNodes()) {
+      const nodes: RowNode[] = [];
+  
+      api.forEachNode((node: RowNode) => {
+        nodes.push(node);
+      });
+
+      for (const node of nodes) {
         const Mdata = api.getRowNode(node.data[ROW_INDEX] - 1).data
         const Ddata = (cargoData as gridData).data[node.data[ROW_INDEX] - 1]
         gridOptions?.checkbox?.forEach((col) => {Mdata[col] = Mdata[col] ? "Y" : "N"})
@@ -150,19 +156,23 @@ const GridCargo: React.FC<Props> = memo(({ initData, svcType }) => {
             Mdata.__changed = false;
           }
         }
-      }
+      };
+
+      toastSuccess("Success.")
+      cargoRefetch();
     };
-    // Call the async function
-    processNodes()
-      .then(() => {
-        toastSuccess("Success.")
-        // dispatch({ isCGOSearch :true})
-        cargoRefetch();
-      })
-      .catch((err) => {
-        error("node. Error", err);
-      });
-  };
+
+    // // Call the async function
+    // processNodes()
+    //   .then(() => {
+    //     toastSuccess("Success.")
+    //     // dispatch({ isCGOSearch :true})
+    //     cargoRefetch();
+    //   })
+    //   .catch((err) => {
+    //     error("node. Error", err);
+    //   });
+  ;
 
   const handleonClick = () => {
     rowAdd(gridRef.current, {

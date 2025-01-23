@@ -10,6 +10,7 @@ import { SP_InitMyColumnInfo } from "components/grid/ag-grid-enterprise/_compone
 import { useConfigs } from "@/states/useConfigs";
 
 import { log, error } from '@repo/kwe-lib-new';
+import { RowNode } from "ag-grid-community";
 
 type Props = {
 };
@@ -78,7 +79,12 @@ const Modal: React.FC<Props> = () => {
       let col_nms = '';
       let col_widths = '';
       let col_visibles = '';
-      for (const node of api.getRenderedNodes()) {
+      const nodes: RowNode[] = [];
+                  
+      api.forEachNode((node: RowNode) => {
+        nodes.push(node);
+      });
+      for (const node of nodes) {
         var data = node.data;
 
         col_nms += col_nms ? "," + data.col_nm : data.col_nm;

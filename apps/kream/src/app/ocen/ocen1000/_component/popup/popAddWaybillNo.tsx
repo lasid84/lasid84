@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import Grid, { gridData, ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import { useGetData, useUpdateData2 } from "@/components/react-query/useMyQuery";
 import { GridOption } from "@/components/grid/ag-grid-enterprise";
-import { CellValueChangedEvent, IRowNode } from "ag-grid-community";
+import { CellValueChangedEvent, IRowNode, RowNode } from "ag-grid-community";
 import { SP_GetBkHblData, SP_SaveBkHblData } from "../data";
 
 import { log, error } from '@repo/kwe-lib-new';
@@ -73,10 +73,11 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
     const onSave = useCallback(async () => {
         const api = gridRef.current.api;
         var waybillValid: any[] = [];
-        var waybillArr = [];
-        var remarkArr = [];
+        var waybillArr:string[] = [];
+        var remarkArr:string[] = [];
         var useYnArr: any[] = [];
-        for (const node of api.getRenderedNodes()) {
+        
+        api.forEachNode((node: RowNode) => {
           let data = node.data;
           gridOptions?.checkbox?.forEach((col) => {
             data[col] = (data[col] || data[col] === undefined) ? "Y" : "N";
@@ -88,7 +89,7 @@ const AddWaybillNo: React.FC<Props> = ({ initData, callbacks, bkData }) => {
               remarkArr.push(data.remark);
               useYnArr.push(data.use_yn);
           }
-        }
+        })
 
         if (waybillArr.length) {
             let data = {

@@ -10,7 +10,7 @@ import Grid, { ROW_TYPE_NEW, rowAdd } from 'components/grid/ag-grid-enterprise';
 import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { PageGrid } from "layouts/grid/grid";
 import { Button } from 'components/button';
-import { CellValueChangedEvent, IRowNode, RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
+import { CellValueChangedEvent, IRowNode, RowClickedEvent, RowNode, SelectionChangedEvent } from "ag-grid-community";
 import { toastSuccess } from "components/toast"
 import { LabelGrid } from "components/label";
 
@@ -120,7 +120,12 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
     const onSave = () => {
         const processNodes = async () => {
           const api = gridRef.current.api;
-          for (const node of api.getRenderedNodes()) {
+          const nodes: RowNode[] = [];
+                      
+          api.forEachNode((node: RowNode) => {
+            nodes.push(node);
+          });
+          for (const node of nodes) {
             var data = node.data;
             gridOptions?.checkbox?.forEach((col) => {
               data[col] = data[col] ? "Y" : "N";
