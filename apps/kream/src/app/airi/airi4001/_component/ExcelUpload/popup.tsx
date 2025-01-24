@@ -1,14 +1,14 @@
 import DialogBasic from "layouts/dialog/dialog";
 import { useFormContext } from "react-hook-form";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { crudType } from "components/provider/contextObjectProvider";
 import { FileUpload } from "components/file-upload";
 import { Button } from "components/button";
 import { JsonToGridData } from "@/components/grid/ag-grid-enterprise";
-import { DateInput, DatePicker } from "components/date";
+import { DatePicker } from "components/date";
 import { useTranslation } from "react-i18next";
 import ExcelUploadGrid from "./popupGrid";
-import { Store } from "../../_store/store";
+import { useCommonStore } from "../../_store/store";
 import { toastError, toastSuccess } from "@/components/toast";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -21,36 +21,36 @@ type Props = {
 const Modal: React.FC<Props> = ({ loadItem }) => {
   const { t } = useTranslation();
   const { getValues, reset, setFocus } = useFormContext();
-  const mainSelectedRow = Store((state) => state.mainSelectedRow);
-  const state = Store((state) => state);
-  const popup = Store((state) => state.popup);
-  const excelData = Store((state) => state.excel_data);
-  const actions = Store((state) => state.actions);
-
+  const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
+  const state = useCommonStore((state) => state);
+  const popup = useCommonStore((state) => state.popup);
+  const excelData = useCommonStore((state) => state.excel_data);
+  const actions = useCommonStore((state) => state.actions);
+  const [columnNames, setColumnNames] = useState<string[]>([]);
+  const [mappingConfigs, setmappingConfigs] = useState<Item[]>([])
+  
   const closeModal = async () => {
     actions.updatePopup({
       popType: "C",
       isPopupUploadOpen: false,
     });
-    actions.setExcelDatas({ data: {}, fields:{} });
+    actions.setExcelDatas({ data: {}, fields: {} });
   };
 
-  useEffect(() => {
-    if (
-      loadItem &&
-      mainSelectedRow &&
-      Object.keys(mainSelectedRow).length > 0
-    ) {
-    }
-  }, [mainSelectedRow, loadItem]);
+interface Item {
+  key: string;
+  index: number;
+  default?: string | number;
+}
 
-  useEffect(() => {
+
+useEffect(() => {
     reset();
     if (state.popup.popType === crudType.CREATE) {
       setFocus("use_yn");
     }
   }, [state.popup.popType, state.popup.isOpen]);
-
+  
   const onSave = useCallback(async () => {
     const params = getValues();
     const jsonData = JSON.stringify([excelData]);
@@ -68,62 +68,93 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
     });
     actions.getDTDDatas(params);
   }, [popup.popType, excelData]);
-
+  
+  useEffect(() => {
+    if (loadItem) {
+      const columns = loadItem[2].data.map((item: Item) => item.key);
+      setColumnNames(columns);
+      setmappingConfigs(loadItem[2].data)
+    }
+  }, [loadItem]);
+  
   const handleFileDrop = (data: any[], header: any[]) => {
-    log("excel upload data", data);
-    //TODO - NOT KWE WAYBILL- CNEE ID, NAME 어떻게 관리할건지? 고민필요
-    const mappingConfig = [
-        { key: "cnee_id", index: 1, default: "" },
-        { key: "cnee_name", index: 2 },
-        { key: "waybill_no", index: 3, default: "-" }, // AWB NO
-        { key: "customs_duty", index: 4, vat: false }, // 관세
-        { key: "customs_tax", index: 5, vat: false }, // 부가세
-        { key: "bonded_wh", index: 6, vat: true }, // 창고료/1.1
-        { key: "customs_clearance", index: 7, vat: true }, // 통관료/1.1
-        { key: "dtd_handling", index: 8, vat: true }, // K/수수료/1.1
-        { key: "trucking", index: 9, vat: true }, // 운송료/1.1
-        { key: "other_1", index: 10, vat: true }, // 보험료/1.1
-        { key: "air_freight", index: 11, vat: false }, // 항공료
-        { key: "bl_handling", index: 12, vat: true },   // H/C/1.1
-        { key: "dispatch_fee", index: 13, vat: true }, // 개청료/1.1
-        // { key: "special_handling", index: 14, vat: true }, // 특별통관수수료/1.1
-        // { key: "other_2", index: 15, vat: true }, // OTHER2/1.1
-        // { key: "other_3", index: 16, vat: true }, // OTHER3/1.1
-        { key: "sum", index: 14, default: 0 }, // 합계
-        { key: "note", index: 15 }, // 비고
-    ];
+    let headerRow = 7;
+    data = data.slice(headerRow).map((row) => {
+      const rowArray = row as any[]; 
+      const rowObject: Record<string, any> = {};
 
-    const mappedData = data.map((row) => {
-      const keys = Object.keys(row) as (keyof typeof row)[];
-      return mappingConfig.reduce(
-        (acc, { key, index, default: defaultValue, vat }) => {
-          if (index !== undefined && keys[index] !== undefined) {
-            let cellValue = row[keys[index]];
+      columnNames.forEach((col: string, index: number) => {
+        rowObject[col] = rowArray[index];
+      });
 
-            // 쉼표 제거 후 숫자로 변환
-            if (typeof cellValue === "string") {
-              cellValue = cellValue.replace(/,/g, ""); // 쉼표 제거
-            }
-            if (vat && cellValue !== undefined && !isNaN(Number(cellValue))) {
-              cellValue = Math.round(Number(cellValue) / 1.1);
-            } else if (!isNaN(Number(cellValue))) {
-              cellValue = Number(cellValue);
-            }
-            acc[key] =
-              cellValue !== undefined && cellValue !== ""
-                ? cellValue
-                : defaultValue;
-          } else {
-            acc[key] = defaultValue ?? null; // index가 잘못되었거나 값이 없으면 null
-          }
-          return acc;
-        },
-        {} as Record<string, any>
-      );
+      return rowObject;
     });
 
-    const mappedHeader = mappingConfig.map(({ key }) => key);
-    const gridData = JsonToGridData(mappedData, mappedHeader, 2);
+    let lastWaybillNo: string | null = null; // 이전 청구 데이터의 waybill_no를 저장할 변수
+    log('columnNames',columnNames)
+    log('mappingConfigs', mappingConfigs)
+    const mappedData = data
+      .filter((row) => {
+        // row가 빈 배열인 경우 제외
+        const keys = Object.keys(row) as (keyof typeof row)[];
+        return (
+          keys.length > 0 &&
+          Object.values(row).some(
+            (value) => value !== null && value !== undefined
+          )
+        );
+      })
+      .map((row) => {
+        const keys = Object.keys(row) as (keyof typeof row)[];
+
+        // 현재 row 매핑
+        const parsedRow = mappingConfigs.reduce(
+          (acc:any, { key, index, default: defaultValue }: Item) => {
+            if (index !== undefined && keys[index] !== undefined) {
+              let cellValue = row[keys[index]];
+
+              // 쉼표 제거 후 숫자로 변환
+              if (typeof cellValue === "string") {
+                cellValue = cellValue.replace(/,/g, ""); // 쉼표 제거
+              }
+
+              if (!isNaN(Number(cellValue))) {
+                cellValue = Number(cellValue);
+              }
+
+              acc[key] =
+                cellValue !== undefined && cellValue !== ""
+                  ? cellValue
+                  : defaultValue;
+            } else {
+              acc[key] = defaultValue ?? null; // index가 잘못되었거나 값이 없으면 null
+            }
+            return acc;
+          },
+          {} as Record<string, any>
+        );
+
+        // 비용 데이터 처리: 청구 데이터의 waybill_no 상속
+        if (
+          parsedRow["category"] === "비용" &&
+          (!parsedRow["waybill_no"] || parsedRow["waybill_no"] === "")
+        ) {
+          parsedRow["waybill_no"] = lastWaybillNo;
+        }
+
+        if (
+          parsedRow["category"] === "청구" &&
+          parsedRow["waybill_no"] &&
+          parsedRow["waybill_no"] !== ""
+        ) {
+          lastWaybillNo = parsedRow["waybill_no"];
+        }
+
+        return parsedRow;
+      });
+
+    const mappedHeader = mappingConfigs.map(({ key }) => key);
+    const gridData = JsonToGridData(mappedData, mappedHeader, 1);
     actions.setExcelDatas(gridData);
   };
 
@@ -142,27 +173,38 @@ const Modal: React.FC<Props> = ({ loadItem }) => {
       }
     >
       <form>
-        <div className="w-full gap-4 md:gap-8">
-          <div className="flex w-[70vw] h-[70vh] p-1 border rounded-lg  mx-auto">
-            <div className={"col-span-1"}>
-              <DatePicker
-                id="settlement_date"
-                label="settlement_date"
-                value={state.uiData?.settlement_date}
-                options={{
-                  inline: true,
-                  textAlign: "center",
-                  freeStyles: "p-1 border-1 border-slate-300",
-                }}
-                lwidth="w-20"
-                height="h-8"
-              />
+        <div className="w-full p-4">
+          <div className="grid grid-cols-1 gap-4 w-[70vw] h-auto p-4 border rounded-lg mx-auto">
+            {/* DatePicker Component */}
+            <div className="flex justify-center w-full">
+              <div className="w-80">
+                <DatePicker
+                  id="settlement_date"
+                  label="Settlement Date"
+                  value={state.uiData?.settlement_date}
+                  options={{
+                    inline: true,
+                    textAlign: "center",
+                    freeStyles:
+                      "p-1 border border-slate-300 rounded-md text-base",
+                  }}
+                  lwidth="w-full"
+                />
+              </div>
             </div>
-            <div className="w-full p-4">
+
+            {/* FileUpload Component */}
+            <div className="w-full border rounded-lg">
               <FileUpload
                 onFileDrop={handleFileDrop}
                 isInit={state.uploadFile_init}
+                headerRow={7}
+                isReturnRawData={true}
               />
+            </div>
+
+            {/* ExcelUploadGrid Component */}
+            <div className="w-full">
               <ExcelUploadGrid
                 params={{
                   waybill_no: mainSelectedRow?.waybill_no,

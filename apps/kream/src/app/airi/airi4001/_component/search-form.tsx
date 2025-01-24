@@ -10,19 +10,11 @@ import { FormProvider, SubmitHandler, useFormContext } from "react-hook-form";
 import PageSearch, {
   PageSearchButton,
 } from "layouts/search-form/page-search-row";
-import { useUserSettings } from "states/useUserSettings";
 import { MaskedInputField, Input } from "components/input";
-import {
-  crudType,
-  useAppContext,
-} from "components/provider/contextObjectProvider";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from "components/date";
-import dayjs from "dayjs";
 import { Button } from "components/button";
-import Radio from "components/radio/index"
-import RadioGroup from "components/radio/RadioGroup"
-import { Store } from "../_store/store";
+import { useCommonStore } from "../_store/store";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -43,14 +35,14 @@ type Props = {
 const SearchForm = ({ loadItem }: any) => {
 
   const { getValues, handleSubmit, reset } = useFormContext();
-  const state = Store((state) => state);
-  const actions = Store((state) => state.actions);
+  const state = useCommonStore((state) => state);
+  const actions = useCommonStore((state) => state.actions);
 
   const [status, setStatus] = useState<any>();
 
   useEffect(() => {
     if (loadItem?.length) {
-      setStatus(loadItem[1]);
+      setStatus(loadItem[0]);
     }    
   }, [loadItem]);
 
@@ -60,7 +52,6 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onSearch = () =>{
     const params = getValues()
-    log("onSeach", params)
     actions.getDTDDatas(params)
   }
 
@@ -85,9 +76,9 @@ const SearchForm = ({ loadItem }: any) => {
 
           <div className={"col-span-1"}>
             <DatePicker
-              id="date"
+              id="fr_date"
               label="settlement_date"
-              value={state.searchParams?.date}
+              value={state.searchParams?.fr_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -134,8 +125,8 @@ const SearchForm = ({ loadItem }: any) => {
               lwidth="w-20"
               height="8px"
               options={{
-                keyCol: "state",
-                displayCol: ["state_nm"],
+                keyCol: "create_user",
+                displayCol: ["create_user_nm"],
                 inline: true,
                 defaultValue: state.searchParams?.state,
               }}

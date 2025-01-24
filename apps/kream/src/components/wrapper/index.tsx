@@ -1,13 +1,14 @@
 export type InputWrapperProps = {
   outerClassName: string;
   inline?: boolean;
+  disableSpacing?: boolean;
   children: React.ReactNode;
 };
 
 export const InputWrapper: React.FC<InputWrapperProps> = ({
   inline = false,
   outerClassName,
-
+  disableSpacing,
   children,
 }) => {
   if (inline) {
@@ -25,7 +26,9 @@ export const InputWrapper: React.FC<InputWrapperProps> = ({
     //   <div className={`w-full space-y-1 ${outerClassName}`}>{children}</div>
     // // </div>
     <div className={outerClassName}>
-      <div className={`w-full space-y-1`}>{children}</div>
+      <div className={`w-full ${
+        disableSpacing ? "space-y-0" : "space-y-0.5"
+      }`}>{children}</div>
     </div>
   );
 };

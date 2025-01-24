@@ -1,21 +1,17 @@
 "use client";
 
 import React, {
-  useState,
   useEffect,
   KeyboardEvent
 } from "react";
-import { FormProvider, SubmitHandler, useFormContext } from "react-hook-form";
-import PageSearch, {
-  PageSearchButton,
-} from "layouts/search-form/page-search-row";
+import {  SubmitHandler, useFormContext } from "react-hook-form";
+import  {  PageSearchButton } from "layouts/search-form/page-search-row";
 import { MaskedInputField, Input } from "components/input";
-import { ReactSelect, data } from "@/components/select/react-select2";
 import { DatePicker } from "components/date";
 import { Button } from "components/button";
 import Radio from "components/radio/index"
 import RadioGroup from "components/radio/RadioGroup"
-import { Store } from "../_store/store";
+import { useCommonStore } from "../_store/store";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 export interface returnData {
@@ -36,16 +32,11 @@ type Props = {
 const SearchForm = ({ loadItem }: any) => {
 
   const { getValues } = useFormContext();
-  const state = Store((state) => state);
-  const actions = Store((state) => state.actions);
 
-  const [status, setStatus] = useState<any>();
+  const searchParams = useCommonStore((state) => state.searchParams);
+  
+  const {  resetSearchParam, getTransportDatas, getLoad } = useCommonStore((state) => state.actions);
 
-  useEffect(() => {
-    if (loadItem?.length) {
-      setStatus(loadItem[1]);
-    }    
-  }, [loadItem]);
 
   useEffect(()=>{
     onSearch()
@@ -53,11 +44,17 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onSearch = () =>{
     const params = getValues()
-    log("params onSeach", params)
-    actions.getTransportDatas(params)
+    getTransportDatas(params)
   }
 
-  const onReset = () =>{}
+  const onReset = () =>{
+    resetSearchParam()
+  }
+
+useEffect(() => {
+  log('searchParams', searchParams)
+  //getLoad(getValues());
+}, [searchParams]);
 
   function handleKeyDown(e:KeyboardEvent) {}
   
@@ -89,7 +86,7 @@ const SearchForm = ({ loadItem }: any) => {
             <DatePicker
               id="fr_date"
               label="fr_date"
-              value={state.searchParams?.fr_date}
+              value={searchParams?.fr_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -101,7 +98,7 @@ const SearchForm = ({ loadItem }: any) => {
              <DatePicker
               id="to_date"
               label="to_date"
-              value={state.searchParams?.to_date}
+              value={searchParams?.to_date}
               options={{
                 inline: true,
                 textAlign: "center",
@@ -115,7 +112,7 @@ const SearchForm = ({ loadItem }: any) => {
             <MaskedInputField
               id="no"
               label="mwb_hwb"
-              value={state.searchParams?.no}
+              value={searchParams?.no|| ""}
               options={{ textAlign: "center", inline: true, noLabel: false }}
               height="h-8"
               events={{
@@ -127,22 +124,22 @@ const SearchForm = ({ loadItem }: any) => {
             />
           </div>
 
-          <div className={"col-span-1"}>           
+          {/* <div className={"col-span-1"}>           
             <ReactSelect
               id="create_user"
-              label="create_user"
-              dataSrc={status as data}
+              dataSrc={createuser as data}
               width="w-96"
               lwidth="w-20"
               height="8px"
               options={{
-                keyCol: "state",
-                displayCol: ["state_nm"],
+                keyCol: "create_user",
+                displayCol: ["create_user_nm"],
                 inline: true,
                 defaultValue: state.searchParams?.state,
               }}
             />
-          </div>
+          </div> */}
+          
         </PageSearchButton>
         </div>
   );

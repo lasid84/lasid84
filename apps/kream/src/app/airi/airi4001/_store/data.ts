@@ -1,9 +1,6 @@
 
-
-import { toastError } from "@/components/toast";
-import { executFunction, callUnipass, unipassAPI001 } from "@/services/api.services";
-import { MutationFunction } from "@tanstack/react-query";
-import { unstable_noStore } from "next/cache";
+import { executFunction } from "@/services/api.services";
+import { paramsUtils } from "@/components/react-query/utils/paramUtils";
 
 const { log } = require('@repo/kwe-lib/components/logHelper');
 // import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -13,35 +10,36 @@ interface cursorData {
   cursorData: {}[]
 }
 
-export const SP_Load = async (searchParam:any) => {
+export const SP_Load = async () => {
   // unstable_noStore();
-  const {user_id, ipaddr} = searchParam;
+  const {user_id, ipaddr} = paramsUtils();
   const params = {
     inparam: ["in_user", "in_ipaddr"],
-    invalue: [ '', ''],
+    invalue: [ user_id, ipaddr],
     inproc: 'airimp.f_airi4001_load',
     isShowLoading: false
   }
-  // log("Acct2003Load", p);
   const result = await executFunction(params);
   return result;
 }
 
+//청구내역서 조회
 export const SP_GetDTDMainData = async (searchParam: any) => {
   console.log('SP_GetDTDMainData', searchParam)  
-  //const Param = searchParam.queryKey[1];
-  const {date,  no, create_date} = searchParam;
+  const {fr_date, to_date,  no, create_date} = searchParam;
   //user_id, ipaddr
   const params = {
     inparam : [
-       "in_date"
+       "in_fr_date"
+      , "in_to_date"
       , "in_no"
       , "in_create_user"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
-      date
+      fr_date
+      , to_date
       , no
       , create_date
       , ''
@@ -52,28 +50,33 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
   }
 
   const result = await executFunction(params);
-  console.log('f_airi3003_get_dtd_list',result)
   return result![0];
 }
 
-export const SP_GetEDIDetailData = async (searchParam: any) => {  
-  // const Param = searchParam.queryKey[1];
-  const {waybill_no, invoice_no, user_id, ipaddr} = searchParam;
-  
+
+
+//청구내역서 Detail 조회
+export const SP_GetDTDDetailData = async (searchParam: any) => {
+  console.log('SP_GetDTDDetailData', searchParam)  
+  const { seq,  waybill_no} = searchParam;
+  const {user_id, ipaddr} = paramsUtils();
+  //user_id, ipaddr
   const params = {
     inparam : [
-       "in_no"
-      , "in_invoice_no"
+       "in_waybill_no"
+      , "in_seq"
+      , "in_create_user"
       , "in_user"
       , "in_ipaddr"
     ],
     invalue: [
       waybill_no
-      , invoice_no
+      , seq
+      , ''
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi3001_get_detail',
+    inproc: 'airimp.f_airi4001_get_dtd_detail',
     isShowLoading: true
   }
 
@@ -82,6 +85,7 @@ export const SP_GetEDIDetailData = async (searchParam: any) => {
 }
 
 
+//INSERT & UPDATE
 export const SP_SaveData = async (param: any) => {  
   //throw new Error("Test error from SP_SaveData"); // 에러 강제 발생
   const {jsondata, settlement_date, user_id, ipaddr} = param;
@@ -99,45 +103,17 @@ export const SP_SaveData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_ins_dtd',
+    inproc: 'airimp.f_airi4001_ins_dtd2',
     isShowLoading: true
   }
-
   const result = await executFunction(params);  
   return result!;
 }
 
-// export const SP_SaveData = async (param: any) => {  
-
-//   const {jsondata, user_id, ipaddr} = param;
-  
-//   const params = {
-//     inparam : [
-//        "in_jsondata"
-//       , "in_user"
-//       , "in_ipaddr"
-//     ],
-//     invalue: [
-//       jsondata
-//       , user_id
-//       , ipaddr
-//     ],
-//     inproc: 'airimp.f_airi4001_ins_dtd',
-//     isShowLoading: true
-//   }
-
-//   const result = await executFunction(params);
-  
-//   log('executefunction result', result)
-//   return result!;
-// }
-
-
-
 export const SP_SaveUploadData = async (param: any) => {  
 
-  const {jsondata, settlement_date, user_id, ipaddr} = param;
-  log('jsondata+settlement_data', jsondata, settlement_date)
+  const {jsondata, settlement_date} = param;
+  const {user_id, ipaddr} = paramsUtils();
   const params = {
     inparam : [
        "in_jsondata"
@@ -151,7 +127,7 @@ export const SP_SaveUploadData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_ins_upload_dtd',
+    inproc: 'airimp.f_airi4001_ins_upload_dtd2',
     isShowLoading: true
   }
 
