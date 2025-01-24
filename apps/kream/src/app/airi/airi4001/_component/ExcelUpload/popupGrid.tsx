@@ -6,7 +6,7 @@ import Grid, { ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import { PageGrid } from "layouts/grid/grid";
 import { LabelGrid } from "@/components/label";
-import { Store } from "../../_store/store";
+import { useCommonStore } from "../../_store/store";
 import {
   CellValueChangedEvent,
   SelectionChangedEvent,
@@ -27,14 +27,31 @@ const ExcelUploadGrid: React.FC<Props> = ({ ref = null, params }) => {
   const { t } = useTranslation();
   const gridRef = useRef<any | null>(ref);
   const [gridOptions, setGridOptions] = useState<GridOption>();
-  const excel_data = Store((state)=>state.excel_data)
+  const excel_data = useCommonStore((state)=>state.excel_data)
   const _ExcelUploadGrid = "_ExcelUploadGrid" //grid id
 
   const gridOption: GridOption = {
     colVisible: {
-      col: [ "cnee_id","cnee_name","waybill_no","customs_duty","customs_tax","bonded_wh","customs_clearance",
-      "dtd_handling","trucking","other_1","air_freight","dispatch_fee","sum","note"],
-      visible: true },
+      // "cnee_id","cnee_name","waybill_no","customs_duty","customs_tax","bonded_wh","customs_clearance",
+      // "dtd_handling","trucking","other_1","air_freight","dispatch_fee","sum","note"
+      col: [],
+      visible: false },
+     rowSpan: ["cnee_id", "cnee_name"],
+     dataType: {
+      customs_duty: "number",
+      customs_tax: "number",
+      bonded_wh: "number",
+      customs_clearance: "number",
+      dtd_handling: "number",
+      trucking: "number",
+      insurance_fee: "number",
+      special_handling: "number",
+      air_freight: "number",
+      dispatch_fee: "number",
+      bl_handling: "number",
+      other_1: "number",
+      sum: "number",
+    },
     gridHeight: "40vh",
     isAutoFitColData: true,
   };

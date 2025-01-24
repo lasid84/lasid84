@@ -36,7 +36,20 @@ export const colors = {
     lightskyblue: "lightskyblue",
     red: "red",
     steelBlue: "#4682B4",
-    white: "white"
+    white: "white",
+    pastelPink: "#FFD1DC",
+    pastelYellow: "#FFFACD",
+    pastelBlue: "#AEC6CF",
+    pastelGreen: "#e0ebf3",
+    pastelLavender: "#E6E6FA",
+    pastelPeach: "#FFDAB9",
+    pastelMint: "#98FF98",
+    pastelSky: "#87CEEB",
+    pastelLilac: "#C8A2C8",
+    pastelCream: "#FFFDD0",
+    pastelGray: "#D3D3D3",
+    transparent: "rgba(0, 0, 0, 0)", // 완전히 투명
+    semiTransparent: "rgba(255, 255, 255, 0.5)", // 반투명
   };
   
 
@@ -51,5 +64,18 @@ export const bgColor : Record<string, { backgroundColor: string; color: string }
     "bg-lightskyblue": { backgroundColor: colors.lightskyblue, color: colors.black },
     "bg-beige": { backgroundColor: colors.beige, color: colors.black },    
     "bg-steelblue": { backgroundColor: colors.steelBlue, color: colors.white },
+    "bg-pastelPink": { backgroundColor: colors.pastelPink, color: colors.pastelGray },
+    "bg-pastelYellow": { backgroundColor: colors.pastelYellow, color: colors.pastelGray },
+    "bg-pastelBlue": { backgroundColor: colors.pastelBlue, color: colors.pastelGray },
+    "bg-pastelGreen": { backgroundColor: colors.pastelGreen, color: colors.pastelGray },
+    "bg-pastelLavender": { backgroundColor: colors.pastelLavender, color: colors.pastelGray },
+    "bg-pastelPeach": { backgroundColor: colors.pastelPeach, color: colors.pastelGray },
+    "bg-pastelMint": { backgroundColor: colors.pastelMint, color: colors.pastelGray },
+    "bg-pastelSky": { backgroundColor: colors.pastelSky, color: colors.pastelGray },
+    "bg-pastelLilac": { backgroundColor: colors.pastelLilac, color: colors.pastelGray },
+    "bg-pastelCream": { backgroundColor: colors.pastelCream, color: colors.pastelGray },  
+    "bg-transparent": { backgroundColor: colors.transparent, color: colors.pastelGray },
+    "bg-semiTransparent": { backgroundColor: colors.semiTransparent, color: colors.pastelGray },
+  
   };
   

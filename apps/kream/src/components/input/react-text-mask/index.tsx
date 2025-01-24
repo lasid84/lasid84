@@ -9,7 +9,7 @@ import { Label } from 'components/label';
 import clsx from 'clsx';
 import createNumberMask from './createNumberMask';
 
-import { log, error } from '@repo/kwe-lib-new';
+import { log, error  } from '@repo/kwe-lib-new'
 
 
 type Props = {
@@ -36,7 +36,7 @@ type Props = {
     textAlignLB?: string;
     radius?: string;          //Border Radius (none, sm, '', md, lg, xl, 2xl, full, ......)
     freeStyles?: string;       //freestyle
-
+    disableSpacing?: boolean;    //input wrapper 공백제거
     isReadOnly?: boolean;      //읽기전용여부
     noLabel?: boolean;
     useIcon?: boolean;
@@ -61,10 +61,10 @@ export const MaskedInputField = forwardRef((props:Props, focusRef) => {
   // if (!control) return null;
   const localRef = useRef<HTMLInputElement | null>(null);
 
-  const { id, label, value = '', width, lwidth, height, options = {}, events, isFocus=false, isDisplay=true } = props;
+  const { id, label, value = '', width, lwidth, height, options = {}, events, isFocus=false, isDisplay=true, } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
     textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
-    freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password',
+    freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password', disableSpacing=false,
     isNotManageSetValue=false
   } = options;
   const { mask, pipe, placeholder } = getMask(type, options);
@@ -191,7 +191,7 @@ export const MaskedInputField = forwardRef((props:Props, focusRef) => {
   }
 
   return (
-    <InputWrapper outerClassName={`${outerClassName} ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline}>
+    <InputWrapper outerClassName={`${outerClassName} ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline} disableSpacing={disableSpacing}>
       {!noLabel && <Label id={id} name={label === null ? '' : label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />}
       <div className={`flex w-full ${outerClassName} ${defWidth}`}>
         <Controller

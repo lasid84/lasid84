@@ -609,7 +609,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //체크박스 셋팅
         if (options?.checkbox) {
           if (options.checkbox.indexOf(col) > -1) {
-            // log("checkbox:", col)
+             log("checkbox:", col)
             cellOption = {
               ...cellOption,
               // editable:true,
@@ -683,7 +683,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         if (options?.cellClass) {
           const arrCols = Object.keys(options.cellClass);
           if (arrCols.indexOf(col) > -1) {
-            const classOrFunction = options.cellClass[col];
+            const classOrFunction = options.cellClass[col];           
         
             cellOption = {
               ...cellOption,
@@ -691,6 +691,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
                  if (typeof classOrFunction === "function") {
                  ///함수 타입인 경우, 동적으로 스타일 반환
                   const dynamicClass = classOrFunction(params);
+                
                   return bgColor[dynamicClass] || null;
                 }
                 //return null; // 기본값
@@ -1262,7 +1263,6 @@ const bizNoFormatter = (params: ValueFormatterParams) => {
 }
 
 function checkBoxParser(params: ValueParserParams) {
-  // log("checkBoxParser", params)
   return params.newValue === 'Y' ? true : false;
 }
 
