@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect,useCallback } from "react";
 import {
   crudType,
   useAppContext,
@@ -19,10 +19,43 @@ type Props = {
 };
 
 const Amount: React.FC<Props> = ({ loadItem, params }) => {
-  const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
+  const detailSelectedRow = useCommonStore((state) => state.detailSelectedRow);
   const popup = useCommonStore((state) => state.popup);
-  const state = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
+
+const handleonChange = useCallback((e:any)=>{
+  log('e',e)
+},[detailSelectedRow])
+
+  const handleMaskedInputChange = useCallback(
+    (e: any) => {
+
+      const sanitizedValue =
+        typeof e.target.value === "string"
+          ? e.target.value.replace(/,/g, "")
+          : e.target.value;
+
+      const numericValue = Number(sanitizedValue);
+
+      if (isNaN(numericValue)) {
+        console.warn("Invalid numeric input:", e.target.value);
+        return; // 숫자로 변환할 수 없는 경우 처리 중단
+      }
+
+      const vatKey = `${e.target.id}_vat`;
+      const vatValue = Math.floor(numericValue * 0.1);
+
+      const updatedRow = {
+        ...detailSelectedRow,
+        [e.target.id]: numericValue,
+        [vatKey]: vatValue,
+        __changed: true,
+      };
+      actions.setDetailSelectedRow(updatedRow);
+
+    },
+    [detailSelectedRow]
+  );
 
   return (
     <>
@@ -68,11 +101,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="customs_duty" name="l_customs_duty" />
               <MaskedInputField
-                id="customs_duty"
-                value={mainSelectedRow?.customs_duty}
+                id="customs_duty_rv"
+                value={detailSelectedRow?.customs_duty_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
@@ -80,24 +116,30 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 value=""
                 options={{
                   ...AmountInputOptions,
-                  bgColor: "transparent",
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                }}
+                  bgColor:"!bg-gray-300",
+                  isReadOnly: true,
+                }}                
               />
               <MaskedInputField
-                id="customs_duty_cost"
-                value={mainSelectedRow?.customs_duty}
+                id="customs_duty_ab"
+                value={detailSelectedRow?.customs_duty_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="customs_duty_profit"
-                value={mainSelectedRow?.customs_duty_profit}
+                value={`${detailSelectedRow?.customs_duty_rv - detailSelectedRow?.customs_duty_ab}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  isReadOnly: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -109,35 +151,45 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="customs_tax" name="l_customs_tax" />
               <MaskedInputField
-                id="customs_tax"
-                value={mainSelectedRow?.customs_tax}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly: true,
-                }}
-              />
-              <MaskedInputField
                 id=""
                 value=""
                 options={{
                   ...AmountInputOptions,
+                  bgColor:"!bg-gray-300",
                   isReadOnly: true,
                 }}
               />
               <MaskedInputField
-                id="customs_tax_cost"
-                value={mainSelectedRow?.customs_tax}
+                id="customs_tax"
+                value={detailSelectedRow?.customs_tax_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="customs_tax_profit"
-                value={mainSelectedRow?.customs_tax_profit}
+                id="customs_tax_ab"
+                value={detailSelectedRow?.customs_tax_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
+              />
+              <MaskedInputField
+                id="customs_tax_profit"
+                value={`${detailSelectedRow?.customs_duty_rv - detailSelectedRow?.customs_duty_ab}`}
+                options={{
+                  ...AmountInputOptions,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -149,35 +201,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="bonded_wh" name="l_bonded_wh" />
               <MaskedInputField
-                id="bonded_wh"
-                value={mainSelectedRow?.bonded_wh}
+                id="bonded_wh_rv"
+                value={detailSelectedRow?.bonded_wh_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="bonded_wh_vat"
-                value={mainSelectedRow?.bonded_wh_vat}
+                id="bonded_wh_vat_rv"
+                value={detailSelectedRow?.bonded_wh_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="bonded_wh_cost"
-                value={mainSelectedRow?.bonded_wh}
+                id="bonded_wh_ab"
+                value={detailSelectedRow?.bonded_wh_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="bonded_wh_profit"
-                value={mainSelectedRow?.bonded_wh_profit}
+                value={`${detailSelectedRow?.bonded_wh_rv - detailSelectedRow?.bonded_wh_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -188,35 +252,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="dispatch_fee" name="l_dispatch_fee" />
               <MaskedInputField
-                id="dispatch_fee"
-                value={mainSelectedRow?.dispatch_fee}
+                id="dispatch_fee_rv"
+                value={detailSelectedRow?.dispatch_fee_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="dispatch_fee_vat"
-                value={mainSelectedRow?.dispatch_fee_vat}
+                id="dispatch_fee_vat_rv"
+                value={detailSelectedRow?.dispatch_fee_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="dispatch_fee_cost"
-                value={mainSelectedRow?.dispatch_fee}
+                id="dispatch_fee_ab"
+                value={detailSelectedRow?.dispatch_fee_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="dispatch_fee_profit"
-                value={mainSelectedRow?.dispatch_fee_profit}
+                value={`${detailSelectedRow?.dispatch_fee_rv - detailSelectedRow?.dispatch_fee_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -228,35 +304,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="customs_clearance" name="l_customs_clearance" />
               <MaskedInputField
-                id="customs_clearance"
-                value={mainSelectedRow?.customs_clearance}
+                id="customs_clearance_rv"
+                value={detailSelectedRow?.customs_clearance_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="customs_clearance_vat"
-                value={mainSelectedRow?.customs_clearance_vat}
+                id="customs_clearance_vat_rv"
+                value={detailSelectedRow?.customs_clearance_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="customs_clearance_cost"
-                value={mainSelectedRow?.customs_clearance}
+                id="customs_clearance_ab"
+                value={detailSelectedRow?.customs_clearance_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="customs_clearance_profit"
-                value={mainSelectedRow?.customs_clearance_profit}
+                value={`${detailSelectedRow?.customs_clearance_rv - detailSelectedRow?.customs_clearance_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -268,35 +356,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="dtd_handling" name="l_dtd_handling" />
               <MaskedInputField
-                id="dtd_handling"
-                value={mainSelectedRow?.dtd_handling}
+                id="dtd_handling_rv"
+                value={detailSelectedRow?.dtd_handling_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="dtd_handling_vat"
-                value={mainSelectedRow?.dtd_handling_vat}
+                id="dtd_handling_vat_rv"
+                value={detailSelectedRow?.dtd_handling_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="dtd_handling_cost"
-                value={mainSelectedRow?.dtd_handling}
+                id="dtd_handling_ab"
+                value={detailSelectedRow?.dtd_handling_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="dtd_handling_profit"
-                value={mainSelectedRow?.dtd_handling_profit}
+                value={`${detailSelectedRow?.dtd_handling_rv - detailSelectedRow?.dtd_handling_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -308,35 +408,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="special_handling" name="l_special_handling" />
               <MaskedInputField
-                id="special_handling"
-                value={mainSelectedRow?.special_handling}
+                id="special_handling_rv"
+                value={detailSelectedRow?.special_handling_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="special_handling_vat"
-                value={mainSelectedRow?.special_handling_vat}
+                id="special_handling_vat_rv"
+                value={detailSelectedRow?.special_handling_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="special_handling_cost"
-                value={mainSelectedRow?.special_handling_cost}
+                id="special_handling_ab"
+                value={detailSelectedRow?.special_handling_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="special_handling_profit"
-                value={mainSelectedRow?.special_handling} /*금액*/
+                value={`${detailSelectedRow?.special_handling_rv-detailSelectedRow?.special_handling_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -348,35 +460,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="trucking" name="l_trucking" />
               <MaskedInputField
-                id="trucking"
-                value={mainSelectedRow?.trucking}
+                id="trucking_rv"
+                value={detailSelectedRow?.trucking_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="trucking_vat"
-                value={mainSelectedRow?.trucking_vat}
+                id="trucking_vat_rv"
+                value={detailSelectedRow?.trucking_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="trucking_cost"
-                value={mainSelectedRow?.trucking_cost}
+                id="trucking_ab"
+                value={detailSelectedRow?.trucking_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="trucking_profit"
-                value={mainSelectedRow?.trucking_profit}
+                value={`${detailSelectedRow?.trucking_rv-detailSelectedRow?.trucking_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -388,35 +512,49 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="air_freight" name="l_air_freight" />
               <MaskedInputField
-                id="air_freight"
-                value={mainSelectedRow?.air_freight}
+                id="air_freight_rv"
+                value={detailSelectedRow?.air_freight_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="air_freight_vat"
-                value={mainSelectedRow?.air_freight_vat}
+                id=''
+                value=''
                 options={{
                   ...AmountInputOptions,
+                  bgColor:"!bg-gray-300",
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="air_freight_cost"
-                value={mainSelectedRow?.air_freight}
+                value={detailSelectedRow?.air_freight_ab}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor : "black",
+                  isReadOnly:true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="air_freight_profit"
-                value={mainSelectedRow?.air_freight_profit}
+                value={`${detailSelectedRow?.air_freight_rv-detailSelectedRow?.air_freight_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -428,41 +566,55 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="bl_handling" name="l_bl_handling" />
               <MaskedInputField
-                id="bl_handling"
-                value={mainSelectedRow?.bl_handling}
+                id="bl_handling_rv"
+                value={detailSelectedRow?.bl_handling_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
 
               <MaskedInputField
-                id="bl_handling_vat"
-                value={mainSelectedRow?.bl_handling_vat}
+                id="bl_handling_vat_rv"
+                value={detailSelectedRow?.bl_handling_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
+                events={{
+                  onChange: handleMaskedInputChange,
+                }}
               />
               <MaskedInputField
-                id="bl_handling_cost"
-                value={mainSelectedRow?.bl_handling_cost}
+                id="bl_handling_ab"
+                value={detailSelectedRow?.bl_handling_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="bl_handling_profit"
                 value={(
-                  Number(mainSelectedRow?.bl_handling?.replace(/,/g, "") || 0) -
                   Number(
-                    mainSelectedRow?.bl_handling_vat?.replace(/,/g, "") || 0
+                    detailSelectedRow?.bl_handling?.replace(/,/g, "") || 0
+                  ) -
+                  Number(
+                    detailSelectedRow?.bl_handling_vat?.replace(/,/g, "") || 0
                   )
                 ).toLocaleString()}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -474,38 +626,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="other_1" name="other_1" />
               <MaskedInputField
-                id="other_1"
-                value={mainSelectedRow?.other_1}
+                id="other_1_rv"
+                value={detailSelectedRow?.other_1_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
-                id="other_1_vat"
-                value={mainSelectedRow?.other_1_vat}
+                id="other_1_vat_rv"
+                value={detailSelectedRow?.other_1_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
-                id="other_1_cost"
-                value={mainSelectedRow?.other_1}
+                id="other_1_ab"
+                value={detailSelectedRow?.other_1_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="other_1_profit"
-                value={mainSelectedRow?.other_1_profit}
+                value={`${detailSelectedRow?.other_1_rv-detailSelectedRow?.other_1_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -516,39 +677,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="other_2" name="other_2" />
               <MaskedInputField
-                id="other_2"
-                value={mainSelectedRow?.other_1}
+                id="other_2_rv"
+                value={detailSelectedRow?.other_2_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
-                id="other_2_vat"
-                value={mainSelectedRow?.other_1_vat}
+                id="other_2_vat_rv"
+                value={detailSelectedRow?.other_2_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
-                id="other_2_cost"
-                value={mainSelectedRow?.other_1}
+                id="other_2_ab"
+                value={detailSelectedRow?.other_2_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="other_2_profit"
-                value={mainSelectedRow?.other_1_profit}
+                value={`${detailSelectedRow?.other_2_rv-detailSelectedRow?.other_2_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -559,39 +728,47 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             >
               <DTDLabel id="other_3" name="other_3" />
               <MaskedInputField
-                id="other_3"
-                value={mainSelectedRow?.other_3}
+                id="other_3_rv"
+                value={detailSelectedRow?.other_3_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
-                id="other_3_vat"
-                value={mainSelectedRow?.other_3_vat}
+                id="other_3_vat_rv"
+                value={detailSelectedRow?.other_3_vat_rv}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
-                id="other_3_cost"
-                value={mainSelectedRow?.other_3_cost}
+                id="other_3_ab"
+                value={detailSelectedRow?.other_3_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
               <MaskedInputField
                 id="other_3_profit"
-                value={mainSelectedRow?.other_3_profit}
+                value={`${detailSelectedRow?.other_3_rv-detailSelectedRow?.other_3_ab}`}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                  disableSpacing: true,
+                }}
+                events={{
+                  onChange: handleMaskedInputChange,
                 }}
               />
             </div>
@@ -604,7 +781,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
               <DTDLabel id="total" name="total" />
               <MaskedInputField
                 id="total"
-                value={mainSelectedRow?.total}
+                value={detailSelectedRow?.total}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
@@ -612,7 +789,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
               />
               <MaskedInputField
                 id="total_vat"
-                value={mainSelectedRow?.total_vat}
+                value={detailSelectedRow?.total_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
@@ -620,7 +797,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
               />
               <MaskedInputField
                 id="total_cost"
-                value={mainSelectedRow?.total_cost}
+                value={detailSelectedRow?.total_cost}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
@@ -628,7 +805,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
               />
               <MaskedInputField
                 id="total_profit"
-                value={mainSelectedRow?.total_profit}
+                value={detailSelectedRow?.total_profit}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
@@ -642,8 +819,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
               id="remark"
               rows={22}
               cols={32}
-              value={mainSelectedRow?.remark}
+              value={detailSelectedRow?.remark}
               options={{ isReadOnly: false }}
+              events={{
+                onChange:handleonChange
+              }}
             />
           </div>
         </div>

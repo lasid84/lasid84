@@ -73,11 +73,12 @@ export const SP_GetDTDDetailData = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_get_dtd_detail',
-    isShowLoading: true
+    inproc: 'airimp.f_airi4001_get_dtd_detail2',
+    isShowLoading: false
   }
 
   const result = await executeKREAMFunction(params);
+  console.log('result', result)
   return result![0];
 }
 

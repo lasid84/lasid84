@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useCommonStore } from "../../_store/store";
 import Amount from "./popupAmount";
 
-// import { log, error } from '@repo/kwe-lib-new';
+import { log, error } from '@repo/kwe-lib-new';
 
 type Callback = () => void;
 type Props = {
@@ -25,6 +25,7 @@ const Modal = ({ loadItem }: Props) => {
 
   const { getValues, reset, setFocus } = useFormContext();
   const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
+  const detailSelectedRow = useCommonStore((state)=>state.detailSelectedRow)
   const popup = useCommonStore((state) => state.popup);
   const state = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
@@ -102,6 +103,51 @@ const Modal = ({ loadItem }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (state.detailSelectedRow) {
+      log("Detail selected row changed:", state.detailSelectedRow);
+      // 필요한 추가 로직
+    }
+  }, [state.detailSelectedRow]);
+
+  const onClickeventBefore = () => {
+    log('onClickeventBefore', state.currentRow);
+  
+    // 이전 인덱스 계산
+    const prevIndexnum = state.currentRow?.__ROWINDEX - 2;
+    log('onClickeventBefore2', prevIndexnum);
+  
+    // prevIndexnum과 동일한 rowIndex를 가진 데이터 찾기
+    const prevRowData = state.allData.find(row => row.__ROWINDEX === prevIndexnum);
+    log('prevRowData', prevRowData);
+  
+    if (prevRowData) {
+      log('Found previous row:', prevRowData);
+      actions.getDTDDetailDatas(prevRowData);
+      actions.setCurrentRow(prevRowData);
+    } else {
+      log('No data found for previous index:', prevIndexnum);
+    }
+  };
+  
+  const onClickeventAfter =  () => {
+    log('onClickeventAfter', state.currentRow)
+ // 다음 인덱스 계산
+ const nextIndexnum =state.currentRow?.__ROWINDEX+2
+ log('onClickeventAfter2', nextIndexnum);
+
+ // nextIndexnum과 동일한 rowIndex를 가진 데이터 찾기
+ const nextRowData = state.allData.find(row => row.__ROWINDEX === nextIndexnum);
+ log('nextRowData', nextRowData);
+ if (nextRowData) {
+   log('Found next row:', nextRowData);
+   actions.getDTDDetailDatas(nextRowData);
+   actions.setCurrentRow(nextRowData)
+ } else {
+   log('No data found for next index:', nextIndexnum);
+ }
+  }
+ 
   return (
     <>
       <div className="">
@@ -119,7 +165,7 @@ const Modal = ({ loadItem }: Props) => {
                   id="cal_issue_or_nm"
                   label="l_gubn"
                   width="w-32"
-                  value={mainSelectedRow?.cal_issue_or_nm}
+                  value={detailSelectedRow?.cal_issue_or_nm}
                   options={{
                     inline: true,
                     isReadOnly: true,
@@ -131,7 +177,7 @@ const Modal = ({ loadItem }: Props) => {
                 <MaskedInputField
                   id="cnee_id"
                   label="cnee_id"
-                  value={mainSelectedRow?.cnee_id}
+                  value={detailSelectedRow?.cnee_id}
                   width="w-32"
                   options={{
                     inline: true,
@@ -157,7 +203,7 @@ const Modal = ({ loadItem }: Props) => {
                     gridStyle={{ width: "600px", height: "300px" }}
                     style={{ width: "1200px", height: "8px" }}
                     isDisplay={true}
-                    defaultValue={mainSelectedRow?.cnee_id}
+                    defaultValue={detailSelectedRow?.cnee_id}
                     inline={true}
                   />
                 {/* </div> */}
@@ -170,7 +216,7 @@ const Modal = ({ loadItem }: Props) => {
                 <MaskedInputField
                   id="state"
                   width="w-32"
-                  value={mainSelectedRow?.state}
+                  value={detailSelectedRow?.state}
                   options={{
                     inline: true,
                     isReadOnly: true,
@@ -195,7 +241,7 @@ const Modal = ({ loadItem }: Props) => {
                   <div className="grid grid-cols-2 gap-4">
                     <MaskedInputField
                       id="waybill_no"
-                      value={mainSelectedRow?.waybill_no}
+                      value={detailSelectedRow?.waybill_no}
                       options={{
                         inline: true,
                         isReadOnly:
@@ -204,7 +250,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <MaskedInputField
                       id="gubn"
-                      value={mainSelectedRow?.gubn}
+                      value={detailSelectedRow?.gubn}
                       options={{
                         inline: true,
                         isReadOnly:
@@ -229,7 +275,7 @@ const Modal = ({ loadItem }: Props) => {
                         gridStyle={{ width: "600px", height: "300px" }}
                         style={{ width: "1000px", height: "8px" }}
                         isDisplay={true}
-                        defaultValue={mainSelectedRow?.cnee_id}
+                        defaultValue={detailSelectedRow?.cnee_id}
                         inline={true}
                       /> */}
                   </div>
@@ -237,7 +283,7 @@ const Modal = ({ loadItem }: Props) => {
                     <MaskedInputField
                       id="ci_invoice"
                       label="invoice_no"
-                      value={mainSelectedRow?.ci_invoice}
+                      value={detailSelectedRow?.ci_invoice}
                       options={{
                         inline: true,
                         isReadOnly:
@@ -247,7 +293,7 @@ const Modal = ({ loadItem }: Props) => {
 
                     <MaskedInputField
                       id="gross_wt"
-                      value={mainSelectedRow?.gross_wt}
+                      value={detailSelectedRow?.gross_wt}
                       options={{
                         inline: true,
                         isReadOnly:
@@ -260,7 +306,7 @@ const Modal = ({ loadItem }: Props) => {
                   <div className="grid grid-cols-2 gap-1">
                     <DatePicker
                       id="settlement_date"
-                      value={mainSelectedRow?.settlement_date}
+                      value={detailSelectedRow?.settlement_date}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -269,7 +315,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <DatePicker
                       id="eta"
-                      value={mainSelectedRow?.eta}
+                      value={detailSelectedRow?.eta}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -278,7 +324,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <DatePicker
                       id="create_date"
-                      value={mainSelectedRow?.create_date}
+                      value={detailSelectedRow?.create_date}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -288,7 +334,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <MaskedInputField
                       id="create_user"
-                      value={mainSelectedRow?.create_user}
+                      value={detailSelectedRow?.create_user}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -297,7 +343,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <DatePicker
                       id="update_date"
-                      value={mainSelectedRow?.update_date}
+                      value={detailSelectedRow?.update_date}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -307,7 +353,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <MaskedInputField
                       id="update_user"
-                      value={mainSelectedRow?.update_user}
+                      value={detailSelectedRow?.update_user}
                       options={{
                         inline: true,
                         isReadOnly: true,
@@ -317,7 +363,21 @@ const Modal = ({ loadItem }: Props) => {
                   </div>
                 </div>
               </div>
-              <div className="justify-center w-full">{mainSelectedRow?.__ROWINDEX}</div>
+              <div className="flex items-center justify-center w-full space-x-2">
+                  <div 
+                    className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
+                    onClick={onClickeventBefore}
+                  >
+                  {'<'}
+                  </div>
+                  <div 
+                    className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
+                    onClick={onClickeventAfter}
+                  >
+                   {'>'}
+                  </div>
+                  <span className="text-gray-700">Index: {Math.floor(state.currentRow?.__ROWINDEX/2)+1} total : {Math.floor(state.allData.length /2)}</span>
+                </div>
               <div className="col-span-3">
                 <Amount loadItem={loadItem} />
               </div>

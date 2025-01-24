@@ -38,9 +38,11 @@ interface StoreState {
         };
       }>  | null,
     mainSelectedRow: Record<string, any> | null;
-    detailSelectedRow: Record<string, any> | null;
+    currentRow : Record<string, any> | null;
+    detailSelectedRow: Record<string, any> | null; //detailDatas가 맞아보임.
     popup: Record<string, any>;
-    loadDatas: gridData[]
+    loadDatas: gridData[];
+    allData:any[] 
 }
 
 interface StoreActions {
@@ -48,12 +50,13 @@ interface StoreActions {
         setExcelDatas : (params: any) => Promise<any> | undefined;
         updateExcelDatas : (params:any) => Promise<any> | undefined;
         getDTDDatas: (params: any) => Promise<any> | undefined;
-        getDTDDetailDatas: (params: any) => Promise<any> | undefined;
-        getDTDDetailDatas2: (params: any) => Promise<any> | undefined;        
+        getDTDDetailDatas: (params: any) => Promise<any> | undefined;   
         setPopup: (popup: Partial<StoreState['popup']>) => void; 
         setState: (newState: Partial<StoreState>) => void;
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
         setMainSelectedRow : (row:any) => void;
+        setDetailSelectedRow : (row:any) => void;
+        setCurrentRow : (row:any)=>void;
         setDetailData: (data: any[]) => void;
         saveDTDData : (data:SaveDataArgs)=> Promise<any>;
         saveUploadData : (data:SaveDataArgs)=>void;
@@ -78,9 +81,11 @@ const initValue: StoreState = {
     uiData : {
         settlement_date : dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
     },
-    mainDatas: { data: {}, fields:{} },
+    mainDatas: { data: {}, fields:{} },     //DB
     detailDatas : {data:{}, fields:{} },
-    mainSelectedRow: null,
+    allData:[],
+    mainSelectedRow: null,                  //GRID
+    currentRow : null,                      //GRID(invoice 참조)
     detailSelectedRow: null,
     excel_data :{ data: {}, fields:{} },
     uploadFile_init : false,
@@ -115,15 +120,11 @@ const setinitValue = (set:any) => {
             },
             getDTDDetailDatas: async (params: any) => {
                 const result = await SP_GetDTDDetailData(params);
-                 set({ detailDatas: result });
+                set((state:any) => ({
+                    ...state,
+                    detailSelectedRow: { ...result.data[0] }, // 새 객체로 할당
+                  }));
                 return result;
-            },
-            //TEST
-            getDTDDetailDatas2: async (params: any) => {
-                // const result = await SP_GetDTDDetailData(params);
-                 set({ detailDatas: params });
-                 console.log('param11111s',params)
-                // return result;
             },
             setPopup: (popup: any) => {
                 set((state: any) => ({             
@@ -142,6 +143,12 @@ const setinitValue = (set:any) => {
             }))},
             setMainSelectedRow: (row:any) =>{
                 set((state:StoreState) => ({ ...state, mainSelectedRow: row }))
+            },
+            setDetailSelectedRow: (row:any) =>{
+                set((state:StoreState) => ({ ...state, detailSelectedRow: row }))
+            },
+            setCurrentRow: (row:any) =>{
+                set((state:StoreState) => ({ ...state, currentRow: row }))
             },
             saveUploadData: async (params: any) => {
                 try {

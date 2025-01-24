@@ -213,11 +213,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const focusedCell = param.api.getFocusedCell();
     var selectedRow = { colId: param.node.id, ...param.node.data };
     actions.setMainSelectedRow(selectedRow);
+    actions.setDetailSelectedRow(selectedRow);
+    actions.setCurrentRow(selectedRow); //INVOICE(POPUP)
 
-    //detail TEST
-    actions.getDTDDetailDatas(selectedRow);
-    log('detailDAtas', state.detailDatas)
-    
     if (focusedCell?.column.getColId() === "waybill_no") {
       actions.updatePopup({
         popType: "C",
@@ -316,9 +314,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
   const handleRowDataUpdated= useCallback((params:any)=>{
     if(!gridApi) return;
-    const allData:any[] = [];
-    gridApi.forEachNode((node:any) => allData.push(node.data));
-    log('allData', allData)
+
+    // 초기화 후 데이터 추가
+    state.allData = []; 
+    gridApi.forEachNode((node:any) => state.allData.push(node.data));
+    log('allData', state.allData)
   },[state.mainDatas])
 
   const handleChange = useCallback(
