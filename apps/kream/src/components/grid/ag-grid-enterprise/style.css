@@ -24,3 +24,16 @@
 .disabled-checkbox {
   pointer-events: none; /* 체크박스 비활성화 */
 }
+
+.row-divide {
+  border-bottom: 5px dotted red;
+}
+
+.cell-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.row-span-default {
+  z-index: auto !important;
+  background-color: #FCFDFE;
+}

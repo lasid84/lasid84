@@ -10,7 +10,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { GrDownload } from "react-icons/gr";
 import { VscSymbolInterface } from "react-icons/vsc";
 import { MdOutlineSyncAlt } from "react-icons/md";
-import { FaClipboardCheck } from "react-icons/fa";  //clipboard
+import { FaClipboardCheck, FaArrowUp } from "react-icons/fa";  //clipboard
 import { RxCopy } from "react-icons/rx";            //copy
 import { SP_InsertLog } from "@/services/clientAction";
 import { useUpdateData2 } from "../react-query/useMyQuery";
@@ -240,6 +240,9 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "minus":
       icon = <TiMinus size={size} />;
+      break;
+    case "up":
+      icon = <FaArrowUp size={size} />;
       break;
     case "descartes":
       const descartesIcon = () => {
