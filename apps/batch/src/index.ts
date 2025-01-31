@@ -9,11 +9,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // const root = path.resolve(arp, '../') // the parent of the root path
-
-const ufs_worker_director = arp + '/apps/batch/components/worker/ufs';
-const mailing_worker_director = arp + '/apps/batch/components/worker/mailing';
-const APPLE_EDI_WORKER_DIR = arp + '/apps/batch/components/worker/appleEDI';
-const EXCHANGE_RATE_WORKER_DIR = arp + '/apps/batch/components/worker/exchange-rate';
+const root = arp + '/apps/batch/components/worker';
+const ufs_worker_director = root + '/ufs';
+const mailing_worker_director = root + '/mailing';
+const APPLE_EDI_WORKER_DIR = root + '/appleEDI';
+const EXCHANGE_RATE_WORKER_DIR = root + '/exchange-rate';
+const TMS_INTERFACE_WORKER_DIR = root + '/dataInterface';
 
 let _arrThread:any = [];
 
@@ -130,6 +131,9 @@ async function startWorker() {
               , { workerData: { idx: thread.idx, pgm:thread.pgm, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
               }});
             break;
+        case "TMS_DATA_INTERFACE":
+          const workerTMSDataInterface = new Worker(TMS_INTERFACE_WORKER_DIR + '/tms.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
+          break;
       }
       await sleep(2000);
       i++;

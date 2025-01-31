@@ -181,6 +181,9 @@ importers:
       '@repo/kwe-lib':
         specifier: '*'
         version: link:../../packages/kwe-lib
+      '@repo/kwe-lib-new':
+        specifier: '*'
+        version: link:../../packages/kwe-lib-new
       basic-ftp:
         specifier: ^5.0.5
         version: 5.0.5
@@ -14016,7 +14019,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 2.1.0
-      ts-node: 10.9.1(@types/node@22.10.5)(typescript@5.7.2)
+      ts-node: 10.9.1(@types/node@20.12.4)(typescript@5.3.3)
       yaml: 1.10.2
 
   /postcss-load-config@4.0.2(postcss@8.4.48)(ts-node@10.9.1):
@@ -16716,7 +16719,6 @@ packages:
       typescript: 5.3.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: false
 
   /ts-node@10.9.1(@types/node@20.17.6)(typescript@4.9.5):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
@@ -16808,6 +16810,7 @@ packages:
       typescript: 5.7.2
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    dev: true
 
   /tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}

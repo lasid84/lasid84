@@ -106,4 +106,57 @@ async function orderAPIExecution(type, params) {
     return await apiCallPost(client, params);
 }
 
-module.exports = { executFunction, sendEmail, insertDBAlertLog, orderAPIExecution }
+/************************************************************/
+// const { createApiClient } = require('@repo/kwe-lib-new');
+const { DataRoutes } = require('./api.constants');
+const { createApiClient } = require('@repo/kwe-lib-new/dist/index.cjs');
+
+const apiClient = createApiClient({
+    baseURL: process.env.KREAM_API_URL
+});
+
+const executeFunction = async (url, params) => {
+    // const kweLib = await import('kwe-lib-new/dist/index.js');
+    const {inproc, inparam, invalue } = params;
+    
+    const token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
+        
+    const data = params;
+    const config = {
+      // withCredentials: true,  // 쿠키를 포함하기 위한 설정
+      headers: {
+        "Authorization": `${token}`
+      },
+    };
+    // log("kweLib.ProcedureResult", kweLib.ProcedureResult);
+    const response = await apiClient.executeProcedure(url, data, config);
+    // log("response", response)
+    const { numericData, textData, cursorData } = response
+
+    if (+numericData !== 0) {
+        // toastWaring((numericData + " : " + textData))
+        return numericData + " : " + textData;
+    }
+    
+    return cursorData || [];
+}
+
+const executeKREAMFunction = async (params) => {
+  const url = `${DataRoutes.BASE}${DataRoutes.URI.GET_DATA}`;
+  const result = await executeFunction(url, params);
+
+  return result;
+}
+
+const executeTMSFunction = async (params) => {
+  const url = `${DataRoutes.BASE}${DataRoutes.URI.GET_TMSDATA}`;
+  const result = await executeFunction(url, params);
+
+  return result;
+}
+
+
+module.exports = { executFunction, sendEmail, insertDBAlertLog, orderAPIExecution
+    , executeKREAMFunction, executeTMSFunction
+
+ }

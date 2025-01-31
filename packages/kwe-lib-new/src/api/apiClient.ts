@@ -30,7 +30,7 @@ export const createApiClient = (config?: AxiosRequestConfig): ExtendedAxiosInsta
         timeout: 30000,
         ...config
     }) as ExtendedAxiosInstance;
-
+    
     instance.get = async function <T = any, R = AxiosResponse<T>, D = any>(
         url: string,
         config?: AxiosRequestConfig<D>
@@ -61,15 +61,24 @@ export const createApiClient = (config?: AxiosRequestConfig): ExtendedAxiosInsta
 
           return response as R;
         } catch (err) {
+          console.log("post", err)
           return Promise.reject(err);
         }
       };
 
     instance.executeProcedure = async function <T>(url: string, data: any, config: AxiosRequestConfig): Promise<ProcedureResult> {
         // console.log('[custom executeProcedure]', url, data, config);
-        const response = await this.post(url, data, config);
-                        
-        return response.data;
+        try {
+          const response = await this.post(url, data, config);
+                          
+          return response.data;
+        } catch (ex) {
+          console.log("executeProcedure", ex)
+          return {
+            numericData: -1,
+            textData: ex + ""
+          }
+        }
       };
 
     return instance;

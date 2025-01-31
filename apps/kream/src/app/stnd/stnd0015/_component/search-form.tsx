@@ -27,7 +27,7 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
 
   useEffect(() => {
     onSearch();
-  }, [])
+  }, [loadDatas])
 
   const onSearch = () => {
     const params = getValues();
