@@ -62,6 +62,7 @@
     "swiper": "^11.1.14",
     "tailwindcss": "^3.4.14",
     "text-mask-addons": "^3.8.0",
+    "uuid": "^11.0.5",
     "xlsx": "^0.18.5",
     "xlsx-js-style": "^1.2.0",
     "xlsx-style": "^0.8.13",

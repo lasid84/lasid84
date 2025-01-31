@@ -12,12 +12,12 @@ import Grid, {
 } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import {
-  CellValueChangedEvent,
-  IRowNode,
   RowClickedEvent,
   SelectionChangedEvent,
 } from "ag-grid-community";
-import { Store, AmountInputOptions_g } from "../_store/store";
+import { AmountInputOptions_g } from "../_store/store";
+import { useTranslation } from "react-i18next";
+import { useCommonStore } from "../_store/store";
 import { DatePicker } from "components/date";
 import Switch from "components/switch/index";
 
@@ -28,19 +28,25 @@ type Props = {
 };
 
 const MasterGrid: React.FC<Props> = memo(({ initData }) => {
-  const [gridOptions, setGridOptions] = useState<GridOption>();
+  const { t } = useTranslation();
+  // const [gridOptions, setGridOptions] = useState<GridOption>();
   const { getValues } = useFormContext();
   const gridRef = useRef<any | null>(null);
-  const state = Store((state) => state);
-  const actions = Store((state) => state.actions);
-  const mainSelectedRow = Store((state) => state.mainSelectedRow);
+
+
+  const state = useCommonStore((state) => state);
+  const searchParams = useCommonStore((state) => state.searchParams);
+  const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
+    
+  const { setMainSelectedRow, resetSearchParam, getTransportDatas,assignDTDItem, updatePopup } = useCommonStore((state) => state.actions);
+
   const [gridApi, setGridApi] = React.useState<any>(null);
 
-  const gridOption: GridOption = {
+  const gridOptions: GridOption = {
     gridHeight: "h-full",
     colVisible: {
       col: [
-        "transport_id",
+        // "transport_id",
         // "terminal_cd",
         // "office_cd",
         // "dept_cd",
@@ -49,7 +55,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         "task_type",
         // "edit_his",
         "transport_dd",
-        "broker_id",
+        // "broker_id",
         // "cnee_id",
         "cnee_nm",
         // "cnee_manager",
@@ -124,6 +130,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         "create_user",
         "update_date",
         "update_user",
+        "ready",
       ],
       visible: true,
     },
@@ -145,7 +152,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       cargo_weight: 100,
       cargo_qty: 100,
       mwb_no: 200,
-      waybill_no: 170,
+      waybill_no: 180,
       invoice_no: 100,
       customs_type: 100,
       customs_status: 100,
@@ -180,7 +187,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       cargo_weight: 100,
       cargo_qty: 100,
       mwb_no: 200,
-      waybill_no: 170,
+      waybill_no: 200,
       invoice_no: 100,
       customs_type: 100,
       customs_status: 100,
@@ -204,31 +211,20 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     },
     editable: ["ready"],
     checkbox: ["ready"],
-    isMultiSelect: true,
     total: {
-      waybill_no: "count",
-      air_freight: "sum",
-      bl_handling: "sum",
-      bonded_wh: "sum",
-      customs_clearance: "sum",
-      customs_duty: "sum",
-      customs_tax: "sum",
-      dispatch_fee: "sum",
-      special_handling: "sum",
-      dtd_handling: "sum",
-      trucking: "sum",
-      trucking_cost: "sum",
-      other_1: "sum",
+      waybill_no: "count" , cargo_qty : "sum", cargo_weight : "sum"
     },
-    isAutoFitColData: false,
-    isShowRowNo: false,
     dataType: {
       loading_dd : "date",
       delivery_request_dd : "date",
+      create_date : "date"
   },
+    isAutoFitColData: false,
+    isShowRowNo: false,
+    isMultiSelect: true,
     cellClass: {
-      send: (params) => {
-        return params.value != "N" ? "bg-green" : "bg-red";
+      ready: (params) => {
+        return params.value != 'N' ? "bg-pastelGreen" : "bg-pastelCream";
       },
     },
   };
@@ -244,10 +240,10 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const handleRowDoubleClicked = (param: RowClickedEvent) => {
     const focusedCell = param.api.getFocusedCell();
     var selectedRow = { colId: param.node.id, ...param.node.data };
-    actions.setMainSelectedRow(selectedRow);
+    setMainSelectedRow(selectedRow);
 
     if (focusedCell?.column.getColId() === "waybill_no") {
-      actions.updatePopup({
+      updatePopup({
         popType: "C",
         isPopupOpen: true,
       });
@@ -260,18 +256,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       log("selectedRow", selectedRow);
       //TODO - 항목별 VAT적용 차지는 {CHARGE}_VAT KEY생성하여 VAT금액생성 필요
 
-      // dispatch({ mSelectedRow: selectedRow });
-      actions.setMainSelectedRow(selectedRow);
+      setMainSelectedRow(selectedRow);
     },
     [mainSelectedRow]
   );
-
-  const onExcelUpload = () => {
-    actions.updatePopup({
-      popType: "C",
-      isPopupUploadOpen: true,
-    });
-  };
+ 
 
   const handleChange = useCallback(
     (e: any, id: any, date: any) => {
@@ -282,7 +271,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         id: params[id],
         __changed: true,
       };
-      actions.setMainSelectedRow(updatedRow);
+      setMainSelectedRow(updatedRow);
       const rowNode = gridApi.getRowNode(mainSelectedRow?.__ROWINDEX - 1);
 
       if (rowNode) {
@@ -291,10 +280,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     },
     [mainSelectedRow]
   );
-
-  useEffect(() => {
-    setGridOptions(gridOption);
-  }, []);
 
   const handleSwitchClick = (checked: boolean) => {
     if (!gridRef.current) return;
@@ -308,44 +293,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     });
     api.refreshCells(); // 그리드 새로고침
   };
-
-  // const onSave = () => {
-  //   const processNodes = async () => {
-  //     if (!gridRef.current) return;
-  //     const api = gridRef.current.api;
-
-  //     api.forEachNode(async (node: any) => {
-  //       const data = node.data;
-  //       if (data.__changed) {
-  //         gridOptions?.checkbox?.forEach((col) => {
-  //           data[col] = data[col] ? "Y" : "N"; // checkbox 컬럼 상태 업데이트
-  //         });
-  //         try {
-  //           if (data.__ROWTYPE === ROW_TYPE_NEW) {
-  //             // await Create.mutateAsync(data);
-  //           } else {
-  //             log("data...1111", data);
-              
-  //             // await Update.mutateAsync(data);
-  //           }
-  //         } catch (error) {
-  //           log("Error:", error);
-  //         } finally {
-  //           data.__changed = false;
-  //         }
-  //       }
-  //     });
-  //   };
-
-  //   processNodes()
-  //     .then(() => {
-  //       toastSuccess("Success.");
-  //       // dispatch({ isMSearch: true });
-  //     })
-  //     .catch((error) => {
-  //       log.error("Error processing nodes", error);
-  //     });
-  // };
 
   const onSave = async () => {
     const dtd : any [] = []
@@ -366,14 +313,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     })
 
     if(hasData){
-      const result = await actions.saveData({
+      //청구항목 등록
+      const result = await assignDTDItem({
         jsondata: JSON.stringify(dtd),
         settlement_date: state.uiData.settlement_date,
       })
-      log("result", result);
       if (result) {
-        toastSuccess("success");
-        //actions.getTransportdatas(state.searchParams);
+        toastSuccess(t("MSG_0193"));  
+        getTransportDatas(getValues());
       }
     }
    }
@@ -407,7 +354,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         <Grid
           id="gridMaster"
           gridRef={gridRef}
-          // loadItem={initData}
           listItem={state.mainDatas as gridData}
           options={gridOptions}
           event={{
@@ -417,8 +363,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
           }}
         />
       </PageMGrid3>
-      {/* <DetailModal loadItem={initData} /> */}
-      {/* <ExcelUploadModal loadItem={initData} /> */}
     </>
   );
 });

@@ -1,10 +1,9 @@
 
-
-// import { executeKREAMFunction, callUnipass, unipassAPI001 } from "@/services/api.services";
 import { executeKREAMFunction } from "@/services/api/apiClient";
-import { log } from '@repo/kwe-lib-new';
+const { log } = require('@repo/kwe-lib/components/logHelper');
 
-export const SP_Load = async (searchParam:any) => {
+
+export const SP_GetLoad = async (searchParam:any) => {
   // unstable_noStore();
   const {user_id, ipaddr} = searchParam;
   const params = {
@@ -49,33 +48,9 @@ export const SP_GetTransportData = async (searchParam: any) => {
   return result![0];
 }
 
-export const SP_GetEDIDetailData = async (searchParam: any) => {  
-  // const Param = searchParam.queryKey[1];
-  const {waybill_no, invoice_no, user_id, ipaddr} = searchParam;
-  
-  const params = {
-    inparam : [
-       "in_no"
-      , "in_invoice_no"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      waybill_no
-      , invoice_no
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi3001_get_detail',
-    isShowLoading: true
-  }
-
-  const result = await executeKREAMFunction(params);
-  return result![0];
-}
 
 
-export const SP_SaveData = async (param: any) => {  
+export const assignDTDItem = async (param: any) => {  
   //throw new Error("Test error from SP_SaveData"); // 에러 강제 발생
   const {jsondata, settlement_date, user_id, ipaddr} = param;
   
@@ -92,39 +67,14 @@ export const SP_SaveData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4002_ins_dtd',
+    inproc: 'airimp.f_airi4002_ins_dtd2',
     isShowLoading: true
   }
-  console.log('parpams',params)
+  console.log('assignDTDItem',params)
 
   const result = await executeKREAMFunction(params);  
   return result!;
 }
-
-// export const SP_SaveData = async (param: any) => {  
-
-//   const {jsondata, user_id, ipaddr} = param;
-  
-//   const params = {
-//     inparam : [
-//        "in_jsondata"
-//       , "in_user"
-//       , "in_ipaddr"
-//     ],
-//     invalue: [
-//       jsondata
-//       , user_id
-//       , ipaddr
-//     ],
-//     inproc: 'airimp.f_airi4001_ins_dtd',
-//     isShowLoading: true
-//   }
-
-//   const result = await executeKREAMFunction(params);
-  
-//   log('executefunction result', result)
-//   return result!;
-// }
 
 
 

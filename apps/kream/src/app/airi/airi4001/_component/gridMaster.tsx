@@ -13,13 +13,14 @@ import {
   RowClickedEvent,
   SelectionChangedEvent,
 } from "ag-grid-community";
-import { Store, AmountInputOptions_g } from "../_store/store";
+// import { TextArea } from "components/input";
+import { useCommonStore, AmountInputOptions_g } from "../_store/store";
 import DetailModal from "./Detail/popup";
 import { DatePicker } from "components/date";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import ExcelUploadModal from "./ExcelUpload/popup";
-
-import { log, error } from '@repo/kwe-lib-new';
+import { v4 as uuidv4 } from "uuid"; // UUID 생성 라이브러리
+const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
   initData?: any | null;
@@ -29,10 +30,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const [gridOptions, setGridOptions] = useState<GridOption>();
   const { getValues } = useFormContext();
   const gridRef = useRef<any | null>(null);
-  const state = Store((state) => state);
-  const actions = Store((state) => state.actions);
-  const mainSelectedRow = Store((state) => state.mainSelectedRow);
-  const [isPopupVisible, setPopupVisible] = useState(false);
+  const state = useCommonStore((state) => state);
+  const actions = useCommonStore((state) => state.actions);
+  const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
   const [gridApi, setGridApi] = React.useState<any>(null);
 
   const gridOption: GridOption = {
@@ -41,6 +41,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       col: [
         "cnee_name",
         "waybill_no",
+        "category",
         "customs_duty",
         "customs_tax",
         "customs_clearance",
@@ -49,16 +50,18 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         "bonded_wh",
         "dispatch_fee",
         "trucking",
+        "insurance_fee",
         "other_1",
         "special_handling",
         "dtd_handling",
         "remark",
+        "use_yn",
       ],
       visible: true,
     },
     minWidth: {
-      cnee_id: 80,
       cnee_name: 150,
+      category: 100,
       waybill_no: 180,
       air_freight: 100,
       bl_handling: 100,
@@ -70,7 +73,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       special_handling: 100,
       dtd_handling: 100,
       trucking: 100,
-      trucking_cost: 100,
+      insurance_fee: 100,
       other_1: 100,
       other_2: 100,
       other_3: 100,
@@ -87,6 +90,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       other_3_vat: 100,
       settlement_date: 100,
       settlement_user: 100,
+      use_yn: 30,
       create_user: 100,
       create_date: 100,
       update_user: 100,
@@ -95,6 +99,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     maxWidth: {
       cnee_id: 80,
       cnee_name: 150,
+      category: 100,
       waybill_no: 200,
       air_freight: 100,
       bl_handling: 100,
@@ -106,7 +111,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       special_handling: 100,
       dtd_handling: 100,
       trucking: 100,
-      trucking_cost: 100,
+      insurance_fee: 100,
       other_1: 100,
       other_2: 100,
       other_3: 100,
@@ -123,17 +128,22 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       other_3_vat: 100,
       settlement_date: 100,
       settlement_user: 100,
+      use_yn: 30,
       create_user: 100,
       create_date: 100,
       update_user: 100,
       update_date: 100,
     },
+    rowSpan: ["waybill_no"],
     pinned: {
       cnee_name: "left",
       waybill_no: "left",
+      category: "left",
+      use_yn: "right",
     },
     editable: [
       "waybill_no",
+      "category",
       "air_freight",
       "bl_handling",
       "bonded_wh",
@@ -144,14 +154,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       "special_handling",
       "dtd_handling",
       "trucking",
-      "trucking_cost",
+      "insurance_fee",
       "other_1",
       "other_2",
       "other_3",
       "remark",
-      //  "bl_handling_vat", "bonded_wh_vat", "customs_clearance_vat", "dispatch_fee_vat", "special_handling_vat", "dtd_handling_vat", "truckng_vat", "other_1_vat", "other_2_vat", "other_3_vat", "settlement_date",
+      "use_yn",
     ],
-    checkbox: ["ready"],
+    checkbox: ["use_yn"],
     isMultiSelect: true,
     total: {
       waybill_no: "count",
@@ -186,8 +196,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       settlement_date: "date",
     },
     cellClass: {
-      send: (params) => {
-        return params.value != "N" ? "bg-green" : "bg-red";
+      use_yn: (params) => {
+        return params.value != "N" ? "bg-pastelGreen" : "bg-pastelCream";
       },
     },
   };
@@ -197,13 +207,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   */
   const handleRowClicked = useCallback((param: RowClickedEvent) => {
     var selectedRow = { colId: param.node.id, ...param.node.data };
-    // dispatch({mSelectedRow:selectedRow});
   }, []);
 
   const handleRowDoubleClicked = (param: RowClickedEvent) => {
     const focusedCell = param.api.getFocusedCell();
     var selectedRow = { colId: param.node.id, ...param.node.data };
     actions.setMainSelectedRow(selectedRow);
+    actions.setDetailSelectedRow(selectedRow);
+    actions.setCurrentRow(selectedRow); //INVOICE(POPUP)
 
     if (focusedCell?.column.getColId() === "waybill_no") {
       actions.updatePopup({
@@ -212,35 +223,46 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       });
     }
   };
-
   const handleCellValueChanged = (param: CellValueChangedEvent) => {
     const updatedKey = param.colDef?.field;
-
     if (updatedKey) {
-      const vatKey = `${updatedKey}_vat`;
-      //TODO - 기존값이 있을때와 없을때 동작 구분필요(key값 확인)
-      // 기존 데이터를 유지하며 새로운 값을 병합
       const updatedRow = {
         ...mainSelectedRow,
-        ...param.node.data,
+        [updatedKey]: param.node.data[updatedKey],
+        __changed: true,
       };
-
+      const vatKey = `${updatedKey}_vat`;
       const value = updatedRow[updatedKey];
       if (typeof value === "number" && !isNaN(value)) {
         const vatValue = Math.floor(value * 0.1); // 10% 계산 후 1원 절사
         updatedRow[vatKey] = vatValue;
       }
+
+      // 동일 key를 가진 ROW 모두 업데이트
+      if (updatedKey === "waybill_no" && updatedRow.key) {
+        const allRows = gridApi.getModel().rowsToDisplay; // 현재 그리드의 모든 ROW 가져오기
+        allRows.forEach((rowNode: any) => {
+          if (rowNode.data.key === updatedRow.key) {
+            rowNode.setData({
+              ...rowNode.data,
+              waybill_no: param.node.data[updatedKey],
+            });
+          }
+        });
+      }
       actions.setMainSelectedRow({ colId: param.node.id, ...updatedRow });
+
+      const rowNode = gridApi.getRowNode(mainSelectedRow?.__ROWINDEX - 1);
+      if (rowNode) {
+        rowNode.setData(updatedRow);
+      }
     }
   };
 
   const handleSelectionChanged = useCallback(
     (param: SelectionChangedEvent) => {
       const selectedRow = param.api.getSelectedRows()[0];
-      log("selectedRow", selectedRow);
-      //TODO - 항목별 VAT적용 차지는 {CHARGE}_VAT KEY생성하여 VAT금액생성 필요
-
-      // dispatch({ mSelectedRow: selectedRow });
+      log("handleSelectionChanged, selectedRow", selectedRow);
       actions.setMainSelectedRow(selectedRow);
     },
     [mainSelectedRow]
@@ -254,19 +276,23 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   };
 
   const onGridNew = async () => {
-    var rows = await rowAdd(gridRef.current, { waybill_no: "" });
-
-    for (const row of rows) {
-      log("onGridNew", row, state.mainDatas);
-      await (state.mainDatas as any).data.push(row);
+    const newKey = uuidv4(); // 임시 고유 키 생성
+    const newRows = [
+      { waybill_no: "", category: "RV", use_yn: "Y", key: newKey },
+      { waybill_no: "", category: "AB", use_yn: "Y", key: newKey },
+    ];
+    const addedRows = [];
+    for (const rowData of newRows) {
+      const rows = await rowAdd(gridRef.current, rowData);
+      addedRows.push(...rows);
+    }
+    if (state.mainDatas) {
+      state.mainDatas.data.push(...addedRows);
     }
   };
 
   //TODO - GRID ROW 삭제기능 생성필요
   const onGridDelete = async () => {
-    // var selectedRow = { "colId": param.node.id, ...param.node.data }
-    // if (objState.tab1) {
-
     var rows = await rowAdd(gridRef.current, { waybill_no: "" });
 
     for (const row of rows) {
@@ -280,9 +306,20 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     }, 200);
     // }
   };
+  
   const handleGridReady = useCallback((params: any) => {
     setGridApi(params.api);
   }, []);
+
+
+  const handleRowDataUpdated= useCallback((params:any)=>{
+    if(!gridApi) return;
+
+    // 초기화 후 데이터 추가
+    state.allData = []; 
+    gridApi.forEachNode((node:any) => state.allData.push(node.data));
+    log('allData', state.allData)
+  },[state.mainDatas])
 
   const handleChange = useCallback(
     (e: any, id: any, date: any) => {
@@ -393,13 +430,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       }
     });
     if (hasData) {
-      const result = await actions.saveData({
+      const result = await actions.saveDTDData({
         jsondata: JSON.stringify(dtd),
         settlement_date: state.uiData.settlement_date,
       });
       if (result) {
         toastSuccess("success");
-        actions.getDTDDatas(state.searchParams);
+        actions.getDTDDatas(getValues());
       }
     }
   };
@@ -438,20 +475,36 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
         rightchildren={
           <>
-            <div className="flex-col w-full h-full col-span-2 p-4">
-              <div className="col-span-2 p-4">
+            <div className="flex-col w-full h-full col-span-2 p-2">
+              <div className="grid grid-cols-2 gap-4">
                 <MaskedInputField
                   id="waybill_no"
                   value={mainSelectedRow?.waybill_no}
                   options={{
                     isReadOnly: true,
+                    disableSpacing: true,
                   }}
                 />
+                <DatePicker
+                  id="settlement_date"
+                  value={mainSelectedRow?.settlement_date}
+                  events={{
+                    onChange: handleChange,
+                  }}
+                  options={{
+                    inline: false,
+                    textAlign: "center",
+                    freeStyles: "p-1 border-1 border-slate-300",
+                  }}
+                />
+              </div>
+              <div className="col-span-2">
                 <MaskedInputField
                   id="cnee_name"
                   value={mainSelectedRow?.cnee_name}
                   options={{
                     isReadOnly: true,
+                    disableSpacing: true,
                   }}
                 />
 
@@ -504,11 +557,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                   />
                 </div>
-
+                {/* K수수료 */}
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInputField
-                    id="special_handling"
-                    value={mainSelectedRow?.special_handling}
+                    id="dtd_handling"
+                    value={mainSelectedRow?.dtd_handling}
                     events={{
                       onChange: handleMaskedInputWithVatUpdate,
                     }}
@@ -518,8 +571,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                   />
                   <MaskedInputField
-                    id="special_handling_vat"
-                    value={mainSelectedRow?.special_handling_vat}
+                    id="dtd_handling_vat"
+                    value={mainSelectedRow?.dtd_handling_vat}
                     events={{
                       onChange: handleMaskedInputChange,
                     }}
@@ -554,7 +607,31 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                   />
                 </div>
-                {/* 항공료  */}
+                <div className="grid grid-cols-2 gap-4">
+                  <MaskedInputField
+                    id="special_handling"
+                    value={mainSelectedRow?.special_handling}
+                    events={{
+                      onChange: handleMaskedInputWithVatUpdate,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                  <MaskedInputField
+                    id="special_handling_vat"
+                    value={mainSelectedRow?.special_handling_vat}
+                    events={{
+                      onChange: handleMaskedInputChange,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                </div>
+                {/* 보험료 */}
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInputField
                     id="other_1"
@@ -580,6 +657,60 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                   />
                 </div>
 
+                {/* 보험료 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <MaskedInputField
+                    id="other_2"
+                    value={mainSelectedRow?.other_2}
+                    events={{
+                      onChange: handleMaskedInputWithVatUpdate,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                  <MaskedInputField
+                    id="other_2_vat"
+                    value={mainSelectedRow?.other_2_vat}
+                    events={{
+                      onChange: handleMaskedInputChange,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                </div>
+
+                {/* 
+                <div className="grid grid-cols-2 gap-4">
+                  <MaskedInputField
+                    id="insurance_fee"
+                    value={mainSelectedRow?.insurance_fee}
+                    events={{
+                      onChange: handleMaskedInputWithVatUpdate,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                  <MaskedInputField
+                    id="insurance_fee_vat"
+                    value={mainSelectedRow?.insurance_fee_vat}
+                    events={{
+                      onChange: handleMaskedInputChange,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                </div> 
+                */}
+
+                {/* 항공료 */}
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInputField
                     id="air_freight"
@@ -592,8 +723,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                       isReadOnly: false,
                     }}
                   />
-                  {/* air freight VAT없음 */}
                 </div>
+                {/* H/C */}
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInputField
                     id="bl_handling"
@@ -618,6 +749,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                   />
                 </div>
+                {/* 개청료 */}
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInputField
                     id="dispatch_fee"
@@ -642,59 +774,17 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="dtd_handling"
-                    value={mainSelectedRow?.dtd_handling}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="dtd_handling_vat"
-                    value={mainSelectedRow?.dtd_handling_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
 
                 {/* 비고 */}
                 <MaskedInputField
                   id="remark"
                   value={mainSelectedRow?.remark}
-                  events={{
-                    onChange: handleMaskedInputWithVatUpdate,
-                  }}
                   options={{
-                    ...AmountInputOptions_g,
+                    type: "text",
                     isReadOnly: false,
                   }}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <DatePicker
-                    id="settlement_date"
-                    value={mainSelectedRow?.settlement_date}
-                    events={{
-                      onChange: handleChange,
-                    }}
-                   
-                    options={{
-                      inline: false,
-                      textAlign: "center",
-                      freeStyles: "p-1 border-1 border-slate-300",
-                    }}
-                  />
-                </div>
+                />                
+                {/* <TextArea id="remark" rows={3} cols={32} value={mainSelectedRow?.remark} options={{ isReadOnly: false }} /> */}
               </div>
             </div>
           </>
@@ -711,6 +801,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
             onRowDoubleClicked: handleRowDoubleClicked,
             onRowClicked: handleRowClicked,
             onSelectionChanged: handleSelectionChanged,
+            onRowDataUpdated : handleRowDataUpdated,
           }}
         />
       </PageMGrid4>

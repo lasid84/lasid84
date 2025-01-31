@@ -1,19 +1,17 @@
 "use client";
 
 import { SP_Load } from "./_store/data";
-import { LOAD, SEARCH_M } from "components/provider/contextObjectProvider";
+import { LOAD } from "components/provider/contextObjectProvider";
 import { useGetData } from "components/react-query/useMyQuery";
 import SearchForm from "./_component/search-form";
 import MasterGrid from "./_component/gridMaster";
 import { FormProvider, useForm } from "react-hook-form";
-import { Store } from "./_store/store"; //STORE 적용
+import { useCommonStore } from "./_store/store";
 
-import { log, error } from '@repo/kwe-lib-new';
 
-export default function AIRI4001() {
-  
+export default function AIRI4001() { 
 
-  const searchParams = Store((state) => state.searchParams);
+  const searchParams = useCommonStore((state) => state.searchParams);
   const { data: initData } = useGetData("", LOAD, SP_Load, {staleTime: 1000 * 60 * 60 });
   
   const methods = useForm({
