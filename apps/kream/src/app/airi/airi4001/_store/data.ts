@@ -46,7 +46,6 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
   }
 
   const result = await executeKREAMFunction(params);
-  console.log('f_airi3003_get_dtd_list',result)
   return result![0];
 }
 
@@ -108,6 +107,35 @@ export const SP_SaveData = async (param: any) => {
   const result = await executeKREAMFunction(params);  
   return result!;
 }
+
+
+//INSERT & UPDATE
+export const SP_SaveDetailData = async (param: any) => {  
+  //throw new Error("Test error from SP_SaveData"); // 에러 강제 발생
+  const {jsondata, settlement_date, user_id, ipaddr} = param;
+  console.log('jsondata', jsondata)
+  const params = {
+    inparam : [
+       "in_jsondata"
+      , "in_settlement_date"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      jsondata
+      , settlement_date
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi4001_ins_dtd2',
+    isShowLoading: true
+  }
+
+  const result = await executeKREAMFunction(params);  
+  return result!;
+}
+
+
 
 // export const SP_SaveData = async (param: any) => {  
 

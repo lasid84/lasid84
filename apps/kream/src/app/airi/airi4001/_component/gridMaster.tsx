@@ -52,6 +52,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         "trucking",
         "insurance_fee",
         "other_1",
+        "other_2",
+        "other_3",
         "special_handling",
         "dtd_handling",
         "remark",
@@ -178,6 +180,19 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       trucking_cost: "sum",
       other_1: "sum",
     },
+    displayCalculatedFields : [
+      'bl_handling',
+      'bonded_wh',
+      'customs_clearance',
+      'dispatch_fee',
+      'special_handling',
+      'dtd_handling',
+      'trucking',
+      'insurance_fee',
+      'other_1',
+      'other_2',
+      'other_3',
+    ],
     isAutoFitColData: false,
     isShowRowNo: false,
     dataType: {
@@ -213,7 +228,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const focusedCell = param.api.getFocusedCell();
     var selectedRow = { colId: param.node.id, ...param.node.data };
     actions.setMainSelectedRow(selectedRow);
-    actions.setDetailSelectedRow(selectedRow);
+    actions.getDTDDetailDatas(selectedRow);
+    // actions.setDetailSelectedRow(selectedRow);
     actions.setCurrentRow(selectedRow); //INVOICE(POPUP)
 
     if (focusedCell?.column.getColId() === "waybill_no") {
@@ -631,7 +647,33 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                   />
                 </div>
-                {/* 보험료 */}
+                {/* 보험료() */}
+                <div className="grid grid-cols-2 gap-4">
+                  <MaskedInputField
+                    id="insurance_fee"
+                    value={mainSelectedRow?.insurance_fee}
+                    events={{
+                      onChange: handleMaskedInputWithVatUpdate,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                  <MaskedInputField
+                    id="insurance_fee_vat"
+                    value={mainSelectedRow?.insurance_fee_vat}
+                    events={{
+                      onChange: handleMaskedInputChange,
+                    }}
+                    options={{
+                      ...AmountInputOptions_g,
+                      isReadOnly: false,
+                    }}
+                  />
+                </div>
+
+                {/* 기타수수료(other1) */}
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInputField
                     id="other_1"
@@ -656,59 +698,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                   />
                 </div>
-
-                {/* 보험료 */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="other_2"
-                    value={mainSelectedRow?.other_2}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="other_2_vat"
-                    value={mainSelectedRow?.other_2_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
-
-                {/* 
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="insurance_fee"
-                    value={mainSelectedRow?.insurance_fee}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="insurance_fee_vat"
-                    value={mainSelectedRow?.insurance_fee_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div> 
-                */}
+              
 
                 {/* 항공료 */}
                 <div className="grid grid-cols-2 gap-4">

@@ -1,6 +1,6 @@
 import { createStore } from "@/states/createStore";
 import { RefObject } from 'react';
-import { SP_Load, SP_GetDTDMainData,  SP_SaveData, SP_SaveUploadData,SP_GetDTDDetailData } from "./data";
+import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_SaveDetailData, SP_SaveUploadData,SP_GetDTDDetailData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 
@@ -59,6 +59,7 @@ interface StoreActions {
         setCurrentRow : (row:any)=>void;
         setDetailData: (data: any[]) => void;
         saveDTDData : (data:SaveDataArgs)=> Promise<any>;
+        saveDTDDetailData : (data:SaveDataArgs)=> Promise<any>;
         saveUploadData : (data:SaveDataArgs)=>void;
         updateData : (data:SaveDataArgs) =>void;
         updateRowData: (rowIndex: number, updatedRow: any) => void;    
@@ -190,6 +191,22 @@ const setinitValue = (set:any) => {
                 } catch (error) {
                     console.error("Error saving data:", error);
                 }
+            },
+            saveDTDDetailData: async (params: any) :Promise<any> => { //undefined
+                try {
+                    console.log("", params);
+                    const result = await SP_SaveDetailData(params); // API 호출
+                    set((state: StoreState) => ({
+                        ...state,
+                        mainDatas: { ...state.mainDatas, ...params },
+                    }));
+                    console.log("Data saved successfully", result);
+                    
+                    return result
+                } catch (error) {
+                    console.error("Error saving data:", error);
+                    return error;
+                }            
             },
             // updateMainSelectedRow : (row:any)=>{
             //     set((state:StoreState) => ({ ...state, mainSelectedRow: row }))

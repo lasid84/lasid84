@@ -8,6 +8,8 @@ import {
 import { TextArea } from "components/input";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { useCommonStore, AmountInputOptions } from "../../_store/store";
+import { shallow } from 'zustand/shallow';
+
 import { DTDLabel, DTDLabel2 } from "@/components/label/index";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -19,7 +21,7 @@ type Props = {
 };
 
 const Amount: React.FC<Props> = ({ loadItem, params }) => {
-  const detailSelectedRow = useCommonStore((state) => state.detailSelectedRow);
+  const detailSelectedRow = useCommonStore((state) => state.detailSelectedRow , shallow);
   const popup = useCommonStore((state) => state.popup);
   const actions = useCommonStore((state) => state.actions);
 
@@ -39,7 +41,7 @@ const handleonChange = useCallback((e:any)=>{
 
       if (isNaN(numericValue)) {
         console.warn("Invalid numeric input:", e.target.value);
-        return; // 숫자로 변환할 수 없는 경우 처리 중단
+        return;
       }
 
       const vatKey = `${e.target.id}_vat`;
@@ -61,7 +63,7 @@ const handleonChange = useCallback((e:any)=>{
     <>
       <div className="w-full flex-col min-h-[30vh] p-2">
         <div className="flex w-full h-full">
-          <div className="flex flex-col w-4/5 h-full gap-1 p-1 p-2 border rounded-lg">
+          <div className="flex flex-col w-4/5 h-full gap-1 p-1 border rounded-lg">
             {/* Title Row */}
             <div
               className="grid justify-center mb-2"

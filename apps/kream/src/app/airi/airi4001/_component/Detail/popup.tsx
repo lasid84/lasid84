@@ -64,42 +64,37 @@ const Modal = ({ loadItem }: Props) => {
     }
   }, [state.popup.popType, state.popup.isOpen]);
 
-  const SaveDetail = async () => {
-    let hasData = false;
-    // const allColumns = state.gridRef_Detail?.current?.api.getAllGridColumns();
-    const allColumns = state.detailDatas;
-    // log("saveDetail? allColumns", allColumns);
-    // await state.gridRef_Detail.current.api.forEachNode((node: any) => {
-    //   if (node.data[ROW_CHANGED]) {
-    //     hasData = true;
-    //     var data = {
-    //       ...node.data,
-    //     };
-    //     log("data", data);
-    //     detail.push(data);
-    //   }
-    // });
+  // const SaveDetail = async () => {
+  //   let hasData = false;
+  //   // const allColumns = state.gridRef_Detail?.current?.api.getAllGridColumns();
+  //   const allColumns = state.detailDatas;
+  //   // log("saveDetail? allColumns", allColumns);
+  //   // await state.gridRef_Detail.current.api.forEachNode((node: any) => {
+  //   //   if (node.data[ROW_CHANGED]) {
+  //   //     hasData = true;
+  //   //     var data = {
+  //   //       ...node.data,
+  //   //     };
+  //   //     log("data", data);
+  //   //     detail.push(data);
+  //   //   }
+  //   // });
 
-    return hasData;
-  };
+  //   return hasData;
+  // };
 
   const onSave = async (param: MouseEventHandler | null) => {
-    let hasDetailData = await SaveDetail();
+    const detail: any[] = [];
     let curData = getValues();
-    console.log("curData", curData, state.popup.popType);
-    if (state.popup.popType === crudType.UPDATE) {
-      if (hasDetailData) {
-        // await Update.mutateAsync(
-        //   { ...curData, jsonData: JSON.stringify(detail) },
-        //   {
-        //     onSuccess: (res: any) => {
-        //       //closeModal();
-        //       //dispatch({ isMSearch: true });
-        //     },
-        //   }
-        // ).catch((err) => {});
-        // await actions.updateAppleDatas({...curData, jsonData : JSON.stringify(state.detailDatas)})
-      }
+    detail.push(curData)
+    // console.log("curData", curData, state.popup.popType);
+    const result = await actions.saveDTDDetailData({
+      jsondata : JSON.stringify(detail)
+    })
+    if (result) {
+      log('success')
+      // toastSuccess("success");
+      // actions.getDTDDatas(getValues());
     }
   };
 
@@ -111,36 +106,28 @@ const Modal = ({ loadItem }: Props) => {
   }, [state.detailSelectedRow]);
 
   const onClickeventBefore = () => {
-    log('onClickeventBefore', state.currentRow);
-  
-    // 이전 인덱스 계산
+
     const prevIndexnum = state.currentRow?.__ROWINDEX - 2;
-    log('onClickeventBefore2', prevIndexnum);
-  
-    // prevIndexnum과 동일한 rowIndex를 가진 데이터 찾기
+
     const prevRowData = state.allData.find(row => row.__ROWINDEX === prevIndexnum);
-    log('prevRowData', prevRowData);
-  
+ 
     if (prevRowData) {
-      log('Found previous row:', prevRowData);
       actions.getDTDDetailDatas(prevRowData);
       actions.setCurrentRow(prevRowData);
     } else {
-      log('No data found for previous index:', prevIndexnum);
+      log('No data :', prevIndexnum);
     }
   };
   
   const onClickeventAfter =  () => {
     log('onClickeventAfter', state.currentRow)
- // 다음 인덱스 계산
+
  const nextIndexnum =state.currentRow?.__ROWINDEX+2
- log('onClickeventAfter2', nextIndexnum);
 
  // nextIndexnum과 동일한 rowIndex를 가진 데이터 찾기
  const nextRowData = state.allData.find(row => row.__ROWINDEX === nextIndexnum);
- log('nextRowData', nextRowData);
+
  if (nextRowData) {
-   log('Found next row:', nextRowData);
    actions.getDTDDetailDatas(nextRowData);
    actions.setCurrentRow(nextRowData)
  } else {
