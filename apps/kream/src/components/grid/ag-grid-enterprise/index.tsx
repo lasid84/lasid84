@@ -124,7 +124,7 @@ export type GridOption = {
   isSelectRowAfterRender?: boolean
   isShowRowNo?: boolean
   isNoSaveColInfo?: boolean               //개인별 컬럼너비 저장 여부
-
+  displayCalculatedFields?: string[]      //커스터마이징 셀 display
   rowSpan?: string[]
   isColumnHeaderVisible?: boolean
   cellClass?: { [key in bgColor]: string | ((params: any) => string) }; 
@@ -620,6 +620,27 @@ const ListGrid: React.FC<Props> = memo((props) => {
               cellDataType: 'boolean',
               cellRenderer: 'agCheckboxCellRenderer',
               cellEditor: 'agCheckboxCellEditor',
+            }
+          }
+        }
+
+        // displayCalculatedFields custom
+        if (options?.displayCalculatedFields) {
+          if (options.displayCalculatedFields.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              cellRenderer : (params:any) =>{
+                const mainValue = Number(params.data[col]) || 0;
+                const vatValue = Number(params.data[col + '_vat']) || 0;
+                let val = (+mainValue + vatValue).toFixed(0);
+                let formatted = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                return formatted
+              },  
+              valueGetter: (params:any) => params.data[col],
+              valueSetter: (params:any) => {
+                params.data[col] = Number(params.newValue) || 0;
+                return true;
+              },
             }
           }
         }
