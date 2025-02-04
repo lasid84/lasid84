@@ -3,6 +3,7 @@
 import { useRef, memo } from "react";
 import Grid, { rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption } from "components/grid/ag-grid-enterprise";
+import { useFormContext } from "react-hook-form";
 import type { RowClickedEvent } from "ag-grid-community";
 import { ToolBar } from "./toolBar";
 import { useCommonStore } from "../_store/store";
@@ -17,9 +18,11 @@ type Props = {
 };
 
 const MasterGrid: React.FC<Props> = memo(() => {
+  const { getValues } = useFormContext();
+
   const gridRef = useRef<any | null>(null);
 
-  const { setPopupOpen } = useCommonStore((state) => state.actions);
+  const actions = useCommonStore((state) => state.actions);
   const mainDatas = useCommonStore((state) => state.mainDatas);
 
   const originCellStyles = (params: any) => {
@@ -53,28 +56,39 @@ const MasterGrid: React.FC<Props> = memo(() => {
   
   const gridOptions: GridOption = {
     gridHeight: "h-full",
+    colVisible: {
+      col: ["transport_id"],
+      visible: false
+    },
     checkbox: ["chk", "use_yn"],
     rowDivide: "transport_type",
-    editable: ["rlsddlvy_local_dd", "pod_local_dd", "loading_loc", "loading_remark", "edi_yn"],
-    autoHeightCol: ["delivery_no", "measurement", "unloading_manager", "loc_nm_short", "request_tm_date", "remark"],
+    editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "loading_remark", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
+    heightColByConfig: {
+      targetList: ["unloading_manager", "loc_nm_short", "request_tm_date", "remark"],
+      excludeFormula: {
+        transport_type: ["Reseller"]
+      },
+      normalHeight: 25,
+      expandHeight: 165
+    },
+    rowHeight: 25,
     isAutoFitColData: true,
     isMultiSelect: false,
     isVerticalCenter: true,
-    preWrap: true,
-    isEditableAllNewRow: true,
+    isEditableAllNewRow: false,
+    largetextPreWrap: true,
+    columnSpanByConfig: {
+      targetCol: ["DN & Sorting"],
+      compareCol: {
+        transport_type: ["HUB", "HUB AC"]
+      }
+    },
     rowSpanByConfig: {
       targetCol: ["origin", "waybill_no", "piece", "gross_wt", "flt", "loading_loc", "transport_type", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd"],
       compareCol: {
         transport_type: ["Reseller"]
       },
       standardCol: "waybill_no"
-    },
-    multipleCells: {
-      targetCol: ["DN & Sorting(If needed)"],
-      compareCol: {
-        transport_type: ["Reseller", "Telecom"]
-      },
-      spliter: "|"
     },
     cellClass: {
       origin: originCellStyles,
@@ -88,6 +102,10 @@ const MasterGrid: React.FC<Props> = memo(() => {
       rlsddlvy_local_dd: "date",
       pod_local_dd: "date",
       gross_wt: "number",
+      loc_nm_short: "largetext",
+      contact: "largetext",
+      request_tm_date: "largetext",
+      remark: "largetext"
     },
     pinned: {
       __ROWINDEX: "left",
@@ -136,6 +154,14 @@ const MasterGrid: React.FC<Props> = memo(() => {
           data.__changed = false;
         }
       }
+
+      if (changeRows.length > 0) {
+        const values = getValues();
+        await actions.updateOperationListData({jsonData: JSON.stringify(changeRows)});
+        await actions.getOperationListData(values.fr_date, values.no);
+      } else {
+        toast(t("msg_0006")); // 변경 내역이 없습니다.
+      }
     }
   };
 
@@ -149,7 +175,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     if (focusedCell?.column.getColId() !== "__ROWINDEX")
         return;
 
-    setPopupOpen(true);
+    actions.setPopupOpen(true);
   };
 
   return (

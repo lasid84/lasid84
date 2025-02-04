@@ -34,6 +34,8 @@
 }
 
 .row-span-default {
-  z-index: auto !important;
   background-color: #FCFDFE;
+  border-top: 0.3px solid #ECECEC;
+  border-bottom: 0.3px solid #ECECEC;
+  border-right: 0.3px solid #ECECEC;
 }
