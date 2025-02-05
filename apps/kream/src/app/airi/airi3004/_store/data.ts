@@ -14,4 +14,20 @@ export const SP_GetOperationListData = async (fr_date: string, waybill_no?: stri
 
   const result = await queryClient("SP_GetOperationListData", params);
   return result;
-}
+};
+
+export const SP_UpdateOperationListData = async (param: any) => {
+
+  const { jsonData, user_id, ipaddr } = paramsUtils(param);
+
+  const params = {
+    inparam: ["in_jsondata", "in_user", "in_ipaddr"],
+    invalue: [jsonData, user_id, ipaddr],
+    inproc: 'airimp.f_airi3004_upd_data',
+    isShowLoading: true,
+    isShowComplete: true,
+  }
+
+  const result = await queryClient("SP_UpdateOperationListData", params);
+  return result;
+};

@@ -32,8 +32,17 @@ export const ToolBar = memo((props: Props) => {
 
         const columnApi = props.gridRef.current?.api;
     if (columnApi) {
-        const columns = columnApi.getAllGridColumns()?.map((col: any) => col.getColId());
+        let columns = columnApi.getAllGridColumns()?.map((col: any) => col.getColId());
+        if (props.gridOptions?.colVisible) {
+            const invisibleList = props.gridOptions.colVisible.col;
+            columns = columns.filter((col:string) => !invisibleList.includes(col));
+        }
         columnApi.setColumnsVisible(columns, true);
+        /**
+         * @dev
+         * getRowHeight를 재호출하기 위함.
+         */
+        columnApi.resetRowHeights();
     }
     };
 
@@ -85,6 +94,12 @@ export const ToolBar = memo((props: Props) => {
             .filter((id: any) => !visibleColumns.includes(id));
 
             columnApi.setColumnsVisible(restOfColumn, false);
+
+            /**
+             * @dev
+             * getRowHeight를 재호출하기 위함.
+             */
+            columnApi.resetRowHeights();
         }
     };
 
@@ -95,7 +110,7 @@ export const ToolBar = memo((props: Props) => {
     const handleSearch = async () => {
         const params = getValues();
         props.gridRef.current?.api.showLoadingOverlay();
-        await getOperationListData(searchParams.fr_date, params.no);
+        await getOperationListData(params.fr_date, params.no);
         props.gridRef.current?.api.hideOverlay();
     };
 
@@ -121,6 +136,12 @@ export const ToolBar = memo((props: Props) => {
         if (columnApi) {
             const columns = columnApi.getAllGridColumns()?.map((col: any) => col.getColId());
             columnApi.setColumnsVisible(columns, true);
+
+            /**
+             * @dev
+             * getRowHeight를 재호출하기 위함.
+             */
+            columnApi.resetRowHeights();
         }
     };
 

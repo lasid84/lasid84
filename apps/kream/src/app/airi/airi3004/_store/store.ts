@@ -1,4 +1,4 @@
-import { SP_GetOperationListData } from "./data";
+import { SP_GetOperationListData, SP_UpdateOperationListData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 import { createStore } from "@/states/createStore";
@@ -19,6 +19,7 @@ interface StoreState {
 interface StoreActions {
     getOperationListData: (fr_date: string, waybill_no?: string) => Promise<any>;
     setPopupOpen: (isOpen: boolean) => void;
+    updateOperationListData: (params: any) => Promise<any>;
 }
 
 // Store 타입 정의
@@ -41,7 +42,6 @@ const initValue: StoreState = {
     },
 };
 
-
 const setinitValue = (set: any) => {
     const actions: StoreActions = {
         getOperationListData: async (fr_date: string, waybill_no?: string) => {
@@ -53,6 +53,9 @@ const setinitValue = (set: any) => {
             set((state: any) => ({
                 popup: { ...state.popup, isOpen }
             }))
+        },
+        updateOperationListData: async (param: any) => {
+            await SP_UpdateOperationListData(param);
         }
     };
 

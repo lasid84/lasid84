@@ -22,6 +22,7 @@ import {
   RowClassParams,
   RowStyle,
   RowSpanParams,
+  NewValueParams,
   DragStoppedEvent
 } from "ag-grid-community";
 
@@ -132,16 +133,26 @@ export type GridOption = {
   rowHeight?: number;
   isVerticalCenter?: boolean;
   rowDivide?: string;
-  preWrap?: boolean;
+  largetextPreWrap?: boolean;
   rowSpanByConfig?: {
-    targetCol: string[]
-    compareCol: { [key:string]: string[] }
-    standardCol: string
+    targetCol: string[];
+    compareCol: { [key:string]: string[] };
+    standardCol: string;
   };
   multipleCells?: {
-    targetCol: string[]
-    compareCol: { [key:string]: string[] }
-    spliter: string
+    targetCol: string[];
+    compareCol: { [key:string]: string[] };
+    spliter: string;
+  };
+  heightColByConfig?: {
+    targetList: string[];
+    excludeFormula: { [key:string]: string[] };
+    normalHeight: number;
+    expandHeight: number; 
+  };
+  columnSpanByConfig?: {
+    targetCol: string[];
+    compareCol: { [key:string]: string[] };
   };
 
   notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
@@ -581,15 +592,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
           cellStyle: { textAlign: "center" },
         };
 
-        if (options?.preWrap) {
-          cellOption = {
-            ...cellOption,
-            cellClassRules: {
-              'cell-pre-wrap': (params: any) => !params.colDef.editable,
-            }
-          }
-        }
-
         if (options?.typeOptions && options.typeOptions[col]) {
           if (options.typeOptions[col].inputLimit)
             cellOption = {
@@ -632,6 +634,14 @@ const ListGrid: React.FC<Props> = memo((props) => {
               ...cellOption,
               cellEditor: 'agLargeTextCellEditor',
               cellEditorPopup: true,
+            }
+            if (options?.largetextPreWrap) {
+              cellOption = {
+                ...cellOption,
+                cellStyle: {
+                  whiteSpace: "pre-wrap"
+                }
+              }
             }
           }
         };
@@ -769,13 +779,30 @@ const ListGrid: React.FC<Props> = memo((props) => {
           if (targetCols.includes(col)) {
             cellOption = {
               ...cellOption,
-              cellRenderer: rowSpanByConfigRenderer,
               rowSpan: getRowSpanByConfig,
+              cellRenderer: rowSpanByConfigRenderer,
+              onCellValueChanged: rowSpanByConfigValueChanged,
+              cellDataType: false,
               cellClassRules: {
                 "show-cell": "value !== undefined",
                 "row-span-default": (params: any) => {
-                  const rowSpan = params.column.getColDef().rowSpan(params);
-                  return rowSpan > 1;
+                  const api = gridRef.current.api;
+
+                  if (api.getDisplayedRowCount()-1 === params.node.rowIndex) {
+                    return false;
+                  }                
+
+                  const currentRowNode = api.getRowNode(params.node.rowIndex);
+                  const nextRowNode = api.getRowNode(params.node.rowIndex+1);
+                  
+                  const standardCol = options.rowSpanByConfig?.standardCol;
+                  if (standardCol) {
+                    if (currentRowNode.data[standardCol] === nextRowNode.data[standardCol]) {
+                      return true;
+                    }
+                  }
+
+                  return false;
                 }
               }
             }
@@ -851,6 +878,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
          }
         }
 
+        // columnSpanByConfig
+        if (options?.columnSpanByConfig) {
+          const targetCols = options.columnSpanByConfig.targetCol;
+          if (targetCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              colSpan: (params: any) => {
+                for (const [key, value] of Object.entries(options?.columnSpanByConfig?.compareCol!)) {
+                  if (value.includes(params.data[key])) {
+                    return 2;
+                  }
+                }
+
+                return 1;
+              }
+            }
+          }
+          
+        }
+
         cols.push({
           field: col,
           headerName: t(col),
@@ -905,20 +952,36 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }, [props.gridState, gridRef?.current])
 
   const onGridReady = (param: GridReadyEvent) => {
-    // log("onGridReady");
+    /**
+     * @dev
+     * 페이지 별 rowHeight를 다르게 설정하기 위한 gridOption.
+     */
+    const option = options?.heightColByConfig;
+    if (option) {
+      const columnApi = gridRef.current.api;
+      columnApi.setGridOption("getRowHeight", (params: any) => {
+          if (option) {
+            const target = option.targetList;
+            const displayColumnList = gridRef.current.columnApi.getAllDisplayedColumns();
+            if (displayColumnList.some((value: any) => target.includes(value.colId))) {
+              
+              let isExclude = false;
+              for (const [key, value] of Object.entries(option.excludeFormula)) {
+                if (value.includes(params.data[key])) {
+                  isExclude = true;
+                }
+              }
 
-    // let result: any = {};
-
-    // gridRef?.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
-    //   result[item.colId] = null;
-    // });
-
-    // let pinnedBottomData = calculatePinnedBottomData(result);
-    // // log("============onGridReady", pinnedBottomData)
-
-    // if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
-    //   gridRef?.current.api.setPinnedBottomRowData([pinnedBottomData]);
-    // }
+              if (!isExclude) {
+                return option.expandHeight;
+              }
+            }
+          }
+          
+          return option.normalHeight;
+      });
+      columnApi.resetRowHeights();
+    }
 
     if (event?.onGridReady) event.onGridReady(param);
 
@@ -933,6 +996,8 @@ const ListGrid: React.FC<Props> = memo((props) => {
       copied.forEach(obj => {
         if (options.editable?.includes(obj.field)) obj['editable'] = (selectedRow[ROW_TYPE] === ROW_TYPE_NEW);
       });
+
+      setColDefs(copied);
     } else if (options?.isEditableAllNewRow) {
       const allColumns = param.api.getAllGridColumns();
       const allColDefs = allColumns.map((col) => {
@@ -947,9 +1012,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
       copied.forEach(obj => {
         obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? true : options.editable?.includes(obj.field);
       });
-    }
 
-    setColDefs(copied);
+      setColDefs(copied);
+    }
 
     // currentRow = selectedRow[ROW_INDEX];
     if (event?.onSelectionChanged) event.onSelectionChanged(param);
@@ -1219,6 +1284,28 @@ const ListGrid: React.FC<Props> = memo((props) => {
     return span;
   };
 
+  const rowSpanByConfigValueChanged = (param: NewValueParams) => {
+    const option = options?.rowSpanByConfig;
+    if (option) {
+      const newValue = param.newValue;
+      const changedColumn = param.column.getId();
+      const standardCol = option.standardCol;
+
+      const rowIndex = param.node?.rowIndex || 0;
+      const totalRow = gridRef.current.api.getDisplayedRowCount();
+
+      const currentRowNode = gridRef.current.api.getRowNode(rowIndex);
+      for (let i=rowIndex+1; i<totalRow; i++) {
+        const nextRowNode = gridRef.current.api.getRowNode(i);
+        if (nextRowNode.data[standardCol] === currentRowNode.data[standardCol]) {
+          nextRowNode.setDataValue(changedColumn, newValue);
+        } else {
+          break;
+        }
+      }
+    }
+  }
+
   const getRowSpanByConfig = (param: RowSpanParams): number => {
     const option = options?.rowSpanByConfig;
     if (option) {
@@ -1228,23 +1315,37 @@ const ListGrid: React.FC<Props> = memo((props) => {
           const currentValue = param.data[option.standardCol];
           let span = 1;
           
-          var totalRow = gridRef.current.api.getDisplayedRowCount();
+          const totalRow = gridRef.current.api.getDisplayedRowCount();
           
-          if(!totalRow) return 1;
-
-          for (let i = rowIndex + 1; i < totalRow; i++) {
-            let rowNode = gridRef.current.api.getRowNode(i);
-            if (rowNode.data[option.standardCol] === currentValue) {
-              span++;
-            }
-            else break;
+          if(!totalRow) {
+            return 1;
           }
 
-          return span;
+          for (let i=rowIndex+1; i<totalRow; i++) {
+            let previousRowNode;
+            if (rowIndex === 0) {
+              previousRowNode = gridRef.current.api.getRowNode(i-1); // currentValue
+            } else {
+              previousRowNode = gridRef.current.api.getRowNode(i-2);
+            }
+            const nextRowNode = gridRef.current.api.getRowNode(i);
+            if (previousRowNode.data[option.standardCol] !== currentValue && nextRowNode.data[option.standardCol] === currentValue) {
+              for (let j=rowIndex+1; j<totalRow; j++) {
+                const rowNode = gridRef.current.api.getRowNode(j);
+                if (rowNode.data[option.standardCol] === currentValue) {
+                  span++;
+                } else {
+                  break;
+                }
+              }
+              return span;              
+            } else {
+              return 0;
+            }
+          }
         }
       }
     }
-
     return 1;
   };
 
