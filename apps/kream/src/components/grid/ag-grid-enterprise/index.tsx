@@ -154,6 +154,7 @@ export type GridOption = {
     targetCol: string[];
     compareCol: { [key:string]: string[] };
   };
+  changeColor?: string[];
 
   notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
 };
@@ -760,6 +761,35 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
+        // 조건부 텍스트 색상 변경
+        if (options?.changeColor) {
+          const arrCols = options.changeColor;
+          if (arrCols.indexOf(col) > -1) {
+            console.log("col : ", col);
+            cellOption = {
+              ...cellOption,
+              cellClassRules: {
+                ...cellOption.cellClassRules,
+                "cell-verify-success": (params:any) => {
+                  if (params.node.data[col.concat("_flag")] === "Y") {
+                    return true;
+                  }
+
+                  return false;
+                },
+                "cell-verify-fail": (params:any) => {
+                  console.log("params : ", params.node.data);
+                  if (params.node.data[col.concat("_flag")] === "N") {
+                    return true;
+                  }
+
+                  return false;
+                }
+              }
+            }
+          }
+        }
+
         // grid 수직 가운데 정렬 설정
         if (options?.isVerticalCenter) {
           cellOption = {
@@ -784,6 +814,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               onCellValueChanged: rowSpanByConfigValueChanged,
               cellDataType: false,
               cellClassRules: {
+                ...cellOption.cellClassRules,
                 "show-cell": "value !== undefined",
                 "row-span-default": (params: any) => {
                   const api = gridRef.current.api;

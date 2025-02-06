@@ -61,6 +61,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
       col: ["transport_id"],
       visible: false
     },
+    changeColor: ["arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     checkbox: ["chk", "use_yn"],
     select: {
       loc_nm_short: locationList,
@@ -204,6 +205,72 @@ const MasterGrid: React.FC<Props> = memo(() => {
     }
   };
 
+  /**
+   * @Handler
+   * UFSP 마일스톤 데이터 검증
+   */
+  const handleVerifyMilestone = async () =>  {
+    const waybillList:string[] = [];
+    if (gridRef.current) {
+      const api = gridRef.current.api;
+      api.forEachNode((node: any) => {
+        if (!waybillList.includes(node.data["waybill_no"])) {
+          waybillList.push(node.data["waybill_no"]);
+        }
+      })
+
+      if (waybillList.length > 0) {
+        const interfaceList = await actions.getMilestoneInterfaceData({waybillList: waybillList.join(',')});
+        for (let data of interfaceList) {
+          console.log("data : ", data);
+          api.forEachNode((node: any) => {
+            if (node.data.waybill_no === data.waybill_no) {
+              if (node.data.transport_type === "Reseller") {
+                if (node.data.milestone === "POD") {
+                  if (node.data["DN & Sorting"] === data.delivery_no) {
+                    if (node.data[data.milestone.toLowerCase().concat("_local_dd")] === data.local_dd) {
+                      const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
+                      const column = data.milestone.toLowerCase().concat("_local_dd");
+                      node.data[key] = "Y";
+                    } else {
+                      const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
+                      const column = data.milestone.toLowerCase().concat("_local_dd");
+                      node.data[key] = "N";
+                    }
+                  }
+                } else {
+                  if (node.data[data.milestone.toLowerCase().concat("_local_dd")] === data.local_dd) {
+                    const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
+                    const column = data.milestone.toLowerCase().concat("_local_dd");
+                    node.data[key] = "Y";
+                  } else {
+                    const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
+                    const column = data.milestone.toLowerCase().concat("_local_dd");
+                    node.data[key] = "N";
+                  }
+                }
+              } else {
+                if (node.data[data.milestone.toLowerCase().concat("_local_dd")] === data.local_dd) {
+                  const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
+                  const column = data.milestone.toLowerCase().concat("_local_dd");
+                  node.data[key] = "Y";
+                } else {
+                  const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
+                  const column = data.milestone.toLowerCase().concat("_local_dd");
+                  node.data[key] = "N";
+                }
+              }
+            }
+          })
+        }
+      } else {
+        toast(t("msg_0006")); // 변경 내역이 없습니다.
+      }
+
+      gridRef.current.api.refreshCells({ force: true });
+    }
+  };
+
   return (
       <>
         <ToolBar gridRef={gridRef} gridOptions={gridOptions} />
@@ -220,7 +287,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
           buttonList={[
             { id:"add", label: "열 추가", size: "20", onClick:handleAddRow },
             { id:"save", label: "수정/등록", size: "20", onClick:handleSaveRow },
-            { id:"milestone", label:"UFS 연동", size: "20", onClick: handleRegistMilestone }
+            { id:"milestone", label:"UFS 연동", size: "20", onClick: handleRegistMilestone },
+            { id:"verify", label:"검증", size: "20", onClick: handleVerifyMilestone }
           ]}
         />
         <Popup loadItem={{}} />

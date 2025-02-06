@@ -39,3 +39,11 @@
   border-bottom: 0.3px solid #ECECEC;
   border-right: 0.3px solid #ECECEC;
 }
+
+.cell-verify-fail {
+  color: red !important;
+}
+
+.cell-verify-success {
+  color: blue !important;
+}

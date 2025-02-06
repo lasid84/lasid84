@@ -50,3 +50,22 @@ export const SP_SetMileStoneEdiData = async (param: any) => {
 
   await queryClient("SP_SetMileStoneEdiData", params);
 };
+
+/**
+ * @dev
+ * 마일스톤 데이터 검증을 위한 interface 데이터 조회
+ */
+export const SP_getMilestoneInterfaceData = async (param: any) => {
+  const { waybillList, user_id, ipaddr } = paramsUtils(param);
+
+  const params = {
+    inparam: ["in_waybill_list", "in_user", "in_ipaddr"],
+    invalue: [waybillList, user_id, ipaddr],
+    inproc: 'airimp.f_airi3004_get_milestone_ufsp_data',
+    isShowLoading: true,
+    isShowComplete: true,
+  };
+
+  const result = await queryClient("SP_SetMileStoneEdiData", params);
+  return result;
+}
