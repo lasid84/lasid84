@@ -112,6 +112,11 @@ async function startWorker() {
               , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
               }});
           break;
+        case "INSERT_UFSP_MILESTONE":
+          const workerMilestone = new Worker(ufs_worker_director + '/worker-ufsp-milestone/milestone.js'
+            , { workerData: { idx: thread.idx, pgm:thread.pgm, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true
+            }});
+          break;
         case "BATCH_MAILING":
           const workerMailing = new Worker(mailing_worker_director + '/worker-mailing.js'
               , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true

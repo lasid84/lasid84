@@ -65,7 +65,6 @@ const registerProxyFunction = (fn, state) => {
 const setBatchInterval = (fn, interval) => {
     setTimeout(() => {
         try {
-            console.log("enter : ", new Date());
             fn();
             setBatchInterval(fn, interval);
         } catch (ex) {
