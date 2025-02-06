@@ -182,6 +182,28 @@ const MasterGrid: React.FC<Props> = memo(() => {
     actions.setPopupOpen(true);
   };
 
+  /**
+   * @Handler
+   * UFSP 마일스톤 등록 시작
+   */
+  const handleRegistMilestone = async () => {
+    const waybillList:string[] = [];
+    if (gridRef.current) {
+      const api = gridRef.current.api;
+      api.forEachNode((node: any) => {
+        if (!waybillList.includes(node.data["waybill_no"])) {
+          waybillList.push(node.data["waybill_no"]);
+        }
+      })
+    }
+    
+    if (waybillList.length > 0) {
+      await actions.setMilestoneEdiData({waybillList: waybillList.join(',')});
+    } else {
+      toast(t("msg_0006")); // 변경 내역이 없습니다.
+    }
+  };
+
   return (
       <>
         <ToolBar gridRef={gridRef} gridOptions={gridOptions} />
@@ -197,7 +219,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
         <FloatingButton
           buttonList={[
             { id:"add", label: "열 추가", size: "20", onClick:handleAddRow },
-            { id:"save", label: "수정/등록", size: "20", onClick:handleSaveRow }
+            { id:"save", label: "수정/등록", size: "20", onClick:handleSaveRow },
+            { id:"milestone", label:"UFS 연동", size: "20", onClick: handleRegistMilestone }
           ]}
         />
         <Popup loadItem={{}} />

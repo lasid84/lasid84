@@ -25,6 +25,7 @@ import { RiFileExcel2Line } from "react-icons/ri"; //excel
 import { IoSend } from "react-icons/io5";          //send
 import { FaSignOutAlt } from "react-icons/fa";     //out, extraction
 import { IoMdPrint } from "react-icons/io";
+import { GoMilestone } from "react-icons/go"; // ufsp insert milestone
 
 import { log, error } from '@repo/kwe-lib-new';
 
@@ -103,6 +104,7 @@ const getColor = (label: string, color: string = "") => {
       case "search":
       case "check":
       case "request":
+      case "milestone":
         c = "sky-fill";
         break;
       case "add":
@@ -243,6 +245,9 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "up":
       icon = <FaArrowUp size={size} />;
+      break;
+    case "milestone":
+      icon = <GoMilestone size={size} />;
       break;
     case "descartes":
       const descartesIcon = () => {
