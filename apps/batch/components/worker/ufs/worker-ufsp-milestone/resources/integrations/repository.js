@@ -1,5 +1,5 @@
 const { getServerIP } = require("../../../../../helpers/common");
-const { executFunction } = require("../../../../../api.service/api.service");
+const { executFunction, executeKREAMFunction } = require("../../../../../api.service/api.service");
 
 const serverIP = getServerIP();
 const USER_ID = "MILESTONE_BATCH";
@@ -83,9 +83,29 @@ const setMilestoneIfData = async (insertedList) => {
     }
 };
 
+/**
+ * @Function
+ * Summary : UFSP에 등록된 마일스톤 데이터 검증을 위한 interface setting.
+ */
+const setMilestoneInterfaceIfData = async (hwabNo) => {
+    try {
+        const params = {
+            inparam: ["in_pgm_code", "in_blno", "in_user_id", "in_ipaddr"],
+            invalue: ["0", hwabNo, USER_ID, serverIP],
+            inproc: "scrap.f_scrp0001_ins_if_data"
+        };
+
+        const result = await executFunction(params.inproc, params.inparam, params.invalue);
+        return result[0];
+    } catch (ex) {
+        throw ex;
+    }
+}
+
 module.exports = {
     getScriptAPI,
     getMilestoneTargetList,
     getMilestoneValueList,
-    setMilestoneIfData
+    setMilestoneIfData,
+    setMilestoneInterfaceIfData
 }
