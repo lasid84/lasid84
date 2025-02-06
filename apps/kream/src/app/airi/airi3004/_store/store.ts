@@ -11,6 +11,7 @@ interface StoreState {
     searchParams: Record<string, any>;
     loadDatas: gridData[] | null;
     mainDatas: gridData | null;
+    locationList: string[];
     mainSelectedRow: Record<string, any> | null;
     popup: Record<string, any>;
 }
@@ -36,6 +37,7 @@ const initValue: StoreState = {
     },
     loadDatas: null,
     mainDatas: null,
+    locationList: [],
     mainSelectedRow: null,
     popup: {
         isOpen: false
@@ -47,6 +49,7 @@ const setinitValue = (set: any) => {
         getOperationListData: async (fr_date: string, waybill_no?: string) => {
             const result = await SP_GetOperationListData(fr_date, waybill_no);
             set({ mainDatas: result[0] });
+            set({ locationList: result[1].data.map((item: any) => item.loc_nm)})
             return result[0];
         },
         setPopupOpen: (isOpen: boolean) => {
