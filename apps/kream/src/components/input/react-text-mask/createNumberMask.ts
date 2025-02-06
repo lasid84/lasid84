@@ -67,10 +67,12 @@ export default function createNumberMask({
       ];
     }
 
-    const isNegative = (rawValue[0] === minus) && allowNegative
+   
+    const isNegative = rawValue.startsWith(minus) && allowNegative;  
+    
     //If negative remove "-" sign
     if(isNegative) {
-      rawValue = rawValue.toString().substr(1)
+      rawValue = rawValue.substring(1); // 앞의 '-' 제거 후 처리
     }
 
     const indexOfLastDecimal = rawValue.lastIndexOf(decimalSymbol)
@@ -146,6 +148,7 @@ export default function createNumberMask({
       mask = [...prefix.split(emptyString), ...mask];
     }
 
+    // 2025.02.05 주석처리
     if (isNegative) {
       // If user is entering a negative number, add a mask placeholder spot to attract the caret to it.
       if (mask.length === prefixLength) {

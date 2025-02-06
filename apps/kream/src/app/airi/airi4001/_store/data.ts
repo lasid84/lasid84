@@ -4,7 +4,7 @@ import { paramsUtils } from "@/components/react-query/utils/paramUtils";
 
 // import { executeKREAMFunction, callUnipass, unipassAPI001 } from "@/services/api.services";
 import { executeKREAMFunction } from "@/services/api/apiClient";
-// import { log } from '@repo/kwe-lib-new';
+import { log } from '@repo/kwe-lib-new';
 
 export const SP_Load = async () => {
   // unstable_noStore();
@@ -21,8 +21,9 @@ export const SP_Load = async () => {
 
 //청구내역서 조회
 export const SP_GetDTDMainData = async (searchParam: any) => {
-  console.log('SP_GetDTDMainData', searchParam)  
+  log('SP_GetDTDMainData', searchParam)  
   const {fr_date, to_date,  no, create_date} = searchParam;
+  const {user_id, ipaddr} = paramsUtils();
   //user_id, ipaddr
   const params = {
     inparam : [
@@ -38,8 +39,8 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
       , to_date
       , no
       , create_date
-      , ''
-      , ''
+      , user_id
+      , ipaddr
     ],
     inproc: 'airimp.f_airi4001_get_dtd_list',
     isShowLoading: true
@@ -82,10 +83,67 @@ export const SP_GetDTDDetailData = async (searchParam: any) => {
 }
 
 
-//INSERT & UPDATE
+//청구내역서 Detail 조회2
+export const SP_GetDTDDetailData2 = async (searchParam: any) => {
+  log('SP_GetDTDDetailData2', searchParam)  
+  const { seq,  waybill_no} = searchParam;
+  const {user_id, ipaddr} = paramsUtils();
+  //user_id, ipaddr
+  const params = {
+    inparam : [
+       "in_waybill_no"
+      , "in_seq"
+      , "in_create_user"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      waybill_no
+      , seq
+      , ''
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi4001_get_dtd_detail22',
+    isShowLoading: false
+  }
+
+  const result = await executeKREAMFunction(params);
+  // console.log('f_airi4001_get_dtd_detail22 22', result)
+  return result;
+}
+
+//INSERT & UPDATE AT DTD INVOICE DETAIL
+export const SP_SaveDTDDetail = async (param: any) => {  
+
+  const {jsondata} = param;
+  const {user_id, ipaddr} = paramsUtils();
+  // console.log('SP_SaveDTDDetail jsondata', jsondata)
+  const params = {
+    inparam : [
+       "in_jsondata"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      jsondata
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi4001_ins_dtd_detail',
+    isShowLoading: true
+  }
+
+  const result = await executeKREAMFunction(params);  
+  return result!;
+}
+
+
+
+//INSERT & UPDATE AT AG-GRID
 export const SP_SaveData = async (param: any) => {  
-  //throw new Error("Test error from SP_SaveData"); // 에러 강제 발생
-  const {jsondata, settlement_date, user_id, ipaddr} = param;
+  const {jsondata, settlement_date} = param;
+  const {user_id, ipaddr} = paramsUtils();
   
   const params = {
     inparam : [
@@ -107,60 +165,6 @@ export const SP_SaveData = async (param: any) => {
   const result = await executeKREAMFunction(params);  
   return result!;
 }
-
-
-//INSERT & UPDATE
-export const SP_SaveDetailData = async (param: any) => {  
-  //throw new Error("Test error from SP_SaveData"); // 에러 강제 발생
-  const {jsondata, settlement_date, user_id, ipaddr} = param;
-  console.log('jsondata', jsondata)
-  const params = {
-    inparam : [
-       "in_jsondata"
-      , "in_settlement_date"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      jsondata
-      , settlement_date
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi4001_ins_dtd2',
-    isShowLoading: true
-  }
-
-  const result = await executeKREAMFunction(params);  
-  return result!;
-}
-
-
-
-// export const SP_SaveData = async (param: any) => {  
-
-//   const {jsondata, user_id, ipaddr} = param;
-  
-//   const params = {
-//     inparam : [
-//        "in_jsondata"
-//       , "in_user"
-//       , "in_ipaddr"
-//     ],
-//     invalue: [
-//       jsondata
-//       , user_id
-//       , ipaddr
-//     ],
-//     inproc: 'airimp.f_airi4001_ins_dtd',
-//     isShowLoading: true
-//   }
-
-//   const result = await executeKREAMFunction(params);
-  
-//   log('executefunction result', result)
-//   return result!;
-// }
 
 
 
@@ -189,50 +193,3 @@ export const SP_SaveUploadData = async (param: any) => {
   return result!;
 }
 
-export const SP_UpdateData = async (param: any) => {  
-
-  const {jsondata, user_id, ipaddr} = param;
-  
-  const params = {
-    inparam : [
-       "in_jsondata"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      jsondata
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi4001_upd_dtd',
-    isShowLoading: true
-  }
-
-  const result = await executeKREAMFunction(params);
-  return result![0];
-}
-
-export const SP_SendEDI = async (param: any) => {  
-  const {waybill_no, invoice_no, user_id , ipaddr} = param;
-  const params = {
-    inparam : [
-       "in_waybill_no"
-      , "in_invoice_no"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      waybill_no
-      , invoice_no
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi3001_send_edi858', //send_edi858
-    isShowLoading: true
-  }
-
-  console.log('params..........',params)
-
-  const result = await executeKREAMFunction(params);
-  return result![0];
-}

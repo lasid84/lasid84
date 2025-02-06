@@ -1,6 +1,6 @@
 import { createStore } from "@/states/createStore";
 import { RefObject } from 'react';
-import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_SaveDetailData, SP_SaveUploadData,SP_GetDTDDetailData } from "./data";
+import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_SaveDTDDetail, SP_SaveUploadData,SP_GetDTDDetailData, SP_GetDTDDetailData2 } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 
@@ -19,7 +19,7 @@ export const AmountInputOptions = {
 }
 export const AmountInputOptions_g = {
     type: "number",
-    textAlign: "right",
+    textAlign: "center",
     limit: 9,
     isAllowDecimal: true,
     decimalLimit: 0,
@@ -40,6 +40,7 @@ interface StoreState {
     mainSelectedRow: Record<string, any> | null;
     currentRow : Record<string, any> | null;
     detailSelectedRow: Record<string, any> | null; //detailDatas가 맞아보임.
+    detailSelectedRow_AB: Record<string, any> | null; //detailDatas가 맞아보임.   
     popup: Record<string, any>;
     loadDatas: gridData[];
     allData:any[] 
@@ -56,6 +57,7 @@ interface StoreActions {
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
         setMainSelectedRow : (row:any) => void;
         setDetailSelectedRow : (row:any) => void;
+        setDetailSelectedRow_AB : (row:any) => void;
         setCurrentRow : (row:any)=>void;
         setDetailData: (data: any[]) => void;
         saveDTDData : (data:SaveDataArgs)=> Promise<any>;
@@ -88,6 +90,7 @@ const initValue: StoreState = {
     mainSelectedRow: null,                  //GRID
     currentRow : null,                      //GRID(invoice 참조)
     detailSelectedRow: null,
+    detailSelectedRow_AB: null,
     excel_data :{ data: {}, fields:{} },
     uploadFile_init : false,
     gridRef_Main : null,
@@ -120,10 +123,14 @@ const setinitValue = (set:any) => {
                 return result;
             },
             getDTDDetailDatas: async (params: any) => {
-                const result = await SP_GetDTDDetailData(params);
+                const result = await SP_GetDTDDetailData2(params);
+                // console.log('result.data[0]',result?.data[0])
+                //console.log('result.data[0]', result?.[0]?.data?.[0], result?.[1]?.data?.[0]);
                 set((state:any) => ({
                     ...state,
-                    detailSelectedRow: { ...result.data[0] }, // 새 객체로 할당
+                    detailSelectedRow: { ...result?.[0]?.data?.[0] }, // 새 객체로 할당
+                    detailSelectedRow_AB: { ...result?.[1]?.data?.[0] }, // 새 객체로 할당
+                    // detailDatas : result
                   }));
                 return result;
             },
@@ -147,6 +154,9 @@ const setinitValue = (set:any) => {
             },
             setDetailSelectedRow: (row:any) =>{
                 set((state:StoreState) => ({ ...state, detailSelectedRow: row }))
+            },
+            setDetailSelectedRow_AB: (row:any) =>{
+                set((state:StoreState) => ({ ...state, detailSelectedRow_AB: row }))
             },
             setCurrentRow: (row:any) =>{
                 set((state:StoreState) => ({ ...state, currentRow: row }))
@@ -194,8 +204,8 @@ const setinitValue = (set:any) => {
             },
             saveDTDDetailData: async (params: any) :Promise<any> => { //undefined
                 try {
-                    console.log("", params);
-                    const result = await SP_SaveDetailData(params); // API 호출
+                    console.log("curDAta", params);
+                    const result = await SP_SaveDTDDetail(params); // API 호출
                     set((state: StoreState) => ({
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },

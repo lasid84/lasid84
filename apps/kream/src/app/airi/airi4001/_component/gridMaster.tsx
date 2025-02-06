@@ -368,8 +368,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       const numericValue = Number(sanitizedValue);
 
       if (isNaN(numericValue)) {
-        console.warn("Invalid numeric input:", e.target.value);
-        return; // 숫자로 변환할 수 없는 경우 처리 중단
+        // console.warn("Invalid numeric input:", e.target.value);
+        return; 
       }
 
       const vatKey = `${e.target.id}_vat`;
@@ -404,8 +404,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       const numericValue = Number(sanitizedValue);
 
       if (isNaN(numericValue)) {
-        console.warn("Invalid numeric input:", e.target.value);
-        return; // 숫자로 변환할 수 없는 경우 처리 중단
+        // console.warn("Invalid numeric input:", e.target.value);
+        return; 
       }
 
       const vatKey = `${e.target.id}_vat`;
