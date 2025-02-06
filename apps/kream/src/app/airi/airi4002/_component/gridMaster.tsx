@@ -264,6 +264,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
   const handleChange = useCallback(
     (e: any, id: any, date: any) => {
+      if (!gridApi) return;
+
       const params = getValues();
       log("params", params, params[id]);
       const updatedRow = {
@@ -272,13 +274,15 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         __changed: true,
       };
       setMainSelectedRow(updatedRow);
+
+    if (!updatedRow) return;
       const rowNode = gridApi.getRowNode(mainSelectedRow?.__ROWINDEX - 1);
 
       if (rowNode) {
         rowNode.setData(updatedRow);
       }
     },
-    [mainSelectedRow]
+    [mainSelectedRow,gridApi]
   );
 
   const handleSwitchClick = (checked: boolean) => {

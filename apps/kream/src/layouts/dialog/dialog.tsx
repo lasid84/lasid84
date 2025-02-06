@@ -149,20 +149,20 @@ export const DialogArrow: React.FC<DialogBasicProps> = ({
             </Transition.Child>
 
             {/* Left Arrow Button */}
-            <button
+            {/* <button
               onClick={onPrev}
-              className="absolute left-0 p-6 text-white transform -translate-y-1/2 bg-gray-700 rounded-full top-1/2 hover:bg-gray-600"
+              className="absolute p-6 text-white transform -translate-y-1/2 bg-gray-700 rounded-full left-20 top-1/2 hover:bg-gray-600"
             >
               <FiChevronLeft size={32} />
-            </button>
+            </button> */}
 
             {/* Right Arrow Button */}
-            <button
+            {/* <button
               onClick={onNext}
-              className="absolute right-0 p-6 text-white transform -translate-y-1/2 bg-gray-700 rounded-full top-1/2 hover:bg-gray-600"
+              className="absolute p-6 text-white transform -translate-y-1/2 bg-gray-700 rounded-full right-20 top-1/2 hover:bg-gray-600"
             >
               <FiChevronRight size={32} />
-            </button>
+            </button> */}
 
             {/*Dialog Contents*/}
             <Transition.Child

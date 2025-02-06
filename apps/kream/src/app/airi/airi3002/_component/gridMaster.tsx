@@ -38,6 +38,29 @@ const MasterGrid: React.FC<Props> = memo(() => {
                 transport_type === "AC" ? "bg-steelblue" : "bg-beige";
     return color;
   }
+
+  const originCellStyles = (params: any) => {
+    let data = params.data.origin;
+
+    switch (data) {
+      case "BKK" :
+          return "bg-lightskyblue";
+      case "CKG" :
+          return "bg-lightivory";
+      case "HAN" :
+          return "bg-lightpink";
+      case "CTU" :
+        return "bg-lightcyan";
+      case "HKG" :
+        return "bg-lightbeige";
+      case "CGO" :
+        return "bg-lightlavender";
+      case "PVG" :
+        return "bg-lightgreenbright";
+      default :
+        return "bg-red";
+    }
+  };
   
   const gridOptions: GridOption = {
     gridHeight: "h-full",
@@ -68,6 +91,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
       transport_type_nm: cellStyles,
       waybill_no: cellStyles,
       mwb_no: cellStyles,
+      origin: originCellStyles,
     },
   };
 

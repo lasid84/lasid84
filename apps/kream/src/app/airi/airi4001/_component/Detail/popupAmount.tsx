@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect,useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import {
   crudType,
   useAppContext,
@@ -8,6 +8,8 @@ import {
 import { TextArea } from "components/input";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { useCommonStore, AmountInputOptions } from "../../_store/store";
+import { shallow } from "zustand/shallow";
+
 import { DTDLabel, DTDLabel2 } from "@/components/label/index";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -19,17 +21,29 @@ type Props = {
 };
 
 const Amount: React.FC<Props> = ({ loadItem, params }) => {
-  const detailSelectedRow = useCommonStore((state) => state.detailSelectedRow);
+  const detailSelectedRow = useCommonStore(
+    (state) => state.detailSelectedRow,
+    shallow
+  );
+  const detailSelectedRow_AB = useCommonStore(
+    (state) => state.detailSelectedRow_AB,
+    shallow
+  );
   const popup = useCommonStore((state) => state.popup);
   const actions = useCommonStore((state) => state.actions);
 
-const handleonChange = useCallback((e:any)=>{
-  log('e',e)
-},[detailSelectedRow])
+  const handleonChange = useCallback(
+    (e: any) => {
+      log("e", e);
+      log("e", detailSelectedRow?.other_3 - detailSelectedRow_AB?.other_3);
+    },
+    [detailSelectedRow, detailSelectedRow_AB]
+  );
+
+ let total = 0
 
   const handleMaskedInputChange = useCallback(
-    (e: any) => {
-
+    (e: any, selectedRow: any, setSelectedRow: (row: any) => void) => {
       const sanitizedValue =
         typeof e.target.value === "string"
           ? e.target.value.replace(/,/g, "")
@@ -38,30 +52,35 @@ const handleonChange = useCallback((e:any)=>{
       const numericValue = Number(sanitizedValue);
 
       if (isNaN(numericValue)) {
-        console.warn("Invalid numeric input:", e.target.value);
-        return; // 숫자로 변환할 수 없는 경우 처리 중단
+        // console.warn("Invalid numeric input:", e.target.value);
+        return;
       }
 
       const vatKey = `${e.target.id}_vat`;
       const vatValue = Math.floor(numericValue * 0.1);
 
       const updatedRow = {
-        ...detailSelectedRow,
+        ...selectedRow,
         [e.target.id]: numericValue,
         [vatKey]: vatValue,
         __changed: true,
       };
-      actions.setDetailSelectedRow(updatedRow);
 
+       total = Object.entries(selectedRow)
+      .filter(([key, value]) => !key.endsWith('_vat')) // '_vat'로 끝나는 키 제외
+      .reduce((sum, [key, value]) => sum + (Number(value) || 0), 0);
+    
+
+      setSelectedRow(updatedRow);
     },
-    [detailSelectedRow]
+    []
   );
 
   return (
     <>
       <div className="w-full flex-col min-h-[30vh] p-2">
         <div className="flex w-full h-full">
-          <div className="flex flex-col w-4/5 h-full gap-1 p-1 p-2 border rounded-lg">
+          <div className="flex flex-col w-4/5 h-full gap-1 p-1 border rounded-lg">
             {/* Title Row */}
             <div
               className="grid justify-center mb-2"
@@ -101,14 +120,19 @@ const handleonChange = useCallback((e:any)=>{
             >
               <DTDLabel id="customs_duty" name="l_customs_duty" />
               <MaskedInputField
-                id="customs_duty_rv"
-                value={detailSelectedRow?.customs_duty_rv}
+                id="customs_duty"
+                value={detailSelectedRow?.customs_duty}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
@@ -116,9 +140,9 @@ const handleonChange = useCallback((e:any)=>{
                 value=""
                 options={{
                   ...AmountInputOptions,
-                  bgColor:"!bg-gray-300",
+                  bgColor: "!bg-gray-300",
                   isReadOnly: true,
-                }}                
+                }}
               />
               <MaskedInputField
                 id="customs_duty_ab"
@@ -128,19 +152,26 @@ const handleonChange = useCallback((e:any)=>{
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="customs_duty_profit"
-                value={`${detailSelectedRow?.customs_duty_rv - detailSelectedRow?.customs_duty_ab}`}
+                value={`${(Number(detailSelectedRow?.customs_duty) || 0) - (Number(detailSelectedRow_AB?.customs_duty_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
+                  bgColor: "!bg-gray-200",
                   isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
               />
             </div>
 
@@ -155,42 +186,54 @@ const handleonChange = useCallback((e:any)=>{
                 value=""
                 options={{
                   ...AmountInputOptions,
-                  bgColor:"!bg-gray-300",
+                  bgColor: "!bg-gray-300",
                   isReadOnly: true,
                 }}
               />
               <MaskedInputField
                 id="customs_tax"
-                value={detailSelectedRow?.customs_tax_rv}
+                value={detailSelectedRow?.customs_tax}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="customs_tax_ab"
-                value={detailSelectedRow?.customs_tax_ab}
+                id="customs_tax_cost"
+                value={detailSelectedRow_AB?.customs_tax_cost}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="customs_tax_profit"
-                value={`${detailSelectedRow?.customs_duty_rv - detailSelectedRow?.customs_duty_ab}`}
+                value={`${(Number(detailSelectedRow?.customs_tax) || 0) - (Number(detailSelectedRow_AB?.customs_tax_cost) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
               />
             </div>
 
@@ -201,48 +244,65 @@ const handleonChange = useCallback((e:any)=>{
             >
               <DTDLabel id="bonded_wh" name="l_bonded_wh" />
               <MaskedInputField
-                id="bonded_wh_rv"
-                value={detailSelectedRow?.bonded_wh_rv}
+                id="bonded_wh"
+                value={detailSelectedRow?.bonded_wh}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="bonded_wh_vat_rv"
-                value={detailSelectedRow?.bonded_wh_vat_rv}
+                id="bonded_wh_vat"
+                value={detailSelectedRow?.bonded_wh_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="bonded_wh_ab"
-                value={detailSelectedRow?.bonded_wh_ab}
+                value={detailSelectedRow_AB?.bonded_wh_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="bonded_wh_profit"
-                value={`${detailSelectedRow?.bonded_wh_rv - detailSelectedRow?.bonded_wh_ab}`}
+                value={`${(Number(detailSelectedRow?.bonded_wh) || 0) - (Number(detailSelectedRow_AB?.bonded_wh_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
               />
             </div>
             {/* 파출수수료 */}
@@ -252,204 +312,272 @@ const handleonChange = useCallback((e:any)=>{
             >
               <DTDLabel id="dispatch_fee" name="l_dispatch_fee" />
               <MaskedInputField
-                id="dispatch_fee_rv"
-                value={detailSelectedRow?.dispatch_fee_rv}
+                id="dispatch_fee"
+                value={detailSelectedRow?.dispatch_fee}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="dispatch_fee_vat_rv"
-                value={detailSelectedRow?.dispatch_fee_vat_rv}
+                id="dispatch_fee_vat"
+                value={detailSelectedRow?.dispatch_fee_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="dispatch_fee_ab"
-                value={detailSelectedRow?.dispatch_fee_ab}
+                value={detailSelectedRow_AB?.dispatch_fee_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="dispatch_fee_profit"
-                value={`${detailSelectedRow?.dispatch_fee_rv - detailSelectedRow?.dispatch_fee_ab}`}
+                value={`${(Number(detailSelectedRow?.dispatch_fee) || 0) - (Number(detailSelectedRow_AB?.dispatch_fee_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: handleMaskedInputChange,
+                // }}
               />
             </div>
 
-            {/* 통관료 */}
+            {/* 통관수수료(대납) */}
             <div
               className="grid h-8 gap-1 "
               style={{ gridTemplateColumns: "1.2fr repeat(4, 1fr)" }}
             >
               <DTDLabel id="customs_clearance" name="l_customs_clearance" />
               <MaskedInputField
-                id="customs_clearance_rv"
-                value={detailSelectedRow?.customs_clearance_rv}
+                id="customs_clearance"
+                value={detailSelectedRow?.customs_clearance}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="customs_clearance_vat_rv"
-                value={detailSelectedRow?.customs_clearance_vat_rv}
+                id="customs_clearance_vat"
+                value={detailSelectedRow?.customs_clearance_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="customs_clearance_ab"
-                value={detailSelectedRow?.customs_clearance_ab}
+                value={detailSelectedRow_AB?.customs_clearance_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="customs_clearance_profit"
-                value={`${detailSelectedRow?.customs_clearance_rv - detailSelectedRow?.customs_clearance_ab}`}
+                value={`${(Number(detailSelectedRow?.customs_clearance) || 0) - (Number(detailSelectedRow_AB?.customs_clearance_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: handleMaskedInputChange,
+                // }}
               />
             </div>
 
-            {/* K/수수료 */}
+            {/* K/수수료- 업무대행수수료 */}
             <div
               className="grid h-8 gap-1 "
               style={{ gridTemplateColumns: "1.2fr repeat(4, 1fr)" }}
             >
               <DTDLabel id="dtd_handling" name="l_dtd_handling" />
               <MaskedInputField
-                id="dtd_handling_rv"
-                value={detailSelectedRow?.dtd_handling_rv}
+                id="dtd_handling"
+                value={detailSelectedRow?.dtd_handling}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="dtd_handling_vat_rv"
-                value={detailSelectedRow?.dtd_handling_vat_rv}
+                id="dtd_handling_vat"
+                value={detailSelectedRow?.dtd_handling_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="dtd_handling_ab"
-                value={detailSelectedRow?.dtd_handling_ab}
+                value={detailSelectedRow_AB?.dtd_handling_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="dtd_handling_profit"
-                value={`${detailSelectedRow?.dtd_handling_rv - detailSelectedRow?.dtd_handling_ab}`}
+                value={`${(Number(detailSelectedRow?.dtd_handling) || 0) - (Number(detailSelectedRow_AB?.dtd_handling_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: handleMaskedInputChange,
+                // }}
               />
             </div>
 
-            {/* K/수수료 */}
+            {/* 특별통관수수료 */}
             <div
               className="grid h-8 gap-1"
               style={{ gridTemplateColumns: "1.2fr repeat(4, 1fr)" }}
             >
               <DTDLabel id="special_handling" name="l_special_handling" />
               <MaskedInputField
-                id="special_handling_rv"
-                value={detailSelectedRow?.special_handling_rv}
+                id="special_handling"
+                value={detailSelectedRow?.special_handling}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="special_handling_vat_rv"
-                value={detailSelectedRow?.special_handling_vat_rv}
+                id="special_handling_vat"
+                value={detailSelectedRow?.special_handling_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="special_handling_ab"
-                value={detailSelectedRow?.special_handling_ab}
+                value={detailSelectedRow_AB?.special_handling_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="special_handling_profit"
-                value={`${detailSelectedRow?.special_handling_rv-detailSelectedRow?.special_handling_ab}`}
+                value={`${(Number(detailSelectedRow?.special_handling) || 0) - (Number(detailSelectedRow_AB?.special_handling_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: handleMaskedInputChange,
+                // }}
               />
             </div>
 
@@ -460,102 +588,136 @@ const handleonChange = useCallback((e:any)=>{
             >
               <DTDLabel id="trucking" name="l_trucking" />
               <MaskedInputField
-                id="trucking_rv"
-                value={detailSelectedRow?.trucking_rv}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly: true,
-                }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
-              />
-              <MaskedInputField
-                id="trucking_vat_rv"
-                value={detailSelectedRow?.trucking_vat_rv}
+                id="trucking"
+                value={detailSelectedRow?.trucking}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
+                }}
+              />
+              <MaskedInputField
+                id="trucking_vat"
+                value={detailSelectedRow?.trucking_vat}
+                options={{
+                  ...AmountInputOptions,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="trucking_ab"
-                value={detailSelectedRow?.trucking_ab}
+                value={detailSelectedRow_AB?.trucking_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="trucking_profit"
-                value={`${detailSelectedRow?.trucking_rv-detailSelectedRow?.trucking_ab}`}
+                value={`${(Number(detailSelectedRow?.trucking) || 0) - (Number(detailSelectedRow_AB?.trucking_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: handleMaskedInputChange,
+                // }}
               />
             </div>
 
-            {/* 항공료 */}
+            {/* 항공운임료(항공료) */}
             <div
               className="grid h-8 gap-1 "
               style={{ gridTemplateColumns: "1.2fr repeat(4, 1fr)" }}
             >
               <DTDLabel id="air_freight" name="l_air_freight" />
               <MaskedInputField
-                id="air_freight_rv"
-                value={detailSelectedRow?.air_freight_rv}
+                id="air_freight"
+                value={detailSelectedRow?.air_freight}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id=''
-                value=''
+                id=""
+                value=""
                 options={{
                   ...AmountInputOptions,
-                  bgColor:"!bg-gray-300",
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-300",
+                  isReadOnly:  true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="air_freight_cost"
-                value={detailSelectedRow?.air_freight_ab}
+                id="air_freight_ab"
+                value={detailSelectedRow_AB?.air_freight_ab}
                 options={{
                   ...AmountInputOptions,
-                  bgColor : "black",
-                  isReadOnly:true,
+                  bgColor: "black",
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,              
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="air_freight_profit"
-                value={`${detailSelectedRow?.air_freight_rv-detailSelectedRow?.air_freight_ab}`}
+                value={`${(Number(detailSelectedRow?.air_freight) || 0) - (Number(detailSelectedRow_AB?.air_freight_ab) || 0)}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
               />
             </div>
 
@@ -566,108 +728,204 @@ const handleonChange = useCallback((e:any)=>{
             >
               <DTDLabel id="bl_handling" name="l_bl_handling" />
               <MaskedInputField
-                id="bl_handling_rv"
-                value={detailSelectedRow?.bl_handling_rv}
+                id="bl_handling"
+                value={detailSelectedRow?.bl_handling}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
 
               <MaskedInputField
-                id="bl_handling_vat_rv"
-                value={detailSelectedRow?.bl_handling_vat_rv}
+                id="bl_handling_vat"
+                value={detailSelectedRow?.bl_handling_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="bl_handling_ab"
-                value={detailSelectedRow?.bl_handling_ab}
+                value={detailSelectedRow_AB?.bl_handling_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="bl_handling_profit"
-                value={(
-                  Number(
-                    detailSelectedRow?.bl_handling?.replace(/,/g, "") || 0
-                  ) -
-                  Number(
-                    detailSelectedRow?.bl_handling_vat?.replace(/,/g, "") || 0
-                  )
-                ).toLocaleString()}
-                options={{
+                value={`${(Number(detailSelectedRow?.bl_handling) || 0) - (Number(detailSelectedRow_AB?.bl_handling_ab) || 0)}`}
+                options={{                  
                   ...AmountInputOptions,
+                  bgColor: "!bg-gray-200",
                   isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
               />
             </div>
 
-            {/* 보험료(OTHER_1) */}
+            {/* 보험료 */}
+            <div
+              className="grid h-8 gap-1 "
+              style={{ gridTemplateColumns: "1.2fr repeat(4, 1fr)" }}
+            >
+              <DTDLabel id="insurance_fee" name="insurance_fee" />
+              <MaskedInputField
+                id="insurance_fee"
+                value={detailSelectedRow?.insurance_fee}
+                options={{
+                  ...AmountInputOptions,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
+                }}
+              />
+              <MaskedInputField
+                id="insurance_fee_vat"
+                value={detailSelectedRow?.insurance_fee_vat}
+                options={{
+                  ...AmountInputOptions,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
+                }}
+              />
+              <MaskedInputField
+                id="insurance_fee_ab"
+                value={detailSelectedRow_AB?.insurance_fee_ab}
+                options={{
+                  ...AmountInputOptions,
+                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                }}
+                events={{
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
+                }}
+              />
+              <MaskedInputField
+                id="insurance_fee_profit"
+                value={`${(Number(detailSelectedRow?.insurance_fee) || 0) - (Number(detailSelectedRow_AB?.insurance_fee_ab) || 0)}`}
+                options={{
+                  ...AmountInputOptions,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
+                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
+              />
+            </div>
+
+            {/* 기타수수료(OTHER_1) */}
             <div
               className="grid h-8 gap-1 "
               style={{ gridTemplateColumns: "1.2fr repeat(4, 1fr)" }}
             >
               <DTDLabel id="other_1" name="other_1" />
               <MaskedInputField
-                id="other_1_rv"
-                value={detailSelectedRow?.other_1_rv}
+                id="other_1"
+                value={detailSelectedRow?.other_1}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="other_1_vat_rv"
-                value={detailSelectedRow?.other_1_vat_rv}
+                id="other_1_vat"
+                value={detailSelectedRow?.other_1_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="other_1_ab"
-                value={detailSelectedRow?.other_1_ab}
+                value={detailSelectedRow_AB?.other_1_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="other_1_profit"
-                value={`${detailSelectedRow?.other_1_rv-detailSelectedRow?.other_1_ab}`}
+                value={`${detailSelectedRow?.other_1 - detailSelectedRow_AB?.other_1_ab}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
               />
             </div>
             {/* 기타1 */}
@@ -677,101 +935,68 @@ const handleonChange = useCallback((e:any)=>{
             >
               <DTDLabel id="other_2" name="other_2" />
               <MaskedInputField
-                id="other_2_rv"
-                value={detailSelectedRow?.other_2_rv}
+                id="other_2"
+                value={detailSelectedRow?.other_2}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
-                id="other_2_vat_rv"
-                value={detailSelectedRow?.other_2_vat_rv}
+                id="other_2_vat"
+                value={detailSelectedRow?.other_2_vat}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow,
+                      actions.setDetailSelectedRow
+                    ),
                 }}
               />
               <MaskedInputField
                 id="other_2_ab"
-                value={detailSelectedRow?.other_2_ab}
+                value={detailSelectedRow_AB?.other_2_ab}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
                 }}
                 events={{
-                  onChange: handleMaskedInputChange,
+                  onChange: (e) =>
+                    handleMaskedInputChange(
+                      e,
+                      detailSelectedRow_AB,
+                      actions.setDetailSelectedRow_AB
+                    ),
                 }}
               />
               <MaskedInputField
                 id="other_2_profit"
-                value={`${detailSelectedRow?.other_2_rv-detailSelectedRow?.other_2_ab}`}
+                value={`${detailSelectedRow?.other_2 - detailSelectedRow_AB?.other_2_ab}`}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
+                // events={{
+                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
+                // }}
               />
             </div>
-            {/* OTHER_3(THC) */}
-            <div
-              className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(4, 1fr)" }}
-            >
-              <DTDLabel id="other_3" name="other_3" />
-              <MaskedInputField
-                id="other_3_rv"
-                value={detailSelectedRow?.other_3_rv}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
-              />
-              <MaskedInputField
-                id="other_3_vat_rv"
-                value={detailSelectedRow?.other_3_vat_rv}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
-              />
-              <MaskedInputField
-                id="other_3_ab"
-                value={detailSelectedRow?.other_3_ab}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
-              />
-              <MaskedInputField
-                id="other_3_profit"
-                value={`${detailSelectedRow?.other_3_rv-detailSelectedRow?.other_3_ab}`}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
-                }}
-                events={{
-                  onChange: handleMaskedInputChange,
-                }}
-              />
-            </div>
+
 
             {/* 합계 */}
             <div
@@ -781,7 +1006,7 @@ const handleonChange = useCallback((e:any)=>{
               <DTDLabel id="total" name="total" />
               <MaskedInputField
                 id="total"
-                value={detailSelectedRow?.total}
+                value={total.toString()}
                 options={{
                   ...AmountInputOptions,
                   isReadOnly: popup.popType === crudType.CREATE ? false : true,
@@ -808,7 +1033,9 @@ const handleonChange = useCallback((e:any)=>{
                 value={detailSelectedRow?.total_profit}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly: popup.popType === crudType.CREATE ? false : true,
+                  bgColor: "!bg-gray-200",
+                  isReadOnly: true,
+                  allowNegative: true,
                 }}
               />
             </div>
@@ -822,7 +1049,7 @@ const handleonChange = useCallback((e:any)=>{
               value={detailSelectedRow?.remark}
               options={{ isReadOnly: false }}
               events={{
-                onChange:handleonChange
+                onChange: handleonChange,
               }}
             />
           </div>
