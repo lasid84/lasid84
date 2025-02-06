@@ -2,13 +2,15 @@
 import { executeKREAMFunction } from "@/services/api/apiClient";
 const { log } = require('@repo/kwe-lib/components/logHelper');
 
+import { paramsUtils } from "@/components/react-query/utils/paramUtils";
 
 export const SP_GetLoad = async (searchParam:any) => {
   // unstable_noStore();
-  const {user_id, ipaddr} = searchParam;
+  const {user_id, ipaddr} = paramsUtils();
+  
   const params = {
     inparam: ["in_user", "in_ipaddr"],
-    invalue: [ '', ''],
+    invalue: [ user_id, ipaddr],
     inproc: 'airimp.f_airi4001_load',
     isShowLoading: false
   }
@@ -18,7 +20,8 @@ export const SP_GetLoad = async (searchParam:any) => {
 }
 
 export const SP_GetTransportData = async (searchParam: any) => {
-  const {fr_date, to_date, search_gubn,  no, user_id, ipaddr} = searchParam;
+  const {fr_date, to_date, search_gubn,  no} = searchParam;
+  const {user_id, ipaddr} = paramsUtils();
 
   const params = {
     inparam : [
@@ -52,7 +55,9 @@ export const SP_GetTransportData = async (searchParam: any) => {
 
 export const assignDTDItem = async (param: any) => {  
   //throw new Error("Test error from SP_SaveData"); // 에러 강제 발생
-  const {jsondata, settlement_date, user_id, ipaddr} = param;
+  const {jsondata, settlement_date} = param;
+  const {user_id, ipaddr} = paramsUtils();
+
   
   const params = {
     inparam : [
@@ -78,75 +83,51 @@ export const assignDTDItem = async (param: any) => {
 
 
 
-export const SP_SaveUploadData = async (param: any) => {  
+// export const SP_SaveUploadData = async (param: any) => {  
 
-  const {jsondata, settlement_date, user_id, ipaddr} = param;
-  log('jsondata+settlement_data', jsondata, settlement_date)
-  const params = {
-    inparam : [
-       "in_jsondata"
-      , "in_settlement_date"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      jsondata
-      , settlement_date
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi4001_ins_upload_dtd',
-    isShowLoading: true
-  }
+//   const {jsondata, settlement_date, user_id, ipaddr} = param;
+//   log('jsondata+settlement_data', jsondata, settlement_date)
+//   const params = {
+//     inparam : [
+//        "in_jsondata"
+//       , "in_settlement_date"
+//       , "in_user"
+//       , "in_ipaddr"
+//     ],
+//     invalue: [
+//       jsondata
+//       , settlement_date
+//       , user_id
+//       , ipaddr
+//     ],
+//     inproc: 'airimp.f_airi4001_ins_upload_dtd',
+//     isShowLoading: true
+//   }
 
-  const result = await executeKREAMFunction(params);
-  return result!;
-}
+//   const result = await executeKREAMFunction(params);
+//   return result!;
+// }
 
-export const SP_UpdateData = async (param: any) => {  
+// export const SP_UpdateData = async (param: any) => {  
 
-  const {jsondata, user_id, ipaddr} = param;
+//   const {jsondata, user_id, ipaddr} = param;
   
-  const params = {
-    inparam : [
-       "in_jsondata"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      jsondata
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi4001_upd_dtd',
-    isShowLoading: true
-  }
+//   const params = {
+//     inparam : [
+//        "in_jsondata"
+//       , "in_user"
+//       , "in_ipaddr"
+//     ],
+//     invalue: [
+//       jsondata
+//       , user_id
+//       , ipaddr
+//     ],
+//     inproc: 'airimp.f_airi4001_upd_dtd',
+//     isShowLoading: true
+//   }
 
-  const result = await executeKREAMFunction(params);
-  return result![0];
-}
+//   const result = await executeKREAMFunction(params);
+//   return result![0];
+// }
 
-export const SP_SendEDI = async (param: any) => {  
-  const {waybill_no, invoice_no, user_id , ipaddr} = param;
-  const params = {
-    inparam : [
-       "in_waybill_no"
-      , "in_invoice_no"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      waybill_no
-      , invoice_no
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi3001_send_edi858', //send_edi858
-    isShowLoading: true
-  }
-
-  console.log('params..........',params)
-
-  const result = await executeKREAMFunction(params);
-  return result![0];
-}

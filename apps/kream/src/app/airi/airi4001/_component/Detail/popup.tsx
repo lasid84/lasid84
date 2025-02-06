@@ -174,7 +174,7 @@ const Modal = ({ loadItem }: Props) => {
                 />
                 {/* <div className="flex-1 max-w-[1000px]"> */}
                   <CustomSelect
-                    id="shipper_id"
+                    id="cnee_id"
                     label="l_cnee_id"
                     initText="Select a Consignee"
                     listItem={custcode as gridData}
@@ -230,41 +230,22 @@ const Modal = ({ loadItem }: Props) => {
                       id="waybill_no"
                       value={detailSelectedRow?.waybill_no}
                       options={{
+                        bgColor: "!bg-yellow-100",
                         inline: true,
                         isReadOnly:
                           popup.popType === crudType.CREATE ? false : true,
                       }}
                     />
                     <MaskedInputField
-                      id="gubn"
-                      value={detailSelectedRow?.gubn}
+                      id="waybill_gubn"
+                      value={detailSelectedRow?.waybill_gubn}
                       options={{
                         inline: true,
                         isReadOnly:
                           popup.popType === crudType.CREATE ? false : true,
                       }}
                     />
-                    {/* 업체명 */}
-                    {/*   <CustomSelect
-                        id="shipper_id"
-                        label="l_cnee_id"
-                        initText="Select a Consignee"
-                        listItem={custcode as gridData}
-                        valueCol={["cust_code"]}
-                        displayCol="cust_nm"
-                        lwidth="8"
-                        gridOption={{
-                          colVisible: {
-                            col: ["cust_code", "cust_nm", "bz_reg_no"],
-                            visible: true,
-                          },
-                        }}
-                        gridStyle={{ width: "600px", height: "300px" }}
-                        style={{ width: "1000px", height: "8px" }}
-                        isDisplay={true}
-                        defaultValue={detailSelectedRow?.cnee_id}
-                        inline={true}
-                      /> */}
+
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <MaskedInputField
@@ -287,7 +268,17 @@ const Modal = ({ loadItem }: Props) => {
                           popup.popType === crudType.CREATE ? false : true,
                       }}
                     />
-                  </div>           
+                  </div>   
+                  <MaskedInputField
+                      id="seq"
+                      value={detailSelectedRow?.seq}
+                      isDisplay={false}
+                      options={{
+                        inline: true,
+                        isReadOnly:
+                          popup.popType === crudType.CREATE ? false : true,
+                      }}
+                    />        
                 </div>
                 <div className="col-span-2 p-1">
                   <div className="grid grid-cols-2 gap-1">
@@ -298,6 +289,7 @@ const Modal = ({ loadItem }: Props) => {
                         inline: true,
                         textAlign: "center",
                         freeStyles: "p-1 border-1 border-slate-300",
+                        isReadOnly: true,
                       }}
                     />
                     <DatePicker
@@ -363,7 +355,7 @@ const Modal = ({ loadItem }: Props) => {
                   >
                    {'>'}
                   </div>
-                  <span className="text-gray-700">Index: {Math.floor(state.currentRow?.__ROWINDEX/2)+1} total : {Math.floor(state.allData.length /2)}</span>
+                  <span className="text-gray-700">  {Math.floor(state.currentRow?.__ROWINDEX/2)+1} / {Math.floor(state.allData.length /2)}</span>
                 </div>
               <div className="col-span-3">
                 <Amount loadItem={loadItem} />

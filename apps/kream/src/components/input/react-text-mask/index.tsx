@@ -26,6 +26,7 @@ type Props = {
     type?: string;            //number, text,  custom: ipaddr, bz_reg_no
     limit?: number;           //입력 자릿수 제한
     isAllowDecimal?: boolean,  //소수점 허용 여부
+    allowNegative?: boolean,  // 마이너스허용
     decimalLimit?: number     //소수점 자리수
     myPlaceholder?: string;   //
     /* Tailwind Style */
@@ -329,7 +330,8 @@ function getMask(type: string = "", options: any = {}): Partial<MaskedInputProps
         mask: createNumberMask({
           allowDecimal: options.isAllowDecimal,
           decimalLimit: options.decimalLimit,
-          integerLimit: options.limit
+          integerLimit: options.limit,
+          allowNegative : options.allowNegative,
         }),
         // pipe: (value: string) => {
         //   // return parseFloat(value).toLocaleString('ko-KR').toString();
