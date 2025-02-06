@@ -26,6 +26,7 @@ import { IoSend } from "react-icons/io5";          //send
 import { FaSignOutAlt } from "react-icons/fa";     //out, extraction
 import { IoMdPrint } from "react-icons/io";
 import { GoMilestone } from "react-icons/go"; // ufsp insert milestone
+import { BsShieldFillCheck } from "react-icons/bs"; // ufsp verification milestone data
 
 import { log, error } from '@repo/kwe-lib-new';
 
@@ -127,7 +128,8 @@ const getColor = (label: string, color: string = "") => {
       case "print":
         c = "sky-outline";
         break;
-      case "send_email":  
+      case "send_email":
+      case "verify_milestone":
         c = "blue-outline"
         break;
       case "save":
@@ -248,6 +250,9 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "milestone":
       icon = <GoMilestone size={size} />;
+      break;
+    case "verify_milestone":
+      icon = <BsShieldFillCheck size={size} />;
       break;
     case "descartes":
       const descartesIcon = () => {
