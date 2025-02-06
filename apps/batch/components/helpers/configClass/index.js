@@ -7,7 +7,8 @@ const { log, error } = require('@repo/kwe-lib/components/logHelper');
 
 class configClass {
 
-    constructor(initialInterval = 1 * 60 * 1000) {
+    constructor(threadName, initialInterval = 1 * 60 * 1000) {
+        this.threadName = threadName
         this.batchTimeoutId = null;
         this.currentInterval = initialInterval;
     }
@@ -44,7 +45,7 @@ class configClass {
         
         setTimeout(() => {
             try {
-                console.log("enter : ", new Date(), this.currentInterval);
+                console.log("enter : ", this.threadName, new Date(), this.currentInterval);
                 fn();
                 this.batchTimeoutId = this.setBatchInterval(fn, this.currentInterval);
             } catch (ex) {

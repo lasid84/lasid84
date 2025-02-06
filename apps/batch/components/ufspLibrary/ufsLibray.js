@@ -182,7 +182,7 @@ class Library {
                 const scripts = cursorData[1].data;
 
                 if (!acctInfo) {
-                    throw "Expired or non-existence ID";
+                    throw id + ": UFS ID Expired or non-existence";
                 }
 
                 for (const [key, val] of Object.entries(acctInfo)) {
@@ -352,7 +352,7 @@ class Library {
 
     async excuteScript(data) {
         try {
-        // log("callElement-----", data);
+        log("callElement-----", data.seq);
             switch(data.method.toUpperCase()) {
                 case "POST":
                     return await this.callAPIPost(data);
@@ -373,7 +373,10 @@ class Library {
                     return await this.gotoUrl(data);
                 case "CHECKWBSTATUS":
                     return await this.CheckWBStatus(data);
-
+                case "INVOICECONFIRM":
+                    return await this.confirmInvoice(data);
+                case "INPUTCHARGE":
+                    return await this.inputCharge(data);
             }
         } catch(ex) {
             throw  "excuteScript " + ex;
@@ -422,10 +425,11 @@ class Library {
             v_tracking = 'send post start';
             const header = this.convertJSON(data.header);
 
-            // if (data.seq === '60' ) log("=========", data.seq, JSON.stringify(bodyText))
+            if (data.seq === '60' ) log("=========", data.seq, JSON.stringify(bodyText))
 
             const result = await this.executeAPI(method, url, header, bodyText);
             
+            // log("callAPIPost", JSON.stringify(result), '\n' , JSON.stringify(result))
             v_tracking = 'send post finish' - + JSON.stringify(result);
     
             //2024.08.20 executeAPI 안으로 이동
@@ -580,6 +584,10 @@ class Library {
                     let isOnlyWarning = true;
                     let message = '';
 
+
+                    /* 아래 경우 에러로 빠져야함.. 데이터 쌓고 로직 수정 예정정
+                       1. errors":[{"sev":3,"message":"Collect Import Shipment 320013686406: Collect Freight Charge or Other Freight Charge are required when Freight Terms or Charge Terms are Collect."}
+                     */
                     message = result.bat.errors.reduce((acc, v) => {
                         if (v.message && v.message.toLowerCase().includes('error')) {
                             isOnlyWarning = false;
@@ -1051,12 +1059,83 @@ class Library {
                             bodyText = await updateBodyText(bodyText);
 
                             // if (lowerKey ==='invoice_wb_amt') log("============================invoice_wb_amt", JSON.stringify(bodyText), JSON.stringify(result.bat.methodReturn.arguments));
+                            // log("=================================", this.resultData.arrCharge)
                             break;
                     }
                 }
             }
         } catch (e) {
             error("calculateCharge - ", v_tracking, e.message)
+            throw v_tracking, e
+        }
+    }
+
+    /* ※ 차지코드드 저장 함수
+         - api 스크립트만으로 처리하기 복잡하여 별로 함수로 처리
+         - 수입쪽 collect 차지 등록 시 PIPELINE_CHARGES에 Read action으로 freight charge도 body에 포함 시켜야야 등록이 되므로 별도 함수로 처리리
+         - ufs 에러 메세지 : Collect Import Shipment 320013686406: Collect Freight Charge or Other Freight Charge are required when Freight Terms or Charge Terms are Collect.
+    */ 
+    async inputCharge(data) {
+        try {
+            var v_tracking = '';
+            var bodyText = JSON.parse(data.body);
+
+            v_tracking = 'body Setting';
+            const shipment = this.resultData.arrShipment.map(v => {
+                if (this.isValidDate(v)) {
+                    return this.transformDate(v);
+                } else if (v.startsWith('.0')) return '0';
+                else return v;
+            })
+
+            bodyText.time = this.resultData.t_hbl_main.time;
+            bodyText.bat.rqst[0].serviceName = this.resultData.t_hbl_main.servicename;
+            bodyText.bat.rqst[0].rowDataList[0].orgAttrData = shipment;
+            bodyText.bat.rqst[0].rowDataList[0].updatedAttrData = shipment;
+            bodyText.bat.rqst[1].rowDataList[0].rownum = this.resultData.chargeRows
+            
+            const readableCharges = this.resultData.arrCharges;
+            const bodyRowDataList = [];
+            let idx = 0;
+            for (const charge of readableCharges) {
+                var objCharge = {
+                    "actionFilter" : "R",
+                    "rownum" : ++idx,
+                    "orgAttrData" : charge.map(v => {
+                        if (this.isValidDate(v)) {
+                            return this.transformDate(v);
+                        } else if (v.startsWith('.0')) return '0';
+                        else return v;
+                    })
+                }
+
+                bodyRowDataList.push(objCharge);
+            }
+
+            var inputCharge = {
+                "actionFilter" : "I",
+                    "rownum" : ++idx,
+                    "orgAttrData" : this.resultData.arrCharge.map(v => {
+                        if (this.isValidDate(v)) {
+                            return this.transformDate(v);
+                        } else if (v.startsWith('.0')) return '0';
+                        else return v;
+                    })
+            }
+
+            bodyRowDataList.push(inputCharge);
+            bodyText.bat.rqst[1].rowDataList = bodyRowDataList;
+            
+            // log("=============inputCharge", JSON.stringify(bodyText));
+
+            v_tracking = 'start executeAPI';
+            const result = await this.executeAPI('POST', data.url, data.header, bodyText);
+            v_tracking = 'end executeAPI' + JSON.stringify(result);
+            await this.updateResult(data, '', result);
+            v_tracking = 'end updateResult';
+
+        } catch (e) {
+            error("inputCharge - ", v_tracking, e.message, JSON.stringify(bodyText));
             throw v_tracking, e
         }
     }
@@ -1133,6 +1212,51 @@ class Library {
         }
     }
 
+    async confirmInvoice(data) {
+        try {
+
+            var v_tracking = 'Invoice Confirm Body Setting';
+            var bodyText = JSON.parse(data.body);
+
+            v_tracking = 'update Input value in resultData';
+
+            const originInvoiceData = this.resultData.invoice.map(v => {
+                                                    if (this.isValidDate(v)) {
+                                                        return this.transformDate(v);
+                                                    } else  return v;
+                                                });
+            const newInvoiceData = [...originInvoiceData];
+            const invoiceDetailData = [...this.resultData.invoice_detail];
+
+            // newInvoiceData[4] = this.resultData.t_hbl_invoice.invoice_dd;
+            newInvoiceData[6] = this.resultData.t_hbl_invoice.govt_invoice_no;
+            newInvoiceData[8] = "CNF"; //this.resultData.t_hbl_invoice.invoice_status;
+            newInvoiceData[59] = this.transformDate(new Date().toUTCString());
+
+            bodyText.bat.rqst[0].rowDataList[0].orgAttrData = originInvoiceData;
+            bodyText.bat.rqst[0].rowDataList[0].updatedAttrData = newInvoiceData;
+
+            bodyText.bat.rqst[5].rowDataList[0].orgAttrData = invoiceDetailData;
+
+            for (let i = 0; i < bodyText.bat.rqst.length; i++) {
+                if (i === 0 || i === 5) continue;
+
+                bodyText.bat.rqst[i].rowDataList = [];
+            }
+
+            v_tracking = 'start executeAPI';
+            const result = await this.executeAPI('POST', data.url, data.header, bodyText);
+            v_tracking = 'end executeAPI' + JSON.stringify(result);
+            // log("confirmInvoice", v_tracking, JSON.stringify(bodyText));
+            await this.updateResult(data, '', result);
+            v_tracking = 'end updateResult';
+
+        } catch (e) {
+            error("confirmInvoice - ", v_tracking, e.message, JSON.stringify(bodyText));
+            throw v_tracking, e
+        }
+    }
+
     async gotoUrl(data) {
         await Promise.all(
             [this.page.waitForNavigation({waitUntil: 'domcontentloaded', timeout: 180000}), this.page.waitForNetworkIdle(),
@@ -1147,7 +1271,7 @@ class Library {
         var wbStatus = data.upd_body_col.split(',');
         var val = await this.GetJsonNode2(this.resultData, data.body.split('.'))
 
-        log("============================================CheckWBStatus", wbStatus, val, data, this.resultData);
+        // log("============================================CheckWBStatus", wbStatus, val, data, this.resultData);
 
         if (!wbStatus.includes(val)) {
             this.mainData.error = `BL Status가 ${val}입니다.` 
@@ -1416,7 +1540,7 @@ class Library {
             }
     
             const inparam = ['in_pgm_code', 'in_idx', 'in_blno', 'in_create_date', 'in_if_yn','in_result', 'in_err', 'in_user_id', 'in_ipaddr'];
-            const invalue = [this.pgm, this.idx, this.mainData.bl_no, this.mainData.create_date, v_if_yn, result, err_msg, '', ''];
+            const invalue = [this.pgm, this.idx, this.mainData.bl_no, this.mainData.create_date, v_if_yn, result, err_msg, 'f_scrp0001_set_if_data', ''];
             const inproc = 'scrap.f_scrp0001_set_if_data'; 
             await executFunction(inproc, inparam, invalue);
             //log("setBLIFData완료!!!!!!!!!!!!!!!!!!!!!!!!!!!!", mainData) ;

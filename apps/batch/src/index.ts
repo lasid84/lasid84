@@ -134,6 +134,12 @@ async function startWorker() {
         case "TMS_DATA_INTERFACE":
           const workerTMSDataInterface = new Worker(TMS_INTERFACE_WORKER_DIR + '/tms.js', {workerData: { idx: thread.idx, pgm:thread.pgm}});
           break;
+        case "SCRAP_UFSP_CONFIRM_INVOICE_UPLOAD":
+          const workerInvoiceConfirm = new Worker(ufs_worker_director + '/worker-ufsp-invoice-confirm.js'
+            , { workerData: { idx: thread.idx, pgm:thread.pgm, type:thread.type, isHeadless:thread.headless?.toLowerCase() == 'false' ? false : true 
+            }});
+          break;  
+
       }
       await sleep(2000);
       i++;

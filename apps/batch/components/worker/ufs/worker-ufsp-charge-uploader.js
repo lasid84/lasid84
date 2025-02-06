@@ -72,7 +72,7 @@ async function startScraping() {
                 await ufsp.setChargeIFData();
             }
 
-            log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
+            // log(ufsp.idx, "----------------------Finish-----------------------", ufsp.mainData.bl_no, ufsp.resultData);
             await ufsp.setBLIFData('Y', '', '');
             ufsp.errCnt = 0;
             ufsp.lastExcute = getKoreaTime();

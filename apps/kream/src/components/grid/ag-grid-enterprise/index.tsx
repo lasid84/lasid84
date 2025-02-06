@@ -1272,22 +1272,14 @@ export const JsonToGridData = (arrDataJson:any[], header:string[],headerLine=1) 
     "fields":[]
   };
 
-  for (let i = 1; i < headerLine; i++) {
-    let objData = arrDataJson.splice(0,1);
-    
-    //header 값이 달라져 데이터가 안보임..
-    // Object.entries(objData[0]).forEach(([key,val],j) => {
-    //   let idx = header.indexOf(key);
-    //   header[idx] = header[idx] + "\n" + val;
-    // });
-  }
+  // for (ls
 
   data.data = arrDataJson;
   data.fields = header.map(v => {
     let obj = {"name":v};
     return obj
   });
-  // log("JsonToGridData", data);
+  log("JsonToGridData", data);
   return data;
 }
 

@@ -116,29 +116,32 @@ const apiClient = createApiClient({
 });
 
 const executeFunction = async (url, params) => {
-    // const kweLib = await import('kwe-lib-new/dist/index.js');
-    const {inproc, inparam, invalue } = params;
-    
-    const token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
+    try {
+        const {inproc, inparam, invalue } = params;
         
-    const data = params;
-    const config = {
-      // withCredentials: true,  // 쿠키를 포함하기 위한 설정
-      headers: {
-        "Authorization": `${token}`
-      },
-    };
-    // log("kweLib.ProcedureResult", kweLib.ProcedureResult);
-    const response = await apiClient.executeProcedure(url, data, config);
-    // log("response", response)
-    const { numericData, textData, cursorData } = response
+        const token = signJwtAccessToken({user_id:"sdd_it", user_nm:"SDD"});
+            
+        const data = params;
+        const config = {
+            // withCredentials: true,  // 쿠키를 포함하기 위한 설정
+            headers: {
+                "Authorization": `${token}`
+            },
+        };
+        // log("kweLib.ProcedureResult", kweLib.ProcedureResult);
+        const response = await apiClient.executeProcedure(url, data, config);
+        // log("response", response)
+        const { numericData, textData, cursorData } = response
 
-    if (+numericData !== 0) {
-        // toastWaring((numericData + " : " + textData))
-        return numericData + " : " + textData;
+        if (+numericData !== 0) {
+            // toastWaring((numericData + " : " + textData))
+            return numericData + " : " + textData;
+        }
+        
+        return cursorData || [];
+    }   catch (err) {
+        error(err)
     }
-    
-    return cursorData || [];
 }
 
 const executeKREAMFunction = async (params) => {

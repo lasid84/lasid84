@@ -3,7 +3,7 @@ const { Readable } = require('stream');
 const Library = require('../../ufspLibrary/ufsLibray');
 const ufsp = new Library(workerData);
 const  { configClass }  = require('../../helpers');
-const config = new configClass();
+const config = new configClass("TMSDataInterface");
 
 const { log, error } = require('@repo/kwe-lib/components/logHelper');
 const { executFunction, executeKREAMFunction, executeTMSFunction } = require('../../api.service/api.service.js');
@@ -53,9 +53,10 @@ async function setConfig() {
 
 const getTMSData = async (last_interface_tm) => {
     try {
+        
         const inparam = ['in_last_interface_tm', 'in_user', 'in_ipaddr'];
         const invalue = [last_interface_tm, pgm, ''];
-        const inproc = 'epod_test.SP_DATAINTERFACE_TO_KREAM'; 
+        const inproc = 'SP_DATAINTERFACE_TO_KREAM'; 
         const result = await executeTMSFunction({inproc, inparam, invalue});
         // log("getTMSData", last_interface_tm, result[0].data)
         return result[0].data;
@@ -96,8 +97,6 @@ const startTMSDataInterface = async () => {
         
         await setTMSDataToKREAM(tmsDatas);
 
-
-        // await makeEDI858FileToFTP();
 
     } catch (ex) {
         /**

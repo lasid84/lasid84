@@ -11,6 +11,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 
 import { log, error } from '@repo/kwe-lib-new';
+import InterfaceHistoryGrid from "./_component/gridInterfaceHistory";
 
 
 export default function UFSM0003() {
@@ -60,15 +61,23 @@ export default function UFSM0003() {
         // log("objState.uploadFile_init", objState.uploadFile_init)
     }, [objState.uploadFile_init])
 
-    const handleFileDrop = (data : any[], header:any[]) => {
+    const handleFileDrop = (data : any[]) => {
+        const header = data.splice(0,2);
         
         data = data.map(obj => {
+            const jsonData:any = {};
+            for (const [key, value] of Object.entries(obj)) {
+                jsonData[header[0][Number(key)]] = value;
+            }
+            
             return {
                 [ROW_TYPE]:ROW_TYPE_NEW,
-                ...obj
+                ...jsonData
             }
         })
-        var gridData = JsonToGridData(data, header, 2);
+        var gridData = JsonToGridData(data, header[0], 2);
+
+        log("handleFileDrop", data, header, gridData)
         dispatch({excel_data: gridData});
         // Create.mutate({excel_data:data}, {
         //     onSuccess: (res: any) => {
@@ -85,8 +94,11 @@ export default function UFSM0003() {
                     <form onSubmit={handleSubmit(() => {})} className="space-y-1">
                         <SearchForm loadItem={null} />
                         <FileUpload onFileDrop={handleFileDrop} isInit={objState.uploadFile_init}/>
-                        <div className={`w-full h-[calc(75vh)]`}>
+                        <div className={`w-full h-[calc(25vh)]`}>
                             <MasterGrid />
+                        </div>
+                        <div className={`w-full h-[calc(45vh)]`}>
+                            <InterfaceHistoryGrid/>
                         </div>
                     </form>
             </FormProvider>

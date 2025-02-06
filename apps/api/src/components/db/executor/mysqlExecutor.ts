@@ -48,9 +48,14 @@ export async function executeMysqlProcedure(
   try {
     await connector.query('BEGIN');
 
+    const parts = connStr.split("/");
+    const dbName = parts[parts.length - 1];
+
     const [schema, procName] = procedureName.includes('.')
-              ? procedureName.split('.') : ['public', procedureName];
+              ? procedureName.split('.') : [dbName, procedureName];
     let resultArgument = await checkExistsProcedure(connector, schema, procName, paramList.toString());
+    
+    // log("===============mysql", dbName, resultArgument);
 
     if (resultArgument.numericData != 0)
         return resultArgument;
@@ -136,7 +141,7 @@ const checkExistsProcedure = async (connector: DBConnector, schema: string, proc
     } catch (err) {
         await connector.query('ROLLBACK');
         return {
-            numericData: -1,
+            numericData: -2,
             textData: JSON.stringify(err),
         };
     } finally {
@@ -146,5 +151,9 @@ const checkExistsProcedure = async (connector: DBConnector, schema: string, proc
 
 const generateProcedureQuery = (schema: string, procName: string, valueList: any[]): string => {
   const placeholders = valueList.map((_, index) => '?').join(', ');
-  return `call ${schema}.${procName}(${placeholders},@n_retrun,@v_return);`;
+  // return `call ${schema}.${procName}(${placeholders},@n_retrun,@v_return);`;
+  if (schema)
+    return `call ${schema}.${procName}(${placeholders},@n_retrun,@v_return);`;
+  else 
+    return `call ${procName}(${placeholders},@n_retrun,@v_return);`;
 }
