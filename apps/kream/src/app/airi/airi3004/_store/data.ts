@@ -26,8 +26,27 @@ export const SP_UpdateOperationListData = async (param: any) => {
     inproc: 'airimp.f_airi3004_upd_data',
     isShowLoading: true,
     isShowComplete: true,
-  }
+  };
 
   const result = await queryClient("SP_UpdateOperationListData", params);
   return result;
+};
+
+/**
+ * @dev
+ * 마일스톤 UFSP 등록을 위한 t_edi_history data 세팅
+ */
+export const SP_SetMileStoneEdiData = async (param: any) => {
+
+  const { waybillList, user_id, ipaddr } = paramsUtils(param);
+
+  const params = {
+    inparam: ["in_waybill_list", "in_user", "in_ipaddr"],
+    invalue: [waybillList, user_id, ipaddr],
+    inproc: 'airimp.f_airi3004_set_milestone_edi',
+    isShowLoading: true,
+    isShowComplete: true,
+  };
+
+  await queryClient("SP_SetMileStoneEdiData", params);
 };
