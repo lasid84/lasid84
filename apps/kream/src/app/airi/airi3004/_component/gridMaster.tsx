@@ -222,7 +222,6 @@ const MasterGrid: React.FC<Props> = memo(() => {
       if (waybillList.length > 0) {
         const interfaceList = await actions.getMilestoneInterfaceData({waybillList: waybillList.join(',')});
         for (let data of interfaceList) {
-          console.log("data : ", data);
           api.forEachNode((node: any) => {
             if (node.data.waybill_no === data.waybill_no) {
               if (node.data.transport_type === "Reseller") {
