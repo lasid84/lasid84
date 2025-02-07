@@ -114,6 +114,8 @@ const insertMilestone = async () => {
             await ufsp.startScript(checkScript);
             const pipelineTX = await ufsp.resultData.get_pipeline_tx_result;
 
+            await sleep(3000);
+
             ufsp.resultData = {};
 
             const row = util.setInsertMilestoneRow(value, ufsp.ufsId, pipelineTX[0].id);
@@ -160,6 +162,25 @@ const insertMilestone = async () => {
             teams.sendMessage(process4, ex, false);
             throw "error";
         });
+    // TEAMS
+    teams.addProcessResult(process4);
+
+    /**
+     * @SECTION
+     * Process : 5
+     * Summary : 등록된 milestone 데이터 검증을 위한 UFSP hawb milestone interface
+     */
+    const process5 = "UFSP milestone data interface setting";
+    
+    for (hawbNo of insertedMilstoneArray) {
+        await repository.setMilestoneInterfaceIfData(hawbNo)
+            .catch(ex => {
+                // TEAMS
+                teams.sendMessage(process5, ex, false);
+                throw ex;
+            });
+    }
+    
     // TEAMS
     teams.sendMessage(process4);
 

@@ -3,6 +3,7 @@
 import React, {
   useState,
   useEffect,
+  useCallback,
   KeyboardEvent
 } from "react";
 import { FormProvider, SubmitHandler, useFormContext } from "react-hook-form";
@@ -35,6 +36,7 @@ const SearchForm = ({ loadItem }: any) => {
 
   const { getValues, handleSubmit, reset } = useFormContext();
   const state = useCommonStore((state) => state);
+  const searchParams = useCommonStore((state) => state.searchParams);
   const actions = useCommonStore((state) => state.actions);
 
   const [status, setStatus] = useState<any>();
@@ -58,6 +60,15 @@ const SearchForm = ({ loadItem }: any) => {
 
   function handleKeyDown(e:KeyboardEvent) {}
 
+  const handleChange = useCallback(
+    (e: any, id: any, date: any) => {
+      const params = getValues();
+      actions.setSearchState(params)
+      log("params", searchParams);
+    },
+    [searchParams]
+  );
+
   return (
       <div>
         <PageSearchButton
@@ -78,6 +89,9 @@ const SearchForm = ({ loadItem }: any) => {
               id="fr_date"
               label="settlement_date"
               value={state.searchParams?.fr_date}
+              events={{
+                onChange: handleChange,
+              }}
               options={{
                 inline: true,
                 textAlign: "center",

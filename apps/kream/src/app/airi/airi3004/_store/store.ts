@@ -1,10 +1,7 @@
-import { SP_GetOperationListData, SP_UpdateOperationListData } from "./data";
+import { SP_GetOperationListData, SP_UpdateOperationListData, SP_SetMileStoneEdiData, SP_getMilestoneInterfaceData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 import { createStore } from "@/states/createStore";
-import { toastError } from "components/toast";
-import { t } from "i18next";
-import { useUserSettings } from "@/states/useUserSettings";
 
 // StoreState 정의
 interface StoreState {
@@ -21,6 +18,8 @@ interface StoreActions {
     getOperationListData: (fr_date: string, waybill_no?: string) => Promise<any>;
     setPopupOpen: (isOpen: boolean) => void;
     updateOperationListData: (params: any) => Promise<any>;
+    setMilestoneEdiData: (params: any) => Promise<any>;
+    getMilestoneInterfaceData: (params: any) =>Promise<any>;
 }
 
 // Store 타입 정의
@@ -41,7 +40,7 @@ const initValue: StoreState = {
     mainSelectedRow: null,
     popup: {
         isOpen: false
-    },
+    }
 };
 
 const setinitValue = (set: any) => {
@@ -59,6 +58,13 @@ const setinitValue = (set: any) => {
         },
         updateOperationListData: async (param: any) => {
             await SP_UpdateOperationListData(param);
+        },
+        setMilestoneEdiData: async (param: any) => {
+            await SP_SetMileStoneEdiData(param);
+        },
+        getMilestoneInterfaceData: async (param: any) => {
+            const result = await SP_getMilestoneInterfaceData(param);
+            return result[0].data;
         }
     };
 

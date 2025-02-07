@@ -168,6 +168,34 @@ export const SP_SaveData = async (param: any) => {
 
 
 
+//INSERT & UPDATE AT AG-GRID
+export const SP_CloseDate = async (param: any) => {  
+  const {jsondata, settlement_date} = param;
+  const {user_id, ipaddr} = paramsUtils();
+  
+  const params = {
+    inparam : [
+       "in_jsondata"
+      , "in_settlement_date"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      jsondata
+      , settlement_date
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi4001_upd_closedate',
+    isShowLoading: true
+  }
+
+  const result = await executeKREAMFunction(params);  
+  return result!;
+}
+
+
+
 export const SP_SaveUploadData = async (param: any) => {  
 
   const {jsondata, settlement_date} = param;

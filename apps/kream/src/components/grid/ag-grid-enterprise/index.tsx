@@ -154,6 +154,8 @@ export type GridOption = {
     targetCol: string[];
     compareCol: { [key:string]: string[] };
   };
+  changeColor?: string[];
+  columnVerticalCenter?: string[];
 
   notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
 };
@@ -666,24 +668,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
-        //체크박스 셋팅
-        if (options?.checkbox) {
-          if (options.checkbox.indexOf(col) > -1) {
-             log("checkbox:", col)
-            cellOption = {
-              ...cellOption,
-              // editable:true,
-              headerCheckboxSelection: options?.isMultiSelect ? true : false,
-              // checkboxSelection: true,
-              valueParser: checkBoxParser,
-              valueFormatter: checkBoxFormatter,
-              cellDataType: 'boolean',
-              cellRenderer: 'agCheckboxCellRenderer',
-              cellEditor: 'agCheckboxCellEditor',
-            }
-          }
-        }
-
         // displayCalculatedFields custom
         if (options?.displayCalculatedFields) {
           if (options.displayCalculatedFields.indexOf(col) > -1) {
@@ -760,6 +744,35 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
+        // 조건부 텍스트 색상 변경
+        if (options?.changeColor) {
+          const arrCols = options.changeColor;
+          if (arrCols.indexOf(col) > -1) {
+            console.log("col : ", col);
+            cellOption = {
+              ...cellOption,
+              cellClassRules: {
+                ...cellOption.cellClassRules,
+                "cell-verify-success": (params:any) => {
+                  if (params.node.data[col.concat("_flag")] === "Y") {
+                    return true;
+                  }
+
+                  return false;
+                },
+                "cell-verify-fail": (params:any) => {
+                  console.log("params : ", params.node.data);
+                  if (params.node.data[col.concat("_flag")] === "N") {
+                    return true;
+                  }
+
+                  return false;
+                }
+              }
+            }
+          }
+        }
+
         // grid 수직 가운데 정렬 설정
         if (options?.isVerticalCenter) {
           cellOption = {
@@ -769,6 +782,22 @@ const ListGrid: React.FC<Props> = memo((props) => {
               display: "flex",
               justifyContent: "center",
               alignItems: 'center'
+            }
+          }
+        }
+
+        // 컬럼별 수직 설정
+        if (options?.columnVerticalCenter) {
+          const columns = options.columnVerticalCenter;
+          if (columns.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              cellStyle: {
+                ...cellOption.cellStyle,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: 'center'
+              }
             }
           }
         }
@@ -784,6 +813,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               onCellValueChanged: rowSpanByConfigValueChanged,
               cellDataType: false,
               cellClassRules: {
+                ...cellOption.cellClassRules,
                 "show-cell": "value !== undefined",
                 "row-span-default": (params: any) => {
                   const api = gridRef.current.api;
@@ -801,10 +831,27 @@ const ListGrid: React.FC<Props> = memo((props) => {
                       return true;
                     }
                   }
-
                   return false;
                 }
               }
+            }
+          }
+        }
+
+        //체크박스 셋팅
+        if (options?.checkbox) {
+          if (options.checkbox.indexOf(col) > -1) {
+             log("checkbox:", col)
+            cellOption = {
+              ...cellOption,
+              // editable:true,
+              headerCheckboxSelection: options?.isMultiSelect ? true : false,
+              // checkboxSelection: true,
+              valueParser: checkBoxParser,
+              valueFormatter: checkBoxFormatter,
+              cellDataType: 'boolean',
+              cellRenderer: 'agCheckboxCellRenderer',
+              cellEditor: 'agCheckboxCellEditor',
             }
           }
         }
@@ -1042,6 +1089,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     if (!options?.notManageRowChange) {
       await rowNode.setData({...rowNode.data, [ROW_CHANGED]:true});
     }
+    
     // setRowChange(param.node);
 
     // const rowElement = document.querySelector(`[row-index="${rowNode.rowIndex}"]`) as HTMLElement;
@@ -1298,6 +1346,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
       for (let i=rowIndex+1; i<totalRow; i++) {
         const nextRowNode = gridRef.current.api.getRowNode(i);
         if (nextRowNode.data[standardCol] === currentRowNode.data[standardCol]) {
+          console.log("nextRowNode : ", nextRowNode);
           nextRowNode.setDataValue(changedColumn, newValue);
         } else {
           break;
@@ -1310,7 +1359,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     const option = options?.rowSpanByConfig;
     if (option) {
       for (const [key, value] of Object.entries(option.compareCol)) {
-        if (value.includes(param.data[key])) {
+        if (value.includes("all") || value.includes(param.data[key])) {
           const rowIndex = param.node?.rowIndex || 0;
           const currentValue = param.data[option.standardCol];
           let span = 1;
@@ -1376,7 +1425,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
     if (options?.rowSpanByConfig) {
       for (const [key, value] of Object.entries(options?.rowSpanByConfig?.compareCol)) {
-        if (value.includes(rowData[key])) {
+        if (value.includes("all") || value.includes(rowData[key])) {
           const standardCol = options.rowSpanByConfig.standardCol;
           if (params.node.rowIndex !== 0) {
             let rowNode = gridRef.current.api.getRowNode(params.node.rowIndex - 1);
