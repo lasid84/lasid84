@@ -1,6 +1,6 @@
 import { createStore } from "@/states/createStore";
 import { RefObject } from 'react';
-import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_SaveDTDDetail, SP_SaveUploadData,SP_GetDTDDetailData, SP_GetDTDDetailData2 } from "./data";
+import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDTDDetail, SP_SaveUploadData,SP_GetDTDDetailData, SP_GetDTDDetailData2 } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 
@@ -54,6 +54,7 @@ interface StoreActions {
         getDTDDetailDatas: (params: any) => Promise<any> | undefined;   
         setPopup: (popup: Partial<StoreState['popup']>) => void; 
         setState: (newState: Partial<StoreState>) => void;
+        setSearchState: (newState: Partial<StoreState>) => void;
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
         setMainSelectedRow : (row:any) => void;
         setDetailSelectedRow : (row:any) => void;
@@ -61,6 +62,7 @@ interface StoreActions {
         setCurrentRow : (row:any)=>void;
         setDetailData: (data: any[]) => void;
         saveDTDData : (data:SaveDataArgs)=> Promise<any>;
+        updDTDCloseDate : (data:SaveDataArgs)=> Promise<any>;
         saveDTDDetailData : (data:SaveDataArgs)=> Promise<any>;
         saveUploadData : (data:SaveDataArgs)=>void;
         updateData : (data:SaveDataArgs) =>void;
@@ -149,6 +151,12 @@ const setinitValue = (set:any) => {
                 ...state,
                 ...newState,
             }))},
+            setSearchState: (newState: Partial<StoreState>) => {
+                console.log('newState', newState)
+                set((state: StoreState) => ({
+                    searchParams : { ...state.searchParams, 
+                    ...newState } 
+            }))},
             setMainSelectedRow: (row:any) =>{
                 set((state:StoreState) => ({ ...state, mainSelectedRow: row }))
             },
@@ -171,22 +179,32 @@ const setinitValue = (set:any) => {
                     console.log("Data saved successfully", result);
                     return result
                 } catch (error) {
-                    console.error("Error saving data:", error);
                 }
             },
-            saveDTDData: async (params: any) :Promise<any> => { //undefined
+            updDTDCloseDate: async (params: any) :Promise<any> => { //undefined
                 try {
-                    console.log("", params);
+                    const result = await SP_CloseDate(params); // API 호출
+                    set((state: StoreState) => ({
+                        ...state,
+                        mainDatas: { ...state.mainDatas, ...params },
+                    }));
+                    // console.log("Data updated successfully", result);
+                    return result
+                } catch (error) {
+                    return error;
+                }            
+            },
+            saveDTDData: async (params: any) :Promise<any> => { //undefined
+                try {                    
                     const result = await SP_SaveData(params); // API 호출
                     set((state: StoreState) => ({
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
                     }));
-                    console.log("Data saved successfully", result);
+                    // console.log("Data saved successfully", result);
                     
                     return result
                 } catch (error) {
-                    console.error("Error saving data:", error);
                     return error;
                 }            
             },
@@ -199,22 +217,19 @@ const setinitValue = (set:any) => {
                     }));
                     console.log("Data saved successfully", result);
                 } catch (error) {
-                    console.error("Error saving data:", error);
+                    return error
                 }
             },
             saveDTDDetailData: async (params: any) :Promise<any> => { //undefined
                 try {
                     console.log("curDAta", params);
                     const result = await SP_SaveDTDDetail(params); // API 호출
-                    set((state: StoreState) => ({
-                        ...state,
-                        mainDatas: { ...state.mainDatas, ...params },
-                    }));
-                    console.log("Data saved successfully", result);
-                    
+                    // set((state: StoreState) => ({
+                    //     ...state,
+                    //     mainDatas: { ...state.mainDatas, ...params },
+                    // }));                    
                     return result
                 } catch (error) {
-                    console.error("Error saving data:", error);
                     return error;
                 }            
             },

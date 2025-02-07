@@ -20,6 +20,7 @@ import { DatePicker } from "components/date";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import ExcelUploadModal from "./ExcelUpload/popup";
 import { v4 as uuidv4 } from "uuid"; // UUID 생성 라이브러리
+import { useTranslation } from "react-i18next";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -27,10 +28,12 @@ type Props = {
 };
 
 const MasterGrid: React.FC<Props> = memo(({ initData }) => {
+  const { t } = useTranslation();
   const [gridOptions, setGridOptions] = useState<GridOption>();
   const { getValues } = useFormContext();
   const gridRef = useRef<any | null>(null);
   const state = useCommonStore((state) => state);
+  const searchParams = useCommonStore((state) => state.searchParams);
   const actions = useCommonStore((state) => state.actions);
   const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
   const [gridApi, setGridApi] = React.useState<any>(null);
@@ -53,7 +56,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         "insurance_fee",
         "other_1",
         "other_2",
-        "other_3",
+        // "other_3",
         "special_handling",
         "dtd_handling",
         "remark",
@@ -61,82 +64,8 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       ],
       visible: true,
     },
-    minWidth: {
-      cnee_name: 150,
-      category: 100,
-      waybill_no: 180,
-      air_freight: 100,
-      bl_handling: 100,
-      bonded_wh: 100,
-      customs_clearance: 100,
-      customs_duty: 100,
-      customs_tax: 100,
-      dispatch_fee: 100,
-      special_handling: 100,
-      dtd_handling: 100,
-      trucking: 100,
-      insurance_fee: 100,
-      other_1: 100,
-      other_2: 100,
-      other_3: 100,
-      remark: 100,
-      bl_handling_vat: 100,
-      bonded_wh_vat: 100,
-      customs_clearance_vat: 100,
-      dispatch_fee_vat: 100,
-      special_handling_vat: 100,
-      dtd_handling_vat: 100,
-      truckng_vat: 100,
-      other_1_vat: 100,
-      other_2_vat: 100,
-      other_3_vat: 100,
-      settlement_date: 100,
-      settlement_user: 100,
-      use_yn: 30,
-      create_user: 100,
-      create_date: 100,
-      update_user: 100,
-      update_date: 100,
-    },
-    maxWidth: {
-      cnee_id: 80,
-      cnee_name: 150,
-      category: 100,
-      waybill_no: 200,
-      air_freight: 100,
-      bl_handling: 100,
-      bonded_wh: 100,
-      customs_clearance: 100,
-      customs_duty: 100,
-      customs_tax: 100,
-      dispatch_fee: 100,
-      special_handling: 100,
-      dtd_handling: 100,
-      trucking: 100,
-      insurance_fee: 100,
-      other_1: 100,
-      other_2: 100,
-      other_3: 100,
-      remark: 100,
-      bl_handling_vat: 100,
-      bonded_wh_vat: 100,
-      customs_clearance_vat: 100,
-      dispatch_fee_vat: 100,
-      special_handling_vat: 100,
-      dtd_handling_vat: 100,
-      truckng_vat: 100,
-      other_1_vat: 100,
-      other_2_vat: 100,
-      other_3_vat: 100,
-      settlement_date: 100,
-      settlement_user: 100,
-      use_yn: 30,
-      create_user: 100,
-      create_date: 100,
-      update_user: 100,
-      update_date: 100,
-    },
-    rowSpan: ["waybill_no"],
+  
+    rowSpan: ["waybill_no"], //, "use_yn"
     pinned: {
       cnee_name: "left",
       waybill_no: "left",
@@ -289,6 +218,35 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       popType: "C",
       isPopupUploadOpen: true,
     });
+  };
+useEffect(() => {
+  let curData = getValues();
+    log('curData', curData)
+}, [state.searchParams]);
+
+
+  const onCloseDate = async () => {    
+    let curData = getValues();
+  
+    const frDate = searchParams.fr_date; // 
+    const formattedDate = `${frDate.slice(0, 4)}-${frDate.slice(4, 6)}-${frDate.slice(6, 8)}`;
+
+    const userConfirmed = window.confirm(formattedDate +t("MSG_0196") || "");
+log('frDate', frDate)
+    if (userConfirmed) {
+      const detail: any[] = [];
+      let curData = getValues();
+      detail.push(curData);
+      // 일자 마감 프로시저 생성
+      const result = await actions.updDTDCloseDate({
+        jsondata: JSON.stringify(detail),
+        settlement_date : frDate
+      });
+      if (result) {
+        toastSuccess('success')
+        actions.getDTDDatas(getValues());
+      }      
+    }
   };
 
   const onGridNew = async () => {
@@ -467,6 +425,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         title={<></>}
         right={
           <>
+          <Button
+              id={"close_date"}
+              onClick={onCloseDate}
+              disabled={false}
+              label="close_date"
+              width="w-14"
+            />
             <Button
               id={"upload_excel"}
               onClick={onExcelUpload}
@@ -478,13 +443,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
               id={"gird_new"}
               label="new"
               onClick={onGridNew}
-              width="w-20"
+              width="w-14"
             />
             <Button
               id={"grid_save"}
               label="save"
               onClick={onGridSave}
-              width="w-20"
+              width="w-14"
               toolTip="ShortCut: Ctrl+S"
             />
           </>

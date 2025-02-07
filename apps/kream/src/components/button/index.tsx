@@ -25,6 +25,7 @@ import { RiFileExcel2Line } from "react-icons/ri"; //excel
 import { IoSend } from "react-icons/io5";          //send
 import { FaSignOutAlt } from "react-icons/fa";     //out, extraction
 import { IoMdPrint } from "react-icons/io";
+import { MdLockOutline } from "react-icons/md";     //lock, closedate
 
 import { log, error } from '@repo/kwe-lib-new';
 
@@ -140,6 +141,7 @@ const getColor = (label: string, color: string = "") => {
         c = "gray";
         break;
       case "refresh":
+      case "close_date":
         c = "gray-outline";
         break;
       case "upload_excel":
@@ -241,6 +243,9 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
     case "minus":
       icon = <TiMinus size={size} />;
       break;
+    case "close_date":
+      icon = <MdLockOutline size={size} />;
+      break;        
     case "descartes":
       const descartesIcon = () => {
         return (
