@@ -144,6 +144,14 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         return params.value != "N" ? "bg-pastelGreen" : "bg-pastelCream";
       },
     },
+    rowSpanByConfig: {
+      targetCol: ["waybill_no", "use_yn"],
+      compareCol: {
+        waybill_no: ["all"]
+      },
+      standardCol: "waybill_no"
+    },
+    columnVerticalCenter: ["waybill_no", "use_yn"]
   };
 
   /*
