@@ -72,6 +72,21 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
     
 
       setSelectedRow(updatedRow);
+
+     // detailSelectedRow_AB 업데이트 로직 추가
+    let updatedDetailSelectedRow_AB = { ...detailSelectedRow_AB };
+
+    if (e.target.id === "customs_duty") {
+      updatedDetailSelectedRow_AB = {
+        ...updatedDetailSelectedRow_AB,
+        customs_duty_ab: numericValue,
+      };
+    } else if (e.target.id === "customs_tax") {
+      updatedDetailSelectedRow_AB = {
+        ...updatedDetailSelectedRow_AB,
+        customs_tax_ab: numericValue,
+      };
+    }
     },
     []
   );
