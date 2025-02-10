@@ -35,9 +35,9 @@
 
 .row-span-default {
   background-color: #FCFDFE;
-  border-top: 0.3px solid #ECECEC;
-  border-bottom: 0.3px solid #ECECEC;
-  border-right: 0.3px solid #ECECEC;
+  border-top: 0.1px solid #ECECEC;
+  border-bottom: 0.1px solid #ECECEC;
+  border-right: 0.1px solid #ECECEC;
 }
 
 .cell-verify-fail {

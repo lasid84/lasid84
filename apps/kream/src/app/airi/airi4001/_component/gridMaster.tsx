@@ -64,8 +64,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       ],
       visible: true,
     },
-  
-    rowSpan: ["waybill_no"], //, "use_yn"
     pinned: {
       cnee_name: "left",
       waybill_no: "left",
@@ -178,6 +176,16 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   };
   const handleCellValueChanged = (param: CellValueChangedEvent) => {
     const updatedKey = param.colDef?.field;
+
+    /**
+     * @dev
+     * 체크박스는 double click -> data 변경이 아니므로 mainSelectedRow에 포함될 수 없음.
+     */
+    const checkboxList = gridOption?.checkbox as string[];
+    if (checkboxList.includes(updatedKey!)) {
+      return;
+    }
+
     if (updatedKey) {
       const updatedRow = {
         ...mainSelectedRow,
