@@ -818,9 +818,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 "row-span-default": (params: any) => {
                   const api = gridRef.current.api;
 
-                  if (api.getDisplayedRowCount()-1 === params.node.rowIndex) {
+                  if (api.getDisplayedRowCount()-1 === params.node.rowIndex || params.node.rowIndex === 0) {
                     return false;
-                  }                
+                  }
+
+                  if (params.value === "" || params.value === undefined) {
+                    return false;
+                  }
 
                   const currentRowNode = api.getRowNode(params.node.rowIndex);
                   const nextRowNode = api.getRowNode(params.node.rowIndex+1);
@@ -1339,6 +1343,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
       const changedColumn = param.column.getId();
       const standardCol = option.standardCol;
 
+      if (param.data[standardCol] === '' || param.data[standardCol] === undefined) {
+        return;
+      }
+
       const rowIndex = param.node?.rowIndex || 0;
       const totalRow = gridRef.current.api.getDisplayedRowCount();
 
@@ -1346,7 +1354,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
       for (let i=rowIndex+1; i<totalRow; i++) {
         const nextRowNode = gridRef.current.api.getRowNode(i);
         if (nextRowNode.data[standardCol] === currentRowNode.data[standardCol]) {
-          console.log("nextRowNode : ", nextRowNode);
           nextRowNode.setDataValue(changedColumn, newValue);
         } else {
           break;
