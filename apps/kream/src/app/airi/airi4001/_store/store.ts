@@ -127,7 +127,7 @@ const setinitValue = (set:any) => {
             getDTDDetailDatas: async (params: any) => {
                 const result = await SP_GetDTDDetailData2(params);
                 // console.log('result.data[0]',result?.data[0])
-                //console.log('result.data[0]', result?.[0]?.data?.[0], result?.[1]?.data?.[0]);
+                console.log('result.data[0]', result?.[0]?.data?.[0], result?.[1]?.data?.[0]);
                 set((state:any) => ({
                     ...state,
                     detailSelectedRow: { ...result?.[0]?.data?.[0] }, // 새 객체로 할당

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback, useRef, memo, useState } from "react";
+import React, { useEffect, useCallback, KeyboardEvent, useRef, memo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toastSuccess } from "components/toast";
 import { PageMGrid4 } from "layouts/grid/grid";
@@ -158,7 +158,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     var selectedRow = { colId: param.node.id, ...param.node.data };
     actions.setMainSelectedRow(selectedRow);
     actions.getDTDDetailDatas(selectedRow);
-    // actions.setDetailSelectedRow(selectedRow);
+
     actions.setCurrentRow(selectedRow); //INVOICE(POPUP)
 
     if (focusedCell?.column.getColId() === "waybill_no") {

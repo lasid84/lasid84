@@ -1,6 +1,6 @@
 import { DialogArrow } from "layouts/dialog/dialog";
 import { useFormContext } from "react-hook-form";
-import { useState, useEffect, MouseEventHandler } from "react";
+import { useState, useEffect, useCallback, MouseEventHandler } from "react";
 import { crudType } from "components/provider/contextObjectProvider";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import CustomSelect from "components/select/customSelect";
@@ -38,6 +38,80 @@ const Modal = ({ loadItem }: Props) => {
       isPopupOpen: false,
     });
   };
+  const onClickeventBefore = async () => {
+    // const userConfirmed = window.confirm(t("MSG_0012") || ""); //템플릿을 저장하시겠습니까?
+
+    // if (userConfirmed) {
+    // const detail: any[] = [];
+    // let curData = getValues();
+    // detail.push(curData);
+    // const result = await actions.saveDTDDetailData({
+    //   jsondata: JSON.stringify(detail),
+    // });
+    // if (result) {
+    // }
+    // }
+
+    const prevIndexnum = state.currentRow?.__ROWINDEX - 2;
+
+    const prevRowData = state.allData.find(
+      (row) => row.__ROWINDEX === prevIndexnum
+    );
+
+    if (prevRowData) {
+      actions.getDTDDetailDatas(prevRowData);
+      actions.setCurrentRow(prevRowData);
+    } else {
+      log("No data :", prevIndexnum);
+    }
+  };
+
+  const onClickeventAfter = async () => {
+    // const userConfirmed = window.confirm(t("MSG_0012") || ""); //템플릿을 저장하시겠습니까?
+
+    // if (userConfirmed) {
+    //   const detail: any[] = [];
+    //   let curData = getValues();
+    //   detail.push(curData);
+    //   const result = await actions.saveDTDDetailData({
+    //     jsondata: JSON.stringify(detail),
+    //   });
+    //   if (result) {
+    //   }
+    // }
+
+    const nextIndexnum = state.currentRow?.__ROWINDEX + 2;
+
+    // nextIndexnum과 동일한 rowIndex를 가진 데이터 찾기
+    const nextRowData = state.allData.find(
+      (row) => row.__ROWINDEX === nextIndexnum
+    );
+
+    if (nextRowData) {
+      actions.getDTDDetailDatas(nextRowData);
+      actions.setCurrentRow(nextRowData);
+    } else {
+      log("No data found for next index:", nextIndexnum);
+    }
+  };
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "PageUp") {
+        onClickeventAfter();
+      } else if (event.key === "PageDown") {
+        onClickeventBefore();
+      }
+    },
+    [onClickeventBefore, onClickeventAfter]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   //Set select box data
   const [incoterms, setIncoterms] = useState<any>();
@@ -106,63 +180,6 @@ const Modal = ({ loadItem }: Props) => {
       // 필요한 추가 로직
     }
   }, [state.detailSelectedRow]);
-
-  const onClickeventBefore = async () => {
-    const userConfirmed = window.confirm(t("MSG_0012") || ""); //템플릿을 저장하시겠습니까?
-
-    if (userConfirmed) {
-      const detail: any[] = [];
-      let curData = getValues();
-      detail.push(curData);
-      const result = await actions.saveDTDDetailData({
-        jsondata: JSON.stringify(detail),
-      });
-      if (result) {
-      }
-    }
-
-    const prevIndexnum = state.currentRow?.__ROWINDEX - 2;
-
-    const prevRowData = state.allData.find(
-      (row) => row.__ROWINDEX === prevIndexnum
-    );
-
-    if (prevRowData) {
-      actions.getDTDDetailDatas(prevRowData);
-      actions.setCurrentRow(prevRowData);
-    } else {
-      log("No data :", prevIndexnum);
-    }
-  };
-
-  const onClickeventAfter = async () => {
-    const userConfirmed = window.confirm(t("MSG_0012") || ""); //템플릿을 저장하시겠습니까?
-
-    if (userConfirmed) {
-      const detail: any[] = [];
-      let curData = getValues();
-      detail.push(curData);
-      const result = await actions.saveDTDDetailData({
-        jsondata: JSON.stringify(detail),
-      });
-      if (result) {
-      }
-    }
-
-    const nextIndexnum = state.currentRow?.__ROWINDEX + 2;
-
-    // nextIndexnum과 동일한 rowIndex를 가진 데이터 찾기
-    const nextRowData = state.allData.find(
-      (row) => row.__ROWINDEX === nextIndexnum
-    );
-
-    if (nextRowData) {
-      actions.getDTDDetailDatas(nextRowData);
-      actions.setCurrentRow(nextRowData);
-    } else {
-      log("No data found for next index:", nextIndexnum);
-    }
-  };
 
   return (
     <>
@@ -297,16 +314,16 @@ const Modal = ({ loadItem }: Props) => {
                   </div>
                   {/* <input className="hidden" value={detailSelectedRow?.seq} /> */}
                   <MaskedInputField
-                      id="seq"
-                      value={detailSelectedRow?.seq}
-                      isDisplay={false}
-                      options={{
-                        bgColor: " none",
-                        inline: true,
-                        isReadOnly:
-                          popup.popType === crudType.CREATE ? false : true,
-                      }}
-                    />     
+                    id="seq"
+                    value={detailSelectedRow?.seq}
+                    isDisplay={false}
+                    options={{
+                      bgColor: " none",
+                      inline: true,
+                      isReadOnly:
+                        popup.popType === crudType.CREATE ? false : true,
+                    }}
+                  />
                   {/* <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                       <MaskedInputField
@@ -388,18 +405,33 @@ const Modal = ({ loadItem }: Props) => {
                 </div>
               </div>
               <div className="flex items-center justify-center w-full space-x-2">
-                <div
+                {/* <div
                   className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
                   onClick={onClickeventBefore}
                 >
                   {"<"}
-                </div>
-                <div
+                </div> */}
+                <Button
+                  id={"left"}
+                  onClick={onClickeventBefore}
+                  disabled={false}
+                  isLabel={false}
+                  width="w-14"
+                />
+
+                <Button
+                  id={"right"}
+                  onClick={onClickeventAfter}
+                  disabled={false}
+                  isLabel={false}
+                  width="w-14"
+                />
+                {/* <div
                   className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
                   onClick={onClickeventAfter}
                 >
                   {">"}
-                </div>
+                </div> */}
                 <span className="text-gray-700">
                   {" "}
                   {Math.floor(state.currentRow?.__ROWINDEX / 2) + 1} /{" "}
