@@ -23,7 +23,8 @@ import {
   RowStyle,
   RowSpanParams,
   NewValueParams,
-  DragStoppedEvent
+  DragStoppedEvent,
+  ICellEditorParams
 } from "ag-grid-community";
 
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -39,6 +40,8 @@ import { SP_GetPersonalColInfoData, SP_SetMyColumnInfo } from './_component/data
 import { bgColor } from './types/constant';
 
 import { log, error, stringToFullDateString, stringToTime, sleep } from '@repo/kwe-lib-new';
+
+import CustomSelectCellEditor from './_component/customSelectCellEditor';
 
 export const ROW_TYPE = '__ROWTYPE';
 export const ROW_INDEX = '__ROWINDEX';
@@ -89,6 +92,9 @@ export type GridOption = {
   select?: {
     [key: string]: string[]; 
   };
+  customSelectCells?: {
+    [key: string]: any;
+  }
   icon?: any;
   colVisible?: {
     col: string[]
@@ -703,6 +709,20 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
+        // CustomeSelect setting.
+        if (options?.customSelectCells) {
+          const arrCols = Object.keys(options.customSelectCells);
+          if (arrCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              cellEditor: CustomSelectCellEditor,
+              cellEditorParams: {
+                values: options.customSelectCells[col],
+              },
+            }
+          }
+        }
+
         //icon 셋팅
         if (options?.icon) {
           var arrCols = Object.keys(options.icon);
@@ -748,7 +768,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
         if (options?.changeColor) {
           const arrCols = options.changeColor;
           if (arrCols.indexOf(col) > -1) {
-            console.log("col : ", col);
             cellOption = {
               ...cellOption,
               cellClassRules: {
@@ -761,7 +780,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
                   return false;
                 },
                 "cell-verify-fail": (params:any) => {
-                  console.log("params : ", params.node.data);
                   if (params.node.data[col.concat("_flag")] === "N") {
                     return true;
                   }
@@ -1445,7 +1463,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
 
     return (
-      <div style={{ zIndex: 30 }}>
+      <div style={{ zIndex: 'auto' }}>
         <div className="show-name">{(params.valueFormatted)? params.valueFormatted : params.value}</div>
       </div>
     );

@@ -16,6 +16,21 @@ export const SP_GetOperationListData = async (fr_date: string, waybill_no?: stri
   return result;
 };
 
+export const SP_GetOperationListLoadData = async () => {  
+
+  const { user_id, ipaddr } = paramsUtils();
+  
+  const params = {
+    inparam: ["in_user", "in_ipaddr"],
+    invalue: [user_id, ipaddr ],
+    inproc: 'airimp.f_airi3004_get_load_data',
+    isShowLoading: false
+  };
+
+  const result = await queryClient("SP_GetOperationListLoadData", params);
+  return result;
+};
+
 export const SP_UpdateOperationListData = async (param: any) => {
 
   const { jsonData, user_id, ipaddr } = paramsUtils(param);

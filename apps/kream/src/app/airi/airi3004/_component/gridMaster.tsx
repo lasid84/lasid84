@@ -24,7 +24,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
 
   const actions = useCommonStore((state) => state.actions);
   const mainDatas = useCommonStore((state) => state.mainDatas);
-  const locationList = useCommonStore((state) => state.locationList);
+  const loadDatas = useCommonStore((state) => state.loadDatas);
 
   const originCellStyles = (params: any) => {
     let data = params.data.origin;
@@ -63,8 +63,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
     },
     changeColor: ["arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     checkbox: ["chk", "use_yn"],
-    select: {
-      loc_nm_short: locationList,
+    customSelectCells: {
+      loc_nm_short: (loadDatas)? loadDatas[0].data : []
     },
     rowDivide: "transport_type",
     editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "loading_remark", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
