@@ -1,6 +1,6 @@
 import { createStore } from "@/states/createStore";
 import { RefObject } from 'react';
-import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDTDDetail, SP_SaveUploadData,SP_GetDTDDetailData, SP_GetDTDDetailData2 } from "./data";
+import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDTDDetail,SP_GetDTDDetailDatas, SP_SaveUploadData,SP_GetDTDDetailData, SP_GetDTDDetailData2 } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 
@@ -30,6 +30,9 @@ interface StoreState {
     uiData: Record <string, any>;
     mainDatas: gridData | null;
     detailDatas : gridData ;
+    detailIndex : number 
+    detailRVDatas : Record<string, any> | null;
+    detailABDatas : Record<string, any> | null;
     uploadFile_init : false
     excel_data : {}
     gridRef_Main : RefObject<{
@@ -52,6 +55,7 @@ interface StoreActions {
         updateExcelDatas : (params:any) => Promise<any> | undefined;
         getDTDDatas: (params: any) => Promise<any> | undefined;
         getDTDDetailDatas: (params: any) => Promise<any> | undefined;   
+        getDTDDetailDatas2: (params: any) => Promise<any> | undefined;   
         setPopup: (popup: Partial<StoreState['popup']>) => void; 
         setState: (newState: Partial<StoreState>) => void;
         setSearchState: (newState: Partial<StoreState>) => void;
@@ -59,11 +63,15 @@ interface StoreActions {
         setMainSelectedRow : (row:any) => void;
         setDetailSelectedRow : (row:any) => void;
         setDetailSelectedRow_AB : (row:any) => void;
+        setDetailRVDatas : (row:any) => void;
+        setDetailABDatas : (row:any) => void;
+        setDetailIndex : (index:any)=>void;
         setCurrentRow : (row:any)=>void;
         setDetailData: (data: any[]) => void;
         saveDTDData : (data:SaveDataArgs)=> Promise<any>;
         updDTDCloseDate : (data:SaveDataArgs)=> Promise<any>;
         saveDTDDetailData : (data:SaveDataArgs)=> Promise<any>;
+        saveDTDDetailDatas : (data:SaveDataArgs)=> Promise<any>;
         saveUploadData : (data:SaveDataArgs)=>void;
         updateData : (data:SaveDataArgs) =>void;
         updateRowData: (rowIndex: number, updatedRow: any) => void;    
@@ -78,16 +86,19 @@ type SaveDataArgs = {
   };
 const initValue: StoreState = {
     searchParams: {
-        fr_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
-        to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+        fr_date: dayjs().subtract(5, "days").startOf("days").format("YYYYMMDD"),
+        to_date: dayjs().subtract(5, "days").startOf("days").format("YYYYMMDD"),
         no: '', // HWB, 
         state:  'ALL',
     },
+    detailIndex : 0 ,
     uiData : {
         settlement_date : dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
     },
     mainDatas: { data: {}, fields:{} },     //DB
     detailDatas : {data:{}, fields:{} },
+    detailABDatas : null,
+    detailRVDatas : null,
     allData:[],
     mainSelectedRow: null,                  //GRID
     currentRow : null,                      //GRID(invoice 참조)
@@ -127,12 +138,23 @@ const setinitValue = (set:any) => {
             getDTDDetailDatas: async (params: any) => {
                 const result = await SP_GetDTDDetailData2(params);
                 // console.log('result.data[0]',result?.data[0])
-                //console.log('result.data[0]', result?.[0]?.data?.[0], result?.[1]?.data?.[0]);
+                console.log('result.data[0]', result?.[0]?.data, result?.[1]?.data);
                 set((state:any) => ({
                     ...state,
                     detailSelectedRow: { ...result?.[0]?.data?.[0] }, // 새 객체로 할당
                     detailSelectedRow_AB: { ...result?.[1]?.data?.[0] }, // 새 객체로 할당
                     // detailDatas : result
+                  }));
+                return result;
+            },
+            getDTDDetailDatas2: async (params: any) => {
+                const result = await SP_GetDTDDetailDatas(params);
+                // console.log('result.data[0]',result?.data[0])
+                console.log('result.data[0]', result);
+                set((state:any) => ({
+                    ...state,
+                    detailRVDatas: { ...result?.[0]?.data }, 
+                    detailABDatas: { ...result?.[1]?.data }, 
                   }));
                 return result;
             },
@@ -165,6 +187,16 @@ const setinitValue = (set:any) => {
             },
             setDetailSelectedRow_AB: (row:any) =>{
                 set((state:StoreState) => ({ ...state, detailSelectedRow_AB: row }))
+            },
+            setDetailRVDatas: (row:any) =>{
+                console.log('row', row)
+                set((state:StoreState) => ({ ...state, detailRVDatas: row }))
+            },
+            setDetailABDatas: (row:any) =>{
+                set((state:StoreState) => ({ ...state, detailABDatas: row }))
+            },
+            setDetailIndex: (index:any) =>{
+                set((state:StoreState) => ({ ...state, detailIndex: index }))
             },
             setCurrentRow: (row:any) =>{
                 set((state:StoreState) => ({ ...state, currentRow: row }))
@@ -233,14 +265,18 @@ const setinitValue = (set:any) => {
                     return error;
                 }            
             },
-            // updateMainSelectedRow : (row:any)=>{
-            //     set((state:StoreState) => ({ ...state, mainSelectedRow: row }))
-            // },
-            // 상태 업데이트
+            saveDTDDetailDatas: async (params: any) :Promise<any> => { //DetailDatas 저장
+                try {
+                    console.log("params", params);
+                    const result = await SP_SaveDTDDetail(params); // API 호출                
+                    return result
+                } catch (error) {
+                    return error;
+                }            
+            },
             setDetailData: (data: any[]) => set(() => 
                 ({detailDatas: data})        
             ),
-            // 특정 행 업데이트
             updateRowData: (rowIndex, updatedRow) => 
                 set((state:any) => {
                     const updatedData = [...state.gridData];
