@@ -1368,7 +1368,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
       for (const [key, value] of Object.entries(option.compareCol)) {
         if (value.includes("all") || value.includes(param.data[key])) {
           const rowIndex = param.node?.rowIndex || 0;
-          const currentValue = param.data[option.standardCol];
+          let currentValue = param.data[option.standardCol];
+          if (!currentValue || currentValue === "") {
+            return 1;
+          }
           let span = 1;
           
           const totalRow = gridRef.current.api.getDisplayedRowCount();
@@ -1385,7 +1388,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               previousRowNode = gridRef.current.api.getRowNode(i-2);
             }
             const nextRowNode = gridRef.current.api.getRowNode(i);
-            if (previousRowNode.data[option.standardCol] !== currentValue && nextRowNode.data[option.standardCol] === currentValue) {
+            if ((rowIndex === 0) || (previousRowNode.data[option.standardCol] !== currentValue && nextRowNode.data[option.standardCol] === currentValue)) {
               for (let j=rowIndex+1; j<totalRow; j++) {
                 const rowNode = gridRef.current.api.getRowNode(j);
                 if (rowNode.data[option.standardCol] === currentValue) {
