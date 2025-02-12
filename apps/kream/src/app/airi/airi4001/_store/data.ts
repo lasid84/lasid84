@@ -113,12 +113,38 @@ export const SP_GetDTDDetailData2 = async (searchParam: any) => {
   return result;
 }
 
+
+//청구내역서 Detail 조회 - LIST
+export const SP_GetDTDDetailDatas = async (searchParam: any) => {  
+  const { jsondata,  waybill_no} = searchParam;
+  const {user_id, ipaddr} = paramsUtils();
+  //user_id, ipaddr
+  const params = {
+    inparam : [
+       "in_jsondata"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      jsondata
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi4001_get_dtd_detail4',
+    isShowLoading: false
+  }
+
+  const result = await executeKREAMFunction(params);
+  console.log('f_airi4001_get_dtd_detail4', result)
+  return result;
+}
+
 //INSERT & UPDATE AT DTD INVOICE DETAIL
 export const SP_SaveDTDDetail = async (param: any) => {  
 
   const {jsondata} = param;
   const {user_id, ipaddr} = paramsUtils();
-  // console.log('SP_SaveDTDDetail jsondata', jsondata)
+  console.log('SP_SaveDTDDetailㄴㄴㄴㄴ jsondata', jsondata)
   const params = {
     inparam : [
        "in_jsondata"

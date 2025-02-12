@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useEffect, useCallback, KeyboardEvent, useRef, memo, useState } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  KeyboardEvent,
+  useRef,
+  memo,
+  useState,
+} from "react";
 import { useFormContext } from "react-hook-form";
 import { toastSuccess } from "components/toast";
 import { PageMGrid4 } from "layouts/grid/grid";
@@ -64,7 +71,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       ],
       visible: true,
     },
-  
+
     rowSpan: ["waybill_no"], //, "use_yn"
     pinned: {
       cnee_name: "left",
@@ -109,18 +116,18 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       trucking_cost: "sum",
       other_1: "sum",
     },
-    displayCalculatedFields : [
-      'bl_handling',
-      'bonded_wh',
-      'customs_clearance',
-      'dispatch_fee',
-      'special_handling',
-      'dtd_handling',
-      'trucking',
-      'insurance_fee',
-      'other_1',
-      'other_2',
-      'other_3',
+    displayCalculatedFields: [
+      "bl_handling",
+      "bonded_wh",
+      "customs_clearance",
+      "dispatch_fee",
+      "special_handling",
+      "dtd_handling",
+      "trucking",
+      "insurance_fee",
+      "other_1",
+      "other_2",
+      "other_3",
     ],
     isAutoFitColData: false,
     isShowRowNo: false,
@@ -156,10 +163,11 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const handleRowDoubleClicked = (param: RowClickedEvent) => {
     const focusedCell = param.api.getFocusedCell();
     var selectedRow = { colId: param.node.id, ...param.node.data };
+    var detailIndex = Math.floor(selectedRow?.__ROWINDEX / 2);
+    log('detailIndex',detailIndex, selectedRow)
     actions.setMainSelectedRow(selectedRow);
-    actions.getDTDDetailDatas(selectedRow);
-
-    actions.setCurrentRow(selectedRow); //INVOICE(POPUP)
+    actions.setCurrentRow(selectedRow);
+    actions.setDetailIndex(detailIndex);
 
     if (focusedCell?.column.getColId() === "waybill_no") {
       actions.updatePopup({
@@ -185,7 +193,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
       // 동일 key를 가진 ROW 모두 업데이트
       if (updatedKey === "waybill_no" && updatedRow.key) {
-        const allRows = gridApi.getModel().rowsToDisplay; // 현재 그리드의 모든 ROW 가져오기
+        const allRows = gridApi.getModel().rowsToDisplay;
         allRows.forEach((rowNode: any) => {
           if (rowNode.data.key === updatedRow.key) {
             rowNode.setData({
@@ -219,33 +227,29 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       isPopupUploadOpen: true,
     });
   };
-useEffect(() => {
-  let curData = getValues();
-    log('curData', curData)
-}, [state.searchParams]);
-
-
-  const onCloseDate = async () => {    
+  useEffect(() => {
     let curData = getValues();
-  
-    const frDate = searchParams.fr_date; // 
-    const formattedDate = `${frDate.slice(0, 4)}-${frDate.slice(4, 6)}-${frDate.slice(6, 8)}`;
+    log("curData", curData);
+  }, [state.searchParams]);
 
-    const userConfirmed = window.confirm(formattedDate +t("MSG_0196") || "");
-log('frDate', frDate)
+  const onCloseDate = async () => {
+    const frDate = searchParams.fr_date; //
+    const formattedDate = `${frDate.slice(0, 4)}-${frDate.slice(4, 6)}-${frDate.slice(6, 8)}`;
+    const userConfirmed = window.confirm(formattedDate + t("MSG_0196") || "");
+
     if (userConfirmed) {
       const detail: any[] = [];
       let curData = getValues();
       detail.push(curData);
-      // 일자 마감 프로시저 생성
+     
       const result = await actions.updDTDCloseDate({
         jsondata: JSON.stringify(detail),
-        settlement_date : frDate
+        settlement_date: frDate,
       });
       if (result) {
-        toastSuccess('success')
+        toastSuccess("success");
         actions.getDTDDatas(getValues());
-      }      
+      }
     }
   };
 
@@ -265,35 +269,36 @@ log('frDate', frDate)
     }
   };
 
-  //TODO - GRID ROW 삭제기능 생성필요
-  const onGridDelete = async () => {
-    var rows = await rowAdd(gridRef.current, { waybill_no: "" });
 
-    for (const row of rows) {
-      log("onGridNew", row, state.mainDatas);
-      await (state.mainDatas as any).data.push(row);
-    }
-
-    setTimeout(() => {
-      // dispatch({ [tabName] : rows[0] , MselectedTab: tabName, isCGDSearch : true });
-      //dispatch({mSelectedRow: ...mSelectedRow, })
-    }, 200);
-    // }
-  };
-  
   const handleGridReady = useCallback((params: any) => {
     setGridApi(params.api);
   }, []);
 
+  const handleRowDataUpdated = useCallback(
+    (params: any) => {
+      if (!gridApi) return;
 
-  const handleRowDataUpdated= useCallback((params:any)=>{
-    if(!gridApi) return;
+      // 초기화 후 데이터 추가
+      state.allData = [];
+      gridApi.forEachNode((node: any) => state.allData.push(node.data));
+      log("allData", state.allData);
+      const filteredWaybills: { waybill_no: string; seq: number }[] = [];
+      const waybillSet = new Set();
+      state.allData.forEach((row, index) => {
+        const key = `${row.waybill_no}_${row.seq}`;
 
-    // 초기화 후 데이터 추가
-    state.allData = []; 
-    gridApi.forEachNode((node:any) => state.allData.push(node.data));
-    log('allData', state.allData)
-  },[state.mainDatas])
+        if (index % 1 === 0 && !waybillSet.has(key)) {
+          waybillSet.add(key);
+          filteredWaybills.push({ waybill_no: row.waybill_no, seq: row.seq });
+        }
+      });
+
+      actions.getDTDDetailDatas2({
+        jsondata: JSON.stringify(filteredWaybills),
+      });
+    },
+    [state.mainDatas]
+  );
 
   const handleChange = useCallback(
     (e: any, id: any, date: any) => {
@@ -327,7 +332,7 @@ log('frDate', frDate)
 
       if (isNaN(numericValue)) {
         // console.warn("Invalid numeric input:", e.target.value);
-        return; 
+        return;
       }
 
       const vatKey = `${e.target.id}_vat`;
@@ -363,7 +368,7 @@ log('frDate', frDate)
 
       if (isNaN(numericValue)) {
         // console.warn("Invalid numeric input:", e.target.value);
-        return; 
+        return;
       }
 
       const vatKey = `${e.target.id}_vat`;
@@ -425,7 +430,7 @@ log('frDate', frDate)
         title={<></>}
         right={
           <>
-          <Button
+            <Button
               id={"close_date"}
               onClick={onCloseDate}
               disabled={false}
@@ -468,7 +473,7 @@ log('frDate', frDate)
                 />
                 <DatePicker
                   id="settlement_date"
-                  value={mainSelectedRow?.settlement_date}
+                  value={mainSelectedRow?.settlement_date || ""}
                   events={{
                     onChange: handleChange,
                   }}
@@ -663,7 +668,6 @@ log('frDate', frDate)
                     }}
                   />
                 </div>
-              
 
                 {/* 항공료 */}
                 <div className="grid grid-cols-2 gap-4">
@@ -738,7 +742,7 @@ log('frDate', frDate)
                     type: "text",
                     isReadOnly: false,
                   }}
-                />                
+                />
                 {/* <TextArea id="remark" rows={3} cols={32} value={mainSelectedRow?.remark} options={{ isReadOnly: false }} /> */}
               </div>
             </div>
@@ -756,7 +760,7 @@ log('frDate', frDate)
             onRowDoubleClicked: handleRowDoubleClicked,
             onRowClicked: handleRowClicked,
             onSelectionChanged: handleSelectionChanged,
-            onRowDataUpdated : handleRowDataUpdated,
+            onRowDataUpdated: handleRowDataUpdated,
           }}
         />
       </PageMGrid4>
