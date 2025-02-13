@@ -27,39 +27,20 @@ const getScriptAPI = async (pgmCode) => {
 
 /**
  * @Function
- * Summary : t_edi_history에 담긴 milestone 조회가 필요한 hawb 목록 조회
+ * Summary : t_edi_history -> 등록 대상 조회 및 t_hbl_milestone_queue -> 등록 정보 조회.
  */
-const getMilestoneTargetList = async (pgm) => {
+const getMilestoneList = async (pgm, idx) => {
     try {
         const params = {
-            inparam: ["in_pgm", "in_user", "in_ipaddr"],
-            invalue: [pgm, USER_ID, serverIP],
-            inproc: "scrap.f_scrp1002_get_milestone_target_list",
+            inparam: ["in_pgm", "in_idx", "in_user", "in_ipaddr"],
+            invalue: [pgm, idx, USER_ID, serverIP],
+            inproc: "scrap.f_scrp1002_get_milestone_list",
         };
 
         const cursorData = await executFunction(params.inproc, params.inparam, params.invalue);
+        console.log("cursorData : ", cursorData);
 
         return cursorData[0].data[0].list;
-    } catch (ex) {
-        throw ex;
-    }
-};
-
-/**
- * @Function
- * Summary : 등록 예정 hawb 리스트에 해당하는 milestone 값 조회.
- */
-const getMilestoneValueList = async (hawbList) => {
-    try {
-        const params = {
-            inparam: ["in_hawb_list", "in_user", "in_ipaddr"],
-            invalue: [hawbList, USER_ID, serverIP],
-            inproc: "scrap.f_scrp1002_get_milestone_value_list",
-        };
-
-        const cursorData =  await executFunction(params.inproc, params.inparam, params.invalue);
-        
-        return cursorData[0].data;
     } catch (ex) {
         throw ex;
     }
@@ -104,8 +85,7 @@ const setMilestoneInterfaceIfData = async (hwabNo) => {
 
 module.exports = {
     getScriptAPI,
-    getMilestoneTargetList,
-    getMilestoneValueList,
+    getMilestoneList,
     setMilestoneIfData,
     setMilestoneInterfaceIfData
 }
