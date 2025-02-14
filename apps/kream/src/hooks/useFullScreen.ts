@@ -42,20 +42,27 @@ export const useFullScreen = (): useFullScreenReturn => {
         }
 
         if (event.code === "Escape") {
-            event.preventDefault();
             setIsFullScreen(false);
+            event.preventDefault();
         }
     };
 
     useEffect(() => {
-        if (containerRef.current) {
-            containerRef.current.classList.add('overflow-auto');
-        }
         document.addEventListener("keydown", handleKeyDown);
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         }
-    },[]);  
+    },[]);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            if (isFullScreen) {
+                containerRef.current.classList.add('overflow-auto');
+            } else {
+                containerRef.current.classList.remove('overflow-auto');
+            }
+        }
+    }, [isFullScreen]);
 
     return { containerRef };
 };

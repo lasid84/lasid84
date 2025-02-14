@@ -23,17 +23,19 @@ const excuteState = {
 
 const insertMilestone = async () => {
     try {
+    teams.processArray = [];
     /**
      * @SECTION
      * Process : 1
      * Summary : milestone 입력 대상 및 등록 정보 조회.
      */
     let process = "milestone 입력 대상 및 등록 정보 조회.";
+    teams.addProcessResult(process);
 
     const mileStonetList = await repository.getMilestoneList(ufsp.pgm, ufsp.idx)
         .catch(ex => {
             // TEAMS
-            teams.sendMessage(process, ex);
+            teams.addProcessResult(process, 'error', false);
             throw ex;
         });
 
@@ -69,13 +71,14 @@ const insertMilestone = async () => {
     const script = await ufsp.getScript();
 
     const insertedMilstoneArray = [];
+    const notInsertedMilestoneArray = [];
     const duplicateMilestoneArray = [];
     for (let create_user in createUserGroupedArray) {
         await ufsp.loginByApi(create_user, false)
             .catch(ex => {
                 // TEAMS
-                teams.sendMessage("USFP 로그인 실패", ex, false);
-                throw "error";
+                teams.addProcessResult(process, 'error', false);
+                throw ex;
             });
         
         for (let value of createUserGroupedArray[create_user]) {
@@ -84,7 +87,7 @@ const insertMilestone = async () => {
             const checkScript = await repository.getScriptAPI(GET_PIPELINE_TX_PGM_CODE)
                 .catch(ex => {
                     // TEAMS
-                    teams.sendMessage(process, ex);
+                    teams.addProcessResult(process, 'error', false);
                     throw ex;
                 });
 
@@ -104,28 +107,36 @@ const insertMilestone = async () => {
             await ufsp.startScript(script)
                 .catch(ex => {
                     // TEAMS
-                    teams.sendMessage(process, ex, false);
-                    throw "error";
+                    teams.addProcessResult(process, 'error', false);
+                    throw ex;
                 });
 
             const result = await ufsp.resultData.milestone_insert_result[0];
 
             if (Array.isArray(result) && result.length === 0) {
-                insertedMilstoneArray.push(value.waybill_no);
+                if (!(insertedMilstoneArray.includes(value.waybill_no))) {
+                    insertedMilstoneArray.push(value.waybill_no);
+                }
+            } else if (!Array.isArray(result) && result.sev === 3 && result.message !== null) {
+                if (!(notInsertedMilestoneArray.includes(value.waybill_no))) {
+                    notInsertedMilestoneArray.push(value.waybill_no.concat(`(${value.milestone})`).concat(" : ").concat(result.message));
+                }
             } else { 
                 duplicateMilestoneArray.push(value.waybill_no);
             }
 
             await sleep(3000);
         }
+        teams.addProcessResult(`${create_user}`, `${JSON.stringify(createUserGroupedArray[create_user])}`);
     }
 
     if (duplicateMilestoneArray.length !== 0) {
-        teams.addProcessResult("중복 등록 milestone 발생", JSON.stringify(duplicateMilestoneArray));
+        teams.addProcessResult("중복 등록 milestone 발생", JSON.stringify(duplicateMilestoneArray), false);
     }
 
-    // TEAMS
-    teams.addProcessResult(process);
+    if (notInsertedMilestoneArray.length !== 0) {
+        teams.addProcessResult("미등록 milestone 발생", JSON.stringify(notInsertedMilestoneArray), false);
+    }
 
     /**
      * @SECTION
@@ -134,11 +145,11 @@ const insertMilestone = async () => {
      */
     process = "등록 data if_yn Y 처리";
 
-    await repository.setMilestoneIfData(insertedMilstoneArray.join(' '))
+    await repository.setMilestoneIfData(insertedMilstoneArray.join(' '), ufsp.idx)
         .catch(ex => {
             // TEAMS
-            teams.sendMessage(process, ex, false);
-            throw "error";
+            teams.addProcessResult(process, 'error', false);
+            throw ex;
         });
     // TEAMS
     teams.addProcessResult(process);
@@ -154,7 +165,7 @@ const insertMilestone = async () => {
         await repository.setMilestoneInterfaceIfData(hawbNo)
             .catch(ex => {
                 // TEAMS
-                teams.sendMessage(process, ex, false);
+                teams.addProcessResult(process, "error", false);
                 throw ex;
             });
     }
@@ -168,7 +179,7 @@ const insertMilestone = async () => {
          * @dev
          * ^ 에러 발생 시 return.
          */
-        teams.sendMessage("배치 실행 에러", ex, false);
+        teams.sendMessage("배치 실행 에러", ex.toString());
         return;
     }
 };

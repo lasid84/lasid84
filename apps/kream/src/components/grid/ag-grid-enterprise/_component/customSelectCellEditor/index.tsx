@@ -21,19 +21,24 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
     const editorRef = useRef<(HTMLDivElement | null)[]>([]);
     
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [selectedValue, setSelectedValue] = useState(value);
     const [dataList, setDataList] = useState(values);
 
     useImperativeHandle(ref, () => ({
         getValue: () => {
-            return selectedValue;
+            /**
+             * @dev
+             * ag grid 기본 Enter 리스너 핸들러로 인해 Enter 키에 한해서 커스텀 핸들링 불가.
+             */
+            if (dataList[selectedIndex]) {
+                return dataList[selectedIndex].main;
+            }
         },
         isPopup: () => true,
     }));
 
-    const handleListClick = (item: string) => {
+    const handleListClick = (index: number) => {
         flushSync(() => {
-            setSelectedValue(item);
+            setSelectedIndex(index);
         });
         props.api.stopEditing();
     };
@@ -42,21 +47,19 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
         if (!editorRef.current) {
             return;
         }
-
+        
         if (event.key === "ArrowDown") {
-            setSelectedIndex((prev) => (prev + 1) % values.length);
+            setSelectedIndex((prev) => ((prev + 1) >= dataList.length)? dataList.length -1 : (prev + 1) % dataList.length);
         } else if (event.key === "ArrowUp") {
-            setSelectedIndex((prev) => (prev - 1 + values.length) % values.length);
+            setSelectedIndex((prev) => ((prev - 1) + dataList.length <= dataList.length)? 0 : (prev - 1) + dataList.length % dataList.length);
         } else if (event.key === "PageDown") {
-            setSelectedIndex((prev) => (prev + 5 + values.length) % values.length);
+            setSelectedIndex((prev) => ((prev + 5) >= dataList.length)? dataList.length -1 : (prev + 5) % dataList.length);
         } else if (event.key === "PageUp") {
-            setSelectedIndex((prev) => (prev - 5 + values.length) % values.length);
-        } else if (event.key === "Enter") {
-            flushSync(() => {
-                setSelectedValue(values[selectedIndex]);
-            });
-            props.api.stopEditing();
-            event.preventDefault();
+            setSelectedIndex((prev) => (prev - 5 + dataList.length <= dataList.length)? 0 : (prev - 5) + dataList.length % dataList.length);
+        } else if (event.key === "End") {
+            setSelectedIndex(dataList.length -1);
+        } else if (event.key === "Home") {
+            setSelectedIndex(0);
         } else if (event.key === "Escape") {
             props.api.stopEditing(false);
         }
@@ -78,6 +81,7 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
         });
 
         setDataList(filterValues);
+        setSelectedIndex(0);
     };
 
     const handleExit = () => {
@@ -119,10 +123,10 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
                     <ul className="flex flex-col">
                         {dataList.map((item, index1) => (
                             <div key={index1} ref={(idx) => editorRef.current[index1] = idx}
-                                className={`mt-3 border-b hover:bg-sky-200 hover:text-white hover:border hover:rounded ${
-                                    selectedIndex === index1 ? "bg-blue-400 text-white" : "bg-gray-100"
+                                className={`mt-3 border-b hover:bg-sky-200 hover:text-white hover:border hover:rounded-md ${
+                                    selectedIndex === index1 ? "bg-blue-400 text-white rounded-md" : ""
                                   }`} 
-                                onClick={() => handleListClick(item.main)}>
+                                onClick={() => handleListClick(index1)}>
                                 <div className="flex flex-row">
                                     {item.mark &&
                                         <div className="flex flex-row items-center justify-center mx-2">

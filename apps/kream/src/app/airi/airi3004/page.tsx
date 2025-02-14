@@ -28,7 +28,7 @@ export default function AIRI3004() {
   return (
     <FormProvider {...methods}>
       <form>
-        <div ref={containerRef} className={`flex-row w-full h-[calc(100vh-55px)]`}>
+        <div ref={containerRef} className={`flex-row w-full h-[calc(100vh-110px)]`}>
           <MasterGrid />
         </div>
       </form>
