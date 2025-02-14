@@ -21,6 +21,13 @@ class Teams {
         this.endTIme = null;
     }
 
+    restart() {
+        this.processArray = [];
+        this.error = null;
+        this.startTime = getKoreaTime();
+        this.endTime = null;
+    }
+
     addProcessResult(name, info, status=true) {
         const processInfo = {
             excuteTime: getKoreaTime(),

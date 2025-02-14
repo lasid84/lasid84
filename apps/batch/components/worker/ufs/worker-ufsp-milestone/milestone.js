@@ -12,8 +12,8 @@ const { sleep } = require('@repo/kwe-lib/components/sleep.js');
 const Teams = require("../../../notification/teams");
 const Library = require("../../../ufspLibrary/ufsLibray");
 
-const ufsp = new Library(workerData);
 const teams = new Teams("INSERT_USFP_MILESTONE");
+const ufsp = new Library(workerData);
 
 const INTERVAL = 180000;
 
@@ -23,7 +23,7 @@ const excuteState = {
 
 const insertMilestone = async () => {
     try {
-    teams.processArray = [];
+    teams.restart();
     /**
      * @SECTION
      * Process : 1
