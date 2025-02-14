@@ -110,7 +110,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
       loc_nm_short: "largetext",
       contact: "largetext",
       request_tm_date: "largetext",
-      remark: "largetext"
+      remark: "largetext",
+      loading_remark: "largetext"
     },
     pinned: {
       __ROWINDEX: "left",

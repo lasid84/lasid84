@@ -38,9 +38,8 @@ const getMilestoneList = async (pgm, idx) => {
         };
 
         const cursorData = await executFunction(params.inproc, params.inparam, params.invalue);
-        console.log("cursorData : ", cursorData);
 
-        return cursorData[0].data[0].list;
+        return cursorData[0].data;
     } catch (ex) {
         throw ex;
     }
@@ -50,11 +49,11 @@ const getMilestoneList = async (pgm, idx) => {
  * @Function
  * Summary : UFSP에 등록된 마일스톤 if_yn 상태값 Y로 변경.
  */
-const setMilestoneIfData = async (insertedList) => {
+const setMilestoneIfData = async (insertedList, idx) => {
     try {
         const params = {
-            inparam: ["in_hawb_list", "in_user", "in_ipaddr"],
-            invalue: [insertedList, USER_ID, serverIP],
+            inparam: ["in_hawb_list", "in_idx", "in_user", "in_ipaddr"],
+            invalue: [insertedList, idx, USER_ID, serverIP],
             inproc: "scrap.f_scrp1002_set_milestone_if_data"
         };
 
@@ -76,8 +75,7 @@ const setMilestoneInterfaceIfData = async (hwabNo) => {
             inproc: "scrap.f_scrp0001_ins_if_data"
         };
 
-        const result = await executFunction(params.inproc, params.inparam, params.invalue);
-        return result[0];
+        await executFunction(params.inproc, params.inparam, params.invalue);
     } catch (ex) {
         throw ex;
     }
