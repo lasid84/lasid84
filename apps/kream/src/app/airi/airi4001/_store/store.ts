@@ -30,7 +30,8 @@ interface StoreState {
     uiData: Record <string, any>;
     mainDatas: gridData | null;
     detailDatas : gridData ;
-    detailIndex : number 
+    closing : string;
+    detailIndex : number ;
     detailRVDatas : Record<string, any> | null;
     detailABDatas : Record<string, any> | null;
     uploadFile_init : false
@@ -86,11 +87,12 @@ type SaveDataArgs = {
   };
 const initValue: StoreState = {
     searchParams: {
-        fr_date: dayjs().subtract(5, "days").startOf("days").format("YYYYMMDD"),
-        to_date: dayjs().subtract(5, "days").startOf("days").format("YYYYMMDD"),
+        fr_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+        to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
         no: '', // HWB, 
         state:  'ALL',
     },
+    closing : '2',
     detailIndex : 0 ,
     uiData : {
         settlement_date : dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),

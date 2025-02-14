@@ -22,7 +22,7 @@ export const SP_Load = async () => {
 //청구내역서 조회
 export const SP_GetDTDMainData = async (searchParam: any) => {
   log('SP_GetDTDMainData', searchParam)  
-  const {fr_date, to_date,  no, create_date} = searchParam;
+  const {fr_date, to_date,  no, settlement_user,logis_id, broker_id} = searchParam;
   const {user_id, ipaddr} = paramsUtils();
   //user_id, ipaddr
   const params = {
@@ -30,7 +30,9 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
        "in_fr_date"
       , "in_to_date"
       , "in_no"
-      , "in_create_user"
+      , "in_settlement_user"
+      , "in_logis_id"
+      , "in_broker_id"
       , "in_user"
       , "in_ipaddr"
     ],
@@ -38,13 +40,16 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
       fr_date
       , to_date
       , no
-      , create_date
+      , settlement_user
+      , logis_id
+      , broker_id
       , user_id
       , ipaddr
     ],
     inproc: 'airimp.f_airi4001_get_dtd_list',
     isShowLoading: true
   }
+  log('params', params)
 
   const result = await executeKREAMFunction(params);
   return result![0];
@@ -144,7 +149,6 @@ export const SP_SaveDTDDetail = async (param: any) => {
 
   const {jsondata} = param;
   const {user_id, ipaddr} = paramsUtils();
-  console.log('SP_SaveDTDDetailㄴㄴㄴㄴ jsondata', jsondata)
   const params = {
     inparam : [
        "in_jsondata"
