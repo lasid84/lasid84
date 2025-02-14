@@ -15,7 +15,7 @@ const Library = require("../../../ufspLibrary/ufsLibray");
 const ufsp = new Library(workerData);
 const teams = new Teams("INSERT_USFP_MILESTONE");
 
-const INTERVAL = 10000;
+const INTERVAL = 180000;
 
 const excuteState = {
     onExcute: false
