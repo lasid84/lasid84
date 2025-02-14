@@ -30,7 +30,6 @@ const insertMilestone = async () => {
      * Summary : milestone 입력 대상 및 등록 정보 조회.
      */
     let process = "milestone 입력 대상 및 등록 정보 조회.";
-    teams.addProcessResult(process);
 
     const mileStonetList = await repository.getMilestoneList(ufsp.pgm, ufsp.idx)
         .catch(ex => {

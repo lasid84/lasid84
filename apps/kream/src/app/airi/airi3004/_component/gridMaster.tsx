@@ -100,12 +100,12 @@ const MasterGrid: React.FC<Props> = memo(() => {
       transport_type: transportTypeCellStyles
     },
     dataType: {
-      arv_local_dd: "date",
-      oltib_local_dd: "date",
-      ice_local_dd: "date",
-      clrcstms_local_dd: "date",
-      rlsddlvy_local_dd: "date",
-      pod_local_dd: "date",
+      arv_local_dd: "date_digits_14",
+      oltib_local_dd: "date_digits_14",
+      ice_local_dd: "date_digits_14",
+      clrcstms_local_dd: "date_digits_14",
+      rlsddlvy_local_dd: "date_digits_14",
+      pod_local_dd: "date_digits_14",
       gross_wt: "number",
       loc_nm_short: "largetext",
       contact: "largetext",
@@ -190,86 +190,104 @@ const MasterGrid: React.FC<Props> = memo(() => {
    */
   const handleRegistMilestone = async () => {
     const waybillList:string[] = [];
-    if (gridRef.current) {
-      const api = gridRef.current.api;
-      api.forEachNode((node: any) => {
-        if (!waybillList.includes(node.data["waybill_no"])) {
-          waybillList.push(node.data["waybill_no"]);
-        }
-      })
+    if (!gridRef.current) {
+      return;
     }
-    
-    if (waybillList.length > 0) {
-      await actions.setMilestoneEdiData({waybillList: waybillList.join(',')});
-    } else {
+      /**
+       * @dev
+       * 목록 waybill 전체 조회
+       */
+    const api = gridRef.current.api;
+    api.forEachNode((node: any) => {
+      if (!waybillList.includes(node.data["waybill_no"])) {
+        waybillList.push(node.data["waybill_no"]);
+      }
+    })
+
+    if (waybillList.length <= 0) {
       toast(t("msg_0006")); // 변경 내역이 없습니다.
+      return;
     }
+
+    /**
+     * @dev
+     * 마일스톤 등록, data interface 완료 상태 waybill 제외.
+     */
+    const interfaceList = await actions.getMilestoneInterfaceData({waybillList: waybillList.join(',')});
+
+    const alreadyRegistMilestoneList:string[] = [];
+    api.forEachNode((node: any) => {
+      for (const interfaceData of interfaceList) {
+        const isMatching =
+          interfaceData.waybill_no === node.data["waybill_no"] &&
+          interfaceData.local_dd === node.data["local_dd"] &&
+          interfaceData.milestone === node.data["milestone"] &&
+          (interfaceData.delivery_no === "" || interfaceData.delivery_no === node.data["delivery_no"]);
+      
+        if (isMatching && !alreadyRegistMilestoneList.includes(interfaceData.waybill)) {
+          alreadyRegistMilestoneList.push(interfaceData.waybill);
+        }
+      }      
+    })
+
+    const targetMilestoneList = waybillList.filter(waybill_no => !alreadyRegistMilestoneList.includes(waybill_no));
+    
+    if (targetMilestoneList.length <= 0) {
+      toast(t("msg_0006")); // 변경 내역이 없습니다.
+      return;
+    }
+
+    await actions.setMilestoneEdiData({waybillList: targetMilestoneList.join(',')});
   };
 
   /**
    * @Handler
    * UFSP 마일스톤 데이터 검증
    */
-  const handleVerifyMilestone = async () =>  {
-    const waybillList:string[] = [];
-    if (gridRef.current) {
-      const api = gridRef.current.api;
-      api.forEachNode((node: any) => {
-        if (!waybillList.includes(node.data["waybill_no"])) {
-          waybillList.push(node.data["waybill_no"]);
-        }
-      })
-
-      if (waybillList.length > 0) {
-        const interfaceList = await actions.getMilestoneInterfaceData({waybillList: waybillList.join(',')});
-        for (let data of interfaceList) {
-          api.forEachNode((node: any) => {
-            if (node.data.waybill_no === data.waybill_no) {
-              if (node.data.transport_type === "Reseller") {
-                if (node.data.milestone === "POD") {
-                  if (node.data["DN & Sorting"] === data.delivery_no) {
-                    if (node.data[data.milestone.toLowerCase().concat("_local_dd")] === data.local_dd) {
-                      const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
-                      const column = data.milestone.toLowerCase().concat("_local_dd");
-                      node.data[key] = "Y";
-                    } else {
-                      const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
-                      const column = data.milestone.toLowerCase().concat("_local_dd");
-                      node.data[key] = "N";
-                    }
-                  }
-                } else {
-                  if (node.data[data.milestone.toLowerCase().concat("_local_dd")] === data.local_dd) {
-                    const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
-                    const column = data.milestone.toLowerCase().concat("_local_dd");
-                    node.data[key] = "Y";
-                  } else {
-                    const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
-                    const column = data.milestone.toLowerCase().concat("_local_dd");
-                    node.data[key] = "N";
-                  }
-                }
-              } else {
-                if (node.data[data.milestone.toLowerCase().concat("_local_dd")] === data.local_dd) {
-                  const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
-                  const column = data.milestone.toLowerCase().concat("_local_dd");
-                  node.data[key] = "Y";
-                } else {
-                  const key = data.milestone.toLowerCase().concat("_local_dd").concat("_flag");
-                  const column = data.milestone.toLowerCase().concat("_local_dd");
-                  node.data[key] = "N";
-                }
-              }
-            }
-          })
-        }
-      } else {
-        toast(t("msg_0006")); // 변경 내역이 없습니다.
+  const handleVerifyMilestone = async () => {
+    if (!gridRef.current) return;
+  
+    const api = gridRef.current.api;
+    const waybillList: string[] = [];
+  
+    api.forEachNode((node: any) => {
+      if (!waybillList.includes(node.data["waybill_no"])) {
+        waybillList.push(node.data["waybill_no"]);
       }
-
-      gridRef.current.api.refreshCells({ force: true });
+    });
+  
+    if (waybillList.length === 0) {
+      toast(t("msg_0006"));
+      return;
     }
+  
+    const interfaceList = await actions.getMilestoneInterfaceData({
+      waybillList: waybillList.join(","),
+    });
+  
+    const updateNodeData = (node: any, data: any) => {
+      const key = `${data.milestone.toLowerCase()}_local_dd_flag`;
+      const column = `${data.milestone.toLowerCase()}_local_dd`;
+  
+      node.data[key] = node.data[column] === data.local_dd ? "Y" : "N";
+    };
+  
+    for (const data of interfaceList) {
+      api.forEachNode((node: any) => {
+        if (node.data.waybill_no !== data.waybill_no) return;
+        if (node.data.transport_type === "Reseller" && data.milestone === "POD") {
+          if (node.data["DN & Sorting"] === data.delivery_no) {
+            updateNodeData(node, data);
+          }
+        } else {
+          updateNodeData(node, data);
+        }
+      });
+    }
+  
+    gridRef.current.api.refreshCells({ force: true });
   };
+  
 
   return (
       <>

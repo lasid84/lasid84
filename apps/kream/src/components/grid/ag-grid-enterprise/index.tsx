@@ -8,7 +8,7 @@ import { useConfigs } from "states/useConfigs";
 import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, RowDoubleClickedEvent,
-  PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
+  PasteEndEvent, ValueFormatterParams, ValueSetterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
   SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent,
   FirstDataRenderedEvent,
   CellKeyDownEvent,
@@ -650,6 +650,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
                   whiteSpace: "pre-wrap"
                 }
               }
+            }
+          } else if (optCols[col] === 'date_digits_14') {
+            cellOption = {
+              ...cellOption,
+              valueFormatter: dateFormatter,
+              valueSetter: dateDigits14Setter
             }
           }
         };
@@ -1623,6 +1629,26 @@ export const rowAdd = async (
 const dateFormatter = (params: ValueFormatterParams) => {
   return stringToFullDateString(params.value, '-');
   // return stringToDateString(params.value, '-');
+}
+
+const dateDigits14Setter = (params: ValueSetterParams) => {
+  const field = params.column.getColDef().field;
+  if (!params.newValue || !field) {
+    return false;
+  }
+  
+  let onlyNumerical = params.newValue.replace(/\D/g, "");
+  if (onlyNumerical === "") {
+    return false;
+  } else if (onlyNumerical.length > 14) {
+    onlyNumerical = onlyNumerical.substring(0, 14);
+  } else if (onlyNumerical.length < 14) {
+    onlyNumerical = onlyNumerical.padEnd(14, "0");
+  }
+
+  params.data[field] = onlyNumerical;
+
+  return true;
 }
 
 const timeFormatter = (params: ValueFormatterParams) => {
