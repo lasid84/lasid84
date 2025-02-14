@@ -52,6 +52,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         "cnee_name",
         "waybill_no",
         "category",
+        "dtd_fh",
         "customs_duty",
         "customs_tax",
         "customs_clearance",
@@ -72,7 +73,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       visible: true,
     },
 
-    rowSpan: ["waybill_no"], //, "use_yn"
+    rowSpan: ["waybill_no","cnee_name"], //, "use_yn"
     pinned: {
       cnee_name: "left",
       waybill_no: "left",
@@ -169,7 +170,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     actions.setCurrentRow(selectedRow);
     actions.setDetailIndex(detailIndex);
 
-    if (focusedCell?.column.getColId() === "waybill_no") {
+    if (focusedCell?.column && ["waybill_no", "category", "cnee_name"].includes(focusedCell.column.getColId())) {
       actions.updatePopup({
         popType: "C",
         isPopupOpen: true,
@@ -630,7 +631,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                       isReadOnly: false,
                     }}
                   />
-                  <MaskedInputField
+                  {/* <MaskedInputField
                     id="insurance_fee_vat"
                     value={mainSelectedRow?.insurance_fee_vat}
                     events={{
@@ -638,9 +639,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                     }}
                     options={{
                       ...AmountInputOptions_g,
-                      isReadOnly: false,
+                      isReadOnly: true,
                     }}
-                  />
+                  /> */}
                 </div>
 
                 {/* 기타수수료(other1) */}
@@ -750,7 +751,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
       >
         <Grid
-          id="master"
+          id="master_4001"
           gridRef={gridRef}
           listItem={state.mainDatas as gridData}
           options={gridOptions}

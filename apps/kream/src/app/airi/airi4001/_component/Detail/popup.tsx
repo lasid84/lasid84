@@ -11,7 +11,7 @@ import { DatePicker } from "@/components/date/react-datepicker";
 import { useTranslation } from "react-i18next";
 import { useCommonStore } from "../../_store/store";
 import { toastSuccess } from "components/toast";
-
+import { TextArea } from "components/input";
 import Amount from "./popupAmount";
 
 import { log, error } from "@repo/kwe-lib-new";
@@ -47,7 +47,7 @@ const Modal = ({ loadItem }: Props) => {
     if (beforeIndexNum2 >= 0) {
       actions.setDetailIndex(beforeIndexNum2);
     } else {
-      toastError(t('MSG_0197'));
+      toastError(t("MSG_0197"));
     }
 
     // const prevRowData = state.allData.find(
@@ -68,7 +68,7 @@ const Modal = ({ loadItem }: Props) => {
     if (nextDetailidx < Math.floor(state.allData.length / 2)) {
       actions.setDetailIndex(nextDetailidx);
     } else {
-      toastError(t('MSG_0198'));
+      toastError(t("MSG_0198"));
     }
 
     // const nextRowData = state.allData.find(
@@ -124,27 +124,29 @@ const Modal = ({ loadItem }: Props) => {
     }
   }, [mainSelectedRow, loadItem, detailRVDatas]);
 
-  useEffect(() => {
-    reset();
-    if (state.popup.popType === crudType.CREATE) {
-      setFocus("use_yn");
-    }
-  }, [state.popup.popType, state.popup.isOpen]);
+  // useEffect(() => {
+  //   reset();
+  //   if (state.popup.popType === crudType.CREATE) {
+  //     setFocus("use_yn");
+  //   }
 
-  const onSave = async (param: MouseEventHandler | null) => {
-    const detail: any[] = [];
-    let curData = getValues();
-    detail.push(curData);
-    // console.log("curData", curData, state.popup.popType);
-    const result = await actions.saveDTDDetailData({
-      jsondata: JSON.stringify(detail),
-    });
-    if (result) {
-      //log('success')
-      toastSuccess("success");
-      // actions.getDTDDatas(getValues());
+  // }, [state.popup.popType, state.popup.isOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    if (popup.isPopupOpen) {
+      document.addEventListener("keydown", handleKeyDown);
     }
-  };
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [popup.isPopupOpen]);
 
   const onSave1 = async (param: MouseEventHandler | null) => {
     if (!detailRVDatas) return;
@@ -165,17 +167,20 @@ const Modal = ({ loadItem }: Props) => {
       }
     );
 
-    console.log("mergedArray", mergedArray)
+    console.log("mergedArray", mergedArray);
     const result = await actions.saveDTDDetailDatas({
-      jsondata: JSON.stringify(mergedArray)
+      jsondata: JSON.stringify(mergedArray),
     });
     if (result) {
-      toastSuccess("success")
-      closeModal()
-       actions.getDTDDatas(getValues())
+      toastSuccess("success");
+      closeModal();
+      actions.getDTDDatas(getValues());
     }
   };
 
+  const handleOnClickB = () => {
+    log("clicked");
+  };
 
   return (
     <>
@@ -193,9 +198,23 @@ const Modal = ({ loadItem }: Props) => {
                 <MaskedInputField
                   id="cal_issue_or_nm"
                   label="l_gubn"
-                  width="w-32"
-                  value={detailRVDatas?.[detailIndex]?.cal_issue_or_nm||''}
+                  width="w-20"
+                  value={detailRVDatas?.[detailIndex]?.cal_issue_or_nm || ""}
                   options={{
+                    inline: true,
+                    isReadOnly: true,
+                    fontSize: "lg",
+                    fontWeight: "semibold",
+                  }}
+                />
+                <MaskedInputField
+                  id="settlement_type"
+                  width="w-20"
+                  value={
+                    detailRVDatas?.[detailIndex]?.settlement_type || "선불"
+                  }
+                  options={{
+                    noLabel: true,
                     inline: true,
                     isReadOnly: true,
                     fontSize: "lg",
@@ -213,7 +232,6 @@ const Modal = ({ loadItem }: Props) => {
                     isReadOnly: true,
                   }}
                 />
-                {/* <div className="flex-1 max-w-[1000px]"> */}
                 <CustomSelect
                   id="cnee_id"
                   label="l_cnee_id"
@@ -231,7 +249,12 @@ const Modal = ({ loadItem }: Props) => {
                   gridStyle={{ width: "600px", height: "300px" }}
                   style={{ width: "1200px", height: "8px" }}
                   isDisplay={true}
-                  defaultValue={detailRVDatas?.[detailIndex]?.cnee_id||''}
+                  isReadOnly={
+                    detailRVDatas?.[detailIndex]?.state === state.closing
+                      ? true
+                      : false
+                  }
+                  defaultValue={detailRVDatas?.[detailIndex]?.cnee_id || ""}
                   inline={true}
                 />
                 {/* </div> */}
@@ -278,7 +301,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <MaskedInputField
                       id="waybill_gubn"
-                      value={detailRVDatas?.[detailIndex]?.waybill_gubn||''}
+                      value={detailRVDatas?.[detailIndex]?.waybill_gubn}
                       options={{
                         bgColor: "!bg-gray-100",
                         inline: true,
@@ -290,7 +313,7 @@ const Modal = ({ loadItem }: Props) => {
                     <MaskedInputField
                       id="ci_invoice"
                       label="invoice_no"
-                      value={detailRVDatas?.[detailIndex]?.ci_invoice||''}
+                      value={detailRVDatas?.[detailIndex]?.ci_invoice || ""}
                       options={{
                         bgColor: "!bg-gray-100",
                         inline: true,
@@ -300,7 +323,7 @@ const Modal = ({ loadItem }: Props) => {
 
                     <MaskedInputField
                       id="gross_wt"
-                      value={detailRVDatas?.[detailIndex]?.gross_wt||''}
+                      value={detailRVDatas?.[detailIndex]?.gross_wt || ""}
                       options={{
                         bgColor: "!bg-gray-100",
                         inline: true,
@@ -308,18 +331,23 @@ const Modal = ({ loadItem }: Props) => {
                       }}
                     />
                   </div>
-                  {/* <input className="hidden" value={detailRVDatas?.[detailIndex].seq} /> */}
+                  <MaskedInputField
+                    id="kwe_remark"
+                    value={detailRVDatas?.[detailIndex]?.kwe_remark || ""}
+                    options={{
+                      inline: true,
+                    }}
+                  />
                   <MaskedInputField
                     id="seq"
-                    value={detailRVDatas?.[detailIndex]?.seq||''}
+                    value={detailRVDatas?.[detailIndex]?.seq || ""}
                     isDisplay={false}
                     options={{
                       bgColor: " none",
                       inline: true,
-                      isReadOnly:
-                       detailRVDatas?.[detailIndex]?.update_date === crudType.CREATE ? false : true,
                     }}
                   />
+
                   {/* <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                       <MaskedInputField
@@ -340,20 +368,8 @@ const Modal = ({ loadItem }: Props) => {
                 <div className="col-span-2 px-1">
                   <div className="grid grid-cols-2 gap-1">
                     <DatePicker
-                      id="settlement_date"
-                      value={
-                        detailRVDatas?.[detailIndex]?.settlement_date ||''                        
-                      }
-                      options={{
-                        inline: true,
-                        textAlign: "center",
-                        freeStyles: "p-1 border-1 border-slate-300",
-                        isReadOnly: true,
-                      }}
-                    />
-                    <DatePicker
                       id="eta"
-                      value={detailRVDatas?.[detailIndex]?.eta||''}
+                      value={detailRVDatas?.[detailIndex]?.eta || ""}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -363,9 +379,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <DatePicker
                       id="create_date"
-                      value={
-                        detailRVDatas?.[detailIndex]?.create_date || ''
-                      }
+                      value={detailRVDatas?.[detailIndex]?.create_date || ""}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -373,20 +387,33 @@ const Modal = ({ loadItem }: Props) => {
                         isReadOnly: true,
                       }}
                     />
+                    <DatePicker
+                      id="settlement_date"
+                      value={
+                        detailRVDatas?.[detailIndex]?.settlement_date || ""
+                      }
+                      options={{
+                        inline: true,
+                        textAlign: "center",
+                        freeStyles: "p-1 border-1 border-slate-300",
+                        isReadOnly: true,
+                      }}
+                    />
                     <MaskedInputField
-                      id="create_user"
-                      value={detailRVDatas?.[detailIndex]?.create_user||''}
+                      id="settlement_user"
+                      value={
+                        detailRVDatas?.[detailIndex]?.settlement_user || ""
+                      }
                       options={{
                         inline: true,
                         textAlign: "center",
                         isReadOnly: true,
                       }}
                     />
+
                     <DatePicker
                       id="update_date"
-                      value={
-                        detailRVDatas?.[detailIndex]?.update_date || ''
-                      }
+                      value={detailRVDatas?.[detailIndex]?.update_date || ""}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -396,7 +423,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <MaskedInputField
                       id="update_user"
-                      value={detailRVDatas?.[detailIndex]?.update_user||''}
+                      value={detailRVDatas?.[detailIndex]?.update_user || ""}
                       options={{
                         inline: true,
                         isReadOnly: true,
@@ -404,9 +431,19 @@ const Modal = ({ loadItem }: Props) => {
                       }}
                     />
                   </div>
+                  <MaskedInputField
+                    id="total"
+                    value={detailRVDatas?.[detailIndex]?.update_user || ""}
+                    options={{
+                      bgColor: "!bg-sky-200",
+                      inline: true,
+                      isReadOnly: true,
+                      textAlign: "center",
+                    }}
+                  />
                 </div>
               </div>
-              <div className="flex items-center justify-center w-full space-x-2">
+              <div className="flex items-center justify-center w-full h-4 space-x-2">
                 <Button
                   id={"left"}
                   onClick={onClickeventBefore}
@@ -423,12 +460,38 @@ const Modal = ({ loadItem }: Props) => {
                   width="w-14"
                 />
                 <span className="text-gray-700">
-                  {state.detailIndex+1}{" / "}{Math.floor(state.allData.length / 2)}
+                  {state.detailIndex + 1}
+                  {" / "}
+                  {Math.floor(state.allData.length / 2)}
                 </span>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-3 ">
                 <Amount loadItem={loadItem} />
               </div>
+              <fieldset className="p-3 ml-auto border border-gray-300 rounded-lg w-fit">
+                <legend className="px-2 text-sm font-semibold text-gray-600">
+                  Info
+                </legend>
+                <div
+                  className="grid grid-cols-2 gap-2 cursor-pointer hover:bg-gray-100"
+                  onClick={handleOnClickB}
+                >
+                  <span className="text-gray-700">
+                    {"입금 : 2025-02-14           "}
+                  </span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                  <span className="text-gray-700">
+                    {"환불 : 2025-02-14          "}
+                  </span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                  <span className="text-gray-700">
+                    {"조정 : 2025-02-14          "}
+                  </span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                  <span className="text-gray-700">{"정산잔액 : "}</span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                </div>
+              </fieldset>
             </div>
           </form>
         </DialogArrow>

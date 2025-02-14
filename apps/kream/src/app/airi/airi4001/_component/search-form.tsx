@@ -39,11 +39,15 @@ const SearchForm = ({ loadItem }: any) => {
   const searchParams = useCommonStore((state) => state.searchParams);
   const actions = useCommonStore((state) => state.actions);
 
-  const [status, setStatus] = useState<any>();
+  const [settlementUser, setSettlementUser] = useState<any>();  
+  const [logis, setLogis] = useState<any>();  
+  const [broker, setBroker] = useState<any>();
 
   useEffect(() => {
     if (loadItem?.length) {
-      setStatus(loadItem[0]);
+      setSettlementUser(loadItem[0]);
+      setLogis(loadItem[3]);
+      setBroker(loadItem[4]);
     }    
   }, [loadItem]);
 
@@ -58,7 +62,11 @@ const SearchForm = ({ loadItem }: any) => {
 
   const onReset = () =>{}
 
-  function handleKeyDown(e:KeyboardEvent) {}
+  function handleKeyDown(e:KeyboardEvent) {
+    if (e.key === "Enter") {
+      onSearch();
+    }
+  }
 
   const handleChange = useCallback(
     (e: any, id: any, date: any) => {
@@ -127,12 +135,8 @@ const SearchForm = ({ loadItem }: any) => {
                 },
               }}
             />
-          </div>
-
-          <div className={"col-span-1"}>           
-            <ReactSelect
-              id="create_user"
-              label="create_user"
+             {/* <ReactSelect
+              id="fh_dtd"
               dataSrc={status as data}
               width="w-96"
               lwidth="w-20"
@@ -143,8 +147,53 @@ const SearchForm = ({ loadItem }: any) => {
                 inline: true,
                 defaultValue: state.searchParams?.state,
               }}
-            />
+            /> */}
           </div>
+          <div className={"col-span-1"}>           
+          <ReactSelect
+              id="logis_id"
+              dataSrc={logis as data}
+              width="w-96"
+              lwidth="w-20"
+              height="8px"
+              options={{
+                keyCol: "create_user",
+                displayCol: ["create_user_nm"],
+                inline: true,
+                defaultValue: state.searchParams?.state,
+              }}
+            />
+            <ReactSelect
+              id="broker_id"
+              dataSrc={broker as data}
+              width="w-96"
+              lwidth="w-20"
+              height="8px"
+              options={{
+                keyCol: "create_user",
+                displayCol: ["create_user_nm"],
+                inline: true,
+                defaultValue: state.searchParams?.state,
+              }}
+            />
+            </div>
+          <div className={"col-span-1"}>           
+            <ReactSelect
+              id="settlement_user"
+              dataSrc={settlementUser as data}
+              width="w-96"
+              lwidth="w-20"
+              height="8px"
+              options={{
+                keyCol: "settlement_user",
+                displayCol: ["settlement_user_nm"],
+                inline: true,
+                defaultValue: state.searchParams?.state,
+              }}
+            />
+
+          </div>
+
         </PageSearchButton>
         </div>
   );
