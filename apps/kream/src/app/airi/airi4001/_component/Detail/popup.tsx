@@ -431,6 +431,7 @@ const Modal = ({ loadItem }: Props) => {
                       }}
                     />
                   </div>
+                  
                   <MaskedInputField
                     id="total"
                     value={detailRVDatas?.[detailIndex]?.update_user || ""}
