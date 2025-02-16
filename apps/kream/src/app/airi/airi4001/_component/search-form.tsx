@@ -157,8 +157,8 @@ const SearchForm = ({ loadItem }: any) => {
               lwidth="w-20"
               height="8px"
               options={{
-                keyCol: "create_user",
-                displayCol: ["create_user_nm"],
+                keyCol: "logis_id",
+                displayCol: ["logis_nm"],
                 inline: true,
                 defaultValue: state.searchParams?.state,
               }}
@@ -170,8 +170,8 @@ const SearchForm = ({ loadItem }: any) => {
               lwidth="w-20"
               height="8px"
               options={{
-                keyCol: "create_user",
-                displayCol: ["create_user_nm"],
+                keyCol: "broker_id",
+                displayCol: ["broker_nm"],
                 inline: true,
                 defaultValue: state.searchParams?.state,
               }}

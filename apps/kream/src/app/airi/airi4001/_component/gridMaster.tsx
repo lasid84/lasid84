@@ -20,7 +20,6 @@ import {
   RowClickedEvent,
   SelectionChangedEvent,
 } from "ag-grid-community";
-// import { TextArea } from "components/input";
 import { useCommonStore, AmountInputOptions_g } from "../_store/store";
 import DetailModal from "./Detail/popup";
 import { DatePicker } from "components/date";
@@ -99,22 +98,22 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       "remark",
       "use_yn",
     ],
-    checkbox: ["use_yn"],
+    checkbox: ["use_yn"],    
     isMultiSelect: true,
     total: {
       waybill_no: "count",
-      air_freight: "sum",
-      bl_handling: "sum",
-      bonded_wh: "sum",
-      customs_clearance: "sum",
-      customs_duty: "sum",
-      customs_tax: "sum",
-      dispatch_fee: "sum",
-      special_handling: "sum",
-      dtd_handling: "sum",
-      trucking: "sum",
-      trucking_cost: "sum",
-      other_1: "sum",
+      // air_freight: "sum",
+      // bl_handling: "sum",
+      // bonded_wh: "sum",
+      // customs_clearance: "sum",
+      // customs_duty: "sum",
+      // customs_tax: "sum",
+      // dispatch_fee: "sum",
+      // special_handling: "sum",
+      // dtd_handling: "sum",
+      // trucking: "sum",
+      // trucking_cost: "sum",
+      // insurance_fee: "sum",
     },
     displayCalculatedFields: [
       "bl_handling",
@@ -152,13 +151,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       },
     },
     rowSpanByConfig: {
-      targetCol: ["waybill_no", "use_yn"],
+      targetCol: ["waybill_no", "use_yn","cnee_name"],
       compareCol: {
         waybill_no: ["all"]
       },
       standardCol: "waybill_no"
     },
-    columnVerticalCenter: ["waybill_no", "use_yn"]
+    columnVerticalCenter: ["waybill_no", "use_yn",'cnee_name']
   };
 
   /*
@@ -648,17 +647,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                       isReadOnly: false,
                     }}
                   />
-                  {/* <MaskedInputField
-                    id="insurance_fee_vat"
-                    value={mainSelectedRow?.insurance_fee_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: true,
-                    }}
-                  /> */}
                 </div>
 
                 {/* 기타수수료(other1) */}
