@@ -27,7 +27,7 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
 
   useEffect(() => {
     onSearch();
-  }, [])
+  }, [loadDatas])
 
   const onSearch = () => {
     const params = getValues();
@@ -58,10 +58,9 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
       ...param
     }
 
-    log("onSave", newData, mainSelectedRow);
-    setMainDatas( newData)
-      .then(() => {getMainDatas(param)});
-    ;
+    // log("onSave", newData, mainSelectedRow);
+    setMainDatas( newData);
+      // .then(() => {getMainDatas(param)});
   }
   
   return (

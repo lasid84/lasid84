@@ -29,15 +29,18 @@ type Store = StoreState & {
 };
 
 const getInitialSearchParams = () => {
-    const { currentParams } = useUserSettings.getState().data;
-    const { trans_mode, trans_type} = getMenuParameters(currentParams);
+    // const { currentParams } = useUserSettings.getState().data;
+    // const { trans_mode, trans_type} = getMenuParameters(currentParams);
     
-    log("trans_mode, trans_type", currentParams, trans_mode, trans_type)
+    // log("trans_mode, trans_type", currentParams, trans_mode, trans_type)
 
     return {
         search_cust_code: null,
-        trans_mode: trans_mode,
-        trans_type: trans_type,
+        // trans_mode: trans_mode,
+        // trans_type: trans_type,
+        // 임시조치 - stephen
+        trans_mode: 'A',
+        trans_type: 'I',
     }
 };
 

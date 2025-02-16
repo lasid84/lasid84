@@ -11,6 +11,8 @@ import type { GridOption, gridData } from 'components/grid/ag-grid-enterprise';
 import { RowClickedEvent, SelectionChangedEvent } from "ag-grid-community";
 
 import { log, error } from '@repo/kwe-lib-new';
+import { PageGrid } from "@/layouts/grid/grid";
+import { LabelGrid } from "@/components/label";
 
 type Props = {
     initData? : any | null;
@@ -21,9 +23,9 @@ const MasterGrid: React.FC<Props> = memo(() => {
     const gridRef = useRef<any | null>(null);
     const { dispatch, objState = {} } = useAppContext();
     const { searchParams, isMSearch, excel_data } = objState;
-    const [ mData, setMData] = useState<gridData>();
+    // const [ mData, setMData] = useState<gridData>();
 
-    const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetIFData, {enabled:false});
+    // const { data: mainData, refetch: mainRefetch, remove: mainRemove } = useGetData(searchParams, SEARCH_M, SP_GetIFData, {enabled:false});
     const gridOption: GridOption = {
         colVisible: { col : ["uuid", "record_id", "sort_id", "print_ind", "type"], visible:false },
         // colDisable: ["trans_mode", "trans_type", "ass_transaction"],
@@ -48,36 +50,42 @@ const MasterGrid: React.FC<Props> = memo(() => {
     const handleSelectionChanged = useCallback((param:SelectionChangedEvent) => {
     }, []);
 
-    useEffect(() => {
-        if (isMSearch) {
-            mainRefetch();
-            dispatch({isMSearch:false, uploadFile_init:false});
-            setMData(mainData as gridData);
-            // log("MasterGrid", mainData)
-        }
-    }, [isMSearch]);
+    // useEffect(() => {
+    //     if (isMSearch) {
+    //         mainRefetch();
+    //         dispatch({isMSearch:false, uploadFile_init:false});
+    //         setMData(mainData as gridData);
+    //         // log("MasterGrid", mainData)
+    //     }
+    // }, [isMSearch]);
 
-    useEffect(() => {
-        setMData(mainData as gridData);
-    }, [mainData])
+    // useEffect(() => {
+    //     setMData(mainData as gridData);
+    // }, [mainData])
 
-    useEffect(() => {
-        // log("excel_data", excel_data);
-        if (Object.keys(excel_data).length) setMData(excel_data);
-    }, [excel_data]);
+    // useEffect(() => {
+    //     log("excel_data", excel_data);
+    //     if (Object.keys(excel_data).length) setMData(excel_data);
+    // }, [excel_data]);
 
     return (
-        <Grid
-            id="gridMaster"
-            gridRef={gridRef}
-            // loadItem={initData}
-            listItem={mData}
-            options={gridOption}
-            event={{
-                onRowClicked: handleRowClicked,
-                onSelectionChanged: handleSelectionChanged,
-            }}
-        />
+        <>
+            <PageGrid
+                title={<><LabelGrid id={'excel_data'} /></>}
+            >
+                <Grid
+                    id="gridMaster"
+                    gridRef={gridRef}
+                    // loadItem={initData}
+                    listItem={excel_data}
+                    options={gridOption}
+                    event={{
+                        onRowClicked: handleRowClicked,
+                        onSelectionChanged: handleSelectionChanged,
+                    }}
+                />
+            </PageGrid>
+        </>
     );
 });
 

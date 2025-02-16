@@ -1,4 +1,5 @@
 const EXCHANGE_RATE_BATCH_CHANNEL_URL = "https://nttaaz00000009.webhook.office.com/webhookb2/050f10d9-818e-4f44-9ff9-48b17ae33122@d245a9b2-207b-44d9-a89d-8a679234928a/IncomingWebhook/3923be62e6a0454c92ce657704ea2ff3/fe95c2f2-4af5-4823-999c-baf32e28b648/V22sc185s0kMy_v_l_MH3aPTE_dWsEgDCWg303sFzcIaE1";
+const INSERT_USFP_MILESTONE_CHANNEL_URL = "https://nttaaz00000009.webhook.office.com/webhookb2/050f10d9-818e-4f44-9ff9-48b17ae33122@d245a9b2-207b-44d9-a89d-8a679234928a/IncomingWebhook/d48614ce646d48d4b02476dbe99f6f03/fe95c2f2-4af5-4823-999c-baf32e28b648/V2NmlNWZNOL82Mz6ezWbxZWl0IUjZduhV3EJ-3LbTUq0s1";
 
 const batchReportTemplate = {
     "type": "message",
@@ -341,6 +342,7 @@ const batchReportProcessObject = {
 
 module.exports = {
     EXCHANGE_RATE_BATCH_CHANNEL_URL,
+    INSERT_USFP_MILESTONE_CHANNEL_URL,
     batchReportTemplate,
     batchReportProcessObject
 }

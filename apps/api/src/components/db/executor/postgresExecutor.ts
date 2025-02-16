@@ -24,6 +24,7 @@ export const executePostgresProcedure = async (
     const connector: DBConnector = getConnector('postgresql', connStr);
     let client: PoolClient = await connector.getClient();
     try {
+        
         const [schema, procName] = procedureName.includes('.')
             ? procedureName.split('.') : ['public', procedureName];
 
@@ -70,9 +71,10 @@ export const executePostgresProcedure = async (
         
         return result;
     } catch (err) {
+        log("err", err);
         await client.query('ROLLBACK');
         return {
-            numericData: -1,
+            numericData: -2,
             textData: JSON.stringify(err),
         };
     } finally {
@@ -129,7 +131,7 @@ const checkExistsProcedure = async (client: PoolClient, schema: string, procName
     } catch (err) {
         await client.query('ROLLBACK');
         return {
-            numericData: -1,
+            numericData: -3,
             textData: JSON.stringify(err),
         };
     } finally {

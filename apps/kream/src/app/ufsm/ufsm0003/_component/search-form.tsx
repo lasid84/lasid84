@@ -46,7 +46,6 @@ const SearchForm = memo(({loadItem}:any) => {
 
   useEffect(() => {
     const params = getValues();
-    log("start", params)
     dispatch({ searchParams: params});
     onSearch();
   }, [])
@@ -87,7 +86,7 @@ const SearchForm = memo(({loadItem}:any) => {
             dispatch({ isMSearch: true });
         }
     });
-    dispatch({excel_data: {}});
+    dispatch({excel_data: {data:{}, fields:{}}});
   }
 
   return (

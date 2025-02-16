@@ -22,7 +22,9 @@ import {
   RowClassParams,
   RowStyle,
   RowSpanParams,
-  DragStoppedEvent
+  NewValueParams,
+  DragStoppedEvent,
+  ICellEditorParams
 } from "ag-grid-community";
 
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -38,6 +40,8 @@ import { SP_GetPersonalColInfoData, SP_SetMyColumnInfo } from './_component/data
 import { bgColor } from './types/constant';
 
 import { log, error, stringToFullDateString, stringToTime, sleep } from '@repo/kwe-lib-new';
+
+import CustomSelectCellEditor from './_component/customSelectCellEditor';
 
 export const ROW_TYPE = '__ROWTYPE';
 export const ROW_INDEX = '__ROWINDEX';
@@ -88,6 +92,9 @@ export type GridOption = {
   select?: {
     [key: string]: string[]; 
   };
+  customSelectCells?: {
+    [key: string]: any;
+  }
   icon?: any;
   colVisible?: {
     col: string[]
@@ -102,6 +109,7 @@ export type GridOption = {
   alignRight?: string[],                  //dataType : number면 자동 우측 정렬
   editable?: string[];
   isEditableOnlyNewRow?: boolean,
+  isEditableAllNewRow?: boolean,          // 추가 row 모든 열 editable 설정
   isEditableAll?:boolean,                 // 전체컬럼 editable 설정
   dataType?: { [key: string]: string };   //date, number, text, bizno, largetext
   typeOptions?: {
@@ -128,6 +136,32 @@ export type GridOption = {
   rowSpan?: string[]
   isColumnHeaderVisible?: boolean
   cellClass?: { [key in bgColor]: string | ((params: any) => string) }; 
+  rowHeight?: number;
+  isVerticalCenter?: boolean;
+  rowDivide?: string;
+  largetextPreWrap?: boolean;
+  rowSpanByConfig?: {
+    targetCol: string[];
+    compareCol: { [key:string]: string[] };
+    standardCol: string;
+  };
+  multipleCells?: {
+    targetCol: string[];
+    compareCol: { [key:string]: string[] };
+    spliter: string;
+  };
+  heightColByConfig?: {
+    targetList: string[];
+    excludeFormula: { [key:string]: string[] };
+    normalHeight: number;
+    expandHeight: number; 
+  };
+  columnSpanByConfig?: {
+    targetCol: string[];
+    compareCol: { [key:string]: string[] };
+  };
+  changeColor?: string[];
+  columnVerticalCenter?: string[];
 
   notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
 };
@@ -168,7 +202,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
   const [ personalColInfoParam, setPersonalColInfoParam ] = useState<any>(null);
   // const [ personalColInfo, setPersonalColInfo ] = useState<any>();
-
+  
   // const path = usePathname();
   const { data: personalColInfoData, refetch: personalColInfoRefetch } = useGetData(personalColInfoParam, "PersonalColumnInfo", SP_GetPersonalColInfoData, { enabled: true });
   const { Create: setMyColInfo } = useUpdateData2(SP_SetMyColumnInfo, "MyColumnInfo");
@@ -257,7 +291,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
   // const gridOptions: GridOptions = useMemo(() => {
   const gridOptions: GridOptions = useMemo(() => {
     return {
-      rowHeight: 25,
+      rowHeight: (options?.rowHeight)? options.rowHeight : 25,
       headerHeight: options?.isColumnHeaderVisible === false ? 0 : 25,
       // autoHeaderHeight:true,
       rowSelection: options?.isMultiSelect ? 'multiple' : 'single',
@@ -341,6 +375,22 @@ const ListGrid: React.FC<Props> = memo((props) => {
           // await delay(100);
           // log("rowClassRules", params, params.data, params.data[ROW_HIGHLIGHTED]);
           return params.data[ROW_HIGHLIGHTED] === 'Y';
+        },
+        "row-divide" : (params) => {
+          if (options?.rowDivide?.length) {
+            const col = options.rowDivide;
+            const currentData = params.data[col];
+            if (currentData) {
+              const nextData = params.api.getDisplayedRowAtIndex(params.rowIndex + 1)?.data[col];
+              if (!nextData) {
+                return false;
+              }
+              
+              return currentData !== nextData;
+            }
+          }
+
+          return false;
         },
       }
     };
@@ -461,10 +511,21 @@ const ListGrid: React.FC<Props> = memo((props) => {
             // minWidth: 30,
             // maxWidth: 70,
             width: myColInfos[i]?.col_width ? Number(myColInfos[i]?.col_width) : 60,
-            cellStyle: { textAlign: "center" },
+            cellStyle: options?.isVerticalCenter ? { display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden", height: "100%"}: { textAlign: "center" },
             aggFunc: "count",
             editable: false
           }
+          
+          if (options?.pinned) {
+            var arrCols = Object.keys(options.pinned);
+            if (arrCols.indexOf(col) > -1) {
+              cellOption = {
+                ...cellOption,
+                pinned: options.pinned[col]
+              };
+            }
+          }
+
           cols.push({
             field: col,
             headerName: t(col),
@@ -487,7 +548,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
             // width:200
           }
         }
-        
 
         cellOption = {
           ...cellOption,
@@ -583,6 +643,14 @@ const ListGrid: React.FC<Props> = memo((props) => {
               cellEditor: 'agLargeTextCellEditor',
               cellEditorPopup: true,
             }
+            if (options?.largetextPreWrap) {
+              cellOption = {
+                ...cellOption,
+                cellStyle: {
+                  whiteSpace: "pre-wrap"
+                }
+              }
+            }
           }
         };
 
@@ -603,24 +671,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
               ...cellOption,
               cellStyle: { textAlign: "right" },
             };
-          }
-        }
-
-        //체크박스 셋팅
-        if (options?.checkbox) {
-          if (options.checkbox.indexOf(col) > -1) {
-             log("checkbox:", col)
-            cellOption = {
-              ...cellOption,
-              // editable:true,
-              headerCheckboxSelection: options?.isMultiSelect ? true : false,
-              // checkboxSelection: true,
-              valueParser: checkBoxParser,
-              valueFormatter: checkBoxFormatter,
-              cellDataType: 'boolean',
-              cellRenderer: 'agCheckboxCellRenderer',
-              cellEditor: 'agCheckboxCellEditor',
-            }
           }
         }
 
@@ -655,6 +705,20 @@ const ListGrid: React.FC<Props> = memo((props) => {
               cellEditorParams: {
                 values: options.select[col],
               } as ISelectCellEditorParams,
+            }
+          }
+        }
+
+        // CustomeSelect setting.
+        if (options?.customSelectCells) {
+          const arrCols = Object.keys(options.customSelectCells);
+          if (arrCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              cellEditor: CustomSelectCellEditor,
+              cellEditorParams: {
+                values: options.customSelectCells[col],
+              },
             }
           }
         }
@@ -700,27 +764,161 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
+        // 조건부 텍스트 색상 변경
+        if (options?.changeColor) {
+          const arrCols = options.changeColor;
+          if (arrCols.indexOf(col) > -1) {
+            cellOption = {
+              ...cellOption,
+              cellClassRules: {
+                ...cellOption.cellClassRules,
+                "cell-verify-success": (params:any) => {
+                  if (params.node.data[col.concat("_flag")] === "Y") {
+                    return true;
+                  }
+
+                  return false;
+                },
+                "cell-verify-fail": (params:any) => {
+                  if (params.node.data[col.concat("_flag")] === "N") {
+                    return true;
+                  }
+
+                  return false;
+                }
+              }
+            }
+          }
+        }
+
+        // grid 수직 가운데 정렬 설정
+        if (options?.isVerticalCenter) {
+          cellOption = {
+            ...cellOption,
+            cellStyle: {
+              ...cellOption.cellStyle,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: 'center'
+            }
+          }
+        }
+
+        // 컬럼별 수직 설정
+        if (options?.columnVerticalCenter) {
+          const columns = options.columnVerticalCenter;
+          if (columns.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              cellStyle: {
+                ...cellOption.cellStyle,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: 'center'
+              }
+            }
+          }
+        }
+
+        //rowSpanByConfig
+        if (options?.rowSpanByConfig) {
+          const targetCols = options.rowSpanByConfig.targetCol;
+          if (targetCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              rowSpan: getRowSpanByConfig,
+              cellRenderer: rowSpanByConfigRenderer,
+              onCellValueChanged: rowSpanByConfigValueChanged,
+              cellDataType: false,
+              cellClassRules: {
+                ...cellOption.cellClassRules,
+                "show-cell": "value !== undefined",
+                "row-span-default": (params: any) => {
+                  const api = gridRef.current.api;
+
+                  if (api.getDisplayedRowCount()-1 === params.node.rowIndex || params.node.rowIndex === 0) {
+                    return false;
+                  }
+
+                  if (params.value === "" || params.value === undefined) {
+                    return false;
+                  }
+
+                  const currentRowNode = api.getRowNode(params.node.rowIndex);
+                  const nextRowNode = api.getRowNode(params.node.rowIndex+1);
+                  
+                  const standardCol = options.rowSpanByConfig?.standardCol;
+                  if (standardCol) {
+                    if (currentRowNode.data[standardCol] === nextRowNode.data[standardCol]) {
+                      return true;
+                    }
+                  }
+                  return false;
+                }
+              }
+            }
+          }
+        }
+
+        //체크박스 셋팅
+        if (options?.checkbox) {
+          if (options.checkbox.indexOf(col) > -1) {
+             log("checkbox:", col)
+            cellOption = {
+              ...cellOption,
+              // editable:true,
+              headerCheckboxSelection: options?.isMultiSelect ? true : false,
+              // checkboxSelection: true,
+              valueParser: checkBoxParser,
+              valueFormatter: checkBoxFormatter,
+              cellDataType: 'boolean',
+              cellRenderer: 'agCheckboxCellRenderer',
+              cellEditor: 'agCheckboxCellEditor',
+            }
+          }
+        }
+
+        //multipleCells
+        if (options?.multipleCells) {
+          const targetCols = options.multipleCells.targetCol;
+          if (targetCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              cellRenderer: multipleCellsRenderer,
+              cellClassRules: {
+                "show-cell": "value !== undefined",
+              }
+            }
+          }
+        }
+
         //cell스타일지정
         if (options?.cellClass) {
           const arrCols = Object.keys(options.cellClass);
-          if (arrCols.indexOf(col) > -1) {
-            const classOrFunction = options.cellClass[col];           
-        
+          if (arrCols.indexOf(col) > -1) {    
+            const classOrFunction = options.cellClass[col];
+            let originStyle = {...cellOption.cellStyle};
+
             cellOption = {
               ...cellOption,
               cellStyle: (params: any) => {
                  if (typeof classOrFunction === "function") {
                  ///함수 타입인 경우, 동적으로 스타일 반환
                   const dynamicClass = classOrFunction(params);
-                
-                  return bgColor[dynamicClass] || null;
+
+                  const colorStyles = {
+                    backgroundColor: bgColor[dynamicClass]?.backgroundColor || null,
+                    color: bgColor[dynamicClass]?.color || null
+                  };
+
+                  originStyle = {...originStyle, ...colorStyles};
+
+                  return originStyle;
                 }
-                //return null; // 기본값
               },
             };
           }
         }
-        
 
         //rowSpan
         if (options?.rowSpan?.length) {
@@ -747,6 +945,26 @@ const ListGrid: React.FC<Props> = memo((props) => {
               wrapText:true,
             }
          }
+        }
+
+        // columnSpanByConfig
+        if (options?.columnSpanByConfig) {
+          const targetCols = options.columnSpanByConfig.targetCol;
+          if (targetCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              colSpan: (params: any) => {
+                for (const [key, value] of Object.entries(options?.columnSpanByConfig?.compareCol!)) {
+                  if (value.includes(params.data[key])) {
+                    return 2;
+                  }
+                }
+
+                return 1;
+              }
+            }
+          }
+          
         }
 
         cols.push({
@@ -803,20 +1021,36 @@ const ListGrid: React.FC<Props> = memo((props) => {
   }, [props.gridState, gridRef?.current])
 
   const onGridReady = (param: GridReadyEvent) => {
-    // log("onGridReady");
+    /**
+     * @dev
+     * 페이지 별 rowHeight를 다르게 설정하기 위한 gridOption.
+     */
+    const option = options?.heightColByConfig;
+    if (option) {
+      const columnApi = gridRef.current.api;
+      columnApi.setGridOption("getRowHeight", (params: any) => {
+          if (option) {
+            const target = option.targetList;
+            const displayColumnList = gridRef.current.columnApi.getAllDisplayedColumns();
+            if (displayColumnList.some((value: any) => target.includes(value.colId))) {
+              
+              let isExclude = false;
+              for (const [key, value] of Object.entries(option.excludeFormula)) {
+                if (value.includes(params.data[key])) {
+                  isExclude = true;
+                }
+              }
 
-    // let result: any = {};
-
-    // gridRef?.current.api.getAllGridColumns().forEach((item: { [key: string]: string }) => {
-    //   result[item.colId] = null;
-    // });
-
-    // let pinnedBottomData = calculatePinnedBottomData(result);
-    // // log("============onGridReady", pinnedBottomData)
-
-    // if (pinnedBottomData && Object.keys(pinnedBottomData).length) {
-    //   gridRef?.current.api.setPinnedBottomRowData([pinnedBottomData]);
-    // }
+              if (!isExclude) {
+                return option.expandHeight;
+              }
+            }
+          }
+          
+          return option.normalHeight;
+      });
+      columnApi.resetRowHeights();
+    }
 
     if (event?.onGridReady) event.onGridReady(param);
 
@@ -826,13 +1060,31 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // log("onSelectionChanged")
     // const selectedRow = {...param.api.getSelectedRows()[0], [ROW_INDEX]: param.api.getSelectedNodes()[0].rowIndex};
     const selectedRow = param.api.getSelectedRows()[0];
+    let copied = [...colDefs];
     if (options?.isEditableOnlyNewRow) {
-      var copied = [...colDefs];
       copied.forEach(obj => {
         if (options.editable?.includes(obj.field)) obj['editable'] = (selectedRow[ROW_TYPE] === ROW_TYPE_NEW);
       });
+
+      setColDefs(copied);
+    } else if (options?.isEditableAllNewRow) {
+      const allColumns = param.api.getAllGridColumns();
+      const allColDefs = allColumns.map((col) => {
+        const colDef = col.getColDef();
+        
+        return {
+          ...colDef,
+          hide: !col.isVisible(),
+        }
+      });
+      copied = [...allColDefs];
+      copied.forEach(obj => {
+        obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? true : options.editable?.includes(obj.field);
+      });
+
       setColDefs(copied);
     }
+
     // currentRow = selectedRow[ROW_INDEX];
     if (event?.onSelectionChanged) event.onSelectionChanged(param);
 
@@ -859,6 +1111,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     if (!options?.notManageRowChange) {
       await rowNode.setData({...rowNode.data, [ROW_CHANGED]:true});
     }
+    
     // setRowChange(param.node);
 
     // const rowElement = document.querySelector(`[row-index="${rowNode.rowIndex}"]`) as HTMLElement;
@@ -1086,7 +1339,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // 다음 행의 셀 값이 현재 셀 값과 같다면 span을 증가시킴
     for (let i = rowIndex + 1; i < totalRow; i++) {
       let rowNode = gridRef.current.api.getRowNode(i);
-      if (rowNode.data[colId] === currentValue) span++;
+      if (rowNode.data[colId] === currentValue) {
+        span++;
+      }
       else break;
     }
 
@@ -1097,6 +1352,78 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // }
     // log("getRowSpan", param, rowIndex, colId, currentValue, totalRow, span)
     return span;
+  };
+
+  const rowSpanByConfigValueChanged = (param: NewValueParams) => {
+    const option = options?.rowSpanByConfig;
+    if (option) {
+      const newValue = param.newValue;
+      const changedColumn = param.column.getId();
+      const standardCol = option.standardCol;
+
+      if (param.data[standardCol] === '' || param.data[standardCol] === undefined) {
+        return;
+      }
+
+      const rowIndex = param.node?.rowIndex || 0;
+      const totalRow = gridRef.current.api.getDisplayedRowCount();
+
+      const currentRowNode = gridRef.current.api.getRowNode(rowIndex);
+      for (let i=rowIndex+1; i<totalRow; i++) {
+        const nextRowNode = gridRef.current.api.getRowNode(i);
+        if (nextRowNode.data[standardCol] === currentRowNode.data[standardCol]) {
+          nextRowNode.setDataValue(changedColumn, newValue);
+        } else {
+          break;
+        }
+      }
+    }
+  }
+
+  const getRowSpanByConfig = (param: RowSpanParams): number => {
+    const option = options?.rowSpanByConfig;
+    if (option) {
+      for (const [key, value] of Object.entries(option.compareCol)) {
+        if (value.includes("all") || value.includes(param.data[key])) {
+          const rowIndex = param.node?.rowIndex || 0;
+          let currentValue = param.data[option.standardCol];
+          if (!currentValue || currentValue === "") {
+            return 1;
+          }
+          let span = 1;
+          
+          const totalRow = gridRef.current.api.getDisplayedRowCount();
+          
+          if(!totalRow) {
+            return 1;
+          }
+
+          for (let i=rowIndex+1; i<totalRow; i++) {
+            let previousRowNode;
+            if (rowIndex === 0) {
+              previousRowNode = gridRef.current.api.getRowNode(i-1); // currentValue
+            } else {
+              previousRowNode = gridRef.current.api.getRowNode(i-2);
+            }
+            const nextRowNode = gridRef.current.api.getRowNode(i);
+            if ((rowIndex === 0) || (previousRowNode.data[option.standardCol] !== currentValue && nextRowNode.data[option.standardCol] === currentValue)) {
+              for (let j=rowIndex+1; j<totalRow; j++) {
+                const rowNode = gridRef.current.api.getRowNode(j);
+                if (rowNode.data[option.standardCol] === currentValue) {
+                  span++;
+                } else {
+                  break;
+                }
+              }
+              return span;              
+            } else {
+              return 0;
+            }
+          }
+        }
+      }
+    }
+    return 1;
   };
 
   const cellRenderer = (params: CustomCellRendererProps) => {
@@ -1114,11 +1441,69 @@ const ListGrid: React.FC<Props> = memo((props) => {
       <div style={{ position: 'relative', zIndex: 'auto' }}>
             <div className="show-name">{params.value}</div>
             {/* <div className="presenter-name">{params.value.presenter}</div> */}
-        </div>
+      </div>
+    );
+  };
+
+  const rowSpanByConfigRenderer = (params: CustomCellRendererProps) => {
+    if (params.node.rowIndex === null || params.node.rowIndex === undefined || params.node.rowIndex < 0 || !params.column) 
+      return;
+
+    const rowData = params.data;
+
+    if (options?.rowSpanByConfig) {
+      for (const [key, value] of Object.entries(options?.rowSpanByConfig?.compareCol)) {
+        if (value.includes("all") || value.includes(rowData[key])) {
+          const standardCol = options.rowSpanByConfig.standardCol;
+          if (params.node.rowIndex !== 0) {
+            let rowNode = gridRef.current.api.getRowNode(params.node.rowIndex - 1);
+            if (params.data[standardCol] === rowNode.data[standardCol]) {
+              return;
+            }
+          }
+        }
+      }
+    }
+
+    return (
+      <div style={{ zIndex: 'auto' }}>
+        <div className="show-name">{(params.valueFormatted)? params.valueFormatted : params.value}</div>
+      </div>
+    );
+  };
+
+  const multipleCellsRenderer = (params: CustomCellRendererProps) => {
+    if (params.node.rowIndex === null || params.node.rowIndex === undefined || params.node.rowIndex < 0 || !params.column) return;
+
+    const rowData = params.data;
+
+    const option = options?.multipleCells
+    if (option) {
+      for (const [key,value] of Object.entries(option.compareCol)) {
+        if (value.includes(rowData[key])) {
+          if (params.node.rowIndex !== 0) {
+            return (
+              <>
+                <div style={{ display:'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+                  <div className="show-name">{params.value.split(option.spliter)[0]}</div>
+                </div>
+                <div style={{ display:'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+                  <div className="show-name">{params.value.split(option.spliter)[1]}</div>
+                </div>
+              </>
+            )
+          }
+        }
+      }
+    }
+
+    return (
+      <div style={{ position: 'relative', zIndex: 'auto' }}>
+        <div className="show-name">{(params.valueFormatted)? params.valueFormatted : params.value}</div>
+      </div>
     );
   };
   
-
   return (
     <>
       <div className={containerStyle}>
@@ -1293,22 +1678,14 @@ export const JsonToGridData = (arrDataJson:any[], header:string[],headerLine=1) 
     "fields":[]
   };
 
-  for (let i = 1; i < headerLine; i++) {
-    let objData = arrDataJson.splice(0,1);
-    
-    //header 값이 달라져 데이터가 안보임..
-    // Object.entries(objData[0]).forEach(([key,val],j) => {
-    //   let idx = header.indexOf(key);
-    //   header[idx] = header[idx] + "\n" + val;
-    // });
-  }
+  // for (ls
 
   data.data = arrDataJson;
   data.fields = header.map(v => {
     let obj = {"name":v};
     return obj
   });
-  // log("JsonToGridData", data);
+  log("JsonToGridData", data);
   return data;
 }
 

@@ -1,4 +1,4 @@
-const { EXCHANGE_RATE_BATCH_CHANNEL_URL, batchReportTemplate, batchReportProcessObject } = require("./message_template");
+const { EXCHANGE_RATE_BATCH_CHANNEL_URL, INSERT_USFP_MILESTONE_CHANNEL_URL, batchReportTemplate, batchReportProcessObject } = require("./message_template");
 const { getKoreaTime } = require('@repo/kwe-lib/components/dataFormatter.js');
 
 class Teams {
@@ -19,6 +19,13 @@ class Teams {
         this.processArray = [];
         this.error = null;
         this.endTIme = null;
+    }
+
+    restart() {
+        this.processArray = [];
+        this.error = null;
+        this.startTime = getKoreaTime();
+        this.endTime = null;
     }
 
     addProcessResult(name, info, status=true) {
@@ -79,8 +86,15 @@ class Teams {
             request.attachments[0].content.body[0].columns[1].items[0].rows.push(object);
         }
 
+        let url;
+        if (this.title === "EXCHANGE_RATE_BATCH") {
+            url = EXCHANGE_RATE_BATCH_CHANNEL_URL;
+        } else {
+            url = INSERT_USFP_MILESTONE_CHANNEL_URL;
+        }
+
         try {
-            await fetch(EXCHANGE_RATE_BATCH_CHANNEL_URL, {
+            await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(request)
             });

@@ -110,6 +110,9 @@ const Modal: React.FC<Props> = () => {
         }
       });
     });
+
+    // log("handleFileDrop", data)
+
     actions.insExcelData({jsonData: JSON.stringify(data), file: file})
             .then(async (response : {[key:string]:any}[] | undefined ) => {
               if (response) {

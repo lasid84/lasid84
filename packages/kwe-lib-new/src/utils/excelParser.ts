@@ -11,7 +11,9 @@ type Options = {
 export const readFile = async (file: File, options?: Options) => {
     try {
         
-        const { fileExtension = '' } = options || {};
+        // const { fileExtension = '' } = options || {};
+
+        const fileExtension = file.name.split('.').pop() || '';
         
         let excelDatas: any[] = [];
         if (fileExtension.toUpperCase() === 'CSV') {

@@ -83,7 +83,7 @@ export const getTMSData = async (req: Request, res: Response) => {
     
     const { inproc, inparam, invalue } = req.body;
     const result = await executeMysqlProcedure(process.env.TMS_DB_CONNSTR, inproc, inparam, invalue);
-    
+    // log("=====--------=getTMSData", result)
     res.json(result);
   } catch (err) {
     error("Error fetching TMS data:", err);
