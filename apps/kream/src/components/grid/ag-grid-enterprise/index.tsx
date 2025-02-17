@@ -841,7 +841,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //체크박스 셋팅
         if (options?.checkbox) {
           if (options.checkbox.indexOf(col) > -1) {
-             log("checkbox:", col)
+            //  log("checkbox:", col)
             cellOption = {
               ...cellOption,
               // editable:true,

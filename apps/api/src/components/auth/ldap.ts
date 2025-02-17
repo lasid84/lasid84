@@ -21,7 +21,7 @@ export const checkAccount = async (
     user_id = user_id.replace('@kwe.com', '');
     client.bind(`${user_id}@kwekr.local`, password, (err: Error | null) => {
       if (err) {
-        error('LDAP authentication failed:', err);
+        error('LDAP authentication failed1:', err);
         callback(false, null, err.message);
       } else {
         log('Trying login', user_id);

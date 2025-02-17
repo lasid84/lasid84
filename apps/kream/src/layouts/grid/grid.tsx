@@ -18,17 +18,21 @@ export const PageGrid: React.FC<PageSearchProps> = ({
 }) => {
   return (
     <>
-      <div className="flex-col w-full h-full">
-        <div className="grid flex-col content-end w-full h-1/6">
+      {/* <div className="flex-col w-full h-full">
+        <div className="grid flex-col content-end w-full h-1/6"> */}
+        <div className="flex flex-col w-full h-full">
+          <div className="w-full"> 
           <div
             className={`h-10 flex w-full rounded-[5px] justify-between ${addition} dark:bg-gray-900 dark:border-gray-800 dark:text-white pr-1 `}
           >
-            <div className="flex inline gap-2 justify-self-start">{title}</div>
+            <div className="flex inline items-end gap-2 justify-self-start">{title}</div>
             <div className="flex inline gap-2 justify-self-end">{right}</div>
           </div>
         </div>
-        <div className="flex w-full h-5/6">
-          <div className="flex w-full h-full gap-1 justify-self-start md:flex-col ">
+        {/* <div className="flex w-full h-5/6"> */}
+        <div className="flex-1 flex w-full">
+          {/* <div className="flex w-full h-full gap-1 justify-self-start md:flex-col "> */}
+          <div className="flex w-full h-full gap-1 justify-self-start ">
             {children}
           </div>
         </div>

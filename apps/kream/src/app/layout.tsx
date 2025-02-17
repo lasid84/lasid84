@@ -21,6 +21,8 @@ import "css/ag-grid/ag-theme-balham.css";
 import "css/ag-grid/ag-theme-material.css";
 import "css/vendors/ReactToastify.css";
 
+import 'react-quill/dist/quill.snow.css';
+
 import  Layout from 'layouts/page'
 import { Suspense } from "react";
 

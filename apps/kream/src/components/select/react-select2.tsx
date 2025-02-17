@@ -6,11 +6,14 @@ import { Label } from "components/label"
 import './custom-select-style.css';
 
 import { log, error } from '@repo/kwe-lib-new';
+import { gridData } from '../grid/ag-grid-enterprise';
 
-export type data = {
-    data?: {}[],
-    field?: any[]
-} | undefined;
+// export type data = {
+//     data?: {}[],
+//     field?: any[]
+// } | undefined;
+
+export type data = gridData;
 
 export type event = {
     onChange?: (e: any, id:string, value:string) => void;
@@ -30,7 +33,7 @@ export type event = {
 
 export type ReactSelectProps = {
     id: string;
-    dataSrc: data;
+    dataSrc: gridData | undefined;
     label?: string;
     width?: string;
     height?: string;
@@ -57,7 +60,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
     const { control } = useFormContext();
     const { id, label, dataSrc, width, height, lwidth, options = {}, events } = props;
     const { dialog = false, keyCol, displayCol, defaultValue, placeholder, isMulti = false, inline = false, rules, noLabel = false, isAllYn = true, isDisplay=true,
-        isMandatory=true
+        isMandatory=true, isReadOnly=false
      } = options;
     const [list, setList] = useState<{}[] | undefined>([]);
     const [selectedVal, setSelectedVal] = useState<{} | null>(null);
@@ -82,7 +85,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
 
     useEffect(() => {
         setList(
-            dataSrc?.data?.map((item: any, i) => {
+            dataSrc?.data?.map((item: any, i:any) => {
                 var value = '', label = '';
                 if (keyCol) value = item[keyCol];
                 else value = item[Object.keys(item)[0]];
@@ -129,7 +132,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
                 }
 
                 return { value: value, label: label };
-            }).filter(x => x)
+            }).filter((x:any) => x)
         );
 
         // log("=============defaultValue", getValue);
@@ -306,6 +309,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
                                         menuPortalTarget={document.getElementsByClassName('dialog-base')[0] as HTMLElement}
                                         menuPosition='fixed'
                                         styles={customStyles}
+                                        isDisabled={isReadOnly}
                                     />
                                 </div>
                             );
@@ -330,6 +334,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
                                         onChange={(e: any) => { handleChange(e); }}
                                         onKeyDown={(e:any) => { handleKeyDown(e);}}
                                         styles={customStyles}
+                                        isDisabled={isReadOnly}
                                     />
                                 </div>
                             );
