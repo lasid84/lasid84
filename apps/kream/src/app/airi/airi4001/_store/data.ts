@@ -90,32 +90,32 @@ export const SP_GetDTDDetailData = async (searchParam: any) => {
 
 //청구내역서 Detail 조회2
 export const SP_GetDTDDetailData2 = async (searchParam: any) => {
-  log('SP_GetDTDDetailData2', searchParam)  
-  const { seq,  waybill_no} = searchParam;
-  const {user_id, ipaddr} = paramsUtils();
-  //user_id, ipaddr
-  const params = {
-    inparam : [
-       "in_waybill_no"
-      , "in_seq"
-      , "in_create_user"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      waybill_no
-      , seq
-      , ''
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi4001_get_dtd_detail22',
-    isShowLoading: false
-  }
+  // log('SP_GetDTDDetailData2', searchParam)  
+  // const { seq,  waybill_no} = searchParam;
+  // const {user_id, ipaddr} = paramsUtils();
+  // //user_id, ipaddr
+  // const params = {
+  //   inparam : [
+  //      "in_waybill_no"
+  //     , "in_seq"
+  //     , "in_create_user"
+  //     , "in_user"
+  //     , "in_ipaddr"
+  //   ],
+  //   invalue: [
+  //     waybill_no
+  //     , seq
+  //     , ''
+  //     , user_id
+  //     , ipaddr
+  //   ],
+  //   inproc: 'airimp.f_airi4001_get_dtd_detail22',
+  //   isShowLoading: false
+  // }
 
-  const result = await executeKREAMFunction(params);
-  // console.log('f_airi4001_get_dtd_detail22 22', result)
-  return result;
+  // const result = await executeKREAMFunction(params);
+  // // console.log('f_airi4001_get_dtd_detail22 22', result)
+  // return result;
 }
 
 

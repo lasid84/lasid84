@@ -123,7 +123,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       "special_handling",
       "dtd_handling",
       "trucking",
-      "insurance_fee",
+      // "insurance_fee",
       "other_1",
       "other_2",
       "other_3",
@@ -142,7 +142,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       dtd_handling: "number",
       trucking: "number",
       trucking_cost: "number",
+      insurance_fee: "number",
       other_1: "number",
+      other_2: "number",
       settlement_date: "date",
     },
     cellClass: {

@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { TextArea } from "components/input";
 import { MaskedInputField } from "@/components/input/react-text-mask";
-import { useCommonStore, AmountInputOptions } from "../../_store/store";
+import { useCommonStore, AmountInputOptions, sumFields,sumVatFields, sumCostFields, profitFields } from "../../_store/store";
 import { shallow } from "zustand/shallow";
 
 import { DTDLabel, DTDLabel2 } from "@/components/label/index";
@@ -26,62 +26,9 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
     shallow
   );
   const detailIndex = useCommonStore((state) => state.detailIndex, shallow);
-  const formatValue = (value: string | undefined) =>
-    value === "0" ? "" : value;
-
-  const Closing = "2";
-  const popup = useCommonStore((state) => state.popup);
+  const formatValue = (value: string | undefined) =>   value === "0" ? "" : value;
+  const Closing = "2";  
   const actions = useCommonStore((state) => state.actions);
-
-  let total = 0;
-
-  // const handleMaskedInputChange = useCallback(
-  //   (e: any, selectedRow: any, setSelectedRow: (row: any) => void) => {
-  //     const sanitizedValue =
-  //       typeof e.target.value === "string"
-  //         ? e.target.value.replace(/,/g, "")
-  //         : e.target.value;
-
-  //     const numericValue = Number(sanitizedValue);
-
-  //     if (isNaN(numericValue)) {
-  //       // console.warn("Invalid numeric input:", e.target.value);
-  //       return;
-  //     }
-
-  //     const vatKey = `${e.target.id}_vat`;
-  //     const vatValue = Math.floor(numericValue * 0.1);
-
-  //     const updatedRow = {
-  //       ...selectedRow,
-  //       [e.target.id]: numericValue,
-  //       [vatKey]: vatValue,
-  //       __changed: true,
-  //     };
-
-  //      total = Object.entries(selectedRow)
-  //     .filter(([key, value]) => !key.endsWith('_vat')) // '_vat'로 끝나는 키 제외
-  //     .reduce((sum, [key, value]) => sum + (Number(value) || 0), 0);
-
-  //     setSelectedRow(updatedRow);
-
-  //    // detailSelectedRow_AB 업데이트 로직 추가
-  //   let updatedDetailSelectedRow_AB = { ...detailSelectedRow_AB };
-
-  //   if (e.target.id === "customs_duty") {
-  //     updatedDetailSelectedRow_AB = {
-  //       ...updatedDetailSelectedRow_AB,
-  //       customs_duty_ab: numericValue,
-  //     };
-  //   } else if (e.target.id === "customs_tax") {
-  //     updatedDetailSelectedRow_AB = {
-  //       ...updatedDetailSelectedRow_AB,
-  //       customs_tax_ab: numericValue,
-  //     };
-  //   }
-  //   },
-  //   []
-  // );
 
   const handleMaskedInputChange = useCallback(
     (
@@ -93,77 +40,136 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
         typeof e.target.value === "string"
           ? e.target.value.replace(/,/g, "")
           : e.target.value;
-
+  
       const numericValue = Number(sanitizedValue);
       const vatKey = `${e.target.id}_vat`;
       const vatValue = Math.floor(numericValue * 0.1);
-
-      if (
-        !selectedRows ||
-        !detailSelectedRow ||
-        !detailSelectedRow_AB ||
-        isNaN(numericValue)
-      ) {
+  
+      if (!selectedRows || !detailSelectedRow || !detailSelectedRow_AB || isNaN(numericValue)) {
         return;
       }
-      log(
-        "detailSelectedRow",
-        detailSelectedRow,
-        detailIndex,
-        numericValue,
-        e.target.id
-      );
+  
+      // 기존 값 가져오기 (없는 경우 기본값 설정)
+      const prevRow = detailSelectedRow[detailIndex] || {};
+      const prevRow_AB = detailSelectedRow_AB[detailIndex] || {};
+  
+      // 🔹 sumFields에 포함된 필드만 합산 (e.target.id 제외)
+      const totalAmtWithoutCurrent = sumFields.reduce((acc, field) => {
+        if (sumFields.includes(field) && field !== e.target.id) { 
+          const value = parseFloat(prevRow[field]) || 0;
+          acc += isNaN(value) ? 0 : value;
+        }
+        return acc;
+      }, 0);
+  
+      // 🔹 total_amt = 기존 합산 값 + e.target.id의 numericValue
+      const totalAmt = totalAmtWithoutCurrent + (sumFields.includes(e.target.id) ? numericValue : 0);
+  
+      // 🔹 sumVatFields에 포함된 필드만 합산 (e.target.id 제외)
+      const totalVatWithoutCurrent = sumVatFields.reduce((acc, field) => {
+        if (sumVatFields.includes(field) && field !== e.target.id) { 
+          const value = parseFloat(prevRow[field]) || 0;
+          acc += isNaN(value) ? 0 : value;
+        }
+        return acc;
+      }, 0);
+  
+      // 🔹 total_vat = 기존 VAT 합산 값 + e.target.id의 vatValue (만약 sumVatFields에 속하면)
+      const totalVat = totalVatWithoutCurrent + (sumVatFields.includes(e.target.id) ? vatValue : 0);
 
-      // 🔹 기존 객체를 복사하고, 특정 detailIndex의 값만 업데이트
+      // 🔹 sumCostFields에 포함된 필드만 합산 (e.target.id 제외)
+      const totalCostWithoutCurrent = sumCostFields.reduce((acc, field) => {
+        if (sumCostFields.includes(field) && field !== e.target.id) {
+          const value = parseFloat(prevRow_AB[field]) || 0;
+          acc += isNaN(value) ? 0 : value;
+        }
+        return acc;
+      }, 0);
+  
+      // 🔹 total_cost = 기존 합산 값 + e.target.id의 numericValue
+      const totalCost = totalCostWithoutCurrent + (sumCostFields.includes(e.target.id) ? numericValue : 0);
+  
+  
       const updatedDetailSelectedRow = {
         ...detailSelectedRow,
         [detailIndex]: {
-          ...detailSelectedRow[detailIndex], // 기존 row 유지
+          ...prevRow,
           [e.target.id]: numericValue,
           [vatKey]: vatValue,
+          total_amt: totalAmt,
+          total_vat: totalVat,
+          total_tot : totalAmt + totalVat,
           __changed: true,
         },
-      };
+      };  
 
-      // 🔹 기존 객체를 복사하고, 특정 detailIndex의 값만 업데이트
       const updatedDetailSelectedRow_AB = {
         ...detailSelectedRow_AB,
         [detailIndex]: {
-          ...detailSelectedRow_AB[detailIndex], // 기존 row 유지
+          ...prevRow_AB,
           [e.target.id]: numericValue,
-          [vatKey]: vatValue,
+          total_cost: totalCost,
           __changed: true,
         },
       };
-
+  
       actions.setDetailRVDatas(updatedDetailSelectedRow);
       actions.setDetailABDatas(updatedDetailSelectedRow_AB);
-      // 총합 계산
-      // const total = updatedRows
-      //   .map(row :any =>
-      //     Object.entries(row)
-      //       .filter(([key]) => !key.endsWith("_vat"))
-      //       .reduce((sum, [, value]) => sum + (Number(value) || 0), 0)
-      //   )
-      //   .reduce((acc, rowTotal) => acc + rowTotal, 0);
-
-      // setSelectedRows(updatedRows);
-
-      // 🔹 detailSelectedRow_AB 업데이트 (배열 형태로 변경)
-      // const updatedDetailSelectedRow_AB = detailSelectedRow_AB.map((row :any, index:any) =>
-      //   index === detailIndex
-      //     ? {
-      //         ...row,
-      //         ...(e.target.id === "customs_duty" && { customs_duty_ab: numericValue }),
-      //         ...(e.target.id === "customs_tax" && { customs_tax_ab: numericValue }),
-      //       }
-      //     : row
-      // );
-
-      // actions.setDetailSelectedRow_AB(updatedDetailSelectedRow_AB);
     },
-    [detailIndex, detailSelectedRow, detailSelectedRow_AB] // 의존성 배열 추가
+    [detailIndex, detailSelectedRow, detailSelectedRow_AB]
   );
+  
+  const [profitValues, setProfitValues] = useState<Record<string, number>>({});
+
+
+  //profit계산
+  useEffect(() => {
+    const updatedProfitValues = sumFields.reduce((acc, field) => {
+      const Field = `${field}`;
+      const costField = `${field}_ab`; 
+      const profitValue =
+        (Number(detailSelectedRow?.[detailIndex]?.[field]) || 0) -
+        (Number(detailSelectedRow_AB?.[detailIndex]?.[costField]) || 0);
+  
+      acc[`${Field}_profit`] = profitValue;
+      return acc;
+    }, {} as { [key: string]: number });
+    
+    setProfitValues(updatedProfitValues);
+  }, [detailSelectedRow, detailSelectedRow_AB, detailIndex, profitFields]);
+  
+  const totalProfit = useMemo(() => {
+    const profit = profitFields.reduce((acc, field) => {
+      const profitField = `${field}`; 
+      const value = profitValues[profitField] || 0;
+      return acc + value;
+    }, 0);
+  
+    return profit;
+  }, [profitValues, profitFields]);
+    
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    log('value', value,  e.target.id)
+
+
+    if (!detailSelectedRow || !detailSelectedRow_AB) {
+      return;
+    }
+
+    const prevRow = detailSelectedRow[detailIndex] || {};
+  
+    const updatedDetailSelectedRow = {
+      ...detailSelectedRow,
+      [detailIndex]: {
+        ...prevRow,
+        [e.target.id]: value,
+        __changed: true,
+      },
+    };
+
+    actions.setDetailRVDatas(updatedDetailSelectedRow);
+  };
 
   return (
     <>
@@ -173,8 +179,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
             {/* Title Row */}
             <div
               className="grid justify-center mb-2"
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
-            >
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
+            >  
               <DTDLabel2 id="" name="" lwidth="20" backgroundColor="white" />
               <DTDLabel2
                 id="amount"
@@ -194,12 +200,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 lwidth="30"
                 backgroundColor="yellow"
               />
-              <DTDLabel2
-                id="vendor_id"
-                name="VENDOR ID"
-                lwidth="30"
-                backgroundColor="gray"
-              />
+
               <DTDLabel2
                 id="profit"
                 name="PROFIT"
@@ -212,12 +213,12 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 lwidth="30"
                 backgroundColor="gray"
               />
-              {/* <DTDLabel2 id="remark" name="REMARK" lwidth="40" backgroundColor="blue"/> */}
+              
             </div>
             {/* 관세 */}
             <div
               className="grid h-8 gap-1"
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="customs_duty" name="l_customs_duty" />
               <MaskedInputField
@@ -235,7 +236,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -251,7 +252,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
               <MaskedInputField
                 id="customs_duty_ab"
                 value={formatValue(
-                  detailSelectedRow?.[detailIndex]?.customs_duty_ab
+                  detailSelectedRow?.[detailIndex]?.customs_duty
                 )}
                 options={{
                   ...AmountInputOptions,
@@ -263,65 +264,43 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="customs_duty_vendor_id"
-                value={formatValue(
-                  detailSelectedRow?.[detailIndex]?.customs_duty_ab
-                )}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="customs_duty_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.customs_duty) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.customs_duty_ab) || 0)}`}
+                value={'0'}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
                   isReadOnly: true,
                   allowNegative: true,
                 }}
-                // events={{
-                //   onChange: (e) => handleMaskedInputChange(e, detailSelectedRow, actions.setDetailSelectedRow),
-                // }}
               />
               <MaskedInputField
                 id="customs_duty_remark"
                 value={detailSelectedRow?.[detailIndex]?.customs_duty_remark}
-                options={{
-                  ...AmountInputOptions,
+                options={{                  
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',    
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}        
+               
               />
             </div>
 
             {/* 부가세 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="customs_tax" name="l_customs_tax" />
               <MaskedInputField
@@ -348,14 +327,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
               <MaskedInputField
                 id="customs_tax_ab"
                 value={formatValue(
-                  detailSelectedRow_AB?.[detailIndex]?.customs_tax_ab
+                  detailSelectedRow?.[detailIndex]?.customs_tax
                 )}
                 options={{
                   ...AmountInputOptions,
@@ -367,32 +346,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="customs_tax_ab"
-                value={formatValue(
-                  detailSelectedRow_AB?.[detailIndex]?.customs_tax_ab
-                )}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="customs_tax_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.customs_tax) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.customs_tax_cost) || 0)}`}
+                value={`0`}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
@@ -404,25 +365,24 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="customs_tax_remark"
                 value={detailSelectedRow?.[detailIndex]?.customs_tax_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',  
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}        
+               
               />
             </div>
 
             {/* 창고료 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="bonded_wh" name="l_bonded_wh" />
               <MaskedInputField
@@ -438,7 +398,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -457,7 +417,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -476,27 +436,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="bonded_wh_vendor_id"
-                value={detailSelectedRow_AB?.[detailIndex]?.bonded_wh_vendor_id}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="bonded_wh_profit"
                 value={`${(Number(detailSelectedRow?.[detailIndex]?.bonded_wh) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.bonded_wh_ab) || 0)}`}
@@ -511,24 +455,22 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="bonded_wh_remark"
                 value={detailSelectedRow?.[detailIndex]?.bonded_wh_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}        
               />
             </div>
             {/* 파출수수료 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="dispatch_fee" name="l_dispatch_fee" />
               <MaskedInputField
@@ -546,7 +488,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -565,7 +507,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -584,27 +526,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="dispatch_fee_vendor_id"
-                value={detailSelectedRow_AB?.[detailIndex]?.dispatch_fee_vendor_id}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="dispatch_fee_profit"
                 value={`${(Number(detailSelectedRow?.[detailIndex]?.dispatch_fee) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.dispatch_fee_ab) || 0)}`}
@@ -619,25 +545,23 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="dispatch_fee_remark"
                 value={detailSelectedRow?.[detailIndex]?.dispatch_fee_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}        
               />
             </div>
 
             {/* 통관수수료(대납) */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="customs_clearance" name="l_customs_clearance" />
               <MaskedInputField
@@ -655,7 +579,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -674,7 +598,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -693,29 +617,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="customs_clearance_vendor_id"
-                value={
-                  formatValue(detailSelectedRow_AB?.[detailIndex]?.customs_clearance_vendor_id)
-                }
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="customs_clearance_profit"
                 value={`${(Number(detailSelectedRow?.[detailIndex]?.customs_clearance) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.customs_clearance_ab) || 0)}`}
@@ -732,25 +638,23 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   detailSelectedRow?.[detailIndex]?.customs_clearance_remark
                 }
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
+                }}           
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}             
               />
             </div>
 
             {/* K/수수료- 업무대행수수료 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{gridTemplateColumns: "1.2fr 1fr 1fr  1fr  0.8fr 1fr" }}
             >
               <DTDLabel id="dtd_handling" name="l_dtd_handling" />
               <MaskedInputField
@@ -768,7 +672,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -787,7 +691,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -806,30 +710,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="dtd_handling_vendor_id"
-                value={formatValue(detailSelectedRow_AB?.[detailIndex].dtd_handling_ab)}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="dtd_handling_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.dtd_handling) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.dtd_handling_ab) || 0)}`}
+                value={`${profitValues?.dtd_handling_profit || 0}`}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
@@ -841,25 +729,24 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="dtd_handling_remark"
                 value={detailSelectedRow?.[detailIndex].dtd_handling_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                }}               
+                 events={{
+                  onChange: handleChange                 
+                }}        
+               
               />
             </div>
 
             {/* 특별통관수수료 */}
             <div
               className="grid h-8 gap-1"
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr"}}
             >
               <DTDLabel id="special_handling" name="l_special_handling" />
               <MaskedInputField
@@ -877,7 +764,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -896,7 +783,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -915,32 +802,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="special_handling_ab"
-                value={formatValue(
-                  detailSelectedRow_AB?.[detailIndex]?.special_handling_ab
-                )}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="special_handling_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.special_handling) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.special_handling_ab) || 0)}`}
+                value={`${profitValues?.special_handling_profit || 0}`}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
@@ -952,25 +821,23 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="special_handling_remark"
                 value={detailSelectedRow?.[detailIndex].dtd_handling_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}        
               />
             </div>
 
             {/* 운송료 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr"}}
             >
               <DTDLabel id="trucking" name="l_trucking" />
               <MaskedInputField
@@ -986,7 +853,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1005,7 +872,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1024,30 +891,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="trucking_vendor_id"
-                value={detailSelectedRow_AB?.[detailIndex]?.trucking_vendor_id}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="trucking_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.trucking) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.trucking_ab) || 0)}`}
+                value={`${profitValues?.trucking_profit || 0}`}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
@@ -1059,25 +910,23 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="trucking_remark"
                 value={detailSelectedRow?.[detailIndex].trucking_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}        
               />
             </div>
 
             {/* 항공운임료(항공료) */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr"}}
             >
               <DTDLabel id="air_freight" name="l_air_freight" />
               <MaskedInputField
@@ -1095,7 +944,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1112,7 +961,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1132,31 +981,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="air_freight_vendor_id"
-                value={formatValue(detailSelectedRow_AB?.[detailIndex]?.air_freight_vendor_id)}
-                options={{
-                  ...AmountInputOptions,
-                  bgColor: "black",
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="air_freight_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.air_freight) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.air_freight_ab) || 0)}`}
+                value={`${profitValues?.air_freight_profit || 0}`}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
@@ -1168,25 +1000,23 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="air_freight_remark"
                 value={detailSelectedRow?.[detailIndex].air_freight_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}        
               />
             </div>
 
             {/* H/C 항공수수료 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="bl_handling" name="l_bl_handling" />
               <MaskedInputField
@@ -1204,7 +1034,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1224,7 +1054,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1243,30 +1073,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="bl_handling_vendor_id"
-                value={formatValue(detailSelectedRow_AB?.[detailIndex]?.bl_handling_vendor_id)}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="bl_handling_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.bl_handling) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.bl_handling_ab) || 0)}`}
+                value={`${profitValues?.bl_handling_profit || 0}`}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
@@ -1278,25 +1092,23 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="bl_handling_remark"
                 value={detailSelectedRow?.[detailIndex].bl_handling_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
+                }}        
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}                
               />
             </div>
 
             {/* 보험료 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr"}}
             >
               <DTDLabel id="insurance_fee" name="insurance_fee" />
               <MaskedInputField
@@ -1314,7 +1126,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1331,7 +1143,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1350,33 +1162,14 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
-              <MaskedInputField
-                id="insurance_fee_ab"
-                value={formatValue(
-                  detailSelectedRow_AB?.[detailIndex]?.insurance_fee_ab
-                )}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
               <MaskedInputField
                 id="insurance_fee_profit"
-                value={`${(Number(detailSelectedRow?.[detailIndex]?.insurance_fee) || 0) - (Number(detailSelectedRow_AB?.[detailIndex]?.insurance_fee_ab) || 0)}`}
-                options={{
+                value={`${profitValues?.insurance_fee_profit || 0}`}
+                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
                   isReadOnly: true,
@@ -1387,25 +1180,23 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="insurance_fee_remark"
                 value={detailSelectedRow?.[detailIndex].insurance_fee_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
+                }}   
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}                     
               />
             </div>
 
             {/* 기타수수료(OTHER_1) */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="other_1" name="other_1" />
               <MaskedInputField
@@ -1421,7 +1212,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1440,7 +1231,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1459,27 +1250,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="other_1_vendor_id"
-                value={detailSelectedRow_AB?.[detailIndex].other_1_vendor_id}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="other_1_profit"
                 value={`${detailSelectedRow?.[detailIndex].other_1 - detailSelectedRow_AB?.[detailIndex].other_1_ab}`}
@@ -1494,24 +1269,22 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="other_1_remark"
                 value={detailSelectedRow?.[detailIndex].other_1_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
+                }} 
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}            
               />
             </div>
             {/* 기타1 */}
             <div
               className="grid h-8 gap-1 "
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr"}}
             >
               <DTDLabel id="other_2" name="other_2" />
               <MaskedInputField
@@ -1527,7 +1300,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1546,7 +1319,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow,
-                      actions.setDetailSelectedRow
+                      actions.setDetailRVDatas
                     ),
                 }}
               />
@@ -1565,27 +1338,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     handleMaskedInputChange(
                       e,
                       detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
+                      actions.setDetailABDatas
                     ),
                 }}
               />
-              <MaskedInputField
-                id="other_2_vendor_id"
-                value={detailSelectedRow_AB?.[detailIndex].other_2_vendor_id}
-                options={{
-                  ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow_AB,
-                      actions.setDetailSelectedRow_AB
-                    ),
-                }}
-              />
+
               <MaskedInputField
                 id="other_2_profit"
                 value={`${detailSelectedRow?.[detailIndex].other_2 - detailSelectedRow_AB?.[detailIndex].other_2_ab}`}
@@ -1600,34 +1357,31 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 id="other_2_remark"
                 value={detailSelectedRow?.[detailIndex].other_2_remark}
                 options={{
-                  ...AmountInputOptions,
+                  noLabel: true,
+                  disableSpacing : true,
+                  fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
+                  fontWeight: 'bold',   
                   isReadOnly:
                     detailSelectedRow?.[detailIndex]?.state === Closing,
                 }}
                 events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
-                }}
+                  onChange: handleChange                 
+                }}                      
               />
             </div>
 
             {/* 합계 */}
             <div
               className="grid h-8 gap-1"
-              style={{ gridTemplateColumns: "1.2fr repeat(6, 1fr)" }}
+              style={{ gridTemplateColumns: "1.2fr 1fr 1fr 1fr 0.8fr 1fr" }}
             >
               <DTDLabel id="total" name="total" />
               <MaskedInputField
-                id="total_amount"
-                value={formatValue(total.toString())}
+                id="total_amt"
+                value={detailSelectedRow?.[detailIndex].total_amt}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
+                  isReadOnly: true,
                 }}
               />
               <MaskedInputField
@@ -1635,22 +1389,20 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 value={detailSelectedRow?.[detailIndex].total_vat}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
+                  isReadOnly: true,
                 }}
               />
               <MaskedInputField
                 id="total_cost"
-                value={detailSelectedRow?.[detailIndex].total_cost}
+                value={detailSelectedRow_AB?.[detailIndex].total_cost}
                 options={{
                   ...AmountInputOptions,
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
+                  isReadOnly: true,
                 }}
               />
               <MaskedInputField
                 id="total_profit"
-                value={detailSelectedRow?.[detailIndex].total_profit}
+                value={`${totalProfit}`}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-gray-200",
@@ -1659,21 +1411,12 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 }}
               />
               <MaskedInputField
-                id="total"
-                value={detailSelectedRow?.[detailIndex].total_profit}
+                id="total_tot"
+                value={detailSelectedRow?.[detailIndex]?.total_tot}
                 options={{
                   ...AmountInputOptions,
                   bgColor: "!bg-sky-200",
-                  isReadOnly:
-                    detailSelectedRow?.[detailIndex]?.state === Closing,
-                }}
-                events={{
-                  onChange: (e) =>
-                    handleMaskedInputChange(
-                      e,
-                      detailSelectedRow,
-                      actions.setDetailSelectedRow
-                    ),
+                  isReadOnly: true,
                 }}
               />
             </div>

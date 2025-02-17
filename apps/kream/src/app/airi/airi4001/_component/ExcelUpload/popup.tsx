@@ -92,8 +92,8 @@ useEffect(() => {
     });
 
     let lastWaybillNo: string | null = null; // 이전 청구 데이터의 waybill_no를 저장할 변수
-    log('columnNames',columnNames)
-    log('mappingConfigs', mappingConfigs)
+    // log('columnNames',columnNames)
+    // log('mappingConfigs', mappingConfigs)
     const mappedData = data
       .filter((row) => {
         // row가 빈 배열인 경우 제외
@@ -106,6 +106,7 @@ useEffect(() => {
         );
       })
       .map((row) => {
+        log('row',row)
         const keys = Object.keys(row) as (keyof typeof row)[];
 
         // 현재 row 매핑
@@ -135,24 +136,27 @@ useEffect(() => {
           {} as Record<string, any>
         );
 
-        // 비용 데이터 처리: 청구 데이터의 waybill_no 상속
-        if (
-          parsedRow["category"] === "비용" &&
-          (!parsedRow["waybill_no"] || parsedRow["waybill_no"] === "")
-        ) {
+        // waybill_no 상속 처리
+        if (parsedRow["category"] === "비용" && !parsedRow["waybill_no"]) {
           parsedRow["waybill_no"] = lastWaybillNo;
         }
 
-        if (
-          parsedRow["category"] === "청구" &&
-          parsedRow["waybill_no"] &&
-          parsedRow["waybill_no"] !== ""
-        ) {
+        if (parsedRow["category"] === "청구" && parsedRow["waybill_no"]) {
           lastWaybillNo = parsedRow["waybill_no"];
         }
 
+        // category 값 변경
+        switch (parsedRow["category"]) {
+          case "비용":
+            parsedRow["category"] = "AB";
+            break;
+          case "청구":
+            parsedRow["category"] = "RV";
+            break;
+        }
         return parsedRow;
-      });
+      })
+      .filter((row) => row["waybill_no"]); // waybill_no 없는 데이터 제거
 
     const mappedHeader = mappingConfigs.map(({ key }) => key);
     const gridData = JsonToGridData(mappedData, mappedHeader, 1);

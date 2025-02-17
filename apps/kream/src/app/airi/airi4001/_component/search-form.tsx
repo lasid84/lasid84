@@ -52,8 +52,9 @@ const SearchForm = ({ loadItem }: any) => {
   }, [loadItem]);
 
   useEffect(()=>{
+    log('init search')
     onSearch()
-  },[])
+  },[searchParams])
 
   const onSearch = () =>{
     const params = getValues()

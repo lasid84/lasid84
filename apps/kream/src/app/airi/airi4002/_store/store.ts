@@ -64,7 +64,9 @@ type SaveDataArgs = {
         to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
         search_gubn : 0,
         no: '', // HWB, MWB
-        state:  'ALL',
+        settlement_user:  'ALL',
+        logis_id:  'ALL',
+        broker_id:  'ALL',
     },
     uiData : {
         settlement_date : dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
