@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, memo } from "react";
+import { useRef, useState, memo } from "react";
 import Grid, { rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption } from "components/grid/ag-grid-enterprise";
 import { useFormContext } from "react-hook-form";
@@ -9,6 +9,8 @@ import { ToolBar } from "./toolBar";
 import { useCommonStore } from "../_store/store";
 import { toast } from "react-toastify";
 import { t } from "i18next";
+
+import { ImCancelCircle } from "react-icons/im";
 
 import Popup from "../_component/Detail/popup";
 import FloatingButton from "../_component/floatingButton";
@@ -21,6 +23,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
   const { getValues } = useFormContext();
 
   const gridRef = useRef<any | null>(null);
+
+  const [isAddRow, setIsAddRow] = useState(false);
 
   const actions = useCommonStore((state) => state.actions);
   const mainDatas = useCommonStore((state) => state.mainDatas);
@@ -76,6 +80,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
       normalHeight: 25,
       expandHeight: 165
     },
+    disableWhenRowAdd: ["piece", "DN & Sorting", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     rowHeight: 25,
     isAutoFitColData: true,
     isMultiSelect: false,
@@ -131,6 +136,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
    */
   const handleAddRow = async () => {
     const data = await rowAdd(gridRef.current, {});
+    setIsAddRow(true);
     if (gridRef.current) {
       const api = gridRef.current.api;
       const node = api.getRowNode((data[0].__ROWINDEX -1).toString());
@@ -138,6 +144,34 @@ const MasterGrid: React.FC<Props> = memo(() => {
         const columns = api.getColumnDefs();
       }
     }
+  };
+
+  /**
+   * @Handler
+   * Summary : 열 추가 취소.
+   */
+  const handleCancelAddRow = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const api = gridRef.current.api;
+    if (api) {
+      const deleteRows:any = [];
+      const originRows:any = [];
+      api.forEachNode((node: any) => {
+        if (node.data && node.data.__ROWTYPE === "NEW") {
+          deleteRows.push(node.data);
+        } else {
+          originRows.push(node.data);
+        }
+      });
+      
+      
+      await api.applyTransaction({ remove: deleteRows });
+      await api.setRowData(originRows);
+      await api.refreshCells({ force: true });
+    }
+
+    setIsAddRow(false);
   };
   
   /**
@@ -265,6 +299,10 @@ const MasterGrid: React.FC<Props> = memo(() => {
       waybillList: waybillList.join(","),
     });
   
+    /**
+     * @dev
+     * local_dd 검증 ag grid 컬럼 데이터 임의 추가로 비교
+     */
     const updateNodeData = (node: any, data: any) => {
       const key = `${data.milestone.toLowerCase()}_local_dd_flag`;
       const column = `${data.milestone.toLowerCase()}_local_dd`;
@@ -310,6 +348,11 @@ const MasterGrid: React.FC<Props> = memo(() => {
           ]}
         />
         <Popup loadItem={{}} />
+        {isAddRow && (
+          <button className="fixed top-5 left-1/2 transform -translate-x-1/2 py-2 px-4 z-[1000]" onClick={handleCancelAddRow}>
+            <ImCancelCircle size="40"/>
+          </button>
+        )}
       </>
   );
 });
