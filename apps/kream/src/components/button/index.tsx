@@ -28,8 +28,9 @@ import { IoMdPrint } from "react-icons/io";
 import { GoMilestone } from "react-icons/go"; // ufsp insert milestone
 import { BsShieldFillCheck } from "react-icons/bs"; // ufsp verification milestone data
 import { MdLockOutline } from "react-icons/md";     //lock, closedate
-
-import { log, error } from '@repo/kwe-lib-new';
+import { log, error } from '@repo/kwe-lib-new'; 
+import { FaChevronLeft } from "react-icons/fa";  //left
+import { FaChevronRight } from "react-icons/fa"; //right
 
 export type data = {
   data?: {}[],
@@ -83,7 +84,7 @@ const btnColor: any = {
   white:
     "text-black font-bold bg-white rounded border border-gray-400 hover:bg-gray-100",
   "sky-outline":
-    "bg-transparent hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-400  hover:border-transparent rounded",
+    "bg-transparent hover:bg-sky-500 text-sky-500 hover:text-white border border-sky-400  hover:border-transparent rounded",
   "blue-outline":
     "bg-transparent hover:bg-sky-600 text-sky-500 hover:text-white border border-sky-500  hover:border-transparent rounded",
   "gray-outline":
@@ -128,6 +129,8 @@ const getColor = (label: string, color: string = "") => {
       case "download":
       case "send":
       case "print":
+      case "left":
+      case "right":
         c = "sky-outline";
         break;
       case "send_email":
@@ -259,7 +262,13 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       break;
     case "close_date":
       icon = <MdLockOutline size={size} />;
-      break;        
+      break;
+    case "left":
+       icon = <FaChevronLeft size={size} />;
+      break;
+      case "right":
+        icon = <FaChevronRight size={size} />;
+      break;
     case "descartes":
       const descartesIcon = () => {
         return (

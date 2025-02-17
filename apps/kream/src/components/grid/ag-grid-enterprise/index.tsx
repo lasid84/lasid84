@@ -8,7 +8,7 @@ import { useConfigs } from "states/useConfigs";
 import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, RowDoubleClickedEvent,
-  PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
+  PasteEndEvent, ValueFormatterParams, ValueSetterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
   SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent,
   FirstDataRenderedEvent,
   CellKeyDownEvent,
@@ -23,7 +23,8 @@ import {
   RowStyle,
   RowSpanParams,
   NewValueParams,
-  DragStoppedEvent
+  DragStoppedEvent,
+  ICellEditorParams
 } from "ag-grid-community";
 
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -39,6 +40,8 @@ import { SP_GetPersonalColInfoData, SP_SetMyColumnInfo } from './_component/data
 import { bgColor } from './types/constant';
 
 import { log, error, stringToFullDateString, stringToTime, sleep } from '@repo/kwe-lib-new';
+
+import CustomSelectCellEditor from './_component/customSelectCellEditor';
 
 export const ROW_TYPE = '__ROWTYPE';
 export const ROW_INDEX = '__ROWINDEX';
@@ -89,6 +92,9 @@ export type GridOption = {
   select?: {
     [key: string]: string[]; 
   };
+  customSelectCells?: {
+    [key: string]: any;
+  }
   icon?: any;
   colVisible?: {
     col: string[]
@@ -156,6 +162,7 @@ export type GridOption = {
   };
   changeColor?: string[];
   columnVerticalCenter?: string[];
+  disableWhenRowAdd?: string[];
 
   notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
 };
@@ -645,6 +652,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 }
               }
             }
+          } else if (optCols[col] === 'date_digits_14') {
+            cellOption = {
+              ...cellOption,
+              valueFormatter: dateFormatter,
+              valueSetter: dateDigits14Setter
+            }
           }
         };
 
@@ -703,6 +716,20 @@ const ListGrid: React.FC<Props> = memo((props) => {
           }
         }
 
+        // CustomeSelect setting.
+        if (options?.customSelectCells) {
+          const arrCols = Object.keys(options.customSelectCells);
+          if (arrCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              cellEditor: CustomSelectCellEditor,
+              cellEditorParams: {
+                values: options.customSelectCells[col],
+              },
+            }
+          }
+        }
+
         //icon 셋팅
         if (options?.icon) {
           var arrCols = Object.keys(options.icon);
@@ -748,7 +775,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
         if (options?.changeColor) {
           const arrCols = options.changeColor;
           if (arrCols.indexOf(col) > -1) {
-            console.log("col : ", col);
             cellOption = {
               ...cellOption,
               cellClassRules: {
@@ -761,7 +787,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
                   return false;
                 },
                 "cell-verify-fail": (params:any) => {
-                  console.log("params : ", params.node.data);
                   if (params.node.data[col.concat("_flag")] === "N") {
                     return true;
                   }
@@ -818,9 +843,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 "row-span-default": (params: any) => {
                   const api = gridRef.current.api;
 
-                  if (api.getDisplayedRowCount()-1 === params.node.rowIndex) {
+                  if (api.getDisplayedRowCount()-1 === params.node.rowIndex || params.node.rowIndex === 0) {
                     return false;
-                  }                
+                  }
+
+                  if (params.value === "" || params.value === undefined) {
+                    return false;
+                  }
 
                   const currentRowNode = api.getRowNode(params.node.rowIndex);
                   const nextRowNode = api.getRowNode(params.node.rowIndex+1);
@@ -1057,7 +1086,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
       });
       copied = [...allColDefs];
       copied.forEach(obj => {
-        obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? true : options.editable?.includes(obj.field);
+        obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? (!options.disableWhenRowAdd?.includes(obj.field)) : options.editable?.includes(obj.field);
+        if (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW && options.disableWhenRowAdd?.includes(obj.field) && obj['editable'] === false) {
+          obj['cellStyle'] = {
+            ...obj['cellStyle'],
+            backgroundColor: '#d3d3d3'
+          }
+        }
       });
 
       setColDefs(copied);
@@ -1339,6 +1374,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
       const changedColumn = param.column.getId();
       const standardCol = option.standardCol;
 
+      if (param.data[standardCol] === '' || param.data[standardCol] === undefined) {
+        return;
+      }
+
       const rowIndex = param.node?.rowIndex || 0;
       const totalRow = gridRef.current.api.getDisplayedRowCount();
 
@@ -1346,7 +1385,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
       for (let i=rowIndex+1; i<totalRow; i++) {
         const nextRowNode = gridRef.current.api.getRowNode(i);
         if (nextRowNode.data[standardCol] === currentRowNode.data[standardCol]) {
-          console.log("nextRowNode : ", nextRowNode);
           nextRowNode.setDataValue(changedColumn, newValue);
         } else {
           break;
@@ -1361,7 +1399,10 @@ const ListGrid: React.FC<Props> = memo((props) => {
       for (const [key, value] of Object.entries(option.compareCol)) {
         if (value.includes("all") || value.includes(param.data[key])) {
           const rowIndex = param.node?.rowIndex || 0;
-          const currentValue = param.data[option.standardCol];
+          let currentValue = param.data[option.standardCol];
+          if (!currentValue || currentValue === "") {
+            return 1;
+          }
           let span = 1;
           
           const totalRow = gridRef.current.api.getDisplayedRowCount();
@@ -1378,7 +1419,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
               previousRowNode = gridRef.current.api.getRowNode(i-2);
             }
             const nextRowNode = gridRef.current.api.getRowNode(i);
-            if (previousRowNode.data[option.standardCol] !== currentValue && nextRowNode.data[option.standardCol] === currentValue) {
+            if ((rowIndex === 0) || (previousRowNode.data[option.standardCol] !== currentValue && nextRowNode.data[option.standardCol] === currentValue)) {
               for (let j=rowIndex+1; j<totalRow; j++) {
                 const rowNode = gridRef.current.api.getRowNode(j);
                 if (rowNode.data[option.standardCol] === currentValue) {
@@ -1438,7 +1479,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     }
 
     return (
-      <div style={{ zIndex: 30 }}>
+      <div style={{ zIndex: 'auto' }}>
         <div className="show-name">{(params.valueFormatted)? params.valueFormatted : params.value}</div>
       </div>
     );
@@ -1595,6 +1636,26 @@ export const rowAdd = async (
 const dateFormatter = (params: ValueFormatterParams) => {
   return stringToFullDateString(params.value, '-');
   // return stringToDateString(params.value, '-');
+}
+
+const dateDigits14Setter = (params: ValueSetterParams) => {
+  const field = params.column.getColDef().field;
+  if (!params.newValue || !field) {
+    return false;
+  }
+  
+  let onlyNumerical = params.newValue.replace(/\D/g, "");
+  if (onlyNumerical === "") {
+    return false;
+  } else if (onlyNumerical.length > 14) {
+    onlyNumerical = onlyNumerical.substring(0, 14);
+  } else if (onlyNumerical.length < 14) {
+    onlyNumerical = onlyNumerical.padEnd(14, "0");
+  }
+
+  params.data[field] = onlyNumerical;
+
+  return true;
 }
 
 const timeFormatter = (params: ValueFormatterParams) => {

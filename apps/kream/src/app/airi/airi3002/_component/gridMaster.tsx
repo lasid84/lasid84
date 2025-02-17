@@ -86,13 +86,20 @@ const MasterGrid: React.FC<Props> = memo(() => {
     isMultiSelect: false,
     // isEditableAll:true,
     editable: ["delivery_request_dd", "revised_edd", "reason", "use_yn"],
-    rowSpan: ["origin"],
     cellClass: {
       transport_type_nm: cellStyles,
       waybill_no: cellStyles,
       mwb_no: cellStyles,
       origin: originCellStyles,
     },
+    rowSpanByConfig: {
+      targetCol: ["origin"],
+      compareCol: {
+        origin: ["all"]
+      },
+      standardCol: "origin"
+    },
+    columnVerticalCenter: ["origin"]
   };
 
   useHotkeys(

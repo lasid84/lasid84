@@ -1,4 +1,4 @@
-import { SP_GetOperationListData, SP_UpdateOperationListData, SP_SetMileStoneEdiData, SP_getMilestoneInterfaceData } from "./data";
+import { SP_GetOperationListData, SP_UpdateOperationListData, SP_SetMileStoneEdiData, SP_getMilestoneInterfaceData, SP_GetOperationListLoadData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 import { createStore } from "@/states/createStore";
@@ -8,7 +8,6 @@ interface StoreState {
     searchParams: Record<string, any>;
     loadDatas: gridData[] | null;
     mainDatas: gridData | null;
-    locationList: string[];
     mainSelectedRow: Record<string, any> | null;
     popup: Record<string, any>;
 }
@@ -36,7 +35,6 @@ const initValue: StoreState = {
     },
     loadDatas: null,
     mainDatas: null,
-    locationList: [],
     mainSelectedRow: null,
     popup: {
         isOpen: false
@@ -46,10 +44,11 @@ const initValue: StoreState = {
 const setinitValue = (set: any) => {
     const actions: StoreActions = {
         getOperationListData: async (fr_date: string, waybill_no?: string) => {
-            const result = await SP_GetOperationListData(fr_date, waybill_no);
-            set({ mainDatas: result[0] });
-            set({ locationList: result[1].data.map((item: any) => item.loc_nm)})
-            return result[0];
+            const mainData = await SP_GetOperationListData(fr_date, waybill_no);
+            set({ mainDatas: mainData[0] });
+            const loadData = await SP_GetOperationListLoadData();
+            set({ loadDatas: loadData});
+            //set({ locationList: result[1].data.map((item: any) => item)})
         },
         setPopupOpen: (isOpen: boolean) => {
             set((state: any) => ({

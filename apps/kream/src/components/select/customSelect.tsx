@@ -30,6 +30,7 @@ type Props = {
   inline?: boolean
   isDisplay?: boolean       // Controlling the visibility of an element.
   isDisplayX?: boolean    // X 아이콘 표시여부(필수값 여부)
+  isReadOnly? :boolean    // ReadOnly?
   noLabel?: boolean       // Label 표시 여부
   lwidth?: string        // Label 넓이
   events?:{               //customselect event전달용
@@ -82,7 +83,7 @@ const CustomSelect = forwardRef((props: Props, focusRef) => {
   const [isSearching, setSearching ] = useState(false);
   const { register, setValue, getValues } = useFormContext();
   const { id, label, initText = 'Select an Option', listItem, inline, valueCol, displayCol = id, gridOption, gridStyle, style, isSelectRowAfterRender, isDisplay=true, isDisplayX = true
-    , noLabel = false, lwidth, defaultValue:initValue, events
+    , isReadOnly=false,noLabel = false, lwidth, defaultValue:initValue, events
   } = props;
   const customselect = true
   const defaultStyle = {
@@ -532,7 +533,8 @@ const CustomSelect = forwardRef((props: Props, focusRef) => {
               right: '5px',
               transform: 'translateY(-50%)',
               cursor: 'pointer',
-              visibility: isDisplay ? 'visible' : 'hidden'  
+              visibility: isDisplay ? 'visible' : 'hidden' , 
+              pointerEvents: isReadOnly ? 'none' : 'auto'
             }}
             onClick={() => {
               const inputElement = document.querySelector(`#${id}`);
@@ -564,7 +566,7 @@ const CustomSelect = forwardRef((props: Props, focusRef) => {
               bottom: openDirection === 'up' ? 'calc(100% + 1px)' : 'auto',
             }}
         >
-          { isDisplay &&
+          { isDisplay && 
           <Grid
             id="customSelect"
             customselect={customselect}

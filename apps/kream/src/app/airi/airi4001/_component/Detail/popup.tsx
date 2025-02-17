@@ -1,16 +1,17 @@
 import { DialogArrow } from "layouts/dialog/dialog";
 import { useFormContext } from "react-hook-form";
-import { useState, useEffect, MouseEventHandler } from "react";
+import { useState, useEffect, useCallback, MouseEventHandler } from "react";
 import { crudType } from "components/provider/contextObjectProvider";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import CustomSelect from "components/select/customSelect";
 import { Button } from "components/button";
+import { toastError } from "components/toast";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { DatePicker } from "@/components/date/react-datepicker";
 import { useTranslation } from "react-i18next";
 import { useCommonStore } from "../../_store/store";
 import { toastSuccess } from "components/toast";
-
+import { TextArea } from "components/input";
 import Amount from "./popupAmount";
 
 import { log, error } from "@repo/kwe-lib-new";
@@ -24,10 +25,11 @@ type Props = {
 const Modal = ({ loadItem }: Props) => {
   const { t } = useTranslation();
   const detail: any[] = [];
-
   const { getValues, reset, setFocus } = useFormContext();
   const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
-  const detailSelectedRow = useCommonStore((state) => state.detailSelectedRow);
+  const detailRVDatas = useCommonStore((state) => state.detailRVDatas);
+  const detailABDatas = useCommonStore((state) => state.detailABDatas);
+  const detailIndex = useCommonStore((state) => state.detailIndex);
   const popup = useCommonStore((state) => state.popup);
   const state = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
@@ -38,6 +40,67 @@ const Modal = ({ loadItem }: Props) => {
       isPopupOpen: false,
     });
   };
+
+  const onClickeventBefore = async () => {
+    const prevIndexnum = state.currentRow?.__ROWINDEX - 2;
+    var beforeIndexNum2 = state.detailIndex - 1;
+    if (beforeIndexNum2 >= 0) {
+      actions.setDetailIndex(beforeIndexNum2);
+    } else {
+      toastError(t("MSG_0197"));
+    }
+
+    // const prevRowData = state.allData.find(
+    //   (row) => row.__ROWINDEX === prevIndexnum
+    // );
+
+    // if (prevRowData) {
+    //   actions.getDTDDetailDatas(prevRowData);
+    //   actions.setCurrentRow(prevRowData);
+    // } else {
+    //   log("No data :", prevIndexnum);
+    // }
+  };
+
+  const onClickeventAfter = async () => {
+    const nextIndexnum = state.currentRow?.__ROWINDEX + 2;
+    var nextDetailidx = state.detailIndex + 1;
+    if (nextDetailidx < Math.floor(state.allData.length / 2)) {
+      actions.setDetailIndex(nextDetailidx);
+    } else {
+      toastError(t("MSG_0198"));
+    }
+
+    // const nextRowData = state.allData.find(
+    //   (row) => row.__ROWINDEX === nextIndexnum -1
+    // );
+    // log("nextRowData", nextRowData);
+
+    // if (nextRowData) {
+    //   // actions.getDTDDetailDatas(nextRowData);
+    //   actions.setCurrentRow(nextRowData);
+    // } else {
+    //   log("No data found for next index:", nextIndexnum);
+    // }
+  };
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "PageUp") {
+        onClickeventAfter();
+      } else if (event.key === "PageDown") {
+        onClickeventBefore();
+      }
+    },
+    [onClickeventBefore, onClickeventAfter]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   //Set select box data
   const [incoterms, setIncoterms] = useState<any>();
@@ -54,114 +117,69 @@ const Modal = ({ loadItem }: Props) => {
     if (
       loadItem &&
       mainSelectedRow &&
-      Object.keys(mainSelectedRow).length > 0
+      Object.keys(mainSelectedRow).length > 0 &&
+      detailRVDatas &&
+      Object.keys(detailRVDatas).length > 0
     ) {
     }
-  }, [mainSelectedRow, loadItem]);
+  }, [mainSelectedRow, loadItem, detailRVDatas]);
+
+  // useEffect(() => {
+  //   reset();
+  //   if (state.popup.popType === crudType.CREATE) {
+  //     setFocus("use_yn");
+  //   }
+
+  // }, [state.popup.popType, state.popup.isOpen]);
 
   useEffect(() => {
-    reset();
-    if (state.popup.popType === crudType.CREATE) {
-      setFocus("use_yn");
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    if (popup.isPopupOpen) {
+      document.addEventListener("keydown", handleKeyDown);
     }
-  }, [state.popup.popType, state.popup.isOpen]);
 
-  // const SaveDetail = async () => {
-  //   let hasData = false;
-  //   // const allColumns = state.gridRef_Detail?.current?.api.getAllGridColumns();
-  //   const allColumns = state.detailDatas;
-  //   // log("saveDetail? allColumns", allColumns);
-  //   // await state.gridRef_Detail.current.api.forEachNode((node: any) => {
-  //   //   if (node.data[ROW_CHANGED]) {
-  //   //     hasData = true;
-  //   //     var data = {
-  //   //       ...node.data,
-  //   //     };
-  //   //     log("data", data);
-  //   //     detail.push(data);
-  //   //   }
-  //   // });
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [popup.isPopupOpen]);
 
-  //   return hasData;
-  // };
+  const onSave1 = async (param: MouseEventHandler | null) => {
+    if (!detailRVDatas) return;
+    if (!detailABDatas) return;
 
-  const onSave = async (param: MouseEventHandler | null) => {
-    const detail: any[] = [];
-    let curData = getValues();
-    detail.push(curData);
-    // console.log("curData", curData, state.popup.popType);
-    const result = await actions.saveDTDDetailData({
-      jsondata: JSON.stringify(detail),
+    const mergedArray = Object.values(detailRVDatas).map(
+      (item: any, index: number) => {
+        log("item, number", item, index);
+        const matchingItem = Object.values(detailABDatas).find(
+          (obj: any, i: number) =>
+            i === index && obj.waybill_no === item.waybill_no
+        );
+
+        return {
+          ...item,
+          ...(matchingItem || {}),
+        };
+      }
+    );
+
+    console.log("mergedArray", mergedArray);
+    const result = await actions.saveDTDDetailDatas({
+      jsondata: JSON.stringify(mergedArray),
     });
     if (result) {
-      //log('success')
       toastSuccess("success");
-      // actions.getDTDDatas(getValues());
+      closeModal();
+      actions.getDTDDatas(getValues());
     }
   };
 
-  useEffect(() => {
-    if (state.detailSelectedRow) {
-      log("Detail selected row changed:", state.detailSelectedRow);
-      // 필요한 추가 로직
-    }
-  }, [state.detailSelectedRow]);
-
-  const onClickeventBefore = async () => {
-    const userConfirmed = window.confirm(t("MSG_0012") || ""); //템플릿을 저장하시겠습니까?
-
-    if (userConfirmed) {
-      const detail: any[] = [];
-      let curData = getValues();
-      detail.push(curData);
-      const result = await actions.saveDTDDetailData({
-        jsondata: JSON.stringify(detail),
-      });
-      if (result) {
-      }
-    }
-
-    const prevIndexnum = state.currentRow?.__ROWINDEX - 2;
-
-    const prevRowData = state.allData.find(
-      (row) => row.__ROWINDEX === prevIndexnum
-    );
-
-    if (prevRowData) {
-      actions.getDTDDetailDatas(prevRowData);
-      actions.setCurrentRow(prevRowData);
-    } else {
-      log("No data :", prevIndexnum);
-    }
-  };
-
-  const onClickeventAfter = async () => {
-    const userConfirmed = window.confirm(t("MSG_0012") || ""); //템플릿을 저장하시겠습니까?
-
-    if (userConfirmed) {
-      const detail: any[] = [];
-      let curData = getValues();
-      detail.push(curData);
-      const result = await actions.saveDTDDetailData({
-        jsondata: JSON.stringify(detail),
-      });
-      if (result) {
-      }
-    }
-
-    const nextIndexnum = state.currentRow?.__ROWINDEX + 2;
-
-    // nextIndexnum과 동일한 rowIndex를 가진 데이터 찾기
-    const nextRowData = state.allData.find(
-      (row) => row.__ROWINDEX === nextIndexnum
-    );
-
-    if (nextRowData) {
-      actions.getDTDDetailDatas(nextRowData);
-      actions.setCurrentRow(nextRowData);
-    } else {
-      log("No data found for next index:", nextIndexnum);
-    }
+  const handleOnClickB = () => {
+    log("clicked");
   };
 
   return (
@@ -180,9 +198,23 @@ const Modal = ({ loadItem }: Props) => {
                 <MaskedInputField
                   id="cal_issue_or_nm"
                   label="l_gubn"
-                  width="w-32"
-                  value={detailSelectedRow?.cal_issue_or_nm}
+                  width="w-20"
+                  value={detailRVDatas?.[detailIndex]?.cal_issue_or_nm || ""}
                   options={{
+                    inline: true,
+                    isReadOnly: true,
+                    fontSize: "lg",
+                    fontWeight: "semibold",
+                  }}
+                />
+                <MaskedInputField
+                  id="settlement_type"
+                  width="w-20"
+                  value={
+                    detailRVDatas?.[detailIndex]?.settlement_type || "선불"
+                  }
+                  options={{
+                    noLabel: true,
                     inline: true,
                     isReadOnly: true,
                     fontSize: "lg",
@@ -193,14 +225,13 @@ const Modal = ({ loadItem }: Props) => {
                 <MaskedInputField
                   id="cnee_id"
                   label="cnee_id"
-                  value={detailSelectedRow?.cnee_id}
+                  value={detailRVDatas?.[detailIndex]?.cnee_id}
                   width="w-32"
                   options={{
                     inline: true,
                     isReadOnly: true,
                   }}
                 />
-                {/* <div className="flex-1 max-w-[1000px]"> */}
                 <CustomSelect
                   id="cnee_id"
                   label="l_cnee_id"
@@ -218,7 +249,12 @@ const Modal = ({ loadItem }: Props) => {
                   gridStyle={{ width: "600px", height: "300px" }}
                   style={{ width: "1200px", height: "8px" }}
                   isDisplay={true}
-                  defaultValue={detailSelectedRow?.cnee_id}
+                  isReadOnly={
+                    detailRVDatas?.[detailIndex]?.state === state.closing
+                      ? true
+                      : false
+                  }
+                  defaultValue={detailRVDatas?.[detailIndex]?.cnee_id || ""}
                   inline={true}
                 />
                 {/* </div> */}
@@ -229,9 +265,9 @@ const Modal = ({ loadItem }: Props) => {
             <>
               <div className="flex">
                 <MaskedInputField
-                  id="state"
+                  id="state_nm"
                   width="w-32"
-                  value={detailSelectedRow?.state}
+                  value={detailRVDatas?.[detailIndex]?.state_nm}
                   options={{
                     inline: true,
                     isReadOnly: true,
@@ -244,7 +280,7 @@ const Modal = ({ loadItem }: Props) => {
           }
           bottomRight={
             <>
-              <Button id={"save"} onClick={onSave} width="w-32" />
+              <Button id={"save"} onClick={onSave1} width="w-32" />
               <Button id={"cancel"} onClick={closeModal} width="w-32" />
             </>
           }
@@ -256,7 +292,7 @@ const Modal = ({ loadItem }: Props) => {
                   <div className="grid grid-cols-2 gap-4">
                     <MaskedInputField
                       id="waybill_no"
-                      value={detailSelectedRow?.waybill_no}
+                      value={detailRVDatas?.[detailIndex]?.waybill_no}
                       options={{
                         bgColor: "!bg-yellow-100",
                         inline: true,
@@ -265,7 +301,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <MaskedInputField
                       id="waybill_gubn"
-                      value={detailSelectedRow?.waybill_gubn}
+                      value={detailRVDatas?.[detailIndex]?.waybill_gubn}
                       options={{
                         bgColor: "!bg-gray-100",
                         inline: true,
@@ -277,7 +313,7 @@ const Modal = ({ loadItem }: Props) => {
                     <MaskedInputField
                       id="ci_invoice"
                       label="invoice_no"
-                      value={detailSelectedRow?.ci_invoice}
+                      value={detailRVDatas?.[detailIndex]?.ci_invoice || ""}
                       options={{
                         bgColor: "!bg-gray-100",
                         inline: true,
@@ -287,7 +323,7 @@ const Modal = ({ loadItem }: Props) => {
 
                     <MaskedInputField
                       id="gross_wt"
-                      value={detailSelectedRow?.gross_wt}
+                      value={detailRVDatas?.[detailIndex]?.gross_wt || ""}
                       options={{
                         bgColor: "!bg-gray-100",
                         inline: true,
@@ -295,23 +331,28 @@ const Modal = ({ loadItem }: Props) => {
                       }}
                     />
                   </div>
-                  {/* <input className="hidden" value={detailSelectedRow?.seq} /> */}
                   <MaskedInputField
-                      id="seq"
-                      value={detailSelectedRow?.seq}
-                      isDisplay={false}
-                      options={{
-                        bgColor: " none",
-                        inline: true,
-                        isReadOnly:
-                          popup.popType === crudType.CREATE ? false : true,
-                      }}
-                    />     
+                    id="kwe_remark"
+                    value={detailRVDatas?.[detailIndex]?.kwe_remark || ""}
+                    options={{
+                      inline: true,
+                    }}
+                  />
+                  <MaskedInputField
+                    id="seq"
+                    value={detailRVDatas?.[detailIndex]?.seq || ""}
+                    isDisplay={false}
+                    options={{
+                      bgColor: " none",
+                      inline: true,
+                    }}
+                  />
+
                   {/* <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                       <MaskedInputField
                         id="total"
-                        value={detailSelectedRow?.total}
+                        value={detailRVDatas?.[detailIndex].total}
                         isDisplay={true}
                         options={{
                           bgColor: " disable",
@@ -327,18 +368,8 @@ const Modal = ({ loadItem }: Props) => {
                 <div className="col-span-2 px-1">
                   <div className="grid grid-cols-2 gap-1">
                     <DatePicker
-                      id="settlement_date"
-                      value={detailSelectedRow?.settlement_date}
-                      options={{
-                        inline: true,
-                        textAlign: "center",
-                        freeStyles: "p-1 border-1 border-slate-300",
-                        isReadOnly: true,
-                      }}
-                    />
-                    <DatePicker
                       id="eta"
-                      value={detailSelectedRow?.eta}
+                      value={detailRVDatas?.[detailIndex]?.eta || ""}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -348,7 +379,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <DatePicker
                       id="create_date"
-                      value={detailSelectedRow?.create_date}
+                      value={detailRVDatas?.[detailIndex]?.create_date || ""}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -356,18 +387,33 @@ const Modal = ({ loadItem }: Props) => {
                         isReadOnly: true,
                       }}
                     />
+                    <DatePicker
+                      id="settlement_date"
+                      value={
+                        detailRVDatas?.[detailIndex]?.settlement_date || ""
+                      }
+                      options={{
+                        inline: true,
+                        textAlign: "center",
+                        freeStyles: "p-1 border-1 border-slate-300",
+                        isReadOnly: true,
+                      }}
+                    />
                     <MaskedInputField
-                      id="create_user"
-                      value={detailSelectedRow?.create_user}
+                      id="settlement_user"
+                      value={
+                        detailRVDatas?.[detailIndex]?.settlement_user || ""
+                      }
                       options={{
                         inline: true,
                         textAlign: "center",
                         isReadOnly: true,
                       }}
                     />
+
                     <DatePicker
                       id="update_date"
-                      value={detailSelectedRow?.update_date}
+                      value={detailRVDatas?.[detailIndex]?.update_date || ""}
                       options={{
                         inline: true,
                         textAlign: "center",
@@ -377,7 +423,7 @@ const Modal = ({ loadItem }: Props) => {
                     />
                     <MaskedInputField
                       id="update_user"
-                      value={detailSelectedRow?.update_user}
+                      value={detailRVDatas?.[detailIndex]?.update_user || ""}
                       options={{
                         inline: true,
                         isReadOnly: true,
@@ -385,30 +431,68 @@ const Modal = ({ loadItem }: Props) => {
                       }}
                     />
                   </div>
+                  
+                  <MaskedInputField
+                    id="total"
+                    value={detailRVDatas?.[detailIndex]?.update_user || ""}
+                    options={{
+                      bgColor: "!bg-sky-200",
+                      inline: true,
+                      isReadOnly: true,
+                      textAlign: "center",
+                    }}
+                  />
                 </div>
               </div>
-              <div className="flex items-center justify-center w-full space-x-2">
-                <div
-                  className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
+              <div className="flex items-center justify-center w-full h-4 space-x-2">
+                <Button
+                  id={"left"}
                   onClick={onClickeventBefore}
-                >
-                  {"<"}
-                </div>
-                <div
-                  className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600"
+                  disabled={false}
+                  isLabel={false}
+                  width="w-14"
+                />
+
+                <Button
+                  id={"right"}
                   onClick={onClickeventAfter}
-                >
-                  {">"}
-                </div>
+                  disabled={false}
+                  isLabel={false}
+                  width="w-14"
+                />
                 <span className="text-gray-700">
-                  {" "}
-                  {Math.floor(state.currentRow?.__ROWINDEX / 2) + 1} /{" "}
+                  {state.detailIndex + 1}
+                  {" / "}
                   {Math.floor(state.allData.length / 2)}
                 </span>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-3 ">
                 <Amount loadItem={loadItem} />
               </div>
+              <fieldset className="p-3 ml-auto border border-gray-300 rounded-lg w-fit">
+                <legend className="px-2 text-sm font-semibold text-gray-600">
+                  Info
+                </legend>
+                <div
+                  className="grid grid-cols-2 gap-2 cursor-pointer hover:bg-gray-100"
+                  onClick={handleOnClickB}
+                >
+                  <span className="text-gray-700">
+                    {"입금 : 2025-02-14           "}
+                  </span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                  <span className="text-gray-700">
+                    {"환불 : 2025-02-14          "}
+                  </span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                  <span className="text-gray-700">
+                    {"조정 : 2025-02-14          "}
+                  </span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                  <span className="text-gray-700">{"정산잔액 : "}</span>
+                  <span className="w-full text-right text-gray-700">{"0"}</span>
+                </div>
+              </fieldset>
             </div>
           </form>
         </DialogArrow>
