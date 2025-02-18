@@ -11,10 +11,15 @@ import { log, error } from '@repo/kwe-lib-new';
 import DetailInfo from "./_component/DetailInfo";
 import { useHotkeys } from "react-hotkeys-hook";
 
+type Props = {
+    trans_mode:string;
+    trans_type:string;
+};
 
-export default function STND0016() {
+export default function STND0016(props:Props) {
     const mGridRef = useRef<AgGridReact>(null);
     const focusRef = useRef(null);
+    const { trans_mode, trans_type } = props;
 
     const searchParams = useCommonStore((state) => state.searchParams);
     const selectedCustData = useCommonStore((state) => state.selectedCustData);
@@ -30,13 +35,16 @@ export default function STND0016() {
     } = methods;
             
     useEffect(() => {
-        resetStore();
         getLoad();        
     }, []);
 
     useEffect(() => {
         getCustDetailDatas(searchParams);
     }, [selectedCustData?.cust_code]);
+
+    useEffect(() => {
+        setState({searchParams: {...searchParams, trans_mode:trans_mode, trans_type:trans_type}})    
+    }, [trans_mode, trans_type]);
 
     useHotkeys(
         "ctrl+s",
