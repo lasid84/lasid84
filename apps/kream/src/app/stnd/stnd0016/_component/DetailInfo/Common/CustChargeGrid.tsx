@@ -19,7 +19,7 @@ const CustChargeGrid: React.FC<Props> = memo(({shipping_type}) => {
   const custChargeDatas = useCommonStore((state) => state.custChargeDatas);
   const selectedCustData = useCommonStore((state) => state.selectedCustData);
   const selectedTab = useCommonStore((state) => state.selectedTab);
-  const searchParams = useCommonStore((state) => state.searchParams);
+  const state = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
   const { getValues } = useFormContext();
 
@@ -36,10 +36,9 @@ const CustChargeGrid: React.FC<Props> = memo(({shipping_type}) => {
   };
 
   useEffect(() => {
-    const {search_cust_code, trans_mode, trans_type } = searchParams;
     const params = {
-        cust_code: search_cust_code, 
-        cust_mode: trans_mode + trans_type, 
+        cust_code: selectedCustData?.cust_code, 
+        cust_mode: (state.trans_mode ?? '') + state.trans_type, 
         shipping_type: shipping_type, 
     }
     actions.getCustChargeDatas(params);

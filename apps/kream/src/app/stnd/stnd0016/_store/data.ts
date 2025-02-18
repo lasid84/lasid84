@@ -21,12 +21,11 @@ export const SP_GetLoad = async () => {
 
 export const SP_GetCustDetailData = async (Params: any) => {  
 
-  const { search_cust_code, trans_mode, trans_type, user_id, ipaddr } = paramsUtils(Params);
-  const cust_mode = trans_mode + trans_type;
+  const { cust_code, cust_mode, user_id, ipaddr } = paramsUtils(Params);
 
   const params = {
     inparam: ["in_cust_code", "in_cust_mode", "in_user", "in_ipaddr"],
-    invalue: [ search_cust_code, cust_mode, user_id, ipaddr],
+    invalue: [ cust_code, cust_mode, user_id, ipaddr],
     inproc: 'public.f_stnd0016_get_cust_data',
     isShowLoading: true
   }

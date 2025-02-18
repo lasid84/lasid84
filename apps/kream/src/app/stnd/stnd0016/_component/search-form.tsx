@@ -24,26 +24,17 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
   const custDetailData = useCommonStore((state) => state.custDetailData);
   
   const { setState, resetSearchParam,  getLoad } = useCommonStore((state) => state.actions);
-
-  useEffect(() => {
-    onSearch();
-  }, [loadDatas])
-
-  const onSearch = () => {
-    const params = getValues();
-    setState({searchParams:params});
-  };
   
-  const onAdd = async () => {
-    if (mGridRef?.current) {
-      var temp = await rowAdd(mGridRef.current, {  });
-      setTimeout(() => {
-        focusRef?.current.inputElement.focus();
-      }, 200);
+  // const onAdd = async () => {
+  //   if (mGridRef?.current) {
+  //     var temp = await rowAdd(mGridRef.current, {  });
+  //     setTimeout(() => {
+  //       focusRef?.current.inputElement.focus();
+  //     }, 200);
 
-      log("onAdd", temp);
-    }
-  }
+  //     log("onAdd", temp);
+  //   }
+  // }
 
   const onSave = () => {
     const params = getValues();
@@ -61,7 +52,8 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
               <div className={"col-span-1"}>
                 <Button id="btnSave" label="save"
                   disabled={!selectedCustData?.cust_code}
-                  onClick={onSave} />
+                  onClick={onSave} 
+                  />
               </div>
             </>
           }
@@ -90,7 +82,6 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
                       const selectedRow = e.api.getSelectedRows()[0];
                       setValue(id, value);
                       setState({selectedCustData:selectedRow})
-                      onSearch();
                   },
                 }}
               />

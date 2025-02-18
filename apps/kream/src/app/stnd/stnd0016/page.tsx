@@ -21,12 +21,12 @@ export default function STND0016(props:Props) {
     const focusRef = useRef(null);
     const { trans_mode, trans_type } = props;
 
-    const searchParams = useCommonStore((state) => state.searchParams);
+    const state = useCommonStore((state) => state);
     const selectedCustData = useCommonStore((state) => state.selectedCustData);
     const { getLoad, setState, resetStore, getCustDetailDatas } = useCommonStore((state) => state.actions);
     const methods = useForm({
         defaultValues: {
-            ...searchParams
+            ...state.searchParams
         },
     });
 
@@ -39,11 +39,15 @@ export default function STND0016(props:Props) {
     }, []);
 
     useEffect(() => {
-        getCustDetailDatas(searchParams);
+        const params = {
+            cust_code: selectedCustData?.cust_code,
+            cust_mode: state.trans_mode + (state.trans_type ?? '')
+        }
+        getCustDetailDatas(params);
     }, [selectedCustData?.cust_code]);
 
     useEffect(() => {
-        setState({searchParams: {...searchParams, trans_mode:trans_mode, trans_type:trans_type}})    
+        setState({trans_mode:trans_mode, trans_type:trans_type})    
     }, [trans_mode, trans_type]);
 
     useHotkeys(

@@ -7,6 +7,8 @@ import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 
 // StoreState 정의
 interface StoreState {
+    trans_mode: string | null,
+    trans_type: string | null,
     searchParams: Record<string, any>;
     loadDatas: gridData[] | null;  /* 0: 거래처코드, 1: Province, 2: Loc_type */ 
     custChargeDatas: gridData | null;
@@ -32,18 +34,11 @@ type Store = StoreState & {
     actions: StoreActions;
 };
 
-const getInitialSearchParams = () => {
-    // const { currentParams } = useUserSettings.getState().data;
-    // const { trans_mode, trans_type} = getMenuParameters(currentParams);
-    
-    return {
-        search_cust_code: null,
-    }
-};
-
 // initValue 정의
 const initValue: StoreState = {
-    searchParams: getInitialSearchParams(),
+    trans_mode: null,
+    trans_type: null,
+    searchParams: {},
     loadDatas: null,
     selectedTab: 'NM',
     custChargeDatas: null,
@@ -58,7 +53,7 @@ const setinitValue = (set: any, get: any) => {
         getLoad: async () => {
             const { searchParams } = get();
             const result = await SP_GetLoad();
-            set({ loadDatas: result, searchParams: {...searchParams, ...initValue.searchParams}, selectedCustData: null,});
+            set({ loadDatas: result, selectedCustData: null });
             return result;
         },
         getCustDetailDatas: async (params: any) => {
