@@ -92,8 +92,6 @@ useEffect(() => {
     });
 
     let lastWaybillNo: string | null = null; // 이전 청구 데이터의 waybill_no를 저장할 변수
-    // log('columnNames',columnNames)
-    // log('mappingConfigs', mappingConfigs)
     const mappedData = data
       .filter((row) => {
         // row가 빈 배열인 경우 제외

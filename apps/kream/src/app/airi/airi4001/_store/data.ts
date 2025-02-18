@@ -244,6 +244,7 @@ export const SP_SaveUploadData = async (param: any) => {
       , ipaddr
     ],
     inproc: 'airimp.f_airi4001_ins_upload_dtd2',
+    // inproc: 'airimp.f_airi4001_ins_upload_dom',
     isShowLoading: true
   }
 
