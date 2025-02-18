@@ -10,13 +10,18 @@ import { AgGridReact } from "ag-grid-react";
 
 import { log, error } from '@repo/kwe-lib-new';
 
+type Props = {
+    trans_mode:string;
+    trans_type:string;
+};
 
-export default memo(function STND0015() {
+export default memo(function STND0015(props: Props) {
     const mGridRef = useRef<AgGridReact>(null);
     const focusRef = useRef(null);
+    const { trans_mode, trans_type } = props;
 
     const searchParams = useCommonStore((state) => state.searchParams);
-    const { getLoad, setState } = useCommonStore((state) => state.actions);
+    const { getLoad, setState, resetStore } = useCommonStore((state) => state.actions);
     const methods = useForm({
     defaultValues: {
         ...searchParams
@@ -28,8 +33,13 @@ export default memo(function STND0015() {
     } = methods;
             
     useEffect(() => {
+        resetStore();
         getLoad();        
     }, [])
+
+    useEffect(() => {
+        setState({searchParams: {...searchParams, trans_mode:trans_mode, trans_type:trans_type}})    
+    }, [trans_mode, trans_type]);
 
     return (
         <FormProvider {...methods}>

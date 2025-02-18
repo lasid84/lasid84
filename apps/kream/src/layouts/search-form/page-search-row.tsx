@@ -247,7 +247,7 @@ export const PageSearchButton: React.FC<PageSearchProps> = ({
   return (
     <>
       <div className="flex w-full">
-        <div className="w-full rounded-[5px] bg-white border mb-2 mt-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
+        <div className="w-full rounded-[5px] bg-white border mb-1 mt-1 dark:bg-gray-900 dark:border-gray-800 dark:text-white">
           {title}
           {/*contents*/}
           <div className="flex px-4 py-1 space-y-2 w-full">

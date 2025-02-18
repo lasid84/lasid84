@@ -23,9 +23,11 @@ type Props = {
         cust_code: string
         cont_type: string
     }
+    title?: string
+    titleColor?: string
 };
 
-const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
+const CustCont: React.FC<Props> = ({ ref = null, initData, params, title = 'pic_nm', titleColor }) => {
 
     const gridRef = useRef<any | null>(ref);
     const { dispatch, objState } = useAppContext();
@@ -161,11 +163,11 @@ const CustCont: React.FC<Props> = ({ ref = null, initData, params }) => {
         <>
             <PageGrid
                 title={
-                    <><LabelGrid id={'pic_nm'} /></>}
+                    <><LabelGrid id={title} textColor={titleColor} /></>}
                 right={
                     <>
-                        <Button id={"add"} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false, cont_type: params.cont_type })} width='w-15'/>
-                        <Button id={"save"} onClick={onSave} width='w-15'/>
+                        <Button id={"add"} disabled={!params?.cust_code} onClick={() => rowAdd(gridRef.current, { "use_yn": true, "def": false, cont_type: params.cont_type })} width='w-15'/>
+                        <Button id={"save"} disabled={!params?.cust_code} onClick={onSave} width='w-15'/>
                     </>
                 }>
                 <Grid

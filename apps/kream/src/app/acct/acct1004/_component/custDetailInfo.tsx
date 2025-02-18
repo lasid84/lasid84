@@ -70,7 +70,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
             <form onSubmit={handleSubmit(onFormSubmit)}>
                 <div className="flex flex-col w-full gap-2 space-y-2 overflow-y-scroll h-[504px] inherit">
                     <PageContent
-                        left={<Tab loadItem={loadItem} onClickTab={handleOnClickTab} />
+                        left={<Tab loadItem={loadItem[14].data} onClickTab={handleOnClickTab} />
                         }
                         right={<>
                             <Button id="save" disabled={false} onClick={handleSubmit(onFormSubmit)} width='w-15'/>

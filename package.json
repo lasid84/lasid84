@@ -7,11 +7,12 @@
   ],
   "scripts": {
     "build": "turbo build",
+    "bd:batch": "turbo build --filter batch",
     "bd:kream": "turbo build --filter kream",
     "bd:api": "turbo build --filter api",
-    "bd:batch": "turbo build --filter batch",
     "dev": "turbo dev",
     "start": "turbo start --filter kream",
+    "st:kream": "turbo start --filter kream",
     "dev:api": "turbo dev --filter api",
     "dev:kream": "turbo dev --filter kream",
     "dev:batch": "turbo dev --filter batch",

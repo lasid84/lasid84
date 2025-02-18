@@ -1,0 +1,13 @@
+.my-editor-wrapper {
+    height: 100%;
+}
+  
+.my-editor-wrapper .ql-container {
+    height: 100% !important; /* 부모 높이에 맞춤 */
+}
+
+.my-editor-wrapper .ql-editor {
+    height: 100%;         /* ql-container의 높이를 채움 */
+    overflow-y: auto;     /* 내용이 많으면 스크롤 표시 */
+}
+  

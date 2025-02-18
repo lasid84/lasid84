@@ -102,7 +102,7 @@ const SearchForm = memo(({ loadItem }: any) => {
           }>
           <div className={"col-span-1"}>
             <ReactSelect
-              id="trans_mode" label="trans_mode" dataSrc={transmode as data}
+              id="trans_mode" label="trans_mode" dataSrc={transmode as gridData}
               width='w-96' lwidth='w-20' height="8px"
               options={{
                 keyCol: "trans_mode",
@@ -113,7 +113,7 @@ const SearchForm = memo(({ loadItem }: any) => {
             />
 
             <ReactSelect
-              id="trans_type" label="trans_type" dataSrc={transtype as data}
+              id="trans_type" label="trans_type" dataSrc={transtype as gridData}
               width='w-96' lwidth='w-20' height="8px"
               options={{
                 keyCol: "trans_type",

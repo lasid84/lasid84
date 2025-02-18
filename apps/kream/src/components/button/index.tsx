@@ -54,6 +54,7 @@ export type ButtonProps = {
   isLabel?: boolean;
   isDisplay? : boolean; // Controlling the visibility of an element.
   width?: string;
+  height?: string;
   dataSrc? : data;
   options ? : {
     keyCol ?: string;
@@ -302,6 +303,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
     icon,
     onClick,
     width,
+    height = 'h-8',
     isCircle,
     toolTip
   } = props;
@@ -312,7 +314,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = (e:MouseEvent<HTMLButtonElement>) => {
-    // log("button", pathName)
+  
     var data = {
       menucode: pathName,
       buttontype: id,
@@ -327,7 +329,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
   return (
     <div className="flex w-min-24 group">
     <button
-      className={`m-1 flex flex-row gap-0.5 h-8 ${width ? width : "w-full"} w-min-24 p-1 text-xs font-medium flex items-center justify-center ${getColor(label ? label : id, color)}
+      className={`m-1 flex flex-row gap-0.5 ${height} ${width ? width : "w-full"} min-w-20 p-1 text-xs font-medium flex items-center justify-center ${getColor(label ? label : id, color)}
             ${isHidden ? "hidden" : ""}
             ${disabledCss}
             ${isDisplay ? '' : 'invisible'}

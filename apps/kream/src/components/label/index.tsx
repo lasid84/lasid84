@@ -8,8 +8,9 @@ export type LabelProps = {
   textAlignLB? : string;
   isDisplay? : boolean;
   // name?: React.ReactNode;
-  textColor?: string;
+  textColor?: string | null;
   backgroundColor?: "gray" | "red" | "yellow" | "blue" | "white";
+  freeStyle?: string;
 };
 
 export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, isDisplay, textColor = 'black-500/75' }) => {
@@ -27,7 +28,7 @@ export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, isD
   );
 };
 
-export const LabelGrid: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB }) => {
+export const LabelGrid: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, textColor="gray-500/75", freeStyle="" }) => {
   const { t } = useTranslation();
 
   const defWidth = lwidth ? lwidth : "min-w-24"
@@ -35,7 +36,7 @@ export const LabelGrid: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB 
   return (
     <label
       htmlFor={id}
-      className={`gap-1 pb-1 pl-2 font-bold leading-8 whitespace-nowrap md:py-0 text-${textAlignLB} text-gray-500/75 dark:text-gray-200 ${defWidth}`}>
+      className={`gap-1 pb-1 pl-2 font-bold leading-8 whitespace-nowrap md:py-0 text-${textAlignLB}  dark:text-gray-200 ${defWidth} text-${textColor} ${freeStyle}`}>
       {t(name ? name : id)}
     </label>
   );

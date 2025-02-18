@@ -25,6 +25,9 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
 
     useImperativeHandle(ref, () => ({
         getValue: () => {
+            if (selectedIndex < 0) {
+                return value;
+            }
             /**
              * @dev
              * ag grid 기본 Enter 리스너 핸들러로 인해 Enter 키에 한해서 커스텀 핸들링 불가.
@@ -68,15 +71,26 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const filterValues = values.filter((value) => {
             const lowerSearchText = event.target.value.toLowerCase();
+            
             const lowerMain = value.main.toLowerCase();
+            const lowerSub = value.sub.toLowerCase();
 
             const koreanMainDisassemble = Hangul.disassemble(value.main).join("").includes(lowerSearchText);
             const koreanMainMatch = Hangul.search(value.main, lowerSearchText) >= 0;
+
+            const koreanSubDisassemble = Hangul.disassemble(value.sub).join("").includes(lowerSearchText);
+            const koreanSubMatch = Hangul.search(value.sub, lowerSearchText) >= 0;
 
             return (
                 lowerMain.includes(lowerSearchText) ||
                 koreanMainDisassemble ||
                 koreanMainMatch
+
+                ||
+                
+                lowerSub.includes(lowerSearchText) ||
+                koreanSubDisassemble ||
+                koreanSubMatch
             );
         });
 
@@ -85,6 +99,9 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
     };
 
     const handleExit = () => {
+        flushSync(() => {
+            setSelectedIndex(-1);
+        });
         props.api.stopEditing(false);
     };
 
@@ -108,18 +125,18 @@ const CustomSelectCellEditor = forwardRef((props: ICellEditorParams<any> & ISele
             <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-md" onClick={handleExit}/>
   
             <div className="relative z-10 flex flex-col w-1/2 bg-white border border-white rounded-lg shadow-lg h-2/3">
-                <div className="flex flex-row items-center justify-start pl-3">
+                <div className="flex flex-row items-center justify-start pl-3 border-b">
                     <CiSearch />
                     <input
                         key={0}
-                        className="flex-1 h-12 ml-2 text-sm focus:border focus:border-blue-500 focus:rounded-tr-md"
+                        className="flex-1 h-12 ml-2 text-sm"
                         placeholder="검색어를 입력해주세요."
                         onChange={handleSearch}
                         autoFocus
                     />
                 </div>
         
-                <ul className="flex-1 p-3 overflow-y-auto min-h-1/2">
+                <ul className="flex-1 p-3 mt-3 overflow-y-auto min-h-1/2">
                     <ul className="flex flex-col">
                         {dataList.map((item, index1) => (
                             <div key={index1} ref={(idx) => editorRef.current[index1] = idx}

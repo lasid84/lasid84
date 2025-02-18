@@ -17,5 +17,5 @@
     "baseUrl": "./src"
   },
   "exclude": ["node_modules"],
-  "include": ["ecosystem.config.js"]
+  "include": ["ecosystem.config.js", "**/*.ts"]
 }

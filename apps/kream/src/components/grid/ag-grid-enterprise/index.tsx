@@ -8,7 +8,7 @@ import { useConfigs } from "states/useConfigs";
 import { Suspense, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   GridOptions, Column, CellClickedEvent, CellValueChangedEvent, CutStartEvent, CutEndEvent, PasteStartEvent, RowDoubleClickedEvent,
-  PasteEndEvent, ValueFormatterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
+  PasteEndEvent, ValueFormatterParams, ValueSetterParams, GridReadyEvent, SizeColumnsToFitGridStrategy, SizeColumnsToFitProvidedWidthStrategy,
   SizeColumnsToContentStrategy, ColumnResizedEvent, ValueParserParams, IRowNode, SelectionChangedEvent, ISelectCellEditorParams, RowClickedEvent, RowDataUpdatedEvent,
   FirstDataRenderedEvent,
   CellKeyDownEvent,
@@ -162,6 +162,7 @@ export type GridOption = {
   };
   changeColor?: string[];
   columnVerticalCenter?: string[];
+  disableWhenRowAdd?: string[];
 
   notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
 };
@@ -651,6 +652,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 }
               }
             }
+          } else if (optCols[col] === 'date_digits_14') {
+            cellOption = {
+              ...cellOption,
+              valueFormatter: dateFormatter,
+              valueSetter: dateDigits14Setter
+            }
           }
         };
 
@@ -863,7 +870,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
         //체크박스 셋팅
         if (options?.checkbox) {
           if (options.checkbox.indexOf(col) > -1) {
-             log("checkbox:", col)
+            //  log("checkbox:", col)
             cellOption = {
               ...cellOption,
               // editable:true,
@@ -1079,7 +1086,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
       });
       copied = [...allColDefs];
       copied.forEach(obj => {
-        obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? true : options.editable?.includes(obj.field);
+        obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? (!options.disableWhenRowAdd?.includes(obj.field)) : options.editable?.includes(obj.field);
+        if (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW && options.disableWhenRowAdd?.includes(obj.field) && obj['editable'] === false) {
+          obj['cellStyle'] = {
+            ...obj['cellStyle'],
+            backgroundColor: '#d3d3d3'
+          }
+        }
       });
 
       setColDefs(copied);
@@ -1623,6 +1636,26 @@ export const rowAdd = async (
 const dateFormatter = (params: ValueFormatterParams) => {
   return stringToFullDateString(params.value, '-');
   // return stringToDateString(params.value, '-');
+}
+
+const dateDigits14Setter = (params: ValueSetterParams) => {
+  const field = params.column.getColDef().field;
+  if (!params.newValue || !field) {
+    return false;
+  }
+  
+  let onlyNumerical = params.newValue.replace(/\D/g, "");
+  if (onlyNumerical === "") {
+    return false;
+  } else if (onlyNumerical.length > 14) {
+    onlyNumerical = onlyNumerical.substring(0, 14);
+  } else if (onlyNumerical.length < 14) {
+    onlyNumerical = onlyNumerical.padEnd(14, "0");
+  }
+
+  params.data[field] = onlyNumerical;
+
+  return true;
 }
 
 const timeFormatter = (params: ValueFormatterParams) => {
