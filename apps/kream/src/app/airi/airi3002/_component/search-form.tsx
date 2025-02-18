@@ -77,7 +77,7 @@ const SearchForm = () => {
             />
           </div>
 
-          <div className={"col-span-1"}>
+          <div className={"col-span-2"}>
             <DatePicker
               id="fr_date"
               label="fr_date"
