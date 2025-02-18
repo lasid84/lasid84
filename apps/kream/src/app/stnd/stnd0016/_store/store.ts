@@ -38,8 +38,6 @@ const getInitialSearchParams = () => {
     
     return {
         search_cust_code: null,
-        // trans_mode: trans_mode,
-        // trans_type: trans_type,
     }
 };
 
@@ -58,14 +56,13 @@ const initValue: StoreState = {
 const setinitValue = (set: any, get: any) => {
     const actions: StoreActions = {
         getLoad: async () => {
+            const { searchParams } = get();
             const result = await SP_GetLoad();
-            // set({ loadDatas: result, searchParams: {...initValue.searchParams} });
-            set({ ...initValue, loadDatas: result });
+            set({ loadDatas: result, searchParams: {...searchParams, ...initValue.searchParams}, selectedCustData: null,});
             return result;
         },
         getCustDetailDatas: async (params: any) => {
             const result = await SP_GetCustDetailData(params);
-            log("getCustDetailDatas result", result)
             set({ custDetailData: result[0].data[0] });
             return result;
         },
