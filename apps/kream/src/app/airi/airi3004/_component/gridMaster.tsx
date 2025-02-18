@@ -10,7 +10,7 @@ import { useCommonStore } from "../_store/store";
 import { toast } from "react-toastify";
 import { t } from "i18next";
 
-import { ImCancelCircle } from "react-icons/im";
+import { GrPowerReset } from "react-icons/gr";
 
 import Popup from "../_component/Detail/popup";
 import FloatingButton from "../_component/floatingButton";
@@ -58,6 +58,12 @@ const MasterGrid: React.FC<Props> = memo(() => {
 
     return (data === "HUB AC"? "bg-lightorange" : "");
   };
+
+  const ediYNCellStyles = (params: any) => {
+    let data = params.data.edi_yn;
+
+    return (data === "Y")? "bg-green" : "bg-red";
+  };
   
   const gridOptions: GridOption = {
     gridHeight: "h-full",
@@ -68,10 +74,11 @@ const MasterGrid: React.FC<Props> = memo(() => {
     changeColor: ["arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     checkbox: ["chk", "use_yn"],
     customSelectCells: {
-      loc_nm_short: (loadDatas)? loadDatas[0].data : []
+      loc_nm_short: (loadDatas)? loadDatas[0].data : [],
+      transport_type: (loadDatas)? loadDatas[1].data : []
     },
     rowDivide: "transport_type",
-    editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "loading_remark", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
+    editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "loading_remark", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     heightColByConfig: {
       targetList: ["unloading_manager", "loc_nm_short", "request_tm_date", "remark"],
       excludeFormula: {
@@ -80,7 +87,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
       normalHeight: 25,
       expandHeight: 165
     },
-    disableWhenRowAdd: ["piece", "DN & Sorting", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
+    disableWhenRowAdd: ["piece", "edi_yn", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     rowHeight: 25,
     isAutoFitColData: true,
     isMultiSelect: false,
@@ -102,7 +109,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
     },
     cellClass: {
       origin: originCellStyles,
-      transport_type: transportTypeCellStyles
+      transport_type: transportTypeCellStyles,
+      edi_yn: ediYNCellStyles
     },
     dataType: {
       arv_local_dd: "date_digits_14",
@@ -141,7 +149,9 @@ const MasterGrid: React.FC<Props> = memo(() => {
       const api = gridRef.current.api;
       const node = api.getRowNode((data[0].__ROWINDEX -1).toString());
       if (node) {
+        console.log("node : ", node);
         const columns = api.getColumnDefs();
+        console.log("columns : ", columns);
       }
     }
   };
@@ -179,6 +189,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
    * Summary : Floating Button(수정/등록)
    */
   const handleSaveRow = async () => {
+    setIsAddRow(false);
     const changeRows = [];
     if (gridRef.current) {
       const api = gridRef.current.api;
@@ -350,7 +361,10 @@ const MasterGrid: React.FC<Props> = memo(() => {
         <Popup loadItem={{}} />
         {isAddRow && (
           <button className="fixed top-5 left-1/2 transform -translate-x-1/2 py-2 px-4 z-[1000]" onClick={handleCancelAddRow}>
-            <ImCancelCircle size="40"/>
+            <div className="flex flex-row items-center justify-center p-3 bg-black border rounded-md drop-shadow-md">
+                <GrPowerReset color="white" />
+                <span className="inline-block ml-1 text-xs text-white">실행취소</span>
+            </div>
           </button>
         )}
       </>

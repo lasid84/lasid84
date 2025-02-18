@@ -45,10 +45,8 @@ const setinitValue = (set: any) => {
     const actions: StoreActions = {
         getOperationListData: async (fr_date: string, waybill_no?: string) => {
             const mainData = await SP_GetOperationListData(fr_date, waybill_no);
-            set({ mainDatas: mainData[0] });
             const loadData = await SP_GetOperationListLoadData();
-            set({ loadDatas: loadData});
-            //set({ locationList: result[1].data.map((item: any) => item)})
+            set({ mainDatas: mainData[0], loadDatas: loadData });
         },
         setPopupOpen: (isOpen: boolean) => {
             set((state: any) => ({
