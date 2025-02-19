@@ -41,7 +41,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
     useEffect(() => {
         if (loadItem?.length) {
             // log("loadItem111111", loadItem[14].data)
-            settab(loadItem[14].data)
+            settab(loadItem?.[14].data)
         }
     }, [loadItem?.length])
     
@@ -70,7 +70,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
             <form onSubmit={handleSubmit(onFormSubmit)}>
                 <div className="flex flex-col w-full gap-2 space-y-2 overflow-y-scroll h-[504px] inherit">
                     <PageContent
-                        left={<Tab loadItem={loadItem[14].data} onClickTab={handleOnClickTab} />
+                        left={<Tab tabList={loadItem?.[14].data} onClickTab={handleOnClickTab} />
                         }
                         right={<>
                             <Button id="save" disabled={false} onClick={handleSubmit(onFormSubmit)} width='w-15'/>

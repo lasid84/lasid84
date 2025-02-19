@@ -23,16 +23,16 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
     const { t } = useTranslation();
     const [selectedTab, setSelectedTab] = useState<any>("NM");
 
-    const { loadItem, onClickTab, } = props;
-    const [tabList, settabList] = useState<tab[]>()
+    const { loadItem, onClickTab, tabList} = props;
+    // const [tabList, settabList] = useState<tab[]>()
 
-    useEffect(() => {
-        if (loadItem?.length) {
-            console.log('loadItem',loadItem[14].data)
-            settabList(loadItem[14].data)
-            // console.log('tabState',loadItem[14].data)
-        }
-    }, [loadItem?.length])
+    // useEffect(() => {
+    //     if (loadItem?.length) {
+    //         // console.log('loadItem',loadItem[14].data)
+    //         settabList(loadItem[14].data)
+    //         // console.log('tabState',loadItem[14].data)
+    //     }
+    // }, [loadItem?.length])
 
     useEffect(() => {
         // console.log('tabState_selectedTab',selectedTab)

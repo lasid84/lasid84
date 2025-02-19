@@ -47,7 +47,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
     return (
         <div className="flex flex-col w-full gap-2 space-y-2">
             <PageContent
-                left={<Tab loadItem={[{cd:'NM', cd_nm:'메인페이지'}, {cd:'DTD', cd_nm:'DTD페이지'}, {cd:'FH', cd_nm:'F/H페이지'}, {cd:'RATE', cd_nm:'Rate페이지'}]} onClickTab={handleOnClickTab} />
+                left={<Tab tabList={[{cd:'NM', cd_nm:'메인페이지'}, {cd:'DTD', cd_nm:'DTD페이지'}, {cd:'FH', cd_nm:'F/H페이지'}, {cd:'RATE', cd_nm:'Rate페이지'}]} onClickTab={handleOnClickTab} />
                 }
                 right={<></>}>
                 <div className={`flex flex-col w-full ${selectedTab == "NM" ? "" : "hidden"}`}>
