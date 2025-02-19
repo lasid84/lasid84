@@ -1,4 +1,4 @@
-import { SP_GetOperationListData, SP_UpdateOperationListData, SP_SetMileStoneEdiData, SP_getMilestoneInterfaceData, SP_GetOperationListLoadData } from "./data";
+import { SP_GetOperationListData, SP_UpdateOperationListData, SP_SetMileStoneEdiData, SP_getMilestoneInterfaceData, SP_GetOperationListLoadData, SP_getMilestoneRegistListData } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 import { createStore } from "@/states/createStore";
@@ -19,6 +19,7 @@ interface StoreActions {
     updateOperationListData: (params: any) => Promise<any>;
     setMilestoneEdiData: (params: any) => Promise<any>;
     getMilestoneInterfaceData: (params: any) =>Promise<any>;
+    getMilestoneRegistListData: (params: any) => Promise<any>;
 }
 
 // Store 타입 정의
@@ -61,6 +62,10 @@ const setinitValue = (set: any) => {
         },
         getMilestoneInterfaceData: async (param: any) => {
             const result = await SP_getMilestoneInterfaceData(param);
+            return result[0].data;
+        },
+        getMilestoneRegistListData: async (param: any) => {
+            const result = await SP_getMilestoneRegistListData(param);
             return result[0].data;
         }
     };

@@ -15,7 +15,7 @@ const Library = require("../../../ufspLibrary/ufsLibray");
 const teams = new Teams("INSERT_USFP_MILESTONE");
 const ufsp = new Library(workerData);
 
-const INTERVAL = 180000;
+const INTERVAL = 60000;
 
 const excuteState = {
     onExcute: false
@@ -69,6 +69,8 @@ const insertMilestone = async () => {
 
     const script = await ufsp.getScript();
 
+    const ifDatas = await ufsp.getIFData();
+
     const insertedMilstoneArray = [];
     const notInsertedMilestoneArray = [];
     const duplicateMilestoneArray = [];
@@ -83,15 +85,31 @@ const insertMilestone = async () => {
         for (let value of createUserGroupedArray[create_user]) {
             ufsp.resultData = {};
 
+            for (let data of ifDatas) {
+                if (data.bl_no === value.waybill_no) {
+                    ufsp.mainData = data;
+                    break;
+                }
+            }
+
             const checkScript = await repository.getScriptAPI(GET_PIPELINE_TX_PGM_CODE)
                 .catch(ex => {
                     // TEAMS
-                    teams.addProcessResult(process, 'error', false);
+                    teams.addProcessResult(process, value, false);
                     throw ex;
                 });
 
             await ufsp.addJsonResult('hwb_no', '', '', value.waybill_no, 'addBulk');
-            await ufsp.startScript(checkScript);
+            await ufsp.startScript(checkScript)
+                .catch(ex => {
+                    /**
+                     * @dev
+                     * milestone 등록하려는 waybill이 존재하지 않을 경우 t_edi_history 원복.
+                     */
+                    // TEAMS
+                    teams.addProcessResult(process, value, false);
+                    throw ex;
+                });
             const pipelineTX = await ufsp.resultData.get_pipeline_tx_result;
 
             await sleep(3000);
