@@ -1,8 +1,4 @@
-
-// import { executFunction } from "@/services/api.services";
 import { paramsUtils } from "@/components/react-query/utils/paramUtils";
-
-// import { executeKREAMFunction, callUnipass, unipassAPI001 } from "@/services/api.services";
 import { executeKREAMFunction } from "@/services/api/apiClient";
 import { log } from '@repo/kwe-lib-new';
 
@@ -19,7 +15,7 @@ export const SP_Load = async () => {
   return result;
 }
 
-//청구내역서 조회
+//ag-grid 청구내역서 조회
 export const SP_GetDTDMainData = async (searchParam: any) => {
   log('SP_GetDTDMainData', searchParam)  
   const {fr_date, to_date,  no, settlement_user,logis_id, broker_id} = searchParam;
@@ -46,7 +42,8 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_get_dtd_list',
+    // inproc: 'airimp.f_airi4001_get_dtd_list',
+    inproc: 'airimp.f_airi4001_get_domestic_inv_list',
     isShowLoading: true
   }
   log('params', params)
@@ -55,74 +52,10 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
   return result![0];
 }
 
-
-
-//청구내역서 Detail 조회
-export const SP_GetDTDDetailData = async (searchParam: any) => {
-  console.log('SP_GetDTDDetailData', searchParam)  
-  const { seq,  waybill_no} = searchParam;
-  const {user_id, ipaddr} = paramsUtils();
-  //user_id, ipaddr
-  const params = {
-    inparam : [
-       "in_waybill_no"
-      , "in_seq"
-      , "in_create_user"
-      , "in_user"
-      , "in_ipaddr"
-    ],
-    invalue: [
-      waybill_no
-      , seq
-      , ''
-      , user_id
-      , ipaddr
-    ],
-    inproc: 'airimp.f_airi4001_get_dtd_detail2',
-    isShowLoading: false
-  }
-
-  const result = await executeKREAMFunction(params);
-  console.log('result', result)
-  return result![0];
-}
-
-
-//청구내역서 Detail 조회2
-export const SP_GetDTDDetailData2 = async (searchParam: any) => {
-  // log('SP_GetDTDDetailData2', searchParam)  
-  // const { seq,  waybill_no} = searchParam;
-  // const {user_id, ipaddr} = paramsUtils();
-  // //user_id, ipaddr
-  // const params = {
-  //   inparam : [
-  //      "in_waybill_no"
-  //     , "in_seq"
-  //     , "in_create_user"
-  //     , "in_user"
-  //     , "in_ipaddr"
-  //   ],
-  //   invalue: [
-  //     waybill_no
-  //     , seq
-  //     , ''
-  //     , user_id
-  //     , ipaddr
-  //   ],
-  //   inproc: 'airimp.f_airi4001_get_dtd_detail22',
-  //   isShowLoading: false
-  // }
-
-  // const result = await executeKREAMFunction(params);
-  // // console.log('f_airi4001_get_dtd_detail22 22', result)
-  // return result;
-}
-
-
 //청구내역서 Detail 조회 - LIST
 export const SP_GetDTDDetailDatas = async (searchParam: any) => {  
   const { jsondata,  waybill_no} = searchParam;
-  const {user_id, ipaddr} = paramsUtils();
+  const {user_id,t, ipaddr} = paramsUtils();
   //user_id, ipaddr
   const params = {
     inparam : [
@@ -132,20 +65,19 @@ export const SP_GetDTDDetailDatas = async (searchParam: any) => {
     ],
     invalue: [
       jsondata
-      , user_id
+      , t
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_get_dtd_detail4',
+    // inproc: 'airimp.f_airi4001_get_dtd_detail4',
+    inproc: 'airimp.f_airi4001_get_domestic_detail_list',
     isShowLoading: false
   }
-
   const result = await executeKREAMFunction(params);
-  console.log('f_airi4001_get_dtd_detail4', result)
   return result;
 }
 
 //INSERT & UPDATE AT DTD INVOICE DETAIL
-export const SP_SaveDTDDetail = async (param: any) => {  
+export const SP_SaveDomesticINVDetail = async (param: any) => {  
 
   const {jsondata} = param;
   const {user_id, ipaddr} = paramsUtils();
@@ -160,10 +92,10 @@ export const SP_SaveDTDDetail = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_ins_dtd_detail',
+    // inproc: 'airimp.f_airi4001_ins_dtd_detail',
+    inproc: 'airimp.f_airi4001_upd_domestic_inv_detail',
     isShowLoading: true
   }
-
   const result = await executeKREAMFunction(params);  
   return result!;
 }
@@ -188,10 +120,10 @@ export const SP_SaveData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_ins_dtd2',
+    inproc: 'airimp.f_airi4001_upd_domestic_inv',
     isShowLoading: true
-  }
-
+  } 
+  log('hi')
   const result = await executeKREAMFunction(params);  
   return result!;
 }
@@ -243,8 +175,8 @@ export const SP_SaveUploadData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4001_ins_upload_dtd2',
-    // inproc: 'airimp.f_airi4001_ins_upload_dom',
+    // inproc: 'airimp.f_airi4001_ins_upload_dtd2',
+    inproc: 'airimp.f_airi4001_ins_upload_dom',
     isShowLoading: true
   }
 

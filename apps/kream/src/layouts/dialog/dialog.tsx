@@ -58,9 +58,9 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:bg-gray-900 dark:text-white dark:border-gray-200 shadow-xl transition-all transform rounded-md space-y-4">
+              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:bg-gray-900 dark:text-white dark:border-gray-200 shadow-xl transition-all transform rounded-md space-y-2">
                 {/*Modal Header*/}
-                <div className="border-b dark:border-black px-4 py-4 bg-[#f2f2f2] dark:bg-[#2b3646] dark:text-white">
+                <div className="border-b dark:border-black px-4 py-1 bg-[#f2f2f2] dark:bg-[#2b3646] dark:text-white">
                   <Dialog.Title as="h3" className="text-[16px] font-bold">
                     {title}
                   </Dialog.Title>
@@ -79,7 +79,7 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
                   {/* </form> */}
                 </div>
                 {(bottomLeft || bottomRight) && (
-                  <div className="flex flex-row justify-between px-4 py-3 border-t border-gray-200 dark:bg-gray-900 dark:text-white dark:border-gray-800">
+                  <div className="flex flex-row justify-between px-4 py-1 border-t border-gray-200 dark:bg-gray-900 dark:text-white dark:border-gray-800">
                     <div className="flex flex-row w-1/2 gap-1">
                       {bottomLeft}
                       <div className="ml-auto"></div>
@@ -174,7 +174,7 @@ export const DialogArrow: React.FC<DialogBasicProps> = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:bg-gray-900 dark:text-white dark:border-gray-200 shadow-xl transition-all transform rounded-md space-y-4">
+              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:bg-gray-900 dark:text-white dark:border-gray-200 shadow-xl transition-all transform rounded-md space-y-1 max-h-[95vh] overflow-y-auto">
                 {/*Modal Header*/}
                 <div className="border-b dark:border-black px-4 py-1 bg-[#f2f2f2] dark:bg-[#2b3646] dark:text-white">
                   <Dialog.Title as="h3" className="text-[16px] font-bold">
@@ -273,7 +273,7 @@ const DialogBasic2: React.FC<DialogBasicProps> = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:bg-gray-900 dark:text-white dark:border-gray-200 shadow-xl transition-all transform rounded-md space-y-4">
+              <div className="relative inline-block max-w-full overflow-hidden text-left align-middle bg-white border border-[#999999] dark:bg-gray-900 dark:text-white dark:border-gray-200 shadow-xl transition-all transform rounded-md space-y-1">
                 {/*Modal Header*/}
                 <div className="border-b dark:border-black px-4 py-1 bg-[#f2f2f2] dark:bg-[#2b3646] dark:text-white">
                   <Dialog.Title as="h3" className="text-[16px] font-bold">
@@ -288,7 +288,7 @@ const DialogBasic2: React.FC<DialogBasicProps> = ({
                 </div>
                 {/*Modal Contents*/}
                 {/*Modal Footer*/}
-                <div className="px-4 space-y-2 dark:bg-gray-900 dark:text-white dark:border-gray-800">
+                <div className="px-4 space-y-1 dark:bg-gray-900 dark:text-white dark:border-gray-800">
                   {/* <form> */}
                   {children}
                   {/* </form> */}

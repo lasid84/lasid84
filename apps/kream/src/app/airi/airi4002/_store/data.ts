@@ -72,7 +72,8 @@ export const assignDTDItem = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    inproc: 'airimp.f_airi4002_ins_dtd2',
+    // inproc: 'airimp.f_airi4002_ins_dtd2',
+    inproc: 'airimp.f_airi4002_ins_domestic_inv',
     isShowLoading: true
   }
   console.log('assignDTDItem',params)

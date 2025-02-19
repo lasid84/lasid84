@@ -50,17 +50,6 @@ const Modal = ({ loadItem }: Props) => {
     } else {
       toastError(t("MSG_0197"));
     }
-
-    // const prevRowData = state.allData.find(
-    //   (row) => row.__ROWINDEX === prevIndexnum
-    // );
-
-    // if (prevRowData) {
-    //   actions.getDTDDetailDatas(prevRowData);
-    //   actions.setCurrentRow(prevRowData);
-    // } else {
-    //   log("No data :", prevIndexnum);
-    // }
   };
 
   const onClickeventAfter = async () => {
@@ -72,17 +61,6 @@ const Modal = ({ loadItem }: Props) => {
       toastError(t("MSG_0198"));
     }
 
-    // const nextRowData = state.allData.find(
-    //   (row) => row.__ROWINDEX === nextIndexnum -1
-    // );
-    // log("nextRowData", nextRowData);
-
-    // if (nextRowData) {
-    //   // actions.getDTDDetailDatas(nextRowData);
-    //   actions.setCurrentRow(nextRowData);
-    // } else {
-    //   log("No data found for next index:", nextIndexnum);
-    // }
   };
 
   const handleKeyDown = useCallback(
@@ -167,7 +145,7 @@ const Modal = ({ loadItem }: Props) => {
       }
     );
 
-    const result = await actions.saveDTDDetailDatas({
+    const result = await actions.saveDomesticINVDetailDatas({
       jsondata: JSON.stringify(mergedArray),
     });
     log('mergedarray', mergedArray)
@@ -198,25 +176,13 @@ const Modal = ({ loadItem }: Props) => {
             <>
               <div className="flex w-full p-1 px-1">
                 <MaskedInputField
-                  id="cal_issue_or_nm"
-                  label="l_gubn"
-                  width="w-20"
-                  value={detailRVDatas?.[detailIndex]?.cal_issue_or_nm || ""}
-                  options={{
-                    inline: true,
-                    isReadOnly: true,
-                    fontSize: "lg",
-                    fontWeight: "semibold",
-                  }}
-                />
-                <MaskedInputField
                   id="settlement_type"
                   width="w-20"
                   value={
                     detailRVDatas?.[detailIndex]?.settlement_type || ""
                   }
                   options={{
-                    noLabel: true,
+                    noLabel: false,
                     inline: true,
                     isReadOnly: true,
                     fontSize: "lg",
