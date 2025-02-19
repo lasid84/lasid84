@@ -163,6 +163,8 @@ export type GridOption = {
   changeColor?: string[];
   columnVerticalCenter?: string[];
   disableWhenRowAdd?: string[];
+  selectFilter?: string[];
+  isDistinguishColorWhenAddRow?: boolean;
 
   notManageRowChange?: boolean             // ROW_CHANGED 관리 여부(row 색 자동변경)
 };
@@ -652,11 +654,12 @@ const ListGrid: React.FC<Props> = memo((props) => {
                 }
               }
             }
-          } else if (optCols[col] === 'date_digits_14') {
+          } else if (/^date_digits_\d+$/.test(optCols[col])) {
+            const digitsNumber = optCols[col].match(/^date_digits_(\d+)$/);
             cellOption = {
               ...cellOption,
               valueFormatter: dateFormatter,
-              valueSetter: dateDigits14Setter
+              valueSetter: (params: any) => dateDigitsSetter(params, digitsNumber![1])
             }
           }
         };
@@ -904,13 +907,13 @@ const ListGrid: React.FC<Props> = memo((props) => {
           const arrCols = Object.keys(options.cellClass);
           if (arrCols.indexOf(col) > -1) {    
             const classOrFunction = options.cellClass[col];
-            let originStyle = {...cellOption.cellStyle};
 
             cellOption = {
               ...cellOption,
-              cellStyle: (params: any) => {
-                 if (typeof classOrFunction === "function") {
-                 ///함수 타입인 경우, 동적으로 스타일 반환
+              cellStyle: ((prevCellStyle) => (params: any) => {
+                let originStyle = {};
+                if (typeof classOrFunction === "function") {
+                  ///함수 타입인 경우, 동적으로 스타일 반환
                   const dynamicClass = classOrFunction(params);
 
                   const colorStyles = {
@@ -920,9 +923,9 @@ const ListGrid: React.FC<Props> = memo((props) => {
 
                   originStyle = {...originStyle, ...colorStyles};
 
-                  return originStyle;
+                  return { ...originStyle, ...(typeof prevCellStyle === "function" ? prevCellStyle(params) : prevCellStyle) };
                 }
-              },
+              })(cellOption.cellStyle),
             };
           }
         }
@@ -971,7 +974,34 @@ const ListGrid: React.FC<Props> = memo((props) => {
               }
             }
           }
-          
+        }
+
+        // selectFilter
+        if (options?.selectFilter) {
+          const arrCols = options.selectFilter;
+          if (arrCols.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              filter: "agSetColumnFilter"
+            }
+          }
+        }
+
+        //isDistinguishColorWhenAddRow
+        if (options?.isDistinguishColorWhenAddRow) {
+          const disableCols = options.disableWhenRowAdd;
+          if (disableCols?.includes(col)) {
+            cellOption = {
+              ...cellOption,
+              cellStyle: ((prevCellStyle) => (params: any) => {
+                let newStyle = {
+                  backgroundColor: (params.data.__ROWTYPE !== "NEW")? '' : '#CDCDCD'
+                }
+                
+                return { ...newStyle, ...(typeof prevCellStyle === "function" ? prevCellStyle(params) : prevCellStyle) };
+              })(cellOption.cellStyle)
+            }
+          }
         }
 
         cols.push({
@@ -1632,19 +1662,24 @@ const dateFormatter = (params: ValueFormatterParams) => {
   // return stringToDateString(params.value, '-');
 }
 
-const dateDigits14Setter = (params: ValueSetterParams) => {
+const dateDigitsSetter = (params: ValueSetterParams, digitsNumber: string) => {
   const field = params.column.getColDef().field;
   if (!params.newValue || !field) {
+    return false;
+  }
+
+  const digits = Number(digitsNumber);
+  if (!digits || isNaN(digits)) {
     return false;
   }
   
   let onlyNumerical = params.newValue.replace(/\D/g, "");
   if (onlyNumerical === "") {
     return false;
-  } else if (onlyNumerical.length > 14) {
-    onlyNumerical = onlyNumerical.substring(0, 14);
-  } else if (onlyNumerical.length < 14) {
-    onlyNumerical = onlyNumerical.padEnd(14, "0");
+  } else if (onlyNumerical.length > digits) {
+    onlyNumerical = onlyNumerical.substring(0, digits);
+  } else if (onlyNumerical.length < digits) {
+    onlyNumerical = onlyNumerical.padEnd(digits, "0");
   }
 
   params.data[field] = onlyNumerical;

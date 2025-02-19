@@ -71,7 +71,7 @@ const setMilestoneInterfaceIfData = async (hwabNo) => {
     try {
         const params = {
             inparam: ["in_pgm_code", "in_blno", "in_user_id", "in_ipaddr"],
-            invalue: ["0", hwabNo, USER_ID, serverIP],
+            invalue: ["90", hwabNo, USER_ID, serverIP],
             inproc: "scrap.f_scrp0001_ins_if_data"
         };
 

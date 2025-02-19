@@ -62,7 +62,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
   const ediYNCellStyles = (params: any) => {
     let data = params.data.edi_yn;
 
-    return (data === "Y")? "bg-green" : "bg-red";
+    return (data === "Y")? "bg-green" : (!data)? "bg-disablegray" : "bg-red";
   };
   
   const gridOptions: GridOption = {
@@ -72,13 +72,12 @@ const MasterGrid: React.FC<Props> = memo(() => {
       visible: false
     },
     changeColor: ["arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
-    checkbox: ["chk", "use_yn"],
     customSelectCells: {
       loc_nm_short: (loadDatas)? loadDatas[0].data : [],
       transport_type: (loadDatas)? loadDatas[1].data : []
     },
     rowDivide: "transport_type",
-    editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "loading_remark", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
+    editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "loading_remark", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     heightColByConfig: {
       targetList: ["unloading_manager", "loc_nm_short", "request_tm_date", "remark"],
       excludeFormula: {
@@ -94,6 +93,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     isVerticalCenter: true,
     isEditableAllNewRow: true,
     largetextPreWrap: true,
+    isDistinguishColorWhenAddRow: true,
     columnSpanByConfig: {
       targetCol: ["DN & Sorting"],
       compareCol: {
@@ -120,6 +120,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
       rlsddlvy_local_dd: "date_digits_14",
       pod_local_dd: "date_digits_14",
       gross_wt: "number",
+      unloading_manager: "largetext",
       loc_nm_short: "largetext",
       contact: "largetext",
       request_tm_date: "largetext",
@@ -135,7 +136,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
       flt: "left",
       loading_loc: "left",
       transport_type: "left"
-    }
+    },
+    selectFilter: ["transport_type", "edi_yn"]
   };
 
   /**
@@ -143,17 +145,8 @@ const MasterGrid: React.FC<Props> = memo(() => {
    * Summary : Floating Button(열 추가)
    */
   const handleAddRow = async () => {
-    const data = await rowAdd(gridRef.current, {});
+    await rowAdd(gridRef.current, {});
     setIsAddRow(true);
-    if (gridRef.current) {
-      const api = gridRef.current.api;
-      const node = api.getRowNode((data[0].__ROWINDEX -1).toString());
-      if (node) {
-        console.log("node : ", node);
-        const columns = api.getColumnDefs();
-        console.log("columns : ", columns);
-      }
-    }
   };
 
   /**
@@ -208,7 +201,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
 
       if (changeRows.length > 0) {
         const values = getValues();
-        await actions.updateOperationListData({jsonData: JSON.stringify(changeRows)});
+        await actions.updateOperationListData({jsonData: JSON.stringify(changeRows), fr_date: values.fr_date});
         await actions.getOperationListData(values.fr_date, values.no);
       } else {
         toast(t("msg_0006")); // 변경 내역이 없습니다.
@@ -221,6 +214,11 @@ const MasterGrid: React.FC<Props> = memo(() => {
    * ag grid - 상세 팝업 핸들러
    */
   const handleRowDoubleClicked = (param: RowClickedEvent) => {
+    /**
+     * TODO
+     * 추가 예정
+     */
+    return;
     const focusedCell = param.api.getFocusedCell();
 
     if (focusedCell?.column.getColId() !== "__ROWINDEX")
