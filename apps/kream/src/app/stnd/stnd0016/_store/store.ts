@@ -1,9 +1,10 @@
-import { SP_GetCustChargeData, SP_GetCustDetailData, SP_GetLoad, SP_SetCustDetailData } from "./data";
+import { SP_GetCustChargeData, SP_GetCustDetailData, SP_GetLoad, SP_SetCustDetailData, SP_SetRTFToHtml } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { createStore } from "@/states/createStore";
 import { useUserSettings } from "@/states/useUserSettings";
 
 import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
+import { createRef } from "react";
 
 // StoreState 정의
 interface StoreState {
@@ -16,6 +17,10 @@ interface StoreState {
     custDetailData: Record<string, any>;
     selectedTab: string;
     selectedCharge: string | null;
+    gridRef: {
+        refCustCont: any
+        refAgencyCont: any
+    }
 }
 
 // StoreActions 정의
@@ -24,6 +29,7 @@ interface StoreActions {
     getCustDetailDatas: (params: any) => Promise<any>;
     setCustDetailDatas: (params: any) => Promise<any> | null;
     getCustChargeDatas: (params: any) => Promise<any>;
+    setFTFToHtml: (params: any) => Promise<any>;
     resetSearchParam: () => void;
     resetStore: () => void;
     setState: (newState: Partial<StoreState>) => void;
@@ -44,7 +50,11 @@ const initValue: StoreState = {
     custChargeDatas: null,
     selectedCustData: null,
     custDetailData: {},
-    selectedCharge: null
+    selectedCharge: null,
+    gridRef: {
+        refCustCont: createRef(),
+        refAgencyCont: createRef(),
+    }
 };
 
 
@@ -68,6 +78,10 @@ const setinitValue = (set: any, get: any) => {
         getCustChargeDatas: async (params: any) => {
             const result = await SP_GetCustChargeData(params);
             set({ custChargeDatas: result[0]});
+            return result;
+        },
+        setFTFToHtml: async (params: any) => {
+            const result = await SP_SetRTFToHtml(params);
             return result;
         },
         resetSearchParam: () => {

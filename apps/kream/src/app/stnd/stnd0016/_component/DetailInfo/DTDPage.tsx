@@ -30,14 +30,14 @@ const MainPage: React.FC<Props> = memo(() => {
     
     return (
         <div className="m-2">
-            <div className="grid overflow-y-auto md:grid-cols-5">
-               <Checkbox id={"dtd_bill_yn"}
+            <div className="grid md:grid-cols-5">
+               {/* <Checkbox id={"dtd_bill_yn"}
                     value={custDetailData?.dtd_bill_yn}
                     readOnly={!selectedCustData?.cust_code}
                     options={{
                         inline:true
                     }}
-               />
+               /> */}
                 <ReactSelect
                     id="payment_type" dataSrc={loadDatas?.[5] as gridData}
                     height="h-6"
@@ -52,61 +52,38 @@ const MainPage: React.FC<Props> = memo(() => {
             </div>
 
             <div className="mt-1">
-                <PageGrid
-                    title={
-                        <><LabelGrid id={'차지 설정'} textColor="blue-700" /></>}
-                    right={<></>}>
-                    <div className="flex-col grid grid-cols-1 w-full h-[110px]">
-                        <CustChargeGrid shipping_type='DTD'/>
-                    </div>
-                </PageGrid>
+                <LabelGrid id={'차지 설정'} textColor="blue-700" />
+                <div className="flex-col grid grid-cols-1 w-full h-[110px]">
+                    <CustChargeGrid shipping_type='DTD'/>
+                </div>
             </div>
 
-            <div className="col-span-5 mt-1">
-                <PageGrid
-                    title={<><LabelGrid id={'통관요율(' + t(selectedCharge) + ')'} textColor="blue-700" /></>}
-                    right={<></>}>
-                        <div>
-                            <RateByCharge/>
-                        </div>
-                </PageGrid>
+            <div className="col-span-4">
+                <LabelGrid id={'요율설정'} textColor="blue-700" />
+                <RateByCharge/>        
             </div>
 
-            <div className="flex-col grid grid-cols-1 gap-1 w-full">
-            <PageGrid
-                    title={
-                        <><LabelGrid id={'dtd_cust_requet'} textColor="blue-700" /></>}
-                    right={<></>}>
-                    <div className="flex-row grid grid-cols-2 gap-1 w-full">
-                        <div className="col-span-2">
-                        <TextArea id={"dtd_cust_requet"} rows={4} cols={0}
-                            value={custDetailData?.dtd_cust_requet}
-                            options={{
-                                inline: true,
-                                noLabel: true
-                            }}
-                        />
-                        </div>
-                    </div>
-                </PageGrid>
-            </div>
-            <div className="flex-col grid grid-cols-1 gap-1 w-full">
-            <PageGrid
-                    title={
-                        <><LabelGrid id={'remark'} textColor="blue-700" /></>}
-                    right={<></>}>
-                    <div className="flex-row grid grid-cols-2 gap-1 w-full">
-                        <div className="col-span-2">
-                        <TextArea id={"dtd_remark"} rows={3} cols={0}
-                            value={custDetailData?.dtd_remark}
-                            options={{
-                                inline: true,
-                                noLabel: true
-                            }}
-                        />
-                        </div>
-                    </div>
-                </PageGrid>
+            <div className="grid flex-col w-full grid-cols-2 gap-1">
+                <div className="col-span-1">
+                    <LabelGrid id={'dtd_cust_requet'} textColor="blue-700" />
+                    <TextArea id={"dtd_cust_requet"} rows={5} cols={0}
+                        value={custDetailData?.dtd_cust_requet}
+                        options={{
+                            inline: true,
+                            noLabel: true
+                        }}
+                    />
+                </div>
+                <div className="col-span-1">
+                    <LabelGrid id={'remark'} textColor="blue-700" />
+                    <TextArea id={"dtd_remark"} rows={5} cols={0}
+                        value={custDetailData?.dtd_remark}
+                        options={{
+                            inline: true,
+                            noLabel: true
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );

@@ -8,8 +8,10 @@ import { LabelGrid } from "@/components/label";
 import ResizableLayout from "./Layout/ResizableLayout";
 import { Button } from "@/components/button";
 import { useCommonStore } from "../../_store/store";
-import { gridData } from "@/components/grid/ag-grid-enterprise";
+import { gridData, rowAdd } from "@/components/grid/ag-grid-enterprise";
 import EditorQuill from "@/components/editor/reactQuill";
+
+import GridCustCont from "components/commonForm/customerContact/_component/gridMaster";
 
 import { log } from '@repo/kwe-lib-new';
 
@@ -24,8 +26,9 @@ const MainPage: React.FC<Props> = () => {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const selectedCustData = useCommonStore((state) => state.selectedCustData);
     const custDetailData = useCommonStore((state) => state.custDetailData);
-    const searchParams = useCommonStore((state) => state.searchParams);
+    const {searchParams, trans_mode='', trans_type=''} = useCommonStore((state) => state);
     const actions = useCommonStore((state) => state.actions);
+    const { refCustCont, refAgencyCont } = useCommonStore((state) => state.gridRef);
 
     useEffect(() => {
         //ResizableLayout 이 렌더링 되어야 중간 넓이가 계산 되므로 아래처럼 처리
@@ -42,20 +45,51 @@ const MainPage: React.FC<Props> = () => {
     };
 
     return (
-        <div className="m-2">
+        <div className="h-full m-2">
             {/* 고객담당자, 대행사정보 */}
-            <div className={`h-[200px] border ${isCollapsed ? 'hidden' : ''}`}>
+            {/* <div className={`h-[200px] border ${isCollapsed ? 'hidden' : ''}`}> */}
+            <div className={`border ${isCollapsed ? 'hidden' : ''}`}>
                 <ResizableLayout 
-                    leftContent={<CustCont initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: searchParams?.trans_mode + searchParams?.trans_type}} title="고객정보" titleColor="blue-700" />} 
-                    rightContent={<CustCont initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: searchParams?.trans_mode + searchParams?.trans_type}} title="대행사정보" titleColor="blue-700" />}                            
+                    leftContent={
+                        <div className="flex flex-col w-full h-full">
+                            <div className="flex items-center justify-between w-full h-auto">
+                                <LabelGrid id={'고객정보'} textColor="blue-700" />
+                                <Button id={"btnAdd"} label="add" height="h-5"
+                                    onClick={() => {
+                                        // log("onClick refCustCont", refCustCont)
+                                        rowAdd(refCustCont?.current, { "use_yn": true, "def": false, cont_type: (trans_mode||'') + trans_type})
+                                    }}
+                                />
+                            </div>
+                            <div className="flex-1 h-full overflow-auto">
+                                <GridCustCont ref={refCustCont} id="custCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: (trans_mode||'') + trans_type}} />
+                            </div>
+                        </div>
+                    } 
+                    rightContent={
+                        <div className="flex flex-col w-full h-full">
+                            <div className="flex items-center justify-between w-full h-auto">
+                                <LabelGrid id={'대행사정보'} textColor="blue-700" />
+                                <Button id={"btnAdd"} label="add" height="h-5"
+                                    onClick={() => {
+                                        // log("onClick refCustCont", refCustCont)
+                                        rowAdd(refAgencyCont?.current, { "use_yn": true, "def": false, cont_type: (trans_mode||'') + trans_type})
+                                    }}
+                                />
+                            </div>
+                            <div className="flex-1 h-full overflow-auto">
+                                <GridCustCont ref={refAgencyCont} id="agencyCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: (trans_mode||'') + trans_type}} isAgency={true} />
+                            </div>
+                        </div>
+                    } 
                 />
             </div>
             {/* 하단의 숨기기/펼치기 버튼 */}
-            <div className="w-full block mb-1 border-t border-gray-200 h-[18px] items-center justify-center">
+            <div className="w-full block mb-1 border-t border-gray-200 h-[18px] items-center justify-center">            
                 <Button
                     id='btnCustContHidden'
                     label={isCollapsed ? '고객사,대행사 정보 ↓':'고객사,대행사 정보 ↑'}
-                    color="sky-fill"
+                    color="gray-outline"
                     height="h-4"
                     options={{
                     }}
@@ -80,7 +114,7 @@ const MainPage: React.FC<Props> = () => {
                     value={custDetailData?.blremark}
                     options={{
                         inline:true,
-                        isReadOnly: !selectedCustData?.cust_code
+                        isReadOnly: !selectedCustData?.cust_code,
                     }}
                     events={{
                         // onChange: onChangedData
@@ -121,7 +155,7 @@ const MainPage: React.FC<Props> = () => {
                     }}/> 
             </div>
             {/* 계약관련 - 현업확인 후 삭제 예정 */}
-            <div className="col-span-5 mt-2">
+            {/* <div className="col-span-5 mt-2">
                 <PageGrid
                     title={
                         <><LabelGrid id={'계약관련'} textColor="blue-700" /></>}
@@ -164,90 +198,62 @@ const MainPage: React.FC<Props> = () => {
                         }}/> 
                 </div>
                 </PageGrid>
-            </div>
+            </div> */}
             {/* 고객요청, 기타 */}
-            <div className="grid flex-col w-full grid-cols-2 gap-1">
-            <PageGrid
-                    title={
-                        <><LabelGrid id={'고객 요청'} textColor="blue-700" /></>}
-                    right={<> </>}>
-                    <div className="grid flex-row w-full grid-cols-2 gap-1">
-                        <div className="col-span-2">
-                        <TextArea id={"depl_req"} rows={2} cols={0}
+            <div className="grid items-stretch w-full grid-cols-2 gap-1">
+                <div className="grid flex-row w-full grid-cols-2 gap-1 ">
+                    <LabelGrid id={'고객요청'} textColor="blue-700" />
+                    <div className="col-span-2">
+                        <TextArea id={"depl_req"} rows={5} cols={0}
                             value={custDetailData?.depl_req}
+                            options={{
+                                inline: true,
+                                isReadOnly: !selectedCustData?.cust_code,
+                                freeStyles: 'text-red-500'
+                            }}
+                        />
+                    </div>
+                    <div className="col-span-2">
+                        <MaskedInputField
+                            id="cer_apply"
+                            height="h-8"
+                            value={custDetailData?.cer_apply}
+                            options={{
+                                inline:true,
+                                isReadOnly: !selectedCustData?.cust_code
+                            }}
+                            events={{
+                                // onChange: onChangedData
+                            }}
+                        />     
+                    </div>
+                    <div className="col-span-2">
+                        <TextArea id={"op_detail"} rows={3} cols={0}
+                            value={custDetailData?.op_detail}
                             options={{
                                 inline: true,
                                 isReadOnly: !selectedCustData?.cust_code
                             }}
                         />
-                        </div>
-                        <div className="col-span-2">
-                            <MaskedInputField
-                                id="cer_apply"
-                                height="h-8"
-                                value={custDetailData?.cer_apply}
-                                options={{
-                                    inline:true,
-                                    isReadOnly: !selectedCustData?.cust_code
-                                }}
-                                events={{
-                                    // onChange: onChangedData
-                                }}
-                            />     
-                        </div>
-                        <ReactSelect
-                            id="DTD  - X" dataSrc={{}}
-                            height="h-6"
-                            options={{
-                                keyCol: "transport_type",
-                                displayCol: ['transport_type_nm'],
-                                defaultValue: '',
-                                isAllYn: false,
-                                inline:true,
-                                isReadOnly: !selectedCustData?.cust_code
-                            }}/> 
-                        <div className="col-span-2">
-                            <TextArea id={"DTD 입력사항 - X"} rows={2} cols={0}
-                                value={'1234567\n12345'}
-                                options={{
-                                    inline: true,
-                                    isReadOnly: !selectedCustData?.cust_code
-                                }}
-                            />
-                        </div>
-                        <div className="col-span-2">
-                            <TextArea id={"op_detail"} rows={2} cols={0}
-                                value={custDetailData?.op_detail}
-                                options={{
-                                    inline: true,
-                                    isReadOnly: !selectedCustData?.cust_code
-                                }}
-                            />
-                        </div>
-                        <div className="col-span-2">
-                            <TextArea id={"wh_etc"} rows={2} cols={0}
-                                value={custDetailData?.wh_etc}
-                                options={{
-                                    inline: true,
-                                    isReadOnly: !selectedCustData?.cust_code
-                                }}
-                            />
-                        </div>
                     </div>
-                </PageGrid>
-                <div className="ml-10">
-                    <PageGrid
-                        title={
-                            <><LabelGrid id={'etc'} textColor="blue-700" /></>}
-                        right={<></>}>
-                        <div className="grid flex-col w-full h-full grid-cols-1 gap-1">
-                            <EditorQuill id='etc' height="350px" value={custDetailData?.etc}
-                                onContentChange={(content) => {
-                                    if (custDetailData) custDetailData['etc'] = content;
-                                }}
-                            />
-                        </div>
-                    </PageGrid>
+                    <div className="col-span-2">
+                        <TextArea id={"wh_etc"} rows={3} cols={0}
+                            value={custDetailData?.wh_etc}
+                            options={{
+                                inline: true,
+                                isReadOnly: !selectedCustData?.cust_code
+                            }}
+                        />
+                    </div>
+                </div>
+                
+                <div className="ml-5">
+                        <LabelGrid id={'etc'} textColor="blue-700" />
+                        <EditorQuill id='etc' height="h-full" value={custDetailData?.etc}
+                            onContentChange={(content) => {
+                                if (custDetailData) custDetailData['etc'] = content;
+                            }}
+                        />
                 </div>
             </div>
         </div>

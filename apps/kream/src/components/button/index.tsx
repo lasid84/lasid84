@@ -31,6 +31,8 @@ import { MdLockOutline } from "react-icons/md";     //lock, closedate
 import { log, error } from '@repo/kwe-lib-new'; 
 import { FaChevronLeft } from "react-icons/fa";  //left
 import { FaChevronRight } from "react-icons/fa"; //right
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+
 
 export type data = {
   data?: {}[],

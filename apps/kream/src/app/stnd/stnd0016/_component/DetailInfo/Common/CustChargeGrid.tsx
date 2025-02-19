@@ -45,11 +45,6 @@ const CustChargeGrid: React.FC<Props> = memo(({shipping_type}) => {
     
   }, [selectedCustData?.cust_code])
 
-  useEffect(() => {
-
-      log("CustChargeGrid custChargeDatas", custChargeDatas)
-  }, [])
-
   const onSave = async () => {
       // const api = gridRef.current.api;
       // const changedDatas:any = [];

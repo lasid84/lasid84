@@ -94,6 +94,7 @@
     "react-tabulator": "^0.19.0",
     "react-tag-autocomplete": "^7.5.0",
     "request-ip": "^3.3.0",
+    "rtf.js": "^3.0.9",
     "supports-color": "^9.4.0",
     "tabulator-tables": "^5.6.1",
     "typescript": "^5.7.3"

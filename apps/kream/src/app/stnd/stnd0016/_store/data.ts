@@ -63,3 +63,18 @@ export const SP_GetCustChargeData = async (Params: any) => {
   const result = await queryClient("SP_GetCustChargeData", params);
   return result;
 }
+
+export const SP_SetRTFToHtml = async (Params: any) => {
+
+  const { cust_code, cust_mode, etc, user_id, ipaddr } = paramsUtils(Params);
+  
+  const params = {
+    inparam: ["in_cust_code", "in_cust_mode", "in_etc", "in_user", "in_ipaddr"],
+    invalue: [ cust_code, cust_mode, etc, user_id, ipaddr],
+    inproc: 'migration.f_mig_ai_table_cust_d',
+    isShowLoading: false
+  }
+
+  const result = await queryClient("SP_SetRTFToHtml", params);
+  log("finish SP_SetRTFToHtml", result, params)
+}

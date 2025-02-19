@@ -1,13 +1,25 @@
-.my-editor-wrapper {
-    height: 100%;
-}
+.my-editor-wrapper .quill {
+    height: calc(100%);
+    display: flex;
+    flex-direction: column;
+  }
   
-.my-editor-wrapper .ql-container {
-    height: 100% !important; /* 부모 높이에 맞춤 */
-}
-
-.my-editor-wrapper .ql-editor {
-    height: 100%;         /* ql-container의 높이를 채움 */
-    overflow-y: auto;     /* 내용이 많으면 스크롤 표시 */
-}
+  .my-editor-wrapper .ql-toolbar {
+    flex: 0 0 auto;
+    /* 혹시 기본 패딩이나 마진이 있다면 제거 */
+    margin: 0 !important;
+    padding: 0 !important;
+  }
   
+  .my-editor-wrapper .ql-container {
+    /* 부모 전체 높이에서 툴바 높이를 뺀 나머지로 설정 */
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+  
+  .my-editor-wrapper .ql-editor {
+    padding-bottom: 0 !important;
+    min-height: 0 !important;
+  }

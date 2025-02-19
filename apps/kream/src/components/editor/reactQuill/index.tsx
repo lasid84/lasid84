@@ -3,8 +3,10 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 // import ReactQuill from 'react-quill';
 import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 import 'react-quill/dist/quill.snow.css';
-// import './css/quillCss.css';
+import { LabelGrid } from '@/components/label';
+import './css/quillCss.css';
 
 type Props= {
     id: string
@@ -39,11 +41,12 @@ const EditorQuill: FC<Props> = (props) => {
   ];
 
   return (
-    <div className="w-full h-full my-editor-wrapper">
+    <div className="w-full h-full my-editor-wrapper" spellCheck={false}>
       <ReactQuill
         id={id}
         // ref={quillRef}
-        style={{ height: height }} 
+        // style={{ height: height, minHeight: '350px' }} 
+        className={height}
         theme="snow"
         value={value}
         onChange={onContentChange}

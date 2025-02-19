@@ -62,7 +62,7 @@ export default function STND0016(props:Props) {
 
     return (
         <FormProvider {...methods}>
-            <div className={`w-full h-full`}>
+            <div className={`flex flex-col max-h-[calc(100vh)]`}>
                 <SearchForm mGridRef={mGridRef} focusRef={focusRef} />
                 <BasicInfo ref={focusRef} />
                 <DetailInfo/>

@@ -22,7 +22,7 @@ export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, isD
   return (
     <label
       htmlFor={id}
-      className={`block justify-center text-xs font-medium whitespace-nowrap ${display} text-${textAlignLB} text-${textColor} dark:text-${textColor} ${defWidth}`}>
+      className={`block justify-center text-xs font-medium whitespace-nowrap ${display} text-${textAlignLB} text-${textColor} dark:text-${textColor} ${defWidth} ml-2`}>
       {t(name ? name : id)}
     </label>
   );
@@ -31,7 +31,7 @@ export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, isD
 export const LabelGrid: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, textColor="gray-500/75", freeStyle="" }) => {
   const { t } = useTranslation();
 
-  const defWidth = lwidth ? lwidth : "min-w-24"
+  const defWidth = lwidth ? lwidth : "min-w-22"
 
   return (
     <label

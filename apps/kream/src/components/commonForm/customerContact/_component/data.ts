@@ -46,7 +46,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const {cust_code, cont_type, user_id, ipaddr } = Param;
+  const {cust_code, cont_type, isAgency, user_id, ipaddr } = Param;
   
   const params = {
     inparam : [
@@ -57,7 +57,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
     ],
     invalue: [
         cust_code
-      , cont_type
+      , cont_type + (isAgency ? 'AGENCY' : '')
       , user_id
       , ipaddr
     ],
@@ -75,7 +75,7 @@ export const SP_UpdateData = async (param: any) => {
   // const Param = searchParam.queryKey[1]
   const Param = param;
   // log("param : ", param)
-  const {cust_code, cont_type, cont_seq, pic_nm, email, cust_office, tel_num,fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
+  const {cust_code, cont_type, cont_seq, pic_nm, email, cust_office, tel_num,cell_num,fax_num,remark,user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr } = Param;
   const params = {
     inparam : [
       "in_cust_code"
@@ -85,7 +85,9 @@ export const SP_UpdateData = async (param: any) => {
     , "in_email"
     , "in_cust_office"
     , "in_tel_num"
+    , "in_cell_num"
     , "in_fax_num"
+    , "in_remark"
     , "in_user_dept"
     , "in_bz_plc_cd"
     , "in_use_yn"
@@ -101,7 +103,9 @@ export const SP_UpdateData = async (param: any) => {
     , email
     , cust_office
     , tel_num
+    , cell_num
     , fax_num
+    , remark
     , user_dept
     , bz_plc_cd
     , use_yn
@@ -109,7 +113,7 @@ export const SP_UpdateData = async (param: any) => {
     , user_id
     , ipaddr
     ],
-    inproc: 'ocean.f_ocen0002_upd_cont_detail',
+    inproc: 'ocean.f_ocen0002_upd_cont_detail2',
     isShowLoading: true,
     isShowComplete:false,
     }
@@ -123,7 +127,7 @@ export const SP_InsertData = async (param: any) => {
   // const Param = searchParam.queryKey[1]
   const Param = param;
   // log("param : ", param)
-  const {cust_code, cont_type, pic_nm, email, cust_office, tel_num, fax_num, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr} = Param;
+  const {cust_code, cont_type, pic_nm, email, cust_office, tel_num, cell_num, fax_num,remark, user_dept, bz_plc_cd, use_yn, def, user_id, ipaddr} = Param;
   const params = {
     inparam : [
       "in_cust_code"
@@ -132,7 +136,9 @@ export const SP_InsertData = async (param: any) => {
     , "in_email"
     , "in_cust_office"
     , "in_tel_num"
+    , "in_cell_num"
     , "in_fax_num"
+    , "in_remark"
     , "in_user_dept"
     , "in_bz_plc_cd"
     , "in_use_yn"
@@ -147,7 +153,9 @@ export const SP_InsertData = async (param: any) => {
     , email
     , cust_office
     , tel_num
+    , cell_num
     , fax_num
+    , remark
     , user_dept
     , bz_plc_cd
     , use_yn
@@ -155,7 +163,7 @@ export const SP_InsertData = async (param: any) => {
     , user_id
     , ipaddr
     ],
-    inproc: 'ocean.f_ocen0002_ins_cont_detail',
+    inproc: 'ocean.f_ocen0002_ins_cont_detail2',
     isShowLoading: true,
     isShowComplete:false,
     }
