@@ -56,7 +56,8 @@ export const colors = {
     lightbeige: "#DDD9C4",
     lightlavender: "#E4DFEC",
     lightgreenbright: "#F5F8EC",
-    lightorange: "#FDE9D9"
+    lightorange: "#FDE9D9",
+    disableGray: "#CDCDCD",
   };
   
 
@@ -89,6 +90,7 @@ export const bgColor : Record<string, { backgroundColor: string; color: string }
     "bg-lightbeige": { backgroundColor: colors.lightbeige, color: colors.black },
     "bg-lightlavender": { backgroundColor: colors.lightlavender, color: colors.black },
     "bg-lightgreenbright": { backgroundColor: colors.lightgreenbright, color: colors.black },
-    "bg-lightorange": { backgroundColor: colors.lightorange, color: colors.blue }
+    "bg-lightorange": { backgroundColor: colors.lightorange, color: colors.blue },
+    "bg-disablegray": { backgroundColor: colors.disableGray, color: colors.black },
   };
   

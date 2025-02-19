@@ -33,11 +33,11 @@ export const SP_GetOperationListLoadData = async () => {
 
 export const SP_UpdateOperationListData = async (param: any) => {
 
-  const { jsonData, user_id, ipaddr } = paramsUtils(param);
+  const { jsonData, fr_date, user_id, ipaddr } = paramsUtils(param);
 
   const params = {
-    inparam: ["in_jsondata", "in_user", "in_ipaddr"],
-    invalue: [jsonData, user_id, ipaddr],
+    inparam: ["in_jsondata", "in_fr_date", "in_user", "in_ipaddr"],
+    invalue: [jsonData, fr_date, user_id, ipaddr],
     inproc: 'airimp.f_airi3004_upd_data',
     isShowLoading: true,
     isShowComplete: true,
