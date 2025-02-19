@@ -28,37 +28,9 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
   const { setState, resetSearchParam,  getLoad, setFTFToHtml } = useCommonStore((state) => state.actions);
 
   const onSave = () => {
-    const params = getValues();
-    
-    (loadDatas?.[7]?.data as []).forEach(row => {
-      RTFViewer(row);
-    })
+    // const params = getValues();
   }
 
-  const RTFViewer= async (row: {cust_code:string, cust_mode:string, etc:string}) => {  
-      const { Document } = RTFJS.RTFJS;
-      // RTF 문자열을 ArrayBuffer로 변환
-      const encoder = new TextEncoder();
-      const buffer = encoder.encode(row.etc).buffer as ArrayBuffer;
-
-      // settings 인자는 ISettings 타입으로, 기본값이 없는 경우 빈 객체를 전달할 수 있음.
-      const settings = {}; // 필요한 설정이 있다면 여기에 추가하세요.
-
-      const doc = new Document(buffer, settings);
-      doc.render().then((nodes) => {
-        const htmlString = nodes.map(node => node.outerHTML).join('');
-        const param = {
-          cust_code: row.cust_code,
-          cust_mode: row.cust_mode,
-          etc: htmlString.replace(/<div\s+style="min-height:\s*9pt;\s*text-align:\s*left;">\s*<\/div>/g, '<p><br></p>')
-        }
-        setFTFToHtml(param);
-        log('finish RTFViewer', param);
-      });
-      
-
-    // return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
-  }
   
   return (
       <form>
