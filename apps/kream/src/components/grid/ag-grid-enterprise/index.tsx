@@ -1087,12 +1087,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
       copied = [...allColDefs];
       copied.forEach(obj => {
         obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? (!options.disableWhenRowAdd?.includes(obj.field)) : options.editable?.includes(obj.field);
-        if (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW && options.disableWhenRowAdd?.includes(obj.field) && obj['editable'] === false) {
-          obj['cellStyle'] = {
-            ...obj['cellStyle'],
-            backgroundColor: '#d3d3d3'
-          }
-        }
       });
 
       setColDefs(copied);

@@ -13,7 +13,7 @@ import PageSearch, {
 import { MaskedInputField, Input } from "components/input";
 import { ReactSelect, data } from "@/components/select/react-select2";
 import { DateInput, DatePicker } from "components/date";
-import { Button } from "components/button";
+import { Button,ICONButton } from "components/button";
 import { useCommonStore } from "../_store/store";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -36,9 +36,10 @@ const SearchForm = ({ loadItem }: any) => {
 
   const { getValues, handleSubmit, reset } = useFormContext();
   const state = useCommonStore((state) => state);
+  
   const searchParams = useCommonStore((state) => state.searchParams);
   const actions = useCommonStore((state) => state.actions);
-
+  // const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [settlementUser, setSettlementUser] = useState<any>();  
   const [logis, setLogis] = useState<any>();  
   const [broker, setBroker] = useState<any>();
@@ -52,8 +53,9 @@ const SearchForm = ({ loadItem }: any) => {
   }, [loadItem]);
 
   useEffect(()=>{
+    log('init search')
     onSearch()
-  },[])
+  },[searchParams])
 
   const onSearch = () =>{
     const params = getValues()
@@ -77,11 +79,23 @@ const SearchForm = ({ loadItem }: any) => {
     [searchParams]
   );
 
+      // “접기/펼치기” 버튼
+      const handleToggle = () => {
+        actions.setUiData({
+          isCollapsed : !state.uiData.isCollapsed
+        })
+        log('toggled!', state.uiData.isCollapsed)
+        // setIsCollapsed((prev) => {
+        // return !prev;
+        // });
+    };
+
   return (
       <div>
         <PageSearchButton
           right={
             <>
+             <ICONButton id="fold" disabled={false} onClick={handleToggle} size={'24'}  />
                 <div className={"col-span-1"}>
                 <Button id="search" disabled={false} onClick={onSearch} />
               </div>

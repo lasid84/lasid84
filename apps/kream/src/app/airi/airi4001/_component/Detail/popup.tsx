@@ -9,7 +9,7 @@ import { toastError } from "components/toast";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { DatePicker } from "@/components/date/react-datepicker";
 import { useTranslation } from "react-i18next";
-import { useCommonStore } from "../../_store/store";
+import { useCommonStore, AmountInputOptions } from "../../_store/store";
 import { toastSuccess } from "components/toast";
 import { TextArea } from "components/input";
 import Amount from "./popupAmount";
@@ -30,6 +30,7 @@ const Modal = ({ loadItem }: Props) => {
   const detailRVDatas = useCommonStore((state) => state.detailRVDatas);
   const detailABDatas = useCommonStore((state) => state.detailABDatas);
   const detailIndex = useCommonStore((state) => state.detailIndex);
+  const allDataLength  = useCommonStore((state) => state.allData.length);
   const popup = useCommonStore((state) => state.popup);
   const state = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
@@ -49,17 +50,6 @@ const Modal = ({ loadItem }: Props) => {
     } else {
       toastError(t("MSG_0197"));
     }
-
-    // const prevRowData = state.allData.find(
-    //   (row) => row.__ROWINDEX === prevIndexnum
-    // );
-
-    // if (prevRowData) {
-    //   actions.getDTDDetailDatas(prevRowData);
-    //   actions.setCurrentRow(prevRowData);
-    // } else {
-    //   log("No data :", prevIndexnum);
-    // }
   };
 
   const onClickeventAfter = async () => {
@@ -71,17 +61,6 @@ const Modal = ({ loadItem }: Props) => {
       toastError(t("MSG_0198"));
     }
 
-    // const nextRowData = state.allData.find(
-    //   (row) => row.__ROWINDEX === nextIndexnum -1
-    // );
-    // log("nextRowData", nextRowData);
-
-    // if (nextRowData) {
-    //   // actions.getDTDDetailDatas(nextRowData);
-    //   actions.setCurrentRow(nextRowData);
-    // } else {
-    //   log("No data found for next index:", nextIndexnum);
-    // }
   };
 
   const handleKeyDown = useCallback(
@@ -154,7 +133,6 @@ const Modal = ({ loadItem }: Props) => {
 
     const mergedArray = Object.values(detailRVDatas).map(
       (item: any, index: number) => {
-        log("item, number", item, index);
         const matchingItem = Object.values(detailABDatas).find(
           (obj: any, i: number) =>
             i === index && obj.waybill_no === item.waybill_no
@@ -167,10 +145,10 @@ const Modal = ({ loadItem }: Props) => {
       }
     );
 
-    console.log("mergedArray", mergedArray);
-    const result = await actions.saveDTDDetailDatas({
+    const result = await actions.saveDomesticINVDetailDatas({
       jsondata: JSON.stringify(mergedArray),
     });
+    log('mergedarray', mergedArray)
     if (result) {
       toastSuccess("success");
       closeModal();
@@ -180,6 +158,8 @@ const Modal = ({ loadItem }: Props) => {
 
   const handleOnClickB = () => {
     log("clicked");
+    // window.location.href = "/airi/airi4002"; // 현재 도메인 유지한 채 경로만 변경
+    window.open("/airi/airi4002", "_blank"); // 현재 도메인 유지하고 새 탭에서 열기
   };
 
   return (
@@ -196,25 +176,13 @@ const Modal = ({ loadItem }: Props) => {
             <>
               <div className="flex w-full p-1 px-1">
                 <MaskedInputField
-                  id="cal_issue_or_nm"
-                  label="l_gubn"
-                  width="w-20"
-                  value={detailRVDatas?.[detailIndex]?.cal_issue_or_nm || ""}
-                  options={{
-                    inline: true,
-                    isReadOnly: true,
-                    fontSize: "lg",
-                    fontWeight: "semibold",
-                  }}
-                />
-                <MaskedInputField
                   id="settlement_type"
                   width="w-20"
                   value={
-                    detailRVDatas?.[detailIndex]?.settlement_type || "선불"
+                    detailRVDatas?.[detailIndex]?.settlement_type || ""
                   }
                   options={{
-                    noLabel: true,
+                    noLabel: false,
                     inline: true,
                     isReadOnly: true,
                     fontSize: "lg",
@@ -332,12 +300,23 @@ const Modal = ({ loadItem }: Props) => {
                     />
                   </div>
                   <MaskedInputField
-                    id="kwe_remark"
-                    value={detailRVDatas?.[detailIndex]?.kwe_remark || ""}
+                    id="total"
+                    value={detailRVDatas?.[detailIndex]?.total_tot || ""}
                     options={{
+                      type: "number",
+                      textAlign: "right",
+                      limit: 9,
+                      isAllowDecimal: true,
+                      decimalLimit: 0,
+                      disableSpacing : true,
+                      fontSize: 'base',      
+                      fontWeight: 'bold',   
+                      bgColor: "!bg-sky-200",
                       inline: true,
+                      isReadOnly: true,
                     }}
                   />
+                  
                   <MaskedInputField
                     id="seq"
                     value={detailRVDatas?.[detailIndex]?.seq || ""}
@@ -347,23 +326,6 @@ const Modal = ({ loadItem }: Props) => {
                       inline: true,
                     }}
                   />
-
-                  {/* <div className="grid grid-cols-2 gap-4">
-                    <div className="col-span-2">
-                      <MaskedInputField
-                        id="total"
-                        value={detailRVDatas?.[detailIndex].total}
-                        isDisplay={true}
-                        options={{
-                          bgColor: " disable",
-                          inline: true,
-                          isReadOnly:
-                            popup.popType === crudType.CREATE ? false : true,
-                          
-                        }}
-                      />
-                    </div>
-                  </div> */}
                 </div>
                 <div className="col-span-2 px-1">
                   <div className="grid grid-cols-2 gap-1">
@@ -431,17 +393,6 @@ const Modal = ({ loadItem }: Props) => {
                       }}
                     />
                   </div>
-                  
-                  <MaskedInputField
-                    id="total"
-                    value={detailRVDatas?.[detailIndex]?.update_user || ""}
-                    options={{
-                      bgColor: "!bg-sky-200",
-                      inline: true,
-                      isReadOnly: true,
-                      textAlign: "center",
-                    }}
-                  />
                 </div>
               </div>
               <div className="flex items-center justify-center w-full h-4 space-x-2">
@@ -463,7 +414,7 @@ const Modal = ({ loadItem }: Props) => {
                 <span className="text-gray-700">
                   {state.detailIndex + 1}
                   {" / "}
-                  {Math.floor(state.allData.length / 2)}
+                  {Math.floor(allDataLength  / 2)}
                 </span>
               </div>
               <div className="col-span-3 ">

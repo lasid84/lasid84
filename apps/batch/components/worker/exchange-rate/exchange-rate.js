@@ -233,7 +233,7 @@ const startInsertExchangeRateData = async () => {
                 currencyRateMap.set(info.currency, element.find('td.txtAr').eq(info.idx).text().trim().replaceAll(",", ""));
             }
 
-            const hanaExchangeRateRound = $('.printdiv .fl strong').eq(2).text().trim() ;
+            const hanaExchangeRateRound = $('.printdiv .fl strong').eq(3).text().trim();
             if (hanaExchangeRateRound !== "(1회차)") {
                 teams.sendMessage(process7, "하나은행 환율 정보 1회차 아님", false);
                 return;

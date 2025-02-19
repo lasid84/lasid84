@@ -32,7 +32,7 @@ import { log, error } from '@repo/kwe-lib-new';
 import { FaChevronLeft } from "react-icons/fa";  //left
 import { FaChevronRight } from "react-icons/fa"; //right
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-
+import { SlOptions } from "react-icons/sl"; // options
 
 export type data = {
   data?: {}[],
@@ -265,9 +265,13 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
     case "close_date":
       icon = <MdLockOutline size={size} />;
       break;
+    case "options":
+      icon = <SlOptions size={size} />;
+      break;
     case "left":
        icon = <FaChevronLeft size={size} />;
       break;
+      case "fold":
       case "right":
         icon = <FaChevronRight size={size} />;
       break;

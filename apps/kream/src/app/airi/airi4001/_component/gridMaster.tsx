@@ -11,7 +11,7 @@ import React, {
 import { useFormContext } from "react-hook-form";
 import { toastSuccess } from "components/toast";
 import { PageMGrid4 } from "layouts/grid/grid";
-import { Button } from "components/button";
+import { Button, ICONButton } from "components/button";
 import Grid, { ROW_CHANGED, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import {
@@ -24,9 +24,11 @@ import { useCommonStore, AmountInputOptions_g } from "../_store/store";
 import DetailModal from "./Detail/popup";
 import { DatePicker } from "components/date";
 import { MaskedInputField } from "@/components/input/react-text-mask";
+import ResizableLayout from "../../../stnd/stnd0016/_component/DetailInfo/Layout/ResizableLayout";
 import ExcelUploadModal from "./ExcelUpload/popup";
 import { v4 as uuidv4 } from "uuid"; // UUID 생성 라이브러리
 import { useTranslation } from "react-i18next";
+import detailInfo from "./detailInfo";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
 type Props = {
@@ -43,7 +45,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const actions = useCommonStore((state) => state.actions);
   const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
   const [gridApi, setGridApi] = React.useState<any>(null);
-
+  // const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const gridOption: GridOption = {
     gridHeight: "h-full",
     colVisible: {
@@ -71,7 +73,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       ],
       visible: true,
     },
-    rowSpan: ["waybill_no","cnee_name"], //, "use_yn"
+    rowSpan: ["waybill_no", "cnee_name"], //, "use_yn"
     pinned: {
       cnee_name: "left",
       waybill_no: "left",
@@ -98,7 +100,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       "remark",
       "use_yn",
     ],
-    checkbox: ["use_yn"],    
+    checkbox: ["use_yn"],
     isMultiSelect: true,
     total: {
       waybill_no: "count",
@@ -123,7 +125,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       "special_handling",
       "dtd_handling",
       "trucking",
-      "insurance_fee",
+      // "insurance_fee",
       "other_1",
       "other_2",
       "other_3",
@@ -142,7 +144,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       dtd_handling: "number",
       trucking: "number",
       trucking_cost: "number",
+      insurance_fee: "number",
       other_1: "number",
+      other_2: "number",
       settlement_date: "date",
     },
     cellClass: {
@@ -151,13 +155,13 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       },
     },
     rowSpanByConfig: {
-      targetCol: ["waybill_no", "use_yn","cnee_name"],
+      targetCol: ["waybill_no", "use_yn", "cnee_name"],
       compareCol: {
-        waybill_no: ["all"]
+        waybill_no: ["all"],
       },
-      standardCol: "waybill_no"
+      standardCol: "waybill_no",
     },
-    columnVerticalCenter: ["waybill_no", "use_yn",'cnee_name']
+    columnVerticalCenter: ["waybill_no", "use_yn", "cnee_name"],
   };
 
   /*
@@ -171,12 +175,17 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     const focusedCell = param.api.getFocusedCell();
     var selectedRow = { colId: param.node.id, ...param.node.data };
     var detailIndex = Math.floor(selectedRow?.__ROWINDEX / 2);
-    log('detailIndex',detailIndex, selectedRow)
+    log("detailIndex", detailIndex, selectedRow);
     actions.setMainSelectedRow(selectedRow);
     actions.setCurrentRow(selectedRow);
     actions.setDetailIndex(detailIndex);
 
-    if (focusedCell?.column && ["waybill_no", "category", "cnee_name"].includes(focusedCell.column.getColId())) {
+    if (
+      focusedCell?.column &&
+      ["waybill_no", "category", "cnee_name"].includes(
+        focusedCell.column.getColId()
+      )
+    ) {
       actions.updatePopup({
         popType: "C",
         isPopupOpen: true,
@@ -258,7 +267,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       const detail: any[] = [];
       let curData = getValues();
       detail.push(curData);
-     
+
       const result = await actions.updDTDCloseDate({
         jsondata: JSON.stringify(detail),
         settlement_date: frDate,
@@ -286,7 +295,6 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     }
   };
 
-
   const handleGridReady = useCallback((params: any) => {
     setGridApi(params.api);
   }, []);
@@ -310,7 +318,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
         }
       });
 
-      actions.getDTDDetailDatas2({
+      actions.getDomesticDetailDatas({
         jsondata: JSON.stringify(filteredWaybills),
       });
     },
@@ -426,7 +434,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       }
     });
     if (hasData) {
-      const result = await actions.saveDTDData({
+      const result = await actions.saveDomesticInvData({
         jsondata: JSON.stringify(dtd),
         settlement_date: state.uiData.settlement_date,
       });
@@ -443,333 +451,343 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
   return (
     <>
-      <PageMGrid4
-        title={<></>}
-        right={
-          <>
-            <Button
-              id={"close_date"}
-              onClick={onCloseDate}
-              disabled={false}
-              label="close_date"
-              width="w-14"
-            />
-            <Button
-              id={"upload_excel"}
-              onClick={onExcelUpload}
-              disabled={false}
-              label="upload_excel"
-              width="w-34"
-            />
-            <Button
-              id={"gird_new"}
-              label="new"
-              onClick={onGridNew}
-              width="w-14"
-            />
-            <Button
-              id={"grid_save"}
-              label="save"
-              onClick={onGridSave}
-              width="w-14"
-              toolTip="ShortCut: Ctrl+S"
-            />
-          </>
-        }
-        rightchildren={
-          <>
-            <div className="flex-col w-full h-full col-span-2 p-2">
-              <div className="grid grid-cols-2 gap-4">
-                <MaskedInputField
-                  id="waybill_no"
-                  value={mainSelectedRow?.waybill_no}
-                  options={{
-                    isReadOnly: true,
-                    disableSpacing: true,
-                  }}
-                />
-                <DatePicker
-                  id="settlement_date"
-                  value={mainSelectedRow?.settlement_date || ""}
-                  events={{
-                    onChange: handleChange,
-                  }}
-                  options={{
-                    inline: false,
-                    textAlign: "center",
-                    freeStyles: "p-1 border-1 border-slate-300",
-                  }}
-                />
-              </div>
-              <div className="col-span-2">
-                <MaskedInputField
-                  id="cnee_name"
-                  value={mainSelectedRow?.cnee_name}
-                  options={{
-                    isReadOnly: true,
-                    disableSpacing: true,
-                  }}
-                />
+      {/* <div className={`h-full border `}> */}
+        <ResizableLayout
+          defaultLeftWidth={3000}
+          minLeftWidth={1000}
+          maxLeftWidth={5000}
+          leftContent={
+            <PageMGrid4 title={<></>} right={<></>} rightchildren={<></>}>
+              <Grid
+                id="master_4001"
+                gridRef={gridRef}
+                listItem={state.mainDatas as gridData}
+                options={gridOptions}
+                event={{
+                  onGridReady: handleGridReady,
+                  onCellValueChanged: handleCellValueChanged,
+                  onRowDoubleClicked: handleRowDoubleClicked,
+                  onRowClicked: handleRowClicked,
+                  onSelectionChanged: handleSelectionChanged,
+                  onRowDataUpdated: handleRowDataUpdated,
+                }}
+              />
+            </PageMGrid4>
+          }
+          rightContent={
+            <>
+              <>
+                <div
+                  className={` ${state.uiData.isCollapsed ? "hidden" : ""} flex-col w-full h-full col-span-2 p-2`}
+                >
+                  <div className="flex flex-row w-full">
+                    <Button
+                      id={"close_date"}
+                      onClick={onCloseDate}
+                      disabled={false}
+                      label="close_date"
+                      width="w-14"
+                    />
+                    <Button
+                      id={"upload_excel"}
+                      onClick={onExcelUpload}
+                      disabled={false}
+                      label="upload_excel"
+                      width="w-34"
+                    />
+                    <Button
+                      id={"gird_new"}
+                      label="new"
+                      onClick={onGridNew}
+                      width="w-14"
+                    />
+                    <Button
+                      id={"grid_save"}
+                      label="save"
+                      onClick={onGridSave}
+                      width="w-14"
+                      toolTip="ShortCut: Ctrl+S"
+                    />
+                  </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="bonded_wh"
-                    value={mainSelectedRow?.bonded_wh}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="bonded_wh_vat"
-                    value={mainSelectedRow?.bonded_wh_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <MaskedInputField
+                      id="waybill_no"
+                      value={mainSelectedRow?.waybill_no}
+                      options={{
+                        isReadOnly: true,
+                        disableSpacing: true,
+                      }}
+                    />
+                    <DatePicker
+                      id="settlement_date"
+                      value={mainSelectedRow?.settlement_date || ""}
+                      events={{
+                        onChange: handleChange,
+                      }}
+                      options={{
+                        inline: false,
+                        textAlign: "center",
+                        freeStyles: "p-1 border-1 border-slate-300",
+                      }}
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <MaskedInputField
+                      id="cnee_name"
+                      value={mainSelectedRow?.cnee_name}
+                      options={{
+                        isReadOnly: true,
+                        disableSpacing: true,
+                      }}
+                    />
 
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="customs_clearance"
-                    value={mainSelectedRow?.customs_clearance}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="customs_clearance_vat"
-                    value={mainSelectedRow?.customs_clearance_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
-                {/* K수수료 */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="dtd_handling"
-                    value={mainSelectedRow?.dtd_handling}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="dtd_handling_vat"
-                    value={mainSelectedRow?.dtd_handling_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
-                {/* 운송료 */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="trucking"
-                    value={mainSelectedRow?.trucking}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="trucking_vat"
-                    value={mainSelectedRow?.trucking_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="special_handling"
-                    value={mainSelectedRow?.special_handling}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="special_handling_vat"
-                    value={mainSelectedRow?.special_handling_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
-                {/* 보험료() */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="insurance_fee"
-                    value={mainSelectedRow?.insurance_fee}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="bonded_wh"
+                        value={mainSelectedRow?.bonded_wh}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="bonded_wh_vat"
+                        value={mainSelectedRow?.bonded_wh_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
 
-                {/* 기타수수료(other1) */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="other_1"
-                    value={mainSelectedRow?.other_1}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="other_1_vat"
-                    value={mainSelectedRow?.other_1_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="customs_clearance"
+                        value={mainSelectedRow?.customs_clearance}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="customs_clearance_vat"
+                        value={mainSelectedRow?.customs_clearance_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
+                    {/* K수수료 */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="dtd_handling"
+                        value={mainSelectedRow?.dtd_handling}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="dtd_handling_vat"
+                        value={mainSelectedRow?.dtd_handling_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
+                    {/* 운송료 */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="trucking"
+                        value={mainSelectedRow?.trucking}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="trucking_vat"
+                        value={mainSelectedRow?.trucking_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="special_handling"
+                        value={mainSelectedRow?.special_handling}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="special_handling_vat"
+                        value={mainSelectedRow?.special_handling_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
+                    {/* 보험료() */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="insurance_fee"
+                        value={mainSelectedRow?.insurance_fee}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
 
-                {/* 항공료 */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="air_freight"
-                    value={mainSelectedRow?.air_freight}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
-                {/* H/C */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="bl_handling"
-                    value={mainSelectedRow?.bl_handling}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="bl_handling_vat"
-                    value={mainSelectedRow?.bl_handling_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
-                {/* 개청료 */}
-                <div className="grid grid-cols-2 gap-4">
-                  <MaskedInputField
-                    id="dispatch_fee"
-                    value={mainSelectedRow?.dispatch_fee}
-                    events={{
-                      onChange: handleMaskedInputWithVatUpdate,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                  <MaskedInputField
-                    id="dispatch_fee_vat"
-                    value={mainSelectedRow?.dispatch_fee_vat}
-                    events={{
-                      onChange: handleMaskedInputChange,
-                    }}
-                    options={{
-                      ...AmountInputOptions_g,
-                      isReadOnly: false,
-                    }}
-                  />
-                </div>
+                    {/* 기타수수료(other1) */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="other_1"
+                        value={mainSelectedRow?.other_1}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="other_1_vat"
+                        value={mainSelectedRow?.other_1_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
 
-                {/* 비고 */}
-                <MaskedInputField
-                  id="remark"
-                  value={mainSelectedRow?.remark}
-                  options={{
-                    type: "text",
-                    isReadOnly: false,
-                  }}
-                />
-                {/* <TextArea id="remark" rows={3} cols={32} value={mainSelectedRow?.remark} options={{ isReadOnly: false }} /> */}
-              </div>
-            </div>
-          </>
-        }
-      >
-        <Grid
-          id="master_4001"
-          gridRef={gridRef}
-          listItem={state.mainDatas as gridData}
-          options={gridOptions}
-          event={{
-            onGridReady: handleGridReady,
-            onCellValueChanged: handleCellValueChanged,
-            onRowDoubleClicked: handleRowDoubleClicked,
-            onRowClicked: handleRowClicked,
-            onSelectionChanged: handleSelectionChanged,
-            onRowDataUpdated: handleRowDataUpdated,
-          }}
+                    {/* 항공료 */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="air_freight"
+                        value={mainSelectedRow?.air_freight}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
+                    {/* H/C */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="bl_handling"
+                        value={mainSelectedRow?.bl_handling}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="bl_handling_vat"
+                        value={mainSelectedRow?.bl_handling_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
+                    {/* 개청료 */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <MaskedInputField
+                        id="dispatch_fee"
+                        value={mainSelectedRow?.dispatch_fee}
+                        events={{
+                          onChange: handleMaskedInputWithVatUpdate,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                      <MaskedInputField
+                        id="dispatch_fee_vat"
+                        value={mainSelectedRow?.dispatch_fee_vat}
+                        events={{
+                          onChange: handleMaskedInputChange,
+                        }}
+                        options={{
+                          ...AmountInputOptions_g,
+                          isReadOnly: false,
+                        }}
+                      />
+                    </div>
+
+                    {/* 비고 */}
+                    <MaskedInputField
+                      id="remark"
+                      value={mainSelectedRow?.remark}
+                      options={{
+                        type: "text",
+                        isReadOnly: false,
+                      }}
+                    />
+                  </div>
+                </div>
+              </>
+            </>
+          }
         />
-      </PageMGrid4>
+      {/* </div> */}
+
       <DetailModal loadItem={initData} />
       <ExcelUploadModal loadItem={initData} />
       {/* <Transport loadItem={initData} /> */}

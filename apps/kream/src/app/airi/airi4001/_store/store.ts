@@ -1,8 +1,68 @@
 import { createStore } from "@/states/createStore";
 import { RefObject } from 'react';
-import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDTDDetail,SP_GetDTDDetailDatas, SP_SaveUploadData,SP_GetDTDDetailData, SP_GetDTDDetailData2 } from "./data";
+import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDomesticINVDetail,SP_GetDTDDetailDatas, SP_SaveUploadData, } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
+
+export const sumFields = [
+    "air_freight",
+    "bl_handling",
+    "bonded_wh",
+    "customs_clearance",
+    "customs_duty",
+    "dispatch_fee",
+    "special_handling",
+    "dtd_handling",
+    "trucking",
+    "insurance_fee",
+    "other_1",
+    "other_2",
+  ] as const;
+
+  export  const profitFields = [
+    "customs_tax_profit",
+    "bonded_wh_profit",
+    "dispatch_fee_profit",
+    "customs_clearance_profit",
+    "dtd_handling_profit",
+    "special_handling_profit",
+    "trucking_profit",
+    "air_freight_profit",
+    "bl_handling_profit",
+    "insurance_fee_profit",
+    "other_1_profit",
+    "other_2_profit",
+  ] as const;
+  
+  export const sumCostFields = [
+    "air_freight_ab",
+    "bl_handling_ab",
+    "bonded_wh_ab",
+    "customs_clearance_ab",
+    "customs_duty_ab",
+    "dispatch_fee_ab",
+    "special_handling_ab",
+    "dtd_handling_ab",
+    "trucking_ab",
+    "insurance_fee_ab",
+    "other_1_ab",
+    "other_2_ab",
+  ] as const;
+
+
+  export const sumVatFields = [
+    // "air_freight",
+    "bl_handling_vat",
+    "bonded_wh_vat",
+    "customs_clearance_vat",
+    "customs_tax",
+    "dispatch_fee_vat",
+    "special_handling_vat",
+    "dtd_handling_vat",
+    "trucking_vat",
+    "other_1_vat",
+    "other_2_vat",
+  ] as const;
 
 export const AmountInputOptions = {
     type: "number",
@@ -43,8 +103,8 @@ interface StoreState {
       }>  | null,
     mainSelectedRow: Record<string, any> | null;
     currentRow : Record<string, any> | null;
-    detailSelectedRow: Record<string, any> | null; //detailDatas가 맞아보임.
-    detailSelectedRow_AB: Record<string, any> | null; //detailDatas가 맞아보임.   
+    // detailSelectedRow: Record<string, any> | null; //detailDatas가 맞아보임.
+    // detailSelectedRow_AB: Record<string, any> | null; //detailDatas가 맞아보임.   
     popup: Record<string, any>;
     loadDatas: gridData[];
     allData:any[] 
@@ -55,24 +115,19 @@ interface StoreActions {
         setExcelDatas : (params: any) => Promise<any> | undefined;
         updateExcelDatas : (params:any) => Promise<any> | undefined;
         getDTDDatas: (params: any) => Promise<any> | undefined;
-        getDTDDetailDatas: (params: any) => Promise<any> | undefined;   
-        getDTDDetailDatas2: (params: any) => Promise<any> | undefined;   
-        setPopup: (popup: Partial<StoreState['popup']>) => void; 
+        getDomesticDetailDatas: (params: any) => Promise<any> | undefined;   
+        setUiData: (popup: Partial<StoreState['popup']>) => void; 
         setState: (newState: Partial<StoreState>) => void;
         setSearchState: (newState: Partial<StoreState>) => void;
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
         setMainSelectedRow : (row:any) => void;
-        setDetailSelectedRow : (row:any) => void;
-        setDetailSelectedRow_AB : (row:any) => void;
         setDetailRVDatas : (row:any) => void;
         setDetailABDatas : (row:any) => void;
         setDetailIndex : (index:any)=>void;
         setCurrentRow : (row:any)=>void;
-        setDetailData: (data: any[]) => void;
-        saveDTDData : (data:SaveDataArgs)=> Promise<any>;
+        saveDomesticInvData : (data:SaveDataArgs)=> Promise<any>;
         updDTDCloseDate : (data:SaveDataArgs)=> Promise<any>;
-        saveDTDDetailData : (data:SaveDataArgs)=> Promise<any>;
-        saveDTDDetailDatas : (data:SaveDataArgs)=> Promise<any>;
+        saveDomesticINVDetailDatas : (data:SaveDataArgs)=> Promise<any>;
         saveUploadData : (data:SaveDataArgs)=>void;
         updateData : (data:SaveDataArgs) =>void;
         updateRowData: (rowIndex: number, updatedRow: any) => void;    
@@ -90,12 +145,15 @@ const initValue: StoreState = {
         fr_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
         to_date: dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
         no: '', // HWB, 
-        state:  'ALL',
+        settlement_user:  'ALL',
+        logis_id:  'ALL',
+        broker_id:  'ALL',
     },
-    closing : '2',
-    detailIndex : 0 ,
+    closing : '2', //마감완료상태
+    detailIndex : 0,
     uiData : {
         settlement_date : dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
+        isCollapsed : false,
     },
     mainDatas: { data: {}, fields:{} },     //DB
     detailDatas : {data:{}, fields:{} },
@@ -104,8 +162,6 @@ const initValue: StoreState = {
     allData:[],
     mainSelectedRow: null,                  //GRID
     currentRow : null,                      //GRID(invoice 참조)
-    detailSelectedRow: null,
-    detailSelectedRow_AB: null,
     excel_data :{ data: {}, fields:{} },
     uploadFile_init : false,
     gridRef_Main : null,
@@ -137,22 +193,8 @@ const setinitValue = (set:any) => {
                 set({ mainDatas: result });
                 return result;
             },
-            getDTDDetailDatas: async (params: any) => {
-                const result = await SP_GetDTDDetailData2(params);
-                // console.log('result.data[0]',result?.data[0])
-                console.log('result.data[0]', result?.[0]?.data, result?.[1]?.data);
-                set((state:any) => ({
-                    ...state,
-                    detailSelectedRow: { ...result?.[0]?.data?.[0] }, // 새 객체로 할당
-                    detailSelectedRow_AB: { ...result?.[1]?.data?.[0] }, // 새 객체로 할당
-                    // detailDatas : result
-                  }));
-                return result;
-            },
-            getDTDDetailDatas2: async (params: any) => {
+            getDomesticDetailDatas: async (params: any) => {
                 const result = await SP_GetDTDDetailDatas(params);
-                // console.log('result.data[0]',result?.data[0])
-                console.log('result.data[0]', result);
                 set((state:any) => ({
                     ...state,
                     detailRVDatas: { ...result?.[0]?.data }, 
@@ -160,9 +202,9 @@ const setinitValue = (set:any) => {
                   }));
                 return result;
             },
-            setPopup: (popup: any) => {
+            setUiData: (uidata: any) => {
                 set((state: any) => ({             
-                    popup: { ...state.popup, popup } 
+                    uiData: { ...state.uiData, ...uidata } 
                 }))
             },
             updatePopup: (updates:any) =>
@@ -184,14 +226,8 @@ const setinitValue = (set:any) => {
             setMainSelectedRow: (row:any) =>{
                 set((state:StoreState) => ({ ...state, mainSelectedRow: row }))
             },
-            setDetailSelectedRow: (row:any) =>{
-                set((state:StoreState) => ({ ...state, detailSelectedRow: row }))
-            },
-            setDetailSelectedRow_AB: (row:any) =>{
-                set((state:StoreState) => ({ ...state, detailSelectedRow_AB: row }))
-            },
             setDetailRVDatas: (row:any) =>{
-                console.log('row', row)
+                // console.log('row', row)
                 set((state:StoreState) => ({ ...state, detailRVDatas: row }))
             },
             setDetailABDatas: (row:any) =>{
@@ -228,7 +264,7 @@ const setinitValue = (set:any) => {
                     return error;
                 }            
             },
-            saveDTDData: async (params: any) :Promise<any> => { //undefined
+            saveDomesticInvData: async (params: any) :Promise<any> => { //ag-grid domestic invoice 저장
                 try {                    
                     const result = await SP_SaveData(params); // API 호출
                     set((state: StoreState) => ({
@@ -254,31 +290,14 @@ const setinitValue = (set:any) => {
                     return error
                 }
             },
-            saveDTDDetailData: async (params: any) :Promise<any> => { //undefined
+            saveDomesticINVDetailDatas: async (params: any) :Promise<any> => { //DetailDatas 저장
                 try {
-                    console.log("curDAta", params);
-                    const result = await SP_SaveDTDDetail(params); // API 호출
-                    // set((state: StoreState) => ({
-                    //     ...state,
-                    //     mainDatas: { ...state.mainDatas, ...params },
-                    // }));                    
+                    const result = await SP_SaveDomesticINVDetail(params); // API 호출                
                     return result
                 } catch (error) {
                     return error;
                 }            
             },
-            saveDTDDetailDatas: async (params: any) :Promise<any> => { //DetailDatas 저장
-                try {
-                    console.log("params", params);
-                    const result = await SP_SaveDTDDetail(params); // API 호출                
-                    return result
-                } catch (error) {
-                    return error;
-                }            
-            },
-            setDetailData: (data: any[]) => set(() => 
-                ({detailDatas: data})        
-            ),
             updateRowData: (rowIndex, updatedRow) => 
                 set((state:any) => {
                     const updatedData = [...state.gridData];
