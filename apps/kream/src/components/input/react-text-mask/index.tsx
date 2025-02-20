@@ -33,6 +33,7 @@ type Props = {
     bgColor?: string;         //Background Color (ingerit, current, transparent, black, white, slate-50......)
     fontSize?: string;        //Font Size (xs, sm, base, lg, xl, 2xl......)
     fontWeight?: string;      //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
+    textColor? : string;      //Font Color
     textAlign?: string;       //Text Align (left, center, right)
     textAlignLB?: string;
     radius?: string;          //Border Radius (none, sm, '', md, lg, xl, 2xl, full, ......)
@@ -64,7 +65,7 @@ export const MaskedInputField = forwardRef((props:Props, focusRef) => {
 
   const { id, label, value = '', width, lwidth, height, options = {}, events, isFocus=false, isDisplay=true, } = props;
   const { type, myPlaceholder, inline, isReadOnly = false, noLabel = false, useIcon = false,
-    textAlign, bgColor, textAlignLB, fontSize = "[13px]", fontWeight = "normal",
+    textAlign, bgColor,  textAlignLB, fontSize = "[13px]", fontWeight = "normal", textColor="black",
     freeStyles = '', radius = 'none', outerClassName = '', isAutoComplete='new-password', disableSpacing=false,
     isNotManageSetValue=false
   } = options;
@@ -207,7 +208,7 @@ export const MaskedInputField = forwardRef((props:Props, focusRef) => {
               type={type === 'password' ? type : ''}
               // {...field} //bg-${bgColor}
               className={clsx(`form-input block ${defWidth} ${defHeight} ${bgColor} border-gray-200 disabled:bg-gray-300 flex-grow-1
-                focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} rounded-${radius} read-only:bg-gray-200 
+                focus:border-blue-500 focus:ring-0 text-${fontSize} font-${fontWeight} text-${textColor}-500 rounded-${radius} read-only:bg-gray-200 
                 dark:bg-gray-900 dark:text-white dark:border-gray-700
                 text-${textAlign}
                 ${freeStyles}`)}
