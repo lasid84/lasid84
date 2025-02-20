@@ -12,6 +12,8 @@ interface ResizableLayoutProps {
   minLeftWidth?: number;
   /** 최대 왼쪽 패널 너비 (px) */
   maxLeftWidth?: number;
+  /* 초기 useEffect세팅 비율 */
+  ratio?: number;
 }
 
 const ResizableLayout: React.FC<ResizableLayoutProps> = ({
@@ -20,6 +22,7 @@ const ResizableLayout: React.FC<ResizableLayoutProps> = ({
   defaultLeftWidth = 300,
   minLeftWidth = 100,
   maxLeftWidth = 2000,
+  ratio,
 }) => {
     // 왼쪽 패널 현재 너비(px)
     const [leftWidth, setLeftWidth] = useState<number>(defaultLeftWidth);
@@ -34,10 +37,22 @@ const ResizableLayout: React.FC<ResizableLayoutProps> = ({
     useEffect(() => {
         if (containerRef.current) {
             const containerWidth = containerRef.current.clientWidth;
-            const half = containerWidth / 2;
+
+            let newWidth;
+
+            if (ratio !== undefined) {
+              newWidth = (containerWidth * ratio) / 100; // ratio 값이 있으면 비율 적용
+          } else {
+              const half = containerWidth / 2; // ratio가 없으면 기존 half 로직 사용
+              newWidth = half;
+          }
+
+
+        // min/max 제한 적용
+        const clamped = Math.min(Math.max(newWidth, minLeftWidth), maxLeftWidth);
 
             // 만약 min/max 제한 적용을 원한다면 아래처럼 사용
-            const clamped = Math.min(Math.max(half, minLeftWidth), maxLeftWidth);
+            // const clamped = Math.min(Math.max(half, minLeftWidth), maxLeftWidth);
 
             setLeftWidth(clamped);
         }

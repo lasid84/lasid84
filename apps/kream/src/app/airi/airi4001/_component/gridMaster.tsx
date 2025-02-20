@@ -11,7 +11,7 @@ import React, {
 import { useFormContext } from "react-hook-form";
 import { toastSuccess } from "components/toast";
 import { PageMGrid4 } from "layouts/grid/grid";
-import { Button, ICONButton } from "components/button";
+import { Button, DropButton } from "components/button";
 import Grid, { ROW_CHANGED, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import {
@@ -28,6 +28,8 @@ import ResizableLayout from "../../../stnd/stnd0016/_component/DetailInfo/Layout
 import ExcelUploadModal from "./ExcelUpload/popup";
 import { v4 as uuidv4 } from "uuid"; // UUID 생성 라이브러리
 import { useTranslation } from "react-i18next";
+import { ReactSelect, data } from "@/components/select/react-select2";
+
 import detailInfo from "./detailInfo";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
@@ -45,6 +47,17 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const actions = useCommonStore((state) => state.actions);
   const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
   const [gridApi, setGridApi] = React.useState<any>(null);
+  const [closekey, setClosekey] = useState<any>();
+  const [uploadkey, setUploadKey] = useState<any>();
+
+  useEffect(() => {
+    if (initData?.length) {
+      setClosekey(initData[6]);     
+      setUploadKey(initData[7]);     
+
+    }    
+  }, [initData]);
+
   // const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   //창고료 스타일(자사/타사창고여부) 자사인경우표시
@@ -282,7 +295,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     log("curData", curData);
   }, [state.searchParams]);
 
-  const onCloseDate = async () => {
+  const onCloseDaily = async () => {
     const frDate = searchParams.fr_date; //
     const formattedDate = `${frDate.slice(0, 4)}-${frDate.slice(4, 6)}-${frDate.slice(6, 8)}`;
     const userConfirmed = window.confirm(formattedDate + t("MSG_0196") || "");
@@ -302,6 +315,15 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       }
     }
   };
+
+  const onClosePeriod = async () =>{
+
+  }
+
+  const onUndoClose = async () =>{
+    
+  }
+
 
   const onGridNew = async () => {
     const newKey = uuidv4(); // 임시 고유 키 생성
@@ -469,6 +491,21 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
     }
   };
 
+  const onDropButtonClick = async (e:any)=>{
+
+    
+    if (e === null || e === undefined) return;
+    switch(e) {
+      case 0:
+       onCloseDaily()
+      case 1:
+       onClosePeriod()
+      case 2:       
+      onUndoClose()
+  }
+}
+
+
   useEffect(() => {
     setGridOptions(gridOption);
   }, []);
@@ -480,6 +517,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
           defaultLeftWidth={3000}
           minLeftWidth={1000}
           maxLeftWidth={5000}
+          ratio={80}
           leftContent={
             <PageMGrid4 title={<></>} right={<></>} rightchildren={<></>}>
               <Grid
@@ -505,20 +543,23 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                   className={` ${state.uiData.isCollapsed ? "hidden" : ""} flex-col w-full h-full col-span-2 p-2`}
                 >
                   <div className="flex flex-row w-full">
-                    <Button
+                    {/* <Button
                       id={"close_date"}
                       onClick={onCloseDate}
                       disabled={false}
                       label="close_date"
                       width="w-14"
-                    />
-                    <Button
+                    /> */}
+                    <DropButton id={"close_date"} width="w-24" dataSrc={closekey as data} options={{ keyCol :"close_key_nm" }} onClick={onDropButtonClick} />
+                    <DropButton id={"upload_excel"} width="w-24" dataSrc={uploadkey as data} options={{ keyCol :"upload_key_nm" }} onClick={onExcelUpload} />
+                    
+                    {/* <Button
                       id={"upload_excel"}
                       onClick={onExcelUpload}
                       disabled={false}
                       label="upload_excel"
                       width="w-34"
-                    />
+                    /> */}
                     <Button
                       id={"gird_new"}
                       label="new"
