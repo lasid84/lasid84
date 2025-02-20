@@ -20,6 +20,8 @@ interface ResizableLayoutProps {
   minLeftWidth?: number;
   /** 왼쪽 패널 최대 너비(px) */
   maxLeftWidth?: number;
+  /* 초기 useEffect세팅 비율 */
+  ratio?: number;
 }
 
 /**
@@ -36,6 +38,7 @@ const ResizableLayout: React.FC<ResizableLayoutProps> = ({
   defaultLeftWidth = 300,
   minLeftWidth = 100,
   maxLeftWidth = 2000,
+  ratio,
 }) => {
   // [1] 전체 컨테이너 높이 관리
   const [containerHeight, setContainerHeight] = useState<number>(defaultHeight);
@@ -58,17 +61,29 @@ const ResizableLayout: React.FC<ResizableLayoutProps> = ({
   //   }
   // }, [defaultHeight, minHeight, maxHeight]);
 
-  /**
-   * 마운트 후 한 번만 실행: 컨테이너의 실제 너비 측정 -> 반으로 설정
-  * (clientWidth를 바로 알 수 있으려면 DOM이 렌더된 뒤라야 가능)
-  */
-  useEffect(() => {
-      if (containerRef.current) {
-          const containerWidth = containerRef.current.clientWidth;
-          const half = containerWidth / 2;
+    /**
+     * 마운트 후 한 번만 실행: 컨테이너의 실제 너비 측정 -> 반으로 설정
+     * (clientWidth를 바로 알 수 있으려면 DOM이 렌더된 뒤라야 가능)
+     */
+    useEffect(() => {
+        if (containerRef.current) {
+            const containerWidth = containerRef.current.clientWidth;
 
-          // 만약 min/max 제한 적용을 원한다면 아래처럼 사용
-          const clamped = Math.min(Math.max(half, minLeftWidth), maxLeftWidth);
+            let newWidth;
+
+            if (ratio !== undefined) {
+              newWidth = (containerWidth * ratio) / 100; // ratio 값이 있으면 비율 적용
+          } else {
+              const half = containerWidth / 2; // ratio가 없으면 기존 half 로직 사용
+              newWidth = half;
+          }
+
+
+        // min/max 제한 적용
+        const clamped = Math.min(Math.max(newWidth, minLeftWidth), maxLeftWidth);
+
+            // 만약 min/max 제한 적용을 원한다면 아래처럼 사용
+            const clamped = Math.min(Math.max(half, minLeftWidth), maxLeftWidth);
 
           setLeftWidth(clamped);
       }
@@ -154,10 +169,10 @@ const ResizableLayout: React.FC<ResizableLayoutProps> = ({
       }}
     >
       {/* (1) 좌우 분할 영역 */}
-      <div ref={topInnerRef} className="w-full h-full flex flex-row">
+      <div ref={topInnerRef} className="flex flex-row w-full h-full">
         {/* 왼쪽 패널 */}
         <div
-          className="bg-white shadow p-1"
+          className="p-1 bg-white shadow"
           style={{ width: leftWidth }}
         >
           {leftContent}
@@ -169,7 +184,7 @@ const ResizableLayout: React.FC<ResizableLayoutProps> = ({
           onMouseDown={onMouseDownVertical}
         />
         {/* 오른쪽 패널 */}
-        <div className="flex-1 bg-gray-50 shadow p-1">
+        <div className="flex-1 p-1 shadow bg-gray-50">
           {rightContent}
         </div>
       </div>
