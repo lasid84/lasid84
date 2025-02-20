@@ -148,6 +148,7 @@ const initValue: StoreState = {
         settlement_user:  'ALL',
         logis_id:  'ALL',
         broker_id:  'ALL',
+        dfd_fh:  'ALL',
     },
     closing : '2', //마감완료상태
     detailIndex : 0,

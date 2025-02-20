@@ -46,6 +46,27 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
   const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
   const [gridApi, setGridApi] = React.useState<any>(null);
   // const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+
+  //창고료 스타일(자사/타사창고여부) 자사인경우표시
+  const bonded_whCellStyles = (params: any) => {
+    let data = params.data.loading_loc;
+    return (data === "KWE"? "bg-lightorange" : "");
+  };
+
+  //운송료 스타일(독차/혼적여부) 혼적인경우표시
+  const truckingCellStyles = (params: any) => {
+    let data = params.data.group_id;
+    return (data !== null ? "bg-lightskyblue" : "");
+  };
+  
+  //항공운임료 스타일(자사/타사여부) 타사인경우표시
+  const air_freightCellStyles = (params: any) => {
+    let data = params.data.waybill_gubn;
+    return (data === 'T' ? "bg-lightpink" : "");
+  };
+    
+
+
   const gridOption: GridOption = {
     gridHeight: "h-full",
     colVisible: {
@@ -150,6 +171,9 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       settlement_date: "date",
     },
     cellClass: {
+      trucking : truckingCellStyles,
+      air_freight : air_freightCellStyles,
+      bonded_wh : bonded_whCellStyles,
       use_yn: (params) => {
         return params.value != "N" ? "bg-pastelGreen" : "bg-pastelCream";
       },
