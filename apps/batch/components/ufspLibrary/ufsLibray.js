@@ -563,6 +563,16 @@ class Library {
                 const invalue = [this.ufsId, '', ''];
                 const inproc = 'scrap.f_scrp0001_set_expired_login_id';
                 await executFunction(inproc, inparam, invalue);
+
+                let userID = this.id;
+                if (!this.id && this.id === '') {
+                    userID = 'all.krit';
+                }
+
+                const inparam2 = ['in_pgm_code', 'in_subject', 'in_body', 'in_bodyhtml', 'in_from_name', 'in_from_addr', 'in_to_addr', 'in_attachment', 'in_user_id', 'in_ipaddr'];
+                const invalue2 = ['UFS_PASSWORD_INVALID', '[KREAM] UFS 비밀번호를 변경해주세요.', `비밀번호 변경 요청\n UFS ID : ` + this.ufsId + `\n 호출 URL : ` + url, '', 'BATCH', '', userID.concat('@kwe.com'), '', '', ''];
+                const inproc2 = 'public.f_comm_ins_mailhis';
+                await executFunction(inproc2, inparam2, invalue2);
                 
                 // this.mainData['error'] = result.error;
                 throw result.error;
