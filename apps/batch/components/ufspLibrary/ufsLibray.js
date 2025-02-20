@@ -560,11 +560,11 @@ class Library {
             //로그인 에러
             if (result && result.success === false) {
                 const inparam = ['in_ufs_id', 'in_user_id', 'in_ipaddr'];
-                const invalue = [this.id, '', ''];
+                const invalue = [this.ufsId, '', ''];
                 const inproc = 'scrap.f_scrp0001_set_expired_login_id';
                 await executFunction(inproc, inparam, invalue);
                 
-                this.mainData['error'] = result.error;
+                // this.mainData['error'] = result.error;
                 throw result.error;
             }
 
