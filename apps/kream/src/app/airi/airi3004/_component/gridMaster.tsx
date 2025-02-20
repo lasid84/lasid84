@@ -77,7 +77,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
       transport_type: (loadDatas)? loadDatas[1].data : []
     },
     rowDivide: "transport_type",
-    editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "loading_remark", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
+    editable: ["origin", "gross_wt", "flt", "loading_loc", "qty", "loc_nm_short", "loading_remark", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     heightColByConfig: {
       targetList: ["unloading_manager", "loc_nm_short", "request_tm_date", "remark"],
       excludeFormula: {
