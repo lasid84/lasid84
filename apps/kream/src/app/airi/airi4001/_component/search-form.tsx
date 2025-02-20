@@ -152,19 +152,6 @@ const SearchForm = ({ loadItem }: any) => {
                 },
               }}
             />
-            <ReactSelect
-              id="dtd_fh"
-              dataSrc={dtdfh as data}
-              width="w-44"
-              lwidth="w-20"
-              height="8px"
-              options={{
-                keyCol: "dtd_fh",
-                displayCol: ["dtd_fh_nm"],
-                inline: true,
-                defaultValue: state.searchParams?.state,
-              }}
-            />
           </div>
           <div className={"col-span-1"}>           
           <ReactSelect
@@ -204,6 +191,19 @@ const SearchForm = ({ loadItem }: any) => {
               options={{
                 keyCol: "settlement_user",
                 displayCol: ["settlement_user_nm"],
+                inline: true,
+                defaultValue: state.searchParams?.state,
+              }}
+            />
+                        <ReactSelect
+              id="dtd_fh"
+              dataSrc={dtdfh as data}
+              width="w-44"
+              lwidth="w-20"
+              height="8px"
+              options={{
+                keyCol: "dtd_fh",
+                displayCol: ["dtd_fh_nm"],
                 inline: true,
                 defaultValue: state.searchParams?.state,
               }}

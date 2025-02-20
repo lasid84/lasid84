@@ -82,8 +82,8 @@ const ResizableLayout: React.FC<ResizableLayoutProps> = ({
         // min/max 제한 적용
         const clamped = Math.min(Math.max(newWidth, minLeftWidth), maxLeftWidth);
 
-            // 만약 min/max 제한 적용을 원한다면 아래처럼 사용
-            const clamped = Math.min(Math.max(half, minLeftWidth), maxLeftWidth);
+            // // 만약 min/max 제한 적용을 원한다면 아래처럼 사용
+            // const clamped = Math.min(Math.max(half, minLeftWidth), maxLeftWidth);
 
           setLeftWidth(clamped);
       }
