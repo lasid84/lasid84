@@ -1104,22 +1104,6 @@ const ListGrid: React.FC<Props> = memo((props) => {
       });
 
       setColDefs(copied);
-    } else if (options?.isEditableAllNewRow) {
-      const allColumns = param.api.getAllGridColumns();
-      const allColDefs = allColumns.map((col) => {
-        const colDef = col.getColDef();
-        
-        return {
-          ...colDef,
-          hide: !col.isVisible(),
-        }
-      });
-      copied = [...allColDefs];
-      copied.forEach(obj => {
-        obj['editable'] = (selectedRow && selectedRow[ROW_TYPE] === ROW_TYPE_NEW)? (!options.disableWhenRowAdd?.includes(obj.field)) : options.editable?.includes(obj.field);
-      });
-
-      setColDefs(copied);
     }
 
     // currentRow = selectedRow[ROW_INDEX];

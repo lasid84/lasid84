@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, memo } from "react";
+import { useRef, useState, memo, useEffect } from "react";
 import Grid, { rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption } from "components/grid/ag-grid-enterprise";
 import { useFormContext } from "react-hook-form";
@@ -14,6 +14,8 @@ import { GrPowerReset } from "react-icons/gr";
 
 import Popup from "../_component/Detail/popup";
 import FloatingButton from "../_component/floatingButton";
+
+import { useHotkeys } from "react-hotkeys-hook";
 
 type Props = {
   initData?: any | null;
@@ -141,12 +143,38 @@ const MasterGrid: React.FC<Props> = memo(() => {
   };
 
   /**
+   * @Function
+   * Summary : 열 추가 상태일때 editable column 변경
+   */
+  const changeEditableColumn = () => {
+    const selectedRow = gridRef.current.api.getSelectedRows()[0];
+
+    const allColumns = gridRef.current.api.getAllGridColumns();
+    const allColDefs = allColumns.map((col: any) => {
+      const colDef = col.getColDef();
+      
+      return {
+        ...colDef,
+        hide: !col.isVisible(),
+      }
+    });
+    let copied = [...allColDefs];
+    copied.forEach(obj => {
+      obj['editable'] = (selectedRow && selectedRow["__ROWTYPE"] === "NEW")? (!gridOptions.disableWhenRowAdd?.includes(obj.field)) : gridOptions.editable?.includes(obj.field);
+    });
+
+    gridRef.current.api.setColumnDefs(copied);
+  };
+
+  /**
    * @Handler
    * Summary : Floating Button(열 추가)
    */
   const handleAddRow = async () => {
     await rowAdd(gridRef.current, {});
     setIsAddRow(true);
+
+    changeEditableColumn();
   };
 
   /**
@@ -256,31 +284,29 @@ const MasterGrid: React.FC<Props> = memo(() => {
      * @dev
      * 마일스톤 등록, data interface 완료 상태 waybill 제외.
      */
-    const interfaceList = await actions.getMilestoneInterfaceData({waybillList: waybillList.join(',')});
+    const interfaceList = await actions.getMilestoneRegistListData({waybillList: waybillList.join(',')});
 
-    const alreadyRegistMilestoneList:string[] = [];
+
+    const registMilestoneList:string[] = [];
     api.forEachNode((node: any) => {
       for (const interfaceData of interfaceList) {
         const isMatching =
           interfaceData.waybill_no === node.data["waybill_no"] &&
-          interfaceData.local_dd === node.data["local_dd"] &&
-          interfaceData.milestone === node.data["milestone"] &&
-          (interfaceData.delivery_no === "" || interfaceData.delivery_no === node.data["delivery_no"]);
+          interfaceData.local_dd === node.data[interfaceData.milestone.toLowerCase().concat("_").concat("local_dd")] &&
+          (interfaceData.delivery_no === "" || interfaceData.delivery_no === node.data["DN & Sorting"]);
       
-        if (isMatching && !alreadyRegistMilestoneList.includes(interfaceData.waybill)) {
-          alreadyRegistMilestoneList.push(interfaceData.waybill);
+        if (isMatching && !registMilestoneList.includes(interfaceData.waybill_no)) {
+          registMilestoneList.push(interfaceData.waybill_no);
         }
       }      
     })
-
-    const targetMilestoneList = waybillList.filter(waybill_no => !alreadyRegistMilestoneList.includes(waybill_no));
     
-    if (targetMilestoneList.length <= 0) {
+    if (registMilestoneList.length <= 0) {
       toast(t("msg_0006")); // 변경 내역이 없습니다.
       return;
     }
 
-    await actions.setMilestoneEdiData({waybillList: targetMilestoneList.join(',')});
+    await actions.setMilestoneEdiData({waybillList: registMilestoneList.join(',')});
   };
 
   /**
@@ -310,7 +336,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
   
     /**
      * @dev
-     * local_dd 검증 ag grid 컬럼 데이터 임의 추가로 비교
+     * local_dd 검증 => ag grid 컬럼 데이터 임의 추가로 비교
      */
     const updateNodeData = (node: any, data: any) => {
       const key = `${data.milestone.toLowerCase()}_local_dd_flag`;
@@ -334,8 +360,22 @@ const MasterGrid: React.FC<Props> = memo(() => {
   
     gridRef.current.api.refreshCells({ force: true });
   };
-  
 
+  useEffect(() => {
+    if (gridRef.current && !isAddRow) {
+      changeEditableColumn();
+    }
+  }, [isAddRow, gridRef]);
+
+  useHotkeys(
+        "ctrl+s",
+        (event) => {
+          event.preventDefault();
+          handleSaveRow();
+        },
+        { enableOnTags: ['INPUT', 'TEXTAREA'] } // form 요소에서 단축키 활성화
+      );
+  
   return (
       <>
         <ToolBar gridRef={gridRef} gridOptions={gridOptions} />
