@@ -33,11 +33,11 @@ export const SP_GetOperationListLoadData = async () => {
 
 export const SP_UpdateOperationListData = async (param: any) => {
 
-  const { jsonData, user_id, ipaddr } = paramsUtils(param);
+  const { jsonData, fr_date, user_id, ipaddr } = paramsUtils(param);
 
   const params = {
-    inparam: ["in_jsondata", "in_user", "in_ipaddr"],
-    invalue: [jsonData, user_id, ipaddr],
+    inparam: ["in_jsondata", "in_fr_date", "in_user", "in_ipaddr"],
+    invalue: [jsonData, fr_date, user_id, ipaddr],
     inproc: 'airimp.f_airi3004_upd_data',
     isShowLoading: true,
     isShowComplete: true,
@@ -81,6 +81,25 @@ export const SP_getMilestoneInterfaceData = async (param: any) => {
     isShowComplete: true,
   };
 
-  const result = await queryClient("SP_SetMileStoneEdiData", params);
+  const result = await queryClient("SP_getMilestoneInterfaceData", params);
+  return result;
+}
+
+/**
+ * @dev
+ * 마일스톤 데이터 등록을 위한 정보 조회
+ */
+export const SP_getMilestoneRegistListData = async (param: any) => {
+  const { waybillList, user_id, ipaddr } = paramsUtils(param);
+
+  const params = {
+    inparam: ["in_waybill_list", "in_user", "in_ipaddr"],
+    invalue: [waybillList, user_id, ipaddr],
+    inproc: 'airimp.f_airi3004_get_milestone_regist_list',
+    isShowLoading: true,
+    isShowComplete: true,
+  };
+
+  const result = await queryClient("SP_getMilestoneRegistListData", params);
   return result;
 }

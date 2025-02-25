@@ -17,8 +17,8 @@ export const SP_Load = async () => {
 
 //ag-grid 청구내역서 조회
 export const SP_GetDTDMainData = async (searchParam: any) => {
-  log('SP_GetDTDMainData', searchParam)  
-  const {fr_date, to_date,  no, settlement_user,logis_id, broker_id} = searchParam;
+  log('SP_GetDTDMainData dfd_fh', searchParam)  
+  const {fr_date, to_date,  no, settlement_user,logis_id, broker_id, dtd_fh} = searchParam;
   const {user_id, ipaddr} = paramsUtils();
   //user_id, ipaddr
   const params = {
@@ -29,6 +29,7 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
       , "in_settlement_user"
       , "in_logis_id"
       , "in_broker_id"
+      , "in_dtd_fh"
       , "in_user"
       , "in_ipaddr"
     ],
@@ -39,6 +40,7 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
       , settlement_user
       , logis_id
       , broker_id
+      , dtd_fh
       , user_id
       , ipaddr
     ],

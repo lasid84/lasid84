@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, memo } from "react";
+import { useRef, useState, memo, useEffect } from "react";
 import Grid, { rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption } from "components/grid/ag-grid-enterprise";
 import { useFormContext } from "react-hook-form";
@@ -14,6 +14,8 @@ import { GrPowerReset } from "react-icons/gr";
 
 import Popup from "../_component/Detail/popup";
 import FloatingButton from "../_component/floatingButton";
+
+import { useHotkeys } from "react-hotkeys-hook";
 
 type Props = {
   initData?: any | null;
@@ -62,7 +64,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
   const ediYNCellStyles = (params: any) => {
     let data = params.data.edi_yn;
 
-    return (data === "Y")? "bg-green" : "bg-red";
+    return (data === "Y")? "bg-green" : (!data)? "bg-disablegray" : "bg-red";
   };
   
   const gridOptions: GridOption = {
@@ -72,13 +74,12 @@ const MasterGrid: React.FC<Props> = memo(() => {
       visible: false
     },
     changeColor: ["arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
-    checkbox: ["chk", "use_yn"],
     customSelectCells: {
       loc_nm_short: (loadDatas)? loadDatas[0].data : [],
       transport_type: (loadDatas)? loadDatas[1].data : []
     },
     rowDivide: "transport_type",
-    editable: ["origin", "flt", "loading_loc", "qty", "loc_nm_short", "loading_remark", "edi_yn", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
+    editable: ["origin", "gross_wt", "flt", "loading_loc", "qty", "loc_nm_short", "loading_remark", "unloading_area", "unloading_manager", "contact", "request_tm_date", "remark", "arv_local_dd", "oltib_local_dd", "ice_local_dd", "clrcstms_local_dd", "rlsddlvy_local_dd", "pod_local_dd"],
     heightColByConfig: {
       targetList: ["unloading_manager", "loc_nm_short", "request_tm_date", "remark"],
       excludeFormula: {
@@ -94,6 +95,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     isVerticalCenter: true,
     isEditableAllNewRow: true,
     largetextPreWrap: true,
+    isDistinguishColorWhenAddRow: true,
     columnSpanByConfig: {
       targetCol: ["DN & Sorting"],
       compareCol: {
@@ -120,6 +122,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
       rlsddlvy_local_dd: "date_digits_14",
       pod_local_dd: "date_digits_14",
       gross_wt: "number",
+      unloading_manager: "largetext",
       loc_nm_short: "largetext",
       contact: "largetext",
       request_tm_date: "largetext",
@@ -135,7 +138,32 @@ const MasterGrid: React.FC<Props> = memo(() => {
       flt: "left",
       loading_loc: "left",
       transport_type: "left"
-    }
+    },
+    selectFilter: ["transport_type", "edi_yn"]
+  };
+
+  /**
+   * @Function
+   * Summary : 열 추가 상태일때 editable column 변경
+   */
+  const changeEditableColumn = () => {
+    const selectedRow = gridRef.current.api.getSelectedRows()[0];
+
+    const allColumns = gridRef.current.api.getAllGridColumns();
+    const allColDefs = allColumns.map((col: any) => {
+      const colDef = col.getColDef();
+      
+      return {
+        ...colDef,
+        hide: !col.isVisible(),
+      }
+    });
+    let copied = [...allColDefs];
+    copied.forEach(obj => {
+      obj['editable'] = (selectedRow && selectedRow["__ROWTYPE"] === "NEW")? (!gridOptions.disableWhenRowAdd?.includes(obj.field)) : gridOptions.editable?.includes(obj.field);
+    });
+
+    gridRef.current.api.setColumnDefs(copied);
   };
 
   /**
@@ -143,17 +171,10 @@ const MasterGrid: React.FC<Props> = memo(() => {
    * Summary : Floating Button(열 추가)
    */
   const handleAddRow = async () => {
-    const data = await rowAdd(gridRef.current, {});
+    await rowAdd(gridRef.current, {});
     setIsAddRow(true);
-    if (gridRef.current) {
-      const api = gridRef.current.api;
-      const node = api.getRowNode((data[0].__ROWINDEX -1).toString());
-      if (node) {
-        console.log("node : ", node);
-        const columns = api.getColumnDefs();
-        console.log("columns : ", columns);
-      }
-    }
+
+    changeEditableColumn();
   };
 
   /**
@@ -208,7 +229,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
 
       if (changeRows.length > 0) {
         const values = getValues();
-        await actions.updateOperationListData({jsonData: JSON.stringify(changeRows)});
+        await actions.updateOperationListData({jsonData: JSON.stringify(changeRows), fr_date: values.fr_date});
         await actions.getOperationListData(values.fr_date, values.no);
       } else {
         toast(t("msg_0006")); // 변경 내역이 없습니다.
@@ -221,6 +242,11 @@ const MasterGrid: React.FC<Props> = memo(() => {
    * ag grid - 상세 팝업 핸들러
    */
   const handleRowDoubleClicked = (param: RowClickedEvent) => {
+    /**
+     * TODO
+     * 추가 예정
+     */
+    return;
     const focusedCell = param.api.getFocusedCell();
 
     if (focusedCell?.column.getColId() !== "__ROWINDEX")
@@ -258,31 +284,29 @@ const MasterGrid: React.FC<Props> = memo(() => {
      * @dev
      * 마일스톤 등록, data interface 완료 상태 waybill 제외.
      */
-    const interfaceList = await actions.getMilestoneInterfaceData({waybillList: waybillList.join(',')});
+    const interfaceList = await actions.getMilestoneRegistListData({waybillList: waybillList.join(',')});
 
-    const alreadyRegistMilestoneList:string[] = [];
+
+    const registMilestoneList:string[] = [];
     api.forEachNode((node: any) => {
       for (const interfaceData of interfaceList) {
         const isMatching =
           interfaceData.waybill_no === node.data["waybill_no"] &&
-          interfaceData.local_dd === node.data["local_dd"] &&
-          interfaceData.milestone === node.data["milestone"] &&
-          (interfaceData.delivery_no === "" || interfaceData.delivery_no === node.data["delivery_no"]);
+          interfaceData.local_dd === node.data[interfaceData.milestone.toLowerCase().concat("_").concat("local_dd")] &&
+          (interfaceData.delivery_no === "" || interfaceData.delivery_no === node.data["DN & Sorting"]);
       
-        if (isMatching && !alreadyRegistMilestoneList.includes(interfaceData.waybill)) {
-          alreadyRegistMilestoneList.push(interfaceData.waybill);
+        if (isMatching && !registMilestoneList.includes(interfaceData.waybill_no)) {
+          registMilestoneList.push(interfaceData.waybill_no);
         }
       }      
     })
-
-    const targetMilestoneList = waybillList.filter(waybill_no => !alreadyRegistMilestoneList.includes(waybill_no));
     
-    if (targetMilestoneList.length <= 0) {
+    if (registMilestoneList.length <= 0) {
       toast(t("msg_0006")); // 변경 내역이 없습니다.
       return;
     }
 
-    await actions.setMilestoneEdiData({waybillList: targetMilestoneList.join(',')});
+    await actions.setMilestoneEdiData({waybillList: registMilestoneList.join(',')});
   };
 
   /**
@@ -312,7 +336,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
   
     /**
      * @dev
-     * local_dd 검증 ag grid 컬럼 데이터 임의 추가로 비교
+     * local_dd 검증 => ag grid 컬럼 데이터 임의 추가로 비교
      */
     const updateNodeData = (node: any, data: any) => {
       const key = `${data.milestone.toLowerCase()}_local_dd_flag`;
@@ -336,8 +360,22 @@ const MasterGrid: React.FC<Props> = memo(() => {
   
     gridRef.current.api.refreshCells({ force: true });
   };
-  
 
+  useEffect(() => {
+    if (gridRef.current && !isAddRow) {
+      changeEditableColumn();
+    }
+  }, [isAddRow, gridRef]);
+
+  useHotkeys(
+        "ctrl+s",
+        (event) => {
+          event.preventDefault();
+          handleSaveRow();
+        },
+        { enableOnTags: ['INPUT', 'TEXTAREA'] } // form 요소에서 단축키 활성화
+      );
+  
   return (
       <>
         <ToolBar gridRef={gridRef} gridOptions={gridOptions} />

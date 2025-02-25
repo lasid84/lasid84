@@ -43,12 +43,15 @@ const SearchForm = ({ loadItem }: any) => {
   const [settlementUser, setSettlementUser] = useState<any>();  
   const [logis, setLogis] = useState<any>();  
   const [broker, setBroker] = useState<any>();
+  const [dtdfh, setDTDFH] = useState<any>();
 
   useEffect(() => {
     if (loadItem?.length) {
       setSettlementUser(loadItem[0]);
       setLogis(loadItem[3]);
       setBroker(loadItem[4]);
+      setDTDFH(loadItem[5]);
+      log('LOADiTEM[5', loadItem[5])
     }    
   }, [loadItem]);
 
@@ -149,19 +152,6 @@ const SearchForm = ({ loadItem }: any) => {
                 },
               }}
             />
-             {/* <ReactSelect
-              id="fh_dtd"
-              dataSrc={status as data}
-              width="w-96"
-              lwidth="w-20"
-              height="8px"
-              options={{
-                keyCol: "create_user",
-                displayCol: ["create_user_nm"],
-                inline: true,
-                defaultValue: state.searchParams?.state,
-              }}
-            /> */}
           </div>
           <div className={"col-span-1"}>           
           <ReactSelect
@@ -201,6 +191,19 @@ const SearchForm = ({ loadItem }: any) => {
               options={{
                 keyCol: "settlement_user",
                 displayCol: ["settlement_user_nm"],
+                inline: true,
+                defaultValue: state.searchParams?.state,
+              }}
+            />
+                        <ReactSelect
+              id="dtd_fh"
+              dataSrc={dtdfh as data}
+              width="w-44"
+              lwidth="w-20"
+              height="8px"
+              options={{
+                keyCol: "dtd_fh",
+                displayCol: ["dtd_fh_nm"],
                 inline: true,
                 defaultValue: state.searchParams?.state,
               }}

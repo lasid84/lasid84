@@ -73,7 +73,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     colVisible: { col : ["transport_id"], visible:false },
     dataType: { 
         create_date: "date", pickup_dd: "date", delivery_request_dd:"date", revised_edd : "date"
-      , sla: "date"
+      , sla: "date_digits_8"
       , num_pieces:"number" , gross_weight:"number", chargeable_weight:"number" },
     typeOptions: {
       gross_weight: { isAllowDecimal: true, decimalLimit:1},
@@ -85,7 +85,7 @@ const MasterGrid: React.FC<Props> = memo(() => {
     isAutoFitColData: true,
     isMultiSelect: false,
     // isEditableAll:true,
-    editable: ["delivery_request_dd", "revised_edd", "reason", "use_yn"],
+    editable: ["delivery_request_dd", "revised_edd", "reason", "use_yn", "sla"],
     cellClass: {
       transport_type_nm: cellStyles,
       waybill_no: cellStyles,
