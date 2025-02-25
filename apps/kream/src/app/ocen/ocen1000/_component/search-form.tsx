@@ -108,7 +108,6 @@ const SearchForm = ({ loadItem }: any) => {
       setCreateuser(loadItem[1]);
       setStatus(loadItem[2]);
 
-      log("loadItem[1]", loadItem[1], loadItem[1].data.filter((v:any) => v.create_user == user_id).length)
       if (loadItem[1].data.filter((v:any) => v.create_user == user_id).length) {
         setValue("create_user", user_id);
         dispatch({searchParams: {...searchParams, create_user:user_id}});

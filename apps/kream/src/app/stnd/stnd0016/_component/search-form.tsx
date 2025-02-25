@@ -6,29 +6,31 @@ import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-ro
 import { Button } from 'components/button';
 import { useCommonStore } from "../_store/store";
 import CustomSelect from "@/components/select/customSelect";
-import { rowAdd } from "@/components/grid/ag-grid-enterprise";
+import { ROW_CHANGED, rowAdd } from "@/components/grid/ag-grid-enterprise";
 import { AgGridReact } from "ag-grid-react";
 
 import { log, error } from '@repo/kwe-lib-new';
 
 import * as RTFJS from 'rtf.js';
+import { update } from "lodash";
 
 type Props = {
-    mGridRef: RefObject<AgGridReact>;
-    focusRef: RefObject<any>;
+    // mGridRef: RefObject<AgGridReact>;
+    // focusRef: RefObject<any>;
 };
 
-const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
+const SearchForm: React.FC<Props> = ({}) => {
   const { getValues, setValue, handleSubmit, reset } = useFormContext();
     
-  const loadDatas = useCommonStore((state) => state.loadDatas);
-  const selectedCustData = useCommonStore((state) => state.selectedCustData);
-  const custDetailData = useCommonStore((state) => state.custDetailData);
+  const { loadDatas, selectedCustData, custDetailData, gridRef, dtdChargeRateData } = useCommonStore((state) => state);
+  const { refDTDCustCharge, refFHCustCharge } = gridRef;
   
-  const { setState, resetSearchParam,  getLoad, setFTFToHtml } = useCommonStore((state) => state.actions);
+  const { setState, resetSearchParam,  getLoad, getCustDetailDatas, setCustDetailDatas } = useCommonStore((state) => state.actions);
 
-  const onSave = () => {
-    // const params = getValues();
+  const onSave = async () => {
+    const params = getValues();
+    log("onSave", params);
+    // setCustDetailDatas(params);
   }
 
   
@@ -42,6 +44,7 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
               </div> */}
               <div className={"col-span-1"}>
                 <Button id="btnSave" label="save"
+                  toolTip="ShortCut: Ctrl+S"
                   disabled={!selectedCustData?.cust_code}
                   onClick={onSave} 
                   />
@@ -72,7 +75,7 @@ const SearchForm: React.FC<Props> = ({mGridRef, focusRef}) => {
                       // log("onSelectionChanged", e, id, value, );
                       const selectedRow = e.api.getSelectedRows()[0];
                       setValue(id, value);
-                      setState({selectedCustData:selectedRow})
+                      setState({selectedCustData:selectedRow, selectedCharge:null});
                   },
                 }}
               />

@@ -26,7 +26,7 @@ const MainPage: React.FC<Props> = () => {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const selectedCustData = useCommonStore((state) => state.selectedCustData);
     const custDetailData = useCommonStore((state) => state.custDetailData);
-    const {searchParams, trans_mode='', trans_type=''} = useCommonStore((state) => state);
+    const {searchParams, cust_mode = ''} = useCommonStore((state) => state);
     const actions = useCommonStore((state) => state.actions);
     const { refCustCont, refAgencyCont } = useCommonStore((state) => state.gridRef);
 
@@ -57,12 +57,12 @@ const MainPage: React.FC<Props> = () => {
                                 <Button id={"btnAdd"} label="add" height="h-5"
                                     onClick={() => {
                                         // log("onClick refCustCont", refCustCont)
-                                        rowAdd(refCustCont?.current, { "use_yn": true, "def": false, cont_type: (trans_mode||'') + trans_type})
+                                        rowAdd(refCustCont?.current, { "use_yn": true, "def": false, cont_type: cust_mode})
                                     }}
                                 />
                             </div>
                             <div className="flex-1 h-full overflow-auto">
-                                <GridCustCont ref={refCustCont} id="custCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: (trans_mode||'') + trans_type}} />
+                                <GridCustCont ref={refCustCont} id="custCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: cust_mode}} />
                             </div>
                         </div>
                     } 
@@ -73,12 +73,12 @@ const MainPage: React.FC<Props> = () => {
                                 <Button id={"btnAdd"} label="add" height="h-5"
                                     onClick={() => {
                                         // log("onClick refCustCont", refCustCont)
-                                        rowAdd(refAgencyCont?.current, { "use_yn": true, "def": false, cont_type: (trans_mode||'') + trans_type})
+                                        rowAdd(refAgencyCont?.current, { "use_yn": true, "def": false, cont_type: cust_mode})
                                     }}
                                 />
                             </div>
                             <div className="flex-1 h-full overflow-auto">
-                                <GridCustCont ref={refAgencyCont} id="agencyCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: (trans_mode||'') + trans_type}} isAgency={true} />
+                                <GridCustCont ref={refAgencyCont} id="agencyCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: cust_mode}} isAgency={true} />
                             </div>
                         </div>
                     } 
@@ -251,7 +251,8 @@ const MainPage: React.FC<Props> = () => {
                         <LabelGrid id={'etc'} textColor="blue-700" />
                         <EditorQuill id='etc' height="h-full" value={custDetailData?.etc}
                             onContentChange={(content) => {
-                                if (custDetailData) custDetailData['etc'] = content;
+                                // if (custDetailData) custDetailData['etc'] = content;
+                                log("EditorQuill", content)
                             }}
                         />
                 </div>

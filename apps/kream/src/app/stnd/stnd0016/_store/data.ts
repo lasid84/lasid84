@@ -36,16 +36,17 @@ export const SP_GetCustDetailData = async (Params: any) => {
 
 export const SP_SetCustDetailData = async (Params: any) => {  
 
-  const { search_cust_code, user_id, ipaddr } = paramsUtils(Params);
+  const { jsonData, user_id, ipaddr } = paramsUtils(Params);
   
   const params = {
-    inparam: ["in_user", "in_ipaddr"],
-    invalue: [ user_id, ipaddr],
-    inproc: 'public.f_stnd0016_load',
-    isShowLoading: false
+    inparam: ["in_jsondata", "in_user", "in_ipaddr"],
+    invalue: [ jsonData, user_id, ipaddr],
+    inproc: 'public.f_stnd0016_set_cust_data',
+    isShowLoading: true,
+    isShowComplete: true
   }
 
-  const result = await queryClient("SP_GetLoad", params);
+  const result = await queryClient("SP_SetCustDetailData", params);
   return result;
 }
 

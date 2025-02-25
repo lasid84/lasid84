@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useRef, memo, useState } from "react";
-import Grid, { ROW_HIGHLIGHTED,ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
+import Grid, { ROW_CHANGED, ROW_HIGHLIGHTED,ROW_TYPE_NEW, rowAdd } from "components/grid/ag-grid-enterprise";
 import type { GridOption, gridData } from "components/grid/ag-grid-enterprise";
 import { useCommonStore } from "../../../_store/store";
 import { useFormContext } from "react-hook-form";
@@ -9,18 +9,17 @@ import { useFormContext } from "react-hook-form";
 import { log } from '@repo/kwe-lib-new';
 
 type Props = {
+  gridRef: any;
   initData?: any | null;
   shipping_type: string;
 };
 
-const CustChargeGrid: React.FC<Props> = memo(({shipping_type}) => {
-  const gridRef = useRef<any | null>(null);
+const CustChargeGrid: React.FC<Props> = memo(({gridRef, shipping_type}) => {
+  // const gridRef = useRef<any | null>(null);
 
-  const custChargeDatas = useCommonStore((state) => state.custChargeDatas);
-  const selectedCustData = useCommonStore((state) => state.selectedCustData);
-  const selectedTab = useCommonStore((state) => state.selectedTab);
-  const state = useCommonStore((state) => state);
+  const { dtdChargeData, fhChargeData, dtdChargeRateData, fhChargeRateData } = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
+  const [mainData, setMainData] = useState<gridData>();
   const { getValues } = useFormContext();
 
   const gridOptions: GridOption = {
@@ -32,65 +31,67 @@ const CustChargeGrid: React.FC<Props> = memo(({shipping_type}) => {
     isShowRowNo:false,
     isAutoFitColData: false,
     isMultiSelect: false,
-    editable: ["delivery_request_dd", "revised_edd", "reason", "use_yn"],
+    editable: ["air_freight","bl_handling","bonded_wh","customs_clearance","customs_duty","customs_tax","dispatch_fee","special_handling","dtd_handling"
+      ,"trucking","insurance_fee","other_1","other_2","other_3"
+    ],
   };
 
   useEffect(() => {
-    const params = {
-        cust_code: selectedCustData?.cust_code, 
-        cust_mode: (state.trans_mode ?? '') + state.trans_type, 
-        shipping_type: shipping_type, 
-    }
-    actions.getCustChargeDatas(params);
-    
-  }, [selectedCustData?.cust_code])
+    if (shipping_type === 'DTD' && dtdChargeData) setMainData(dtdChargeData);
+  }, [dtdChargeData])
 
-  const onSave = async () => {
-      // const api = gridRef.current.api;
-      // const changedDatas:any = [];
-      // await api.forEachNode((node:RowNode) => {
-      //   var data = node.data;
-      //   gridOptions?.checkbox?.forEach((col) => {
-      //     data[col] = data[col] ? "Y" : "N";
-      //   });
-      //   if (data.__changed) {
-      //     if (!data.delivery_request_dd) {
-      //       toast(t("MSG_0191"));  //요청일은 필수 값입니다.
-      //       return;
-      //     }
+  useEffect(() => {
+    if (shipping_type === 'FH' && fhChargeData) setMainData(fhChargeData);
+  }, [fhChargeData])
 
-      //     try {
-      //       changedDatas.push(data);
-      //     } catch (error) {
-      //       log("error:", error);
-      //     } finally {
-      //       data.__changed = false;
-      //     }
-      //   }
-      // });
-      
-      // if (changedDatas.length > 0) {
-      //   await actions.setAppleDatas({jsonData: JSON.stringify(changedDatas)});
-      //   await actions.getAppleDatas(getValues());
-      // } else {
-      //   toast(t("msg_0006"));  //변경 내역이 없습니다.
-      // }
-  };
-
+  // useEffect(() => {
+  //   log("mainData",shipping_type, dtdChargeData, fhChargeData, mainData)
+  // }, [mainData])
 
   return (
     <>
       <Grid
         id="CustChargeGrid"
         gridRef={gridRef}
-        listItem={custChargeDatas}
+        listItem={mainData}
         options={gridOptions}
         event={{
           onCellClicked(params) {
-            const data = params.data;
-            const selectedCol = params.column.getColId();
-            // log("onCellClicked", params, data, selectedCol, data[selectedCol]);
-            actions.setState({selectedCharge: selectedCol});
+            const col = params.column.getColId() + '_' + params.data['category2'].toLowerCase();
+            actions.setState({selectedCharge: col});
+          },
+          onCellValueChanged(params) {
+              const col = params.column.getColId() + '_' + params.data['category2'];
+              const val = params.newValue;
+              if (shipping_type === 'DTD') {
+                if (dtdChargeRateData) {
+                    if (!dtdChargeRateData[col]) {
+                      dtdChargeRateData[col] = {
+                          charge_type: params.column.getColId(), 
+                          category:params.data['category2'],
+                          shipping_type: shipping_type
+                      };
+                    }
+
+                    dtdChargeRateData[col]['charge_code'] = val;
+                    dtdChargeRateData[ROW_CHANGED] = true;
+
+                    // log('dtdChargeRateData', dtdChargeRateData);
+                  }
+              } else {
+                if (fhChargeRateData) {
+                  if (!fhChargeRateData[col]) {
+                      fhChargeRateData[col] = {
+                          charge_type: params.column.getColId(),
+                          category:params.data['category2'],
+                          shipping_type: shipping_type
+                      };
+                  }
+
+                  fhChargeRateData[col]['charge_code'] = val;
+                  fhChargeRateData[ROW_CHANGED] = true;
+                }
+              }
           },
         }}
       />

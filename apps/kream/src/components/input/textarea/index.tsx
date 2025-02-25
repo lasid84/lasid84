@@ -48,6 +48,7 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
 
   useEffect(() => {
     setText(value);
+    if (id) setValue(id, value);
   }, [value]);
 
   function handleKeyDown(event: any) {
@@ -64,7 +65,6 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
   }
 
   const handleChange = (e:any) => {
-    // log("TextArea handleChange", e.target?.value)
     if (id) setValue(id, e?.target?.value);
     setText(e.target?.value);
 
@@ -80,6 +80,7 @@ export const TextArea: React.FC<TextareaProps> = (props: TextareaProps) => {
         <div className={`w-full py-0.5 ${outerClassName}`}>
         <textarea
           {...register(id, rules)}
+          // {...register(id, )}
           placeholder={placeholder}
           autoComplete="on"
           rows={rows}

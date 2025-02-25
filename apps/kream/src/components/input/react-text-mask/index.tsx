@@ -148,7 +148,6 @@ export const MaskedInputField = forwardRef((props:Props, focusRef) => {
     // log("handleChange", e?.target?.value)
 
     if (id && !isNotManageSetValue) {
-      // log("handleChange in if", id, e?.target?.value.replaceAll(":", ""))
       setValue(id, e?.target?.value.replaceAll(":", ""));
     }
     setSelectedVal(e?.target?.value);
@@ -194,7 +193,7 @@ export const MaskedInputField = forwardRef((props:Props, focusRef) => {
   return (
     <InputWrapper outerClassName={`${outerClassName} ${isDisplay && isDisplay ? '' : 'invisible'} `} inline={inline} disableSpacing={disableSpacing}>
       {!noLabel && <Label id={id} name={label === null ? '' : label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />}
-      <div className={`flex w-full ${outerClassName} ${defWidth}`}>
+      <div className={`flex ${outerClassName} ${defWidth}`}>
         <Controller
           name={id}
           control={control}
@@ -243,6 +242,7 @@ export const MaskedInputField = forwardRef((props:Props, focusRef) => {
         />
         {useIcon && <div className='flex px-1 py-1 item-center'><FcExpand size="24" /></div>}
       </div>
+      {/* {rightLabel && <Label id={id} name={label === null ? '' : label} lwidth={lwidth} textAlignLB={textAlignLB} isDisplay={isDisplay} />} */}
     </InputWrapper>
   );
 });

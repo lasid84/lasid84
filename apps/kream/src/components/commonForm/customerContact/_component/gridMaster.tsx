@@ -17,7 +17,7 @@ type Props = {
     initData?: any | null
     params: {
         cust_code: string
-        cont_type: string
+        cont_type: string | null
     }
     isAgency?: boolean
 };

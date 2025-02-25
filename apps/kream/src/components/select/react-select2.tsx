@@ -238,9 +238,14 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
 
 
     const customStyles = {
+        container: (base: any) => ({
+            ...base,
+            width: `${defWidth} !important`
+        }),
         control: (base: any) => ({
             ...base,
             //   padding : "1px",
+            width: `${defWidth} !important`,
             minHeight: defHeight,
             height: "30px",
             fontSize: 13,
@@ -297,7 +302,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
                                         {...field}
                                         ref={ref}
                                         id={id}
-                                        classNamePrefix="my-react-select"
+                                        // classNamePrefix="my-react-select"
                                         value={selectedVal}
                                         isMulti={isMulti}
                                         options={list}
@@ -322,7 +327,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
                         rules={rules}
                         render={({ field }) => {
                             return (
-                                <div className={`${display} my-react-select-container w-96 inline-block ${defWidth} flex-grow-1`}>
+                                <div className={`${display} my-react-select-container inline-block ${defWidth} flex-grow-1`}>
                                     <ReactSelectComponent
                                         // ref={ref}
                                         {...field}

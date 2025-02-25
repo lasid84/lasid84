@@ -23,15 +23,17 @@ export default function STND0016(props:Props) {
 
     const state = useCommonStore((state) => state);
     const selectedCustData = useCommonStore((state) => state.selectedCustData);
-    const { getLoad, setState, resetStore, getCustDetailDatas } = useCommonStore((state) => state.actions);
+    const { getLoad, setState, resetStore, getCustDetailDatas, setCustDetailDatas } = useCommonStore((state) => state.actions);
     const methods = useForm({
         defaultValues: {
-            ...state.searchParams
+            ...state.searchParams,
+            cust_mode: trans_mode + trans_type
         },
     });
 
     const { 
         formState: { errors, isSubmitSuccessful },
+        getValues
     } = methods;
             
     useEffect(() => {
@@ -39,31 +41,35 @@ export default function STND0016(props:Props) {
     }, []);
 
     useEffect(() => {
-        const params = {
-            cust_code: selectedCustData?.cust_code,
-            cust_mode: state.trans_mode + (state.trans_type ?? '')
-        }
-        getCustDetailDatas(params);
-    }, [selectedCustData?.cust_code]);
+        setState({cust_mode:trans_mode + trans_type})    
+    }, [trans_mode, trans_type]);
 
     useEffect(() => {
-        setState({trans_mode:trans_mode, trans_type:trans_type})    
-    }, [trans_mode, trans_type]);
+        const params = {
+            cust_code: selectedCustData?.cust_code,
+            cust_mode: state.cust_mode
+        }
+        getCustDetailDatas(params);
+        log("selectedCustData?.cust_code", selectedCustData)
+    }, [selectedCustData?.cust_code]);
 
     useHotkeys(
         "ctrl+s",
         (event) => {
             event.preventDefault();
-            log("ctrl+s");
-            // onSave();
+            
+            if (!selectedCustData?.cust_code) return;
+            
+            const params = getValues();
+            setCustDetailDatas(params);
         },
         { enableOnTags: ['INPUT', 'TEXTAREA', 'SELECT'] } // form 요소에서 단축키 활성화
-        );
+    );
 
     return (
         <FormProvider {...methods}>
             <div className={`flex flex-col max-h-[calc(100vh)]`}>
-                <SearchForm mGridRef={mGridRef} focusRef={focusRef} />
+                <SearchForm/>
                 <BasicInfo ref={focusRef} />
                 <DetailInfo/>
             </div>

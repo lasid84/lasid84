@@ -11,9 +11,10 @@ export type LabelProps = {
   textColor?: string | null;
   backgroundColor?: "gray" | "red" | "yellow" | "blue" | "white";
   freeStyle?: string;
+  margin?:string;
 };
 
-export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, isDisplay, textColor = 'black-500/75' }) => {
+export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, isDisplay, textColor = 'black-500/75', margin='ml-2' }) => {
   const { t } = useTranslation();
 
   const defWidth = lwidth ? lwidth : "min-w-24"
@@ -22,7 +23,7 @@ export const Label: React.FC<LabelProps> = ({ id, name, lwidth, textAlignLB, isD
   return (
     <label
       htmlFor={id}
-      className={`block justify-center text-xs font-medium whitespace-nowrap ${display} text-${textAlignLB} text-${textColor} dark:text-${textColor} ${defWidth} ml-2`}>
+      className={`flex items-center justify-center text-xs font-medium whitespace-nowrap ${display} text-${textAlignLB} text-${textColor} dark:text-${textColor} ${defWidth} ${margin} `}>
       {t(name ? name : id)}
     </label>
   );

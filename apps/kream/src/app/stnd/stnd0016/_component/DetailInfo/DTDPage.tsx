@@ -23,10 +23,8 @@ type Props = {
 
 const MainPage: React.FC<Props> = memo(() => {
 
-    const loadDatas = useCommonStore((state) => state.loadDatas);
-    const selectedCharge = useCommonStore((state) => state.selectedCharge) || '';
-    const selectedCustData = useCommonStore((state) => state.selectedCustData);
-    const custDetailData = useCommonStore((state) => state.custDetailData);
+    const { loadDatas, dtdChargeRateData, selectedCustData, custDetailData, gridRef} = useCommonStore((state) => state);
+    const { refDTDCustCharge } = gridRef;
     
     return (
         <div className="m-2">
@@ -41,6 +39,7 @@ const MainPage: React.FC<Props> = memo(() => {
                 <ReactSelect
                     id="payment_type" dataSrc={loadDatas?.[5] as gridData}
                     height="h-6"
+                    width="150px"
                     options={{
                         keyCol: "cd",
                         displayCol: ['cd', 'cd_nm'],
@@ -54,7 +53,7 @@ const MainPage: React.FC<Props> = memo(() => {
             <div className="mt-1">
                 <LabelGrid id={'차지 설정'} textColor="blue-700" />
                 <div className="flex-col grid grid-cols-1 w-full h-[110px]">
-                    <CustChargeGrid shipping_type='DTD'/>
+                    <CustChargeGrid gridRef={refDTDCustCharge} shipping_type='DTD'/>
                 </div>
             </div>
 
@@ -65,8 +64,8 @@ const MainPage: React.FC<Props> = memo(() => {
 
             <div className="grid flex-col w-full grid-cols-2 gap-1">
                 <div className="col-span-1">
-                    <LabelGrid id={'dtd_cust_requet'} textColor="blue-700" />
-                    <TextArea id={"dtd_cust_requet"} rows={5} cols={0}
+                    <LabelGrid id={'dtd_cust_request'} textColor="blue-700" />
+                    <TextArea id={"dtd_cust_request"} rows={5} cols={0}
                         value={custDetailData?.dtd_cust_requet}
                         options={{
                             inline: true,

@@ -62,3 +62,26 @@ const rtf = `{\\rtf1\\ansi\\ansicpg949\\deff0{\\fonttbl{\\f0\\fnil\\fcharset129 
 // }
 
 // test2();
+
+
+import CryptoJS from 'crypto-js';
+
+/* TODO 
+    1. secretKey 모듈화(env)
+*/
+
+const secretKey = 'Zwm18jRcFUOu1JoZtQw1ZgFY1fO/EDTSlttuoVEG25E='; // 32바이트 길이의 비밀 키를 입력합니다.
+
+// 암호화 함수
+export const encrypt = (plaintext) => {
+    const cipherText = CryptoJS.AES.encrypt(plaintext, secretKey);
+    return cipherText.toString();
+  }
+  
+  // 복호화 함수
+export const decrypt = (cipherText) => {
+    const bytes = CryptoJS.AES.decrypt(cipherText, secretKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
+
+console.log("!"  +decrypt('U2FsdGVkX1+oWwvTzK2I37m479bFdEkp2uJxj7W8o5I=') + "!!!!!", encrypt('1q2w#E$R'), decrypt('U2FsdGVkX1/Pss8ICQpyNYsmuDZH2STGaNqo7Ctk7As=') === encrypt('1q2w#E$R'))
