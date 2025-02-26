@@ -141,7 +141,7 @@ const BasicInfo = forwardRef((props:Props, focusRef) => {
                         // value={selectedCustData?.cust_code}
                         value={custDetailData?.billto_cd}
                         options={{
-                            isReadOnly: true,
+                            isReadOnly: false,
                             inline:true
                         }}
                         events={{

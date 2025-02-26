@@ -1,18 +1,16 @@
 'use client'
 
-import React, { useState, useEffect, Dispatch, useContext, memo, RefObject } from "react";
+import React, { useState, useEffect, Dispatch, useContext, memo, RefObject, useRef } from "react";
 import { FormProvider, SubmitHandler, useForm, useFormContext } from "react-hook-form";
 import PageSearch, { PageSearchButton } from "layouts/search-form/page-search-row";
 import { Button } from 'components/button';
 import { useCommonStore } from "../_store/store";
 import CustomSelect from "@/components/select/customSelect";
-import { ROW_CHANGED, rowAdd } from "@/components/grid/ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
+import AutoCompleteSelct, { AutoCompleteSelectRef } from 'components/select/AutoCompleteSelect';
 
 import { log, error } from '@repo/kwe-lib-new';
-
-import * as RTFJS from 'rtf.js';
-import { update } from "lodash";
+import { MaskedInputField } from "@/components/input";
+import { set } from "lodash";
 
 type Props = {
     // mGridRef: RefObject<AgGridReact>;
@@ -24,13 +22,15 @@ const SearchForm: React.FC<Props> = ({}) => {
     
   const { loadDatas, selectedCustData, custDetailData, gridRef, dtdChargeRateData } = useCommonStore((state) => state);
   const { refDTDCustCharge, refFHCustCharge } = gridRef;
+  const selectRef = useRef<AutoCompleteSelectRef>(null);
+  const [ isCustomerOpen, setIsCustomerOpen] = useState(false);
   
   const { setState, resetSearchParam,  getLoad, getCustDetailDatas, setCustDetailDatas } = useCommonStore((state) => state.actions);
 
   const onSave = async () => {
     const params = getValues();
     log("onSave", params);
-    // setCustDetailDatas(params);
+    setCustDetailDatas(params);
   }
 
   
@@ -54,7 +54,7 @@ const SearchForm: React.FC<Props> = ({}) => {
         >
           
           <div className={"col-span-2"}>
-            <CustomSelect
+            {/* <CustomSelect
                 id="search_cust_code"
                 initText="Select an option"
                 listItem={loadDatas?.[0]}
@@ -78,7 +78,32 @@ const SearchForm: React.FC<Props> = ({}) => {
                       setState({selectedCustData:selectedRow, selectedCharge:null});
                   },
                 }}
-              />
+              /> */}
+              <MaskedInputField
+                    id="cust_nm"
+                    value={selectedCustData?.cust_nm}
+                    // height={componetHeight}
+                    options={{
+                        isReadOnly: true,
+                        inline:true
+                    }}
+                    events={{
+                        // onChange: () => {
+                        //   if (!isPopup) setIsPopup(true);
+                        // }
+                        onClick: () => {
+                          if (!isCustomerOpen) setIsCustomerOpen(true);
+                        }
+                    }}
+                />
+              {isCustomerOpen && <AutoCompleteSelct 
+                values={loadDatas?.[0].data}
+                ref={selectRef}
+                onClose={() => {
+                  if (selectRef.current) setState({cust_code:selectRef.current.getValue()?.cust_code });
+                  setIsCustomerOpen(false);
+                }}
+              />}
           </div>
         </PageSearchButton>
         </form>

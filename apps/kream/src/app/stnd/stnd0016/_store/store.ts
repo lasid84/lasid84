@@ -8,6 +8,7 @@ import { createRef } from "react";
 
 // StoreState 정의
 interface StoreState {
+    cust_code: string | null,
     cust_mode: string | null,
     searchParams: Record<string, any>;
     loadDatas: gridData[] | null;  /* 0: 거래처코드, 1: Province, 2: Loc_type */ 
@@ -44,6 +45,7 @@ type Store = StoreState & {
 
 // initValue 정의
 const initValue: StoreState = {
+    cust_code: null,
     cust_mode: null,
     searchParams: {},
     loadDatas: null,
@@ -104,8 +106,9 @@ const setinitValue = (set: any, get: any) => {
 
                 convertedFHData[col] = data;
             }
-            log("convertedDTDData", convertedDTDData);
+
             set({ 
+                selectedCustData: result[5].data[0],
                 custDetailData: result[0]?.data[0],
                 dtdChargeData: result[1],
                 dtdChargeRateData: convertedDTDData,
@@ -136,7 +139,7 @@ const setinitValue = (set: any, get: any) => {
                     }
                 }
             }
-            log("updatedData1", hasData, params);
+            
             if (!hasData && dtdChargeRateData?.[ROW_CHANGED]) hasData = true;
         
             const updatedData: UpdateData = {
@@ -144,7 +147,7 @@ const setinitValue = (set: any, get: any) => {
                 t_cust_charge_rate: dtdChargeRateData
             };
         
-            log("updatedData2", hasData, JSON.stringify(updatedData));
+            
             /////db 저장 추가
             if (hasData) {
                 const params = {

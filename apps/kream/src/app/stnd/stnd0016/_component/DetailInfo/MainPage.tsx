@@ -25,6 +25,7 @@ const MainPage: React.FC<Props> = () => {
     /** “숨기기/펼치기” 상태 */
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const selectedCustData = useCommonStore((state) => state.selectedCustData);
+
     const custDetailData = useCommonStore((state) => state.custDetailData);
     const {searchParams, cust_mode = ''} = useCommonStore((state) => state);
     const actions = useCommonStore((state) => state.actions);
@@ -252,7 +253,7 @@ const MainPage: React.FC<Props> = () => {
                         <EditorQuill id='etc' height="h-full" value={custDetailData?.etc}
                             onContentChange={(content) => {
                                 // if (custDetailData) custDetailData['etc'] = content;
-                                log("EditorQuill", content)
+                                // log("EditorQuill", content)
                             }}
                         />
                 </div>

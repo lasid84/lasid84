@@ -29,13 +29,6 @@ const MainPage: React.FC<Props> = memo(() => {
     return (
         <div className="m-2">
             <div className="grid md:grid-cols-5">
-               {/* <Checkbox id={"dtd_bill_yn"}
-                    value={custDetailData?.dtd_bill_yn}
-                    readOnly={!selectedCustData?.cust_code}
-                    options={{
-                        inline:true
-                    }}
-               /> */}
                 <ReactSelect
                     id="payment_type" dataSrc={loadDatas?.[5] as gridData}
                     height="h-6"
@@ -48,6 +41,13 @@ const MainPage: React.FC<Props> = memo(() => {
                         inline:true,
                         isReadOnly:!selectedCustData?.cust_code
                     }}/>   
+                <Checkbox id={"dtd_ufs_if_yn"}
+                    value={custDetailData?.dtd_ufs_if_yn}
+                    readOnly={!selectedCustData?.cust_code}
+                    options={{
+                        inline:true
+                    }}
+               />
             </div>
 
             <div className="mt-1">
