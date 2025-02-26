@@ -21,7 +21,8 @@ type Props = {
 
 export const SubMenuTab: React.FC<Props> = (props: Props) => {
     const { t } = useTranslation();
-    const [selectedTab, setSelectedTab] = useState<any>("NM");
+    const { MselectedTab = 'NM' } = props
+    const [selectedTab, setSelectedTab] = useState<any>(MselectedTab);
 
     const { loadItem, onClickTab, tabList} = props;
     // const [tabList, settabList] = useState<tab[]>()

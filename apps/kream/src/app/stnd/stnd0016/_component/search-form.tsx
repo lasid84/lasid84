@@ -24,6 +24,7 @@ const SearchForm: React.FC<Props> = ({}) => {
   const { refDTDCustCharge, refFHCustCharge } = gridRef;
   const selectRef = useRef<AutoCompleteSelectRef>(null);
   const [ isCustomerOpen, setIsCustomerOpen] = useState(false);
+  const [ searchFilters, setSearchFilters ] = useState('');
   
   const { setState, resetSearchParam,  getLoad, getCustDetailDatas, setCustDetailDatas } = useCommonStore((state) => state.actions);
 
@@ -32,7 +33,6 @@ const SearchForm: React.FC<Props> = ({}) => {
     log("onSave", params);
     setCustDetailDatas(params);
   }
-
   
   return (
       <form>
@@ -84,25 +84,29 @@ const SearchForm: React.FC<Props> = ({}) => {
                     value={selectedCustData?.cust_nm}
                     // height={componetHeight}
                     options={{
-                        isReadOnly: true,
+                        isReadOnly: false,
                         inline:true
                     }}
                     events={{
-                        // onChange: () => {
-                        //   if (!isPopup) setIsPopup(true);
-                        // }
+                        onChange: (e) => {
+                          if (!isCustomerOpen) setIsCustomerOpen(true);
+                          // setSearchFilters(e.target.value);
+                        },
                         onClick: () => {
                           if (!isCustomerOpen) setIsCustomerOpen(true);
                         }
                     }}
                 />
-              {isCustomerOpen && <AutoCompleteSelct 
-                values={loadDatas?.[0].data}
-                ref={selectRef}
-                onClose={() => {
-                  if (selectRef.current) setState({cust_code:selectRef.current.getValue()?.cust_code });
-                  setIsCustomerOpen(false);
-                }}
+              {isCustomerOpen 
+              && <AutoCompleteSelct
+                  value={searchFilters}
+                  values={loadDatas?.[0].data}
+                  ref={selectRef}
+                  onClose={() => {
+                    if (selectRef.current) setState({cust_code:selectRef.current.getValue()?.cust_code });
+                    setIsCustomerOpen(false);
+                    // setSearchFilters('');
+                  }}
               />}
           </div>
         </PageSearchButton>

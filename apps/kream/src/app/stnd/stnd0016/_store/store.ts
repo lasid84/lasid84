@@ -11,13 +11,15 @@ interface StoreState {
     cust_code: string | null,
     cust_mode: string | null,
     searchParams: Record<string, any>;
-    loadDatas: gridData[] | null;  /* 0: 거래처코드, 1: Province, 2: Loc_type */ 
+    loadDatas: gridData[] | null;                   /* load 프로시저 참조조 */ 
     selectedCustData: Record<string, any> | null;
-    custDetailData: Record<string, any>;
-    dtdChargeData: gridData | null;
-    dtdChargeRateData: Record<string, any> | null;
+    custDetailData: Record<string, any>;            // t_cust_d
+    dtdExtraData: Record<string, any>;              // t_cust_d_extra
+    dtdChargeData: gridData | null;                 
+    dtdChargeRateData: Record<string, any> | null;  // t_cust_charge_rate
     fhChargeData: gridData | null;
-    fhChargeRateData: Record<string, any> | null;
+    fhChargeRateData: Record<string, any> | null;   // t_cust_charge_rate
+    fhExtraData: Record<string, any>;               // t_cust_d_extra
     selectedTab: string;
     selectedCharge: string | null;
     gridRef: {
@@ -43,13 +45,15 @@ type Store = StoreState & {
     actions: StoreActions;
 };
 
+export const pages = ['NM_PAGE','DTD_PAGE','FH_PAGE','RATE_PAGE'];
+
 // initValue 정의
 const initValue: StoreState = {
     cust_code: null,
     cust_mode: null,
     searchParams: {},
     loadDatas: null,
-    selectedTab: 'NM',
+    selectedTab: pages[0],
     selectedCustData: null,
     custDetailData: {},
     selectedCharge: null,
@@ -59,8 +63,10 @@ const initValue: StoreState = {
         refDTDCustCharge: createRef(),
         refFHCustCharge: createRef()
     },
+    dtdExtraData: {},
     dtdChargeData: null,
     dtdChargeRateData: {},
+    fhExtraData: {},
     fhChargeData: null,
     fhChargeRateData: {}
 };
@@ -106,23 +112,26 @@ const setinitValue = (set: any, get: any) => {
 
                 convertedFHData[col] = data;
             }
-
+            // log("result", result)
             set({ 
                 selectedCustData: result[5].data[0],
-                custDetailData: result[0]?.data[0],
+                custDetailData: result[0]?.data[0] || {},
+                dtdExtraData: result[6]?.data[0] || {},
                 dtdChargeData: result[1],
                 dtdChargeRateData: convertedDTDData,
+                fhExtraData: result[7]?.data[0] || {},
                 fhChargeData: result[3],
                 fhChargeRateData: convertedFHData,
             });
             return result;
         },
         setCustDetailDatas: async (params: any) => {
-            const { custDetailData, dtdChargeRateData, gridRef, selectedCustData } = get();
-            const { refDTDCustCharge } = gridRef; /* To Do */ //FH도 추가 예정
+            const { custDetailData, dtdExtraData, dtdChargeRateData, fhExtraData, gridRef, selectedCustData } = get();
+            // const { refDTDCustCharge } = gridRef; /* To Do */ //FH도 추가 예정pnpm
                 
             type UpdateData = {
                 t_cust_d: Record<string, any>;
+                t_cust_d_extra: Record<string, any>[];
                 // t_cust_charge: Record<string, any>[];
                 t_cust_charge_rate: Record<string, any> | null;
             }
@@ -144,6 +153,7 @@ const setinitValue = (set: any, get: any) => {
         
             const updatedData: UpdateData = {
                 t_cust_d: {...params},
+                t_cust_d_extra: [dtdExtraData, fhExtraData],
                 t_cust_charge_rate: dtdChargeRateData
             };
         

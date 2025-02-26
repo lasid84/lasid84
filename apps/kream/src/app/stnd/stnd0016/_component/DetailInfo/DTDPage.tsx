@@ -23,8 +23,12 @@ type Props = {
 
 const MainPage: React.FC<Props> = memo(() => {
 
-    const { loadDatas, dtdChargeRateData, selectedCustData, custDetailData, gridRef} = useCommonStore((state) => state);
+    const { loadDatas, dtdExtraData, selectedCustData, gridRef} = useCommonStore((state) => state);
     const { refDTDCustCharge } = gridRef;
+
+    const handleChange = (col:string, val:string) => {
+        dtdExtraData[col] = val;
+    }
     
     return (
         <div className="m-2">
@@ -36,16 +40,25 @@ const MainPage: React.FC<Props> = memo(() => {
                     options={{
                         keyCol: "cd",
                         displayCol: ['cd', 'cd_nm'],
-                        defaultValue: custDetailData?.payment_type,
+                        defaultValue: dtdExtraData?.payment_type,
                         isAllYn: false,
                         inline:true,
                         isReadOnly:!selectedCustData?.cust_code
-                    }}/>   
-                <Checkbox id={"dtd_ufs_if_yn"}
-                    value={custDetailData?.dtd_ufs_if_yn}
+                    }}
+                    events={{
+                        onChange(e, id, value) {
+                            handleChange(id, value);
+                        },
+                    }}
+                    />   
+                <Checkbox id={"ufs_if_yn"}
+                    value={dtdExtraData?.ufs_if_yn}
                     readOnly={!selectedCustData?.cust_code}
                     options={{
                         inline:true
+                    }}
+                    events={{
+                        onChange: handleChange
                     }}
                />
             </div>
@@ -64,22 +77,32 @@ const MainPage: React.FC<Props> = memo(() => {
 
             <div className="grid flex-col w-full grid-cols-2 gap-1">
                 <div className="col-span-1">
-                    <LabelGrid id={'dtd_cust_request'} textColor="blue-700" />
-                    <TextArea id={"dtd_cust_request"} rows={5} cols={0}
-                        value={custDetailData?.dtd_cust_requet}
+                    <LabelGrid id={'cust_request'} textColor="blue-700" />
+                    <TextArea id={"cust_request"} rows={5} cols={0}
+                        value={dtdExtraData?.cust_requet}
                         options={{
                             inline: true,
                             noLabel: true
+                        }}
+                        events={{
+                            onChange(e) {
+                                handleChange('cust_request', e.target.value);
+                            },
                         }}
                     />
                 </div>
                 <div className="col-span-1">
                     <LabelGrid id={'remark'} textColor="blue-700" />
-                    <TextArea id={"dtd_remark"} rows={5} cols={0}
-                        value={custDetailData?.dtd_remark}
+                    <TextArea id={"remark"} rows={5} cols={0}
+                        value={dtdExtraData?.remark}
                         options={{
                             inline: true,
                             noLabel: true
+                        }}
+                        events={{
+                            onChange(e) {
+                                handleChange('remark', e.target.value);
+                            },
                         }}
                     />
                 </div>
