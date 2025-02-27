@@ -19,36 +19,47 @@ type Rate = {
 const defualTitleWidth = "w-[120px]";
 const defaultLabelWidth = "w-20"
 const defaultInputWidth = "w-20"
+const defaultHeight = "h-6"
 
 const RateByCharge: React.FC<Props> = memo(() => {
     const {t} = useTranslation();
-    const { dtdChargeRateData } = useCommonStore((state) => state);
     
-    const handleChange = (charge_type: string, col: string, value: string | null) => {
-        if (dtdChargeRateData && dtdChargeRateData[charge_type]) {
-            dtdChargeRateData[charge_type][col] = value;
-            dtdChargeRateData[ROW_CHANGED] = true;
-          }
+    const handleChange = (rate: any, charge_type: string, col: string, value: string | null) => {
+        // log("handleChange", rate, col, value)
+        if (rate[col] !== value) {
+            rate[col] = value;
+            rate[ROW_CHANGED] = true;
+        }
+        
+        // if (dtdChargeRateData && dtdChargeRateData[charge_type]) {
+        //     dtdChargeRateData[charge_type][col] = value;
+        //     dtdChargeRateData[ROW_CHANGED] = true;
+        //   }
     }
 
     return (
-        <div className="flex flex-col gap-2 p-2 m-1 md:grid md:grid-cols-1">
+        <div className="flex flex-col gap-1 p-2 m-1 md:grid md:grid-cols-1">
             <Clearance onChange={handleChange}/>
             <DTDHandling onChange={handleChange}/>
             <AirFreight onChange={handleChange}/>
             <CCFee onChange={handleChange}/>
+            <Other2 onChange={handleChange}/>
+            <SpecialHandling onChange={handleChange}/>
         </div>
     );
 });
 
 type innerProps = {
-    onChange?: (charge_type: string, col: string, value: string | null ) => void;
+    onChange?: (rate:any, charge_type: string, col: string, value: string | null ) => void;
 };
 
 const getChargeInfo = (col_nm: string) => {
-    const { dtdChargeData, dtdChargeRateData } = useCommonStore((state) => state);
+    const { dtdChargeData } = useCommonStore((state) => state);
     // const charge_type = dtdChargeData?.data.filter((row:any) => row.category = 'RV')[0][col_nm];
-    const rate = dtdChargeRateData?.[col_nm];
+
+    // const rate = dtdChargeRateData?.[col_nm];
+    const rate = dtdChargeData?.data.filter((row:any) => row['charge_type'] === col_nm)[0];
+    // log("getChargeInfo", rate)
 
     return {
         // charge_type,
@@ -56,26 +67,40 @@ const getChargeInfo = (col_nm: string) => {
     }
 }
 
+const getColName = (category:string) => {
+    return [
+        category + '_type',
+        category + '_rate',
+        category + '_amt',
+        category + '_min',
+        category + '_max',
+        category + '_etc',
+    ]
+}
+
 //통관료
 const Clearance: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
     const { onChange: handleChange } = props
     
-    const current_col = 'customs_clearance_rv';
+    const current_col = 'customs_clearance';
+    const category = 'rv';
     const { rate } = getChargeInfo(current_col);
+    
+    const [colType, colRate, colAmt, colMin, colMax, colEtc] = getColName(category);
     
     // if (selectedCell !== 'customs_clearance') return;
 
     return (
         <>
             <div className={`flex flex-row gap-2 ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'customs_clearance'} freeStyle={defualTitleWidth}/>
+                <LabelGrid id={'customs_clearance'} freeStyle={defualTitleWidth + ' ' + defaultHeight}/>
                 <MaskedInputField
                     id={current_col + '_rate'}
-                    height="h-8"
+                    height={defaultHeight}
                     width={defaultInputWidth}
                     lwidth={defaultLabelWidth}
-                    value={rate?.rate}
+                    value={rate?.[colRate]}
                     options={{
                         isReadOnly: false,
                         inline:true,
@@ -84,17 +109,17 @@ const Clearance: React.FC<innerProps> = (props) => {
                     }}
                     events={{
                         onChange(e, dataType) {
-                            handleChange?.(current_col, 'rate', e.target.value);
+                            handleChange?.(rate, current_col, colRate, e.target.value);
                         },
                     }}
                 />
                 <Label id={'lbl1'} name="%" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
                 <MaskedInputField
                     id={current_col + '_min'}
-                    height='h-8'
+                    height={defaultHeight}
                     width={defaultInputWidth}
                     lwidth={defaultLabelWidth}
-                    value={rate?.min}
+                    value={rate?.[colMin]}
                     options={{
                         isReadOnly: false,
                         inline:true,
@@ -103,17 +128,17 @@ const Clearance: React.FC<innerProps> = (props) => {
                     }}
                     events={{
                         onChange(e, dataType) {
-                            handleChange?.(current_col, 'min', e.target.value);
+                            handleChange?.(rate, current_col, colMin, e.target.value);
                         },
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
                 <MaskedInputField
                     id={current_col + '_max'}
-                    height="h-8"
+                    height={defaultHeight}
                     width={defaultInputWidth}
                     lwidth={defaultLabelWidth}
-                    value={rate?.max}
+                    value={rate?.[colMax]}
                     options={{
                         isReadOnly: false,
                         inline:true,
@@ -122,7 +147,27 @@ const Clearance: React.FC<innerProps> = (props) => {
                     }}
                     events={{
                         onChange(e, dataType) {
-                            handleChange?.(current_col, 'max', e.target.value);
+                            handleChange?.(rate, current_col, colMax, e.target.value);
+                        },
+                    }}
+                />
+                <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
+
+                <MaskedInputField
+                    id={current_col + '_amt'}
+                    height={defaultHeight}
+                    width={defaultInputWidth}
+                    lwidth={defaultLabelWidth}
+                    value={rate?.[colAmt]}
+                    options={{
+                        isReadOnly: false,
+                        inline:true,
+                        type: 'number',
+                        textAlign: 'right'
+                    }}
+                    events={{
+                        onChange(e, dataType) {
+                            handleChange?.(rate, current_col, colAmt, e.target.value);
                         },
                     }}
                 />
@@ -136,21 +181,25 @@ const Clearance: React.FC<innerProps> = (props) => {
 const DTDHandling: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
     const { onChange: handleChange } = props
-    const current_col = 'dtd_handling_rv';
+    const current_col = 'dtd_handling';
+    const category = 'rv';
     const { rate } = getChargeInfo(current_col);
+    
+    const [colType, colRate, colAmt, colMin, colMax, colEtc] = getColName(category);
+    // log(current_col, colEtc, rate)
     // if (selectedCell !== 'dtd_handling') return;
 
     return (
         <>
             <div className={`flex flex-row gap-2 ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'dtd_handling'} freeStyle={defualTitleWidth} />
+                <LabelGrid id={'dtd_handling'} freeStyle={defualTitleWidth + ' ' + defaultHeight} />
                 <MaskedInputField
                     id={current_col + '_amt'}
                     label={'기본'}
-                    height='h-8'
+                    height={defaultHeight}
                     width={defaultInputWidth}
                     lwidth={defaultLabelWidth}
-                    value={rate?.amt}
+                    value={rate?.[colAmt]}
                     options={{
                         isReadOnly: false,
                         inline:true,
@@ -159,17 +208,17 @@ const DTDHandling: React.FC<innerProps> = (props) => {
                     }}
                     events={{
                         onChange(e, dataType) {
-                            handleChange?.(current_col, 'amt', e.target.value);
+                            handleChange?.(rate, current_col, colAmt, e.target.value);
                         },
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
                 <MaskedInputField
                     id={current_col + '_etc_overtime'}
-                    height="h-8"
+                    height={defaultHeight}
                     width={defaultInputWidth}
                     lwidth={defaultLabelWidth}
-                    value={rate?.etc?.overtime}
+                    value={rate?.[colEtc]?.overtime}
                     options={{
                         isReadOnly: false,
                         inline:true,
@@ -179,10 +228,10 @@ const DTDHandling: React.FC<innerProps> = (props) => {
                     events={{
                         onChange(e, dataType) {
                             const newEtc = {
-                                ...rate?.etc,
+                                ...rate?.[colEtc],
                                 overtime: e.target.value
                             }
-                            handleChange?.(current_col, 'etc', newEtc);
+                            handleChange?.(rate, current_col, colEtc, newEtc);
                         },
                     }}
                 />
@@ -197,21 +246,24 @@ const AirFreight: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
     const { onChange: handleChange } = props
 
-    const current_col = 'bl_handling_rv';
+    const current_col = 'bl_handling';
+    const category = 'rv';
     const { rate } = getChargeInfo(current_col);
+    
+    const [colType, colRate, colAmt, colMin, colMax, colEtc] = getColName(category);
     // if (selectedCell !== 'bl_handling') return;
-
+    // log(current_col, rate, colAmt)
     return (
         <>
             <div className={`flex flex-row gap-2 
                         ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'bl_handling'} freeStyle={defualTitleWidth}  />
+                <LabelGrid id={'bl_handling'} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
                 <MaskedInputField
                     id={current_col + '_amt'}
-                    height="h-8"
+                    height={defaultHeight}
                     width={defaultInputWidth}
                     lwidth={defaultLabelWidth}
-                    value={rate?.amt}
+                    value={rate?.[colAmt]}
                     options={{
                         isReadOnly: false,
                         inline:true,
@@ -220,7 +272,7 @@ const AirFreight: React.FC<innerProps> = (props) => {
                     }}
                     events={{
                         onChange(e, dataType) {
-                            handleChange?.(current_col, 'amt', e.target.value);
+                            handleChange?.(rate, current_col, colAmt, e.target.value);
                         },
                     }}
                 />
@@ -236,17 +288,19 @@ const CCFee: React.FC<innerProps> = (props) => {
     const { onChange: handleChange } = props
     const [selectedType, setSelectedType] = useState("No");
 
-    const current_col = 'air_freight_rv';
+    const current_col = 'air_freight';
+    const category = 'rv';
     const { rate } = getChargeInfo(current_col);
+    
+    const [colType, colRate, colAmt, colMin, colMax, colEtc] = getColName(category);
 
     useEffect(() => {
-        if (rate) typeHandler(rate.type)
+        if (rate) typeHandler(rate[colType])
     }, [rate])
 
     const typeHandler = (value: string) => {
-        const group = loadDatas?.[6].data.find((arr: { [x: string]: string; }) => arr['cd'] === value);
+        const group = loadDatas?.[6].data.find((arr: { [x: string]: string; }) => arr['cd'] === value) || {};
         setSelectedType(group['type_group']);
-        handleChange?.(current_col, 'type', value);
     }
 
     // if (selectedCell !== 'air_freight') return;
@@ -255,34 +309,34 @@ const CCFee: React.FC<innerProps> = (props) => {
         <>
             <div className={`flex flex-row gap-2
                         ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'ccfee'} freeStyle={defualTitleWidth}  />
+                <LabelGrid id={'ccfee'} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
                 <ReactSelect
                     id={current_col + '_type'} dataSrc={loadDatas?.[6] as gridData}
-                    height="h-8"
+                    height={'24px'}
                     // width="w-full"
                     width={"185px"}
                     lwidth={defaultLabelWidth}
                     options={{
                         keyCol: "cd",
                         displayCol: ['cd_nm'],
-                        defaultValue: rate?.type,
+                        defaultValue: rate?.[colType],
                         isAllYn: false,
                         inline:true
                     }}
                     events={{
                         onChange(e, id, value) {
                             typeHandler(value);
-                            handleChange?.(current_col, 'type', value);
+                            handleChange?.(rate, current_col, colType, value);
                         },
                     }}
                 /> 
                 <div className={`flex flex-row ${selectedType !== 'Rate' ? 'hidden' : ''} gap-2`}>
                     <MaskedInputField
                         id={current_col + '_rate'}
-                        height="h-8"
+                        height={defaultHeight}
                         width={defaultInputWidth}
                         lwidth={defaultLabelWidth}
-                        value={rate?.rate}
+                        value={rate?.[colRate]}
                         options={{
                             isReadOnly: false,
                             inline:true,
@@ -292,17 +346,17 @@ const CCFee: React.FC<innerProps> = (props) => {
                         }}
                         events={{
                             onChange(e, dataType) {
-                                handleChange?.(current_col, 'rate', e.target.value);
+                                handleChange?.(rate, current_col, colRate, e.target.value);
                             },
                         }}
                     />
                     <Label id={'lbl1'} name="%" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
                     <MaskedInputField
                         id={current_col + '_min'}
-                        height="h-8"
+                        height={defaultHeight}
                         width={defaultInputWidth}
                         lwidth={defaultLabelWidth}
-                        value={rate?.min}
+                        value={rate?.[colMin]}
                         options={{
                             isReadOnly: false,
                             inline:true,
@@ -311,7 +365,7 @@ const CCFee: React.FC<innerProps> = (props) => {
                         }}
                         events={{
                             onChange(e, dataType) {
-                                handleChange?.(current_col, 'min', e.target.value);
+                                handleChange?.(rate, current_col, colMin, e.target.value);
                             },
                         }}
                     />
@@ -321,10 +375,10 @@ const CCFee: React.FC<innerProps> = (props) => {
                 <div className={`flex flex-row ${selectedType !== 'Fixed' ? 'hidden' : ''} gap-2`}>
                     <MaskedInputField
                         id={current_col + '_amt'}
-                        height="h-8"
+                        height={defaultHeight}
                         width={defaultInputWidth}
                         lwidth={defaultLabelWidth}
-                        value={rate?.amt}
+                        value={rate?.[colAmt]}
                         options={{
                             isReadOnly: false,
                             inline:true,
@@ -333,7 +387,7 @@ const CCFee: React.FC<innerProps> = (props) => {
                         }}
                         events={{
                             onChange(e, dataType) {
-                                handleChange?.(current_col, 'amt', e.target.value);
+                                handleChange?.(rate, current_col, colAmt, e.target.value);
                             },
                         }}
                     />
@@ -344,10 +398,100 @@ const CCFee: React.FC<innerProps> = (props) => {
     )
 }
 
+//항공수수료
+const Other2: React.FC<innerProps> = (props) => {
+    const { selectedCharge: col_nm } = useCommonStore((state) => state);
+    const { onChange: handleChange } = props
+
+    const current_col = 'other_2';
+    const category = 'rv';
+    const { rate } = getChargeInfo(current_col);
+    
+    const [colType, colRate, colAmt, colMin, colMax, colEtc] = getColName(category);
+    // if (selectedCell !== 'bl_handling') return;
+    // log(current_col, rate, colAmt)
+    return (
+        <>
+            <div className={`flex flex-row gap-2 
+                        ${col_nm === current_col ? 'border border-red-500' : ''}`}>
+                <LabelGrid id={current_col} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
+                <MaskedInputField
+                    id={current_col + '_amt'}
+                    height={defaultHeight}
+                    width={defaultInputWidth}
+                    lwidth={defaultLabelWidth}
+                    value={rate?.[colAmt]}
+                    options={{
+                        isReadOnly: false,
+                        inline:true,
+                        type: 'number',
+                        textAlign: 'right'
+                    }}
+                    events={{
+                        onChange(e, dataType) {
+                            handleChange?.(rate, current_col, colAmt, e.target.value);
+                        },
+                    }}
+                />
+                <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
+            </div>
+        </>
+    )
+}
+
+//특별통관료
+const SpecialHandling: React.FC<innerProps> = (props) => {
+    const { selectedCharge: col_nm } = useCommonStore((state) => state);
+    const { onChange: handleChange } = props
+    const current_col = 'special_handling';
+    const category = 'rv';
+    const { rate } = getChargeInfo(current_col);
+    
+    const [colType, colRate, colAmt, colMin, colMax, colEtc] = getColName(category);
+    // log(current_col, colEtc, rate)
+    // if (selectedCell !== 'dtd_handling') return;
+
+    return (
+        <>
+            <div className={`flex flex-row gap-2 ${col_nm === current_col ? 'border border-red-500' : ''}`}>
+                <LabelGrid id={current_col} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
+                <MaskedInputField
+                    id={current_col + '_etc_overtime'}
+                    height={defaultHeight}
+                    width={defaultInputWidth}
+                    lwidth={defaultLabelWidth}
+                    value={rate?.[colEtc]?.overtime}
+                    options={{
+                        isReadOnly: false,
+                        inline:true,
+                        type: 'number',
+                        textAlign: 'right'
+                    }}
+                    events={{
+                        onChange(e, dataType) {
+                            const newEtc = {
+                                ...rate?.[colEtc],
+                                overtime: e.target.value
+                            }
+                            handleChange?.(rate, current_col, colEtc, newEtc);
+                        },
+                    }}
+                />
+                <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
+            </div>
+        </>
+    )
+}
+
 //운송료
 const Trucking: React.FC<innerProps> = (props) => {
     const { onChange: handleChange } = props
     const transFeeDatas = useCommonStore((state) => state);
+    const current_col = '';
+    const category = 'rv';
+    const { rate } = getChargeInfo(current_col);
+    
+    const [colType, colRate, colAmt, colMin, colMax] = getColName(category);
 
     // if (selectedCell !== 'trucking') return;
 

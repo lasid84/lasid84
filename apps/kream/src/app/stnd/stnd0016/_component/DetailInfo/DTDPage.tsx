@@ -31,11 +31,11 @@ const MainPage: React.FC<Props> = memo(() => {
     }
     
     return (
-        <div className="m-2">
-            <div className="grid md:grid-cols-5">
+        <div className="flex flex-col m-2">
+            <div className="grid items-center md:grid-cols-5">
                 <ReactSelect
                     id="payment_type" dataSrc={loadDatas?.[5] as gridData}
-                    height="h-6"
+                    // height="h-6"
                     width="150px"
                     options={{
                         keyCol: "cd",
@@ -63,23 +63,29 @@ const MainPage: React.FC<Props> = memo(() => {
                />
             </div>
 
-            <div className="mt-1">
-                <LabelGrid id={'차지 설정'} textColor="blue-700" />
-                <div className="flex-col grid grid-cols-1 w-full h-[110px]">
-                    <CustChargeGrid gridRef={refDTDCustCharge} shipping_type='DTD'/>
-                </div>
+            <div className="grid items-stretch grid-cols-3 gap-4 mt-1">
+                {/* <div className="grid flex-col grid-cols-3"> */}
+                    <div className="h-full col-span-1">
+                        <LabelGrid id={'차지 설정'} textColor="blue-700" />
+                        <div className="w-full h-[340px]">
+                            <CustChargeGrid gridRef={refDTDCustCharge} shipping_type='DTD'/>
+                        </div>
+                    </div>
+                    <div className="col-span-2">
+                        <div className="h-full">
+                            <LabelGrid id={'요율설정'} textColor="blue-700" />
+                            <RateByCharge/>        
+                        </div>
+                    </div>
+                {/* </div> */}
             </div>
 
-            <div className="col-span-4">
-                <LabelGrid id={'요율설정'} textColor="blue-700" />
-                <RateByCharge/>        
-            </div>
 
-            <div className="grid flex-col w-full grid-cols-2 gap-1">
+            <div className="grid grid-cols-2 gap-1 mt-1">
                 <div className="col-span-1">
                     <LabelGrid id={'cust_request'} textColor="blue-700" />
                     <TextArea id={"cust_request"} rows={5} cols={0}
-                        value={dtdExtraData?.cust_requet}
+                        value={dtdExtraData?.cust_request}
                         options={{
                             inline: true,
                             noLabel: true

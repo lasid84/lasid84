@@ -50,7 +50,7 @@ export default function STND0016(props:Props) {
             cust_code: selectedCustCode,
             cust_mode: state.cust_mode
         }
-        log("selectedCustCode", selectedCustCode)
+        // log("selectedCustCode", selectedCustCode)
         getCustDetailDatas(params);
         // log("selectedCustData?.cust_code", selectedCustData)
     }, [selectedCustCode]);

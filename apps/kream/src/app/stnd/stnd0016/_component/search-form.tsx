@@ -20,7 +20,7 @@ type Props = {
 const SearchForm: React.FC<Props> = ({}) => {
   const { getValues, setValue, handleSubmit, reset } = useFormContext();
     
-  const { loadDatas, selectedCustData, custDetailData, gridRef, dtdChargeRateData } = useCommonStore((state) => state);
+  const { loadDatas, selectedCustData, gridRef } = useCommonStore((state) => state);
   const { refDTDCustCharge, refFHCustCharge } = gridRef;
   const selectRef = useRef<AutoCompleteSelectRef>(null);
   const [ isCustomerOpen, setIsCustomerOpen] = useState(false);
@@ -30,7 +30,7 @@ const SearchForm: React.FC<Props> = ({}) => {
 
   const onSave = async () => {
     const params = getValues();
-    log("onSave", params);
+    // log("onSave", params);
     setCustDetailDatas(params);
   }
   
@@ -84,8 +84,9 @@ const SearchForm: React.FC<Props> = ({}) => {
                     value={selectedCustData?.cust_nm}
                     // height={componetHeight}
                     options={{
-                        isReadOnly: false,
-                        inline:true
+                        isReadOnly: true,
+                        inline:true,
+                        myPlaceholder:'Click for Search here..'
                     }}
                     events={{
                         onChange: (e) => {

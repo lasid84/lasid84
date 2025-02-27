@@ -100,7 +100,6 @@ const MainPage: React.FC<Props> = () => {
             <div className="grid md:grid-cols-5">
                 <ReactSelect
                     id="bldlv" dataSrc={loadDatas[1] as gridData}
-                    height="h-6"
                     options={{
                         keyCol: "cd",
                         displayCol: ['cd', 'cd_nm'],
@@ -123,7 +122,6 @@ const MainPage: React.FC<Props> = () => {
                 />        
                 <ReactSelect
                     id="delivery_release_doc" dataSrc={loadDatas[2] as gridData}
-                    height="h-6"
                     options={{
                         keyCol: "cd",
                         displayCol: ['cd_nm'],
@@ -133,23 +131,21 @@ const MainPage: React.FC<Props> = () => {
                         isReadOnly: !selectedCustData?.cust_code
                     }}/> 
                 <ReactSelect
-                    id="cs_person" dataSrc={loadDatas[3] as gridData}
-                    height="h-6"
+                    id="cs_manager" dataSrc={loadDatas[3] as gridData}
                     options={{
                         keyCol: "cd",
                         displayCol: ['cd_nm'],
-                        defaultValue: custDetailData?.cs_person,
+                        defaultValue: custDetailData?.cs_manager,
                         isAllYn: false,
                         inline:true,
                         isReadOnly: !selectedCustData?.cust_code
                     }}/> 
                 <ReactSelect
-                    id="sales_person" dataSrc={loadDatas[4] as gridData}
-                    height="h-6"
+                    id="sales_manager" dataSrc={loadDatas[4] as gridData}
                     options={{
                         keyCol: "cd",
                         displayCol: ['cd_nm'],
-                        defaultValue: custDetailData?.sales_person,
+                        defaultValue: custDetailData?.sales_manager,
                         isAllYn: false,
                         inline:true,
                         isReadOnly: !selectedCustData?.cust_code

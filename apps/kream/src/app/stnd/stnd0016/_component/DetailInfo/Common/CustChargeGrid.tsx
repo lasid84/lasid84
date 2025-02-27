@@ -17,26 +17,42 @@ type Props = {
 const CustChargeGrid: React.FC<Props> = memo(({gridRef, shipping_type}) => {
   // const gridRef = useRef<any | null>(null);
 
-  const { dtdChargeData, fhChargeData, dtdChargeRateData, fhChargeRateData } = useCommonStore((state) => state);
+  const { dtdChargeData, fhChargeData } = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
   const [mainData, setMainData] = useState<gridData>();
   const { getValues } = useFormContext();
 
+  // const gridOptions: GridOption = {
+  //   gridHeight: "h-full",
+  //   // checkbox: ["chk", "use_yn"],
+  //   colVisible: { col : ["cust_code", "cust_mode", "shipping_type"], visible:false },
+  //   dataType: { 
+  //        },
+  //   isShowRowNo:false,
+  //   isAutoFitColData: false,
+  //   isMultiSelect: false,
+  //   editable: ["air_freight","bl_handling","bonded_wh","customs_clearance","customs_duty","customs_tax","dispatch_fee","special_handling","dtd_handling"
+  //     ,"trucking","insurance_fee","other_1","other_2","other_3"
+  //   ],
+  // };
+
   const gridOptions: GridOption = {
     gridHeight: "h-full",
     // checkbox: ["chk", "use_yn"],
-    colVisible: { col : ["cust_code", "cust_mode", "shipping_type"], visible:false },
+    colVisible: { col : ["charge_type_nm", "rv_charge", "ab_charge", "ab_vendor_id"], visible:true },
     dataType: { 
          },
     isShowRowNo:false,
     isAutoFitColData: false,
     isMultiSelect: false,
-    editable: ["air_freight","bl_handling","bonded_wh","customs_clearance","customs_duty","customs_tax","dispatch_fee","special_handling","dtd_handling"
-      ,"trucking","insurance_fee","other_1","other_2","other_3"
-    ],
+    // editable: ["air_freight","bl_handling","bonded_wh","customs_clearance","customs_duty","customs_tax","dispatch_fee","special_handling","dtd_handling"
+    //   ,"trucking","insurance_fee","other_1","other_2","other_3"
+    // ],
+    editable: ["rv_charge", "ab_charge", "rv_vendor_id", "ab_vendor_id"]
   };
 
   useEffect(() => {
+    // log("dtdChargeData", dtdChargeData)
     if (shipping_type === 'DTD' && dtdChargeData) setMainData(dtdChargeData);
   }, [dtdChargeData])
 
@@ -57,41 +73,47 @@ const CustChargeGrid: React.FC<Props> = memo(({gridRef, shipping_type}) => {
         options={gridOptions}
         event={{
           onCellClicked(params) {
-            const col = params.column.getColId() + '_' + params.data['category2'].toLowerCase();
-            actions.setState({selectedCharge: col});
+            const col = params.column.getColId();
+            const chargeType = params.data['charge_type'];
+            actions.setState({selectedCharge: chargeType});
           },
           onCellValueChanged(params) {
-              const col = params.column.getColId() + '_' + params.data['category2'];
+              log(params)
+              // const col = params.column.getColId() + '_' + params.data['category2'];
+              const col = params.column.getColId();
+              const chargeType = params.data['charge_type'];
               const val = params.newValue;
-              if (shipping_type === 'DTD') {
-                if (dtdChargeRateData) {
-                    if (!dtdChargeRateData[col]) {
-                      dtdChargeRateData[col] = {
-                          charge_type: params.column.getColId(), 
-                          category:params.data['category2'],
-                          shipping_type: shipping_type
-                      };
-                    }
+              log("onCellValueChanged", params, col, chargeType, val)
+              
+              // if (shipping_type === 'DTD') {
+              //   if (dtdChargeRateData) {
+              //       if (!dtdChargeRateData[col]) {
+              //         dtdChargeRateData[col] = {
+              //             charge_type: params.column.getColId(), 
+              //             category:params.data['category2'],
+              //             shipping_type: shipping_type
+              //         };
+              //       }
 
-                    dtdChargeRateData[col]['charge_code'] = val;
-                    dtdChargeRateData[ROW_CHANGED] = true;
+              //       dtdChargeRateData[col]['charge_code'] = val;
+              //       dtdChargeRateData[ROW_CHANGED] = true;
 
-                    // log('dtdChargeRateData', dtdChargeRateData);
-                  }
-              } else {
-                if (fhChargeRateData) {
-                  if (!fhChargeRateData[col]) {
-                      fhChargeRateData[col] = {
-                          charge_type: params.column.getColId(),
-                          category:params.data['category2'],
-                          shipping_type: shipping_type
-                      };
-                  }
+              //       // log('dtdChargeRateData', dtdChargeRateData);
+              //     }
+              // } else {
+              //   if (fhChargeRateData) {
+              //     if (!fhChargeRateData[col]) {
+              //         fhChargeRateData[col] = {
+              //             charge_type: params.column.getColId(),
+              //             category:params.data['category2'],
+              //             shipping_type: shipping_type
+              //         };
+              //     }
 
-                  fhChargeRateData[col]['charge_code'] = val;
-                  fhChargeRateData[ROW_CHANGED] = true;
-                }
-              }
+              //     fhChargeRateData[col]['charge_code'] = val;
+              //     fhChargeRateData[ROW_CHANGED] = true;
+              //   }
+              // }
           },
         }}
       />

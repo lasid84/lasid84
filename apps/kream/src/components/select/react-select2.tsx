@@ -67,7 +67,7 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
     const [firstVal, setFirstVal] = useState('');
     const [firstLab, setFirstLab] = useState('');
     const defWidth = width ? width : "w-full";
-    const defHeight = height ? height : "h-6";
+    const defHeight = height ? height : "30px";
     const display = isDisplay? '':'block hidden ';
     // const ref = React.useRef(null)
     const ref = useRef<any>(null)
@@ -236,19 +236,31 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
         setMenuIsOpen(false);
     };
 
+    function computeFontSize(heightStr: string) {
+        const heightNum = parseInt(heightStr, 10); // 예: "20px" → 20
+        const fontSizeNum = heightNum * 0.47; // 비율
+        return `${fontSizeNum}px`;
+      }
+
+    const computedFontSize = computeFontSize(defHeight);
 
     const customStyles = {
         container: (base: any) => ({
             ...base,
-            width: `${defWidth} !important`
+            width: `${defWidth} !important`,
+            // height: defHeight
         }),
         control: (base: any) => ({
             ...base,
             //   padding : "1px",
             width: `${defWidth} !important`,
             minHeight: defHeight,
-            height: "30px",
-            fontSize: 13,
+            height: defHeight,
+            display: "flex",
+            alignItems: "center",
+            padding: 0,
+            // fontSize: 13,
+            fontSize: computedFontSize,
             border: "1px solid #e5e7eb",
             borderRadius: "0rem",
             boxShadow: "none",
@@ -265,12 +277,31 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
         }),
         valueContainer: (base: any) => ({
             ...base,
-            height: "30px",
-            justifyContent: "center",
+            // height: "30px",
+            height: defHeight,
+            justifyContent: "flex-start",
+            display: "flex",
+            alignItems: "center",
+            paddingTop: 0,
+            paddingBottom: 0,
+            margin: 0
         }),
+        input: (base:any) => ({
+            ...base,
+            margin: 0,
+            padding: 0,
+            height: defHeight,
+            // lineHeight: defHeight,
+          }),
+        singleValue: (base:any) => ({
+            ...base,
+            display: "flex",
+            alignItems: "center",
+            lineHeight: defHeight,
+          }),
         indicatorSeparator: (base: any) => ({
             ...base,
-            display: "none"
+            display: "none",
         }),
         clearIndicator: (base: any) => ({
             ...base,
@@ -278,7 +309,8 @@ export const ReactSelect: React.FC<ReactSelectProps> = memo((props) => {
         }),
         dropdownIndicator: (base: any, state: any) => ({
             ...base,
-            padding: `${(30 - 20 - 1 - 1) / 2}px`,
+            // padding: `${(30 - 20 - 1 - 1) / 2}px`,
+            padding: 0,
             transition: 'all .2s ease',
             transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : 'none'
         }),

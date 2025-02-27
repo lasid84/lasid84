@@ -39,7 +39,7 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
     let isChecked = value === 'Y' ? true : false
     // log('???checkbox', id, value, isChecked)
     setChceckVal(isChecked);
-    setValue(id, isChecked);
+    setValue(id, value);
   }, [value])
 
   const  handleKeyDown =  (e:any)=>{
@@ -78,7 +78,7 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
           // checked={checkVal}
           defaultChecked={false}
           type="checkbox"
-          className="items-center w-6 h-6 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"
+          className="items-center w-6 h-5 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"
           onKeyDown={handleKeyDown}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (readOnly) return;

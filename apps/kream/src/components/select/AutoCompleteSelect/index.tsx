@@ -207,7 +207,7 @@ const AutoCompleteSelct = forwardRef<AutoCompleteSelectRef, Props>((props: Props
                     ref={listRef}
                     className="flex-1 mt-3"
                     height={window.innerHeight * 0.6} 
-                    itemCount={dataList.length}
+                    itemCount={dataList?.length}
                     itemSize={ITEM_HEIGHT}
                     width="100%"
                     >

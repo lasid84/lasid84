@@ -1129,7 +1129,7 @@ const ListGrid: React.FC<Props> = memo((props) => {
     // log("onCellValueChanged")
     var rowNode = param.node;
     // rowNode.data[ROW_CHANGED] = true;
-    if (!options?.notManageRowChange) {
+    if (!options?.notManageRowChange && param.oldValue !== param.newValue) {
       await rowNode.setData({...rowNode.data, [ROW_CHANGED]:true});
     }
     
