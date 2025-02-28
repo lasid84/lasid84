@@ -1,9 +1,8 @@
-
-import { executeKREAMFunction } from "@/services/api/apiClient";
-const { log } = require('@repo/kwe-lib/components/logHelper');
-
+import { log } from '@repo/kwe-lib-new';
+import { DataRoutes } from "@/services/api.constants";
+import { executeKREAMFunction, callUnipass } from "@/services/api/apiClient";
 import { paramsUtils } from "@/components/react-query/utils/paramUtils";
-
+import { toastError } from "@/components/toast";
 export const SP_GetLoad = async (searchParam:any) => {
   // unstable_noStore();
   const {user_id, ipaddr} = paramsUtils();
@@ -22,7 +21,7 @@ export const SP_GetLoad = async (searchParam:any) => {
 export const SP_GetTransportData = async (searchParam: any) => {
   const {fr_date, to_date, search_gubn,  no} = searchParam;
   const {user_id, ipaddr} = paramsUtils();
-
+  let keys: string[] = [];
   const params = {
     inparam : [
         "in_fr_date"
@@ -44,10 +43,31 @@ export const SP_GetTransportData = async (searchParam: any) => {
     isShowLoading: true
   }
 
-  console.log('params',params)
-
   const result = await executeKREAMFunction(params);
-  console.log('f_airi4002_get_data',result)
+
+  if(result![0]?.data){
+    result![0].data?.forEach(async (node:any)=>{
+      const data = node;
+
+      //axios timeout 오류로 반출신고,수입신고수리 상태가 아닌경우에만 unipass 요청대상으로 함
+      if(data["__highlight"]==='N'){
+        keys.push(data["waybill_no"]);
+      }
+    })
+    const year = fr_date?.slice(0, 4);
+ 
+    const body = {
+      blYy:year,
+      hblNo:keys.join(' '),
+      user_id:user_id
+    }
+    log('body',body)
+    let unipass_result = await callUnipass(DataRoutes.URI.GET_CARG_CSCL_PRGS_INFO_QRY, body);
+    
+    if (unipass_result.status !== 200) {    
+      toastError(unipass_result);
+    } 
+  }
   return result![0];
 }
 

@@ -23,6 +23,7 @@ export const AmountInputOptions_g = {
 
 interface StoreState {
     searchParams: Record<string, any>;
+    hblDatas : string;
     uiData: Record <string, any>;
     mainDatas: gridData | null;
     detailDatas : gridData ;
@@ -71,6 +72,7 @@ type SaveDataArgs = {
     uiData : {
         settlement_date : dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD"),
     },
+    hblDatas : '',
     mainDatas: { data: {}, fields:{} },
     detailDatas : {data:{}, fields:{} },
     mainSelectedRow: null,
@@ -92,7 +94,8 @@ const setinitValue =  (set : any) => {
             set({ loadDatas: result });
             return result;
         },
-        getTransportDatas: async (params: any) => {
+        getTransportDatas: async (params: any) => 
+        {
             const result = await SP_GetTransportData(params);
             set({ mainDatas: result });
             return result;

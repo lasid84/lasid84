@@ -4,6 +4,8 @@ import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDomesticIN
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 
+
+
 export const sumFields = [
     "air_freight",
     "bl_handling",
@@ -85,6 +87,11 @@ export const AmountInputOptions_g = {
     decimalLimit: 0,
 }
 
+export const Category = {
+    RV : "RV",
+    AB : "AB"
+}
+
 interface StoreState {
     searchParams: Record<string, any>;
     uiData: Record <string, any>;
@@ -148,7 +155,7 @@ const initValue: StoreState = {
         settlement_user:  'ALL',
         logis_id:  'ALL',
         broker_id:  'ALL',
-        dfd_fh:  'ALL',
+        dtd_fh:  'ALL',
     },
     closing : '2', //마감완료상태
     detailIndex : 0,
@@ -190,6 +197,7 @@ const setinitValue = (set:any) => {
                 return uploadData;
             },
             getDTDDatas: async (params: any) => {
+                console.log('wayparams', params)
                 const result = await SP_GetDTDMainData(params);
                 set({ mainDatas: result });
                 return result;
