@@ -45,12 +45,12 @@ interface Item {
 }
 
 
-useEffect(() => {
-    reset();
-    if (state.popup.popType === crudType.CREATE) {
-      setFocus("use_yn");
-    }
-  }, [state.popup.popType, state.popup.isOpen]);
+// useEffect(() => {
+//     reset();
+//     if (state.popup.popType === crudType.CREATE) {
+//       setFocus("use_yn");
+//     }
+//   }, [state.popup.popType, state.popup.isOpen]);
   
   const onSave = useCallback(async () => {
     const params = getValues();

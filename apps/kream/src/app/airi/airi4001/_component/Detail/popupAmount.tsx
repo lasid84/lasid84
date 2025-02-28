@@ -49,11 +49,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
         typeof e.target.value === "string"
           ? e.target.value.replace(/,/g, "")
           : e.target.value;
-
+  
       const numericValue = Number(sanitizedValue);
       const vatKey = `${e.target.id}_vat`;
       const vatValue = Math.floor(numericValue * 0.1);
-
+  
       if (
         !selectedRows ||
         !detailSelectedRow ||
@@ -62,81 +62,73 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
       ) {
         return;
       }
-
+  
       // 기존 값 가져오기 (없는 경우 기본값 설정)
       const prevRow = detailSelectedRow[detailIndex] || {};
       const prevRow_AB = detailSelectedRow_AB[detailIndex] || {};
-
-      // 🔹 sumFields에 포함된 필드만 합산 (e.target.id 제외)
-      const totalAmtWithoutCurrent = sumFields.reduce((acc, field) => {
-        if (sumFields.includes(field) && field !== e.target.id) {
-          const value = parseFloat(prevRow[field]) || 0;
-          acc += isNaN(value) ? 0 : value;
-        }
-        return acc;
+  
+      // 🔹 원금과 VAT를 먼저 적용
+      const updatedRow = {
+        ...prevRow,
+        [e.target.id]: numericValue,
+        [vatKey]: vatValue,
+      };
+  
+      const updatedRow_AB = {
+        ...prevRow_AB,
+        [e.target.id]: numericValue,
+      };
+  
+      // 🔹 sumFields에 포함된 필드만 합산 (e.target.id 포함)
+      const totalAmt = sumFields.reduce((acc, field) => {
+        const value = parseFloat(
+          field === e.target.id ? numericValue : updatedRow[field]
+        ) || 0;
+        return acc + (isNaN(value) ? 0 : value);
       }, 0);
-
-      // 🔹 total_amt = 기존 합산 값 + e.target.id의 numericValue
-      const totalAmt =
-        totalAmtWithoutCurrent +
-        (sumFields.includes(e.target.id) ? numericValue : 0);
-
-      // 🔹 sumVatFields에 포함된 필드만 합산 (e.target.id 제외)
-      const totalVatWithoutCurrent = sumVatFields.reduce((acc, field) => {
-        if (sumVatFields.includes(field) && field !== e.target.id) {
-          const value = parseFloat(prevRow[field]) || 0;
-          acc += isNaN(value) ? 0 : value;
-        }
-        return acc;
+  
+      // 🔹 sumVatFields에 포함된 필드만 합산 (e.target.id 포함)
+      const totalVat = sumVatFields.reduce((acc, field) => {
+        const value = parseFloat(
+          field === e.target.id ? vatValue : updatedRow[field]
+        ) || 0;
+        return acc + (isNaN(value) ? 0 : value);
       }, 0);
-
-      // 🔹 total_vat = 기존 VAT 합산 값 + e.target.id의 vatValue (만약 sumVatFields에 속하면)
-      const totalVat =
-        totalVatWithoutCurrent +
-        (sumVatFields.includes(e.target.id) ? vatValue : 0);
-
-      // 🔹 sumCostFields에 포함된 필드만 합산 (e.target.id 제외)
-      const totalCostWithoutCurrent = sumCostFields.reduce((acc, field) => {
-        if (sumCostFields.includes(field) && field !== e.target.id) {
-          const value = parseFloat(prevRow_AB[field]) || 0;
-          acc += isNaN(value) ? 0 : value;
-        }
-        return acc;
+  
+      // 🔹 sumCostFields에 포함된 필드만 합산 (e.target.id 포함)
+      const totalCost = sumCostFields.reduce((acc, field) => {
+        const value = parseFloat(
+          field === e.target.id ? numericValue : updatedRow_AB[field]
+        ) || 0;
+        return acc + (isNaN(value) ? 0 : value);
       }, 0);
-
-      // 🔹 total_cost = 기존 합산 값 + e.target.id의 numericValue
-      const totalCost =
-        totalCostWithoutCurrent +
-        (sumCostFields.includes(e.target.id) ? numericValue : 0);
-
+  
+      // 🔹 최종 업데이트
       const updatedDetailSelectedRow = {
         ...detailSelectedRow,
         [detailIndex]: {
-          ...prevRow,
-          [e.target.id]: numericValue,
-          [vatKey]: vatValue,
+          ...updatedRow,
           total_amt: totalAmt,
           total_vat: totalVat,
           total_tot: totalAmt + totalVat,
           __changed: true,
         },
       };
-
+  
       const updatedDetailSelectedRow_AB = {
         ...detailSelectedRow_AB,
         [detailIndex]: {
-          ...prevRow_AB,
-          [e.target.id]: numericValue,
+          ...updatedRow_AB,
           total_cost: totalCost,
           __changed: true,
         },
       };
-
+  
       actions.setDetailRVDatas(updatedDetailSelectedRow);
       actions.setDetailABDatas(updatedDetailSelectedRow_AB);
     },
     [detailIndex, detailSelectedRow, detailSelectedRow_AB]
-  );
+  );  
 
   const [profitValues, setProfitValues] = useState<Record<string, number>>({});
 
@@ -448,6 +440,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     ...AmountInputOptions,
                     isReadOnly:
                       detailSelectedRow?.[detailIndex]?.state === Closing,
+                      bgColor :  detailSelectedRow?.[detailIndex]?.loading_loc === "KWE" ? "!bg-yellow-100" : "",
                   }}
                   events={{
                     onChange: (e) =>
@@ -743,7 +736,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <MaskedInputField
                   id="dtd_handling_vat"
                   value={formatValue(
-                    detailSelectedRow?.[detailIndex].dtd_handling_vat
+                    detailSelectedRow?.[detailIndex]?.dtd_handling_vat
                   )}
                   options={{
                     ...AmountInputOptions,
@@ -762,7 +755,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <MaskedInputField
                   id="dtd_handling_ab"
                   value={formatValue(
-                    detailSelectedRow_AB?.[detailIndex].dtd_handling_ab
+                    detailSelectedRow_AB?.[detailIndex]?.dtd_handling_ab
                   )}
                   options={{
                     ...AmountInputOptions,
@@ -792,7 +785,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="dtd_handling_remark"
-                  value={detailSelectedRow?.[detailIndex].dtd_handling_remark}
+                  value={detailSelectedRow?.[detailIndex]?.dtd_handling_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -887,7 +880,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="special_handling_remark"
-                  value={detailSelectedRow?.[detailIndex].dtd_handling_remark}
+                  value={detailSelectedRow?.[detailIndex]?.dtd_handling_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -918,6 +911,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     ...AmountInputOptions,
                     isReadOnly:
                       detailSelectedRow?.[detailIndex]?.state === Closing,
+                      bgColor :  detailSelectedRow?.[detailIndex]?.group_id !== null ? "!bg-blue-200" : "",
                   }}
                   events={{
                     onChange: (e) =>
@@ -983,7 +977,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="trucking_remark"
-                  value={detailSelectedRow?.[detailIndex].trucking_remark}
+                  value={detailSelectedRow?.[detailIndex]?.trucking_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -1014,6 +1008,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     ...AmountInputOptions,
                     isReadOnly:
                       detailSelectedRow?.[detailIndex]?.state === Closing,
+                      bgColor :  detailSelectedRow?.[detailIndex]?.waybill_gubn === "T-타사BL" ? "!bg-red-200" : "",
                   }}
                   events={{
                     onChange: (e) =>
@@ -1078,7 +1073,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="air_freight_remark"
-                  value={detailSelectedRow?.[detailIndex].air_freight_remark}
+                  value={detailSelectedRow?.[detailIndex]?.air_freight_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -1175,7 +1170,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="bl_handling_remark"
-                  value={detailSelectedRow?.[detailIndex].bl_handling_remark}
+                  value={detailSelectedRow?.[detailIndex]?.bl_handling_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -1268,7 +1263,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="insurance_fee_remark"
-                  value={detailSelectedRow?.[detailIndex].insurance_fee_remark}
+                  value={detailSelectedRow?.[detailIndex]?.insurance_fee_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -1292,7 +1287,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <DTDLabel id="other_1" name="other_1" />
                 <MaskedInputField
                   id="other_1"
-                  value={formatValue(detailSelectedRow?.[detailIndex].other_1)}
+                  value={formatValue(detailSelectedRow?.[detailIndex]?.other_1)}
                   options={{
                     ...AmountInputOptions,
                     isReadOnly:
@@ -1311,7 +1306,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <MaskedInputField
                   id="other_1_vat"
                   value={formatValue(
-                    detailSelectedRow?.[detailIndex].other_1_vat
+                    detailSelectedRow?.[detailIndex]?.other_1_vat
                   )}
                   options={{
                     ...AmountInputOptions,
@@ -1331,7 +1326,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <MaskedInputField
                   id="other_1_ab"
                   value={formatValue(
-                    detailSelectedRow_AB?.[detailIndex].other_1_ab
+                    detailSelectedRow_AB?.[detailIndex]?.other_1_ab
                   )}
                   options={{
                     ...AmountInputOptions,
@@ -1362,7 +1357,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="other_1_remark"
-                  value={detailSelectedRow?.[detailIndex].other_1_remark}
+                  value={detailSelectedRow?.[detailIndex]?.other_1_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -1385,7 +1380,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <DTDLabel id="other_2" name="other_2" />
                 <MaskedInputField
                   id="other_2"
-                  value={formatValue(detailSelectedRow?.[detailIndex].other_2)}
+                  value={formatValue(detailSelectedRow?.[detailIndex]?.other_2)}
                   options={{
                     ...AmountInputOptions,
                     isReadOnly:
@@ -1404,7 +1399,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <MaskedInputField
                   id="other_2_vat"
                   value={formatValue(
-                    detailSelectedRow?.[detailIndex].other_2_vat
+                    detailSelectedRow?.[detailIndex]?.other_2_vat
                   )}
                   options={{
                     ...AmountInputOptions,
@@ -1424,7 +1419,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <MaskedInputField
                   id="other_2_ab"
                   value={formatValue(
-                    detailSelectedRow_AB?.[detailIndex].other_2_ab
+                    detailSelectedRow_AB?.[detailIndex]?.other_2_ab
                   )}
                   options={{
                     ...AmountInputOptions,
@@ -1455,7 +1450,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="other_2_remark"
-                  value={detailSelectedRow?.[detailIndex].other_2_remark}
+                  value={detailSelectedRow?.[detailIndex]?.other_2_remark}
                   options={{
                     noLabel: true,
                     disableSpacing: true,
@@ -1479,7 +1474,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 <DTDLabel id="total" name="total" />
                 <MaskedInputField
                   id="total_amt"
-                  value={detailSelectedRow?.[detailIndex].total_amt}
+                  value={detailSelectedRow?.[detailIndex]?.total_amt}
                   options={{
                     ...AmountInputOptions,
                     isReadOnly: true,
@@ -1487,7 +1482,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="total_vat"
-                  value={detailSelectedRow?.[detailIndex].total_vat}
+                  value={detailSelectedRow?.[detailIndex]?.total_vat}
                   options={{
                     ...AmountInputOptions,
                     isReadOnly: true,
@@ -1495,7 +1490,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                 />
                 <MaskedInputField
                   id="total_cost"
-                  value={detailSelectedRow_AB?.[detailIndex].total_cost}
+                  value={detailSelectedRow_AB?.[detailIndex]?.total_cost}
                   options={{
                     ...AmountInputOptions,
                     isReadOnly: true,
