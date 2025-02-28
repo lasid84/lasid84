@@ -54,9 +54,13 @@ const SearchForm = ({ loadItem }: any) => {
       log('LOADiTEM[5', loadItem[5])
     }    
   }, [loadItem]);
+  
+  useEffect(()=>{
+    onSearch()
+  },[])
 
   useEffect(()=>{
-    log('init search')
+    log('searchParams')
     onSearch()
   },[searchParams])
 
@@ -205,7 +209,7 @@ const SearchForm = ({ loadItem }: any) => {
                 keyCol: "dtd_fh",
                 displayCol: ["dtd_fh_nm"],
                 inline: true,
-                defaultValue: state.searchParams?.state,
+                defaultValue: state.searchParams?.dtd_fh,
               }}
             />
 

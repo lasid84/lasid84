@@ -17,7 +17,6 @@ export const SP_Load = async () => {
 
 //ag-grid 청구내역서 조회
 export const SP_GetDTDMainData = async (searchParam: any) => {
-  log('SP_GetDTDMainData dfd_fh', searchParam)  
   const {fr_date, to_date,  no, settlement_user,logis_id, broker_id, dtd_fh} = searchParam;
   const {user_id, ipaddr} = paramsUtils();
   //user_id, ipaddr
@@ -44,12 +43,10 @@ export const SP_GetDTDMainData = async (searchParam: any) => {
       , user_id
       , ipaddr
     ],
-    // inproc: 'airimp.f_airi4001_get_dtd_list',
     inproc: 'airimp.f_airi4001_get_domestic_inv_list',
     isShowLoading: true
   }
-  log('params', params)
-
+  log('wayparams1',params)
   const result = await executeKREAMFunction(params);
   return result![0];
 }
@@ -70,7 +67,6 @@ export const SP_GetDTDDetailDatas = async (searchParam: any) => {
       , t
       , ipaddr
     ],
-    // inproc: 'airimp.f_airi4001_get_dtd_detail4',
     inproc: 'airimp.f_airi4001_get_domestic_detail_list',
     isShowLoading: false
   }
@@ -125,7 +121,6 @@ export const SP_SaveData = async (param: any) => {
     inproc: 'airimp.f_airi4001_upd_domestic_inv',
     isShowLoading: true
   } 
-  log('hi')
   const result = await executeKREAMFunction(params);  
   return result!;
 }

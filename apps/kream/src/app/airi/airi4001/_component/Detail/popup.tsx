@@ -100,6 +100,8 @@ const Modal = ({ loadItem }: Props) => {
       detailRVDatas &&
       Object.keys(detailRVDatas).length > 0
     ) {
+
+      log('detailRVDatas', detailRVDatas)
     }
   }, [mainSelectedRow, loadItem, detailRVDatas]);
 

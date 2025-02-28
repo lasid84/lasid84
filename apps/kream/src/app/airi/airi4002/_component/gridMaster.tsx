@@ -59,6 +59,7 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
       waybill_no: "left",
       cnee_nm: "left",
       ready : "right",
+      // cargtrcnrelabsoptpcd : "right", --처리구분
     },
     editable: ["ready"],
     checkbox: ["ready"],
@@ -151,9 +152,12 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
 
   const onSave = async () => {
     const dtd : any [] = []
+    // const hbl : any [] = []
+    // state.hblDatas
     var hasData = false;
     gridRef.current.api.forEachNode((node:any)=>{
       var data = node.data
+      state.hblDatas += data["waybill_no"]
       if (data[ROW_CHANGED]) {
         hasData = true;
         if (gridOptions?.checkbox) {
