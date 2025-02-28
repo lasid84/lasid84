@@ -40,6 +40,10 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
         selectedTab && onClickTab(selectedTab);
     }, [selectedTab]);
 
+    useEffect(() => {
+        MselectedTab && onClickTab(MselectedTab);
+    }, [MselectedTab]);
+
     return (
         <div className="flex flex-row justify-center overflow-x-auto dark:bg-gray-900 dark:text-white dark:border-gray-800">
             {tabList?.map(({ cd, cd_nm }, idx) => (

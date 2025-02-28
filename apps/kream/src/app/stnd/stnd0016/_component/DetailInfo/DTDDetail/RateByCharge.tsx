@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useMemo, useCallback, useRef, memo, useState } from "react";
+import { useEffect, useReducer, useMemo, useCallback, useRef, memo, useState, FocusEvent, Fragment } from "react";
 import { useCommonStore } from "../../../_store/store";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { ReactSelect } from "@/components/select/react-select2";
@@ -13,9 +13,11 @@ import { RowContainerComp } from "ag-grid-community";
 type Props = {
 };
 
-type Rate = {
-     [x: string]: { [key: string]: any; } 
-}
+type innerProps = {
+    col: string;
+    onChange?: (rate:any, charge_type: string, col: string, value: string | null ) => void;
+};
+
 const defualTitleWidth = "w-[120px]";
 const defaultLabelWidth = "w-20"
 const defaultInputWidth = "w-20"
@@ -23,35 +25,52 @@ const defaultHeight = "h-6"
 
 const RateByCharge: React.FC<Props> = memo(() => {
     const {t} = useTranslation();
+
+    const { chargeTypeSeq } = useCommonStore((state) => state);
     
     const handleChange = (rate: any, charge_type: string, col: string, value: string | null) => {
-        // log("handleChange", rate, col, value)
         if (rate[col] !== value) {
             rate[col] = value;
             rate[ROW_CHANGED] = true;
         }
-        
-        // if (dtdChargeRateData && dtdChargeRateData[charge_type]) {
-        //     dtdChargeRateData[charge_type][col] = value;
-        //     dtdChargeRateData[ROW_CHANGED] = true;
-        //   }
     }
+
+    const components: Record<string, React.FC<innerProps>> = {
+        'customs_clearance' : Clearance,
+        'dtd_handling'      : DTDHandling,
+        'bl_handling'       : AirFreight,
+        'air_freight'       : CCFee,
+        'other_2'           : Other2,
+        'special_handling'  : SpecialHandling,
+    }
+
 
     return (
         <div className="flex flex-col gap-1 p-2 m-1 md:grid md:grid-cols-1">
-            <Clearance onChange={handleChange}/>
-            <DTDHandling onChange={handleChange}/>
-            <AirFreight onChange={handleChange}/>
-            <CCFee onChange={handleChange}/>
-            <Other2 onChange={handleChange}/>
-            <SpecialHandling onChange={handleChange}/>
+            {chargeTypeSeq ? 
+            chargeTypeSeq.map((row:any,idx:number) => {
+                const { charge_type } = row
+                const Component = components[charge_type];
+
+                if (!Component) return;
+                return (
+                    <Fragment key={idx}>
+                        <Component onChange={handleChange} col={charge_type} />
+                    </Fragment>
+                );
+            })
+            : Object.entries(components).map((item, idx) => {
+                const [charge_type, Component] = item;
+                return (
+                    <Fragment key={idx}>
+                        <Component onChange={handleChange} col={charge_type} />
+                    </Fragment>
+                )
+            })
+            }
         </div>
     );
 });
-
-type innerProps = {
-    onChange?: (rate:any, charge_type: string, col: string, value: string | null ) => void;
-};
 
 const getChargeInfo = (col_nm: string) => {
     const { dtdChargeData } = useCommonStore((state) => state);
@@ -78,12 +97,17 @@ const getColName = (category:string) => {
     ]
 }
 
+const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+    // log("handleFocus", e)
+    e.target.select();
+}
+
 //통관료
 const Clearance: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
-    const { onChange: handleChange } = props
+    const { col, onChange: handleChange } = props
     
-    const current_col = 'customs_clearance';
+    const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     
@@ -111,6 +135,7 @@ const Clearance: React.FC<innerProps> = (props) => {
                         onChange(e, dataType) {
                             handleChange?.(rate, current_col, colRate, e.target.value);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="%" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -130,6 +155,7 @@ const Clearance: React.FC<innerProps> = (props) => {
                         onChange(e, dataType) {
                             handleChange?.(rate, current_col, colMin, e.target.value);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -149,6 +175,7 @@ const Clearance: React.FC<innerProps> = (props) => {
                         onChange(e, dataType) {
                             handleChange?.(rate, current_col, colMax, e.target.value);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -169,6 +196,7 @@ const Clearance: React.FC<innerProps> = (props) => {
                         onChange(e, dataType) {
                             handleChange?.(rate, current_col, colAmt, e.target.value);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -180,8 +208,8 @@ const Clearance: React.FC<innerProps> = (props) => {
 //업무대행 수수료
 const DTDHandling: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
-    const { onChange: handleChange } = props
-    const current_col = 'dtd_handling';
+    const { col, onChange: handleChange } = props
+    const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     
@@ -210,6 +238,7 @@ const DTDHandling: React.FC<innerProps> = (props) => {
                         onChange(e, dataType) {
                             handleChange?.(rate, current_col, colAmt, e.target.value);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -233,6 +262,7 @@ const DTDHandling: React.FC<innerProps> = (props) => {
                             }
                             handleChange?.(rate, current_col, colEtc, newEtc);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -244,9 +274,9 @@ const DTDHandling: React.FC<innerProps> = (props) => {
 //항공수수료
 const AirFreight: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
-    const { onChange: handleChange } = props
+    const { col, onChange: handleChange } = props
 
-    const current_col = 'bl_handling';
+    const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     
@@ -274,6 +304,7 @@ const AirFreight: React.FC<innerProps> = (props) => {
                         onChange(e, dataType) {
                             handleChange?.(rate, current_col, colAmt, e.target.value);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -284,11 +315,11 @@ const AirFreight: React.FC<innerProps> = (props) => {
 
 //CC Fee
 const CCFee: React.FC<innerProps> = (props) => {
-    const {  loadDatas, selectedCharge: col_nm } = useCommonStore((state) => state);
-    const { onChange: handleChange } = props
+    const { loadDatas, selectedCharge: col_nm } = useCommonStore((state) => state);
+    const { col, onChange: handleChange } = props
     const [selectedType, setSelectedType] = useState("No");
 
-    const current_col = 'air_freight';
+    const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     
@@ -348,6 +379,7 @@ const CCFee: React.FC<innerProps> = (props) => {
                             onChange(e, dataType) {
                                 handleChange?.(rate, current_col, colRate, e.target.value);
                             },
+                            onFocus:handleFocus
                         }}
                     />
                     <Label id={'lbl1'} name="%" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -367,6 +399,7 @@ const CCFee: React.FC<innerProps> = (props) => {
                             onChange(e, dataType) {
                                 handleChange?.(rate, current_col, colMin, e.target.value);
                             },
+                            onFocus:handleFocus
                         }}
                     />
                     <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -389,6 +422,7 @@ const CCFee: React.FC<innerProps> = (props) => {
                             onChange(e, dataType) {
                                 handleChange?.(rate, current_col, colAmt, e.target.value);
                             },
+                            onFocus:handleFocus
                         }}
                     />
                     <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -401,9 +435,9 @@ const CCFee: React.FC<innerProps> = (props) => {
 //항공수수료
 const Other2: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
-    const { onChange: handleChange } = props
+    const { col, onChange: handleChange } = props
 
-    const current_col = 'other_2';
+    const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     
@@ -431,6 +465,7 @@ const Other2: React.FC<innerProps> = (props) => {
                         onChange(e, dataType) {
                             handleChange?.(rate, current_col, colAmt, e.target.value);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -442,8 +477,8 @@ const Other2: React.FC<innerProps> = (props) => {
 //특별통관료
 const SpecialHandling: React.FC<innerProps> = (props) => {
     const { selectedCharge: col_nm } = useCommonStore((state) => state);
-    const { onChange: handleChange } = props
-    const current_col = 'special_handling';
+    const { col, onChange: handleChange } = props
+    const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     
@@ -475,6 +510,7 @@ const SpecialHandling: React.FC<innerProps> = (props) => {
                             }
                             handleChange?.(rate, current_col, colEtc, newEtc);
                         },
+                        onFocus:handleFocus
                     }}
                 />
                 <Label id={'lbl1'} name="won" margin="ml-0" isDisplay={true} lwidth="w-[5px]"/>
@@ -485,9 +521,9 @@ const SpecialHandling: React.FC<innerProps> = (props) => {
 
 //운송료
 const Trucking: React.FC<innerProps> = (props) => {
-    const { onChange: handleChange } = props
+    const { col, onChange: handleChange } = props
     const transFeeDatas = useCommonStore((state) => state);
-    const current_col = '';
+    const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     

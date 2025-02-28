@@ -13,12 +13,11 @@ interface StoreState {
     searchParams: Record<string, any>;
     loadDatas: gridData[] | null;                   /* load 프로시저 참조조 */ 
     selectedCustData: Record<string, any> | null;
+    chargeTypeSeq: Record<string, any>;      // Charge항목 순서서
     custDetailData: Record<string, any>;            // t_cust_d
     dtdExtraData: Record<string, any>;              // t_cust_d_extra
     dtdChargeData: gridData | null;                 
-    // dtdChargeRateData: Record<string, any> | null;  // t_cust_charge_rate
     fhChargeData: gridData | null;
-    fhChargeRateData: Record<string, any> | null;   // t_cust_charge_rate
     fhExtraData: Record<string, any>;               // t_cust_d_extra
     selectedTab: string;
     selectedCharge: string | null;
@@ -55,6 +54,7 @@ const initValue: StoreState = {
     loadDatas: null,
     selectedTab: pages[0],
     selectedCustData: null,
+    chargeTypeSeq: [],
     custDetailData: {},
     selectedCharge: null,
     gridRef: {
@@ -65,10 +65,8 @@ const initValue: StoreState = {
     },
     dtdExtraData: {},
     dtdChargeData: null,
-    // dtdChargeRateData: {},
     fhExtraData: {},
     fhChargeData: null,
-    fhChargeRateData: {}
 };
 
 
@@ -77,7 +75,11 @@ const setinitValue = (set: any, get: any) => {
         getLoad: async () => {
             const { searchParams } = get();
             const result = await SP_GetLoad();
-            set({ loadDatas: result, selectedCustCode: null, selectedTab: pages[0] });
+            log("result[7].data", result)
+            set({ loadDatas: result
+                , chargeTypeSeq: result[7].data
+                , cust_code: null
+                , selectedTab: pages[0] });
             return result;
         },
         getCustDetailDatas: async (params: any) => {

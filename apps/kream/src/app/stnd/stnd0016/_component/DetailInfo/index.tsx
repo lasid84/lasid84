@@ -55,15 +55,15 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
             <PageContent
                 left={<Tab tabList={tabList} MselectedTab={selectedTab} onClickTab={handleOnClickTab} />}
                 right={<></>}>
-                <div className={`flex flex-col w-full ${checkCurrentPage(pMain)}`}>
+                <div className={`flex flex-col w-full ${selectedTab && checkCurrentPage(pMain)}`}>
                     <MainPage/>
                 </div>
-                <div className={`w-full h-full flex flex-col ${checkCurrentPage(pDTD)}`}>
+                <div className={`w-full h-full flex flex-col ${selectedTab && checkCurrentPage(pDTD)}`}>
                     <DTDPage/>
                 </div>
-                <div className={`w-full h-full flex flex-col ${checkCurrentPage(pFH)}`}>
+                <div className={`w-full h-full flex flex-col ${selectedTab && checkCurrentPage(pFH)}`}>
                 </div>
-                <div className={`w-full flex flex-col overflow-auto ${checkCurrentPage(pRATE)}`}>
+                <div className={`w-full flex flex-col overflow-auto ${selectedTab && checkCurrentPage(pRATE)}`}>
                 </div>
             </PageContent>
         </div>
