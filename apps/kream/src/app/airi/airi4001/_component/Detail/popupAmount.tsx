@@ -35,7 +35,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
   const detailIndex = useCommonStore((state) => state.detailIndex, shallow);
   const formatValue = (value: string | undefined) =>
     value === "0" ? "" : value;
-  const Closing = "2";
+  const state = useCommonStore((state) => state);
+  const Closing = state.closing;
   const actions = useCommonStore((state) => state.actions);
   const [index, setIndex] = useState(0);
 
@@ -49,11 +50,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
         typeof e.target.value === "string"
           ? e.target.value.replace(/,/g, "")
           : e.target.value;
-  
+
       const numericValue = Number(sanitizedValue);
       const vatKey = `${e.target.id}_vat`;
       const vatValue = Math.floor(numericValue * 0.1);
-  
+
       if (
         !selectedRows ||
         !detailSelectedRow ||
@@ -62,47 +63,48 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
       ) {
         return;
       }
-  
+
       // 기존 값 가져오기 (없는 경우 기본값 설정)
       const prevRow = detailSelectedRow[detailIndex] || {};
       const prevRow_AB = detailSelectedRow_AB[detailIndex] || {};
-  
+
       // 🔹 원금과 VAT를 먼저 적용
       const updatedRow = {
         ...prevRow,
         [e.target.id]: numericValue,
         [vatKey]: vatValue,
       };
-  
+
       const updatedRow_AB = {
         ...prevRow_AB,
         [e.target.id]: numericValue,
       };
-  
+
       // 🔹 sumFields에 포함된 필드만 합산 (e.target.id 포함)
       const totalAmt = sumFields.reduce((acc, field) => {
-        const value = parseFloat(
-          field === e.target.id ? numericValue : updatedRow[field]
-        ) || 0;
+        const value =
+          parseFloat(
+            field === e.target.id ? numericValue : updatedRow[field]
+          ) || 0;
         return acc + (isNaN(value) ? 0 : value);
       }, 0);
-  
+
       // 🔹 sumVatFields에 포함된 필드만 합산 (e.target.id 포함)
       const totalVat = sumVatFields.reduce((acc, field) => {
-        const value = parseFloat(
-          field === e.target.id ? vatValue : updatedRow[field]
-        ) || 0;
+        const value =
+          parseFloat(field === e.target.id ? vatValue : updatedRow[field]) || 0;
         return acc + (isNaN(value) ? 0 : value);
       }, 0);
-  
+
       // 🔹 sumCostFields에 포함된 필드만 합산 (e.target.id 포함)
       const totalCost = sumCostFields.reduce((acc, field) => {
-        const value = parseFloat(
-          field === e.target.id ? numericValue : updatedRow_AB[field]
-        ) || 0;
+        const value =
+          parseFloat(
+            field === e.target.id ? numericValue : updatedRow_AB[field]
+          ) || 0;
         return acc + (isNaN(value) ? 0 : value);
       }, 0);
-  
+
       // 🔹 최종 업데이트
       const updatedDetailSelectedRow = {
         ...detailSelectedRow,
@@ -114,7 +116,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
           __changed: true,
         },
       };
-  
+
       const updatedDetailSelectedRow_AB = {
         ...detailSelectedRow_AB,
         [detailIndex]: {
@@ -123,12 +125,12 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
           __changed: true,
         },
       };
-  
+
       actions.setDetailRVDatas(updatedDetailSelectedRow);
       actions.setDetailABDatas(updatedDetailSelectedRow_AB);
     },
     [detailIndex, detailSelectedRow, detailSelectedRow_AB]
-  );  
+  );
 
   const [profitValues, setProfitValues] = useState<Record<string, number>>({});
 
@@ -374,7 +376,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -393,7 +395,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -440,7 +443,10 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     ...AmountInputOptions,
                     isReadOnly:
                       detailSelectedRow?.[detailIndex]?.state === Closing,
-                      bgColor :  detailSelectedRow?.[detailIndex]?.loading_loc === "KWE" ? "!bg-yellow-100" : "",
+                    bgColor:
+                      detailSelectedRow?.[detailIndex]?.loading_loc === "KWE"
+                        ? "!bg-yellow-100"
+                        : "",
                   }}
                   events={{
                     onChange: (e) =>
@@ -448,7 +454,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow,
                         actions.setDetailRVDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -467,7 +474,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow,
                         actions.setDetailRVDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -486,7 +494,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -496,7 +505,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.bonded_wh_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.bonded_wh_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -542,7 +552,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -561,7 +571,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow,
                         actions.setDetailRVDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -580,7 +591,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -590,7 +602,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.dispatch_fee_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.dispatch_fee_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -628,6 +641,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     ...AmountInputOptions,
                     isReadOnly:
                       detailSelectedRow?.[detailIndex]?.state === Closing,
+                    
                   }}
                   events={{
                     onChange: (e) =>
@@ -635,7 +649,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow,
                         actions.setDetailRVDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -654,7 +669,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow,
                         actions.setDetailRVDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -673,7 +689,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -683,7 +700,10 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.customs_clearance_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.customs_clearance_profit < 0
+                        ? "red"
+                        : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -730,7 +750,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow,
                         actions.setDetailRVDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -749,7 +770,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow,
                         actions.setDetailRVDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -768,7 +790,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -778,7 +801,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.dtd_handling_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.dtd_handling_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -824,7 +848,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -844,7 +868,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -863,7 +887,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         e,
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
-                      ), onKeyDown: (e) => handleKeyDown(e, index),
+                      ),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -873,7 +898,10 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.special_handling_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.special_handling_profit < 0
+                        ? "red"
+                        : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -911,7 +939,10 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     ...AmountInputOptions,
                     isReadOnly:
                       detailSelectedRow?.[detailIndex]?.state === Closing,
-                      bgColor :  detailSelectedRow?.[detailIndex]?.group_id !== null ? "!bg-blue-200" : "",
+                    bgColor:
+                      detailSelectedRow?.[detailIndex]?.group_id !== null
+                        ? "!bg-blue-200"
+                        : "",
                   }}
                   events={{
                     onChange: (e) =>
@@ -920,7 +951,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -940,7 +971,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -960,7 +991,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -970,7 +1001,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.trucking_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.trucking_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -1008,7 +1040,11 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                     ...AmountInputOptions,
                     isReadOnly:
                       detailSelectedRow?.[detailIndex]?.state === Closing,
-                      bgColor :  detailSelectedRow?.[detailIndex]?.waybill_gubn === "T-타사BL" ? "!bg-red-200" : "",
+                    bgColor:
+                      detailSelectedRow?.[detailIndex]?.waybill_gubn ===
+                      "T-타사BL"
+                        ? "!bg-red-200"
+                        : "",
                   }}
                   events={{
                     onChange: (e) =>
@@ -1017,7 +1053,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1035,7 +1071,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1056,7 +1092,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -1066,7 +1102,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.air_freight_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.air_freight_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -1112,7 +1149,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -1133,7 +1170,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1153,7 +1190,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -1163,7 +1200,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.bl_handling_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.bl_handling_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -1209,7 +1247,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1227,7 +1265,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1247,7 +1285,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1256,7 +1294,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.insurance_fee_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.insurance_fee_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -1300,7 +1339,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1320,7 +1359,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1340,7 +1379,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -1350,7 +1389,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.other_1_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.other_1_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -1393,7 +1433,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1413,7 +1453,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow,
                         actions.setDetailRVDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
                 <MaskedInputField
@@ -1433,7 +1473,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                         detailSelectedRow_AB,
                         actions.setDetailABDatas
                       ),
-                      onKeyDown: (e) => handleKeyDown(e, index),
+                    onKeyDown: (e) => handleKeyDown(e, index),
                   }}
                 />
 
@@ -1443,7 +1483,8 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : profitValues?.other_2_profit < 0 ? "red" : "black",
+                    textColor:
+                      profitValues?.other_2_profit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}
@@ -1502,7 +1543,7 @@ const Amount: React.FC<Props> = ({ loadItem, params }) => {
                   options={{
                     ...AmountInputOptions,
                     bgColor: "!bg-gray-200",
-                    textColor : totalProfit < 0 ? "red" : "black",
+                    textColor: totalProfit < 0 ? "red" : "black",
                     isReadOnly: true,
                     allowNegative: true,
                   }}

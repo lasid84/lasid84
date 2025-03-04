@@ -4,7 +4,7 @@ import { executeKREAMFunction, callUnipass } from "@/services/api/apiClient";
 import { paramsUtils } from "@/components/react-query/utils/paramUtils";
 import { toastError } from "@/components/toast";
 export const SP_GetLoad = async (searchParam:any) => {
-  // unstable_noStore();
+
   const {user_id, ipaddr} = paramsUtils();
   
   const params = {
@@ -13,7 +13,6 @@ export const SP_GetLoad = async (searchParam:any) => {
     inproc: 'airimp.f_airi4001_load',
     isShowLoading: false
   }
-  // log("Acct2003Load", p);
   const result = await executeKREAMFunction(params);
   return result;
 }
