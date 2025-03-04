@@ -76,7 +76,7 @@ export const AmountInputOptions = {
     disableSpacing : true,
     fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
     fontWeight: 'bold',   
-    // freeStyles : 'max-w-32',   //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
+    freeStyles : "!text-right",   //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
     // outerClassName : 'h-8'
 }
 export const AmountInputOptions_g = {
@@ -129,6 +129,7 @@ interface StoreActions {
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
         setMainSelectedRow : (row:any) => void;
         setDetailRVDatas : (row:any) => void;
+        updateDetailRVField  :  (detailDatas: any, key: number, field: string, value: any)=>void;
         setDetailABDatas : (row:any) => void;
         setDetailIndex : (index:any)=>void;
         setCurrentRow : (row:any)=>void;
@@ -236,9 +237,22 @@ const setinitValue = (set:any) => {
                 set((state:StoreState) => ({ ...state, mainSelectedRow: row }))
             },
             setDetailRVDatas: (row:any) =>{
-                // console.log('row', row)
                 set((state:StoreState) => ({ ...state, detailRVDatas: row }))
             },
+            //특정 field업데이트
+            updateDetailRVField : (detailRVDatas: any, key: number, field: string, value: any) => {
+                if (!detailRVDatas[key]) {
+                  return detailRVDatas;
+                }               
+                    const updatedData = {
+                        ...detailRVDatas,
+                        [key]: {
+                        ...detailRVDatas[key],
+                        [field]: value,
+                        },
+                    };
+                    set((state:StoreState) => ({ ...state, detailRVDatas: updatedData }))
+              },
             setDetailABDatas: (row:any) =>{
                 set((state:StoreState) => ({ ...state, detailABDatas: row }))
             },
