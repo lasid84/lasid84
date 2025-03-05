@@ -3,13 +3,17 @@
 import { useState, useEffect, useCallback, MouseEventHandler } from "react";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { useCommonStore } from "../../_store/store";
+import { useFormContext } from "react-hook-form";
 import { shallow } from "zustand/shallow";
 import { DatePicker } from "@/components/date/react-datepicker";
 import { Button } from "components/button";
+import { toastError, toastSuccess } from "components/toast";
 import { gridData } from "components/grid/ag-grid-enterprise";
 import ResizableLayout from "../../../../stnd/stnd0016/_component/DetailInfo/Layout/ResizableLayout";
 import CustomSelect from "components/select/customSelect";
 import { Label } from 'components/label';
+import dayjs from "dayjs";
+import { MdSignalCellularNodata } from "react-icons/md";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 type Props = {
   loadItem?: any | null;
@@ -19,18 +23,21 @@ type Props = {
 };
 
 const Balance: React.FC<Props> = ({ loadItem, params }) => {
-  const detailSelectedRow = useCommonStore(
-    (state) => state.detailRVDatas,
-    shallow
-  );
-
+  const { getValues } = useFormContext();
   const state = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
   const detailRVDatas = useCommonStore((state) => state.detailRVDatas);
   const detailABDatas = useCommonStore((state) => state.detailABDatas);
   const detailIndex = useCommonStore((state) => state.detailIndex);
-  const [isAdding, setIsAdding] = useState(false);
-  const [transactiongubn, setTransactiongubn] = useState<any>();
+  const searchParams = useCommonStore((state) => state.searchParams);
+  
+  const [isAdding, setIsAdding] = useState(false);  
+  const [transactioncategory, setTransactioncategory] = useState<any>();
+  useEffect(() => {
+    if (loadItem?.length) {
+      setTransactioncategory(loadItem[10]);
+    }
+  }, [loadItem]);
 
   const onAdd = async (param: MouseEventHandler | null) => {
     setIsAdding(true);
@@ -39,6 +46,23 @@ const Balance: React.FC<Props> = ({ loadItem, params }) => {
   const onSave = async (param: MouseEventHandler | null) => {
     if (!detailRVDatas) return;
     if (!detailABDatas) return;
+    const result = await  actions.saveFinancialRecord(getValues());
+    if(result){        
+      toastSuccess("success")
+      const filteredWaybills: { waybill_no: string; seq: number }[] = [];
+      const waybillSet = new Set();
+      state.allData.forEach((row, index) => {
+        const key = `${row.waybill_no}_${row.seq}`;
+
+        if (index % 1 === 0 && !waybillSet.has(key)) {
+          waybillSet.add(key);
+          filteredWaybills.push({ waybill_no: row.waybill_no, seq: row.seq });
+        }
+      });
+      actions.getDomesticDetailDatas({
+        jsondata: JSON.stringify(filteredWaybills),
+      });
+    }
     setIsAdding(false); 
   };
   
@@ -66,7 +90,7 @@ const Balance: React.FC<Props> = ({ loadItem, params }) => {
                 <>
                   <DatePicker
                     id="transaction_date"
-                    value={detailRVDatas?.[detailIndex]?.transaction_date || ""}
+                    value={dayjs().subtract(0, "days").startOf("days").format("YYYYMMDD")}
                     width="w-full"
                     options={{
                       inline: true,
@@ -84,20 +108,20 @@ const Balance: React.FC<Props> = ({ loadItem, params }) => {
                     }}
                   />
                   <CustomSelect
-                      id="transaction_gubn"
-                      listItem={transactiongubn as gridData}
-                      valueCol={["waybill_gubn"]}
-                      displayCol="waybill_gubn_nm"
+                      id="transaction_category"
+                      listItem={transactioncategory as gridData}
+                      valueCol={["transaction_category"]}
+                      displayCol="transaction_category_nm"
                       gridOption={{
                         colVisible: {
-                          col: ["waybill_gubn", "waybill_gubn_nm"],
+                          col: ["transaction_category", "transaction_category_nm"],
                           visible: true,
                         },
                       }}
                       events={{
                         onSelectionChanged: handleonSelectionChanged,
                       }}
-                      gridStyle={{ width: "400px", height: "150px" }}
+                      gridStyle={{ width: "600px", height: "150px" }}
                       style={{ width: "600px", height: "8px" }}
                       isDisplay={true}
                       isReadOnly={

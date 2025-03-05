@@ -1,6 +1,6 @@
 import { createStore } from "@/states/createStore";
 import { RefObject } from 'react';
-import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDomesticINVDetail,SP_GetDTDDetailDatas, SP_SaveUploadData, } from "./data";
+import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDomesticINVDetail,SP_GetDTDDetailDatas, SP_SaveUploadData,saveFinancialRecord } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 
@@ -137,6 +137,7 @@ interface StoreActions {
         updDTDCloseDate : (data:SaveDataArgs)=> Promise<any>;
         saveDomesticINVDetailDatas : (data:SaveDataArgs)=> Promise<any>;
         saveUploadData : (data:SaveDataArgs)=>void;
+        saveFinancialRecord : (data:any)=> Promise<any>;
         updateData : (data:SaveDataArgs) =>void;
         updateRowData: (rowIndex: number, updatedRow: any) => void;    
 }
@@ -269,10 +270,17 @@ const setinitValue = (set:any) => {
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
                     }));
-                    console.log("Data saved successfully", result);
                     return result
                 } catch (error) {
                 }
+            },
+            saveFinancialRecord: async (params: any) :Promise<any> => { 
+                try {
+                    const result = await saveFinancialRecord(params); // API 호출
+                    return result
+                } catch (error) {
+                    return error;
+                }            
             },
             updDTDCloseDate: async (params: any) :Promise<any> => { //undefined
                 try {
@@ -281,7 +289,6 @@ const setinitValue = (set:any) => {
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
                     }));
-                    // console.log("Data updated successfully", result);
                     return result
                 } catch (error) {
                     return error;
@@ -293,9 +300,7 @@ const setinitValue = (set:any) => {
                     set((state: StoreState) => ({
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
-                    }));
-                    // console.log("Data saved successfully", result);
-                    
+                    }));                    
                     return result
                 } catch (error) {
                     return error;
@@ -308,7 +313,6 @@ const setinitValue = (set:any) => {
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
                     }));
-                    console.log("Data saved successfully", result);
                 } catch (error) {
                     return error
                 }
@@ -326,9 +330,7 @@ const setinitValue = (set:any) => {
                     const updatedData = [...state.gridData];
                     updatedData[rowIndex] = { ...updatedData[rowIndex], ...updatedRow };
                     return { gridData: updatedData };
-                }),
-        
-
+                }),        
     };
 
     return {

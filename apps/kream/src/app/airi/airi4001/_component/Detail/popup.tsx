@@ -350,10 +350,10 @@ const Modal = ({ loadItem }: Props) => {
 
                   <MaskedInputField
                     id="seq"
-                    value={detailRVDatas?.[detailIndex]?.seq || ""}
+                    value={detailRVDatas?.[detailIndex]?.seq}
                     isDisplay={false}
                     options={{
-                      bgColor: " none",
+                      bgColor: "none",
                       inline: true,
                     }}
                   />

@@ -172,7 +172,6 @@ export const SP_SaveUploadData = async (param: any) => {
       , user_id
       , ipaddr
     ],
-    // inproc: 'airimp.f_airi4001_ins_upload_dtd2',
     inproc: 'airimp.f_airi4001_ins_upload_dom',
     isShowLoading: true
   }
@@ -180,4 +179,38 @@ export const SP_SaveUploadData = async (param: any) => {
   const result = await executeKREAMFunction(params);
   return result!;
 }
+export const saveFinancialRecord = async (param: any) => {  
+  const {waybill_no, seq, transaction_category, transaction_amount, transaction_date, transaction_remark } = param;
+  const {user_id, ipaddr} = paramsUtils();
 
+    const params = {
+    inparam : [
+       "in_waybill_no"       
+      , "in_seq"
+      , "in_transaction_category"      
+      , "in_transaction_amount"
+      , "in_transaction_date"      
+      , "in_transaction_remark"
+      , "in_user"
+      , "in_ipaddr"
+    ],
+    invalue: [
+      waybill_no
+      , seq
+      , transaction_category
+      , transaction_amount 
+      , transaction_date
+      , transaction_remark
+      , user_id
+      , ipaddr
+    ],
+    inproc: 'airimp.f_airi4003_ins_financial_transaction',
+    isShowLoading: true
+  }
+
+
+
+
+  const result = await executeKREAMFunction(params);  
+  return result!;
+}

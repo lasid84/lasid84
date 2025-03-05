@@ -715,6 +715,16 @@ const MasterGrid: React.FC<Props> = memo(({ initData }) => {
                       }}
                     />
                 </div>
+                <div className="grid-cols-2">
+                  {/* 비고 */}
+                  <MaskedInputField
+                    id="kwe_remark"
+                    value={mainSelectedRow?.kwe_remark}
+                    options={{
+                      isReadOnly: false,
+                    }}
+                  />
+                </div>
                 {/*AG-Grid Detail*/}
                 {mainSelectedRow?.category === Category.RV ? (
                   <RVInfo loadItem={initData} />
