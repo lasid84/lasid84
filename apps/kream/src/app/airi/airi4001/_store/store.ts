@@ -1,6 +1,6 @@
 import { createStore } from "@/states/createStore";
 import { RefObject } from 'react';
-import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDomesticINVDetail,SP_GetDTDDetailDatas, SP_SaveUploadData, } from "./data";
+import { SP_Load, SP_GetDTDMainData,  SP_SaveData,SP_CloseDate,SP_SaveDomesticINVDetail,SP_GetDTDDetailDatas, SP_SaveUploadData,saveFinancialRecord } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import dayjs from "dayjs";
 
@@ -76,7 +76,7 @@ export const AmountInputOptions = {
     disableSpacing : true,
     fontSize: 'base',        //Font Size (xs, sm, base, lg, xl, 2xl......)
     fontWeight: 'bold',   
-    // freeStyles : 'max-w-32',   //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
+    freeStyles : "!text-right",   //Font Weight (thin, extralight, ligth, normal, medium, semibold, bold ......)
     // outerClassName : 'h-8'
 }
 export const AmountInputOptions_g = {
@@ -129,6 +129,7 @@ interface StoreActions {
         updatePopup : (popup: Partial<StoreState['popup']>) =>void;
         setMainSelectedRow : (row:any) => void;
         setDetailRVDatas : (row:any) => void;
+        updateDetailRVField  :  (detailDatas: any, key: number, field: string, value: any)=>void;
         setDetailABDatas : (row:any) => void;
         setDetailIndex : (index:any)=>void;
         setCurrentRow : (row:any)=>void;
@@ -136,6 +137,7 @@ interface StoreActions {
         updDTDCloseDate : (data:SaveDataArgs)=> Promise<any>;
         saveDomesticINVDetailDatas : (data:SaveDataArgs)=> Promise<any>;
         saveUploadData : (data:SaveDataArgs)=>void;
+        saveFinancialRecord : (data:any)=> Promise<any>;
         updateData : (data:SaveDataArgs) =>void;
         updateRowData: (rowIndex: number, updatedRow: any) => void;    
 }
@@ -236,9 +238,22 @@ const setinitValue = (set:any) => {
                 set((state:StoreState) => ({ ...state, mainSelectedRow: row }))
             },
             setDetailRVDatas: (row:any) =>{
-                // console.log('row', row)
                 set((state:StoreState) => ({ ...state, detailRVDatas: row }))
             },
+            //특정 field업데이트
+            updateDetailRVField : (detailRVDatas: any, key: number, field: string, value: any) => {
+                if (!detailRVDatas[key]) {
+                  return detailRVDatas;
+                }               
+                    const updatedData = {
+                        ...detailRVDatas,
+                        [key]: {
+                        ...detailRVDatas[key],
+                        [field]: value,
+                        },
+                    };
+                    set((state:StoreState) => ({ ...state, detailRVDatas: updatedData }))
+              },
             setDetailABDatas: (row:any) =>{
                 set((state:StoreState) => ({ ...state, detailABDatas: row }))
             },
@@ -255,10 +270,17 @@ const setinitValue = (set:any) => {
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
                     }));
-                    console.log("Data saved successfully", result);
                     return result
                 } catch (error) {
                 }
+            },
+            saveFinancialRecord: async (params: any) :Promise<any> => { 
+                try {
+                    const result = await saveFinancialRecord(params); // API 호출
+                    return result
+                } catch (error) {
+                    return error;
+                }            
             },
             updDTDCloseDate: async (params: any) :Promise<any> => { //undefined
                 try {
@@ -267,7 +289,6 @@ const setinitValue = (set:any) => {
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
                     }));
-                    // console.log("Data updated successfully", result);
                     return result
                 } catch (error) {
                     return error;
@@ -279,9 +300,7 @@ const setinitValue = (set:any) => {
                     set((state: StoreState) => ({
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
-                    }));
-                    // console.log("Data saved successfully", result);
-                    
+                    }));                    
                     return result
                 } catch (error) {
                     return error;
@@ -294,7 +313,6 @@ const setinitValue = (set:any) => {
                         ...state,
                         mainDatas: { ...state.mainDatas, ...params },
                     }));
-                    console.log("Data saved successfully", result);
                 } catch (error) {
                     return error
                 }
@@ -312,9 +330,7 @@ const setinitValue = (set:any) => {
                     const updatedData = [...state.gridData];
                     updatedData[rowIndex] = { ...updatedData[rowIndex], ...updatedRow };
                     return { gridData: updatedData };
-                }),
-        
-
+                }),        
     };
 
     return {

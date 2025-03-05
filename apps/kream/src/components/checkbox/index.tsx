@@ -77,7 +77,7 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
           checked={checkVal}
           defaultChecked={false}
           type="checkbox"
-          className="items-center w-6 h-5 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"
+          className="items-center flex-shrink-0 w-6 h-5 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"
           onKeyDown={handleKeyDown}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (readOnly) return;

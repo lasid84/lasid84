@@ -30,17 +30,12 @@ import { v4 as uuidv4 } from "uuid"; // UUID 생성 라이브러리
 import { useTranslation } from "react-i18next";
 const { log } = require("@repo/kwe-lib/components/logHelper");
 
-type Props = {
-    ref?: any | null
-    initData?: any | null
-    params: {
-        cust_code: string
-        cont_type: string
-    }
-    title?: string
-    titleColor?: string
-};
 
+type Callback = () => void;
+type Props = {
+  initData: any[] | null;
+  callbacks?: Callback[];
+};
 
 //TODO - 코드 분리예정.. 현재 미사용
 const detailInfo: React.FC<Props> = ({ initData }) => {
@@ -55,12 +50,7 @@ const detailInfo: React.FC<Props> = ({ initData }) => {
   const [gridApi, setGridApi] = React.useState<any>(null);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
-  const onExcelUpload = () => {
-    actions.updatePopup({
-      popType: "C",
-      isPopupUploadOpen: true,
-    });
-  };
+ 
   useEffect(() => {
     let curData = getValues();
     log("curData", curData);
@@ -82,7 +72,7 @@ const detailInfo: React.FC<Props> = ({ initData }) => {
       });
       if (result) {
         toastSuccess("success");
-        actions.getDTDDatas(getValues());
+        actions.getDTDDatas(searchParams);
       }
     }
   };
@@ -254,32 +244,10 @@ const detailInfo: React.FC<Props> = ({ initData }) => {
   };
 
   return (
-    <>
+
       <>
-        <Button
-          id={"close_date"}
-          onClick={onCloseDate}
-          disabled={false}
-          label="close_date"
-          width="w-14"
-        />
-        <Button
-          id={"upload_excel"}
-          onClick={onExcelUpload}
-          disabled={false}
-          label="upload_excel"
-          width="w-34"
-        />
-        <Button id={"gird_new"} label="new" onClick={onGridNew} width="w-14" />
-        <Button
-          id={"grid_save"}
-          label="save"
-          onClick={onGridSave}
-          width="w-14"
-          toolTip="ShortCut: Ctrl+S"
-        />
         <div className="flex-col w-full h-full col-span-2 p-2">
-          <div className="grid grid-cols-2 gap-4">
+           <div className="grid grid-cols-2 gap-4">
             <MaskedInputField
               id="waybill_no"
               value={mainSelectedRow?.waybill_no}
@@ -552,7 +520,7 @@ const detailInfo: React.FC<Props> = ({ initData }) => {
           </div>
         </div>
       </>
-    </>
+
   );
 };
 

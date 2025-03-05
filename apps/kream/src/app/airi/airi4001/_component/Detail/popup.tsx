@@ -11,8 +11,9 @@ import { DatePicker } from "@/components/date/react-datepicker";
 import { useTranslation } from "react-i18next";
 import { useCommonStore, AmountInputOptions } from "../../_store/store";
 import { toastSuccess } from "components/toast";
-import { TextArea } from "components/input";
+import { ReactSelect, data } from "@/components/select/react-select2";
 import Amount from "./popupAmount";
+import Balance from "./popupFooter";
 
 import { log, error } from "@repo/kwe-lib-new";
 
@@ -24,16 +25,18 @@ type Props = {
 
 const Modal = ({ loadItem }: Props) => {
   const { t } = useTranslation();
-  const detail: any[] = [];
-  const { getValues, reset, setFocus } = useFormContext();
+
   const mainSelectedRow = useCommonStore((state) => state.mainSelectedRow);
   const detailRVDatas = useCommonStore((state) => state.detailRVDatas);
   const detailABDatas = useCommonStore((state) => state.detailABDatas);
   const detailIndex = useCommonStore((state) => state.detailIndex);
-  const allDataLength  = useCommonStore((state) => state.allData.length);
+  const allDataLength = useCommonStore((state) => state.allData.length);
+
+  const searchParams = useCommonStore((state) => state.searchParams);
   const popup = useCommonStore((state) => state.popup);
   const state = useCommonStore((state) => state);
   const actions = useCommonStore((state) => state.actions);
+  const [waybillgubn, setWaybillgubn] = useState<any>();
 
   const closeModal = async () => {
     actions.updatePopup({
@@ -42,8 +45,13 @@ const Modal = ({ loadItem }: Props) => {
     });
   };
 
+  useEffect(() => {
+    if (loadItem?.length) {
+      setWaybillgubn(loadItem[8]);
+    }
+  }, [loadItem]);
+
   const onClickeventBefore = async () => {
-    const prevIndexnum = state.currentRow?.__ROWINDEX - 2;
     var beforeIndexNum2 = state.detailIndex - 1;
     if (beforeIndexNum2 >= 0) {
       actions.setDetailIndex(beforeIndexNum2);
@@ -60,7 +68,6 @@ const Modal = ({ loadItem }: Props) => {
     } else {
       toastError(t("MSG_0198"));
     }
-
   };
 
   const handleKeyDown = useCallback(
@@ -81,13 +88,11 @@ const Modal = ({ loadItem }: Props) => {
     };
   }, [handleKeyDown]);
 
-  //Set select box data
-  const [incoterms, setIncoterms] = useState<any>();
   const [custcode, setCustcode] = useState<any>();
 
   useEffect(() => {
     if (loadItem) {
-      setIncoterms(loadItem[1]);
+      // setIncoterms(loadItem[1]);
       setCustcode(loadItem[1]);
     }
   }, [loadItem]);
@@ -100,18 +105,9 @@ const Modal = ({ loadItem }: Props) => {
       detailRVDatas &&
       Object.keys(detailRVDatas).length > 0
     ) {
-
-      log('detailRVDatas', detailRVDatas)
+      log("detailRVDatas", detailRVDatas);
     }
   }, [mainSelectedRow, loadItem, detailRVDatas]);
-
-  // useEffect(() => {
-  //   reset();
-  //   if (state.popup.popType === crudType.CREATE) {
-  //     setFocus("use_yn");
-  //   }
-
-  // }, [state.popup.popType, state.popup.isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -135,9 +131,12 @@ const Modal = ({ loadItem }: Props) => {
 
     const mergedArray = Object.values(detailRVDatas).map(
       (item: any, index: number) => {
+        // `waybill_no`와 `seq`를 조합하여 고유값 생성
+        const uniqueKey = `${item.waybill_no}_${item.seq}`;
         const matchingItem = Object.values(detailABDatas).find(
           (obj: any, i: number) =>
-            i === index && obj.waybill_no === item.waybill_no
+            // i === index && obj.waybill_no === item.waybill_no
+            `${obj.waybill_no}_${obj.seq}` === uniqueKey
         );
 
         return {
@@ -146,22 +145,34 @@ const Modal = ({ loadItem }: Props) => {
         };
       }
     );
-
     const result = await actions.saveDomesticINVDetailDatas({
       jsondata: JSON.stringify(mergedArray),
     });
-    log('mergedarray', mergedArray)
+    log("mergedarray", mergedArray);
     if (result) {
       toastSuccess("success");
       closeModal();
-      actions.getDTDDatas(getValues());
+      actions.getDTDDatas(searchParams);
     }
   };
 
   const handleOnClickB = () => {
-    log("clicked");
-    // window.location.href = "/airi/airi4002"; // 현재 도메인 유지한 채 경로만 변경
-    window.open("/airi/airi4002", "_blank"); // 현재 도메인 유지하고 새 탭에서 열기
+    window.open("/airi/airi4003", "_blank"); // 현재 도메인 유지하고 새 탭에서 열기
+  };
+
+  const handleonSelectionChanged = (e: any, id: any, value: any) => {
+    if (!e) return;
+    actions.updateDetailRVField(detailRVDatas, detailIndex, id, value);
+  };
+
+  const handleonChange = (e: any) => {
+    if (!e) return;
+    actions.updateDetailRVField(
+      detailRVDatas,
+      detailIndex,
+      e.target.id,
+      e.target.value
+    );
   };
 
   return (
@@ -178,11 +189,11 @@ const Modal = ({ loadItem }: Props) => {
             <>
               <div className="flex w-full p-1 px-1">
                 <MaskedInputField
-                  id="settlement_type"
-                  width="w-20"
-                  value={
-                    detailRVDatas?.[detailIndex]?.settlement_type || ""
-                  }
+                  id="settlement_type_nm"
+                  label={"settlement_type"}
+                  width="w-28"
+                  lwidth="w-10"
+                  value={detailRVDatas?.[detailIndex]?.settlement_type_nm || ""}
                   options={{
                     noLabel: false,
                     inline: true,
@@ -203,6 +214,7 @@ const Modal = ({ loadItem }: Props) => {
                   }}
                 />
                 <CustomSelect
+                  key={detailIndex}
                   id="cnee_id"
                   label="l_cnee_id"
                   initText="Select a Consignee"
@@ -220,14 +232,11 @@ const Modal = ({ loadItem }: Props) => {
                   style={{ width: "1200px", height: "8px" }}
                   isDisplay={true}
                   isReadOnly={
-                    detailRVDatas?.[detailIndex]?.state === state.closing
-                      ? true
-                      : false
+                    detailRVDatas?.[detailIndex]?.state == state.closing
                   }
                   defaultValue={detailRVDatas?.[detailIndex]?.cnee_id || ""}
                   inline={true}
                 />
-                {/* </div> */}
               </div>
             </>
           }
@@ -269,25 +278,45 @@ const Modal = ({ loadItem }: Props) => {
                         isReadOnly: true,
                       }}
                     />
-                    <MaskedInputField
+
+                    <CustomSelect
                       id="waybill_gubn"
-                      value={detailRVDatas?.[detailIndex]?.waybill_gubn}
-                      options={{
-                        bgColor: "!bg-gray-100",
-                        inline: true,
-                        isReadOnly: true,
+                      listItem={waybillgubn as gridData}
+                      valueCol={["waybill_gubn"]}
+                      displayCol="waybill_gubn_nm"
+                      gridOption={{
+                        colVisible: {
+                          col: ["waybill_gubn", "waybill_gubn_nm"],
+                          visible: true,
+                        },
                       }}
+                      events={{
+                        onSelectionChanged: handleonSelectionChanged,
+                      }}
+                      gridStyle={{ width: "400px", height: "150px" }}
+                      style={{ width: "600px", height: "8px" }}
+                      isDisplay={true}
+                      isReadOnly={
+                        detailRVDatas?.[detailIndex]?.state == state.closing
+                      }
+                      defaultValue={
+                        detailRVDatas?.[detailIndex]?.waybill_gubn || ""
+                      }
+                      inline={true}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <MaskedInputField
                       id="ci_invoice"
                       label="invoice_no"
-                      value={detailRVDatas?.[detailIndex]?.ci_invoice || ""}
+                      value={detailRVDatas?.[detailIndex]?.ci_invoice}
                       options={{
-                        bgColor: "!bg-gray-100",
                         inline: true,
-                        isReadOnly: true,
+                        isReadOnly:
+                          detailRVDatas?.[detailIndex]?.state == state.closing,
+                      }}
+                      events={{
+                        onChange: handleonChange,
                       }}
                     />
 
@@ -295,9 +324,9 @@ const Modal = ({ loadItem }: Props) => {
                       id="gross_wt"
                       value={detailRVDatas?.[detailIndex]?.gross_wt || ""}
                       options={{
-                        bgColor: "!bg-gray-100",
                         inline: true,
-                        isReadOnly: true,
+                        isReadOnly:
+                          detailRVDatas?.[detailIndex]?.state == state.closing,
                       }}
                     />
                   </div>
@@ -310,21 +339,21 @@ const Modal = ({ loadItem }: Props) => {
                       limit: 9,
                       isAllowDecimal: true,
                       decimalLimit: 0,
-                      disableSpacing : true,
-                      fontSize: 'base',      
-                      fontWeight: 'bold',   
+                      disableSpacing: true,
+                      fontSize: "base",
+                      fontWeight: "bold",
                       bgColor: "!bg-sky-200",
                       inline: true,
                       isReadOnly: true,
                     }}
                   />
-                  
+
                   <MaskedInputField
                     id="seq"
-                    value={detailRVDatas?.[detailIndex]?.seq || ""}
+                    value={detailRVDatas?.[detailIndex]?.seq}
                     isDisplay={false}
                     options={{
-                      bgColor: " none",
+                      bgColor: "none",
                       inline: true,
                     }}
                   />
@@ -416,36 +445,11 @@ const Modal = ({ loadItem }: Props) => {
                 <span className="text-gray-700">
                   {state.detailIndex + 1}
                   {" / "}
-                  {Math.floor(allDataLength  / 2)}
+                  {Math.floor(allDataLength / 2)}
                 </span>
               </div>
-              <div className="col-span-3 ">
-                <Amount loadItem={loadItem} />
-              </div>
-              <fieldset className="p-3 ml-auto border border-gray-300 rounded-lg w-fit">
-                <legend className="px-2 text-sm font-semibold text-gray-600">
-                  Info
-                </legend>
-                <div
-                  className="grid grid-cols-2 gap-2 cursor-pointer hover:bg-gray-100"
-                  onClick={handleOnClickB}
-                >
-                  <span className="text-gray-700">
-                    {"입금 : 2025-02-14           "}
-                  </span>
-                  <span className="w-full text-right text-gray-700">{"0"}</span>
-                  <span className="text-gray-700">
-                    {"환불 : 2025-02-14          "}
-                  </span>
-                  <span className="w-full text-right text-gray-700">{"0"}</span>
-                  <span className="text-gray-700">
-                    {"조정 : 2025-02-14          "}
-                  </span>
-                  <span className="w-full text-right text-gray-700">{"0"}</span>
-                  <span className="text-gray-700">{"정산잔액 : "}</span>
-                  <span className="w-full text-right text-gray-700">{"0"}</span>
-                </div>
-              </fieldset>
+              <Amount loadItem={loadItem} />
+              <Balance loadItem={loadItem} />
             </div>
           </form>
         </DialogArrow>
