@@ -289,7 +289,7 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
       };
       icon = descartesIcon();
       break;
-    case "trucking_rate":
+    case "transport_fee_table":
       icon = <AiOutlineTable size={size} />;
       break;
   }
