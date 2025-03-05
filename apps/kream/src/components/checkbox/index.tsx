@@ -37,7 +37,6 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
 
   useEffect(() => {
     let isChecked = value === 'Y' ? true : false
-    // log('???checkbox', id, value, isChecked)
     setChceckVal(isChecked);
     setValue(id, value);
   }, [value])
@@ -75,7 +74,7 @@ export const Checkbox: React.FC<CheckboxProps> = (props : CheckboxProps) => {
           {...register(id, rules)}
           id={id}
           // name={name?name:id}
-          // checked={checkVal}
+          checked={checkVal}
           defaultChecked={false}
           type="checkbox"
           className="items-center w-6 h-5 text-blue-600 bg-center bg-no-repeat border-gray-300 rounded form-checkbox focus:outline-none focus:ring-offset-0 focus:ring-2"

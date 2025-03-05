@@ -53,7 +53,7 @@ const CustomerDetail: React.FC<Props> = memo(({ loadItem }) => {
     return (
         <div className="flex flex-col w-full gap-2 space-y-2">
             <PageContent
-                left={<Tab tabList={tabList} MselectedTab={selectedTab} onClickTab={handleOnClickTab} />}
+                left={<Tab tabList={tabList} MselectedTab={pMain} onClickTab={handleOnClickTab} />}
                 right={<></>}>
                 <div className={`flex flex-col w-full ${selectedTab && checkCurrentPage(pMain)}`}>
                     <MainPage/>

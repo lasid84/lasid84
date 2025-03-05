@@ -30,7 +30,7 @@ const DialogBasic: React.FC<DialogBasicProps> = ({
         <Dialog
           as="div"
           className="fixed inset-0 z-40 overflow-y-auto dialog-base"
-          onClose={() => {}}
+          onClose={() => onClose(false)}
         >
           <div
             className={`flex flex-col items-center justify-center min-h-screen px-4 text-center ${isModal ? "pointer-events-none" : ""}`}

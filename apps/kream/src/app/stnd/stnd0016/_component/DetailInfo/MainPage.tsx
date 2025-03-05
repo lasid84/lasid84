@@ -55,15 +55,16 @@ const MainPage: React.FC<Props> = () => {
                         <div className="flex flex-col w-full h-full">
                             <div className="flex items-center justify-between w-full h-auto">
                                 <LabelGrid id={'고객정보'} textColor="blue-700" />
-                                <Button id={"btnAdd"} label="add" height="h-5"
+                                <Button id={"btnCustContAdd"} label="add" height="h-5" disabled={!selectedCustData?.cust_code}
                                     onClick={() => {
                                         // log("onClick refCustCont", refCustCont)
-                                        rowAdd(refCustCont?.current, { "use_yn": true, "def": false, cont_type: cust_mode})
+                                        rowAdd(refCustCont?.current, { "use_yn": true, "def": false, cust_code: selectedCustData?.cust_code, cont_type: cust_mode})
                                     }}
                                 />
                             </div>
                             <div className="flex-1 h-full overflow-auto">
-                                <GridCustCont ref={refCustCont} id="custCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: cust_mode}} />
+                                <GridCustCont ref={refCustCont} id="custCont" initData={[]} 
+                                    params={{ cust_code: selectedCustData?.cust_code, cont_type: cust_mode}} />
                             </div>
                         </div>
                     } 
@@ -71,15 +72,16 @@ const MainPage: React.FC<Props> = () => {
                         <div className="flex flex-col w-full h-full">
                             <div className="flex items-center justify-between w-full h-auto">
                                 <LabelGrid id={'대행사정보'} textColor="blue-700" />
-                                <Button id={"btnAdd"} label="add" height="h-5"
+                                <Button id={"btnCustAgencyAdd"} label="add" height="h-5" disabled={!selectedCustData?.cust_code}
                                     onClick={() => {
                                         // log("onClick refCustCont", refCustCont)
-                                        rowAdd(refAgencyCont?.current, { "use_yn": true, "def": false, cont_type: cust_mode})
+                                        rowAdd(refAgencyCont?.current, { "use_yn": true, "def": false, cust_code: selectedCustData?.cust_code, cont_type: cust_mode + 'AGENCY'})
                                     }}
                                 />
                             </div>
                             <div className="flex-1 h-full overflow-auto">
-                                <GridCustCont ref={refAgencyCont} id="agencyCont" initData={[]} params={{ cust_code: selectedCustData?.cust_code, cont_type: cust_mode}} isAgency={true} />
+                                <GridCustCont ref={refAgencyCont} id="agencyCont" initData={[]} 
+                                    params={{ cust_code: selectedCustData?.cust_code, cont_type: cust_mode + 'AGENCY'}} />
                             </div>
                         </div>
                     } 

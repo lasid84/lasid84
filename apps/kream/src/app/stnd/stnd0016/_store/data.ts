@@ -79,3 +79,34 @@ export const SP_SetRTFToHtml = async (Params: any) => {
   const result = await queryClient("SP_SetRTFToHtml", params);
   log("finish SP_SetRTFToHtml", result, params)
 }
+
+export const SP_GetTransportFee = async (Params: any) => {  
+
+  const { cust_code, cust_mode, user_id, ipaddr } = paramsUtils(Params);
+  
+  const params = {
+    inparam: ["in_cust_code", "in_cust_mode", "in_user", "in_ipaddr"],
+    invalue: [ cust_code, cust_mode, user_id, ipaddr],
+    inproc: 'public.f_stnd0016_get_transport_fee',
+    isShowLoading: false
+  }
+
+  const result = await queryClient("SP_GetTransportFee", params);
+  return result;
+}
+
+export const SP_SetTransportFee = async (Params: any) => {  
+
+  const { jsonData, user_id, ipaddr } = paramsUtils(Params);
+  
+  const params = {
+    inparam: ["in_jsondata", "in_user", "in_ipaddr"],
+    invalue: [ jsonData, user_id, ipaddr],
+    inproc: 'public.f_stnd0016_set_transport_fee',
+    isShowLoading: true,
+    isShowComplete: true
+  }
+
+  const result = await queryClient("SP_SetTransportFee", params);
+  return result;
+}

@@ -22,20 +22,6 @@ const CustChargeGrid: React.FC<Props> = memo(({gridRef, shipping_type}) => {
   const [mainData, setMainData] = useState<gridData>();
   const { getValues } = useFormContext();
 
-  // const gridOptions: GridOption = {
-  //   gridHeight: "h-full",
-  //   // checkbox: ["chk", "use_yn"],
-  //   colVisible: { col : ["cust_code", "cust_mode", "shipping_type"], visible:false },
-  //   dataType: { 
-  //        },
-  //   isShowRowNo:false,
-  //   isAutoFitColData: false,
-  //   isMultiSelect: false,
-  //   editable: ["air_freight","bl_handling","bonded_wh","customs_clearance","customs_duty","customs_tax","dispatch_fee","special_handling","dtd_handling"
-  //     ,"trucking","insurance_fee","other_1","other_2","other_3"
-  //   ],
-  // };
-
   const gridOptions: GridOption = {
     gridHeight: "h-full",
     // checkbox: ["chk", "use_yn"],
@@ -45,10 +31,8 @@ const CustChargeGrid: React.FC<Props> = memo(({gridRef, shipping_type}) => {
     isShowRowNo:false,
     isAutoFitColData: false,
     isMultiSelect: false,
-    // editable: ["air_freight","bl_handling","bonded_wh","customs_clearance","customs_duty","customs_tax","dispatch_fee","special_handling","dtd_handling"
-    //   ,"trucking","insurance_fee","other_1","other_2","other_3"
-    // ],
-    editable: ["rv_charge", "ab_charge", "rv_vendor_id", "ab_vendor_id"]
+    editable: ["rv_charge", "ab_charge", "rv_vendor_id", "ab_vendor_id"],
+    isShowFilter: false,
   };
 
   useEffect(() => {

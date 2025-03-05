@@ -25,24 +25,11 @@ export const SubMenuTab: React.FC<Props> = (props: Props) => {
     const [selectedTab, setSelectedTab] = useState<any>(MselectedTab);
 
     const { loadItem, onClickTab, tabList} = props;
-    // const [tabList, settabList] = useState<tab[]>()
-
-    // useEffect(() => {
-    //     if (loadItem?.length) {
-    //         // console.log('loadItem',loadItem[14].data)
-    //         settabList(loadItem[14].data)
-    //         // console.log('tabState',loadItem[14].data)
-    //     }
-    // }, [loadItem?.length])
 
     useEffect(() => {
-        // console.log('tabState_selectedTab',selectedTab)
+        // console.log('tabState_selectedTab1',selectedTab)
         selectedTab && onClickTab(selectedTab);
     }, [selectedTab]);
-
-    useEffect(() => {
-        MselectedTab && onClickTab(MselectedTab);
-    }, [MselectedTab]);
 
     return (
         <div className="flex flex-row justify-center overflow-x-auto dark:bg-gray-900 dark:text-white dark:border-gray-800">

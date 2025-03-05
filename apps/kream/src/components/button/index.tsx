@@ -33,6 +33,8 @@ import { FaChevronLeft } from "react-icons/fa";  //left
 import { FaChevronRight } from "react-icons/fa"; //right
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { SlOptions } from "react-icons/sl"; // options
+import { MdOpenInNew } from 'react-icons/md';
+import { AiOutlineTable } from 'react-icons/ai';
 
 export type data = {
   data?: {}[],
@@ -286,6 +288,9 @@ const getIcon = (label: string, icon: JSX.Element, size: string) => {
         /></>)
       };
       icon = descartesIcon();
+      break;
+    case "trucking_rate":
+      icon = <AiOutlineTable size={size} />;
       break;
   }
   return icon;

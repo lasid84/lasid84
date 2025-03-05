@@ -46,7 +46,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
   // console.log('searchParam', searchParam.queryKey[1])
   const Param = searchParam.queryKey[1]
 
-  const {cust_code, cont_type, isAgency, user_id, ipaddr } = Param;
+  const {cust_code, cont_type, user_id, ipaddr } = Param;
   
   const params = {
     inparam : [
@@ -57,7 +57,7 @@ export const SP_GetDetailData = async (searchParam: any) => {
     ],
     invalue: [
         cust_code
-      , cont_type + (isAgency ? 'AGENCY' : '')
+      , cont_type
       , user_id
       , ipaddr
     ],

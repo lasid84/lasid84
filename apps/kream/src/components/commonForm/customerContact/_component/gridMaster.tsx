@@ -19,15 +19,14 @@ type Props = {
         cust_code: string
         cont_type: string | null
     }
-    isAgency?: boolean
 };
 
-const GridMaster = forwardRef<any, Props>(({id= 'gridMaster', initData, params, isAgency}, ref) => {
+const GridMaster = forwardRef<any, Props>(({id= 'gridMaster', initData, params}, ref) => {
 
     const { dispatch, objState } = useAppContext();
     const [gridOptions, setGridOptions] = useState<GridOption>();
 
-    const { data, refetch, remove } = useGetData({...params, isAgency:isAgency}, SEARCH_D, SP_GetDetailData);
+    const { data, refetch, remove } = useGetData({...params}, SEARCH_D, SP_GetDetailData);
 
     useEffect(() => {
         let arrDept = [];

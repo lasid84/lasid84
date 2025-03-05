@@ -1,10 +1,12 @@
-import { SP_GetCustChargeData, SP_GetCustDetailData, SP_GetLoad, SP_SetCustDetailData, SP_SetRTFToHtml } from "./data";
-import { gridData, ROW_CHANGED } from "@/components/grid/ag-grid-enterprise";
+import { SP_GetCustChargeData, SP_GetCustDetailData, SP_GetLoad, SP_GetTransportFee, SP_SetCustDetailData, SP_SetRTFToHtml, SP_SetTransportFee } from "./data";
+import { SP_InsertData as SP_InsCustCont, SP_UpdateData as SP_UpdCustCont } from "components/commonForm/customerContact/_component/data";
+import { gridData, ROW_CHANGED, ROW_TYPE_NEW } from "@/components/grid/ag-grid-enterprise";
 import { createStore } from "@/states/createStore";
 import { useUserSettings } from "@/states/useUserSettings";
 
 import { log, error, getMenuParameters } from '@repo/kwe-lib-new';
 import { createRef } from "react";
+import { RowNode } from "ag-grid-community";
 
 // StoreState 정의
 interface StoreState {
@@ -34,6 +36,8 @@ interface StoreActions {
     getLoad: () => Promise<any[]> | undefined;
     getCustDetailDatas: (params: any) => Promise<any>;
     setCustDetailDatas: (params: any) => Promise<any> | null;
+    getTransportFee: (params: any) => Promise<gridData>;
+    setTransportFee: (params: any) => Promise<any> | null;
     resetSearchParam: () => void;
     resetStore: () => void;
     setState: (newState: Partial<StoreState>) => void;
@@ -73,18 +77,19 @@ const initValue: StoreState = {
 const setinitValue = (set: any, get: any) => {
     const actions: StoreActions = {
         getLoad: async () => {
-            const { searchParams } = get();
+            const { searchParams, selectedTab } = get();
             const result = await SP_GetLoad();
-            log("result[7].data", result)
-            set({ loadDatas: result
-                , chargeTypeSeq: result[7].data
-                , cust_code: null
-                , selectedTab: pages[0] });
+            set({
+                loadDatas: result,
+                chargeTypeSeq: result[7].data,
+                cust_code: null,
+                selectedTab: pages[0]
+            });
             return result;
         },
         getCustDetailDatas: async (params: any) => {
             const result = await SP_GetCustDetailData(params);
-            
+
             // let convertedDTDData: any = {};
             // for (const row of result[2]?.data) {
             //     let data: { [key: string]: any } = {};
@@ -96,10 +101,8 @@ const setinitValue = (set: any, get: any) => {
             //             data[key] = val as string;
             //         }
             //     }
-
             //     convertedDTDData[col] = data;
             // }
-
             // let convertedFHData:any = {};
             // for (const row of result[4]?.data) {
             //     let data: { [key: string]: any } = {};
@@ -111,11 +114,10 @@ const setinitValue = (set: any, get: any) => {
             //             data[key] = val;
             //         }
             //     }
-
             //     convertedFHData[col] = data;
             // }
             // log("result", result)
-            set({ 
+            set({
                 selectedCustData: result[5].data[0],
                 custDetailData: result[0]?.data[0] || {},
                 dtdExtraData: result[6]?.data[0] || {},
@@ -129,23 +131,25 @@ const setinitValue = (set: any, get: any) => {
         },
         setCustDetailDatas: async (params: any) => {
             const { custDetailData, dtdExtraData, fhExtraData, dtdChargeData, gridRef, selectedCustData } = get();
-            const { refDTDCustCharge } = gridRef; /* To Do */ //FH도 추가 예정pnpm
-                
+            const { refDTDCustCharge, refCustCont, refAgencyCont } = gridRef; /* To Do */ //FH도 추가 예정pnpm
+
             type UpdateData = {
                 t_cust_d: Record<string, any>;
                 t_cust_d_extra: Record<string, any>[];
                 // t_cust_charge: Record<string, any>[];
                 t_cust_charge_rate: Record<string, any> | null;
-            }
+                t_cust_cont: Record<string, any>[];
+            };
 
             let updatedData: UpdateData = {
                 t_cust_d: {},
                 t_cust_d_extra: [],
-                t_cust_charge_rate: []
-            }
-            
+                t_cust_charge_rate: [],
+                t_cust_cont: []
+            };
+
             let hasData = false;
-        
+
             /* 데이터 변경 체크 */
             if (params) {
                 for (const [key, val] of Object.entries(custDetailData)) {
@@ -155,12 +159,12 @@ const setinitValue = (set: any, get: any) => {
                         // log("hasData!", key, val, params[key]);
                         updatedData = {
                             ...updatedData,
-                            t_cust_d: {...params},
-                        }
+                            t_cust_d: { ...params },
+                        };
                         break;
                     }
                 }
-                
+
                 for (const [key, val] of Object.entries(dtdExtraData)) {
                     // log('dtd',params, key, val)
                     if (params[key] !== undefined && (params[key] || '').trim() !== (val as string || '').trim()) {
@@ -170,7 +174,7 @@ const setinitValue = (set: any, get: any) => {
                         updatedData = {
                             ...updatedData,
                             t_cust_d_extra: updatedData.t_cust_d_extra,
-                        }
+                        };
                         break;
                     }
                 }
@@ -190,7 +194,53 @@ const setinitValue = (set: any, get: any) => {
                 //     }
                 // }
             }
-            
+
+            /* 고객, 대행사 연락처 저장 */
+            const updatedCont: RowNode[] = [];
+
+            refCustCont.current.api.forEachNode(async (node: RowNode) => {
+                let data = node.data;
+
+                for (const [col, val] of Object.entries(data)) {
+                    const colInfo = refCustCont.current.api.getColumnDef(col);
+                    if (colInfo?.cellEditor === 'agCheckboxCellEditor') {
+                        data[col] = val ? "Y" : "N";
+                    }
+                }
+
+                if (data[ROW_CHANGED]) {
+                    updatedCont.push(data);
+                    data[ROW_CHANGED] = false;
+                }
+            });
+            refAgencyCont.current.api.forEachNode(async (node: RowNode) => {
+                let data = node.data;
+
+                for (const [col, val] of Object.entries(data)) {
+                    const colInfo = refAgencyCont.current.api.getColumnDef(col);
+                    if (colInfo?.cellEditor === 'agCheckboxCellEditor') {
+                        data[col] = val ? "Y" : "N";
+                    }
+                }
+
+                if (data[ROW_CHANGED]) {
+                    updatedCont.push(data);
+                    data[ROW_CHANGED] = false;
+                }
+            });
+
+            if (updatedCont.length) {
+                hasData = true;
+                updatedData = {
+                    ...updatedData,
+                    t_cust_cont: updatedCont
+                };
+
+                refAgencyCont?.current?.api.redrawRows();
+                refCustCont?.current?.api.redrawRows();
+            }
+
+
             /* Grid의 변경 값을 store(dtdChargeData)에 반영 */
             const saveCols = ['ab_charge', 'ab_vendor_id', 'rv_charge', 'rv_vendor_id'];
             await refDTDCustCharge.current.api.forEachNode(async (node: any) => {
@@ -198,7 +248,7 @@ const setinitValue = (set: any, get: any) => {
 
                 if (data[ROW_CHANGED]) {
                     const charge_type = data['charge_type'];
-                    
+
                     for (const row of dtdChargeData.data) {
                         if (row['charge_type'] === charge_type) {
                             saveCols.forEach(col => row[col] = data[col]);
@@ -208,7 +258,7 @@ const setinitValue = (set: any, get: any) => {
                     }
                 }
             });
-            
+
             const updatedChargeData: Record<string, any>[] = [];
             for (const row of dtdChargeData.data) {
                 if (row[ROW_CHANGED]) {
@@ -221,21 +271,31 @@ const setinitValue = (set: any, get: any) => {
                 updatedData = {
                     ...updatedData,
                     t_cust_charge_rate: updatedChargeData
-                }
+                };
             }
-    
+
             /////db 저장 추가
             if (hasData) {
                 const data = {
                     jsonData: JSON.stringify(updatedData)
-                }
-                // log("hasData ", updatedData, data);
+                };
                 const result = await SP_SetCustDetailData(data);
                 await get().actions.getCustDetailDatas(params);
             }
         },
+        getTransportFee: async (params: any) => {
+            const result = await SP_GetTransportFee(params);
+            return result[0];
+        },
+        setTransportFee: async (params: any) => {
+            const { custDetailData, dtdExtraData, fhExtraData, dtdChargeData, gridRef, selectedCustData } = get();
+            const { refDTDCustCharge, refCustCont, refAgencyCont } = gridRef; /* To Do */ //FH도 추가 예정pnpm
+
+            const result = await SP_SetTransportFee(params);
+            
+        },
         resetSearchParam: () => {
-            set({ searchParams: {...initValue.searchParams}});
+            set({ searchParams: { ...initValue.searchParams } });
         },
         resetStore: () => {
             set({ ...initValue });

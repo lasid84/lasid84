@@ -2,13 +2,15 @@ import { useEffect, useReducer, useMemo, useCallback, useRef, memo, useState, Fo
 import { useCommonStore } from "../../../_store/store";
 import { MaskedInputField } from "@/components/input/react-text-mask";
 import { ReactSelect } from "@/components/select/react-select2";
-import TruckingChargeGrid from "./TruckingChargeGrid";
+import TransportFeeGrid from "./popup/TransportFeeGrid";
 import { gridData, ROW_CHANGED } from "@/components/grid/ag-grid-enterprise";
 import { Label, LabelGrid } from "@/components/label";
 import { useTranslation } from "react-i18next";
 
 import { log } from '@repo/kwe-lib-new';
 import { RowContainerComp } from "ag-grid-community";
+import { TextArea } from "@/components/input";
+import { Button } from "components/button";
 
 type Props = {
 };
@@ -18,7 +20,7 @@ type innerProps = {
     onChange?: (rate:any, charge_type: string, col: string, value: string | null ) => void;
 };
 
-const defualTitleWidth = "w-[120px]";
+const defualTitleWidth = "w-[80px]";
 const defaultLabelWidth = "w-20"
 const defaultInputWidth = "w-20"
 const defaultHeight = "h-6"
@@ -42,6 +44,7 @@ const RateByCharge: React.FC<Props> = memo(() => {
         'air_freight'       : CCFee,
         'other_2'           : Other2,
         'special_handling'  : SpecialHandling,
+        'trucking'  : Trucking,
     }
 
 
@@ -118,7 +121,7 @@ const Clearance: React.FC<innerProps> = (props) => {
     return (
         <>
             <div className={`flex flex-row gap-2 ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'customs_clearance'} freeStyle={defualTitleWidth + ' ' + defaultHeight}/>
+                <LabelGrid id={current_col} freeStyle={defualTitleWidth + ' ' + defaultHeight}/>
                 <MaskedInputField
                     id={current_col + '_rate'}
                     height={defaultHeight}
@@ -220,7 +223,7 @@ const DTDHandling: React.FC<innerProps> = (props) => {
     return (
         <>
             <div className={`flex flex-row gap-2 ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'dtd_handling'} freeStyle={defualTitleWidth + ' ' + defaultHeight} />
+                <LabelGrid id={current_col} freeStyle={defualTitleWidth + ' ' + defaultHeight} />
                 <MaskedInputField
                     id={current_col + '_amt'}
                     label={'기본'}
@@ -287,7 +290,7 @@ const AirFreight: React.FC<innerProps> = (props) => {
         <>
             <div className={`flex flex-row gap-2 
                         ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'bl_handling'} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
+                <LabelGrid id={current_col} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
                 <MaskedInputField
                     id={current_col + '_amt'}
                     height={defaultHeight}
@@ -340,7 +343,7 @@ const CCFee: React.FC<innerProps> = (props) => {
         <>
             <div className={`flex flex-row gap-2
                         ${col_nm === current_col ? 'border border-red-500' : ''}`}>
-                <LabelGrid id={'ccfee'} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
+                <LabelGrid id={current_col} freeStyle={defualTitleWidth + ' ' + defaultHeight}  />
                 <ReactSelect
                     id={current_col + '_type'} dataSrc={loadDatas?.[6] as gridData}
                     height={'24px'}
@@ -521,13 +524,16 @@ const SpecialHandling: React.FC<innerProps> = (props) => {
 
 //운송료
 const Trucking: React.FC<innerProps> = (props) => {
+
+    const { selectedCharge: col_nm } = useCommonStore((state) => state);
     const { col, onChange: handleChange } = props
-    const transFeeDatas = useCommonStore((state) => state);
     const current_col = col;
     const category = 'rv';
     const { rate } = getChargeInfo(current_col);
     
-    const [colType, colRate, colAmt, colMin, colMax] = getColName(category);
+    const [colType, colRate, colAmt, colMin, colMax, colEtc] = getColName(category);
+
+    const [isPopup, setIsPopup] = useState(false);
 
     // if (selectedCell !== 'trucking') return;
 
@@ -536,9 +542,32 @@ const Trucking: React.FC<innerProps> = (props) => {
     }, [])
 
     return (
-        <>
-            <TruckingChargeGrid />
-        </>
+        <div className={`flex flex-row gap-2 ${col_nm === current_col ? 'border border-red-500' : ''}`}>
+            <LabelGrid id={current_col} freeStyle={defualTitleWidth + ' ' + defaultHeight}/>
+            <TextArea 
+                id={current_col + '_etc_etc'}
+                rows={3} cols={0}
+                value={rate?.[colEtc]?.etc}
+                options={{
+                    inline: true,
+                    noLabel: true,
+                    freeStyles: 'resize'
+                }}
+                events={{
+                    onChange(e) {
+                        const newEtc = {
+                            ...rate?.[colEtc],
+                            etcss: e.target.value
+                        }
+                        handleChange?.(rate, current_col, colEtc, newEtc);
+                    },
+                }}
+            />
+            <Button id={"btn" + current_col + "_normal"} label="transport_fee_table" color="gray-outline"
+                onClick={() => setIsPopup(!isPopup)}
+            />
+            <TransportFeeGrid isOpen={isPopup} onClose={setIsPopup} />
+        </div>
     )
 }
 

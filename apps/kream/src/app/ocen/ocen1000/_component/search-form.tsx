@@ -268,8 +268,7 @@ const SearchForm = ({ loadItem }: any) => {
               label="create_user"
               dataSrc={createuser as data}
               width="w-96"
-              lwidth="w-20"
-              height="8px"              
+              lwidth="w-20"       
               options={{
                 keyCol: "create_user",
                 displayCol: ["create_user_nm"],
@@ -284,7 +283,6 @@ const SearchForm = ({ loadItem }: any) => {
               dataSrc={status as data}
               width="w-96"
               lwidth="w-20"
-              height="8px"
               options={{
                 keyCol: "state",
                 displayCol: ["state", "state_nm"],
