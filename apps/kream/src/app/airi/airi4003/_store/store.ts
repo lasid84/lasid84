@@ -1,4 +1,4 @@
-import { SP_GetLoad, SP_GetMainData,SP_GetDetailData } from "./data";
+import { SP_GetLoad, SP_GetMainData,SP_GetDetailData, saveFinancialRecord } from "./data";
 import { gridData } from "@/components/grid/ag-grid-enterprise";
 import { createStore } from "@/states/createStore";
 import { useUserSettings } from "@/states/useUserSettings";
@@ -21,6 +21,7 @@ interface StoreActions {
     getDetailDatas: (params: any) => Promise<any>;
     resetSearchParam: () => void;
     resetStore: () => void;
+    saveFinancialRecord : (data:any)=> Promise<any>;
     setState: (newState: Partial<StoreState>) => void;
 }
 
@@ -56,6 +57,14 @@ const setinitValue = (set: any, get: any) => {
             log('retailDataresult',result)
             set({ detailDatas : result});
             return result;
+        },
+        saveFinancialRecord: async (params: any) :Promise<any> => { 
+            try {
+                const result = await saveFinancialRecord(params); // API 호출
+                return result
+            } catch (error) {
+                return error;
+            }            
         },
         resetSearchParam: () => {
             set({ searchParams: {...initValue.searchParams}});
